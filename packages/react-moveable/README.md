@@ -1,18 +1,53 @@
 
+
 <p align="middle" ><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/logo.png"/></p>
-<h2 align="middle">Moveable</h2>
+<h2 align="middle">React Moveable</h2>
 <p align="middle">
-<a href="https://www.npmjs.com/package/moveable" target="_blank"><img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
+<a href="https://www.npmjs.com/package/react-moveable" target="_blank"><img src="https://img.shields.io/npm/v/react-moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">Moveable, Draggable, Resizable Target.</p>
+<p align="middle">A React Component that create Moveable, Draggable, Resizable target.</p>
 
-## 📦 Packages
-* [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable target.
+
+
+## ⚙️ Installation
+```sh
+$ npm i react-moveable
+```
+
+## 🚀 How to use
+```ts
+import Moveable from "react-moveable";
+
+const scene = new Scene({
+    ...
+});
+
+const timeline = new Timeline(scene, document.body, {
+    keyboard: true,
+});
+
+timeline.on("select", (e: SelectEvent) => {
+    console.log(e.selectedItem);
+});
+```
+
+
+## ⚙️ Developments
+### `npm start`
+
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
+
+
 
 ## ⭐️ Show Your Support
 Please give a ⭐️ if this project helped you!
+
 
 ## 👏 Contributing
 
