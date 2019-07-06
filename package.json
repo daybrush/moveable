@@ -1,0 +1,40 @@
+{
+  "name": "moveable",
+  "version": "0.0.1",
+  "description": "new project",
+  "main": "./dist/moveable.cjs.js",
+  "module": "./dist/moveable.esm.js",
+  "sideEffects": false,
+  "types": "declaration/index.d.ts",
+  "scripts": {
+    "start": "rollup -c -w",
+    "build": "rollup -c && npm run declaration && print-sizes ./dist",
+    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+    "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
+    "prerelease": "npm run build && prerelease --dirs=dist,doc",
+    "release": "npm run build && npm run doc && release --dirs=dist,doc",
+    "release:init": "npm run build && npm run doc && release -i --dirs=dist,doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daybrush/moveable.git"
+  },
+  "author": "Daybrush",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daybrush/moveable/issues"
+  },
+  "homepage": "https://github.com/daybrush/moveable#readme",
+  "dependencies": {
+    "@daybrush/utils": "^0.10.0"
+  },
+  "devDependencies": {
+    "@daybrush/builder": "^0.1.1",
+    "@daybrush/jsdoc": "^0.3.7",
+    "@daybrush/release": "^0.2.4",
+    "daybrush-jsdoc-template": "^1.6.0",
+    "print-sizes": "0.0.4",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.2"
+  }
+}

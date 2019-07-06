@@ -1,0 +1,15 @@
+# http://editorconfig.org
+root = true
+
+[{*.js,*.ts}]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+max_line_length = 80
+trim_trailing_whitespace = true
+
+[{package.json,.travis.yml}]
+indent_style = space
+indent_size = 4
