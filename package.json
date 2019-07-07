@@ -1,7 +1,7 @@
 {
   "name": "moveable",
   "version": "0.0.1",
-  "description": "new project",
+  "description": "Moveable, Draggable, Resizable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
   "sideEffects": false,
@@ -15,6 +15,15 @@
     "release": "npm run build && npm run doc && release --dirs=dist,doc",
     "release:init": "npm run build && npm run doc && release -i --dirs=dist,doc"
   },
+  "keywords": [
+    "moveable",
+    "resizable",
+    "draggable",
+    "rotatable",
+    "movable",
+    "dom",
+    "resize"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/daybrush/moveable.git"
