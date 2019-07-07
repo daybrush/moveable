@@ -17,20 +17,20 @@ $ npm i react-moveable
 ```
 
 ## 🚀 How to use
-```ts
+```tsx
 import Moveable from "react-moveable";
 
-const scene = new Scene({
-    ...
-});
+render() {
+    return (
+        <Moveable
+            target={document.querySelector(".target")}
+            draggable={true}
+            resizable={true}
+            rotatable={true}
+        />
+    )
+}
 
-const timeline = new Timeline(scene, document.body, {
-    keyboard: true,
-});
-
-timeline.on("select", (e: SelectEvent) => {
-    console.log(e.selectedItem);
-});
 ```
 
 
