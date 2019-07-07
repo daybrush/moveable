@@ -1,7 +1,7 @@
 # http://editorconfig.org
 root = true
 
-[{*.js,*.ts}]
+[{*.js,*.ts,*.tsx}]
 charset = utf-8
 end_of_line = lf
 indent_style = space

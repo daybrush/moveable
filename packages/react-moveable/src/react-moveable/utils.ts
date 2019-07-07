@@ -1,7 +1,8 @@
 import { PREFIX } from "./consts";
+import { prefixNames } from "framework-utils";
 
 export function prefix(...classNames: string[]) {
-    return classNames.map(name => name ? `${PREFIX}${name}` : "").join(" ");
+    return prefixNames(PREFIX, ...classNames);
 }
 
 export function caculate3x2(a: number[], b: number[]) {

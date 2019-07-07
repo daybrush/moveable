@@ -1,0 +1,14 @@
+export interface MoveableState {
+    target: HTMLElement | null | undefined;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    matrix: number[];
+    transformOrigin: number[];
+    origin: number[];
+    pos1: number[];
+    pos2: number[];
+    pos3: number[];
+    pos4: number[];
+}
