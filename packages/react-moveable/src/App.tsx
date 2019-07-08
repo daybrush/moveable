@@ -16,11 +16,14 @@ class App extends React.Component {
             <div>
                 <Moveable
                     target={this.state.target} ref={ref(this, "moveable")}
-                    onRotate={({ delta, matrix }) => {
-                        document.querySelector<HTMLElement>(".App-logo")!.style.transform = matrix;
+                    onRotate={({ delta, transform }) => {
+                        this.state.target!.style.transform = transform;
+                    }}
+                    onDrag={({ transform }) => {
+                        this.state.target!.style.transform = transform;
                     }}
                 />
-                <div className="App" onClick={this.onClick}>
+                <div className="App" onMouseDown={this.onClick}>
 
                     <header className="App-header">
                         <img src={logo} className="App-logo" alt="logo" />

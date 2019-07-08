@@ -7,7 +7,7 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState, OnRotate } from "./types";
+import { MoveableState, OnRotate, OnDrag } from "./types";
 import { getRotatableDragger } from "./Rotatable";
 import { getDraggableDragger } from "./Draggable";
 
@@ -21,9 +21,24 @@ export default class Moveable extends React.PureComponent<{
     onRotateStart?: () => void,
     onRotate?: (e: OnRotate) => void,
     onRotateEnd?: () => void,
+    onDragStart?: () => void,
+    onDrag?: (e: OnDrag) => void,
+    onDragEnd?: () => void,
 }, MoveableState> {
+    public static defaultProps = {
+        rotatable: true,
+        draggable: true,
+        resizable: true,
+        onRotateStart: () => {},
+        onRotate: () => {},
+        onRotateEnd: () => {},
+        onDragStart: () => {},
+        onDrag: () => {},
+        onDragEnd: () => {},
+    };
     public state: MoveableState = {
         target: null,
+        beforeMatrix: [1, 0, 0, 1, 0, 0],
         matrix: [1, 0, 0, 1, 0, 0],
         left: 0,
         top: 0,
@@ -100,9 +115,13 @@ export default class Moveable extends React.PureComponent<{
     }
     public componentDidMount() {
         /* rotatable */
-        this.rotatableDragger = getRotatableDragger(this, this.rotationElement);
+        if (this.props.rotatable) {
+            this.rotatableDragger = getRotatableDragger(this, this.rotationElement);
+        }
         /* resizable */
-        // this.resizableDragger = getRotatableDragger(this, this.rotationElement);
+        if (this.props.resizable) {
+            // this.resizableDragger = getRotatableDragger(this, this.rotationElement);
+        }
     }
     public componentWillUnmount() {
         if (this.draggableDragger) {
@@ -113,21 +132,6 @@ export default class Moveable extends React.PureComponent<{
             this.rotatableDragger.unset();
             this.rotatableDragger = null;
         }
-    }
-    public rotateStart() {
-        const onRotateStart = this.props.onRotateStart;
-
-        onRotateStart && onRotateStart();
-    }
-    public rotate(e: OnRotate) {
-        const onRotate = this.props.onRotate;
-
-        onRotate && onRotate(e);
-    }
-    public rotateEnd() {
-        const onRotateEnd = this.props.onRotateEnd;
-
-        onRotateEnd && onRotateEnd();
     }
     public getRadByPos(pos: number[]) {
         const { left, top, origin } = this.state;
@@ -154,7 +158,7 @@ export default class Moveable extends React.PureComponent<{
                 this.draggableDragger.unset();
                 this.draggableDragger = null;
             }
-            if (target) {
+            if (target && this.props.draggable) {
                 this.draggableDragger = getDraggableDragger(this, target);
             }
         }

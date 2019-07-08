@@ -83,10 +83,10 @@ export function getRotatableDragger(
                 top,
             } = rotate(moveable, datas, clientX, clientY);
 
-            moveable.rotate({
+            moveable.props.onRotate!({
                 delta,
                 dist,
-                matrix: `${datas.transform} rotate(${dist}deg)`,
+                transform: `${datas.transform} rotate(${dist}deg)`,
             });
             moveable.setState({
                 origin,
@@ -106,12 +106,12 @@ export function getRotatableDragger(
                     dist,
                 } = rotate(moveable, datas, clientX, clientY);
 
-                moveable.rotate({
+                moveable.props.onRotate!({
                     delta,
                     dist,
-                    matrix: `${datas.transform} rotate(${dist}deg)`,
+                    transform: `${datas.transform} rotate(${dist}deg)`,
                 });
-                moveable.rotateEnd();
+                moveable.props.onRotateEnd!();
                 moveable.updateRect();
             }
         },

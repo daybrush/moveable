@@ -1,6 +1,7 @@
 import { PREFIX } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket } from "@daybrush/utils";
+import { MoveableState } from "./types";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -43,33 +44,91 @@ export function multiple3x2(a: number[], b: number[]) {
     a[5] = a10 * b02 + a11 * b12 + a12 * 1;
     return a;
 }
+export function invert3x2(a: number[]) {
+    // 00 01 02
+    // 10 11 12
+    // 20 21 22
+    const [
+        a00,
+        a10,
+        a01,
+        a11,
+        a02,
+        a12,
+    ] = a;
+    const a20 = 0;
+    const a21 = 0;
+    const a22 = 1;
 
+    const det
+        = a00 * a11 * a22
+        + a01 * a12 * a20
+        + a02 * a10 * a21
+        - a02 * a11 * a20
+        - a01 * a10 * a22
+        - a00 * a12 * a21;
+
+    const b00 = a11 * a22 - a12 * a21;
+    const b01 = a02 * a21 - a01 * a22;
+    const b02 = a01 * a12 - a02 * a11;
+
+    const b10 = a12 * a20 - a10 * a22;
+    const b11 = a22 * a00 - a20 * a02;
+    const b12 = a02 * a10 - a00 * a12;
+
+    // const b20 = a11 * a21 - a11 * a20;
+    // const b21 = a20 * a01 - a21 * a00;
+    // const b22 = a00 * a11 - a01 * a10;
+
+    a[0] = b00 / det;
+    a[1] = b10 / det;
+    a[2] = b01 / det;
+    a[3] = b11 / det;
+    a[4] = b02 / det;
+    a[5] = b12 / det;
+
+    return a;
+}
 export function caculateMatrixStack(target: HTMLElement) {
     let el: HTMLElement | null = target;
-    const matrixes: number[][] = [];
+    const matrixes: Array<"none" | number[]> = [];
+
     while (el) {
         const transform = window.getComputedStyle(el).transform!;
 
         if (transform !== "none") {
             const value = splitBracket(transform).value!;
-
-            matrixes.push(value.split(/s*,\s*/g).map(v => parseFloat(v)));
+            const matrix = value.split(/s*,\s*/g).map(v => parseFloat(v));
+            matrixes.push(matrix);
+        } else {
+            matrixes.push("none");
         }
         el = el.parentElement;
     }
+
     matrixes.reverse();
 
     // 1 0 0
     // 0 1 0
     const mat = [1, 0, 0, 1, 0, 0];
+    const length = matrixes.length;
+    let beforeMatrix = [1, 0, 0, 1, 0, 0];
 
-    matrixes.forEach(matrix => {
-        multiple3x2(mat, matrix);
+    matrixes.forEach((matrix, i) => {
+        if (length - 1 === i) {
+            beforeMatrix = mat.slice();
+        }
+        if (matrix !== "none") {
+            multiple3x2(mat, matrix);
+        }
+
     });
+    beforeMatrix[4] = 0;
+    beforeMatrix[5] = 0;
     mat[4] = 0;
     mat[5] = 0;
 
-    return mat;
+    return [beforeMatrix, mat];
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     let [x1, y1] = caculate3x2(matrix, [0, 0, 1]);
@@ -128,7 +187,7 @@ export function getLineTransform(pos1: number[], pos2: number[]) {
     return `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad) scale(${width}, 1.2)`;
 }
 
-export function getTargetInfo(target?: HTMLElement) {
+export function getTargetInfo(target?: HTMLElement): MoveableState {
     let left = 0;
     let top = 0;
     let origin = [0, 0];
@@ -136,6 +195,7 @@ export function getTargetInfo(target?: HTMLElement) {
     let pos2 = [0, 0];
     let pos3 = [0, 0];
     let pos4 = [0, 0];
+    let beforeMatrix = [1, 0, 0, 1, 0, 0];
     let matrix = [1, 0, 0, 1, 0, 0];
     let width = 0;
     let height = 0;
@@ -148,7 +208,7 @@ export function getTargetInfo(target?: HTMLElement) {
         top = rect.top;
         width = target.offsetWidth;
         height = target.offsetHeight;
-        matrix = caculateMatrixStack(target);
+        [beforeMatrix, matrix] = caculateMatrixStack(target);
         transformOrigin = window.getComputedStyle(target).transformOrigin!.split(" ").map(pos => parseFloat(pos));
         [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
     }
@@ -164,6 +224,7 @@ export function getTargetInfo(target?: HTMLElement) {
         pos4,
         width,
         height,
+        beforeMatrix,
         matrix,
         origin,
         transformOrigin,
