@@ -10,24 +10,33 @@ class App extends React.Component {
     public state = {
         target: null,
     };
+    public deg = 18;
     public render() {
-        return (<div>
-                        <Moveable target={this.state.target} ref={ref(this, "moveable")} />
-            <div className="App" onClick={this.onClick} onTouchEnd={this.onClick}>
+        return (
+            <div>
+                <Moveable
+                    target={this.state.target} ref={ref(this, "moveable")}
+                    onRotateStart={() => {
+                    }}
+                    onRotate={({ delta, matrix }) => {
+                        document.querySelector<HTMLElement>(".App-logo")!.style.transform = matrix;
+                    }}
+                />
+                <div className="App" onClick={this.onClick} onTouchEnd={this.onClick}>
 
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                        Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-                    <a
-                        className="App-link"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-        </a>
-                </header>
-            </div>
+                    <header className="App-header">
+                        <img src={logo} className="App-logo" alt="logo" />
+                        <p>
+                            Edit <code>src/App.tsx</code> and save to reload.
+                        </p>
+                        <a
+                            className="App-link"
+                            rel="noopener noreferrer"
+                        >
+                            Learn React
+                        </a>
+                    </header>
+                </div>
             </div>
         );
     }

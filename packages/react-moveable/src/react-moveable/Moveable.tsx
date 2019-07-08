@@ -2,13 +2,13 @@ import * as React from "react";
 import { MOVEABLE_CSS } from "./consts";
 import {
     prefix, getRad, getLineTransform,
-    caculateRotationMatrix, caculatePosition,
-    caculateMatrixStack,
+    getTargetInfo,
 } from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState } from "./types";
+import { MoveableState, OnRotate } from "./types";
+import { getRotatableDragger } from "./Rotatable";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -17,7 +17,9 @@ export default class Moveable extends React.PureComponent<{
     rotatable?: boolean,
     draggable?: boolean,
     resizable?: boolean,
-    onRotate?: (e: { delta: number, dist: number }) => void,
+    onRotateStart?: () => void,
+    onRotate?: (e: OnRotate) => void,
+    onRotateEnd?: () => void,
 }, MoveableState> {
     public state: MoveableState = {
         target: null,
@@ -92,66 +94,9 @@ export default class Moveable extends React.PureComponent<{
     }
     public componentDidMount() {
         /* rotatable */
-        this.rotatableDragger = drag(this.rotationElement, {
-            container: window,
-            dragstart: ({ datas, clientX, clientY }) => {
-                const { matrix, left, top } = this.state;
-
-                datas.matrix = matrix;
-                datas.left = left;
-                datas.top = top;
-                datas.prevRad = this.getRadByPos([clientX, clientY]);
-                datas.startRad = datas.prevRad;
-                datas.loop = 0;
-                datas.direction = this.getDirection();
-            },
-            drag: ({ datas, clientX, clientY }) => {
-                const startRad = datas.startRad;
-                const prevRad = datas.prevRad;
-                const prevLoop = datas.loop;
-                const rad = this.getRadByPos([clientX, clientY]);
-
-                if (prevRad > rad && prevRad > 270 && rad < 90) {
-                    // 360 => 0
-                    ++datas.loop;
-                } else if (prevRad < rad && prevRad < 90 && rad > 270) {
-                    // 0 => 360
-                    --datas.loop;
-                }
-
-                const absolutePrevRad = prevLoop * 360 + prevRad;
-                const absoluteRad = datas.loop * 360 + rad;
-                const {
-                    width,
-                    height,
-                    transformOrigin,
-                    origin: prevOrigin,
-                    left: prevLeft,
-                    top: prevTop,
-                } = this.state;
-
-                const matrix = caculateRotationMatrix(datas.matrix, datas.direction * (rad - startRad));
-                const prevAbsoluteOrigin = [prevLeft + prevOrigin[0], prevTop + prevOrigin[1]];
-                const [origin, pos1, pos2, pos3, pos4]
-                    = caculatePosition(matrix, transformOrigin, width, height);
-
-                this.rotate({
-                    delta: absoluteRad - absolutePrevRad,
-                    dist: absolutePrevRad - startRad,
-                });
-                this.setState({
-                    origin,
-                    pos1,
-                    pos2,
-                    pos3,
-                    pos4,
-                    matrix,
-                    left: prevAbsoluteOrigin[0] - origin[0],
-                    top: prevAbsoluteOrigin[1] - origin[1],
-                });
-                datas.prevRad = rad;
-            },
-        });
+        this.rotatableDragger = getRotatableDragger(this, this.rotationElement);
+        /* resizable */
+        // this.resizableDragger = getRotatableDragger(this, this.rotationElement);
     }
     public componentWillUnmount() {
         if (this.draggableDragger) {
@@ -163,26 +108,41 @@ export default class Moveable extends React.PureComponent<{
             this.rotatableDragger = null;
         }
     }
-    public rotate = (e: { delta: number, dist: number }) => {
+    public rotateStart() {
+        const onRotateStart = this.props.onRotateStart;
+
+        onRotateStart && onRotateStart();
+    }
+    public rotate(e: OnRotate) {
         const onRotate = this.props.onRotate;
 
         onRotate && onRotate(e);
     }
+    public rotateEnd() {
+        const onRotateEnd = this.props.onRotateEnd;
+
+        onRotateEnd && onRotateEnd();
+    }
+    public getRadByPos(pos: number[]) {
+        const { left, top, origin } = this.state;
+        const center = [left + origin[0], top + origin[1]];
+
+        return getRad(center, pos);
+    }
+    public getDirection() {
+        const { pos1, pos2, origin } = this.state;
+        const pi = Math.PI;
+        const pos1Rad = getRad(origin, pos1);
+        const pos2Rad = getRad(origin, pos2);
+
+        // 1 : clockwise
+        // -1 : counterclockwise
+        return (pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi)
+            ? 1 : -1;
+    }
     public updateRect(isNotSetState?: boolean) {
         const target = this.props.target;
         const state = this.state;
-        let left = 0;
-        let top = 0;
-        let origin = [0, 0];
-        let pos1 = [0, 0];
-        let pos2 = [0, 0];
-        let pos3 = [0, 0];
-        let pos4 = [0, 0];
-        let matrix = [1, 0, 0, 1, 0, 0];
-        let width = 0;
-        let height = 0;
-        let transformOrigin = [0, 0];
-
         if (state.target !== target) {
             if (this.draggableDragger) {
                 this.draggableDragger.unset();
@@ -194,31 +154,7 @@ export default class Moveable extends React.PureComponent<{
                 });
             }
         }
-        if (target) {
-            const rect = target.getBoundingClientRect();
-
-            left = rect.left;
-            top = rect.top;
-            width = target.offsetWidth;
-            height = target.offsetHeight;
-            matrix = caculateMatrixStack(target);
-            transformOrigin = window.getComputedStyle(target).transformOrigin!.split(" ").map(pos => parseFloat(pos));
-            [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
-        }
-        this.updateState({
-            target,
-            left,
-            top,
-            pos1,
-            pos2,
-            pos3,
-            pos4,
-            width,
-            height,
-            matrix,
-            origin,
-            transformOrigin,
-        }, isNotSetState);
+        this.updateState(getTargetInfo(target), isNotSetState);
     }
     private updateState(nextState: any, isNotSetState?: boolean) {
         const state = this.state as any;
@@ -230,22 +166,5 @@ export default class Moveable extends React.PureComponent<{
         } else {
             this.setState(nextState);
         }
-    }
-    private getRadByPos(pos: number[]) {
-        const { left, top, origin } = this.state;
-        const center = [left + origin[0], top + origin[1]];
-
-        return getRad(center, pos);
-    }
-    private getDirection() {
-        const { pos1, pos2, origin } = this.state;
-        const pi = Math.PI;
-        const pos1Rad = getRad(origin, pos1);
-        const pos2Rad = getRad(origin, pos2);
-
-        // 1 : clockwise
-        // -1 : counterclockwise
-        return (pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi)
-            ? 1 : -1;
     }
 }

@@ -127,3 +127,44 @@ export function getLineTransform(pos1: number[], pos2: number[]) {
 
     return `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad) scale(${width}, 1.2)`;
 }
+
+export function getTargetInfo(target?: HTMLElement) {
+    let left = 0;
+    let top = 0;
+    let origin = [0, 0];
+    let pos1 = [0, 0];
+    let pos2 = [0, 0];
+    let pos3 = [0, 0];
+    let pos4 = [0, 0];
+    let matrix = [1, 0, 0, 1, 0, 0];
+    let width = 0;
+    let height = 0;
+    let transformOrigin = [0, 0];
+
+    if (target) {
+        const rect = target.getBoundingClientRect();
+
+        left = rect.left;
+        top = rect.top;
+        width = target.offsetWidth;
+        height = target.offsetHeight;
+        matrix = caculateMatrixStack(target);
+        transformOrigin = window.getComputedStyle(target).transformOrigin!.split(" ").map(pos => parseFloat(pos));
+        [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
+    }
+
+    return {
+        target,
+        left,
+        top,
+        pos1,
+        pos2,
+        pos3,
+        pos4,
+        width,
+        height,
+        matrix,
+        origin,
+        transformOrigin,
+    };
+}

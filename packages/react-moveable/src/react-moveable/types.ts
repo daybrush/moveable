@@ -12,3 +12,9 @@ export interface MoveableState {
     pos3: number[];
     pos4: number[];
 }
+
+export interface OnRotate {
+    delta: number;
+    dist: number;
+    matrix: string;
+};
