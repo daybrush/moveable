@@ -1,146 +1,17 @@
 import * as React from "react";
-import { PREFIX } from "./consts";
-import { prefix } from "./utils";
+import { MOVEABLE_CSS } from "./consts";
+import {
+    prefix, getRad, getLineTransform,
+    caculateRotationMatrix, caculatePosition,
+    caculateMatrixStack,
+} from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
-import { splitBracket } from "@daybrush/utils";
-import { caculate3x2, multiple3x2 } from "./utils";
-import { prefixCSS, ref } from "framework-utils";
+import { ref } from "framework-utils";
 import { MoveableState } from "./types";
 
-const ControlBoxElement = styler("div", prefixCSS(PREFIX, `
-{
-    position: fixed;
-    width: 0;
-    height: 0;
-    left: 0;
-    top: 0;
-    z-index: 3000;
-}
-.control {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    box-sizing: border-box;
-    background: #4af;
-    margin-top: -7px;
-    margin-left: -7px;
-}
-.line {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    background: #4af;
-    transform-origin: 0px 0.5px;
-}
-.line.rotation {
-    width: 60px;
-}
-.line.rotation .control {
-    left: 100%;
-    border-color: #4af;
-    background:#fff;
-    cursor: alias;
-}
-.control.e, .control.w {
-    cursor: ew-resize;
-}
-.control.s, .control.n {
-    cursor: ns-resize;
-}
-.control.nw, .control.se {
-    cursor: nwse-resize
-}
-.control.ne, .control.sw {
-    cursor: nesw-resize;
-}
-`));
+const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
-function caculateMatrix(target: HTMLElement) {
-    let el: HTMLElement | null = target;
-    const matrixes: number[][] = [];
-    while (el) {
-        const transform = window.getComputedStyle(el).transform!;
-
-        if (transform !== "none") {
-            const value = splitBracket(transform).value!;
-
-            matrixes.push(value.split(/s*,\s*/g).map(v => parseFloat(v)));
-        }
-        el = el.parentElement;
-    }
-    matrixes.reverse();
-
-    // 1 0 0
-    // 0 1 0
-    const mat = [1, 0, 0, 1, 0, 0];
-
-    matrixes.forEach(matrix => {
-        multiple3x2(mat, matrix);
-    });
-    mat[4] = 0;
-    mat[5] = 0;
-
-    return mat;
-}
-function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
-    let [x1, y1] = caculate3x2(matrix, [0, 0, 1]);
-    let [x2, y2] = caculate3x2(matrix, [width, 0, 1]);
-    let [x3, y3] = caculate3x2(matrix, [0, height, 1]);
-    let [x4, y4] = caculate3x2(matrix, [width, height, 1]);
-    let [originX, originY] = caculate3x2(matrix, [origin[0], origin[1], 1]);
-
-    const minX = Math.min(x1, x2, x3, x4);
-    const minY = Math.min(y1, y2, y3, y4);
-
-    x1 = (x1 - minX) || 0;
-    x2 = (x2 - minX) || 0;
-    x3 = (x3 - minX) || 0;
-    x4 = (x4 - minX) || 0;
-
-    y1 = (y1 - minY) || 0;
-    y2 = (y2 - minY) || 0;
-    y3 = (y3 - minY) || 0;
-    y4 = (y4 - minY) || 0;
-
-    originX = (originX - minX) || 0;
-    originY = (originY - minY) || 0;
-
-    return [
-        [originX, originY],
-        [x1, y1],
-        [x2, y2],
-        [x3, y3],
-        [x4, y4],
-    ];
-}
-function caculateRotationMatrix(matrix: number[], rad: number) {
-    const mat = matrix.slice();
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-
-    const rotationMatrix = [cos, sin, -sin, cos, 0, 0];
-
-    return multiple3x2(mat, rotationMatrix);
-}
-
-function getRad(pos1: number[], pos2: number[]) {
-    const distX = pos2[0] - pos1[0];
-    const distY = pos2[1] - pos1[1];
-    const rad = Math.atan2(distY, distX);
-
-    return rad > 0 ? rad : rad + Math.PI * 2;
-}
-function getLineTransform(pos1: number[], pos2: number[]) {
-    const distX = pos2[0] - pos1[0];
-    const distY = pos2[1] - pos1[1];
-    const width = Math.sqrt(distX * distX + distY * distY);
-    const rad = getRad(pos1, pos2);
-
-    return `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad) scale(${width}, 1.2)`;
-}
 export default class Moveable extends React.PureComponent<{
     target?: HTMLElement,
     rotatable?: boolean,
@@ -310,6 +181,17 @@ export default class Moveable extends React.PureComponent<{
 
         onRotate && onRotate(e);
     }
+    public updateState(nextState: any, isNotSetState?: boolean) {
+        const state = this.state as any;
+
+        if (isNotSetState) {
+            for (const name in nextState) {
+                state[name] = nextState[name];
+            }
+        } else {
+            this.setState(nextState);
+        }
+    }
     public updateRect(isNotSetState?: boolean) {
         const target = this.props.target;
         const state = this.state;
@@ -343,38 +225,23 @@ export default class Moveable extends React.PureComponent<{
             top = rect.top;
             width = target.offsetWidth;
             height = target.offsetHeight;
-            matrix = caculateMatrix(target);
+            matrix = caculateMatrixStack(target);
             transformOrigin = window.getComputedStyle(target).transformOrigin!.split(" ").map(pos => parseFloat(pos));
             [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
         }
-        if (isNotSetState) {
-            state.target = target;
-            state.left = left;
-            state.top = top;
-            state.pos1 = pos1;
-            state.pos2 = pos2;
-            state.pos3 = pos3;
-            state.pos4 = pos4;
-            state.width = width;
-            state.height = height;
-            state.matrix = matrix;
-            state.origin = origin;
-            state.transformOrigin = transformOrigin;
-        } else {
-            this.setState({
-                target,
-                left,
-                top,
-                pos1,
-                pos2,
-                pos3,
-                pos4,
-                width,
-                height,
-                matrix,
-                origin,
-                transformOrigin,
-            });
-        }
+        this.updateState({
+            target,
+            left,
+            top,
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+            width,
+            height,
+            matrix,
+            origin,
+            transformOrigin,
+        }, isNotSetState);
     }
 }
