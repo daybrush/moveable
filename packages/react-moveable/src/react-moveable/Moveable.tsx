@@ -71,7 +71,7 @@ function caculateMatrix(target: HTMLElement) {
         }
         el = el.parentElement;
     }
-    // matrixes.reverse();
+    matrixes.reverse();
 
     // 1 0 0
     // 0 1 0
@@ -123,7 +123,7 @@ function caculateRotationMatrix(matrix: number[], rad: number) {
 
     const rotationMatrix = [cos, sin, -sin, cos, 0, 0];
 
-    return multiple3x2(rotationMatrix, mat);
+    return multiple3x2(mat, rotationMatrix);
 }
 
 function getRad(pos1: number[], pos2: number[]) {

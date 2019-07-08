@@ -4,8 +4,8 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-/*   transform: rotate(18deg); */
+  /* animation: App-logo-spin infinite 20s linear; */
+  transform: rotate(18deg);
   height: 40vmin;
 }
 img {
@@ -19,6 +19,7 @@ img {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+  transform: rotate(-9deg);
   color: white;
 }
 
