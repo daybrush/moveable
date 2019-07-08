@@ -99,18 +99,8 @@ export function getRotatableDragger(
                 top,
             });
         },
-        dragend: ({ datas, clientX, clientY, isDrag }) => {
+        dragend: ({ isDrag }) => {
             if (isDrag) {
-                const {
-                    delta,
-                    dist,
-                } = rotate(moveable, datas, clientX, clientY);
-
-                moveable.props.onRotate!({
-                    delta,
-                    dist,
-                    transform: `${datas.transform} rotate(${dist}deg)`,
-                });
                 moveable.props.onRotateEnd!();
                 moveable.updateRect();
             }

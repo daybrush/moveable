@@ -23,6 +23,9 @@ export function getDraggableDragger(
 
             datas.prevDist = [0, 0];
             datas.prevBeforeDist = [0, 0];
+
+
+            moveable.props.onDragStart!();
         },
         drag: ({ datas, distX, distY }) => {
 
@@ -32,7 +35,6 @@ export function getDraggableDragger(
 
             const delta = [dist[0] - prevDist[0], dist[1] - prevDist[1]];
             const beforeDelta = [beforeDist[0] - prevBeforeDist[0], beforeDist[1] - prevBeforeDist[1]];
-
 
             datas.prevDist = dist;
             datas.prevBeforeDist = beforeDist;
@@ -60,7 +62,7 @@ export function getDraggableDragger(
             });
         },
         dragend: () => {
-
-        }
+            moveable.props.onDragEnd!();
+        },
     });
 }
