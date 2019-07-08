@@ -1,7 +1,7 @@
 {
   "name": "moveable",
   "version": "0.0.1",
-  "description": "Moveable, Draggable, Resizable, Rotatable.",
+  "description": "Moveable is Draggable, Resizable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
   "sideEffects": false,

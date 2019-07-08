@@ -9,6 +9,24 @@
 </p>
 <p align="middle">A React Component that create Moveable, Draggable, Resizable, Rotatable.</p>
 
+<table width="100%" align="center">
+<tr>
+<th>Draggable</th>
+<th>Resizable</th>
+<th>Rotatable</th>
+</tr>
+<tr>
+<td align="center">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/draggable.gif">
+</td>
+<td align="center">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif">
+</td>
+<td align="center">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif">
+</td>
+</tr>
+</table>
 
 
 ## ⚙️ Installation
