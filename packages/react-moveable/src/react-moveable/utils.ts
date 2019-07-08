@@ -154,6 +154,7 @@ export function getTargetInfo(target?: HTMLElement) {
     }
 
     return {
+        transform: "",
         target,
         left,
         top,

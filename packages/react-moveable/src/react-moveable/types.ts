@@ -5,6 +5,7 @@ export interface MoveableState {
     width: number;
     height: number;
     matrix: number[];
+    transform: string;
     transformOrigin: number[];
     origin: number[];
     pos1: number[];
@@ -17,4 +18,4 @@ export interface OnRotate {
     delta: number;
     dist: number;
     matrix: string;
-};
+}

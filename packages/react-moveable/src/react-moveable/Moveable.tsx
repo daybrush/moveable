@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MOVEABLE_CSS } from "./consts";
+import { MOVEABLE_CSS, PREFIX } from "./consts";
 import {
     prefix, getRad, getLineTransform,
     getTargetInfo,
@@ -9,6 +9,7 @@ import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableState, OnRotate } from "./types";
 import { getRotatableDragger } from "./Rotatable";
+import { getDraggableDragger } from "./Draggable";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -28,6 +29,7 @@ export default class Moveable extends React.PureComponent<{
         top: 0,
         width: 0,
         height: 0,
+        transform: "",
         transformOrigin: [0, 0],
         origin: [0, 0],
         pos1: [0, 0],
@@ -40,17 +42,21 @@ export default class Moveable extends React.PureComponent<{
     private draggableDragger!: ReturnType<typeof drag> | null;
     private rotationElement!: HTMLElement;
 
+    public isMoveableElement(target: HTMLElement) {
+        return target && target.className.indexOf(PREFIX) > -1;
+    }
     public render() {
         if (this.state.target !== this.props.target) {
             this.updateRect(true);
         }
-        const { origin, left, top, pos1, pos2, pos3, pos4, target } = this.state;
+        const { origin, left, top, pos1, pos2, pos3, pos4, target, transform } = this.state;
         const rotationRad = getRad(pos1, pos2) - this.getDirection() * Math.PI / 2;
 
         return (
             <ControlBoxElement
                 className={prefix("control-box")} style={{
                     position: "fixed", left: `${left}px`, top: `${top}px`, display: target ? "block" : "none",
+                    transform,
                 }}>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos1, pos2) }}></div>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos2, pos4) }}></div>
@@ -149,9 +155,7 @@ export default class Moveable extends React.PureComponent<{
                 this.draggableDragger = null;
             }
             if (target) {
-                this.draggableDragger = drag(target, {
-                    container: window,
-                });
+                this.draggableDragger = getDraggableDragger(this, target);
             }
         }
         this.updateState(getTargetInfo(target), isNotSetState);

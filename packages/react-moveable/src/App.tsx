@@ -16,13 +16,11 @@ class App extends React.Component {
             <div>
                 <Moveable
                     target={this.state.target} ref={ref(this, "moveable")}
-                    onRotateStart={() => {
-                    }}
                     onRotate={({ delta, matrix }) => {
                         document.querySelector<HTMLElement>(".App-logo")!.style.transform = matrix;
                     }}
                 />
-                <div className="App" onClick={this.onClick} onTouchEnd={this.onClick}>
+                <div className="App" onClick={this.onClick}>
 
                     <header className="App-header">
                         <img src={logo} className="App-logo" alt="logo" />
@@ -43,7 +41,7 @@ class App extends React.Component {
     public onClick = (e: any) => {
         console.log("?", e.target.className);
         e.preventDefault();
-        if (!(ReactDOM.findDOMNode(this.moveable) as HTMLElement).contains(e.target)) {
+        if (!this.moveable.isMoveableElement(e.target)) {
             if (this.state.target === e.target) {
                 this.moveable.updateRect();
             } else {
