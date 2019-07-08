@@ -9,7 +9,7 @@
 </p>
 <p align="middle">A React Component that create Moveable, Draggable, Resizable, Rotatable.</p>
 
-<table width="100%" align="center">
+<table width="100%">
 <tr>
 <th>Draggable</th>
 <th>Resizable</th>
