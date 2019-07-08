@@ -12,7 +12,7 @@
 <table width="100%">
 <tr>
 <th>Draggable</th>
-<th>Resizable</th>
+<th>Resizable(soon)</th>
 <th>Rotatable</th>
 </tr>
 <tr>

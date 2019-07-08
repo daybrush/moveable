@@ -2,6 +2,7 @@ import { PREFIX } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket } from "@daybrush/utils";
 import { MoveableState } from "./types";
+import { isUndefined } from "util";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -203,13 +204,24 @@ export function getTargetInfo(target?: HTMLElement): MoveableState {
 
     if (target) {
         const rect = target.getBoundingClientRect();
-
+        const style = window.getComputedStyle(target);
         left = rect.left;
         top = rect.top;
         width = target.offsetWidth;
         height = target.offsetHeight;
+
+        if (isUndefined(width)) {
+            width =
+                target.clientWidth
+                + (parseFloat(style.borderLeftWidth!) || 0)
+                + (parseFloat(style.borderRightWidth!) || 0);
+            height =
+                target.clientHeight
+                + (parseFloat(style.borderTopWidth!) || 0)
+                + (parseFloat(style.borderBottomWidth!) || 0);
+        }
         [beforeMatrix, matrix] = caculateMatrixStack(target);
-        transformOrigin = window.getComputedStyle(target).transformOrigin!.split(" ").map(pos => parseFloat(pos));
+        transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
         [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
     }
 

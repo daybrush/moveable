@@ -1,6 +1,6 @@
 {
   "name": "react-moveable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A React Component that create Moveable, Draggable, Resizable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
