@@ -43,7 +43,7 @@ export default class Moveable extends React.PureComponent<{
             this.updateRect(true);
         }
         const { origin, left, top, pos1, pos2, pos3, pos4, target } = this.state;
-        const rotationRad = getRad(pos1, pos2) - Math.PI / 2;
+        const rotationRad = getRad(pos1, pos2) - this.getDirection() * Math.PI / 2;
 
         return (
             <ControlBoxElement
@@ -90,18 +90,12 @@ export default class Moveable extends React.PureComponent<{
             </ControlBoxElement>
         );
     }
-    public getRadByPos(pos: number[]) {
-        const { left, top, origin } = this.state;
-        const center = [left + origin[0], top + origin[1]];
-
-        return getRad(center, pos);
-    }
     public componentDidMount() {
         /* rotatable */
         this.rotatableDragger = drag(this.rotationElement, {
             container: window,
             dragstart: ({ datas, clientX, clientY }) => {
-                const { matrix, left, top, pos1, pos2 } = this.state;
+                const { matrix, left, top } = this.state;
 
                 datas.matrix = matrix;
                 datas.left = left;
@@ -109,14 +103,7 @@ export default class Moveable extends React.PureComponent<{
                 datas.prevRad = this.getRadByPos([clientX, clientY]);
                 datas.startRad = datas.prevRad;
                 datas.loop = 0;
-
-                const pos1Rad = this.getRadByPos(pos1);
-                const pos2Rad = this.getRadByPos(pos2);
-
-                datas.direction =
-                    (pos1Rad < pos2Rad && pos2Rad - pos1Rad < 180)
-                    || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -180)
-                    ? 1 : -1;
+                datas.direction = this.getDirection();
             },
             drag: ({ datas, clientX, clientY }) => {
                 const startRad = datas.startRad;
@@ -181,17 +168,6 @@ export default class Moveable extends React.PureComponent<{
 
         onRotate && onRotate(e);
     }
-    public updateState(nextState: any, isNotSetState?: boolean) {
-        const state = this.state as any;
-
-        if (isNotSetState) {
-            for (const name in nextState) {
-                state[name] = nextState[name];
-            }
-        } else {
-            this.setState(nextState);
-        }
-    }
     public updateRect(isNotSetState?: boolean) {
         const target = this.props.target;
         const state = this.state;
@@ -243,5 +219,33 @@ export default class Moveable extends React.PureComponent<{
             origin,
             transformOrigin,
         }, isNotSetState);
+    }
+    private updateState(nextState: any, isNotSetState?: boolean) {
+        const state = this.state as any;
+
+        if (isNotSetState) {
+            for (const name in nextState) {
+                state[name] = nextState[name];
+            }
+        } else {
+            this.setState(nextState);
+        }
+    }
+    private getRadByPos(pos: number[]) {
+        const { left, top, origin } = this.state;
+        const center = [left + origin[0], top + origin[1]];
+
+        return getRad(center, pos);
+    }
+    private getDirection() {
+        const { pos1, pos2, origin } = this.state;
+        const pi = Math.PI;
+        const pos1Rad = getRad(origin, pos1);
+        const pos2Rad = getRad(origin, pos2);
+
+        // 1 : clockwise
+        // -1 : counterclockwise
+        return (pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi)
+            ? 1 : -1;
     }
 }

@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  transform: scaleX(-0.8);
+  transform: scaleX(-0.8) translateY(30px);
 }
 
 .App-logo {
