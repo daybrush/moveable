@@ -28,7 +28,7 @@ function rotate(moveable: Moveable, datas: any, clientX: number, clientY: number
     } = moveable.state;
 
     const direction = datas.direction;
-
+    
     const matrix = caculateRotationMatrix(datas.matrix, direction * (rad - startRad));
     const prevAbsoluteOrigin = [prevLeft + prevOrigin[0], prevTop + prevOrigin[1]];
     const [origin, pos1, pos2, pos3, pos4]
@@ -100,8 +100,8 @@ export function getRotatableDragger(
             });
         },
         dragend: ({ isDrag }) => {
+            moveable.props.onRotateEnd!({ isDrag });
             if (isDrag) {
-                moveable.props.onRotateEnd!();
                 moveable.updateRect();
             }
         },

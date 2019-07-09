@@ -10,7 +10,7 @@ export function getDraggableDragger(
         container: window,
         dragstart: ({ datas, inputEvent }) => {
             const style = window.getComputedStyle(target!);
-            const { origin, matrix, beforeMatrix } = moveable.state;
+            const { matrix, beforeMatrix } = moveable.state;
 
             datas.matrix = invert3x2(matrix.slice());
             datas.beforeMatrix = invert3x2(beforeMatrix.slice());
@@ -63,8 +63,11 @@ export function getDraggableDragger(
                 transform: `translate(${distX}px, ${distY}px)`,
             });
         },
-        dragend: () => {
-            moveable.props.onDragEnd!();
+        dragend: ({ isDrag }) => {
+            moveable.props.onDragEnd!({ isDrag });
+            if (isDrag) {
+                moveable.updateRect();
+            }
         },
     });
 }

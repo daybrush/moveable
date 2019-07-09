@@ -20,6 +20,9 @@ export interface OnRotate {
     dist: number;
     transform: string;
 }
+export interface OnRotateEnd {
+    isDrag: boolean;
+}
 export interface OnDragStart {
     target: Element;
     currentTarget: Element;
@@ -35,4 +38,7 @@ export interface OnDrag {
     top: number;
     bottom: number;
     right: number;
+}
+export interface OnDragEnd {
+    isDrag: boolean;
 }

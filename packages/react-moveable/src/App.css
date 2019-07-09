@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  transform-origin: 30% 50%;
   transform: scaleX(-0.8) translateY(30px);
 }
 

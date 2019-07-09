@@ -8,7 +8,7 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState, OnRotate, OnDrag, OnDragStart } from "./types";
+import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd } from "./types";
 import { getRotatableDragger } from "./Rotatable";
 import { getDraggableDragger } from "./Draggable";
 
@@ -21,10 +21,10 @@ export default class Moveable extends React.PureComponent<{
     resizable?: boolean,
     onRotateStart?: () => void,
     onRotate?: (e: OnRotate) => void,
-    onRotateEnd?: () => void,
+    onRotateEnd?: (e: OnRotateEnd) => void,
     onDragStart?: (e: OnDragStart) => void,
     onDrag?: (e: OnDrag) => void,
-    onDragEnd?: () => void,
+    onDragEnd?: (e: OnDragEnd) => void,
 }, MoveableState> {
     public static defaultProps = {
         rotatable: true,
