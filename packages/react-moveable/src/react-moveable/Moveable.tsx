@@ -8,7 +8,7 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState, OnRotate, OnDrag } from "./types";
+import { MoveableState, OnRotate, OnDrag, OnDragStart } from "./types";
 import { getRotatableDragger } from "./Rotatable";
 import { getDraggableDragger } from "./Draggable";
 
@@ -22,7 +22,7 @@ export default class Moveable extends React.PureComponent<{
     onRotateStart?: () => void,
     onRotate?: (e: OnRotate) => void,
     onRotateEnd?: () => void,
-    onDragStart?: () => void,
+    onDragStart?: (e: OnDragStart) => void,
     onDrag?: (e: OnDrag) => void,
     onDragEnd?: () => void,
 }, MoveableState> {

@@ -8,7 +8,7 @@ export function getDraggableDragger(
 ) {
     return drag(target, {
         container: window,
-        dragstart: ({ datas }) => {
+        dragstart: ({ datas, inputEvent }) => {
             const style = window.getComputedStyle(target!);
             const { origin, matrix, beforeMatrix } = moveable.state;
 
@@ -24,8 +24,10 @@ export function getDraggableDragger(
             datas.prevDist = [0, 0];
             datas.prevBeforeDist = [0, 0];
 
-
-            moveable.props.onDragStart!();
+            return moveable.props.onDragStart!({
+                target: inputEvent.target as Element,
+                currentTarget: target,
+            });
         },
         drag: ({ datas, distX, distY }) => {
 

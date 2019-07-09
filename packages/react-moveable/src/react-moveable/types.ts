@@ -20,6 +20,11 @@ export interface OnRotate {
     dist: number;
     transform: string;
 }
+export interface OnDragStart {
+    target: Element;
+    currentTarget: Element;
+}
+
 export interface OnDrag {
     beforeDelta: number[];
     beforeDist: number[];
