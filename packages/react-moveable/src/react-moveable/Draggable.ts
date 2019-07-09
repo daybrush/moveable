@@ -18,12 +18,13 @@ export function getDraggableDragger(
             datas.top = parseFloat(style.top || "") || 0;
             datas.bottom = parseFloat(style.bottom || "") || 0;
             datas.right = parseFloat(style.right || "") || 0;
-
             datas.transform = style.transform;
-
             datas.prevDist = [0, 0];
             datas.prevBeforeDist = [0, 0];
-
+            
+            if (datas.transform === "none") {
+                datas.transform = "";
+            }
             return moveable.props.onDragStart!({
                 target: inputEvent.target as Element,
                 currentTarget: target,

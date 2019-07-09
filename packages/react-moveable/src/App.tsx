@@ -20,6 +20,7 @@ class App extends React.Component {
                         this.state.target!.style.transform = transform;
                     }}
                     onDrag={({ transform }) => {
+                        console.log(transform);
                         this.state.target!.style.transform = transform;
                     }}
                 />

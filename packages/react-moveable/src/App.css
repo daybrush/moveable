@@ -10,6 +10,9 @@
   transform: rotate(18deg);
   height: 40vmin;
 }
+.App code {
+  display: inline-block;
+}
 img {
   background: #f55;
 }
