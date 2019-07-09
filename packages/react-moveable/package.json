@@ -51,7 +51,7 @@
     "framework-utils": "^0.1.0",
     "keycon": "^0.3.0",
     "react-color": "^2.17.3",
-    "react-css-styler": "^0.1.1",
+    "react-css-styler": "^0.2.1",
     "react-pure-props": "^0.1.2",
     "scenejs": "^1.0.4"
   },

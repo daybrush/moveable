@@ -9,8 +9,8 @@ import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd } from "./types";
-import { getRotatableDragger } from "./Rotatable";
-import { getDraggableDragger } from "./Draggable";
+import { getDraggableDragger } from "./DraggableDragger";
+import { getMoveableDragger } from "./MoveableDragger";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -53,10 +53,10 @@ export default class Moveable extends React.PureComponent<{
         pos3: [0, 0],
         pos4: [0, 0],
     };
-    private rotatableDragger!: ReturnType<typeof drag> | null;
-    private resizableDragger!: ReturnType<typeof drag> | null;
+    private moveableDragger!: ReturnType<typeof drag> | null;
     private draggableDragger!: ReturnType<typeof drag> | null;
-    private rotationElement!: HTMLElement;
+    private controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
+    private controlBoxElement!: HTMLElement;
 
     public isMoveableElement(target: HTMLElement) {
         return target && target.className.indexOf(PREFIX) > -1;
@@ -70,6 +70,7 @@ export default class Moveable extends React.PureComponent<{
 
         return (
             <ControlBoxElement
+                ref={ref(this, "controlBox")}
                 className={prefix("control-box")} style={{
                     position: "fixed", left: `${left}px`, top: `${top}px`, display: target ? "block" : "none",
                     transform,
@@ -98,22 +99,17 @@ export default class Moveable extends React.PureComponent<{
     }
     public componentDidMount() {
         /* rotatable */
-        if (this.props.rotatable) {
-            this.rotatableDragger = getRotatableDragger(this, this.rotationElement);
-        }
         /* resizable */
-        if (this.props.resizable) {
-            // this.resizableDragger = getRotatableDragger(this, this.rotationElement);
-        }
+        this.moveableDragger = getMoveableDragger(this, this.controlBox.getElement());
     }
     public componentWillUnmount() {
         if (this.draggableDragger) {
             this.draggableDragger.unset();
             this.draggableDragger = null;
         }
-        if (this.rotatableDragger) {
-            this.rotatableDragger.unset();
-            this.rotatableDragger = null;
+        if (this.moveableDragger) {
+            this.moveableDragger.unset();
+            this.moveableDragger = null;
         }
     }
     public getRadByPos(pos: number[]) {

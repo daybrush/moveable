@@ -2,7 +2,7 @@ import Moveable from "./Moveable";
 import { drag } from "@daybrush/drag";
 import { caculateRotationMatrix, caculatePosition } from "./utils";
 
-function rotate(moveable: Moveable, datas: any, clientX: number, clientY: number) {
+function getRotateInfo(moveable: Moveable, datas: any, clientX: number, clientY: number) {
     const startRad = datas.startRad;
     const prevRad = datas.prevRad;
     const prevLoop = datas.loop;
@@ -51,63 +51,56 @@ function rotate(moveable: Moveable, datas: any, clientX: number, clientY: number
         top,
     };
 }
-export function getRotatableDragger(
-    moveable: Moveable,
-    rotationElement: HTMLElement,
-) {
-    return drag(rotationElement, {
-        container: window,
-        dragstart: ({ datas, clientX, clientY }) => {
-            const { target, matrix, left, top } = moveable.state;
 
-            datas.transform = window.getComputedStyle(target!).transform;
-            datas.matrix = matrix;
-            datas.left = left;
-            datas.top = top;
-            datas.prevRad = moveable.getRadByPos([clientX, clientY]);
-            datas.startRad = datas.prevRad;
-            datas.loop = 0;
-            datas.direction = moveable.getDirection();
+export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any) {
+    const { target, matrix, left, top } = moveable.state;
 
-            if (datas.transform === "none") {
-                datas.transform = "";
-            }
-        },
-        drag: ({ datas, clientX, clientY }) => {
-            const {
-                delta,
-                dist,
-                origin,
-                pos1,
-                pos2,
-                pos3,
-                pos4,
-                matrix,
-                left,
-                top,
-            } = rotate(moveable, datas, clientX, clientY);
+    datas.transform = window.getComputedStyle(target!).transform;
+    datas.matrix = matrix;
+    datas.left = left;
+    datas.top = top;
+    datas.prevRad = moveable.getRadByPos([clientX, clientY]);
+    datas.startRad = datas.prevRad;
+    datas.loop = 0;
+    datas.direction = moveable.getDirection();
 
-            moveable.props.onRotate!({
-                delta,
-                dist,
-                transform: `${datas.transform} rotate(${dist}deg)`,
-            });
-            moveable.setState({
-                origin,
-                pos1,
-                pos2,
-                pos3,
-                pos4,
-                matrix,
-                left,
-                top,
-            });
-        },
-        dragend: ({ isDrag }) => {
-            moveable.props.onRotateEnd!({ isDrag });
-            if (isDrag) {
-                moveable.updateRect();
-            }
-        },
+    if (datas.transform === "none") {
+        datas.transform = "";
+    }
+}
+export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
+    const {
+        delta,
+        dist,
+        origin,
+        pos1,
+        pos2,
+        pos3,
+        pos4,
+        matrix,
+        left,
+        top,
+    } = getRotateInfo(moveable, datas, clientX, clientY);
+
+    moveable.props.onRotate!({
+        delta,
+        dist,
+        transform: `${datas.transform} rotate(${dist}deg)`,
     });
+    moveable.setState({
+        origin,
+        pos1,
+        pos2,
+        pos3,
+        pos4,
+        matrix,
+        left,
+        top,
+    });
+}
+export function rotateEnd(moveable: Moveable, { isDrag }: any) {
+    moveable.props.onRotateEnd!({ isDrag });
+    if (isDrag) {
+        moveable.updateRect();
+    }
 }

@@ -21,7 +21,7 @@ export function getDraggableDragger(
             datas.transform = style.transform;
             datas.prevDist = [0, 0];
             datas.prevBeforeDist = [0, 0];
-            
+
             if (datas.transform === "none") {
                 datas.transform = "";
             }
