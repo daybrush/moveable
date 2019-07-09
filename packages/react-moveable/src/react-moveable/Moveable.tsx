@@ -3,6 +3,7 @@ import { MOVEABLE_CSS, PREFIX } from "./consts";
 import {
     prefix, getRad, getLineTransform,
     getTargetInfo,
+    getControlTransform,
 } from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
@@ -29,12 +30,12 @@ export default class Moveable extends React.PureComponent<{
         rotatable: true,
         draggable: true,
         resizable: true,
-        onRotateStart: () => {},
-        onRotate: () => {},
-        onRotateEnd: () => {},
-        onDragStart: () => {},
-        onDrag: () => {},
-        onDragEnd: () => {},
+        onRotateStart: () => { },
+        onRotate: () => { },
+        onRotateEnd: () => { },
+        onDragStart: () => { },
+        onDrag: () => { },
+        onDragEnd: () => { },
     };
     public state: MoveableState = {
         target: null,
@@ -83,33 +84,15 @@ export default class Moveable extends React.PureComponent<{
                 }}>
                     <div className={prefix("control", "rotation")} ref={ref(this, "rotationElement")}></div>
                 </div>
-                <div className={prefix("control", "origin")} style={{
-                    transform: `translate(${origin[0]}px,${origin[1]}px)`,
-                }}></div>
-                <div className={prefix("control", "nw")} style={{
-                    transform: `translate(${pos1[0]}px,${pos1[1]}px)`,
-                }}></div>
-                <div className={prefix("control", "n")} style={{
-                    transform: `translate(${(pos1[0] + pos2[0]) / 2}px,${(pos1[1] + pos2[1]) / 2}px)`,
-                }}></div>
-                <div className={prefix("control", "ne")} style={{
-                    transform: `translate(${pos2[0]}px,${pos2[1]}px)`,
-                }}></div>
-                <div className={prefix("control", "w")} style={{
-                    transform: `translate(${(pos1[0] + pos3[0]) / 2}px,${(pos1[1] + pos3[1]) / 2}px)`,
-                }}></div>
-                <div className={prefix("control", "e")} style={{
-                    transform: `translate(${(pos2[0] + pos4[0]) / 2}px,${(pos2[1] + pos4[1]) / 2}px)`,
-                }}></div>
-                <div className={prefix("control", "sw")} style={{
-                    transform: `translate(${pos3[0]}px,${pos3[1]}px)`,
-                }}></div>
-                <div className={prefix("control", "s")} style={{
-                    transform: `translate(${(pos3[0] + pos4[0]) / 2}px,${(pos3[1] + pos4[1]) / 2}px)`,
-                }}></div>
-                <div className={prefix("control", "se")} style={{
-                    transform: `translate(${pos4[0]}px,${pos4[1]}px)`,
-                }}></div>
+                <div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>
+                <div className={prefix("control", "nw")} style={getControlTransform(pos1)}></div>
+                <div className={prefix("control", "n")} style={getControlTransform(pos1, pos2)}></div>
+                <div className={prefix("control", "ne")} style={getControlTransform(pos2)}></div>
+                <div className={prefix("control", "w")} style={getControlTransform(pos1, pos3)}></div>
+                <div className={prefix("control", "e")} style={getControlTransform(pos2, pos4)}></div>
+                <div className={prefix("control", "sw")} style={getControlTransform(pos3)}></div>
+                <div className={prefix("control", "s")} style={getControlTransform(pos3, pos4)}></div>
+                <div className={prefix("control", "se")} style={getControlTransform(pos4)}></div>
             </ControlBoxElement>
         );
     }

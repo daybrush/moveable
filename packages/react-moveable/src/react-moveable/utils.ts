@@ -187,7 +187,15 @@ export function getLineTransform(pos1: number[], pos2: number[]) {
 
     return `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad) scale(${width}, 1.2)`;
 }
+export function getControlTransform(...poses: number[][]) {
+    const length = poses.length;
 
+    const x = poses.reduce((prev, pos) => prev + pos[0], 0) / length;
+    const y = poses.reduce((prev, pos) => prev + pos[1], 0) / length;
+    return {
+        transform: `translate(${x}px, ${y}px)`,
+    };
+}
 export function getTargetInfo(target?: HTMLElement): MoveableState {
     let left = 0;
     let top = 0;
