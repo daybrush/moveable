@@ -1,15 +1,15 @@
 import Moveable from "./Moveable";
 import { drag } from "@daybrush/drag";
-import { invert3x2, caculate3x2, prefix } from "./utils";
+import { prefix } from "./utils";
 import { hasClass } from "@daybrush/utils";
+import { scaleStart, scale, scaleEnd } from "./Scalable";
 import { rotateStart, rotate, rotateEnd } from "./Rotatable";
-import { resizeStart, resize } from "./resizable";
 
 export function getMoveableDragger(
     moveable: Moveable,
     target: HTMLElement,
 ) {
-    let type: "rotate" | "resize" | "" = "";
+    let type: "rotate" | "scale" | "";
 
     return drag(target, {
         container: window,
@@ -22,8 +22,8 @@ export function getMoveableDragger(
                     type = "rotate";
                     return rotateStart(moveable, { datas, clientX, clientY });
                 } else {
-                    type = "resize";
-                    return resizeStart(moveable, inputTarget, { datas });
+                    type = "scale";
+                    return scaleStart(moveable, inputTarget, { datas });
                 }
             } else {
                 return false;
@@ -34,8 +34,8 @@ export function getMoveableDragger(
                 return;
             } else if (type === "rotate") {
                 return rotate(moveable, { datas, clientX, clientY });
-            } else if (type === "resize") {
-                return resize(moveable, { datas, distX, distY });
+            } else if (type === "scale") {
+                return scale(moveable, { datas, distX, distY });
             }
         },
         dragend: ({ isDrag }) => {
@@ -43,6 +43,8 @@ export function getMoveableDragger(
                 return;
             } else if (type === "rotate") {
                 return rotateEnd(moveable, { isDrag });
+            } else if (type === "scale") {
+                return scaleEnd(moveable, { isDrag });
             }
         },
     });

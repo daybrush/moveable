@@ -42,3 +42,13 @@ export interface OnDrag {
 export interface OnDragEnd {
     isDrag: boolean;
 }
+
+export interface OnScale {
+    scale: number[];
+    dist: number[];
+    delta: number[];
+    transform: string;
+}
+export interface OnScaleEnd {
+    isDrag: boolean;
+}

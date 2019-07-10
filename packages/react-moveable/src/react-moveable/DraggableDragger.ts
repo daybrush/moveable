@@ -43,9 +43,9 @@ export function getDraggableDragger(
             datas.prevBeforeDist = beforeDist;
 
             const left = datas.left + beforeDist[0];
-            const top = datas.left + beforeDist[0];
-            const right = datas.left + beforeDist[0];
-            const bottom = datas.left + beforeDist[0];
+            const top = datas.top + beforeDist[1];
+            const right = datas.right - beforeDist[0];
+            const bottom = datas.bottom - beforeDist[1];
             const transform = `${datas.transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
             moveable.props.onDrag!({

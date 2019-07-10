@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import Moveable from "./react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
@@ -12,15 +11,22 @@ class App extends React.Component {
     };
     public deg = 18;
     public render() {
+        const target = this.state.target;
+
         return (
             <div>
                 <Moveable
-                    target={this.state.target} ref={ref(this, "moveable")}
+                    target={target} ref={ref(this, "moveable")}
                     onRotate={({ delta, transform }) => {
-                        this.state.target!.style.transform = transform;
+                        target!.style.transform = transform;
                     }}
-                    onDrag={({ transform }) => {
-                        this.state.target!.style.transform = transform;
+                    onDrag={({ transform, left, top }) => {
+                        // target!.style.left = `${left}px`;
+                        // target!.style.top = `${top}px`;
+                        target!.style.transform = transform;
+                    }}
+                    onScale={({ transform }) => {
+                        target!.style.transform = transform;
                     }}
                 />
                 <div className="App" onMouseDown={this.onClick}>

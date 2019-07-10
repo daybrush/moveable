@@ -8,7 +8,7 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd } from "./types";
+import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd, OnScaleEnd, OnScale } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
 
@@ -18,6 +18,7 @@ export default class Moveable extends React.PureComponent<{
     target?: HTMLElement,
     rotatable?: boolean,
     draggable?: boolean,
+    scalable?: boolean,
     resizable?: boolean,
     onRotateStart?: () => void,
     onRotate?: (e: OnRotate) => void,
@@ -25,9 +26,9 @@ export default class Moveable extends React.PureComponent<{
     onDragStart?: (e: OnDragStart) => void,
     onDrag?: (e: OnDrag) => void,
     onDragEnd?: (e: OnDragEnd) => void,
-    onResizeStart?: () => void,
-    onResize?: () => void,
-    onResizeEnd?: () => void,
+    onScaleStart?: () => void,
+    onScale?: (e: OnScale) => void,
+    onScaleEnd?: (e: OnScaleEnd) => void,
 }, MoveableState> {
     public static defaultProps = {
         rotatable: true,
@@ -39,9 +40,9 @@ export default class Moveable extends React.PureComponent<{
         onDragStart: () => { },
         onDrag: () => { },
         onDragEnd: () => { },
-        onResizeStart: () => { },
-        onResize: () => { },
-        onResizeEnd: () => { },
+        onScaleStart: () => { },
+        onScale: () => { },
+        onScaleEnd: () => { },
     };
     public state: MoveableState = {
         target: null,
@@ -72,14 +73,15 @@ export default class Moveable extends React.PureComponent<{
             this.updateRect(true);
         }
         const { origin, left, top, pos1, pos2, pos3, pos4, target, transform } = this.state;
-        const rotationRad = getRad(pos1, pos2) - this.getDirection() * Math.PI / 2;
+        const direction = this.getDirection();
+        const rotationRad = getRad(pos1, pos2) - direction * Math.PI / 2;
 
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
-                className={prefix("control-box")} style={{
-                    position: "fixed", left: `${left}px`, top: `${top}px`, display: target ? "block" : "none",
-                    transform,
+                className={prefix("control-box", direction === -1 ? "reverse" : "")} style={{
+                    position: "fixed", display: target ? "block" : "none",
+                    transform: `translate(${left}px, ${top}px) ${transform}`,
                 }}>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos1, pos2) }}></div>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos2, pos4) }}></div>

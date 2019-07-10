@@ -29,7 +29,7 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     transform-origin: 0px 0.5px;
 }
 .line.rotation {
-    width: 60px;
+    width: 40px;
 }
 .line.rotation .control {
     left: 100%;
@@ -43,10 +43,10 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .control.s, .control.n {
     cursor: ns-resize;
 }
-.control.nw, .control.se {
-    cursor: nwse-resize
+.control.nw, .control.se, .reverse .control.ne, .reverse .control.sw {
+    cursor: nwse-resize;
 }
-.control.ne, .control.sw {
+.control.ne, .control.sw, .reverse .control.nw, .reverse .control.se {
     cursor: nesw-resize;
 }
 `);

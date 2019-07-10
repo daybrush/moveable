@@ -3,7 +3,9 @@
   transform-origin: 30% 50%;
   transform: scaleX(-0.8) translateY(30px);
 }
-
+.App * {
+  position: relative;
+}
 .App-logo {
   position: relative;
   /* animation: App-logo-spin infinite 20s linear; */
