@@ -6,12 +6,16 @@
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">Moveable is Draggable, Resizable, Rotatable.</p>
+<p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable</p>
 
 <table width="100%" align="center">
 <tr>
+<th colspan="4">Moveable</th>
+</tr>
+<tr>
 <th>Draggable</th>
 <th>Resizable</th>
+<th>Scalaable</th>
 <th>Rotatable</th>
 </tr>
 <tr>
@@ -22,6 +26,9 @@
 <img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif">
 </td>
 <td align="center">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif">
+</td>
+<td align="center">
 <img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif">
 </td>
 </tr>
@@ -29,7 +36,7 @@
 
 
 ## 📦 Packages
-* [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Rotatable.
+* [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
 
 ## ⭐️ Show Your Support
 Please give a ⭐️ if this project helped you!
