@@ -25,6 +25,9 @@ export default class Moveable extends React.PureComponent<{
     onDragStart?: (e: OnDragStart) => void,
     onDrag?: (e: OnDrag) => void,
     onDragEnd?: (e: OnDragEnd) => void,
+    onResizeStart?: () => void,
+    onResize?: () => void,
+    onResizeEnd?: () => void,
 }, MoveableState> {
     public static defaultProps = {
         rotatable: true,
@@ -36,6 +39,9 @@ export default class Moveable extends React.PureComponent<{
         onDragStart: () => { },
         onDrag: () => { },
         onDragEnd: () => { },
+        onResizeStart: () => { },
+        onResize: () => { },
+        onResizeEnd: () => { },
     };
     public state: MoveableState = {
         target: null,
@@ -86,14 +92,22 @@ export default class Moveable extends React.PureComponent<{
                     <div className={prefix("control", "rotation")} ref={ref(this, "rotationElement")}></div>
                 </div>
                 <div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>
-                <div className={prefix("control", "nw")} style={getControlTransform(pos1)}></div>
-                <div className={prefix("control", "n")} style={getControlTransform(pos1, pos2)}></div>
-                <div className={prefix("control", "ne")} style={getControlTransform(pos2)}></div>
-                <div className={prefix("control", "w")} style={getControlTransform(pos1, pos3)}></div>
-                <div className={prefix("control", "e")} style={getControlTransform(pos2, pos4)}></div>
-                <div className={prefix("control", "sw")} style={getControlTransform(pos3)}></div>
-                <div className={prefix("control", "s")} style={getControlTransform(pos3, pos4)}></div>
-                <div className={prefix("control", "se")} style={getControlTransform(pos4)}></div>
+                <div className={prefix("control", "nw")} data-position="nw"
+                    style={getControlTransform(pos1)}></div>
+                <div className={prefix("control", "n")} data-position="n"
+                    style={getControlTransform(pos1, pos2)}></div>
+                <div className={prefix("control", "ne")} data-position="ne"
+                    style={getControlTransform(pos2)}></div>
+                <div className={prefix("control", "w")} data-position="w"
+                    style={getControlTransform(pos1, pos3)}></div>
+                <div className={prefix("control", "e")} data-position="e"
+                    style={getControlTransform(pos2, pos4)}></div>
+                <div className={prefix("control", "sw")} data-position="sw"
+                    style={getControlTransform(pos3)}></div>
+                <div className={prefix("control", "s")} data-position="s"
+                    style={getControlTransform(pos3, pos4)}></div>
+                <div className={prefix("control", "se")} data-position="se"
+                    style={getControlTransform(pos4)}></div>
             </ControlBoxElement>
         );
     }

@@ -1,5 +1,4 @@
 import Moveable from "./Moveable";
-import { drag } from "@daybrush/drag";
 import { caculateRotationMatrix, caculatePosition } from "./utils";
 
 function getRotateInfo(moveable: Moveable, datas: any, clientX: number, clientY: number) {

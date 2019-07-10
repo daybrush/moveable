@@ -196,6 +196,44 @@ export function getControlTransform(...poses: number[][]) {
         transform: `translate(${x}px, ${y}px)`,
     };
 }
+export function getSize(
+    target: HTMLElement,
+    style: CSSStyleDeclaration,
+    isOffset?: boolean,
+    isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
+) {
+    let width = target.offsetWidth;
+    let height = target.offsetHeight;
+    const hasOffset = !isUndefined(width);
+
+    if ((isOffset || isBoxSizing) && hasOffset) {
+        return [width, height];
+    }
+    width = target.clientWidth;
+    height = target.clientHeight;
+
+    if (isOffset || isBoxSizing) {
+        const borderLeft = parseFloat(style.borderLeftWidth!) || 0;
+        const borderRight = parseFloat(style.borderRightWidth!) || 0;
+        const borderTop = parseFloat(style.borderTopWidth!) || 0;
+        const borderBottom = parseFloat(style.borderBottomWidth!) || 0;
+
+        return [
+            width + borderLeft + borderRight,
+            height + borderTop + borderBottom,
+        ];
+    } else {
+        const paddingLeft = parseFloat(style.paddingLeft!) || 0;
+        const paddingRight = parseFloat(style.paddingRight!) || 0;
+        const paddingTop = parseFloat(style.paddingTop!) || 0;
+        const paddingBottom = parseFloat(style.paddingBottom!) || 0;
+
+        return [
+            width - paddingLeft - paddingRight,
+            height - paddingTop - paddingBottom,
+        ];
+    }
+}
 export function getTargetInfo(target?: HTMLElement): MoveableState {
     let left = 0;
     let top = 0;
@@ -219,14 +257,7 @@ export function getTargetInfo(target?: HTMLElement): MoveableState {
         height = target.offsetHeight;
 
         if (isUndefined(width)) {
-            width =
-                target.clientWidth
-                + (parseFloat(style.borderLeftWidth!) || 0)
-                + (parseFloat(style.borderRightWidth!) || 0);
-            height =
-                target.clientHeight
-                + (parseFloat(style.borderTopWidth!) || 0)
-                + (parseFloat(style.borderBottomWidth!) || 0);
+            [width, height] = getSize(target, style, true);
         }
         [beforeMatrix, matrix] = caculateMatrixStack(target);
         transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
