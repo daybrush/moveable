@@ -1,11 +1,12 @@
 import Moveable from "./Moveable";
 import { caculatePosition, invert3x2, caculate3x2, multiple3x2, getRad, getSize } from "./utils";
 
-export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
-    if (!position) {
+export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, inputEvent }: any) {
+    const target = moveable.props.target;
+
+    if (!target || !position) {
         return false;
     }
-    const target = moveable.props.target;
     const {
         beforeMatrix,
     } = moveable.state;
@@ -18,6 +19,10 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     datas.height = height;
     datas.prevWidth = 0;
     datas.prevHeight = 0;
+
+    moveable.props.onResizeStart!({
+        target,
+    });
 }
 export function resize(moveable: Moveable, { datas, distX, distY }: any) {
     const {
@@ -49,9 +54,8 @@ export function resize(moveable: Moveable, { datas, distX, distY }: any) {
     datas.prevWidth = distWidth;
     datas.prevHeight = distHeight;
 
-
-    console.log(nextWidth, nextHeight);
     moveable.props.onResize!({
+        target: moveable.props.target!,
         width: nextWidth,
         height: nextHeight,
         dist: [distWidth, distHeight],
@@ -61,7 +65,10 @@ export function resize(moveable: Moveable, { datas, distX, distY }: any) {
     moveable.updateRect();
 }
 export function resizeEnd(moveable: Moveable, { isDrag }: any) {
-    moveable.props.onScaleEnd!({ isDrag });
+    moveable.props.onScaleEnd!({
+        target: moveable.props.target!,
+        isDrag,
+    });
     if (isDrag) {
         moveable.updateRect();
     }

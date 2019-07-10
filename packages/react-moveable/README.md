@@ -43,15 +43,89 @@ $ npm i react-moveable
 
 ## 🚀 How to use
 ```tsx
-import Moveable from "react-moveable";
+import Moveable, {
+    OnDragStart
+    OnDrag,
+    OnDragEnd,
+    OnResizableStart
+    OnResizable,
+    OnResizableEnd,
+    OnScaleStart
+    OnScale,
+    OnScaleEnd,
+    OnRotateStart
+    OnRotate,
+    OnRotateEnd,
+} from "react-moveable";
 
 render() {
     return (
         <Moveable
             target={document.querySelector(".target")}
+
+            /* draggable */
             draggable={true}
+            onDragStart={({ target }: OnDragStart) => {
+                console.log("onDragStart", target);
+            }}
+            onDrag={({
+                target,
+                beforeDelta, beforeDist,
+                left, top,
+                right, bottom,
+                delta, dist,
+                transform,
+            }: OnDrag) => {
+                console.log("onDrag left, top", left, top);
+                // target!.style.left = `${left}px`;
+                // target!.style.top = `${top}px`;
+                console.log("onDrag translate", dist);
+                target!.style.transform = transform;
+            }}
+            onDragEnd={({ target, isDrag }: OnDragEnd) => {
+                console.log("onDragEnd", target, isDrag);
+            }}
+            /* resizable */
             resizable={true}
+            onResizeStart={({ target }: OnResizeStart) => {
+                console.log("onResizeStart", target);
+            }}
+            onResize={({ target, width, height, dist, delta }: OnResize) => {
+                console.log("onResize", target);
+                delta[0] && (target!.style.width = `${width}px`);
+                delta[1] && (target!.style.height = `${height}px`);
+            }}
+            onResizeEnd={({ target, isDrag }: OnResizeEnd) => {
+                console.log("onResizeEnd", target, isDrag);
+            }}
+
+            /* scalable */
+            scalable={true}
+            onScaleStart={({ target }: OnScalableStart) => {
+                console.log("onScaleStart", target);
+            }}
+            onScale={({
+                target, scale, dist, delta, transform,
+            }: OnScale) => {
+                console.log("onScale scale", scale);
+                target!.style.transform = transform;
+            }}
+            onScaleEnd={({ target, isDrag }: OnScaleEnd) => {
+                console.log("onScaleEnd", target, isDrag);
+            }}
+
+            /* rotatable */
             rotatable={true}
+            onRotateStart={({ target }: OnRotateStart) => {
+                console.log("onRotateStart", target);
+            }}
+            onRotate={({ target, delta, dist, transform }: onRotate) => {
+                console.log("onRotate", dist);
+                target!.style.transform = transform;
+            }}
+            onRotateEnd={({ target, isDrag }: OnRotateEnd) => {
+                console.log("onRotateEnd", target, isDrag);
+            }}
         />
     )
 }

@@ -15,20 +15,12 @@ export interface MoveableState {
     pos4: number[];
 }
 
-export interface OnRotate {
-    delta: number;
-    dist: number;
-    transform: string;
-}
-export interface OnRotateEnd {
-    isDrag: boolean;
-}
 export interface OnDragStart {
-    target: Element;
-    currentTarget: Element;
+    target: HTMLElement | SVGElement;
 }
 
 export interface OnDrag {
+    target: HTMLElement | SVGElement;
     beforeDelta: number[];
     beforeDist: number[];
     delta: number[];
@@ -40,25 +32,50 @@ export interface OnDrag {
     right: number;
 }
 export interface OnDragEnd {
+    target: HTMLElement | SVGElement;
     isDrag: boolean;
 }
 
+export interface OnScaleStart {
+    target: HTMLElement | SVGElement;
+}
 export interface OnScale {
+    target: HTMLElement | SVGElement;
     scale: number[];
     dist: number[];
     delta: number[];
     transform: string;
 }
 export interface OnScaleEnd {
+    target: HTMLElement | SVGElement;
     isDrag: boolean;
 }
 
+export interface OnResizeStart {
+    target: HTMLElement | SVGElement;
+}
 export interface OnResize {
+    target: HTMLElement | SVGElement;
     width: number;
     height: number;
     dist: number[];
     delta: number[];
 }
 export interface OnResizeEnd {
+    target: HTMLElement | SVGElement;
+    isDrag: boolean;
+}
+
+export interface OnRotateStart {
+    target: HTMLElement | SVGElement;
+}
+export interface OnRotate {
+    target: HTMLElement | SVGElement;
+    delta: number;
+    dist: number;
+    transform: string;
+}
+export interface OnRotateEnd {
+    target: HTMLElement | SVGElement;
     isDrag: boolean;
 }

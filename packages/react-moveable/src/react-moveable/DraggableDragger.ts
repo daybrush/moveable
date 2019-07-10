@@ -8,7 +8,7 @@ export function getDraggableDragger(
 ) {
     return drag(target, {
         container: window,
-        dragstart: ({ datas, inputEvent }) => {
+        dragstart: ({ datas }) => {
             const style = window.getComputedStyle(target!);
             const { matrix, beforeMatrix } = moveable.state;
 
@@ -26,8 +26,7 @@ export function getDraggableDragger(
                 datas.transform = "";
             }
             return moveable.props.onDragStart!({
-                target: inputEvent.target as Element,
-                currentTarget: target,
+                target,
             });
         },
         drag: ({ datas, distX, distY }) => {
@@ -49,6 +48,7 @@ export function getDraggableDragger(
             const transform = `${datas.transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
             moveable.props.onDrag!({
+                target,
                 transform,
                 dist,
                 delta,
@@ -65,7 +65,7 @@ export function getDraggableDragger(
             });
         },
         dragend: ({ isDrag }) => {
-            moveable.props.onDragEnd!({ isDrag });
+            moveable.props.onDragEnd!({ target, isDrag });
             if (isDrag) {
                 moveable.updateRect();
             }

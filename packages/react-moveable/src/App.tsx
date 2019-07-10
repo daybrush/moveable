@@ -13,28 +13,28 @@ class App extends React.Component {
     };
     public deg = 18;
     public render() {
-        const target = this.state.target;
+        const selectedTarget = this.state.target;
         const isResizable = this.state.isResizable;
 
         return (
             <div>
                 <Moveable
-                    target={target}
+                    target={selectedTarget}
                     ref={ref(this, "moveable")}
                     scalable={!isResizable}
                     resizable={isResizable}
-                    onRotate={({ delta, transform }) => {
+                    onRotate={({ target, transform }) => {
                         target!.style.transform = transform;
                     }}
-                    onDrag={({ transform, left, top }) => {
+                    onDrag={({ target, transform }) => {
                         // target!.style.left = `${left}px`;
                         // target!.style.top = `${top}px`;
                         target!.style.transform = transform;
                     }}
-                    onScale={({ transform }) => {
+                    onScale={({ target, transform }) => {
                         target!.style.transform = transform;
                     }}
-                    onResize={({ width, height, delta }) => {
+                    onResize={({ target, width, height, delta }) => {
                         delta[0] && (target!.style.width = `${width}px`);
                         delta[1] && (target!.style.height = `${height}px`);
                     }}

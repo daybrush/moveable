@@ -8,7 +8,13 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd, OnScaleEnd, OnScale, OnResize, OnResizeEnd } from "./types";
+import {
+    MoveableState,
+    OnDrag, OnDragStart, OnDragEnd,
+    OnRotateStart, OnRotate, OnRotateEnd,
+    OnScaleStart, OnScaleEnd, OnScale,
+    OnResizeStart, OnResize, OnResizeEnd,
+} from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
 
@@ -21,7 +27,7 @@ export default class Moveable extends React.PureComponent<{
     scalable?: boolean,
     resizable?: boolean,
 
-    onRotateStart?: () => void,
+    onRotateStart?: (e: OnRotateStart) => void,
     onRotate?: (e: OnRotate) => void,
     onRotateEnd?: (e: OnRotateEnd) => void,
 
@@ -29,11 +35,11 @@ export default class Moveable extends React.PureComponent<{
     onDrag?: (e: OnDrag) => void,
     onDragEnd?: (e: OnDragEnd) => void,
 
-    onScaleStart?: () => void,
+    onScaleStart?: (e: OnScaleStart) => void,
     onScale?: (e: OnScale) => void,
     onScaleEnd?: (e: OnScaleEnd) => void,
 
-    onReiszeStart?: () => void,
+    onResizeStart?: (e: OnResizeStart) => void,
     onResize?: (e: OnResize) => void,
     onResizeEnd?: (e: OnResizeEnd) => void,
 
@@ -75,7 +81,6 @@ export default class Moveable extends React.PureComponent<{
     private moveableDragger!: ReturnType<typeof drag> | null;
     private draggableDragger!: ReturnType<typeof drag> | null;
     private controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
-    private controlBoxElement!: HTMLElement;
 
     public isMoveableElement(target: HTMLElement) {
         return target && target.className.indexOf(PREFIX) > -1;

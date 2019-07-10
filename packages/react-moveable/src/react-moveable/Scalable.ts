@@ -2,11 +2,11 @@ import Moveable from "./Moveable";
 import { caculatePosition, invert3x2, caculate3x2, multiple3x2, getRad } from "./utils";
 
 export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
-    if (!position) {
+    const target = moveable.props.target;
+    if (!position || !target) {
         return false;
     }
-    const target = moveable.props.target;
-    const style = window.getComputedStyle(target!);
+    const style = window.getComputedStyle(target);
     const {
         matrix,
         width,
@@ -31,6 +31,10 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
     if (datas.transform === "none") {
         datas.transform = "";
     }
+
+    moveable.props.onScaleStart!({
+        target,
+    });
 }
 export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     const {
@@ -74,6 +78,7 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
 
     datas.prevDist = [scaleX, scaleY];
     moveable.props.onScale!({
+        target: moveable.props.target!,
         scale: [scaleX, scaleY],
         dist: [scaleX - 1, scaleY - 1],
         delta: [scaleX - prevDist[0], scaleY - prevDist[1]],
@@ -87,7 +92,10 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     });
 }
 export function scaleEnd(moveable: Moveable, { isDrag }: any) {
-    moveable.props.onScaleEnd!({ isDrag });
+    moveable.props.onScaleEnd!({
+        target: moveable.props.target!,
+        isDrag,
+    });
     if (isDrag) {
         moveable.updateRect();
     }

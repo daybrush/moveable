@@ -52,7 +52,12 @@ function getRotateInfo(moveable: Moveable, datas: any, clientX: number, clientY:
 }
 
 export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any) {
-    const { target, matrix, left, top } = moveable.state;
+    const target = moveable.props.target;
+
+    if (!target) {
+        return false;
+    }
+    const { matrix, left, top } = moveable.state;
 
     datas.transform = window.getComputedStyle(target!).transform;
     datas.matrix = matrix;
@@ -66,6 +71,9 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     if (datas.transform === "none") {
         datas.transform = "";
     }
+    moveable.props.onRotateStart!({
+        target,
+    });
 }
 export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
     const {
@@ -82,6 +90,7 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
     } = getRotateInfo(moveable, datas, clientX, clientY);
 
     moveable.props.onRotate!({
+        target: moveable.props.target!,
         delta,
         dist,
         transform: `${datas.transform} rotate(${dist}deg)`,
@@ -98,7 +107,10 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
     });
 }
 export function rotateEnd(moveable: Moveable, { isDrag }: any) {
-    moveable.props.onRotateEnd!({ isDrag });
+    moveable.props.onRotateEnd!({
+        target: moveable.props.target!,
+        isDrag,
+    });
     if (isDrag) {
         moveable.updateRect();
     }
