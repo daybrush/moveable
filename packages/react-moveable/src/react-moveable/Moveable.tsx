@@ -8,42 +8,13 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import {
-    MoveableState,
-    OnDrag, OnDragStart, OnDragEnd,
-    OnRotateStart, OnRotate, OnRotateEnd,
-    OnScaleStart, OnScaleEnd, OnScale,
-    OnResizeStart, OnResize, OnResizeEnd,
-} from "./types";
+import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
-export default class Moveable extends React.PureComponent<{
-    target?: HTMLElement,
-    rotatable?: boolean,
-    draggable?: boolean,
-    scalable?: boolean,
-    resizable?: boolean,
-
-    onRotateStart?: (e: OnRotateStart) => void,
-    onRotate?: (e: OnRotate) => void,
-    onRotateEnd?: (e: OnRotateEnd) => void,
-
-    onDragStart?: (e: OnDragStart) => void,
-    onDrag?: (e: OnDrag) => void,
-    onDragEnd?: (e: OnDragEnd) => void,
-
-    onScaleStart?: (e: OnScaleStart) => void,
-    onScale?: (e: OnScale) => void,
-    onScaleEnd?: (e: OnScaleEnd) => void,
-
-    onResizeStart?: (e: OnResizeStart) => void,
-    onResize?: (e: OnResize) => void,
-    onResizeEnd?: (e: OnResizeEnd) => void,
-
-}, MoveableState> {
+export default class Moveable extends React.PureComponent<MoveableProps, MoveableState> {
     public static defaultProps = {
         rotatable: true,
         draggable: true,

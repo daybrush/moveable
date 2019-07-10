@@ -1,3 +1,26 @@
+export interface MoveableProps {
+    target?: HTMLElement;
+    rotatable?: boolean;
+    draggable?: boolean;
+    scalable?: boolean;
+    resizable?: boolean;
+
+    onRotateStart?: (e: OnRotateStart) => void;
+    onRotate?: (e: OnRotate) => void;
+    onRotateEnd?: (e: OnRotateEnd) => void;
+
+    onDragStart?: (e: OnDragStart) => void;
+    onDrag?: (e: OnDrag) => void;
+    onDragEnd?: (e: OnDragEnd) => void;
+
+    onScaleStart?: (e: OnScaleStart) => void;
+    onScale?: (e: OnScale) => void;
+    onScaleEnd?: (e: OnScaleEnd) => void;
+
+    onResizeStart?: (e: OnResizeStart) => void;
+    onResize?: (e: OnResize) => void;
+    onResizeEnd?: (e: OnResizeEnd) => void;
+}
 export interface MoveableState {
     target: HTMLElement | null | undefined;
     left: number;
