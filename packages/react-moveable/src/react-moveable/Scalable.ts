@@ -1,5 +1,5 @@
 import Moveable from "./Moveable";
-import { caculatePosition, invert3x2, getSize, caculate3x2, multiple3x2 } from "./utils";
+import { caculatePosition, invert3x2, caculate3x2, multiple3x2, getRad } from "./utils";
 
 export function scaleStart(moveable: Moveable, positionTarget: Element, { datas }: any) {
     const position = positionTarget.getAttribute("data-position")!;
@@ -27,12 +27,10 @@ export function scaleStart(moveable: Moveable, positionTarget: Element, { datas 
     datas.matrix = invert3x2(matrix.slice());
     datas.transform = style.transform;
     datas.prevDist = [1, 1];
-    datas.direction = moveable.getDirection();
     datas.position = pos;
     datas.width = width;
     datas.height = height;
     datas.transformOrigin = transformOrigin;
-
     datas.originalMatrix = matrix;
     datas.originalOrigin = origin;
     datas.left = left;
@@ -54,6 +52,7 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
         top,
         transformOrigin,
         originalOrigin,
+        transform,
     } = datas;
     const dist = caculate3x2(matrix, [distX, distY, 1]);
     let distWidth = position[0] * dist[0];
@@ -61,11 +60,15 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
 
     // diagonal
     if (position[0] && position[1]) {
-        const distDiagonal = Math.max(Math.abs(distWidth), Math.abs(distHeight));
+        const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+        const rad = getRad([0, 0], dist);
+        const standardRad = getRad([0, 0], position);
+        const distDiagonal = Math.cos(rad - standardRad) * size;
 
-        distWidth = (distWidth < 0 ? -1 : 1) * distDiagonal;
-        distHeight = (distHeight < 0 ? -1 : 1) * distDiagonal * height / width;
+        distWidth = distDiagonal;
+        distHeight = distDiagonal * height / width;
     }
+
     const nextWidth = width + distWidth;
     const nextHeight = height + distHeight;
     const scaleX = nextWidth / width;
@@ -82,7 +85,7 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
         scale: [scaleX, scaleY],
         dist: [scaleX - 1, scaleY - 1],
         delta: [scaleX - prevDist[0], scaleY - prevDist[1]],
-        transform: `${datas.transform} scale(${scaleX}, ${scaleY})`,
+        transform: `${transform} scale(${scaleX}, ${scaleY})`,
     });
 
     moveable.setState({
