@@ -10,7 +10,8 @@
   position: relative;
   /* animation: App-logo-spin infinite 20s linear; */
   transform: rotate(18deg);
-  height: 40vmin;
+  width: 300px;
+  height: 200px;
 }
 .App code {
   display: inline-block;

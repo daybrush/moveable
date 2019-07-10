@@ -16,7 +16,7 @@
 <tr>
 <th>Draggable</th>
 <th>Resizable</th>
-<th>Scalaable</th>
+<th>Scalable</th>
 <th>Rotatable</th>
 </tr>
 <tr>

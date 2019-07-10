@@ -8,7 +8,7 @@ import {
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd, OnScaleEnd, OnScale } from "./types";
+import { MoveableState, OnRotate, OnDrag, OnDragStart, OnRotateEnd, OnDragEnd, OnScaleEnd, OnScale, OnResize, OnResizeEnd } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
 
@@ -20,20 +20,29 @@ export default class Moveable extends React.PureComponent<{
     draggable?: boolean,
     scalable?: boolean,
     resizable?: boolean,
+
     onRotateStart?: () => void,
     onRotate?: (e: OnRotate) => void,
     onRotateEnd?: (e: OnRotateEnd) => void,
+
     onDragStart?: (e: OnDragStart) => void,
     onDrag?: (e: OnDrag) => void,
     onDragEnd?: (e: OnDragEnd) => void,
+
     onScaleStart?: () => void,
     onScale?: (e: OnScale) => void,
     onScaleEnd?: (e: OnScaleEnd) => void,
+
+    onReiszeStart?: () => void,
+    onResize?: (e: OnResize) => void,
+    onResizeEnd?: (e: OnResizeEnd) => void,
+
 }, MoveableState> {
     public static defaultProps = {
         rotatable: true,
         draggable: true,
-        resizable: true,
+        scalable: true,
+        resizable: false,
         onRotateStart: () => { },
         onRotate: () => { },
         onRotateEnd: () => { },
@@ -43,6 +52,9 @@ export default class Moveable extends React.PureComponent<{
         onScaleStart: () => { },
         onScale: () => { },
         onScaleEnd: () => { },
+        onResizeStart: () => { },
+        onResize: () => { },
+        onResizeEnd: () => { },
     };
     public state: MoveableState = {
         target: null,
@@ -116,6 +128,7 @@ export default class Moveable extends React.PureComponent<{
     public componentDidMount() {
         /* rotatable */
         /* resizable */
+        /* scalable */
         this.moveableDragger = getMoveableDragger(this, this.controlBox.getElement());
     }
     public componentWillUnmount() {

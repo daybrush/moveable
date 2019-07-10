@@ -52,3 +52,13 @@ export interface OnScale {
 export interface OnScaleEnd {
     isDrag: boolean;
 }
+
+export interface OnResize {
+    width: number;
+    height: number;
+    dist: number[];
+    delta: number[];
+}
+export interface OnResizeEnd {
+    isDrag: boolean;
+}

@@ -3,20 +3,26 @@ import Moveable from "./react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";
+import KeyController from "keycon";
 
 class App extends React.Component {
     public moveable: Moveable;
     public state = {
         target: null,
+        isResizable: true,
     };
     public deg = 18;
     public render() {
         const target = this.state.target;
+        const isResizable = this.state.isResizable;
 
         return (
             <div>
                 <Moveable
-                    target={target} ref={ref(this, "moveable")}
+                    target={target}
+                    ref={ref(this, "moveable")}
+                    scalable={!isResizable}
+                    resizable={isResizable}
                     onRotate={({ delta, transform }) => {
                         target!.style.transform = transform;
                     }}
@@ -27,6 +33,10 @@ class App extends React.Component {
                     }}
                     onScale={({ transform }) => {
                         target!.style.transform = transform;
+                    }}
+                    onResize={({ width, height, delta }) => {
+                        delta[0] && (target!.style.width = `${width}px`);
+                        delta[1] && (target!.style.height = `${height}px`);
                     }}
                 />
                 <div className="App" onMouseDown={this.onClick}>
@@ -50,6 +60,14 @@ class App extends React.Component {
     public onClick = (e: any) => {
         console.log("?", e.target.className);
         e.preventDefault();
+
+        const keycon = new KeyController(window);
+
+        keycon.keydown("shift", () => {
+            this.setState({ isResizable: false });
+        }).keyup("shift", () => {
+            this.setState({ isResizable: true });
+        })
         if (!this.moveable.isMoveableElement(e.target)) {
             if (this.state.target === e.target) {
                 this.moveable.updateRect();

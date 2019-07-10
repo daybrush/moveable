@@ -1,9 +1,7 @@
 import Moveable from "./Moveable";
 import { caculatePosition, invert3x2, caculate3x2, multiple3x2, getRad } from "./utils";
 
-export function scaleStart(moveable: Moveable, positionTarget: Element, { datas }: any) {
-    const position = positionTarget.getAttribute("data-position")!;
-
+export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
     if (!position) {
         return false;
     }
@@ -17,17 +15,11 @@ export function scaleStart(moveable: Moveable, positionTarget: Element, { datas 
         transformOrigin,
         origin,
     } = moveable.state;
-    const pos = [0, 0];
-
-    (position.indexOf("w") > -1) && (pos[0] = -1);
-    (position.indexOf("e") > -1) && (pos[0] = 1);
-    (position.indexOf("n") > -1) && (pos[1] = -1);
-    (position.indexOf("s") > -1) && (pos[1] = 1);
 
     datas.matrix = invert3x2(matrix.slice());
     datas.transform = style.transform;
     datas.prevDist = [1, 1];
-    datas.position = pos;
+    datas.position = position;
     datas.width = width;
     datas.height = height;
     datas.transformOrigin = transformOrigin;

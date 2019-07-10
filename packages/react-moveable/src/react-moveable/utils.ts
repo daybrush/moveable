@@ -198,7 +198,7 @@ export function getControlTransform(...poses: number[][]) {
 }
 export function getSize(
     target: HTMLElement,
-    style: CSSStyleDeclaration,
+    style: CSSStyleDeclaration = window.getComputedStyle(target),
     isOffset?: boolean,
     isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
 ) {
@@ -280,4 +280,20 @@ export function getTargetInfo(target?: HTMLElement): MoveableState {
         origin,
         transformOrigin,
     };
+}
+
+export function getPosition(target: HTMLElement) {
+    const position = target.getAttribute("data-position")!;
+
+    if (!position) {
+        return;
+    }
+    const pos = [0, 0];
+
+    (position.indexOf("w") > -1) && (pos[0] = -1);
+    (position.indexOf("e") > -1) && (pos[0] = 1);
+    (position.indexOf("n") > -1) && (pos[1] = -1);
+    (position.indexOf("s") > -1) && (pos[1] = 1);
+
+    return pos;
 }
