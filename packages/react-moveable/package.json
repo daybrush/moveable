@@ -20,7 +20,12 @@
     "rotatable",
     "movable",
     "dom",
-    "resize"
+    "resize",
+    "scale",
+    "drag",
+    "move",
+    "rotate",
+    "react"
   ],
   "repository": {
     "type": "git",
@@ -29,9 +34,9 @@
   "author": "Daybrush",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/daybrush/movable/issues"
+    "url": "https://github.com/daybrush/moveable/issues"
   },
-  "homepage": "https://github.com/daybrush/movable#readme",
+  "homepage": "https://github.com/daybrush/moveable#readme",
   "devDependencies": {
     "@daybrush/builder": "^0.1.0",
     "@scenejs/effects": "^1.0.1",

@@ -18,12 +18,17 @@
   "keywords": [
     "moveable",
     "resizable",
+    "scalable",
     "draggable",
     "rotatable",
-    "scalable",
     "movable",
     "dom",
-    "resize"
+    "resize",
+    "scale",
+    "drag",
+    "move",
+    "rotate",
+    "react"
   ],
   "repository": {
     "type": "git",
