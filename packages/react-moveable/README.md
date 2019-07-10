@@ -85,6 +85,7 @@ render() {
             onDragEnd={({ target, isDrag }: OnDragEnd) => {
                 console.log("onDragEnd", target, isDrag);
             }}
+
             /* resizable*/
             /* Only one of resizable, scalable can be used. */
             resizable={true}
