@@ -43,10 +43,10 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .control.s, .control.n {
     cursor: ns-resize;
 }
-.control.nw, .control.se, .reverse .control.ne, .reverse .control.sw {
+.control.nw, .control.se, :host.reverse .control.ne, :host.reverse .control.sw {
     cursor: nwse-resize;
 }
-.control.ne, .control.sw, .reverse .control.nw, .reverse .control.se {
+.control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {
     cursor: nesw-resize;
 }
 `);
