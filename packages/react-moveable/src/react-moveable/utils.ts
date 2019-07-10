@@ -1,8 +1,7 @@
 import { PREFIX } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket } from "@daybrush/utils";
+import { splitBracket, isUndefined } from "@daybrush/utils";
 import { MoveableState } from "./types";
-import { isUndefined } from "util";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
