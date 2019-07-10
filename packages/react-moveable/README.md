@@ -85,7 +85,8 @@ render() {
             onDragEnd={({ target, isDrag }: OnDragEnd) => {
                 console.log("onDragEnd", target, isDrag);
             }}
-            /* resizable */
+            /* resizable*/
+            /* Only one of resizable, scalable can be used. */
             resizable={true}
             onResizeStart={({ target }: OnResizeStart) => {
                 console.log("onResizeStart", target);
@@ -100,6 +101,7 @@ render() {
             }}
 
             /* scalable */
+            /* Only one of resizable, scalable can be used. */
             scalable={true}
             onScaleStart={({ target }: OnScalableStart) => {
                 console.log("onScaleStart", target);
