@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">A Ppreact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.</p>
+<p align="middle">A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.</p>
 
 <table width="100%" align="center">
 <tr>
