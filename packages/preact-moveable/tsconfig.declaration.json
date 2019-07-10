@@ -1,0 +1,15 @@
+{
+    "extends": "./tsconfig",
+    "compilerOptions": {
+        "allowJs": false,
+        "noEmit": false,
+        "isolatedModules": false,
+        "removeComments": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "declarationDir": "declaration"
+    },
+    "include": [
+        "./src/preact-moveable/**/*"
+    ]
+}

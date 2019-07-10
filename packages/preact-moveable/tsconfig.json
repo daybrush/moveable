@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "outDir": "./outjs/",
+    "esModuleInterop": false,
+    "sourceMap": true,
+    "module": "esnext",
+    "target": "es5",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}

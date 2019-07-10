@@ -38,6 +38,8 @@
 ## 📦 Packages
 * [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
 
+* [**preact-moveable**](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
+
 ## ⭐️ Show Your Support
 Please give a ⭐️ if this project helped you!
 
