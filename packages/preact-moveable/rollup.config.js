@@ -10,7 +10,7 @@ const defaultOptions = {
         "preact": "Preact",
         "preact-compat": "preact-compat",
         "framework-utils": "framework-utils",
-        // "preact-css-styler": "preact-css-styler",
+        "preact-css-styler": "preact-css-styler",
     },
     exports: "named",
     plugins: [
@@ -19,7 +19,7 @@ const defaultOptions = {
             noEnv: true,
             noReactIs: true,
             aliasModules: {
-                // "react-css-styler": "preact-css-styler",
+                "react-css-styler": "preact-css-styler",
             },
         }),
     ],
