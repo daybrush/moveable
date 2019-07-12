@@ -16,10 +16,11 @@ const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
 export default class Moveable extends React.PureComponent<MoveableProps, MoveableState> {
     public static defaultProps = {
-        rotatable: true,
-        draggable: true,
-        scalable: true,
+        rotatable: false,
+        draggable: false,
+        scalable: false,
         resizable: false,
+        origin: true,
         onRotateStart: () => { },
         onRotate: () => { },
         onRotateEnd: () => { },
@@ -60,9 +61,8 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         if (this.state.target !== this.props.target) {
             this.updateRect(true);
         }
-        const { origin, left, top, pos1, pos2, pos3, pos4, target, transform } = this.state;
+        const { left, top, pos1, pos2, pos3, pos4, target, transform } = this.state;
         const direction = this.getDirection();
-        const rotationRad = getRad(pos1, pos2) - direction * Math.PI / 2;
 
         return (
             <ControlBoxElement
@@ -75,31 +75,61 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos2, pos4) }}></div>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos1, pos3) }}></div>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos3, pos4) }}></div>
-                <div className={prefix("line rotation")} style={{
-                    // tslint:disable-next-line: max-line-length
-                    transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) rotate(${rotationRad}rad)`,
-                }}>
-                    <div className={prefix("control", "rotation")} ref={ref(this, "rotationElement")}></div>
-                </div>
-                <div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>
-                <div className={prefix("control", "nw")} data-position="nw"
-                    style={getControlTransform(pos1)}></div>
-                <div className={prefix("control", "n")} data-position="n"
-                    style={getControlTransform(pos1, pos2)}></div>
-                <div className={prefix("control", "ne")} data-position="ne"
-                    style={getControlTransform(pos2)}></div>
-                <div className={prefix("control", "w")} data-position="w"
-                    style={getControlTransform(pos1, pos3)}></div>
-                <div className={prefix("control", "e")} data-position="e"
-                    style={getControlTransform(pos2, pos4)}></div>
-                <div className={prefix("control", "sw")} data-position="sw"
-                    style={getControlTransform(pos3)}></div>
-                <div className={prefix("control", "s")} data-position="s"
-                    style={getControlTransform(pos3, pos4)}></div>
-                <div className={prefix("control", "se")} data-position="se"
-                    style={getControlTransform(pos4)}></div>
+                {this.renderRotation(direction)}
+                {this.renderPosition()}
+
+
             </ControlBoxElement>
         );
+    }
+    public renderRotation(direction: number) {
+        if (!this.props.rotatable) {
+            return null;
+        }
+        const { pos1, pos2 } = this.state;
+        const rotationRad = getRad(pos1, pos2) - direction * Math.PI / 2;
+
+        return (
+            <div className={prefix("line rotation")} style={{
+                // tslint:disable-next-line: max-line-length
+                transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) rotate(${rotationRad}rad)`,
+            }}>
+                <div className={prefix("control", "rotation")} ref={ref(this, "rotationElement")}></div>
+            </div>
+        );
+    }
+    public renderOrigin() {
+        if (!this.props.origin) {
+            return null;
+        }
+        const { origin } = this.state;
+
+        return (<div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>);
+    }
+    public renderPosition() {
+        if (!this.props.resizable && !this.props.scalable) {
+            return null;
+        }
+        const { pos1, pos2, pos3, pos4 } = this.state;
+        return [
+            <div className={prefix("control", "nw")} data-position="nw" key="nw"
+                style={getControlTransform(pos1)}></div>,
+            <div className={prefix("control", "n")} data-position="n" key="n"
+                style={getControlTransform(pos1, pos2)}></div>,
+            <div className={prefix("control", "ne")} data-position="ne" key="ne"
+                style={getControlTransform(pos2)}></div>,
+            <div className={prefix("control", "w")} data-position="w" key="w"
+                style={getControlTransform(pos1, pos3)}></div>,
+            <div className={prefix("control", "e")} data-position="e" key="e"
+                style={getControlTransform(pos2, pos4)}></div>,
+            <div className={prefix("control", "sw")} data-position="sw" key="sw"
+                style={getControlTransform(pos3)}></div>,
+            <div className={prefix("control", "s")} data-position="s" key="s"
+                style={getControlTransform(pos3, pos4)}></div>,
+            <div className={prefix("control", "se")} data-position="se" key="se"
+                style={getControlTransform(pos4)}></div>,
+        ];
+
     }
     public componentDidMount() {
         /* rotatable */

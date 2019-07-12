@@ -21,6 +21,7 @@ class App extends React.Component {
                 <Moveable
                     target={selectedTarget}
                     ref={ref(this, "moveable")}
+                    draggable={true}
                     scalable={!isResizable}
                     resizable={isResizable}
                     onRotate={({ target, transform }) => {

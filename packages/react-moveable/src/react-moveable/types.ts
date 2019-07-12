@@ -1,5 +1,11 @@
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface MoveableProps {
     target?: HTMLElement;
+
+    origin?: boolean;
     rotatable?: boolean;
     draggable?: boolean;
     scalable?: boolean;
@@ -21,6 +27,10 @@ export interface MoveableProps {
     onResize?: (e: OnResize) => void;
     onResizeEnd?: (e: OnResizeEnd) => void;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface MoveableState {
     target: HTMLElement | null | undefined;
     left: number;
@@ -37,11 +47,17 @@ export interface MoveableState {
     pos3: number[];
     pos4: number[];
 }
-
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnDragStart {
     target: HTMLElement | SVGElement;
 }
-
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnDrag {
     target: HTMLElement | SVGElement;
     beforeDelta: number[];
@@ -54,14 +70,25 @@ export interface OnDrag {
     bottom: number;
     right: number;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnDragEnd {
     target: HTMLElement | SVGElement;
     isDrag: boolean;
 }
-
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnScaleStart {
     target: HTMLElement | SVGElement;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnScale {
     target: HTMLElement | SVGElement;
     scale: number[];
@@ -69,14 +96,26 @@ export interface OnScale {
     delta: number[];
     transform: string;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnScaleEnd {
     target: HTMLElement | SVGElement;
     isDrag: boolean;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnResizeStart {
     target: HTMLElement | SVGElement;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnResize {
     target: HTMLElement | SVGElement;
     width: number;
@@ -84,20 +123,35 @@ export interface OnResize {
     dist: number[];
     delta: number[];
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnResizeEnd {
     target: HTMLElement | SVGElement;
     isDrag: boolean;
 }
-
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnRotateStart {
     target: HTMLElement | SVGElement;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnRotate {
     target: HTMLElement | SVGElement;
     delta: number;
     dist: number;
     transform: string;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface OnRotateEnd {
     target: HTMLElement | SVGElement;
     isDrag: boolean;
