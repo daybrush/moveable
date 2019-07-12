@@ -1,6 +1,6 @@
 {
   "name": "react-moveable",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -56,8 +56,8 @@
     "@daybrush/drag": "^0.5.0",
     "@daybrush/utils": "^0.10.0",
     "framework-utils": "^0.1.0",
-    "react-css-styler": "^0.3.0",
-    "react-pure-props": "^0.1.2"
+    "react-css-styler": "^0.3.4",
+    "react-pure-props": "^0.1.5"
   },
   "browserslist": {
     "production": [
