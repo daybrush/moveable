@@ -1,6 +1,7 @@
 import { MoveableProps, MoveableState } from "react-moveable/declaration/types";
+import Preact from "preact";
 
-export interface PreactMoveable extends JSX.ElementClass {
+export interface MoveableInterface extends JSX.ElementClass {
     props: MoveableProps;
     state: MoveableState;
     isMoveableElement(target: HTMLElement): boolean;
