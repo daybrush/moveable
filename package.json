@@ -41,13 +41,17 @@
   },
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
-    "@daybrush/utils": "^0.10.0"
+    "@daybrush/utils": "^0.10.0",
+    "@egjs/component": "^2.1.2",
+    "framework-utils": "^0.1.0",
+    "preact-moveable": "^0.1.6"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.1",
     "@daybrush/jsdoc": "^0.3.7",
     "@daybrush/release": "^0.2.4",
     "daybrush-jsdoc-template": "^1.6.0",
+    "preact": "^8.4.2",
     "print-sizes": "0.0.4",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"

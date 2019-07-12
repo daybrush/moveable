@@ -8,6 +8,8 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
+    "jsx": "react",
+    "jsxFactory": "h",
     "lib": [
       "es2015",
       "dom"
