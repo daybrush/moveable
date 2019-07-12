@@ -4,7 +4,7 @@ import { invert3x2, caculate3x2 } from "./utils";
 
 export function getDraggableDragger(
     moveable: Moveable,
-    target: HTMLElement,
+    target: HTMLElement | SVGElement,
 ) {
     return drag(target, {
         container: window,

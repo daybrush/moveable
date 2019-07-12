@@ -3,7 +3,7 @@
  * @memberof Moveable
  */
 export interface MoveableProps {
-    target?: HTMLElement;
+    target?: SVGElement | HTMLElement;
 
     origin?: boolean;
     rotatable?: boolean;
@@ -32,7 +32,7 @@ export interface MoveableProps {
  * @memberof Moveable
  */
 export interface MoveableState {
-    target: HTMLElement | null | undefined;
+    target: SVGElement | HTMLElement | null | undefined;
     left: number;
     top: number;
     width: number;

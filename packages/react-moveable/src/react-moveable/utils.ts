@@ -89,8 +89,8 @@ export function invert3x2(a: number[]) {
 
     return a;
 }
-export function caculateMatrixStack(target: HTMLElement) {
-    let el: HTMLElement | null = target;
+export function caculateMatrixStack(target: SVGElement | HTMLElement) {
+    let el: SVGElement | HTMLElement | null = target;
     const matrixes: Array<"none" | number[]> = [];
 
     while (el) {
@@ -196,13 +196,13 @@ export function getControlTransform(...poses: number[][]) {
     };
 }
 export function getSize(
-    target: HTMLElement,
+    target: SVGElement | HTMLElement,
     style: CSSStyleDeclaration = window.getComputedStyle(target),
     isOffset?: boolean,
     isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
 ) {
-    let width = target.offsetWidth;
-    let height = target.offsetHeight;
+    let width = (target as HTMLElement).offsetWidth;
+    let height = (target as HTMLElement).offsetHeight;
     const hasOffset = !isUndefined(width);
 
     if ((isOffset || isBoxSizing) && hasOffset) {
@@ -233,7 +233,7 @@ export function getSize(
         ];
     }
 }
-export function getTargetInfo(target?: HTMLElement): MoveableState {
+export function getTargetInfo(target?: SVGElement | HTMLElement): MoveableState {
     let left = 0;
     let top = 0;
     let origin = [0, 0];
@@ -252,8 +252,8 @@ export function getTargetInfo(target?: HTMLElement): MoveableState {
         const style = window.getComputedStyle(target);
         left = rect.left;
         top = rect.top;
-        width = target.offsetWidth;
-        height = target.offsetHeight;
+        width = (target as HTMLElement).offsetWidth;
+        height = (target as HTMLElement).offsetHeight;
 
         if (isUndefined(width)) {
             [width, height] = getSize(target, style, true);
@@ -281,7 +281,7 @@ export function getTargetInfo(target?: HTMLElement): MoveableState {
     };
 }
 
-export function getPosition(target: HTMLElement) {
+export function getPosition(target: SVGElement | HTMLElement) {
     const position = target.getAttribute("data-position")!;
 
     if (!position) {

@@ -77,8 +77,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos3, pos4) }}></div>
                 {this.renderRotation(direction)}
                 {this.renderPosition()}
-
-
+                {this.renderOrigin()}
             </ControlBoxElement>
         );
     }
