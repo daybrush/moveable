@@ -3,4 +3,5 @@ export interface MoveableOptions {
     resizable?: boolean;
     scalable?: boolean;
     rotatable?: boolean;
+    target?: SVGElement | HTMLElement;
 }

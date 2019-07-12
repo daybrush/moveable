@@ -39,33 +39,41 @@ export default class Moveable extends EgComponent {
     get draggable() {
         return this.preactMoveable.state.draggable || false;
     }
-    set draggable(isEnable: boolean) {
+    set draggable(draggable: boolean) {
         this.preactMoveable.setState({
-            draggable: isEnable,
+            draggable,
+        });
+    }
+    get target() {
+        return this.preactMoveable.state.draggable || false;
+    }
+    set target(target: boolean) {
+        this.preactMoveable.setState({
+            target,
         });
     }
     get resizable() {
         return this.preactMoveable.state.resizable || false;
     }
-    set resizable(isEnable: boolean) {
+    set resizable(resizable: boolean) {
         this.preactMoveable.setState({
-            resizable: isEnable,
+            resizable,
         });
     }
     get scalable() {
         return this.preactMoveable.state.scalable || false;
     }
-    set scalable(isEnable: boolean) {
+    set scalable(scalable: boolean) {
         this.preactMoveable.setState({
-            scalable: isEnable,
+            scalable,
         });
     }
     get rotatable() {
         return this.preactMoveable.state.rotatable || false;
     }
-    set rotatable(isEnable: boolean) {
+    set rotatable(rotatable: boolean) {
         this.preactMoveable.setState({
-            rotatable: isEnable,
+            rotatable,
         });
     }
     private onDragStart = (e: OnDragStart) => {
