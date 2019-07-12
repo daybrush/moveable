@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -11,9 +11,9 @@
     "build": "rollup -c && npm run declaration && print-sizes ./dist",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
-    "prerelease": "npm run build && prerelease --dirs=dist,doc",
-    "release": "npm run build && npm run doc && release --dirs=dist,doc",
-    "release:init": "npm run build && npm run doc && release -i --dirs=dist,doc"
+    "prerelease": "npm run build && prerelease --dirs=dist",
+    "release": "npm run build && npm run doc && release --dirs=dist",
+    "release:init": "npm run build && npm run doc && release -i --dirs=dist"
   },
   "keywords": [
     "moveable",
@@ -41,17 +41,20 @@
   },
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
+    "@daybrush/drag": "^0.5.0",
     "@daybrush/utils": "^0.10.0",
     "@egjs/component": "^2.1.2",
-    "framework-utils": "^0.1.0",
-    "preact-moveable": "^0.1.6"
+    "framework-utils": "^0.1.0"
   },
   "devDependencies": {
+    "preact-compat2": "^0.1.0",
+    "rollup-plugin-preact": "^0.4.1",
     "@daybrush/builder": "^0.1.1",
     "@daybrush/jsdoc": "^0.3.7",
     "@daybrush/release": "^0.2.4",
     "daybrush-jsdoc-template": "^1.6.0",
     "preact": "^8.4.2",
+    "preact-moveable": "^0.1.7",
     "print-sizes": "0.0.4",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"

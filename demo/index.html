@@ -1,0 +1,64 @@
+<style>
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .moveable {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        text-align: center;
+        line-height: 200px;
+        font-size: 30px;
+        margin: 0px auto;
+        font-weight: bold;
+    }
+
+    .buttons {
+        text-align: center;
+        margin: 0;
+        padding: 10px;
+    }
+
+    .buttons a {
+        margin: 0;
+        position: relative;
+        text-decoration: none;
+        color: #333;
+        padding: 10px 0px;
+        width: 100px;
+        text-align: center;
+        font-weight: bold;
+        background: #eee;
+        display: inline-block;
+    }
+</style>
+<div class="container">
+    <div class="moveable">Moveable</div>
+    <div class="buttons">
+        <a href="#">Github</a>
+        <a href="#">API</a>
+    </div>
+</div>
+<script src="./release/latest/dist/moveable.js"></script>
+
+<script>
+    var moveable = new Moveable(document.body, {
+        target: document.querySelector(".moveable"),
+        origin: false,
+        resizable: true,
+        scalable: false,
+    }).on("drag", function (e) {
+        e.target.style.transform = e.transform;
+    }).on("scale", function (e) {
+        e.target.style.transform = e.transform;
+    }).on("rotate", function (e) {
+        e.target.style.transform = e.transform;
+    }).on("resize", function (e) {
+        e.target.style.width = e.width + "px";
+        e.target.style.height = e.height + "px";
+    });
+</script>
