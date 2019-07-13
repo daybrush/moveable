@@ -10,6 +10,10 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     top: 0;
     z-index: 3000;
 }
+.line, .control {
+    left: 0;
+    top: 0;
+}
 .control {
     position: absolute;
     width: 14px;
@@ -31,10 +35,9 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .line.rotation {
     height: 40px;
     width: 1px;
+    transform-origin: 0.5px 39.5px;
 }
 .line.rotation .control {
-    left: 0%;
-    top: 0%;
     border-color: #4af;
     background:#fff;
     cursor: alias;

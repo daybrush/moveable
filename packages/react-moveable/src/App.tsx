@@ -24,6 +24,7 @@ class App extends React.Component {
                     draggable={true}
                     scalable={!isResizable}
                     resizable={isResizable}
+                    rotatable={true}
                     onRotate={({ target, transform }) => {
                         target!.style.transform = transform;
                     }}

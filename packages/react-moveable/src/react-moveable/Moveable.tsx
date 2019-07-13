@@ -86,12 +86,12 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             return null;
         }
         const { pos1, pos2 } = this.state;
-        const rotationRad = getRad(pos1, pos2) - direction * Math.PI / 2;
+        const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
 
         return (
             <div className={prefix("line rotation")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) rotate(${rotationRad}rad) translateY(-40px)`,
+                transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) translateY(-40px) rotate(${rotationRad}rad)`,
             }}>
                 <div className={prefix("control", "rotation")} ref={ref(this, "rotationElement")}></div>
             </div>

@@ -1,7 +1,7 @@
 import Moveable from "./Moveable";
-import { caculatePosition, invert3x2, caculate3x2, multiple3x2, getRad, getSize } from "./utils";
+import { invert3x2, caculate3x2, getRad, getSize } from "./utils";
 
-export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, inputEvent }: any) {
+export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
     const target = moveable.props.target;
 
     if (!target || !position) {
