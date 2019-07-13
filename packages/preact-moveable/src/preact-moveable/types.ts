@@ -6,4 +6,5 @@ export interface MoveableInterface extends Component<MoveableProps, MoveableStat
     getRadByPos(pos: number[]): number;
     getDirection(): 1 | -1;
     updateRect(isNotSetState?: boolean): void;
+    move(pos: number[]): void;
 }

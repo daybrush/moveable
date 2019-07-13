@@ -29,10 +29,12 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     transform-origin: 0px 0.5px;
 }
 .line.rotation {
-    width: 40px;
+    height: 40px;
+    width: 1px;
 }
 .line.rotation .control {
-    left: 100%;
+    left: 0%;
+    top: 0%;
     border-color: #4af;
     background:#fff;
     cursor: alias;

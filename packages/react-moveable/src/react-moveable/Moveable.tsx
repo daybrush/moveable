@@ -91,7 +91,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         return (
             <div className={prefix("line rotation")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) rotate(${rotationRad}rad)`,
+                transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) rotate(${rotationRad}rad) translateY(-40px)`,
             }}>
                 <div className={prefix("control", "rotation")} ref={ref(this, "rotationElement")}></div>
             </div>
@@ -145,6 +145,16 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             this.moveableDragger.unset();
             this.moveableDragger = null;
         }
+    }
+    public move(pos: number[]) {
+        if (!pos[0] && !pos[1]) {
+            return;
+        }
+        const { left, top } = this.state;
+        this.setState({
+            left: left + pos[0],
+            top: top + pos[1],
+        });
     }
     public getRadByPos(pos: number[]) {
         const { left, top, origin } = this.state;
