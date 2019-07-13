@@ -4,7 +4,7 @@
  */
 export interface MoveableProps {
     target?: SVGElement | HTMLElement;
-
+    container?: SVGElement | HTMLElement | null;
     origin?: boolean;
     rotatable?: boolean;
     draggable?: boolean;

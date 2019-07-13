@@ -20,6 +20,7 @@ class App extends React.Component {
             <div>
                 <Moveable
                     target={selectedTarget}
+                    container={document.body}
                     ref={ref(this, "moveable")}
                     draggable={true}
                     scalable={!isResizable}

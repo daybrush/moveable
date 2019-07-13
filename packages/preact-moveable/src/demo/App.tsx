@@ -1,12 +1,12 @@
 
 import { h, Component } from "preact";
-import Moveable from "../preact-moveable";
+import Moveable, { MoveableInterface } from "../preact-moveable";
 import "./App.css";
 import { ref } from "framework-utils";
 import KeyController from "keycon";
 
 class App extends Component {
-    public moveable: Moveable;
+    public moveable: MoveableInterface;
     public state = {
         target: null,
         isResizable: true,
@@ -20,6 +20,7 @@ class App extends Component {
             <div>
                 <Moveable
                     target={selectedTarget}
+                    container={document.body}
                     ref={ref(this, "moveable")}
                     scalable={!isResizable}
                     resizable={isResizable}

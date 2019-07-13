@@ -15,7 +15,8 @@ import { getMoveableDragger } from "./MoveableDragger";
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
 export default class Moveable extends React.PureComponent<MoveableProps, MoveableState> {
-    public static defaultProps = {
+    public static defaultProps: MoveableProps = {
+        container: null,
         rotatable: false,
         draggable: false,
         scalable: false,
@@ -68,7 +69,8 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
                 className={prefix("control-box", direction === -1 ? "reverse" : "")} style={{
-                    position: "fixed", display: target ? "block" : "none",
+                    position: this.props.container ? "absolute" : "fixed",
+                    display: target ? "block" : "none",
                     transform: `translate(${left}px, ${top}px) ${transform}`,
                 }}>
                 <div className={prefix("line")} style={{ transform: getLineTransform(pos1, pos2) }}></div>
@@ -185,7 +187,8 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 this.draggableDragger = getDraggableDragger(this, target);
             }
         }
-        this.updateState(getTargetInfo(target), isNotSetState);
+        const container = this.props.container;
+        this.updateState(getTargetInfo(target, container), isNotSetState);
     }
     private updateState(nextState: any, isNotSetState?: boolean) {
         const state = this.state as any;

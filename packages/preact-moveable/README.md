@@ -62,8 +62,11 @@ render() {
     return (
         <Moveable
             target={document.querySelector(".target")}
+            container={document.body}
+            origin={true}
 
             /* draggable */
+
             draggable={true}
             onDragStart={({ target }: OnDragStart) => {
                 console.log("onDragStart", target);

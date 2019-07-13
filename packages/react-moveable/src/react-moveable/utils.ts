@@ -1,7 +1,7 @@
 import { PREFIX } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined } from "@daybrush/utils";
-import { MoveableState } from "./types";
+import { MoveableState, MoveableProps } from "./types";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -233,7 +233,10 @@ export function getSize(
         ];
     }
 }
-export function getTargetInfo(target?: SVGElement | HTMLElement): MoveableState {
+export function getTargetInfo(
+    target?: SVGElement | HTMLElement,
+    container?: MoveableProps["container"],
+): MoveableState {
     let left = 0;
     let top = 0;
     let origin = [0, 0];
@@ -261,6 +264,13 @@ export function getTargetInfo(target?: SVGElement | HTMLElement): MoveableState 
         [beforeMatrix, matrix] = caculateMatrixStack(target);
         transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
         [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
+
+        if (container) {
+            const containerRect = container.getBoundingClientRect();
+
+            left -= containerRect.left;
+            top -= containerRect.top;
+        }
     }
 
     return {
