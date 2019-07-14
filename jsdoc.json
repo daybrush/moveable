@@ -7,7 +7,7 @@
 		"destination": "./doc/"
     },
     "source": {
-		"include": ["./src", "README.md"],
+		"include": ["./src", "README.md", "node_modules/react-moveable/src/react-moveable/types.ts", "node_modules/@egjs/component/src/Component.js"],
         "includePattern": "(.+\\.js(doc|x)?|.+\\.ts(doc|x)?)$",
         "excludePattern": "(^|\\/|\\\\)_"
     },

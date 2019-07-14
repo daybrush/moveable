@@ -11,6 +11,8 @@
     "build": "rollup -c && npm run declaration && print-sizes ./dist",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
     "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
+    "demo:start": "rollup -c rollup.config.demo.js -w",
+    "demo:build": "rm -rf ./demo/dist && rollup -c rollup.config.demo.js",
     "prerelease": "npm run build && prerelease --dirs=dist",
     "release": "npm run build && npm run doc && release --dirs=dist",
     "release:init": "npm run build && npm run doc && release -i --dirs=dist"
@@ -47,15 +49,17 @@
     "framework-utils": "^0.1.0"
   },
   "devDependencies": {
-    "preact-compat2": "^0.1.0",
-    "rollup-plugin-preact": "^0.4.1",
     "@daybrush/builder": "^0.1.1",
+    "@daybrush/demo": "0.0.2",
     "@daybrush/jsdoc": "^0.3.7",
     "@daybrush/release": "^0.2.4",
     "daybrush-jsdoc-template": "^1.6.0",
     "preact": "^8.4.2",
-    "preact-moveable": "^0.1.7",
+    "preact-compat2": "^0.1.0",
+    "preact-moveable": "^0.3.1",
     "print-sizes": "0.0.4",
+    "rollup-plugin-css-bundle": "^1.0.4",
+    "rollup-plugin-preact": "^0.4.1",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
   }

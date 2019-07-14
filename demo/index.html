@@ -1,64 +1,114 @@
-<style>
-    .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .moveable {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        text-align: center;
-        line-height: 200px;
-        font-size: 30px;
-        margin: 0px auto;
-        font-weight: bold;
-    }
-
-    .buttons {
-        text-align: center;
-        margin: 0;
-        padding: 10px;
-    }
-
-    .buttons a {
-        margin: 0;
-        position: relative;
-        text-decoration: none;
-        color: #333;
-        padding: 10px 0px;
-        width: 100px;
-        text-align: center;
-        font-weight: bold;
-        background: #eee;
-        display: inline-block;
-    }
-</style>
-<div class="container">
-    <div class="moveable">Moveable</div>
-    <div class="buttons">
-        <a href="#">Github</a>
-        <a href="#">API</a>
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css">
+<link rel="stylesheet" type="text/css" href="./dist/index.css" />
+<div class="page">
+    <div class="container">
+        <div class="moveable"><span>Moveable</span></div>
+        <p class="badges">
+            <a href="https://www.npmjs.com/package/moveable" target="_blank">
+                <img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version"
+                    alt="npm version" /></a>
+            <a href="https://github.com/daybrush/moveable" target="_blank">
+                <img
+                    src="https://img.shields.io/github/stars/daybrush/moveable.svg?color=42b883&style=flat-square" /></a>
+            <a href="https://github.com/daybrush/moveable" target="_blank">
+                <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square" />
+            </a>
+            <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank">
+                <img
+                    src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D" />
+            </a>
+            <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img
+                    alt="React"
+                    src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
+            <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img
+                    alt="React"
+                    src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
+        </p>
+        <p class="description">Moveable is Draggable! Resizable! Scalable! Rotatable!</p>
+        <div class="buttons">
+            <a href="https://github.com/daybrush/moveable" target="_blank">Download</a>
+            <a href="./release/latest/doc" target="_blank">API</a>
+        </div>
     </div>
 </div>
-<script src="./release/latest/dist/moveable.js"></script>
+<div class="page feature">
+    <h2 class="container">Features</h2>
+    <div class="container">
+        <div class="left">
+            <div class="moveable draggable"><span>Draggable</span></div>
+        </div>
+        <div class="right">
+            <p class="description"><strong>Draggable</strong> refers to the ability to drag and move targets.</p>
+            <button class="tab selected" data-tab="vanilla" data-group="draggable">Vanilla</button>
+            <button class="tab" data-tab="react" data-group="draggable">React</button>
+            <button class="tab" data-tab="preact" data-group="draggable">Preact</button>
+            <pre class="panel selected" data-panel="vanilla"
+                data-group="draggable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="react" data-group="draggable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="preact" data-group="draggable"><code class="javascript"></code></pre>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left">
+            <div class="moveable resizable"><span>Resizable</span></div>
+        </div>
+        <div class="right">
+            <p class="description"><strong>Draggable</strong> refers to the ability to drag and move targets.</p>
+            <button class="tab selected" data-tab="vanilla" data-group="resizable">Vanilla</button>
+            <button class="tab" data-tab="react" data-group="resizable">React</button>
+            <button class="tab" data-tab="preact" data-group="resizable">Preact</button>
+            <pre class="panel selected" data-panel="vanilla"
+                data-group="resizable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="react" data-group="resizable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="preact" data-group="resizable"><code class="javascript"></code></pre>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left">
+            <div class="moveable scalable"><span>Scalable</span></div>
+        </div>
+        <div class="right">
+            <p class="description"><strong>Scalable</strong> refers to the ability to drag and move targets.</p>
+            <button class="tab selected" data-tab="vanilla" data-group="scalable">Vanilla</button>
+            <button class="tab" data-tab="react" data-group="scalable">React</button>
+            <button class="tab" data-tab="preact" data-group="scalable">Preact</button>
+            <pre class="panel selected" data-panel="vanilla"
+                data-group="scalable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="react" data-group="scalable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="preact" data-group="scalable"><code class="javascript"></code></pre>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left">
+            <div class="moveable rotatable"><span>Rotatable</span></div>
+        </div>
+        <div class="right">
+            <p class="description"><strong>Rotatable</strong> refers to the ability to drag and move targets.</p>
+            <button class="tab selected" data-tab="vanilla" data-group="rotatable">Vanilla</button>
+            <button class="tab" data-tab="react" data-group="rotatable">React</button>
+            <button class="tab" data-tab="preact" data-group="rotatable">Preact</button>
+            <pre class="panel selected" data-panel="vanilla"
+                data-group="rotatable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="react" data-group="rotatable"><code class="javascript"></code></pre>
+            <pre class="panel" data-panel="preact" data-group="rotatable"><code class="javascript"></code></pre>
+        </div>
+    </div>
+    <div class="buttons"><a href="./release/latest/doc" class="button">More Features</a></div>
+</div>
+<div class="page footer">
+    <div class="container">
 
-<script>
-    var moveable = new Moveable(document.body, {
-        target: document.querySelector(".moveable"),
-        origin: false,
-        resizable: true,
-        scalable: false,
-    }).on("drag", function (e) {
-        e.target.style.transform = e.transform;
-    }).on("scale", function (e) {
-        e.target.style.transform = e.transform;
-    }).on("rotate", function (e) {
-        e.target.style.transform = e.transform;
-    }).on("resize", function (e) {
-        e.target.style.width = e.width + "px";
-        e.target.style.height = e.height + "px";
-    });
-</script>
+        <p>Copyright &copy; Daybrush</p>
+        <p>
+            <span><a href="https://github.com/daybrush" target="_blank">github</a></span>
+            <span><a href="https://codepen.io/daybrush" target="_blank">codepen</a></span>
+            <span><a href="https://medium.com/@daybrush" target="_blank">medium</a></span>
+            <span><a href="https://twitter.com/daybrush" target="_blank">twitter</a></span>
+        </p>
+        <p>daybrush@gmail.com</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+<script src="./dist/index.js"></script>
