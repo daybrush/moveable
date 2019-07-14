@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -47,6 +47,7 @@
     "@daybrush/drag": "^0.5.0",
     "@daybrush/utils": "^0.10.0",
     "@egjs/component": "^2.1.2",
+    "preact-moveable": "^0.3.1",
     "framework-utils": "^0.1.0"
   },
   "devDependencies": {
@@ -58,7 +59,6 @@
     "gh-pages": "^2.0.1",
     "preact": "^8.4.2",
     "preact-compat2": "^0.1.0",
-    "preact-moveable": "^0.3.1",
     "print-sizes": "0.0.4",
     "rollup-plugin-css-bundle": "^1.0.4",
     "rollup-plugin-preact": "^0.4.1",
