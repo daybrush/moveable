@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/Moveable.tsx - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
+    <link type="text/css" rel="stylesheet" href="styles/custom.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="src/Moveable.tsx - Documentation"/>
+
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h2 class="custom"><a href="https://github.com/daybrush/moveable" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><div class="search"><div class="input-area"><input type="text"/></div><button></button></div><ul class="classes"><li file="moveable" class="parent"><a href="Moveable.html">Moveable</a><h4><a href="Moveable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.html#draggable">draggable</a></li><li data-type='method'><a href="Moveable.html#origin">origin</a></li><li data-type='method'><a href="Moveable.html#resizable">resizable</a></li><li data-type='method'><a href="Moveable.html#rotatable">rotatable</a></li><li data-type='method'><a href="Moveable.html#scalable">scalable</a></li><li data-type='method'><a href="Moveable.html#target">target</a></li></ul><h4><a href="Moveable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.html#hasOn">hasOn</a></li><li data-type='method'><a href="Moveable.html#isMoveableElement">isMoveableElement</a></li><li data-type='method'><a href="Moveable.html#move">move</a></li><li data-type='method'><a href="Moveable.html#off">off</a></li><li data-type='method'><a href="Moveable.html#on">on</a></li><li data-type='method'><a href="Moveable.html#once">once</a></li><li data-type='method'><a href="Moveable.html#trigger">trigger</a></li><li data-type='method'><a href="Moveable.html#updateRect">updateRect</a></li></ul><h4><a href="Moveable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.html#.event:drag">drag</a></li><li data-type='event'><a href="Moveable.html#.event:dragEnd">dragEnd</a></li><li data-type='event'><a href="Moveable.html#.event:dragStart">dragStart</a></li><li data-type='event'><a href="Moveable.html#.event:resize">resize</a></li><li data-type='event'><a href="Moveable.html#.event:resizeEnd">resizeEnd</a></li><li data-type='event'><a href="Moveable.html#.event:resizeStart">resizeStart</a></li><li data-type='event'><a href="Moveable.html#.event:rotate">rotate</a></li><li data-type='event'><a href="Moveable.html#.event:rotateEnd">rotateEnd</a></li><li data-type='event'><a href="Moveable.html#.event:rotateStart">rotateStart</a></li><li data-type='event'><a href="Moveable.html#.event:scale">scale</a></li><li data-type='event'><a href="Moveable.html#.event:scaleEnd">scaleEnd</a></li><li data-type='event'><a href="Moveable.html#.event:scaleStart">scaleStart</a></li></ul><h4><a href="Moveable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.html#.MoveableOptions">MoveableOptions</a></li><li data-type='typddef'><a href="Moveable.html#.OnDrag">OnDrag</a></li><li data-type='typddef'><a href="Moveable.html#.OnDragEnd">OnDragEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnDragStart">OnDragStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnResize">OnResize</a></li><li data-type='typddef'><a href="Moveable.html#.OnResizeEnd">OnResizeEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnResizeStart">OnResizeStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnRotate">OnRotate</a></li><li data-type='typddef'><a href="Moveable.html#.OnRotateEnd">OnRotateEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRotateStart">OnRotateStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnScale">OnScale</a></li><li data-type='typddef'><a href="Moveable.html#.OnScaleEnd">OnScaleEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnScaleStart">OnScaleStart</a></li></ul></li><li file="component" class="parent"><a href="eg.Component.html">eg.Component</a><h4><a href="eg.Component.html#static members">Static Members</a></h4><ul class='static members'><li data-type='member'><a href="eg.Component.html#.VERSION">VERSION</a></li></ul><h4><a href="eg.Component.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="eg.Component.html#hasOn">hasOn</a></li><li data-type='method'><a href="eg.Component.html#off">off</a></li><li data-type='method'><a href="eg.Component.html#on">on</a></li><li data-type='method'><a href="eg.Component.html#once">once</a></li><li data-type='method'><a href="eg.Component.html#trigger">trigger</a></li></ul></li></ul><ul class="global"><li file="global"  class="parent"><a href="global.html">Global</a><h4><a href="global.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="global.html#isUndefined">isUndefined</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/Moveable.tsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import EgComponent from "@egjs/component";
+import { ref } from "framework-utils";
+import { h, render } from "preact";
+import InnerMoveable from "./InnerMoveable";
+import { MoveableOptions } from "./types";
+import {
+    OnDragStart, OnDrag, OnResize, OnResizeStart,
+    OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
+    OnRotateEnd, OnDragEnd, OnRotate, OnScale,
+} from "preact-moveable";
+
+/**
+ * Moveable is Draggable! Resizable! Scalable! Rotatable!
+ * @sort 1
+ * @extends eg.Component
+ */
+class Moveable extends EgComponent {
+    private innerMoveable!: InnerMoveable;
+
+    /**
+     *
+     */
+    constructor(parentElement: HTMLElement | SVGElement, options: MoveableOptions = {}) {
+        super();
+        const element = document.createElement("div");
+
+        render(
+            &lt;InnerMoveable
+                ref={ref(this, "innerMoveable")}
+                {...options}
+                onDragStart={this.onDragStart}
+                onDrag={this.onDrag}
+                onDragEnd={this.onDragEnd}
+                onResizeStart={this.onResizeStart}
+                onResize={this.onResize}
+                onResizeEnd={this.onResizeEnd}
+                onScaleStart={this.onScaleStart}
+                onScale={this.onScale}
+                onScaleEnd={this.onScaleEnd}
+                onRotateStart={this.onRotateStart}
+                onRotate={this.onRotate}
+                onRotateEnd={this.onRotateEnd}
+            />,
+            element,
+        );
+        parentElement.appendChild(element.children[0]);
+    }
+    /**
+     * target is target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.origin = true;
+     */
+    get origin() {
+        return this.getMoveableProps().origin;
+    }
+    set origin(origin: boolean) {
+        this.innerMoveable.setState({
+            origin,
+        });
+    }
+    /**
+     * target is target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     * moveable.target = document.querySelector(".target");
+     */
+    get target(): HTMLElement | SVGElement {
+        return this.getMoveableProps().target;
+    }
+    set target(target: HTMLElement | SVGElement) {
+        if (target !== this.target) {
+            this.innerMoveable.setState({
+                target,
+            });
+        } else {
+            this.updateRect();
+        }
+    }
+    /**
+     * Whether or not target can be dragged.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.draggable = true;
+     */
+    get draggable(): boolean {
+        return this.getMoveableProps().draggable || false;
+    }
+    set draggable(draggable: boolean) {
+        this.innerMoveable.setState({
+            draggable,
+        });
+    }
+    /**
+     * Whether or not target can be resized.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.resizable = true;
+     */
+    get resizable(): boolean {
+        return this.getMoveableProps().resizable;
+    }
+    set resizable(resizable: boolean) {
+        this.innerMoveable.setState({
+            resizable,
+        });
+    }
+    /**
+     * Whether or not target can scaled.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.scalable = true;
+     */
+    get scalable(): boolean {
+        return this.getMoveableProps().scalable;
+    }
+    set scalable(scalable: boolean) {
+        this.innerMoveable.setState({
+            scalable,
+        });
+    }
+    /**
+     * Whether or not target can be rotated.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.rotatable = true;
+     */
+    get rotatable(): boolean {
+        return this.getMoveableProps().rotatable;
+    }
+    set rotatable(rotatable: boolean) {
+        this.innerMoveable.setState({
+            rotatable,
+        });
+    }
+    /**
+     * Move the moveable as much as the `pos`.
+     * @param - the values of x and y to move moveable.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.move([0, -10]);
+     */
+    public move(pos: number[]) {
+        this.getMoveable().move(pos);
+    }
+    /**
+     * Check if the target is an element included in the moveable.
+     * @param - the target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("click", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *         moveable.target = e.target;
+     *     }
+     * });
+     */
+    public isMoveableElement(target: HTMLElement | SVGElement) {
+        return this.getMoveable().isMoveableElement(target);
+    }
+    /**
+     * If the width, height, left, and top of the target change, update the shape of the moveable.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("resize", e => {
+     *     moveable.updateRect();
+     * });
+     */
+    public updateRect() {
+        this.getMoveable().updateRect();
+    }
+    private getMoveable() {
+        return this.innerMoveable.preactMoveable;
+    }
+    private getMoveableProps() {
+        return this.getMoveable().props;
+    }
+    private onDragStart = (e: OnDragStart) => {
+        this.trigger("dragStart", e);
+    }
+    private onDrag = (e: OnDrag) => {
+        this.trigger("drag", e);
+    }
+    private onDragEnd = (e: OnDragEnd) => {
+        this.trigger("dragEnd", e);
+    }
+    private onResizeStart = (e: OnResizeStart) => {
+        this.trigger("resizeStart", e);
+    }
+    private onResize = (e: OnResize) => {
+        this.trigger("resize", e);
+    }
+    private onResizeEnd = (e: OnResizeEnd) => {
+        this.trigger("resizeEnd", e);
+    }
+    private onScaleStart = (e: OnScaleStart) => {
+        this.trigger("scaleStart", e);
+    }
+    private onScale = (e: OnScale) => {
+        this.trigger("scale", e);
+    }
+    private onScaleEnd = (e: OnScaleEnd) => {
+        this.trigger("scaleEnd", e);
+    }
+    private onRotateStart = (e: OnRotateStart) => {
+        this.trigger("rotateStart", e);
+    }
+    private onRotate = (e: OnRotate) => {
+        this.trigger("rotate", e);
+    }
+    private onRotateEnd = (e: OnRotateEnd) => {
+        this.trigger("rotateEnd", e);
+    }
+}
+
+/**
+ * When the drag starts, the dragStart event is called.
+ * @memberof Moveable
+ * @event dragStart
+ * @param {Moveable.OnDragStart} - Parameters for the dragStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { draggable: true });
+ * moveable.on("dragStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When dragging, the drag event is called.
+ * @memberof Moveable
+ * @event drag
+ * @param {Moveable.OnDrag} - Parameters for the drag event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { draggable: true });
+ * moveable.on("drag", ({ target, transform }) => {
+ *     target.style.transform = transform;
+ * });
+ */
+/**
+ * When the drag finishes, the dragEnd event is called.
+ * @memberof Moveable
+ * @event dragEnd
+ * @param {Moveable.OnDragEnd} - Parameters for the dragEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { draggable: true });
+ * moveable.on("dragEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+/**
+ * When the resize starts, the resizeStart event is called.
+ * @memberof Moveable
+ * @event resizeStart
+ * @param {Moveable.OnResizeStart} - Parameters for the resizeStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resizeStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When resizing, the resize event is called.
+ * @memberof Moveable
+ * @event resize
+ * @param {Moveable.OnResize} - Parameters for the resize event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resize", ({ target, width, height }) => {
+ *     target.style.width = `${e.width}px`;
+ *     target.style.height = `${e.height}px`;
+ * });
+ */
+/**
+ * When the resize finishes, the resizeEnd event is called.
+ * @memberof Moveable
+ * @event resizeEnd
+ * @param {Moveable.OnResizeEnd} - Parameters for the resizeEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resizeEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+/**
+ * When the scale starts, the scaleStart event is called.
+ * @memberof Moveable
+ * @event scaleStart
+ * @param {Moveable.OnScaleStart} - Parameters for the scaleStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("scaleStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When scaling, the scale event is called.
+ * @memberof Moveable
+ * @event scale
+ * @param {Moveable.OnScale} - Parameters for the scale event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("scale", ({ target, transform, dist }) => {
+ *     target.style.transform = transform;
+ * });
+ */
+/**
+ * When the scale finishes, the scaleEnd event is called.
+ * @memberof Moveable
+ * @event scaleEnd
+ * @param {Moveable.OnScaleEnd} - Parameters for the scaleEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("scaleEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+/**
+ * When the rotate starts, the rotateStart event is called.
+ * @memberof Moveable
+ * @event rotateStart
+ * @param {Moveable.OnRotateStart} - Parameters for the rotateStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { rotatable: true });
+ * moveable.on("rotateStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When rotating, the rotate event is called.
+ * @memberof Moveable
+ * @event rotate
+ * @param {Moveable.OnRotate} - Parameters for the rotate event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { rotatable: true });
+ * moveable.on("rotate", ({ target, transform, dist }) => {
+ *     target.style.transform = transform;
+ * });
+ */
+/**
+ * When the rotate finishes, the rotateEnd event is called.
+ * @memberof Moveable
+ * @event rotateEnd
+ * @param {Moveable.OnRotateEnd} - Parameters for the rotateEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { rotatable: true });
+ * moveable.on("rotateEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+export default Moveable;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+<style>
+
+
+nav li[file="src/moveable"]:after {
+    display: none;
+}
+nav li[file="src/moveable"] h4, nav li[file="src/moveable"] ul {
+    display: block;
+}
+</style>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.3.7</a> on Sun Jul 14 2019 23:44:49 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/utils.min.js"></script>
+<script src="scripts/search.js"></script>
+<script src="scripts/custom.js"></script>
+</body>
+</html>
