@@ -10,7 +10,7 @@
 </p>
 <p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable</p>
 <p align="middle">
-    <a href="https://daybrush.com/moveable"><strong>Official Site</strong></a> /
+    <a href="https://daybrush.com/moveable"><strong>Demo</strong></a> /
     <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable"><strong>React Moveable</strong></a> /
     <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable"><strong>Preact Moveable</strong></a>
 </p>
