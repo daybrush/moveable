@@ -15,7 +15,8 @@
     "demo:build": "rm -rf ./demo/dist && rollup -c rollup.config.demo.js",
     "prerelease": "npm run build && prerelease --dirs=dist,doc",
     "release": "npm run build && npm run doc && release --dirs=dist,doc",
-    "release:init": "npm run build && npm run doc && release -i --dirs=dist,doc"
+    "release:init": "npm run build && npm run doc && release -i --dirs=dist,doc",
+    "deploy": "gh-pages -d ./demo --dest=./ --add --remote origin"
   },
   "keywords": [
     "moveable",
@@ -54,6 +55,7 @@
     "@daybrush/jsdoc": "^0.3.7",
     "@daybrush/release": "^0.2.4",
     "daybrush-jsdoc-template": "^1.6.0",
+    "gh-pages": "^2.0.1",
     "preact": "^8.4.2",
     "preact-compat2": "^0.1.0",
     "preact-moveable": "^0.3.1",
