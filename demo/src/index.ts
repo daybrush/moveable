@@ -1,4 +1,4 @@
-import Moveable from "../../src/";
+import Moveable, { OnDrag, OnScale, OnRotate, OnResize } from "../../src/";
 import { codes } from "./consts";
 import "./index.css";
 
@@ -13,15 +13,15 @@ const moveable = new Moveable(moveableElement.parentElement, {
     resizable: true,
     rotatable: true,
     scalable: false,
-}).on("drag", e => {
-    e.target.style.transform = e.transform;
-}).on("scale", e => {
-    e.target.style.transform = e.transform;
-}).on("rotate", e => {
-    e.target.style.transform = e.transform;
-}).on("resize", e => {
-    e.target.style.width = e.width + "px";
-    e.target.style.height = e.height + "px";
+}).on("drag", ({ target, transform }: OnDrag) => {
+    target.style.transform = transform;
+}).on("scale", ({ target, transform}: OnScale) => {
+    target.style.transform = transform;
+}).on("rotate", ({ target, transform }: OnRotate) => {
+    target.style.transform = transform;
+}).on("resize", ({ target, width, height }: OnResize) => {
+    target.style.width = `${width}px`;
+    target.style.height = `${height}px`;
 });
 
 const draggableElement: HTMLElement = document.querySelector(".draggable");
@@ -30,8 +30,8 @@ const draggable = new Moveable(draggableElement.parentElement, {
     container: draggableElement.parentElement,
     origin: false,
     draggable: true,
-}).on("drag", e => {
-    e.target.style.transform = e.transform;
+}).on("drag", ({ target, transform }: OnDrag) => {
+    target.style.transform = transform;
 });
 
 const resizableElement: HTMLElement = document.querySelector(".resizable");
@@ -40,9 +40,9 @@ const resizable = new Moveable(resizableElement.parentElement, {
     container: resizableElement.parentElement,
     origin: false,
     resizable: true,
-}).on("resize", e => {
-    e.target.style.width = `${e.width}px`;
-    e.target.style.height = `${e.height}px`;
+}).on("resize", ({ target, width, height}: OnResize) => {
+    target.style.width = `${width}px`;
+    target.style.height = `${height}px`;
 });
 
 const scalableElement: HTMLElement = document.querySelector(".scalable");
@@ -51,8 +51,8 @@ const scalable = new Moveable(scalableElement.parentElement, {
     container: scalableElement.parentElement,
     origin: false,
     scalable: true,
-}).on("scale", e => {
-    e.target.style.transform = e.transform;
+}).on("scale", ({ target, transform }: OnScale) => {
+    target.style.transform = transform;
 });
 
 const rotatableElement: HTMLElement = document.querySelector(".rotatable");
@@ -61,8 +61,8 @@ const rotatable = new Moveable(rotatableElement.parentElement, {
     container: rotatableElement.parentElement,
     origin: false,
     rotatable: true,
-}).on("rotate", e => {
-    e.target.style.transform = e.transform;
+}).on("rotate", ({ target, transform }: OnRotate) => {
+    target.style.transform = transform;
 });
 
 window.addEventListener("resize", () => {
