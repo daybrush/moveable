@@ -161,7 +161,7 @@ export function caculatePosition(matrix: number[], origin: number[], width: numb
         [x4, y4],
     ];
 }
-export function caculateRotationMatrix(matrix: number[], rad: number) {
+export function multipleRotationMatrix(matrix: number[], rad: number) {
     const mat = matrix.slice();
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
@@ -169,6 +169,14 @@ export function caculateRotationMatrix(matrix: number[], rad: number) {
     const rotationMatrix = [cos, sin, -sin, cos, 0, 0];
 
     return multiple3x2(mat, rotationMatrix);
+}
+
+export function caculateRotationMatrix(matrix: number[], rad: number) {
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+    const rotationMatrix = [cos, sin, -sin, cos, 0, 0];
+
+    return caculate3x2(rotationMatrix, matrix);
 }
 
 export function getRad(pos1: number[], pos2: number[]) {
@@ -249,6 +257,9 @@ export function getTargetInfo(
     let width = 0;
     let height = 0;
     let transformOrigin = [0, 0];
+    let direction: 1 | -1 = 1;
+    let rotationPos = [0, 0];
+    let rotationRad = 0;
 
     if (target) {
         const rect = target.getBoundingClientRect();
@@ -271,9 +282,28 @@ export function getTargetInfo(
             left -= containerRect.left;
             top -= containerRect.top;
         }
+        const pi = Math.PI;
+        const pos1Rad = getRad(origin, pos1);
+        const pos2Rad = getRad(origin, pos2);
+
+        // 1 : clockwise
+        // -1 : counterclockwise
+        direction =
+            (pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi)
+            ? 1 : -1;
+        rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
+        const relativeRotationPos = caculateRotationMatrix([0, -40, 0], rotationRad);
+
+        rotationPos = [
+            (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
+            (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
+        ];
     }
 
     return {
+        direction,
+        rotationRad,
+        rotationPos,
         transform: "",
         target,
         left,

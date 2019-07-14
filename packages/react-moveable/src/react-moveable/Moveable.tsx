@@ -45,6 +45,9 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         height: 0,
         transform: "",
         transformOrigin: [0, 0],
+        direction: 1,
+        rotationRad: 0,
+        rotationPos: [0, 0],
         origin: [0, 0],
         pos1: [0, 0],
         pos2: [0, 0],
@@ -62,8 +65,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         if (this.state.target !== this.props.target) {
             this.updateRect(true);
         }
-        const { left, top, pos1, pos2, pos3, pos4, target, transform } = this.state;
-        const direction = this.getDirection();
+        const { left, top, pos1, pos2, pos3, pos4, target, transform, direction } = this.state;
 
         return (
             <ControlBoxElement
@@ -157,23 +159,6 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             left: left + pos[0],
             top: top + pos[1],
         });
-    }
-    public getRadByPos(pos: number[]) {
-        const { left, top, origin } = this.state;
-        const center = [left + origin[0], top + origin[1]];
-
-        return getRad(center, pos);
-    }
-    public getDirection() {
-        const { pos1, pos2, origin } = this.state;
-        const pi = Math.PI;
-        const pos1Rad = getRad(origin, pos1);
-        const pos2Rad = getRad(origin, pos2);
-
-        // 1 : clockwise
-        // -1 : counterclockwise
-        return (pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi)
-            ? 1 : -1;
     }
     public updateRect(isNotSetState?: boolean) {
         const target = this.props.target;

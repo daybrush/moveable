@@ -1,11 +1,15 @@
 import Moveable from "./Moveable";
-import { caculateRotationMatrix, caculatePosition } from "./utils";
+import { multipleRotationMatrix, caculatePosition, getRad } from "./utils";
 
 function getRotateInfo(moveable: Moveable, datas: any, clientX: number, clientY: number) {
-    const startRad = datas.startRad;
-    const prevRad = datas.prevRad;
-    const prevLoop = datas.loop;
-    const rad = moveable.getRadByPos([clientX, clientY]);
+    const {
+        startAbsoluteOrigin,
+        startRad,
+        prevRad,
+        loop: prevLoop,
+        direction,
+    } = datas;
+    const rad = getRad(startAbsoluteOrigin, [clientX, clientY]);
 
     if (prevRad > rad && prevRad > 270 && rad < 90) {
         // 360 => 0
@@ -26,9 +30,7 @@ function getRotateInfo(moveable: Moveable, datas: any, clientX: number, clientY:
         top: prevTop,
     } = moveable.state;
 
-    const direction = datas.direction;
-
-    const matrix = caculateRotationMatrix(datas.matrix, direction * (rad - startRad));
+    const matrix = multipleRotationMatrix(datas.matrix, direction * (rad - startRad));
     const prevAbsoluteOrigin = [prevLeft + prevOrigin[0], prevTop + prevOrigin[1]];
     const [origin, pos1, pos2, pos3, pos4]
         = caculatePosition(matrix, transformOrigin, width, height);
@@ -57,16 +59,18 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     if (!target) {
         return false;
     }
-    const { matrix, left, top } = moveable.state;
+    const { matrix, left, top, origin, rotationPos, direction } = moveable.state;
 
     datas.transform = window.getComputedStyle(target!).transform;
     datas.matrix = matrix;
     datas.left = left;
     datas.top = top;
-    datas.prevRad = moveable.getRadByPos([clientX, clientY]);
+    datas.startAbsoluteOrigin = [clientX - rotationPos[0] + origin[0], clientY - rotationPos[1] + origin[1]];
+
+    datas.prevRad = getRad(datas.startAbsoluteOrigin, [clientX, clientY]);
     datas.startRad = datas.prevRad;
     datas.loop = 0;
-    datas.direction = moveable.getDirection();
+    datas.direction = direction;
 
     if (datas.transform === "none") {
         datas.transform = "";

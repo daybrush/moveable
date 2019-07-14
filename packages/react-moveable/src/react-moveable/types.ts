@@ -42,11 +42,15 @@ export interface MoveableState {
     transform: string;
     transformOrigin: number[];
     origin: number[];
+    direction: 1 | -1;
+    rotationRad: number;
+    rotationPos: number[];
     pos1: number[];
     pos2: number[];
     pos3: number[];
     pos4: number[];
 }
+
 /**
  * @typedef
  * @memberof Moveable
