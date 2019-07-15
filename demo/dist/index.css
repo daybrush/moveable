@@ -21,6 +21,7 @@ a {
     position: relative;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
 }
 
 .page:nth-child(2n) {
@@ -105,7 +106,7 @@ a {
     padding: 60px 0px;
     margin: auto;
     transform: none;
-    width: 100%;
+    width: auto;
     max-width: 800px;
 
 }
@@ -128,6 +129,7 @@ a {
     display: inline-block;
     vertical-align: top;
     z-index: 2000;
+    margin-bottom: 20px;
 }
 
 .feature .container .right {
@@ -198,4 +200,21 @@ code.hljs {
 .page.footer span:before {
     content: "/";
 
+}
+
+
+@media screen and (max-width: 750px) {
+    .page.feature .container {
+        display: block;
+    }
+    .page.feature .container {
+        text-align: center;
+    }
+    .page.feature .left, .page.feature .right {
+        display: block;
+        margin: 0px auto 20px;
+    }
+    .page.feature .right {
+        text-align: left;
+    }
 }
