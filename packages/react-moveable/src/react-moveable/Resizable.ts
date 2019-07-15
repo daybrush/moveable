@@ -8,12 +8,12 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
         return false;
     }
     const {
-        beforeMatrix,
+        matrix,
     } = moveable.state;
 
     const [width, height] = getSize(target!);
 
-    datas.matrix = invert3x2(beforeMatrix.slice());
+    datas.matrix = invert3x2(matrix.slice());
     datas.position = position;
     datas.width = width;
     datas.height = height;

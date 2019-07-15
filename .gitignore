@@ -3,6 +3,8 @@ node_modules/
 .DS_Store
 doc/
 dist/
+demo/dist/
+packages/*/dist/
 release/
 npm-debug.log*
 coverage/
