@@ -157,6 +157,7 @@ pre {
     border: 1px solid #ccc;
     box-sizing: border-box;
     padding: 10px;
+    max-width: 500px;
 }
 
 code.hljs {
