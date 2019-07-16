@@ -1,7 +1,7 @@
 .App {
   text-align: center;
   transform-origin: 30% 50%;
-  transform: scaleX(-0.8) translateY(30px);
+  /* transform: scaleX(1) translateY(30px); */
 }
 .App * {
   position: relative;
@@ -9,7 +9,7 @@
 .App-logo {
   position: relative;
   /* animation: App-logo-spin infinite 20s linear; */
-  transform: rotate(18deg);
+  /* transform: rotate(18deg); */
   width: 300px;
   height: 200px;
 }
@@ -27,7 +27,7 @@ img {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  transform: rotate(-9deg);
+  /* transform: rotate(-9deg); */
   color: white;
 }
 

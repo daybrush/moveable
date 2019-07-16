@@ -24,12 +24,12 @@ const moveable = new Moveable(moveableElement.parentElement, {
 }).on("drag", ({ target, left, top }: OnDrag) => {
     target.style.left = `${left}px`;
     target.style.top = `${top}px`;
-}).on("scale", ({ target, delta}: OnScale) => {
-    scale[0] += delta[0];
-    scale[1] += delta[1];
+}).on("scale", ({ target, dist }: OnScale) => {
+    scale[0] *= dist[0];
+    scale[1] *= dist[1];
     setTransform(target);
-}).on("rotate", ({ target, delta }: OnRotate) => {
-    rotate += delta;
+}).on("rotate", ({ target, beforeDelta }: OnRotate) => {
+    rotate += beforeDelta;
     setTransform(target);
 }).on("resize", ({ target, width, height }: OnResize) => {
     target.style.width = `${width}px`;

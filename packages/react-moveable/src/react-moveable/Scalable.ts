@@ -1,5 +1,5 @@
 import Moveable from "./Moveable";
-import { caculatePosition, invert3x2, caculate3x2, multiple3x2, getRad } from "./utils";
+import { invert3x2, caculate3x2, getRad } from "./utils";
 
 export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
     const target = moveable.props.target;
@@ -9,6 +9,7 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
     const style = window.getComputedStyle(target);
     const {
         matrix,
+        beforeMatrix,
         width,
         height,
         left, top,
@@ -17,13 +18,13 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
     } = moveable.state;
 
     datas.matrix = invert3x2(matrix.slice());
+    datas.beforeMatrix = beforeMatrix;
     datas.transform = style.transform;
     datas.prevDist = [1, 1];
     datas.position = position;
     datas.width = width;
     datas.height = height;
     datas.transformOrigin = transformOrigin;
-    datas.originalMatrix = matrix;
     datas.originalOrigin = origin;
     datas.left = left;
     datas.top = top;
@@ -38,8 +39,8 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
 }
 export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     const {
-        originalMatrix,
         matrix,
+        beforeMatrix,
         prevDist,
         position,
         width,
@@ -69,27 +70,26 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     const nextHeight = height + distHeight;
     const scaleX = nextWidth / width;
     const scaleY = nextHeight / height;
-    const [origin, pos1, pos2, pos3, pos4] = caculatePosition(
-        multiple3x2(originalMatrix.slice(), [scaleX, 0, 0, scaleY, 0, 0]),
-        transformOrigin, width, height,
-    );
-    const nextLeft = left + originalOrigin[0] - origin[0];
-    const nextTop = top + originalOrigin[1] - origin[1];
+    const target = moveable.props.target!
 
     datas.prevDist = [scaleX, scaleY];
     moveable.props.onScale!({
-        target: moveable.props.target!,
+        target,
         scale: [scaleX, scaleY],
-        dist: [scaleX - 1, scaleY - 1],
+        dist: [scaleX / prevDist[0], scaleY / prevDist[1]],
         delta: [scaleX - prevDist[0], scaleY - prevDist[1]],
         transform: `${transform} scale(${scaleX}, ${scaleY})`,
     });
 
-    moveable.setState({
-        origin, pos1, pos2, pos3, pos4,
-        left: nextLeft,
-        top: nextTop,
-    });
+    moveable.updateTargetRect(target, {
+        beforeMatrix,
+        transformOrigin,
+        origin: originalOrigin,
+        width,
+        height,
+        left,
+        top,
+    })
 }
 export function scaleEnd(moveable: Moveable, { isDrag }: any) {
     moveable.props.onScaleEnd!({

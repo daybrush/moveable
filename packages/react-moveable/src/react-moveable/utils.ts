@@ -89,20 +89,27 @@ export function invert3x2(a: number[]) {
 
     return a;
 }
+export function getTransform(target: SVGElement | HTMLElement, isInit: true): number[];
+export function getTransform(target: SVGElement | HTMLElement): "none" | number[];
+export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
+    const transform = window.getComputedStyle(target).transform!;
+
+    if (transform === "none") {
+        if (isInit) {
+            return [1, 0, 0, 1, 0, 0];
+        }
+        return "none";
+    } else {
+        const value = splitBracket(transform).value!;
+        return value.split(/s*,\s*/g).map(v => parseFloat(v));
+    }
+}
 export function caculateMatrixStack(target: SVGElement | HTMLElement) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: Array<"none" | number[]> = [];
 
     while (el) {
-        const transform = window.getComputedStyle(el).transform!;
-
-        if (transform !== "none") {
-            const value = splitBracket(transform).value!;
-            const matrix = value.split(/s*,\s*/g).map(v => parseFloat(v));
-            matrixes.push(matrix);
-        } else {
-            matrixes.push("none");
-        }
+        matrixes.push(getTransform(el));
         el = el.parentElement;
     }
 
@@ -186,13 +193,16 @@ export function getRad(pos1: number[], pos2: number[]) {
 
     return rad > 0 ? rad : rad + Math.PI * 2;
 }
-export function getLineTransform(pos1: number[], pos2: number[]) {
+export function getLineStyle(pos1: number[], pos2: number[]) {
     const distX = pos2[0] - pos1[0];
     const distY = pos2[1] - pos1[1];
     const width = Math.sqrt(distX * distX + distY * distY);
     const rad = getRad(pos1, pos2);
 
-    return `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad) scale(${width}, 1.2)`;
+    return {
+        transform: `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad)`,
+        width: `${width}px`,
+    };
 }
 export function getControlTransform(...poses: number[][]) {
     const length = poses.length;
@@ -241,6 +251,21 @@ export function getSize(
         ];
     }
 }
+export function getRotationInfo(origin: number[], pos1: number[], pos2: number[]): [1 | -1, number, number[]] {
+    const pos1Rad = getRad(origin, pos1);
+    const pos2Rad = getRad(origin, pos2);
+    const direction =
+    (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
+        ? 1 : -1;
+    const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
+    const relativeRotationPos = caculateRotationMatrix([0, -40, 0], rotationRad);
+    const rotationPos = [
+        (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
+        (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
+    ];
+
+    return [direction, rotationRad, rotationPos];
+}
 export function getTargetInfo(
     target?: SVGElement | HTMLElement,
     container?: MoveableProps["container"],
@@ -282,22 +307,9 @@ export function getTargetInfo(
             left -= containerRect.left;
             top -= containerRect.top;
         }
-        const pi = Math.PI;
-        const pos1Rad = getRad(origin, pos1);
-        const pos2Rad = getRad(origin, pos2);
-
         // 1 : clockwise
         // -1 : counterclockwise
-        direction =
-            (pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi)
-            ? 1 : -1;
-        rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-        const relativeRotationPos = caculateRotationMatrix([0, -40, 0], rotationRad);
-
-        rotationPos = [
-            (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
-            (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
-        ];
+        [direction, rotationRad, rotationPos] = getRotationInfo(origin, pos1, pos2);
     }
 
     return {

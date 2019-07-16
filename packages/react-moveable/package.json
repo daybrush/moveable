@@ -1,6 +1,6 @@
 {
   "name": "react-moveable",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -47,10 +47,10 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1",
+    "scenejs": "^1.1.4",
     "shape-svg": "^0.3.3",
     "tslint": "^5.16.0",
-    "typescript": "^3.4.5",
-    "scenejs": "^1.0.4"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "@daybrush/drag": "^0.5.0",

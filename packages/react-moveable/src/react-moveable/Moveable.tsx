@@ -1,9 +1,13 @@
 import * as React from "react";
 import { MOVEABLE_CSS, PREFIX } from "./consts";
 import {
-    prefix, getRad, getLineTransform,
+    prefix, getRad, getLineStyle,
     getTargetInfo,
     getControlTransform,
+    getTransform,
+    caculatePosition,
+    multiple3x2,
+    getRotationInfo,
 } from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
@@ -75,10 +79,10 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                     display: target ? "block" : "none",
                     transform: `translate(${left}px, ${top}px) ${transform}`,
                 }}>
-                <div className={prefix("line")} style={{ transform: getLineTransform(pos1, pos2) }}></div>
-                <div className={prefix("line")} style={{ transform: getLineTransform(pos2, pos4) }}></div>
-                <div className={prefix("line")} style={{ transform: getLineTransform(pos1, pos3) }}></div>
-                <div className={prefix("line")} style={{ transform: getLineTransform(pos3, pos4) }}></div>
+                <div className={prefix("line")} style={getLineStyle(pos1, pos2)}></div>
+                <div className={prefix("line")} style={getLineStyle(pos2, pos4)}></div>
+                <div className={prefix("line")} style={getLineStyle(pos1, pos3)}></div>
+                <div className={prefix("line")} style={getLineStyle(pos3, pos4)}></div>
                 {this.renderRotation(direction)}
                 {this.renderPosition()}
                 {this.renderOrigin()}
@@ -174,6 +178,34 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         }
         const container = this.props.container;
         this.updateState(getTargetInfo(target, container), isNotSetState);
+    }
+    public updateTargetRect(target: HTMLElement | SVGElement, nextState: {
+        beforeMatrix: number[],
+        transformOrigin: number[],
+        width: number,
+        height: number,
+        left: number,
+        top: number,
+        origin: number[],
+    }) {
+        const { beforeMatrix, transformOrigin, width, height, left, top, origin: originalOrigin } = nextState;
+        const nextTransform = getTransform(target, true);
+        const [origin, pos1, pos2, pos3, pos4] = caculatePosition(
+            multiple3x2(beforeMatrix.slice(), nextTransform),
+            transformOrigin, width, height,
+        );
+        const nextLeft = left + originalOrigin[0] - origin[0];
+        const nextTop = top + originalOrigin[1] - origin[1];
+        const [direction, rotationRad, rotationPos] = getRotationInfo(origin, pos1, pos2);
+
+        this.setState({
+            direction,
+            rotationRad,
+            rotationPos,
+            origin, pos1, pos2, pos3, pos4,
+            left: nextLeft,
+            top: nextTop,
+        });
     }
     private updateState(nextState: any, isNotSetState?: boolean) {
         const state = this.state as any;

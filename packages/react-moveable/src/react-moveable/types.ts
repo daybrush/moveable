@@ -172,12 +172,16 @@ export interface OnRotateStart {
  * @property - a rotating target
  * @property - The distance of rotation rad
  * @property - The delta of rotation rad
+ * @property - The distance of rotation rad before transform is applied
+ * @property - The delta of rotation rad before transform is applied
  * @property - a target's transform
  */
 export interface OnRotate {
     target: HTMLElement | SVGElement;
     dist: number;
     delta: number;
+    beforeDist: number;
+    beforeDelta: number;
     transform: string;
 }
 /**
