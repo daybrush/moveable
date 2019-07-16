@@ -42,6 +42,14 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     background:#fff;
     cursor: alias;
 }
+.control.origin {
+    border-color: #f55;
+    background: #fff;
+    width: 12px;
+    height: 12px;
+    margin-top: -6px;
+    margin-left: -6px;
+}
 .control.e, .control.w {
     cursor: ew-resize;
 }
