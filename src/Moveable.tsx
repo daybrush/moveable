@@ -7,7 +7,7 @@ import {
     OnDragStart, OnDrag, OnResize, OnResizeStart,
     OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
     OnRotateEnd, OnDragEnd, OnRotate, OnScale,
-} from "preact-moveable";
+} from "react-moveable/declaration/types";
 
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
@@ -15,7 +15,7 @@ import {
  * @extends eg.Component
  */
 class Moveable extends EgComponent {
-    private innerMoveable!: InnerMoveable;
+    private innerMoveable!: any;
 
     /**
      *
