@@ -10,11 +10,11 @@ const moveable = new Moveable(moveableElement.parentElement, {
     container: moveableElement.parentElement,
     origin: false,
     draggable: true,
-    resizable: true,
     rotatable: true,
-    scalable: false,
-}).on("drag", ({ target, transform }: OnDrag) => {
-    target.style.transform = transform;
+    scalable: true,
+}).on("drag", ({ target, left, top }: OnDrag) => {
+    target.style.left = `${left}px`;
+    target.style.top = `${top}px`;
 }).on("scale", ({ target, transform}: OnScale) => {
     target.style.transform = transform;
 }).on("rotate", ({ target, transform }: OnRotate) => {
