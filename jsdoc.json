@@ -1,24 +1,38 @@
-
 {
     "plugins": [],
-	"recurseDepth": 10,
-	"opts": {
-		"template": "./node_modules/daybrush-jsdoc-template",
-		"destination": "./doc/"
+    "recurseDepth": 10,
+    "opts": {
+        "template": "./node_modules/daybrush-jsdoc-template",
+        "destination": "./doc/"
     },
     "source": {
-		"include": ["./src", "README.md", "node_modules/react-moveable/src/react-moveable/types.ts", "node_modules/@egjs/component/src/Component.js"],
+        "include": [
+            "./src",
+            "README.md",
+            "node_modules/react-moveable/src/react-moveable/types.ts",
+            "node_modules/@egjs/component/src/Component.js"
+        ],
         "includePattern": "(.+\\.js(doc|x)?|.+\\.ts(doc|x)?)$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
     "sourceType": "module",
     "tags": {
         "allowUnknownTags": true,
-        "dictionaries": ["jsdoc","closure"]
+        "dictionaries": [
+            "jsdoc",
+            "closure"
+        ]
     },
     "templates": {
         "cleverLinks": false,
-        "monospaceLinks": false
+        "monospaceLinks": false,
+        "default": {
+            "staticFiles": {
+                "include": [
+                    "./static"
+                ]
+            }
+        }
     },
     "linkMap": {
         "IObject": "http://daybrush.com/utils/release/latest/doc/global.html#ObjectInterface"
