@@ -1,10 +1,19 @@
-import Moveable, { OnDrag, OnScale, OnRotate, OnResize } from "../../src/";
+import Moveable from "../../src/Moveable";
+import { OnDrag, OnScale, OnRotate, OnResize } from "preact-moveable";
 import { codes } from "./consts";
 import "./index.css";
 
 declare const hljs: any;
 
 const moveableElement: HTMLElement = document.querySelector(".moveable");
+
+let rotate: number = 0;
+const translate = [0, 0];
+const scale = [1, 1];
+
+function setTransform(target: HTMLElement | SVGElement) {
+    target.style.transform = `translate(${translate[0]}px, ${translate[1]}px) rotate(${rotate}deg) scale(${scale[0]}, ${scale[1]})`;
+}
 const moveable = new Moveable(moveableElement.parentElement, {
     target: moveableElement,
     container: moveableElement.parentElement,
@@ -15,10 +24,13 @@ const moveable = new Moveable(moveableElement.parentElement, {
 }).on("drag", ({ target, left, top }: OnDrag) => {
     target.style.left = `${left}px`;
     target.style.top = `${top}px`;
-}).on("scale", ({ target, transform}: OnScale) => {
-    target.style.transform = transform;
-}).on("rotate", ({ target, transform }: OnRotate) => {
-    target.style.transform = transform;
+}).on("scale", ({ target, delta}: OnScale) => {
+    scale[0] += delta[0];
+    scale[1] += delta[1];
+    setTransform(target);
+}).on("rotate", ({ target, delta }: OnRotate) => {
+    rotate += delta;
+    setTransform(target);
 }).on("resize", ({ target, width, height }: OnResize) => {
     target.style.width = `${width}px`;
     target.style.height = `${height}px`;

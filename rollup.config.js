@@ -29,7 +29,7 @@ export default builder([
         uglify: true,
     },
     {
-        input: "src/index.ts",
+        input: "src/index.umd.ts",
         output: "./dist/moveable.esm.js",
         exports: "named",
         format: "es",
@@ -37,7 +37,7 @@ export default builder([
         external,
     },
     {
-        input: "src/index.ts",
+        input: "src/index.umd.ts",
         output: "./dist/moveable.cjs.js",
         exports: "named",
         format: "cjs",
