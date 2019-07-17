@@ -17,7 +17,8 @@ function setTransform(target: HTMLElement | SVGElement) {
         = `translate(${translate[0]}px, ${translate[1]}px) rotate(${rotate}deg) scale(${scale[0]}, ${scale[1]})`;
 }
 function setLabel(clientX: number, clientY: number, text) {
-    labelElement.style.cssText = `display: block; left: ${clientX + 10}px; top: ${clientY + 10}px;`;
+    // tslint:disable-next-line: max-line-length
+    labelElement.style.cssText = `display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
     labelElement.innerHTML = text;
 }
 const moveable = new Moveable(moveableElement.parentElement, {

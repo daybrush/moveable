@@ -109,6 +109,7 @@ a {
     font-weight: bold;
     font-size: 12px;
     display: none;
+    transform: translate(-100%, -100%);
 }
 
 .page.feature, .page.footer {
