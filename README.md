@@ -85,25 +85,27 @@ const moveable = new Moveable(document.body, {
     throttleResize: 0,
     throttleScale: 0,
     throttleRotate: 0,
-}).on("dragStart", ({ target, clientX, clientY }: OnDragStart) => {
+})
+/* draggable */
+moveable.on("dragStart", ({ target, clientX, clientY }: OnDragStart) => {
     console.log("onDragStart", target);
 }).on("drag", ({
-    target,
-    beforeDelta, beforeDist,
-    left, top,
-    right, bottom,
-    delta, dist,
-    transform,
+    target, transform,
+    left, top, right, bottom,
+    beforeDelta, beforeDist, delta, dist,
     clientX, clientY,
 }: OnDrag) => {
     console.log("onDrag left, top", left, top);
-    // target!.style.left = `${left}px`;
-    // target!.style.top = `${top}px`;
-    console.log("onDrag translate", dist);
-    target!.style.transform = transform;
+    target!.style.left = `${left}px`;
+    target!.style.top = `${top}px`;
+    // console.log("onDrag translate", dist);
+    // target!.style.transform = transform;
 }).on("dragEnd", ({ target, isDrag, clientX, clientY }: OnDragEnd) => {
     console.log("onDragEnd", target, isDrag);
-}).on("resizeStart", ({ target, clientX, clientY }: OnResizeStart) => {
+});
+
+/* resizable */
+moveable.on("resizeStart", ({ target, clientX, clientY }: OnResizeStart) => {
     console.log("onResizeStart", target);
 }).on("resize", ({ target, width, height, dist, delta, clientX, clientY }: OnResize) => {
     console.log("onResize", target);
@@ -111,7 +113,10 @@ const moveable = new Moveable(document.body, {
     delta[1] && (target!.style.height = `${height}px`);
 }).on("resizeEnd", ({ target, isDrag, clientX, clientY }: OnResizeEnd) => {
     console.log("onResizeEnd", target, isDrag);
-}).on("scaleStart", ({ target, clientX, clientY }: OnScalableStart) => {
+});
+
+/* scalable */
+moveable.on("scaleStart", ({ target, clientX, clientY }: OnScalableStart) => {
     console.log("onScaleStart", target);
 }).on("scale", ({
     target, scale, dist, delta, transform, clientX, clientY,
@@ -120,7 +125,10 @@ const moveable = new Moveable(document.body, {
     target!.style.transform = transform;
 }).on("scaleEnd", ({ target, isDrag, clientX, clientY }: OnScaleEnd) => {
     console.log("onScaleEnd", target, isDrag);
-}).on("rotateStart", ({ target, clientX, clientY }: OnRotateStart) => {
+});
+
+/* rotatable */
+moveable.on("rotateStart", ({ target, clientX, clientY }: OnRotateStart) => {
     console.log("onRotateStart", target);
 }).on("rotate", ({ target, delta, dist, transform, clientX, clientY }: onRotate) => {
     console.log("onRotate", dist);
