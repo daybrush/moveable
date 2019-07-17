@@ -38,7 +38,11 @@ export function resize(moveable: Moveable, { datas, distX, distY }: any) {
     let distHeight = position[1] * dist[1];
 
     // diagonal
-    if (position[0] && position[1]) {
+    if (
+        moveable.props.keepRatio
+        && position[0] && position[1]
+        && width && height
+    ) {
         const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
         const rad = getRad([0, 0], dist);
         const standardRad = getRad([0, 0], position);

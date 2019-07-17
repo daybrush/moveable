@@ -7,6 +7,7 @@ export interface MoveableProps {
     draggable?: boolean;
     scalable?: boolean;
     resizable?: boolean;
+    keepRatio?: boolean;
 
     onRotateStart?: (e: OnRotateStart) => void;
     onRotate?: (e: OnRotate) => void;

@@ -63,3 +63,6 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     cursor: nesw-resize;
 }
 `);
+
+
+export const MIN_SCALE = 0.000000001;

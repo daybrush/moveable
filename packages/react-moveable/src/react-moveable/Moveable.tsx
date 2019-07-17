@@ -25,6 +25,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         draggable: false,
         scalable: false,
         resizable: false,
+        keepRatio: true,
         origin: true,
         onRotateStart: () => { },
         onRotate: () => { },

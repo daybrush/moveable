@@ -1,5 +1,6 @@
 import Moveable from "./Moveable";
 import { invert3x2, caculate3x2, getRad } from "./utils";
+import { MIN_SCALE } from "./consts";
 
 export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
     const target = moveable.props.target;
@@ -56,7 +57,11 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     let distHeight = position[1] * dist[1];
 
     // diagonal
-    if (position[0] && position[1]) {
+    if (
+        moveable.props.keepRatio
+        && position[0] && position[1]
+        && width && height
+    ) {
         const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
         const rad = getRad([0, 0], dist);
         const standardRad = getRad([0, 0], position);
@@ -68,10 +73,16 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
 
     const nextWidth = width + distWidth;
     const nextHeight = height + distHeight;
-    const scaleX = nextWidth / width;
-    const scaleY = nextHeight / height;
+    let scaleX = nextWidth / width;
+    let scaleY = nextHeight / height;
     const target = moveable.props.target!
 
+    if (scaleX === 0) {
+        scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+    }
+    if (scaleY === 0) {
+        scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+    }
     datas.prevDist = [scaleX, scaleY];
     moveable.props.onScale!({
         target,
