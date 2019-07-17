@@ -1,5 +1,5 @@
 import Moveable from "./Moveable";
-import { invert3x2, caculate3x2, getRad } from "./utils";
+import { invert3x2, caculate3x2, getRad, throttle } from "./utils";
 import { MIN_SCALE } from "./consts";
 
 export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
@@ -76,6 +76,10 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     let scaleX = nextWidth / width;
     let scaleY = nextHeight / height;
     const target = moveable.props.target!
+    const throttleScale = moveable.props.throttleScale!;
+
+    scaleX = throttle(scaleX, throttleScale);
+    scaleY = throttle(scaleY, throttleScale);
 
     if (scaleX === 0) {
         scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -83,7 +87,12 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     if (scaleY === 0) {
         scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
     }
+
     datas.prevDist = [scaleX, scaleY];
+
+    if (scaleX === prevDist[0] && scaleY === prevDist[1]) {
+        return;
+    }
     moveable.props.onScale!({
         target,
         scale: [scaleX, scaleY],

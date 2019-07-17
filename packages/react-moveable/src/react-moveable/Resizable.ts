@@ -1,5 +1,5 @@
 import Moveable from "./Moveable";
-import { invert3x2, caculate3x2, getRad, getSize } from "./utils";
+import { invert3x2, caculate3x2, getRad, getSize, throttle } from "./utils";
 
 export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
     const target = moveable.props.target;
@@ -52,18 +52,27 @@ export function resize(moveable: Moveable, { datas, distX, distY }: any) {
         distHeight = distDiagonal * height / width;
     }
 
+    const throttleResize = moveable.props.throttleResize!;
+
+    distWidth = throttle(distWidth, throttleResize);
+    distHeight = throttle(distHeight, throttleResize);
+
     const nextWidth = width + distWidth;
     const nextHeight = height + distHeight;
+    const delta = [distWidth - prevWidth, distHeight - prevHeight];
 
     datas.prevWidth = distWidth;
     datas.prevHeight = distHeight;
 
+    if (delta.every(num => !num)) {
+        return;
+    }
     moveable.props.onResize!({
         target: moveable.props.target!,
         width: nextWidth,
         height: nextHeight,
         dist: [distWidth, distHeight],
-        delta: [distWidth - prevWidth, distHeight - prevHeight],
+        delta,
     });
 
     moveable.updateRect();

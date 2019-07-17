@@ -27,6 +27,10 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         resizable: false,
         keepRatio: true,
         origin: true,
+        throttleDrag: 0,
+        throttleResize: 0,
+        throttleScale: 0,
+        throttleRotate: 0,
         onRotateStart: () => { },
         onRotate: () => { },
         onRotateEnd: () => { },
@@ -180,16 +184,48 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         const container = this.props.container;
         this.updateState(getTargetInfo(target, container), isNotSetState);
     }
+    public updatePosition() {
+        const { target, container } = this.props;
+
+        if (target) {
+            const rect = target.getBoundingClientRect();
+            const style = window.getComputedStyle(target);
+
+            let left = rect.left;
+            let top = rect.top;
+
+            if (container) {
+                const containerRect = container.getBoundingClientRect();
+
+                left -= containerRect.left;
+                top -= containerRect.top;
+            }
+            this.setState({
+                left,
+                top,
+            });
+        }
+
+    }
     public updateTargetRect(target: HTMLElement | SVGElement, nextState: {
         beforeMatrix: number[],
-        transformOrigin: number[],
-        width: number,
-        height: number,
-        left: number,
-        top: number,
-        origin: number[],
+        left?: number,
+        top?: number,
+        width?: number,
+        height?: number,
+        origin?: number[],
+        transformOrigin?: number[],
     }) {
-        const { beforeMatrix, transformOrigin, width, height, left, top, origin: originalOrigin } = nextState;
+        const state = this.state;
+        const {
+            beforeMatrix,
+            left = state.left,
+            top = state.top,
+            width = state.width,
+            height = state.height,
+            transformOrigin = state.transformOrigin,
+            origin: originalOrigin = state.origin,
+        } = nextState;
         const nextTransform = getTransform(target, true);
         const [origin, pos1, pos2, pos3, pos4] = caculatePosition(
             multiple3x2(beforeMatrix.slice(), nextTransform),

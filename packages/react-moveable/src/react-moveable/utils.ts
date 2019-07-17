@@ -348,3 +348,16 @@ export function getPosition(target: SVGElement | HTMLElement) {
 
     return pos;
 }
+
+
+export function throttle(num: number, unit: number) {
+    if (!unit) {
+        return num;
+    }
+    return Math.round(num / unit) * unit;
+}
+export function throttleArray(nums: number[], unit: number) {
+    nums.forEach((_, i) => {
+        nums[i] = throttle(nums[i], unit);
+    });
+}

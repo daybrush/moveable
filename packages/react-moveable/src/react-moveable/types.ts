@@ -9,6 +9,10 @@ export interface MoveableProps {
     resizable?: boolean;
     keepRatio?: boolean;
 
+    throttleDrag?: number;
+    throttleResize?: number;
+    throttleScale?: number;
+    throttleRotate?: number;
     onRotateStart?: (e: OnRotateStart) => void;
     onRotate?: (e: OnRotate) => void;
     onRotateEnd?: (e: OnRotateEnd) => void;

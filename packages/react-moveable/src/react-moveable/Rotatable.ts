@@ -1,33 +1,33 @@
 import Moveable from "./Moveable";
-import { getRad } from "./utils";
+import { getRad, throttle } from "./utils";
 
-function getRotateInfo(datas: any, clientX: number, clientY: number) {
+function getRotateInfo(datas: any, clientX: number, clientY: number, throttleRotate: number) {
     const {
         startAbsoluteOrigin,
-        startRad,
-        prevRad,
+        startDeg,
+        prevDeg,
         loop: prevLoop,
         direction,
     } = datas;
-    const rad = getRad(startAbsoluteOrigin, [clientX, clientY]);
+    const deg = throttle(getRad(startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180, throttleRotate);
 
-    if (prevRad > rad && prevRad > 270 && rad < 90) {
+    if (prevDeg > deg && prevDeg > 270 && deg < 90) {
         // 360 => 0
         ++datas.loop;
-    } else if (prevRad < rad && prevRad < 90 && rad > 270) {
+    } else if (prevDeg < deg && prevDeg < 90 && deg > 270) {
         // 0 => 360
         --datas.loop;
     }
 
-    const absolutePrevRad = prevLoop * 360 + prevRad;
-    const absoluteRad = datas.loop * 360 + rad;
+    const absolutePrevDeg = prevLoop * 360 + prevDeg;
+    const absoluteDeg = datas.loop * 360 + deg;
 
-    datas.prevRad = rad;
+    datas.prevDeg = deg;
     return {
-        delta: direction * (absoluteRad - absolutePrevRad) / Math.PI * 180,
-        dist: direction * (absolutePrevRad - startRad) / Math.PI * 180,
-        beforeDelta: (absoluteRad - absolutePrevRad) / Math.PI * 180,
-        beforeDist: (absolutePrevRad - startRad) / Math.PI * 180,
+        delta: direction * (absoluteDeg - absolutePrevDeg),
+        dist: direction * (absoluteDeg - startDeg),
+        beforeDelta: (absoluteDeg - absolutePrevDeg),
+        beforeDist: (absoluteDeg - startDeg),
         origin,
     };
 }
@@ -46,8 +46,8 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     datas.top = top;
     datas.startAbsoluteOrigin = [clientX - rotationPos[0] + origin[0], clientY - rotationPos[1] + origin[1]];
 
-    datas.prevRad = getRad(datas.startAbsoluteOrigin, [clientX, clientY]);
-    datas.startRad = datas.prevRad;
+    datas.prevDeg = getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
+    datas.startDeg = datas.prevDeg;
     datas.loop = 0;
     datas.direction = direction;
 
@@ -64,8 +64,11 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
         dist,
         beforeDist,
         beforeDelta,
-    } = getRotateInfo(datas, clientX, clientY);
+    } = getRotateInfo(datas, clientX, clientY, moveable.props.throttleRotate!);
 
+    if (!delta) {
+        return;
+    }
     moveable.props.onRotate!({
         target: moveable.props.target!,
         delta,

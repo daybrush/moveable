@@ -40,6 +40,10 @@ class App extends React.Component {
                     draggable={true}
                     scalable={!isResizable}
                     resizable={isResizable}
+                    throttleDrag={10}
+                    throttleScale={0.1}
+                    throttleResize={10}
+                    throttleRotate={10}
                     rotatable={true}
                     onRotate={({ target, beforeDelta }) => {
                         item.set("rotate", `${parseFloat(item.get("rotate")) + beforeDelta}deg`);
