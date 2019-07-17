@@ -6,13 +6,19 @@ import "./index.css";
 declare const hljs: any;
 
 const moveableElement: HTMLElement = document.querySelector(".moveable");
+const labelElement: HTMLElement = document.querySelector(".label");
 
 let rotate: number = 0;
 const translate = [0, 0];
 const scale = [1, 1];
 
 function setTransform(target: HTMLElement | SVGElement) {
-    target.style.transform = `translate(${translate[0]}px, ${translate[1]}px) rotate(${rotate}deg) scale(${scale[0]}, ${scale[1]})`;
+    target.style.transform
+        = `translate(${translate[0]}px, ${translate[1]}px) rotate(${rotate}deg) scale(${scale[0]}, ${scale[1]})`;
+}
+function setLabel(clientX: number, clientY: number, text) {
+    labelElement.style.cssText = `display: block; left: ${clientX + 10}px; top: ${clientY + 10}px;`;
+    labelElement.innerHTML = text;
 }
 const moveable = new Moveable(moveableElement.parentElement, {
     target: moveableElement,
@@ -21,19 +27,32 @@ const moveable = new Moveable(moveableElement.parentElement, {
     draggable: true,
     rotatable: true,
     scalable: true,
-}).on("drag", ({ target, left, top }: OnDrag) => {
+    keepRatio: false,
+    throttleDrag: 1,
+    throttleScale: 0.01,
+    throttleRotate: 0.2,
+}).on("drag", ({ target, left, top, clientX, clientY }: OnDrag) => {
     target.style.left = `${left}px`;
     target.style.top = `${top}px`;
-}).on("scale", ({ target, dist }: OnScale) => {
+    setLabel(clientX, clientY, `X: ${left}px<br/>Y: ${top}px`);
+}).on("scale", ({ target, dist, clientX, clientY }: OnScale) => {
     scale[0] *= dist[0];
     scale[1] *= dist[1];
     setTransform(target);
-}).on("rotate", ({ target, beforeDelta }: OnRotate) => {
+    setLabel(clientX, clientY, `S: ${scale[0].toFixed(2)}, ${scale[1].toFixed(2)}`);
+}).on("rotate", ({ target, beforeDelta, clientX, clientY }: OnRotate) => {
     rotate += beforeDelta;
     setTransform(target);
+    setLabel(clientX, clientY, `R: ${rotate.toFixed(1)}`);
 }).on("resize", ({ target, width, height }: OnResize) => {
     target.style.width = `${width}px`;
     target.style.height = `${height}px`;
+}).on("dragEnd", () => {
+    labelElement.style.display = "none";
+}).on("scaleEnd", () => {
+    labelElement.style.display = "none";
+}).on("rotateEnd", () => {
+    labelElement.style.display = "none";
 });
 
 const draggableElement: HTMLElement = document.querySelector(".draggable");
@@ -73,6 +92,20 @@ const rotatable = new Moveable(rotatableElement.parentElement, {
     container: rotatableElement.parentElement,
     origin: false,
     rotatable: true,
+}).on("rotate", ({ target, transform }: OnRotate) => {
+    target.style.transform = transform;
+});
+
+const originElement: HTMLElement = document.querySelector(".origin");
+const origin = new Moveable(originElement.parentElement, {
+    target: originElement,
+    container: originElement.parentElement,
+    origin: true,
+    draggable: true,
+    rotatable: true,
+}).on("drag", ({ target, left, top }) => {
+    target.style.left = `${left}px`;
+    target.style.top = `${top}px`;
 }).on("rotate", ({ target, transform }: OnRotate) => {
     target.style.transform = transform;
 });

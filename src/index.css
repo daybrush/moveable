@@ -52,6 +52,7 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    white-space: nowrap;
 }
 
 .description {
@@ -92,6 +93,22 @@ a {
 .buttons a:hover {
     background: #333;
     color: #fff;
+}
+.page.main {
+    z-index: 1;
+}
+.label {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 5px;
+    border-radius: 5px;
+    background: #333;
+    z-index: 10;
+    color: #fff;
+    font-weight: bold;
+    font-size: 12px;
+    display: none;
 }
 
 .page.feature, .page.footer {
@@ -147,9 +164,12 @@ a {
     font-weight: 600;
 }
 
-.draggable, .resizable, .scalable, .rotatable {
+.draggable, .resizable, .scalable, .rotatable, .origin {
     position: absolute;
     left: 0;
+}
+.origin {
+    transform-origin: 30% 50%;
 }
 
 pre {
