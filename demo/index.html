@@ -22,9 +22,10 @@
 </head>
 
 <body>
-
-    <div class="page">
+    <div class="label"></div>
+    <div class="page main">
         <div class="container">
+
             <div class="moveable"><span>Moveable</span></div>
             <p class="badges">
                 <a href="https://www.npmjs.com/package/moveable" target="_blank">
@@ -76,7 +77,8 @@
                 <div class="moveable resizable"><span>Resizable</span></div>
             </div>
             <div class="right">
-                <p class="description"><strong>Resizable</strong> indicates whether the target's width and height can be increased or decreased.</p>
+                <p class="description"><strong>Resizable</strong> indicates whether the target's width and height can be
+                    increased or decreased.</p>
                 <button class="tab selected" data-tab="vanilla" data-group="resizable">Vanilla</button>
                 <button class="tab" data-tab="react" data-group="resizable">React</button>
                 <button class="tab" data-tab="preact" data-group="resizable">Preact</button>
@@ -91,7 +93,8 @@
                 <div class="moveable scalable"><span>Scalable</span></div>
             </div>
             <div class="right">
-                <p class="description"><strong>Scalable</strong> indicates whether the target's x and y can be scale of transform.</p>
+                <p class="description"><strong>Scalable</strong> indicates whether the target's x and y can be scale of
+                    transform.</p>
                 <button class="tab selected" data-tab="vanilla" data-group="scalable">Vanilla</button>
                 <button class="tab" data-tab="react" data-group="scalable">React</button>
                 <button class="tab" data-tab="preact" data-group="scalable">Preact</button>
@@ -116,6 +119,22 @@
                 <pre class="panel" data-panel="preact" data-group="rotatable"><code class="javascript"></code></pre>
             </div>
         </div>
+        <div class="container">
+            <div class="left">
+                <div class="moveable origin"><span>30%, 50%</span></div>
+            </div>
+            <div class="right">
+                <p class="description"><strong>origin</strong> indicates whether or not the origin controlbox will be
+                    visible or not. (transform-origin:30% 50%)</p>
+                <button class="tab selected" data-tab="vanilla" data-group="origin">Vanilla</button>
+                <button class="tab" data-tab="react" data-group="origin">React</button>
+                <button class="tab" data-tab="preact" data-group="origin">Preact</button>
+                <pre class="panel selected" data-panel="vanilla"
+                    data-group="origin"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="react" data-group="origin"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="preact" data-group="origin"><code class="javascript"></code></pre>
+            </div>
+        </div>
         <div class="buttons"><a href="./release/latest/doc" class="button">More Features</a></div>
     </div>
     <div class="page footer">
@@ -136,10 +155,11 @@
     <script src="./dist/index.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-128864447-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'UA-128864447-1');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'UA-128864447-1');
     </script>
 </body>
+
 </html>

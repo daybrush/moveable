@@ -1,7 +1,7 @@
 import Moveable from "./Moveable";
 import { invert3x2, caculate3x2, getRad, getSize, throttle } from "./utils";
 
-export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
+export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
 
     if (!target || !position) {
@@ -22,9 +22,11 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
 
     moveable.props.onResizeStart!({
         target,
+        clientX,
+        clientY,
     });
 }
-export function resize(moveable: Moveable, { datas, distX, distY }: any) {
+export function resize(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
     const {
         matrix,
         position,
@@ -73,13 +75,17 @@ export function resize(moveable: Moveable, { datas, distX, distY }: any) {
         height: nextHeight,
         dist: [distWidth, distHeight],
         delta,
+        clientX,
+        clientY,
     });
 
     moveable.updateRect();
 }
-export function resizeEnd(moveable: Moveable, { isDrag }: any) {
+export function resizeEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
     moveable.props.onScaleEnd!({
         target: moveable.props.target!,
+        clientX,
+        clientY,
         isDrag,
     });
     if (isDrag) {

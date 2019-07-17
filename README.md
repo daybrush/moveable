@@ -52,7 +52,6 @@ $ npm i moveable
 <script src="//daybrush.com/moveable/release/latest/dist/moveable.min.js"></script>
 ```
 
-
 ## 📄 Documents
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
@@ -81,7 +80,12 @@ const moveable = new Moveable(document.body, {
     scalable: true,
     rotatable: true,
     origin: true,
-}).on("dragStart", ({ target }: OnDragStart) => {
+    keepRatio: true,
+    throttleDrag: 0,
+    throttleResize: 0,
+    throttleScale: 0,
+    throttleRotate: 0,
+}).on("dragStart", ({ target, clientX, clientY }: OnDragStart) => {
     console.log("onDragStart", target);
 }).on("drag", ({
     target,
@@ -90,37 +94,38 @@ const moveable = new Moveable(document.body, {
     right, bottom,
     delta, dist,
     transform,
+    clientX, clientY,
 }: OnDrag) => {
     console.log("onDrag left, top", left, top);
     // target!.style.left = `${left}px`;
     // target!.style.top = `${top}px`;
     console.log("onDrag translate", dist);
     target!.style.transform = transform;
-}).on("dragEnd", ({ target, isDrag }: OnDragEnd) => {
+}).on("dragEnd", ({ target, isDrag, clientX, clientY }: OnDragEnd) => {
     console.log("onDragEnd", target, isDrag);
-}).on("resizeStart", ({ target }: OnResizeStart) => {
+}).on("resizeStart", ({ target, clientX, clientY }: OnResizeStart) => {
     console.log("onResizeStart", target);
-}).on("resize", ({ target, width, height, dist, delta }: OnResize) => {
+}).on("resize", ({ target, width, height, dist, delta, clientX, clientY }: OnResize) => {
     console.log("onResize", target);
     delta[0] && (target!.style.width = `${width}px`);
     delta[1] && (target!.style.height = `${height}px`);
-}).on("resizeEnd", ({ target, isDrag }: OnResizeEnd) => {
+}).on("resizeEnd", ({ target, isDrag, clientX, clientY }: OnResizeEnd) => {
     console.log("onResizeEnd", target, isDrag);
-}).on("scaleStart", ({ target }: OnScalableStart) => {
+}).on("scaleStart", ({ target, clientX, clientY }: OnScalableStart) => {
     console.log("onScaleStart", target);
 }).on("scale", ({
-    target, scale, dist, delta, transform,
+    target, scale, dist, delta, transform, clientX, clientY,
 }: OnScale) => {
     console.log("onScale scale", scale);
     target!.style.transform = transform;
-}).on("scaleEnd", ({ target, isDrag }: OnScaleEnd) => {
+}).on("scaleEnd", ({ target, isDrag, clientX, clientY }: OnScaleEnd) => {
     console.log("onScaleEnd", target, isDrag);
-}).on("rotateStart", ({ target }: OnRotateStart) => {
+}).on("rotateStart", ({ target, clientX, clientY }: OnRotateStart) => {
     console.log("onRotateStart", target);
-}).on("rotate", ({ target, delta, dist, transform }: onRotate) => {
+}).on("rotate", ({ target, delta, dist, transform, clientX, clientY }: onRotate) => {
     console.log("onRotate", dist);
     target!.style.transform = transform;
-}).on("rotateEnd", ({ target, isDrag }: OnRotateEnd) => {
+}).on("rotateEnd", ({ target, isDrag, clientX, clientY }: OnRotateEnd) => {
     console.log("onRotateEnd", target, isDrag);
 });
 ```
@@ -129,7 +134,6 @@ const moveable = new Moveable(document.body, {
 ## 📦 Packages
 * [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
 * [**preact-moveable**](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable): A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
-
 
 
 

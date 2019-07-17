@@ -65,7 +65,8 @@ render() {
 
             /* draggable */
             draggable={true}
-            onDragStart={({ target }: OnDragStart) => {
+            throttleDrag={0}
+            onDragStart={({ target, clientX, clientY, }: OnDragStart) => {
                 console.log("onDragStart", target);
             }}
             onDrag={({
@@ -75,6 +76,7 @@ render() {
                 right, bottom,
                 delta, dist,
                 transform,
+                clientX, clientY,
             }: OnDrag) => {
                 console.log("onDrag left, top", left, top);
                 // target!.style.left = `${left}px`;
@@ -82,51 +84,67 @@ render() {
                 console.log("onDrag translate", dist);
                 target!.style.transform = transform;
             }}
-            onDragEnd={({ target, isDrag }: OnDragEnd) => {
+            onDragEnd={({ target, isDrag, clientX, clientY }: OnDragEnd) => {
                 console.log("onDragEnd", target, isDrag);
             }}
+
+            /* When resize or scale, keeps a ratio of the width, height. */
+            keepRatio={true}
 
             /* resizable*/
             /* Only one of resizable, scalable can be used. */
             resizable={true}
-            onResizeStart={({ target }: OnResizeStart) => {
+            throttleResize={0}
+            onResizeStart={({ target , clientX, clientY}: OnResizeStart) => {
                 console.log("onResizeStart", target);
             }}
-            onResize={({ target, width, height, dist, delta }: OnResize) => {
+            onResize={({
+                target, width, height,
+                dist, delta,
+                clientX, clientY,
+            }: OnResize) => {
                 console.log("onResize", target);
                 delta[0] && (target!.style.width = `${width}px`);
                 delta[1] && (target!.style.height = `${height}px`);
             }}
-            onResizeEnd={({ target, isDrag }: OnResizeEnd) => {
+            onResizeEnd={({ target, isDrag, clientX, clientY }: OnResizeEnd) => {
                 console.log("onResizeEnd", target, isDrag);
             }}
 
             /* scalable */
             /* Only one of resizable, scalable can be used. */
             scalable={true}
-            onScaleStart={({ target }: OnScalableStart) => {
+            throttleScale={0}
+            onScaleStart={({ target, clientX, clientY }: OnScalableStart) => {
                 console.log("onScaleStart", target);
             }}
             onScale={({
                 target, scale, dist, delta, transform,
+                clientX, clientY,
             }: OnScale) => {
                 console.log("onScale scale", scale);
                 target!.style.transform = transform;
             }}
-            onScaleEnd={({ target, isDrag }: OnScaleEnd) => {
+            onScaleEnd={({ target, isDrag, clientX, clientY }: OnScaleEnd) => {
                 console.log("onScaleEnd", target, isDrag);
             }}
 
             /* rotatable */
             rotatable={true}
-            onRotateStart={({ target }: OnRotateStart) => {
+            throttleRotate={0}
+            onRotateStart={({ target, clientX, clientY }: OnRotateStart) => {
                 console.log("onRotateStart", target);
             }}
-            onRotate={({ target, delta, dist, transform }: onRotate) => {
+            onRotate={({
+                target,
+                delta, dist,
+                transform,
+                clientX, clientY,
+            }: onRotate) => {
                 console.log("onRotate", dist);
                 target!.style.transform = transform;
             }}
-            onRotateEnd={({ target, isDrag }: OnRotateEnd) => {
+            onRotateEnd={({ target, isDrag, clientX, clientY }: OnRotateEnd) => {
                 console.log("onRotateEnd", target, isDrag);
             }}
         />

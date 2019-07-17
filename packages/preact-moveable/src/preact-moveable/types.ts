@@ -4,5 +4,6 @@ import { Component } from "preact";
 export interface MoveableInterface extends Component<MoveableProps, MoveableState> {
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(isNotSetState?: boolean): void;
+    updatePosition(): void;
     move(pos: number[]): void;
 }

@@ -2,7 +2,7 @@ import Moveable from "./Moveable";
 import { invert3x2, caculate3x2, getRad, throttle } from "./utils";
 import { MIN_SCALE } from "./consts";
 
-export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas }: any) {
+export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
     if (!position || !target) {
         return false;
@@ -36,9 +36,11 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
 
     moveable.props.onScaleStart!({
         target,
+        clientX,
+        clientY,
     });
 }
-export function scale(moveable: Moveable, { datas, distX, distY }: any) {
+export function scale(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
     const {
         matrix,
         beforeMatrix,
@@ -75,7 +77,7 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
     const nextHeight = height + distHeight;
     let scaleX = nextWidth / width;
     let scaleY = nextHeight / height;
-    const target = moveable.props.target!
+    const target = moveable.props.target!;
     const throttleScale = moveable.props.throttleScale!;
 
     scaleX = throttle(scaleX, throttleScale);
@@ -99,6 +101,8 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
         dist: [scaleX / prevDist[0], scaleY / prevDist[1]],
         delta: [scaleX - prevDist[0], scaleY - prevDist[1]],
         transform: `${transform} scale(${scaleX}, ${scaleY})`,
+        clientX,
+        clientY,
     });
 
     moveable.updateTargetRect(target, {
@@ -109,12 +113,14 @@ export function scale(moveable: Moveable, { datas, distX, distY }: any) {
         height,
         left,
         top,
-    })
+    });
 }
-export function scaleEnd(moveable: Moveable, { isDrag }: any) {
+export function scaleEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
     moveable.props.onScaleEnd!({
         target: moveable.props.target!,
         isDrag,
+        clientX,
+        clientY,
     });
     if (isDrag) {
         moveable.updateRect();

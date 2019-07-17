@@ -8,7 +8,7 @@ export function getDraggableDragger(
 ) {
     return drag(target, {
         container: window,
-        dragstart: ({ datas }) => {
+        dragstart: ({ datas, clientX, clientY }) => {
             const style = window.getComputedStyle(target!);
             const { matrix, beforeMatrix } = moveable.state;
 
@@ -27,9 +27,11 @@ export function getDraggableDragger(
             }
             return moveable.props.onDragStart!({
                 target,
+                clientX,
+                clientY,
             });
         },
-        drag: ({ datas, distX, distY }) => {
+        drag: ({ datas, distX, distY, clientX, clientY }) => {
             const throttleDrag = moveable.props.throttleDrag!;
             const { beforeMatrix, matrix, prevDist, prevBeforeDist } = datas;
             const beforeDist = caculate3x2(beforeMatrix, [distX, distY, 1]);
@@ -64,6 +66,8 @@ export function getDraggableDragger(
                 top,
                 right,
                 bottom,
+                clientX,
+                clientY,
             });
             if (throttleDrag) {
                 moveable.updatePosition();
@@ -73,8 +77,13 @@ export function getDraggableDragger(
                 });
             }
         },
-        dragend: ({ isDrag }) => {
-            moveable.props.onDragEnd!({ target, isDrag });
+        dragend: ({ isDrag, clientX, clientY }) => {
+            moveable.props.onDragEnd!({
+                target,
+                isDrag,
+                clientX,
+                clientY,
+            });
             if (isDrag) {
                 moveable.updateRect();
             }

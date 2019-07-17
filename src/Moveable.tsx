@@ -46,7 +46,7 @@ class Moveable extends EgComponent {
         parentElement.appendChild(element.children[0]);
     }
     /**
-     * target is target
+     * Whether or not the origin controlbox will be visible or not
      * @example
      * import Moveable from "moveable";
      *
@@ -63,7 +63,7 @@ class Moveable extends EgComponent {
         });
     }
     /**
-     * target is target
+     * The target to indicate Moveable Control Box.
      * @example
      * import Moveable from "moveable";
      *
@@ -148,6 +148,91 @@ class Moveable extends EgComponent {
     set rotatable(rotatable: boolean) {
         this.innerMoveable.setState({
             rotatable,
+        });
+    }
+    /**
+     * When resize or scale, keeps a ratio of the width, height.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.keepRatio = true;
+     */
+    get keepRatio(): boolean {
+        return this.getMoveable().keepRatio;
+    }
+    set keepRatio(keepRatio: boolean) {
+        this.innerMoveable.setState({
+            keepRatio,
+        });
+    }
+    /**
+     * throttle of x, y when drag.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.throttleDrag = 1;
+     */
+    get throttleDrag(): number {
+        return this.getMoveable().throttleDrag;
+    }
+    set throttleDrag(throttleDrag: number) {
+        this.innerMoveable.setState({
+            throttleDrag,
+        });
+    }
+    /**
+     * throttle of width, height when resize.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.throttleResize = 1;
+     */
+    get throttleResize(): number {
+        return this.getMoveable().throttleResize;
+    }
+    set throttleResize(throttleResize: number) {
+        this.innerMoveable.setState({
+            throttleResize,
+        });
+    }
+    /**
+     * throttle of scaleX, scaleY when scale.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.throttleScale = 0.1;
+     */
+    get throttleScale(): number {
+        return this.getMoveable().throttleScale;
+    }
+    set throttleScale(throttleScale: number) {
+        this.innerMoveable.setState({
+            throttleScale,
+        });
+    }
+    /**
+     * hrottle of angle(degree) when rotate.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.throttleRotate = 1;
+     */
+    get throttleRotate(): number {
+        return this.getMoveable().throttleRotate;
+    }
+    set throttleRotate(throttleRotate: number) {
+        this.innerMoveable.setState({
+            throttleRotate,
         });
     }
     /**

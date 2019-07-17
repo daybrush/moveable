@@ -56,6 +56,8 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     }
     moveable.props.onRotateStart!({
         target,
+        clientX,
+        clientY,
     });
 }
 export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
@@ -73,6 +75,8 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
         target: moveable.props.target!,
         delta,
         dist,
+        clientX,
+        clientY,
         beforeDist,
         beforeDelta,
         transform: `${datas.transform} rotate(${dist}deg)`,
@@ -80,8 +84,10 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
 
     moveable.updateTargetRect(moveable.props.target!, moveable.state);
 }
-export function rotateEnd(moveable: Moveable, { isDrag }: any) {
+export function rotateEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
     moveable.props.onRotateEnd!({
+        clientX,
+        clientY,
         target: moveable.props.target!,
         isDrag,
     });
