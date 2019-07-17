@@ -189,8 +189,6 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
 
         if (target) {
             const rect = target.getBoundingClientRect();
-            const style = window.getComputedStyle(target);
-
             let left = rect.left;
             let top = rect.top;
 
