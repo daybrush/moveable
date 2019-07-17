@@ -85,7 +85,7 @@ const moveable = new Moveable(document.body, {
     throttleResize: 0,
     throttleScale: 0,
     throttleRotate: 0,
-})
+});
 /* draggable */
 moveable.on("dragStart", ({ target, clientX, clientY }: OnDragStart) => {
     console.log("onDragStart", target);
