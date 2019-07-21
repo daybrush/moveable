@@ -49,6 +49,7 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     height: 12px;
     margin-top: -6px;
     margin-left: -6px;
+    pointer-events: none;
 }
 .control.e, .control.w {
     cursor: ew-resize;
@@ -63,6 +64,5 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     cursor: nesw-resize;
 }
 `);
-
 
 export const MIN_SCALE = 0.000000001;

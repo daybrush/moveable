@@ -1,6 +1,7 @@
 import Moveable from "./Moveable";
-import { invert3x2, caculate3x2, getRad, throttle } from "./utils";
+import { getRad, throttle } from "./utils";
 import { MIN_SCALE } from "./consts";
+import { invert, multiply } from "./matrix";
 
 export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
@@ -16,9 +17,11 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
         left, top,
         transformOrigin,
         origin,
+        is3d,
     } = moveable.state;
 
-    datas.matrix = invert3x2(matrix.slice());
+    datas.is3d = is3d;
+    datas.matrix = invert(matrix, is3d ? 4 : 3);
     datas.beforeMatrix = beforeMatrix;
     datas.transform = style.transform;
     datas.prevDist = [1, 1];
@@ -53,8 +56,10 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         transformOrigin,
         originalOrigin,
         transform,
+        is3d,
     } = datas;
-    const dist = caculate3x2(matrix, [distX, distY, 1]);
+
+    const dist = multiply(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
     let distWidth = position[0] * dist[0];
     let distHeight = position[1] * dist[1];
 

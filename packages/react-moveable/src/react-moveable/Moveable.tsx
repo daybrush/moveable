@@ -6,7 +6,6 @@ import {
     getControlTransform,
     getTransform,
     caculatePosition,
-    multiple3x2,
     getRotationInfo,
 } from "./utils";
 import styler from "react-css-styler";
@@ -15,16 +14,19 @@ import { ref } from "framework-utils";
 import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
+import { multiply, convertCSStoMatrix, convertDimension } from "./matrix";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
 export default class Moveable extends React.PureComponent<MoveableProps, MoveableState> {
-    public static defaultProps: MoveableProps = {
+    public static defaultProps: Required<MoveableProps> = {
+        target: null,
         container: null,
         rotatable: false,
         draggable: false,
         scalable: false,
         resizable: false,
+        warpable: false,
         keepRatio: true,
         origin: true,
         throttleDrag: 0,
@@ -43,11 +45,15 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         onResizeStart: () => { },
         onResize: () => { },
         onResizeEnd: () => { },
+        onWarpStart: () => {},
+        onWarp: () => {},
+        onWarpEnd: () => {},
     };
     public state: MoveableState = {
         target: null,
         beforeMatrix: [1, 0, 0, 1, 0, 0],
         matrix: [1, 0, 0, 1, 0, 0],
+        is3d: false,
         left: 0,
         top: 0,
         width: 0,
@@ -90,6 +96,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 <div className={prefix("line")} style={getLineStyle(pos3, pos4)}></div>
                 {this.renderRotation(direction)}
                 {this.renderPosition()}
+                {this.renderDiagonalPosition()}
                 {this.renderOrigin()}
             </ControlBoxElement>
         );
@@ -118,28 +125,36 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
 
         return (<div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>);
     }
-    public renderPosition() {
-        if (!this.props.resizable && !this.props.scalable) {
+    public renderDiagonalPosition() {
+        if (!this.props.resizable && !this.props.scalable && !this.props.warpable) {
             return null;
         }
         const { pos1, pos2, pos3, pos4 } = this.state;
         return [
             <div className={prefix("control", "nw")} data-position="nw" key="nw"
                 style={getControlTransform(pos1)}></div>,
-            <div className={prefix("control", "n")} data-position="n" key="n"
-                style={getControlTransform(pos1, pos2)}></div>,
             <div className={prefix("control", "ne")} data-position="ne" key="ne"
                 style={getControlTransform(pos2)}></div>,
+            <div className={prefix("control", "sw")} data-position="sw" key="sw"
+                style={getControlTransform(pos3)}></div>,
+            <div className={prefix("control", "se")} data-position="se" key="se"
+                style={getControlTransform(pos4)}></div>,
+        ];
+    }
+    public renderPosition() {
+        if (!this.props.resizable && !this.props.scalable) {
+            return null;
+        }
+        const { pos1, pos2, pos3, pos4 } = this.state;
+        return [
+            <div className={prefix("control", "n")} data-position="n" key="n"
+                style={getControlTransform(pos1, pos2)}></div>,
             <div className={prefix("control", "w")} data-position="w" key="w"
                 style={getControlTransform(pos1, pos3)}></div>,
             <div className={prefix("control", "e")} data-position="e" key="e"
                 style={getControlTransform(pos2, pos4)}></div>,
-            <div className={prefix("control", "sw")} data-position="sw" key="sw"
-                style={getControlTransform(pos3)}></div>,
             <div className={prefix("control", "s")} data-position="s" key="s"
                 style={getControlTransform(pos3, pos4)}></div>,
-            <div className={prefix("control", "se")} data-position="se" key="se"
-                style={getControlTransform(pos4)}></div>,
         ];
 
     }
@@ -224,9 +239,14 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             transformOrigin = state.transformOrigin,
             origin: originalOrigin = state.origin,
         } = nextState;
-        const nextTransform = getTransform(target, true);
+        const is3d = beforeMatrix.length === 16;
+        let nextTransform = convertCSStoMatrix(getTransform(target, true));
+
+        if (is3d && nextTransform.length !== 16) {
+            nextTransform = convertDimension(nextTransform, 3, 4);
+        }
         const [origin, pos1, pos2, pos3, pos4] = caculatePosition(
-            multiple3x2(beforeMatrix.slice(), nextTransform),
+            multiply(beforeMatrix, nextTransform, is3d ? 4 : 3),
             transformOrigin, width, height,
         );
         const nextLeft = left + originalOrigin[0] - origin[0];

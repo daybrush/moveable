@@ -1,5 +1,6 @@
 import Moveable from "./Moveable";
-import { invert3x2, caculate3x2, getRad, getSize, throttle } from "./utils";
+import { getRad, getSize, throttle } from "./utils";
+import { invert, multiply } from "./matrix";
 
 export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
@@ -9,11 +10,13 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     }
     const {
         matrix,
+        is3d,
     } = moveable.state;
 
     const [width, height] = getSize(target!);
 
-    datas.matrix = invert3x2(matrix.slice());
+    datas.is3d = is3d;
+    datas.matrix = invert(matrix, is3d ? 4 : 3);
     datas.position = position;
     datas.width = width;
     datas.height = height;
@@ -34,8 +37,10 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
         height,
         prevWidth,
         prevHeight,
+        is3d,
     } = datas;
-    const dist = caculate3x2(matrix, [distX, distY, 1]);
+    const dist = multiply(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
+
     let distWidth = position[0] * dist[0];
     let distHeight = position[1] * dist[1];
 

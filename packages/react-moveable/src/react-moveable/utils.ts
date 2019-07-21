@@ -2,93 +2,16 @@ import { PREFIX } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
+import {
+    multiply, invert,
+    convertCSStoMatrix, convertMatrixtoCSS,
+    convertDimension, createIdentityMatrix,
+} from "./matrix";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
 }
 
-export function caculate3x2(a: number[], b: number[]) {
-    // 0 2 4
-    // 1 3 5
-
-    return [
-        a[0] * b[0] + a[2] * b[1] + a[4] * b[2],
-        a[1] * b[0] + a[3] * b[1] + a[5] * b[2],
-    ];
-}
-export function multiple3x2(a: number[], b: number[]) {
-    // 00 01 02
-    // 10 11 12
-    const [
-        a00,
-        a10,
-        a01,
-        a11,
-        a02,
-        a12,
-    ] = a;
-    const [
-        b00,
-        b10,
-        b01,
-        b11,
-        b02,
-        b12,
-    ] = b;
-
-    a[0] = a00 * b00 + a01 * b10;
-    a[1] = a10 * b00 + a11 * b10;
-    a[2] = a00 * b01 + a01 * b11;
-    a[3] = a10 * b01 + a11 * b11;
-    a[4] = a00 * b02 + a01 * b12 + a02 * 1;
-    a[5] = a10 * b02 + a11 * b12 + a12 * 1;
-    return a;
-}
-export function invert3x2(a: number[]) {
-    // 00 01 02
-    // 10 11 12
-    // 20 21 22
-    const [
-        a00,
-        a10,
-        a01,
-        a11,
-        a02,
-        a12,
-    ] = a;
-    const a20 = 0;
-    const a21 = 0;
-    const a22 = 1;
-
-    const det
-        = a00 * a11 * a22
-        + a01 * a12 * a20
-        + a02 * a10 * a21
-        - a02 * a11 * a20
-        - a01 * a10 * a22
-        - a00 * a12 * a21;
-
-    const b00 = a11 * a22 - a12 * a21;
-    const b01 = a02 * a21 - a01 * a22;
-    const b02 = a01 * a12 - a02 * a11;
-
-    const b10 = a12 * a20 - a10 * a22;
-    const b11 = a22 * a00 - a20 * a02;
-    const b12 = a02 * a10 - a00 * a12;
-
-    // const b20 = a11 * a21 - a11 * a20;
-    // const b21 = a20 * a01 - a21 * a00;
-    // const b22 = a00 * a11 - a01 * a10;
-
-    a[0] = b00 / det;
-    a[1] = b10 / det;
-    a[2] = b01 / det;
-    a[3] = b11 / det;
-    a[4] = b02 / det;
-    a[5] = b12 / det;
-
-    return a;
-}
 export function getTransform(target: SVGElement | HTMLElement, isInit: true): number[];
 export function getTransform(target: SVGElement | HTMLElement): "none" | number[];
 export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
@@ -117,32 +40,54 @@ export function caculateMatrixStack(target: SVGElement | HTMLElement) {
 
     // 1 0 0
     // 0 1 0
-    const mat = [1, 0, 0, 1, 0, 0];
     const length = matrixes.length;
-    let beforeMatrix = [1, 0, 0, 1, 0, 0];
+    let mat = createIdentityMatrix(3);
+    let beforeMatrix = createIdentityMatrix(3);
+    let is3d = false;
 
     matrixes.forEach((matrix, i) => {
         if (length - 1 === i) {
             beforeMatrix = mat.slice();
         }
         if (matrix !== "none") {
-            multiple3x2(mat, matrix);
-        }
+            const nextMatrix = convertCSStoMatrix(matrix);
 
+            if (!is3d && nextMatrix.length === 16) {
+                is3d = true;
+                mat = convertDimension(mat, 3, 4);
+            }
+            mat = multiply(
+                mat,
+                nextMatrix,
+                is3d ? 4 : 3,
+            );
+        }
     });
-    beforeMatrix[4] = 0;
-    beforeMatrix[5] = 0;
-    mat[4] = 0;
-    mat[5] = 0;
+    if (is3d && beforeMatrix.length !== 16) {
+        beforeMatrix = convertDimension(beforeMatrix, 3, 4);
+    }
+    if (is3d) {
+        beforeMatrix[3] = 0;
+        beforeMatrix[7] = 0;
+        mat[3] = 0;
+        mat[7] = 0;
+    } else {
+        beforeMatrix[2] = 0;
+        beforeMatrix[5] = 0;
+        mat[2] = 0;
+        mat[5] = 0;
+    }
 
     return [beforeMatrix, mat];
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
-    let [x1, y1] = caculate3x2(matrix, [0, 0, 1]);
-    let [x2, y2] = caculate3x2(matrix, [width, 0, 1]);
-    let [x3, y3] = caculate3x2(matrix, [0, height, 1]);
-    let [x4, y4] = caculate3x2(matrix, [width, height, 1]);
-    let [originX, originY] = caculate3x2(matrix, [origin[0], origin[1], 1]);
+    const is3d = matrix.length === 16;
+    const n = is3d ? 4 : 3;
+    let [x1, y1] = multiply(matrix, is3d ? [0, 0, 0, 1] : [0, 0, 1], n);
+    let [x2, y2] = multiply(matrix, is3d ? [width, 0, 0, 1] : [width, 0, 1], n);
+    let [x3, y3] = multiply(matrix, is3d ? [0, height, 0, 1] : [0, height, 1], n);
+    let [x4, y4] = multiply(matrix, is3d ? [width, height, 0, 1] : [width, height, 1], n);
+    let [originX, originY] = multiply(matrix, is3d ? [origin[0], origin[1], 0, 1] : [origin[0], origin[1], 1], n);
 
     const minX = Math.min(x1, x2, x3, x4);
     const minY = Math.min(y1, y2, y3, y4);
@@ -168,22 +113,16 @@ export function caculatePosition(matrix: number[], origin: number[], width: numb
         [x4, y4],
     ];
 }
-export function multipleRotationMatrix(matrix: number[], rad: number) {
-    const mat = matrix.slice();
+
+export function rotateMatrix(matrix: number[], rad: number) {
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
 
-    const rotationMatrix = [cos, sin, -sin, cos, 0, 0];
-
-    return multiple3x2(mat, rotationMatrix);
-}
-
-export function caculateRotationMatrix(matrix: number[], rad: number) {
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-    const rotationMatrix = [cos, sin, -sin, cos, 0, 0];
-
-    return caculate3x2(rotationMatrix, matrix);
+    return multiply([
+        cos, -sin, 0,
+        sin, cos, 0,
+        0, 0, 1,
+    ], matrix, 3);
 }
 
 export function getRad(pos1: number[], pos2: number[]) {
@@ -255,10 +194,11 @@ export function getRotationInfo(origin: number[], pos1: number[], pos2: number[]
     const pos1Rad = getRad(origin, pos1);
     const pos2Rad = getRad(origin, pos2);
     const direction =
-    (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
-        ? 1 : -1;
+        (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
+            ? 1 : -1;
     const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-    const relativeRotationPos = caculateRotationMatrix([0, -40, 0], rotationRad);
+    const relativeRotationPos = rotateMatrix([0, -40, 0], rotationRad);
+
     const rotationPos = [
         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
         (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
@@ -267,7 +207,7 @@ export function getRotationInfo(origin: number[], pos1: number[], pos2: number[]
     return [direction, rotationRad, rotationPos];
 }
 export function getTargetInfo(
-    target?: SVGElement | HTMLElement,
+    target?: SVGElement | HTMLElement | null,
     container?: MoveableProps["container"],
 ): MoveableState {
     let left = 0;
@@ -285,10 +225,12 @@ export function getTargetInfo(
     let direction: 1 | -1 = 1;
     let rotationPos = [0, 0];
     let rotationRad = 0;
+    let is3d = false;
 
     if (target) {
         const rect = target.getBoundingClientRect();
         const style = window.getComputedStyle(target);
+
         left = rect.left;
         top = rect.top;
         width = (target as HTMLElement).offsetWidth;
@@ -298,6 +240,8 @@ export function getTargetInfo(
             [width, height] = getSize(target, style, true);
         }
         [beforeMatrix, matrix] = caculateMatrixStack(target);
+
+        is3d = matrix.length === 16;
         transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
         [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
 
@@ -328,6 +272,7 @@ export function getTargetInfo(
         height,
         beforeMatrix,
         matrix,
+        is3d,
         origin,
         transformOrigin,
     };
@@ -349,7 +294,6 @@ export function getPosition(target: SVGElement | HTMLElement) {
     return pos;
 }
 
-
 export function throttle(num: number, unit: number) {
     if (!unit) {
         return num;
@@ -360,4 +304,45 @@ export function throttleArray(nums: number[], unit: number) {
     nums.forEach((_, i) => {
         nums[i] = throttle(nums[i], unit);
     });
+}
+
+export function warp(
+    pos0: number[],
+    pos1: number[],
+    pos2: number[],
+    pos3: number[],
+    nextPos0: number[],
+    nextPos1: number[],
+    nextPos2: number[],
+    nextPos3: number[],
+) {
+    const [x0, y0] = pos0;
+    const [x1, y1] = pos1;
+    const [x2, y2] = pos2;
+    const [x3, y3] = pos3;
+
+    const [u0, v0] = nextPos0;
+    const [u1, v1] = nextPos1;
+    const [u2, v2] = nextPos2;
+    const [u3, v3] = nextPos3;
+
+    const matrix = [
+        x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0,
+        0, 0, 0, x0, y0, 1, -v0 * x0, -v0 * y0,
+        x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1,
+        0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1,
+        x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2,
+        0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2,
+        x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3,
+        0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3,
+    ];
+    const inverseMatrix = invert(matrix, 8);
+
+    if (!inverseMatrix.length) {
+        return createIdentityMatrix(8);
+    }
+    const h = multiply(invert(matrix, 8), [u0, v0, u1, v1, u2, v2, u3, v3], 8);
+
+    h[8] = 1;
+    return convertMatrixtoCSS(convertDimension(h, 3, 4));
 }

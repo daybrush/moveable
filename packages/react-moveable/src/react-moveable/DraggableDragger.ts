@@ -1,6 +1,7 @@
 import Moveable from "./Moveable";
 import { drag } from "@daybrush/drag";
-import { invert3x2, caculate3x2, throttleArray } from "./utils";
+import { throttleArray } from "./utils";
+import { invert, multiply } from "./matrix";
 
 export function getDraggableDragger(
     moveable: Moveable,
@@ -10,10 +11,11 @@ export function getDraggableDragger(
         container: window,
         dragstart: ({ datas, clientX, clientY }) => {
             const style = window.getComputedStyle(target!);
-            const { matrix, beforeMatrix } = moveable.state;
+            const { matrix, beforeMatrix, is3d} = moveable.state;
 
-            datas.matrix = invert3x2(matrix.slice());
-            datas.beforeMatrix = invert3x2(beforeMatrix.slice());
+            datas.is3d = is3d;
+            datas.matrix = invert(matrix.slice(), is3d ? 4 : 3);
+            datas.beforeMatrix = invert(beforeMatrix.slice(), is3d ? 4 : 3);
             datas.left = parseFloat(style.left || "") || 0;
             datas.top = parseFloat(style.top || "") || 0;
             datas.bottom = parseFloat(style.bottom || "") || 0;
@@ -33,9 +35,9 @@ export function getDraggableDragger(
         },
         drag: ({ datas, distX, distY, clientX, clientY }) => {
             const throttleDrag = moveable.props.throttleDrag!;
-            const { beforeMatrix, matrix, prevDist, prevBeforeDist } = datas;
-            const beforeDist = caculate3x2(beforeMatrix, [distX, distY, 1]);
-            const dist = caculate3x2(matrix, [distX, distY, 1]);
+            const { beforeMatrix, matrix, prevDist, prevBeforeDist, is3d } = datas;
+            const beforeDist = multiply(beforeMatrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
+            const dist = multiply(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
 
             throttleArray(dist, throttleDrag);
             throttleArray(beforeDist, throttleDrag);
