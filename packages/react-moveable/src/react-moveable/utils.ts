@@ -5,7 +5,7 @@ import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
     convertCSStoMatrix, convertMatrixtoCSS,
-    convertDimension, createIdentityMatrix,
+    convertDimension, createIdentityMatrix, caculate,
 } from "./matrix";
 
 export function prefix(...classNames: string[]) {
@@ -66,28 +66,16 @@ export function caculateMatrixStack(target: SVGElement | HTMLElement) {
     if (is3d && beforeMatrix.length !== 16) {
         beforeMatrix = convertDimension(beforeMatrix, 3, 4);
     }
-    if (is3d) {
-        beforeMatrix[3] = 0;
-        beforeMatrix[7] = 0;
-        mat[3] = 0;
-        mat[7] = 0;
-    } else {
-        beforeMatrix[2] = 0;
-        beforeMatrix[5] = 0;
-        mat[2] = 0;
-        mat[5] = 0;
-    }
-
     return [beforeMatrix, mat];
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
     const n = is3d ? 4 : 3;
-    let [x1, y1] = multiply(matrix, is3d ? [0, 0, 0, 1] : [0, 0, 1], n);
-    let [x2, y2] = multiply(matrix, is3d ? [width, 0, 0, 1] : [width, 0, 1], n);
-    let [x3, y3] = multiply(matrix, is3d ? [0, height, 0, 1] : [0, height, 1], n);
-    let [x4, y4] = multiply(matrix, is3d ? [width, height, 0, 1] : [width, height, 1], n);
-    let [originX, originY] = multiply(matrix, is3d ? [origin[0], origin[1], 0, 1] : [origin[0], origin[1], 1], n);
+    let [x1, y1] = caculate(matrix, is3d ? [0, 0, 0, 1] : [0, 0, 1], n);
+    let [x2, y2] = caculate(matrix, is3d ? [width, 0, 0, 1] : [width, 0, 1], n);
+    let [x3, y3] = caculate(matrix, is3d ? [0, height, 0, 1] : [0, height, 1], n);
+    let [x4, y4] = caculate(matrix, is3d ? [width, height, 0, 1] : [width, height, 1], n);
+    let [originX, originY] = caculate(matrix, is3d ? [origin[0], origin[1], 0, 1] : [origin[0], origin[1], 1], n);
 
     const minX = Math.min(x1, x2, x3, x4);
     const minY = Math.min(y1, y2, y3, y4);
@@ -190,9 +178,18 @@ export function getSize(
         ];
     }
 }
-export function getRotationInfo(origin: number[], pos1: number[], pos2: number[]): [1 | -1, number, number[]] {
-    const pos1Rad = getRad(origin, pos1);
-    const pos2Rad = getRad(origin, pos2);
+export function getRotationInfo(
+    pos1: number[],
+    pos2: number[],
+    pos3: number[],
+    pos4: number[],
+): [1 | -1, number, number[]] {
+    const center = [
+        (pos1[0] + pos2[0] + pos3[0] + pos4[0]) / 4,
+        (pos1[1] + pos2[1] + pos3[1] + pos4[1]) / 4,
+    ];
+    const pos1Rad = getRad(center, pos1);
+    const pos2Rad = getRad(center, pos2);
     const direction =
         (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
             ? 1 : -1;
@@ -253,7 +250,7 @@ export function getTargetInfo(
         }
         // 1 : clockwise
         // -1 : counterclockwise
-        [direction, rotationRad, rotationPos] = getRotationInfo(origin, pos1, pos2);
+        [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
     }
 
     return {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MOVEABLE_CSS, PREFIX } from "./consts";
 import {
-    prefix, getRad, getLineStyle,
+    prefix, getLineStyle,
     getTargetInfo,
     getControlTransform,
     getTransform,
@@ -94,19 +94,19 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 <div className={prefix("line")} style={getLineStyle(pos2, pos4)}></div>
                 <div className={prefix("line")} style={getLineStyle(pos1, pos3)}></div>
                 <div className={prefix("line")} style={getLineStyle(pos3, pos4)}></div>
-                {this.renderRotation(direction)}
+                {this.renderRotation()}
                 {this.renderPosition()}
                 {this.renderDiagonalPosition()}
                 {this.renderOrigin()}
             </ControlBoxElement>
         );
     }
-    public renderRotation(direction: number) {
+    public renderRotation() {
         if (!this.props.rotatable) {
             return null;
         }
-        const { pos1, pos2 } = this.state;
-        const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
+
+        const { pos1, pos2, rotationRad } = this.state;
 
         return (
             <div className={prefix("line rotation")} style={{
@@ -231,7 +231,6 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
     }) {
         const state = this.state;
         const {
-            beforeMatrix,
             left = state.left,
             top = state.top,
             width = state.width,
@@ -239,19 +238,26 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             transformOrigin = state.transformOrigin,
             origin: originalOrigin = state.origin,
         } = nextState;
-        const is3d = beforeMatrix.length === 16;
+        let { beforeMatrix } = nextState;
+        let is3d = beforeMatrix.length === 16;
         let nextTransform = convertCSStoMatrix(getTransform(target, true));
+        const isNext3d = nextTransform.length === 16;
 
-        if (is3d && nextTransform.length !== 16) {
+        if (is3d && !isNext3d) {
             nextTransform = convertDimension(nextTransform, 3, 4);
         }
+        if (!is3d && isNext3d) {
+            is3d = true;
+            beforeMatrix = convertDimension(beforeMatrix, 3, 4);
+        }
+
         const [origin, pos1, pos2, pos3, pos4] = caculatePosition(
             multiply(beforeMatrix, nextTransform, is3d ? 4 : 3),
             transformOrigin, width, height,
         );
         const nextLeft = left + originalOrigin[0] - origin[0];
         const nextTop = top + originalOrigin[1] - origin[1];
-        const [direction, rotationRad, rotationPos] = getRotationInfo(origin, pos1, pos2);
+        const [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
 
         this.setState({
             direction,

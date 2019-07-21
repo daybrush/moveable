@@ -52,7 +52,17 @@ export function createIdentityMatrix(n: number) {
     }
     return matrix;
 }
+export function ignoreTranslate(
+    matrix: number[],
+    n: number = Math.sqrt(matrix.length),
+) {
+    const newMatrix = matrix.slice();
 
+    for (let i = 0; i < n - 1; ++i) {
+        newMatrix[i * n - 1] = 0;
+    }
+    return newMatrix;
+}
 export function invert(
     matrix: number[],
     n: number = Math.sqrt(matrix.length),
@@ -136,6 +146,11 @@ export function multiply(matrix: number[], matrix2: number[], n: number) {
     }
     // n * k
     return newMatrix;
+}
+export function caculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
+    const result = multiply(matrix, matrix2, n);
+    const k = result[n - 1];
+    return result.map(v => v / k);
 }
 export function convertCSStoMatrix(a: number[]) {
     if (a.length === 6) {

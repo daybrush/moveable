@@ -1,6 +1,6 @@
 import Moveable from "./Moveable";
 import { getRad, getSize, throttle } from "./utils";
-import { invert, multiply } from "./matrix";
+import { invert, multiply, ignoreTranslate } from "./matrix";
 
 export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
@@ -14,9 +14,10 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     } = moveable.state;
 
     const [width, height] = getSize(target!);
+    const n = is3d ? 4 : 3;
 
     datas.is3d = is3d;
-    datas.matrix = invert(matrix, is3d ? 4 : 3);
+    datas.matrix = invert(ignoreTranslate(matrix, n), n);
     datas.position = position;
     datas.width = width;
     datas.height = height;
