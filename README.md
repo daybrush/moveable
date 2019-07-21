@@ -20,10 +20,10 @@
 <th colspan="4">Moveable</th>
 </tr>
 <tr>
-<th>Draggable</th>
-<th>Resizable</th>
-<th>Scalable</th>
-<th>Rotatable</th>
+<td align="center"><strong>Draggable</strong></td>
+<td align="center"><strong>Resizable</strong></td>
+<td align="center"><strong>Scalable</strong></td>
+<td align="center"><strong>Rotatable</strong></td>
 </tr>
 <tr>
 <td align="center">
@@ -38,6 +38,18 @@
 <td align="center">
 <img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif">
 </td>
+</tr>
+<tr>
+<td align="center"><strong>Warpable</strong></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+</tr>
+<tr>
+<td align="center">Soon</td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
 </tr>
 </table>
 

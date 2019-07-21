@@ -9,6 +9,7 @@ import { IObject } from "@daybrush/utils";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
+setAlias("tz", ["transform", "translateZ"]);
 setAlias("rotate", ["transform", "rotate"]);
 setAlias("sx", ["transform", "scaleX"]);
 setAlias("sy", ["transform", "scaleY"]);
@@ -37,19 +38,21 @@ class App extends React.Component {
                     container={document.body}
                     ref={ref(this, "moveable")}
                     keepRatio={false}
+
                     draggable={true}
-                    scalable={!isResizable}
-                    resizable={isResizable}
-                    throttleDrag={10}
-                    throttleScale={0.1}
-                    throttleResize={10}
-                    throttleRotate={10}
+                    // scalable={!isResizable}
+                    // resizable={isResizable}
+                    warpable={true}
+                    throttleDrag={0}
+                    throttleScale={0}
+                    throttleResize={0}
+                    throttleRotate={0}
                     rotatable={true}
                     onRotate={({ target, beforeDelta }) => {
                         item.set("rotate", `${parseFloat(item.get("rotate")) + beforeDelta}deg`);
                         target.style.cssText += item.toCSS();
                     }}
-                    onDrag={({ target, left, top, beforeDelta }) => {
+                    onDrag={({ target, beforeDelta }) => {
 
                         item.set("tx", `${parseFloat(item.get("tx")) + beforeDelta[0]}px`);
                         item.set("ty", `${parseFloat(item.get("ty")) + beforeDelta[1]}px`);
@@ -107,6 +110,7 @@ class App extends React.Component {
         const items = this.items;
         if (!items[id]) {
             items[id] = new Frame({
+                tz: "5px",
                 tx: "0px",
                 ty: "0px",
                 rotate: "0deg",

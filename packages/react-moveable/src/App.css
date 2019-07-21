@@ -18,6 +18,7 @@
 }
 img {
   background: #f55;
+  transform-origin: 0px 0px;
 }
 .App-header {
   background-color: #282c34;

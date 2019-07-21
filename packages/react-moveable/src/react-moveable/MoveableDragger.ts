@@ -5,12 +5,13 @@ import { hasClass } from "@daybrush/utils";
 import { scaleStart, scale, scaleEnd } from "./Scalable";
 import { rotateStart, rotate, rotateEnd } from "./Rotatable";
 import { resizeStart, resize, resizeEnd } from "./Resizable";
+import { warpStart, warp } from "./Warpable";
 
 export function getMoveableDragger(
     moveable: Moveable,
     target: HTMLElement,
 ) {
-    let type: "rotate" | "scale" | "resize" | "";
+    let type: "rotate" | "scale" | "resize" | "warp" | "";
 
     return drag(target, {
         container: window,
@@ -32,19 +33,26 @@ export function getMoveableDragger(
                 const position = getPosition(inputTarget);
                 type = "resize";
                 return resizeStart(moveable, position, { datas, clientX, clientY });
+            } else if (moveable.props.warpable) {
+                const position = getPosition(inputTarget);
+
+                type = "warp";
+                return warpStart(moveable, position, { datas, clientX, clientY });
             } else {
                 return false;
             }
         },
-        drag: ({ datas, clientX, clientY, distX, distY }) => {
+        drag: e => {
             if (!type) {
                 return;
             } else if (type === "rotate") {
-                return rotate(moveable, { datas, clientX, clientY });
+                return rotate(moveable, e);
             } else if (type === "scale") {
-                return scale(moveable, { datas, clientX, clientY, distX, distY });
+                return scale(moveable, e);
             } else if (type === "resize") {
-                return resize(moveable, { datas, clientX, clientY, distX, distY });
+                return resize(moveable, e);
+            } else if (type === "warp") {
+                return warp(moveable, e);
             }
         },
         dragend: ({ isDrag, clientX, clientY }) => {

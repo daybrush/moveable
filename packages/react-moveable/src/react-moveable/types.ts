@@ -1,18 +1,23 @@
 
 export interface MoveableProps {
-    target?: SVGElement | HTMLElement;
+    target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
     rotatable?: boolean;
     draggable?: boolean;
     scalable?: boolean;
     resizable?: boolean;
+    warpable?: boolean;
     keepRatio?: boolean;
 
     throttleDrag?: number;
     throttleResize?: number;
     throttleScale?: number;
     throttleRotate?: number;
+
+    onWarpStart?: (e: OnWarpStart) => void;
+    onWarp?: (e: OnWarp) => void;
+    onWarpEnd?: (e: OnWarpEnd) => void;
     onRotateStart?: (e: OnRotateStart) => void;
     onRotate?: (e: OnRotate) => void;
     onRotateEnd?: (e: OnRotateEnd) => void;
@@ -38,6 +43,7 @@ export interface MoveableState {
     height: number;
     beforeMatrix: number[];
     matrix: number[];
+    is3d: boolean;
     transform: string;
     transformOrigin: number[];
     origin: number[];
@@ -242,6 +248,46 @@ export interface OnRotate {
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  */
 export interface OnRotateEnd {
+    target: HTMLElement | SVGElement;
+    isDrag: boolean;
+    clientX: number;
+    clientY: number;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - a target to warp
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ */
+export interface OnWarpStart {
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - a warping target
+ * @property - a target's transform
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ */
+export interface OnWarp {
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - a warp finished target
+ * @property - Whether rotate called
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ */
+export interface OnWarpEnd {
     target: HTMLElement | SVGElement;
     isDrag: boolean;
     clientX: number;
