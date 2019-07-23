@@ -1,6 +1,6 @@
 import { PREFIX } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
@@ -17,17 +17,23 @@ export function getTransform(target: SVGElement | HTMLElement): "none" | number[
 export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
     const transform = window.getComputedStyle(target).transform!;
 
-    if (transform === "none") {
-        if (isInit) {
-            return [1, 0, 0, 1, 0, 0];
-        }
+    if (transform === "none" && !isInit) {
         return "none";
-    } else {
-        const value = splitBracket(transform).value!;
-        return value.split(/s*,\s*/g).map(v => parseFloat(v));
     }
+    return getTransformMatrix(transform);
 }
-export function caculateMatrixStack(target: SVGElement | HTMLElement) {
+
+export function getTransformMatrix(transform: string | number[]) {
+    if (transform === "none") {
+        return [1, 0, 0, 1, 0, 0];
+    }
+    if (isObject(transform)) {
+        return transform;
+    }
+    const value = splitBracket(transform).value!;
+    return value.split(/s*,\s*/g).map(v => parseFloat(v));
+}
+export function caculateMatrixStack(target: SVGElement | HTMLElement): [number[], number[], string, number[]] {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: Array<"none" | number[]> = [];
 
@@ -36,6 +42,8 @@ export function caculateMatrixStack(target: SVGElement | HTMLElement) {
         el = el.parentElement;
     }
 
+    const isTargetMatrixNone = matrixes[0] === "none";
+    let targetMatrix = convertCSStoMatrix(getTransformMatrix(matrixes[0]));
     matrixes.reverse();
 
     // 1 0 0
@@ -63,10 +71,17 @@ export function caculateMatrixStack(target: SVGElement | HTMLElement) {
             );
         }
     });
+    if (is3d && targetMatrix.length !== 16) {
+        targetMatrix = convertDimension(targetMatrix, 3, 4);
+    }
     if (is3d && beforeMatrix.length !== 16) {
         beforeMatrix = convertDimension(beforeMatrix, 3, 4);
     }
-    return [beforeMatrix, mat];
+    console.log(isTargetMatrixNone);
+    const transform = isTargetMatrixNone
+                    ? "" : `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
+
+    return [beforeMatrix, mat, transform, targetMatrix];
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
@@ -214,8 +229,9 @@ export function getTargetInfo(
     let pos2 = [0, 0];
     let pos3 = [0, 0];
     let pos4 = [0, 0];
-    let beforeMatrix = [1, 0, 0, 1, 0, 0];
-    let matrix = [1, 0, 0, 1, 0, 0];
+    let beforeMatrix = createIdentityMatrix(3);
+    let matrix = createIdentityMatrix(3);
+    let targetMatrix = createIdentityMatrix(3);
     let width = 0;
     let height = 0;
     let transformOrigin = [0, 0];
@@ -223,6 +239,7 @@ export function getTargetInfo(
     let rotationPos = [0, 0];
     let rotationRad = 0;
     let is3d = false;
+    let targetTransform = "";
 
     if (target) {
         const rect = target.getBoundingClientRect();
@@ -236,7 +253,7 @@ export function getTargetInfo(
         if (isUndefined(width)) {
             [width, height] = getSize(target, style, true);
         }
-        [beforeMatrix, matrix] = caculateMatrixStack(target);
+        [beforeMatrix, matrix, targetTransform, targetMatrix] = caculateMatrixStack(target);
 
         is3d = matrix.length === 16;
         transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
@@ -269,6 +286,8 @@ export function getTargetInfo(
         height,
         beforeMatrix,
         matrix,
+        targetTransform,
+        targetMatrix,
         is3d,
         origin,
         transformOrigin,
@@ -336,10 +355,10 @@ export function warp(
     const inverseMatrix = invert(matrix, 8);
 
     if (!inverseMatrix.length) {
-        return createIdentityMatrix(8);
+        return createIdentityMatrix(3);
     }
     const h = multiply(invert(matrix, 8), [u0, v0, u1, v1, u2, v2, u3, v3], 8);
 
     h[8] = 1;
-    return convertMatrixtoCSS(convertDimension(h, 3, 4));
+    return convertDimension(h, 3, 4);
 }

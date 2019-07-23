@@ -43,6 +43,8 @@ export interface MoveableState {
     height: number;
     beforeMatrix: number[];
     matrix: number[];
+    targetTransform: string;
+    targetMatrix: number[];
     is3d: boolean;
     transform: string;
     transformOrigin: number[];

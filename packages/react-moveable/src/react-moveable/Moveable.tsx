@@ -14,7 +14,7 @@ import { ref } from "framework-utils";
 import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
-import { multiply, convertCSStoMatrix, convertDimension } from "./matrix";
+import { multiply, convertCSStoMatrix, convertDimension, createIdentityMatrix } from "./matrix";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -51,8 +51,10 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
     };
     public state: MoveableState = {
         target: null,
-        beforeMatrix: [1, 0, 0, 1, 0, 0],
-        matrix: [1, 0, 0, 1, 0, 0],
+        beforeMatrix: createIdentityMatrix(3),
+        matrix: createIdentityMatrix(3),
+        targetTransform: "",
+        targetMatrix: createIdentityMatrix(3),
         is3d: false,
         left: 0,
         top: 0,

@@ -1,5 +1,6 @@
 import Moveable from "./Moveable";
 import { warp as warpMatrix } from "./utils";
+import { convertDimension, invert, ignoreTranslate, multiply, convertMatrixtoCSS } from "./matrix";
 
 export function warpStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
@@ -7,19 +8,29 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     if (!position || !target) {
         return false;
     }
-    const { pos1, pos2, pos3, pos4 } = moveable.state;
+    const {
+        transformOrigin, is3d,
+        beforeMatrix, targetTransform, targetMatrix, width, height,
+    } = moveable.state;
 
-    datas.transform = window.getComputedStyle(target!).transform;
+    datas.targetTransform = targetTransform;
+    datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
+    datas.beforeMatrix = is3d ? beforeMatrix : convertDimension(beforeMatrix, 3, 4);
+    datas.targetInverseMatrix = invert(datas.targetMatrix, 4);
     datas.position = position;
+    datas.is3d = is3d;
 
-    datas.poses = [pos1, pos2, pos3, pos4];
+    datas.poses = [
+        [0, 0],
+        [width, 0],
+        [0, height],
+        [width, height],
+    ].map(pos => pos.map((p, i) => p - transformOrigin[i]));
+
+    datas.nextPoses = datas.poses.map(([x, y]: number[]) => multiply(datas.targetMatrix, [x, y, 0, 1], 4));
     datas.posNum =
         (position[0] === -1 ? 0 : 1)
         + (position[1] === -1 ? 0 : 2);
-
-    if (datas.transform === "none") {
-        datas.transform = "";
-    }
 
     moveable.props.onWarpStart!({
         target,
@@ -29,15 +40,14 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
 }
 
 export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY, deltaX, deltaY }: any) {
-    const { posNum, poses } = datas;
+    const { posNum, poses, targetInverseMatrix } = datas;
     const target = moveable.props.target!;
     // moveable.setState({
     //     [posName]: [x + deltaX, y + deltaY],
     // });
+    const nextPoses = datas.nextPoses.slice();
 
-    const nextPoses: number[][] = poses.slice();
-
-    nextPoses[posNum] = [poses[posNum][0] + distX, poses[posNum][1] + distY];
+    nextPoses[posNum] = [nextPoses[posNum][0] + distX, nextPoses[posNum][1] + distY];
 
     const h = warpMatrix(
         poses[0],
@@ -50,6 +60,8 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
         nextPoses[3],
     );
 
-    target.style.transform = `${datas.transform} matrix3d(${h.join(",")})`;
+    target.style.transform = `${datas.targetTransform} matrix3d(${
+        convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4)).join(",")
+    })`;
 
 }
