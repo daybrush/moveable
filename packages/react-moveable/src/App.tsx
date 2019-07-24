@@ -7,12 +7,14 @@ import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
 
+
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
 setAlias("tz", ["transform", "translateZ"]);
 setAlias("rotate", ["transform", "rotate"]);
 setAlias("sx", ["transform", "scaleX"]);
 setAlias("sy", ["transform", "scaleY"]);
+setAlias("matrix3d", ["transform", "matrix3d"]);
 
 class App extends React.Component {
     public moveable: Moveable;
@@ -70,6 +72,16 @@ class App extends React.Component {
                     onResize={({ target, width, height, delta }) => {
                         delta[0] && (target!.style.width = `${width}px`);
                         delta[1] && (target!.style.height = `${height}px`);
+                    }}
+                    onWarp={({ target, delta, multiply }) => {
+                        const matrix3d = item.get("matrix3d");
+
+                        if (!matrix3d) {
+                            item.set("matrix3d", delta);
+                        } else {
+                            item.set("matrix3d", multiply(item.get("matrix3d"), delta, 4));
+                        }
+                        target.style.cssText += item.toCSS();
                     }}
                 />
                 <div className="App" onMouseDown={this.onClick} data-target="app">

@@ -65,4 +65,11 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 }
 `);
 
+export const NEARBY_POS = [
+    [0, 1, 2],
+    [1, 0, 3],
+    [2, 0, 3],
+    [3, 1, 2],
+];
+
 export const MIN_SCALE = 0.000000001;

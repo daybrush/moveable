@@ -280,6 +280,10 @@ export interface OnWarp {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
+    delta: number[];
+    dist: number[];
+    multiply: (matrix1: number[], matrix2: number[], n?: number) => number[];
+    transform: string;
 }
 /**
  * @typedef

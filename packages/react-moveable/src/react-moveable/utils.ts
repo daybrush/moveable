@@ -77,7 +77,6 @@ export function caculateMatrixStack(target: SVGElement | HTMLElement): [number[]
     if (is3d && beforeMatrix.length !== 16) {
         beforeMatrix = convertDimension(beforeMatrix, 3, 4);
     }
-    console.log(isTargetMatrixNone);
     const transform = isTargetMatrixNone
                     ? "" : `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
@@ -127,7 +126,6 @@ export function rotateMatrix(matrix: number[], rad: number) {
         0, 0, 1,
     ], matrix, 3);
 }
-
 export function getRad(pos1: number[], pos2: number[]) {
     const distX = pos2[0] - pos1[0];
     const distY = pos2[1] - pos1[1];
@@ -355,9 +353,9 @@ export function warp(
     const inverseMatrix = invert(matrix, 8);
 
     if (!inverseMatrix.length) {
-        return createIdentityMatrix(3);
+        return [];
     }
-    const h = multiply(invert(matrix, 8), [u0, v0, u1, v1, u2, v2, u3, v3], 8);
+    const h = multiply(inverseMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
 
     h[8] = 1;
     return convertDimension(h, 3, 4);

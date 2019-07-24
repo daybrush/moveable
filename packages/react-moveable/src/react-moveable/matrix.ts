@@ -63,6 +63,21 @@ export function ignoreTranslate(
     }
     return newMatrix;
 }
+export function ignoreDimension(
+    matrix: number[],
+    m: number,
+    n: number = Math.sqrt(matrix.length),
+) {
+    const newMatrix = matrix.slice();
+
+    for (let i = 0; i < n; ++i) {
+        newMatrix[i * n + m - 1] = 0;
+        newMatrix[(m - 1) * n + i] = 0;
+    }
+    newMatrix[(m - 1) * (n + 1)] = 1;
+
+    return newMatrix;
+}
 export function invert(
     matrix: number[],
     n: number = Math.sqrt(matrix.length),
@@ -147,10 +162,35 @@ export function multiply(matrix: number[], matrix2: number[], n: number) {
     // n * k
     return newMatrix;
 }
+export function multiplyCSS(matrix: number[], matrix2: number[], n: number = Math.sqrt(matrix.length)) {
+    const newMatrix = [];
+    // n(y) * m(x) X m(y) * k(x)
+    const m = matrix.length / n;
+    const k = matrix2.length / m;
+
+    for (let i = 0; i < n; ++i) {
+        for (let j = 0; j < k; ++j) {
+            newMatrix[i + j * k] = 0;
+            for (let l = 0; l < m; ++l) {
+                newMatrix[i + j * k] += matrix[i + l * m] * matrix2[l + j * k];
+            }
+        }
+    }
+    // n * k
+    return newMatrix;
+}
 export function caculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
     const result = multiply(matrix, matrix2, n);
     const k = result[n - 1];
     return result.map(v => v / k);
+}
+export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
+    const originMatrix = [];
+
+    for (let i = 0; i < n; ++i) {
+        originMatrix[i] = matrix[(i + 1) * n - 1];
+    }
+    return originMatrix;
 }
 export function convertCSStoMatrix(a: number[]) {
     if (a.length === 6) {

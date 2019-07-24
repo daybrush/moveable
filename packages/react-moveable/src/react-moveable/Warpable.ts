@@ -1,7 +1,34 @@
 import Moveable from "./Moveable";
-import { warp as warpMatrix } from "./utils";
-import { convertDimension, invert, ignoreTranslate, multiply, convertMatrixtoCSS } from "./matrix";
+import { warp as warpMatrix, getRad } from "./utils";
+import {
+    convertDimension, invert,
+    ignoreTranslate, multiply,
+    convertMatrixtoCSS, caculate,
+    createIdentityMatrix,
+    ignoreDimension,
+    multiplyCSS,
+} from "./matrix";
+import { NEARBY_POS } from "./consts";
 
+function getTriangleRad(pos1: number[], pos2: number[], pos3: number[]) {
+    // pos1 Rad
+    const rad1 = getRad(pos1, pos2);
+    const rad2 = getRad(pos1, pos3);
+
+    const rad = rad2 - rad1;
+
+    return rad >= 0 ? rad : rad + 2 * Math.PI;
+}
+function isValidPos(poses1: number[][], poses2: number[][]) {
+    const rad1 = getTriangleRad(poses1[0], poses1[1], poses1[2]);
+    const rad2 = getTriangleRad(poses2[0], poses2[1], poses2[2]);
+    const pi = Math.PI;
+
+    if (rad1 > pi && rad2 < pi || rad1 < pi && rad2 > pi) {
+        return false;
+    }
+    return true;
+}
 export function warpStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
 
@@ -10,13 +37,16 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     }
     const {
         transformOrigin, is3d,
-        beforeMatrix, targetTransform, targetMatrix, width, height,
+        matrix,
+        beforeMatrix,
+        targetTransform, targetMatrix, width, height,
     } = moveable.state;
 
     datas.targetTransform = targetTransform;
     datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
-    datas.beforeMatrix = is3d ? beforeMatrix : convertDimension(beforeMatrix, 3, 4);
-    datas.targetInverseMatrix = invert(datas.targetMatrix, 4);
+    datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
+    datas.matrix = is3d ? beforeMatrix : convertDimension(beforeMatrix, 3, 4);
+    datas.inverseMatrix = invert(ignoreTranslate(datas.matrix, 4), 4);
     datas.position = position;
     datas.is3d = is3d;
 
@@ -27,10 +57,12 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         [width, height],
     ].map(pos => pos.map((p, i) => p - transformOrigin[i]));
 
-    datas.nextPoses = datas.poses.map(([x, y]: number[]) => multiply(datas.targetMatrix, [x, y, 0, 1], 4));
+    datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.targetMatrix, [x, y, 0, 1], 4));
     datas.posNum =
         (position[0] === -1 ? 0 : 1)
         + (position[1] === -1 ? 0 : 2);
+
+    datas.prevMatrix = createIdentityMatrix(4);
 
     moveable.props.onWarpStart!({
         target,
@@ -38,17 +70,17 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         clientY,
     });
 }
-
 export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY, deltaX, deltaY }: any) {
-    const { posNum, poses, targetInverseMatrix } = datas;
+    const { posNum, poses, targetInverseMatrix, inverseMatrix, prevMatrix } = datas;
     const target = moveable.props.target!;
-    // moveable.setState({
-    //     [posName]: [x + deltaX, y + deltaY],
-    // });
+    const dist = caculate(inverseMatrix, [distX, distY, 0, 1], 4);
     const nextPoses = datas.nextPoses.slice();
 
-    nextPoses[posNum] = [nextPoses[posNum][0] + distX, nextPoses[posNum][1] + distY];
+    nextPoses[posNum] = [nextPoses[posNum][0] + dist[0], nextPoses[posNum][1] + dist[1]];
 
+    if (!isValidPos( NEARBY_POS[posNum].map(i => poses[i]), NEARBY_POS[posNum].map(i => nextPoses[i]))) {
+        return;
+    }
     const h = warpMatrix(
         poses[0],
         poses[1],
@@ -60,8 +92,25 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
         nextPoses[3],
     );
 
-    target.style.transform = `${datas.targetTransform} matrix3d(${
-        convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4)).join(",")
-    })`;
+    if (!h.length) {
+        return;
+    }
 
+    const matrix = convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4));
+    const transform = `${datas.targetTransform} matrix3d(${matrix.join(",")})`;
+
+    const delta = multiply(invert(prevMatrix, 4), matrix, 4);
+
+    datas.prevMatrix = matrix;
+    moveable.props.onWarp!({
+        target,
+        clientX,
+        clientY,
+        delta,
+        multiply: multiplyCSS,
+        dist: matrix,
+        transform,
+    });
+
+    moveable.updateRect();
 }
