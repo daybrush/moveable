@@ -40,18 +40,26 @@
 </td>
 </tr>
 <tr>
-<td align="center"><strong>Warpable</strong></td>
+<td align="center"><strong>Warpable(soon)</strong></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
 <tr>
-<td align="center">Soon</td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
 </table>
+
+## 🔥 Able!
+* **Draggable** refers to the ability to drag and move targets.
+* **Resizable** indicates whether the target's width and height can be increased or decreased.
+* **Scalable** indicates whether the target's x and y can be scale of transform.
+* **Rotatable** indicates whether the target can be rotated.
+* **Warpable** Warpable indicates whether the target can be warped(distorted, bented).
+
 
 ## ⚙️ Installation
 ### npm
