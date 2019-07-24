@@ -58,7 +58,7 @@
 * **Resizable** indicates whether the target's width and height can be increased or decreased.
 * **Scalable** indicates whether the target's x and y can be scale of transform.
 * **Rotatable** indicates whether the target can be rotated.
-* **Warpable** Warpable indicates whether the target can be warped(distorted, bented).
+* **Warpable** indicates whether the target can be warped(distorted, bented).
 
 
 ## ⚙️ Installation
