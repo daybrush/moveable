@@ -7,7 +7,6 @@ import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
 
-
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
 setAlias("tz", ["transform", "translateZ"]);
@@ -40,7 +39,7 @@ class App extends React.Component {
                     container={document.body}
                     ref={ref(this, "moveable")}
                     keepRatio={false}
-
+                    origin={false}
                     draggable={true}
                     // scalable={!isResizable}
                     // resizable={isResizable}
@@ -85,7 +84,7 @@ class App extends React.Component {
                     }}
                 />
                 <div className="App" onMouseDown={this.onClick} data-target="app">
-
+                    <div className="box" data-target="box"><span>A</span></div>
                     <header className="App-header" data-target="header">
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />
                         <p data-target="p">

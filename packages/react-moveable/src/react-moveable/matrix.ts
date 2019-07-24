@@ -179,17 +179,29 @@ export function multiplyCSS(matrix: number[], matrix2: number[], n: number = Mat
     // n * k
     return newMatrix;
 }
+export function sum(pos1: number[], pos2: number[]) {
+    return pos1.map((p, i) => p + pos2[i]);
+}
+export function minus(pos1: number[], pos2: number[]) {
+    return pos1.map((p, i) => p - pos2[i]);
+}
 export function caculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
     const result = multiply(matrix, matrix2, n);
     const k = result[n - 1];
     return result.map(v => v / k);
 }
+export function caculateWithOrigin(matrix: number[], matrix2: number[], origin: number[], n: number = matrix2.length) {
+    const result = multiply(matrix, minus(matrix2, origin), n);
+    const k = result[n - 1];
+    return sum(result.map(v => v / k), origin);
+}
 export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
     const originMatrix = [];
 
-    for (let i = 0; i < n; ++i) {
+    for (let i = 0; i < n - 1; ++i) {
         originMatrix[i] = matrix[(i + 1) * n - 1];
     }
+    originMatrix[n - 1] = 0;
     return originMatrix;
 }
 export function convertCSStoMatrix(a: number[]) {

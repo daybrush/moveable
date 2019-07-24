@@ -5,7 +5,7 @@ import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
     convertCSStoMatrix, convertMatrixtoCSS,
-    convertDimension, createIdentityMatrix, caculate,
+    convertDimension, createIdentityMatrix, caculateWithOrigin,
 } from "./matrix";
 
 export function prefix(...classNames: string[]) {
@@ -78,18 +78,21 @@ export function caculateMatrixStack(target: SVGElement | HTMLElement): [number[]
         beforeMatrix = convertDimension(beforeMatrix, 3, 4);
     }
     const transform = isTargetMatrixNone
-                    ? "" : `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
+        ? "" : `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
     return [beforeMatrix, mat, transform, targetMatrix];
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
     const n = is3d ? 4 : 3;
-    let [x1, y1] = caculate(matrix, is3d ? [0, 0, 0, 1] : [0, 0, 1], n);
-    let [x2, y2] = caculate(matrix, is3d ? [width, 0, 0, 1] : [width, 0, 1], n);
-    let [x3, y3] = caculate(matrix, is3d ? [0, height, 0, 1] : [0, height, 1], n);
-    let [x4, y4] = caculate(matrix, is3d ? [width, height, 0, 1] : [width, height, 1], n);
-    let [originX, originY] = caculate(matrix, is3d ? [origin[0], origin[1], 0, 1] : [origin[0], origin[1], 1], n);
+    const translate = [origin[0], origin[1], 0, 0];
+
+    let [x1, y1] = caculateWithOrigin(matrix, is3d ? [0, 0, 0, 1] : [0, 0, 1], translate, n);
+    let [x2, y2] = caculateWithOrigin(matrix, is3d ? [width, 0, 0, 1] : [width, 0, 1], translate, n);
+    let [x3, y3] = caculateWithOrigin(matrix, is3d ? [0, height, 0, 1] : [0, height, 1], translate, n);
+    let [x4, y4] = caculateWithOrigin(matrix, is3d ? [width, height, 0, 1] : [width, height, 1], translate, n);
+    let [originX, originY] = caculateWithOrigin(
+        matrix, is3d ? [origin[0], origin[1], 0, 1] : [origin[0], origin[1], 1], translate, n);
 
     const minX = Math.min(x1, x2, x3, x4);
     const minY = Math.min(y1, y2, y3, y4);
