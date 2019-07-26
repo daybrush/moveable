@@ -1,6 +1,6 @@
 import Moveable from "./Moveable";
 import { getRad, getSize, throttle } from "./utils";
-import { invert, multiply, ignoreTranslate } from "./matrix";
+import { dragStart, getDragDist } from "./Draggable";
 
 export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
@@ -8,16 +8,10 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     if (!target || !position) {
         return false;
     }
-    const {
-        matrix,
-        is3d,
-    } = moveable.state;
-
     const [width, height] = getSize(target!);
-    const n = is3d ? 4 : 3;
 
-    datas.is3d = is3d;
-    datas.matrix = invert(ignoreTranslate(matrix, n), n);
+    dragStart(moveable, { datas });
+
     datas.position = position;
     datas.width = width;
     datas.height = height;
@@ -32,15 +26,13 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
 }
 export function resize(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
     const {
-        matrix,
         position,
         width,
         height,
         prevWidth,
         prevHeight,
-        is3d,
     } = datas;
-    const dist = multiply(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
+    const dist = getDragDist({ datas, distX, distY });
 
     let distWidth = position[0] * dist[0];
     let distHeight = position[1] * dist[1];

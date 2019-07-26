@@ -83,7 +83,7 @@ class App extends React.Component {
                         target.style.cssText += item.toCSS();
                     }}
                 />
-                <div className="App" onMouseDown={this.onClick} data-target="app">
+                <div className="App" onMouseDown={this.onClick} onTouchStart={this.onClick} data-target="app">
                     <div className="box" data-target="box"><span>A</span></div>
                     <header className="App-header" data-target="header">
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />

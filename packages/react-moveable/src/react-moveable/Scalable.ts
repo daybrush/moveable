@@ -1,7 +1,7 @@
 import Moveable from "./Moveable";
 import { getRad, throttle } from "./utils";
 import { MIN_SCALE } from "./consts";
-import { invert, multiply, ignoreTranslate } from "./matrix";
+import { dragStart, getDragDist } from "./Draggable";
 
 export function scaleStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
     const target = moveable.props.target;
@@ -9,26 +9,18 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
         return false;
     }
     const {
-        matrix,
-        beforeMatrix,
         width,
         height,
-        transformOrigin,
-        origin,
-        is3d,
         targetTransform,
     } = moveable.state;
-    const n = is3d ? 4 : 3;
-    datas.is3d = is3d;
-    datas.matrix = invert(ignoreTranslate(matrix, n), n);
-    datas.beforeMatrix = beforeMatrix;
+
+    dragStart(moveable, { datas });
+
     datas.transform = targetTransform;
     datas.prevDist = [1, 1];
     datas.position = position;
     datas.width = width;
     datas.height = height;
-    datas.transformOrigin = transformOrigin;
-    datas.originalOrigin = origin;
 
     moveable.props.onScaleStart!({
         target,
@@ -38,19 +30,14 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
 }
 export function scale(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
     const {
-        matrix,
-        beforeMatrix,
         prevDist,
         position,
         width,
         height,
-        transformOrigin,
-        originalOrigin,
         transform,
-        is3d,
     } = datas;
 
-    const dist = multiply(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
+    const dist = getDragDist({ datas, distX, distY });
     let distWidth = position[0] * dist[0];
     let distHeight = position[1] * dist[1];
 
@@ -101,13 +88,7 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         clientY,
     });
 
-    moveable.updateTarget({
-        beforeMatrix,
-        transformOrigin,
-        origin: originalOrigin,
-        width,
-        height,
-    });
+    moveable.updateTarget();
 }
 export function scaleEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
     moveable.props.onScaleEnd!({

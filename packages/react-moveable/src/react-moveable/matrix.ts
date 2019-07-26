@@ -54,22 +54,12 @@ export function createIdentityMatrix(n: number) {
 }
 export function createOriginMatrix(n: number, origin: number[]) {
     const m = createIdentityMatrix(n);
+    const length = Math.min(origin.length, n - 1);
 
-    origin.forEach((p, i) => {
-        m[n * (i + 1) - 1] = p;
-    });
-    return m;
-}
-export function ignoreTranslate(
-    matrix: number[],
-    n: number = Math.sqrt(matrix.length),
-) {
-    const newMatrix = matrix.slice();
-
-    for (let i = 0; i < n; ++i) {
-        newMatrix[i * n - 1] = 0;
+    for (let i = 0; i < length; ++i) {
+        m[n * (i + 1) - 1] = origin[i];
     }
-    return newMatrix;
+    return m;
 }
 export function ignoreDimension(
     matrix: number[],
@@ -148,10 +138,14 @@ export function convertPositionMatrix(matrix: number[], n: number) {
 }
 export function convertDimension(matrix: number[], n: number = Math.sqrt(matrix.length), m: number) {
     // n < m
+    if (n === m) {
+        return matrix;
+    }
     const newMatrix = createIdentityMatrix(m);
 
-    for (let i = 0; i < n - 1; ++i) {
-        for (let j = 0; j < n - 1; ++j) {
+    const length = Math.min(n, m);
+    for (let i = 0; i < length - 1; ++i) {
+        for (let j = 0; j < length - 1; ++j) {
             newMatrix[i * m + j] = matrix[i * n + j];
         }
 
@@ -220,9 +214,11 @@ export function caculate(matrix: number[], matrix2: number[], n: number = matrix
     return result.map(v => v / k);
 }
 export function caculateWithOrigin(matrix: number[], matrix2: number[], origin: number[], n: number = matrix2.length) {
-    const result = multiply(matrix, minus(matrix2, origin), n);
+    console.log(matrix, origin, n);
+    const result = multiply(matrix, matrix2, n);
     const k = result[n - 1];
-    return sum(result.map(v => v / k), origin);
+
+    return result.map(v => v / k);
 }
 export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
     const originMatrix = [];
@@ -248,7 +244,7 @@ export function convertMatrixtoCSS(a: number[]) {
         return [
             a[0], a[3],
             a[1], a[4],
-            a[2], a[4],
+            a[2], a[5],
         ];
     }
     return transpose(a);

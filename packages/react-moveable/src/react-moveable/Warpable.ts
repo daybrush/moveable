@@ -1,14 +1,14 @@
 import Moveable from "./Moveable";
 import { warp as warpMatrix, getRad } from "./utils";
 import {
-    convertDimension, invert,
-    ignoreTranslate, multiply,
+    convertDimension, invert, multiply,
     convertMatrixtoCSS, caculate,
     createIdentityMatrix,
     ignoreDimension,
     multiplyCSS,
 } from "./matrix";
 import { NEARBY_POS } from "./consts";
+import { dragStart, getDragDist } from "./Draggable";
 
 function getTriangleRad(pos1: number[], pos2: number[], pos3: number[]) {
     // pos1 Rad
@@ -24,7 +24,7 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
     const rad2 = getTriangleRad(poses2[0], poses2[1], poses2[2]);
     const pi = Math.PI;
 
-    if ((rad1 > pi && rad2 < pi) || (rad1 < pi && rad2 > pi)) {
+    if ((rad1 >= pi && rad2 <= pi) || (rad1 <= pi && rad2 >= pi)) {
         return false;
     }
     return true;
@@ -37,18 +37,15 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     }
     const {
         transformOrigin, is3d,
-        beforeMatrix,
         targetTransform, targetMatrix, width, height,
     } = moveable.state;
 
     datas.targetTransform = targetTransform;
     datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
     datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
-    datas.beforeMatrix = is3d ? beforeMatrix : convertDimension(beforeMatrix, 3, 4);
-    datas.inverseBeforeMatrix = invert(ignoreTranslate(datas.beforeMatrix, 4), 4);
     datas.position = position;
-    datas.is3d = is3d;
 
+    dragStart(moveable, { datas });
     datas.poses = [
         [0, 0],
         [width, 0],
@@ -60,9 +57,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     datas.posNum =
         (position[0] === -1 ? 0 : 1)
         + (position[1] === -1 ? 0 : 2);
-
     datas.prevMatrix = createIdentityMatrix(4);
-
     moveable.props.onWarpStart!({
         target,
         clientX,
@@ -70,14 +65,16 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     });
 }
 export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
-    const { posNum, poses, targetInverseMatrix, inverseBeforeMatrix, prevMatrix } = datas;
+    const { posNum, poses, targetInverseMatrix, prevMatrix } = datas;
     const target = moveable.props.target!;
-    const dist = caculate(inverseBeforeMatrix, [distX, distY, 0, 1], 4);
+    const dist = getDragDist({ datas, distX, distY });
     const nextPoses = datas.nextPoses.slice();
 
     nextPoses[posNum] = [nextPoses[posNum][0] + dist[0], nextPoses[posNum][1] + dist[1]];
 
-    if (!isValidPos( NEARBY_POS[posNum].map(i => poses[i]), NEARBY_POS[posNum].map(i => nextPoses[i]))) {
+    if (!NEARBY_POS.every(
+        nearByPoses => isValidPos(nearByPoses.map(i => poses[i]), nearByPoses.map(i => nextPoses[i])),
+    )) {
         return;
     }
     const h = warpMatrix(

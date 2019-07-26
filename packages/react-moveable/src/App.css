@@ -14,7 +14,7 @@
   /* transform: rotate(18deg); */
   width: 300px;
   height: 200px;
-  transform-origin: 0% 0%!important;
+  /* transform-origin: 0% 0%!important; */
 }
 .App code {
   display: inline-block;

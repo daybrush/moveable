@@ -4,10 +4,9 @@ import {
     prefix, getLineStyle,
     getTargetInfo,
     getControlTransform,
-    getTransform,
     caculatePosition,
     getRotationInfo,
-    getOriginMatrix,
+    caculateMatrixStack,
 } from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
@@ -15,7 +14,7 @@ import { ref } from "framework-utils";
 import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
-import { multiply, convertCSStoMatrix, convertDimension, createIdentityMatrix } from "./matrix";
+import { createIdentityMatrix } from "./matrix";
 import { dot } from "@daybrush/utils";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
@@ -47,9 +46,9 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         onResizeStart: () => { },
         onResize: () => { },
         onResizeEnd: () => { },
-        onWarpStart: () => {},
-        onWarp: () => {},
-        onWarpEnd: () => {},
+        onWarpStart: () => { },
+        onWarp: () => { },
+        onWarpEnd: () => { },
     };
     public state: MoveableState = {
         target: null,
@@ -57,14 +56,13 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         matrix: createIdentityMatrix(3),
         targetTransform: "",
         targetMatrix: createIdentityMatrix(3),
-        offsetMatrix: createIdentityMatrix(3),
+        absoluteMatrix: createIdentityMatrix(3),
         is3d: false,
         left: 0,
         top: 0,
         width: 0,
         height: 0,
         transformOrigin: [0, 0],
-        offset: [0, 0],
         direction: 1,
         rotationRad: 0,
         rotationPos: [0, 0],
@@ -93,7 +91,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 className={prefix("control-box", direction === -1 ? "reverse" : "")} style={{
                     position: this.props.container ? "absolute" : "fixed",
                     display: target ? "block" : "none",
-                    transform: `translate(${left}px, ${top}px)`,
+                    transform: `translate(${left}px, ${top}px) translateZ(50px)`,
                 }}>
                 <div className={prefix("line")} style={getLineStyle(pos1, pos2)}></div>
                 <div className={prefix("line")} style={getLineStyle(pos2, pos4)}></div>
@@ -230,50 +228,32 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         const container = this.props.container;
         this.updateState(getTargetInfo(target, container), isNotSetState);
     }
-    public updateTarget(nextState: {
-        beforeMatrix?: number[],
-        matrix?: number[],
-        width?: number,
-        height?: number,
-        origin?: number[],
-        transformOrigin?: number[],
-    } = {}) {
-        const state = this.state;
+    public updateTarget() {
         const {
-            width = state.width,
-            height = state.height,
-            transformOrigin = state.transformOrigin,
-            beforeMatrix = state.beforeMatrix,
-            matrix = state.matrix,
-        } = nextState;
+            width,
+            height,
+            beforeMatrix,
+        } = this.state;
         const target = this.props.target!;
-        let is3d = beforeMatrix.length === 16;
-        let nextTransform = convertCSStoMatrix(getTransform(target, true));
-        const isNext3d = nextTransform.length === 16;
-        let nextBeforeMatrix = beforeMatrix;
-        let nextMatrix = matrix;
-        if (is3d && !isNext3d) {
-            nextTransform = convertDimension(nextTransform, 3, 4);
-        }
-        if (!is3d && isNext3d) {
-            is3d = true;
-            nextBeforeMatrix = convertDimension(beforeMatrix, 3, 4);
-        }
+        const is3d = beforeMatrix.length === 16;
         const n = is3d ? 4 : 3;
-        const parentElement: HTMLElement | null = target.parentElement;
-        const parentStyle = parentElement ? window.getComputedStyle(parentElement) : null;
-        const parentOrigin = parentStyle ? parentStyle.transformOrigin!.split(" ").map(pos => parseFloat(pos)) : [0, 0];
-        const originMatrix = getOriginMatrix(target, n, parentOrigin);
-
-        nextMatrix = multiply(nextBeforeMatrix, originMatrix, n);
-        nextMatrix = multiply(nextMatrix, nextTransform, n);
-
-        const [[nextLeft, nextTop], nextOrigin, pos1, pos2, pos3, pos4] = caculatePosition(
-            nextMatrix,
+        const [, matrix,  targetMatrix, absoluteMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
+            target,
+            target,
+            beforeMatrix,
+            n,
+        );
+        const [
+            [left, top],
+            nextOrigin,
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+        ] = caculatePosition(
+            absoluteMatrix,
             transformOrigin, width, height,
         );
-        // const nextLeft = left + origin[0] - nextOrigin[0];
-        // const nextTop = top + origin[1] - nextOrigin[1];
         const [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
 
         this.setState({
@@ -282,11 +262,14 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             rotationPos,
             pos1, pos2, pos3, pos4,
             origin: nextOrigin,
-            beforeMatrix: nextBeforeMatrix,
-            matrix: nextMatrix,
-            targetMatrix: nextTransform,
-            left: nextLeft,
-            top: nextTop,
+            absoluteMatrix,
+            beforeMatrix,
+            targetMatrix,
+            matrix,
+            transformOrigin,
+            targetTransform,
+            left,
+            top,
         });
     }
     private updateState(nextState: any, isNotSetState?: boolean) {
