@@ -8,34 +8,27 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
     if (!position || !target) {
         return false;
     }
-    const style = window.getComputedStyle(target);
     const {
         matrix,
         beforeMatrix,
         width,
         height,
-        left, top,
         transformOrigin,
         origin,
         is3d,
+        targetTransform,
     } = moveable.state;
     const n = is3d ? 4 : 3;
     datas.is3d = is3d;
     datas.matrix = invert(ignoreTranslate(matrix, n), n);
     datas.beforeMatrix = beforeMatrix;
-    datas.transform = style.transform;
+    datas.transform = targetTransform;
     datas.prevDist = [1, 1];
     datas.position = position;
     datas.width = width;
     datas.height = height;
     datas.transformOrigin = transformOrigin;
     datas.originalOrigin = origin;
-    datas.left = left;
-    datas.top = top;
-
-    if (datas.transform === "none") {
-        datas.transform = "";
-    }
 
     moveable.props.onScaleStart!({
         target,
@@ -51,8 +44,6 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         position,
         width,
         height,
-        left,
-        top,
         transformOrigin,
         originalOrigin,
         transform,
@@ -110,14 +101,12 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         clientY,
     });
 
-    moveable.updateTargetRect(target, {
+    moveable.updateTarget({
         beforeMatrix,
         transformOrigin,
         origin: originalOrigin,
         width,
         height,
-        left,
-        top,
     });
 }
 export function scaleEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {

@@ -24,7 +24,7 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
     const rad2 = getTriangleRad(poses2[0], poses2[1], poses2[2]);
     const pi = Math.PI;
 
-    if (rad1 > pi && rad2 < pi || rad1 < pi && rad2 > pi) {
+    if ((rad1 > pi && rad2 < pi) || (rad1 < pi && rad2 > pi)) {
         return false;
     }
     return true;
@@ -37,7 +37,6 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     }
     const {
         transformOrigin, is3d,
-        matrix,
         beforeMatrix,
         targetTransform, targetMatrix, width, height,
     } = moveable.state;
@@ -45,8 +44,8 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     datas.targetTransform = targetTransform;
     datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
     datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
-    datas.matrix = is3d ? beforeMatrix : convertDimension(beforeMatrix, 3, 4);
-    datas.inverseMatrix = invert(ignoreTranslate(datas.matrix, 4), 4);
+    datas.beforeMatrix = is3d ? beforeMatrix : convertDimension(beforeMatrix, 3, 4);
+    datas.inverseBeforeMatrix = invert(ignoreTranslate(datas.beforeMatrix, 4), 4);
     datas.position = position;
     datas.is3d = is3d;
 
@@ -70,10 +69,10 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         clientY,
     });
 }
-export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY, deltaX, deltaY }: any) {
-    const { posNum, poses, targetInverseMatrix, inverseMatrix, prevMatrix } = datas;
+export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
+    const { posNum, poses, targetInverseMatrix, inverseBeforeMatrix, prevMatrix } = datas;
     const target = moveable.props.target!;
-    const dist = caculate(inverseMatrix, [distX, distY, 0, 1], 4);
+    const dist = caculate(inverseBeforeMatrix, [distX, distY, 0, 1], 4);
     const nextPoses = datas.nextPoses.slice();
 
     nextPoses[posNum] = [nextPoses[posNum][0] + dist[0], nextPoses[posNum][1] + dist[1]];
@@ -113,4 +112,16 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
     });
 
     moveable.updateRect();
+}
+
+export function warpEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
+    moveable.props.onWarpEnd!({
+        target: moveable.props.target!,
+        clientX,
+        clientY,
+        isDrag,
+    });
+    if (isDrag) {
+        moveable.updateRect();
+    }
 }

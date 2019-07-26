@@ -71,13 +71,7 @@ export function getDraggableDragger(
                 clientX,
                 clientY,
             });
-            if (throttleDrag) {
-                moveable.updatePosition();
-            } else {
-                moveable.setState({
-                    transform: `translate(${distX}px, ${distY}px)`,
-                });
-            }
+            moveable.updateTarget();
         },
         dragend: ({ isDrag, clientX, clientY }) => {
             moveable.props.onDragEnd!({

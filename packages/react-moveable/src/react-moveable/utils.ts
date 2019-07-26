@@ -33,52 +33,66 @@ export function getTransformMatrix(transform: string | number[]) {
     const value = splitBracket(transform).value!;
     return value.split(/s*,\s*/g).map(v => parseFloat(v));
 }
-export function caculateMatrixStack(target: SVGElement | HTMLElement): [number[], number[], string, number[]] {
+export function createOriginMatrix(el: HTMLElement | SVGElement, is3d: boolean) {
+    const m = createIdentityMatrix(is3d ? 4 : 3);
+
+    m[is3d ? 3 : 2] = (el as any).offsetLeft;
+    m[is3d ? 7 : 5] = (el as any).offsetTop;
+
+    return m;
+}
+
+export function caculateMatrixStack(
+    target: SVGElement | HTMLElement,
+    container: SVGElement | HTMLElement | null | undefined,
+): [number[], number[], string, number[]] {
     let el: SVGElement | HTMLElement | null = target;
-    const matrixes: Array<"none" | number[]> = [];
-
-    while (el) {
-        matrixes.push(getTransform(el));
-        el = el.parentElement;
-    }
-
-    const isTargetMatrixNone = matrixes[0] === "none";
-    let targetMatrix = convertCSStoMatrix(getTransformMatrix(matrixes[0]));
-    matrixes.reverse();
-
-    // 1 0 0
-    // 0 1 0
-    const length = matrixes.length;
-    let mat = createIdentityMatrix(3);
-    let beforeMatrix = createIdentityMatrix(3);
+    const matrixes: number[][] = [];
+    const isContainer = el === container;
     let is3d = false;
 
+    while (el && (isContainer || el !== container)) {
+        let matrix = convertCSStoMatrix(getTransform(el, true));
+
+        if (is3d && matrix.length === 9) {
+            matrix = convertDimension(matrix, 3, 4);
+        }
+        matrixes.push(matrix);
+        if (!is3d && matrix.length === 16) {
+            is3d = true;
+            const matrixesLength = matrixes.length - 1;
+
+            for (let i = 0; i < matrixesLength; ++i) {
+                matrixes[i] = convertDimension(matrixes[i], 3, 4);
+            }
+        }
+        const m = createOriginMatrix(el, is3d);
+
+        matrixes.push(m);
+
+        el = el.parentElement;
+        if (isContainer) {
+            break;
+        }
+    }
+    const length = matrixes.length;
+    const n = is3d ? 4 : 3;
+    const targetMatrix = matrixes[0] || createIdentityMatrix(n);
+    let mat = createIdentityMatrix(n);
+    let beforeMatrix = createIdentityMatrix(n);
+
+    matrixes.reverse();
     matrixes.forEach((matrix, i) => {
-        if (length - 1 === i) {
+        if (length - 2 === i) {
             beforeMatrix = mat.slice();
         }
-        if (matrix !== "none") {
-            const nextMatrix = convertCSStoMatrix(matrix);
-
-            if (!is3d && nextMatrix.length === 16) {
-                is3d = true;
-                mat = convertDimension(mat, 3, 4);
-            }
-            mat = multiply(
-                mat,
-                nextMatrix,
-                is3d ? 4 : 3,
-            );
-        }
+        mat = multiply(
+            mat,
+            matrix,
+            n,
+        );
     });
-    if (is3d && targetMatrix.length !== 16) {
-        targetMatrix = convertDimension(targetMatrix, 3, 4);
-    }
-    if (is3d && beforeMatrix.length !== 16) {
-        beforeMatrix = convertDimension(beforeMatrix, 3, 4);
-    }
-    const transform = isTargetMatrixNone
-        ? "" : `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
+    const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
     return [beforeMatrix, mat, transform, targetMatrix];
 }
@@ -111,6 +125,7 @@ export function caculatePosition(matrix: number[], origin: number[], width: numb
     originY = (originY - minY) || 0;
 
     return [
+        [minX, minY],
         [originX, originY],
         [x1, y1],
         [x2, y2],
@@ -220,7 +235,7 @@ export function getRotationInfo(
     return [direction, rotationRad, rotationPos];
 }
 export function getTargetInfo(
-    target?: SVGElement | HTMLElement | null,
+    target?: MoveableProps["target"],
     container?: MoveableProps["container"],
 ): MoveableState {
     let left = 0;
@@ -243,29 +258,19 @@ export function getTargetInfo(
     let targetTransform = "";
 
     if (target) {
-        const rect = target.getBoundingClientRect();
         const style = window.getComputedStyle(target);
 
-        left = rect.left;
-        top = rect.top;
         width = (target as HTMLElement).offsetWidth;
         height = (target as HTMLElement).offsetHeight;
 
         if (isUndefined(width)) {
             [width, height] = getSize(target, style, true);
         }
-        [beforeMatrix, matrix, targetTransform, targetMatrix] = caculateMatrixStack(target);
+        [beforeMatrix, matrix, targetTransform, targetMatrix] = caculateMatrixStack(target, container);
 
         is3d = matrix.length === 16;
         transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
-        [origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
-
-        if (container) {
-            const containerRect = container.getBoundingClientRect();
-
-            left -= containerRect.left;
-            top -= containerRect.top;
-        }
+        [[left, top], origin, pos1, pos2, pos3, pos4] = caculatePosition(matrix, transformOrigin, width, height);
         // 1 : clockwise
         // -1 : counterclockwise
         [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
@@ -275,7 +280,6 @@ export function getTargetInfo(
         direction,
         rotationRad,
         rotationPos,
-        transform: "",
         target,
         left,
         top,
@@ -362,4 +366,21 @@ export function warp(
 
     h[8] = 1;
     return convertDimension(h, 3, 4);
+}
+
+export function getTargetPosition(target: HTMLElement | SVGElement, container?: HTMLElement | SVGElement | null) {
+    const rect = target.getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.top;
+
+    if (container) {
+        const containerRect = container.getBoundingClientRect();
+
+        left -= containerRect.left;
+        top -= containerRect.top;
+    }
+    return {
+        left,
+        top,
+    };
 }

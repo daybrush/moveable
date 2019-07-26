@@ -46,7 +46,6 @@ export interface MoveableState {
     targetTransform: string;
     targetMatrix: number[];
     is3d: boolean;
-    transform: string;
     transformOrigin: number[];
     origin: number[];
     direction: 1 | -1;
@@ -275,15 +274,18 @@ export interface OnWarpStart {
  * @property - a target's transform
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - The delta of warp matrix
+ * @property - The dist of warp matrix
+ * @property - Multiply function that can multiply previous matrix by warp matrix
  */
 export interface OnWarp {
     target: HTMLElement | SVGElement;
+    transform: string;
     clientX: number;
     clientY: number;
     delta: number[];
     dist: number[];
     multiply: (matrix1: number[], matrix2: number[], n?: number) => number[];
-    transform: string;
 }
 /**
  * @typedef

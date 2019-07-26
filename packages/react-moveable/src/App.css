@@ -5,6 +5,7 @@
 }
 .App * {
   position: relative;
+  transform-origin: 50% 50%;
 }
 .App-logo {
   position: relative;

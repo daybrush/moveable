@@ -7,6 +7,7 @@ import {
     getTransform,
     caculatePosition,
     getRotationInfo,
+    createOriginMatrix,
 } from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
@@ -15,6 +16,7 @@ import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
 import { multiply, convertCSStoMatrix, convertDimension, createIdentityMatrix } from "./matrix";
+import { dot } from "@daybrush/utils";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -60,7 +62,6 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         top: 0,
         width: 0,
         height: 0,
-        transform: "",
         transformOrigin: [0, 0],
         direction: 1,
         rotationRad: 0,
@@ -82,7 +83,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         if (this.state.target !== this.props.target) {
             this.updateRect(true);
         }
-        const { left, top, pos1, pos2, pos3, pos4, target, transform, direction } = this.state;
+        const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
         return (
             <ControlBoxElement
@@ -90,7 +91,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 className={prefix("control-box", direction === -1 ? "reverse" : "")} style={{
                     position: this.props.container ? "absolute" : "fixed",
                     display: target ? "block" : "none",
-                    transform: `translate(${left}px, ${top}px) ${transform}`,
+                    transform: `translate(${left}px, ${top}px)`,
                 }}>
                 <div className={prefix("line")} style={getLineStyle(pos1, pos2)}></div>
                 <div className={prefix("line")} style={getLineStyle(pos2, pos4)}></div>
@@ -98,6 +99,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 <div className={prefix("line")} style={getLineStyle(pos3, pos4)}></div>
                 {this.renderRotation()}
                 {this.renderPosition()}
+                {this.renderMiddleLine()}
                 {this.renderDiagonalPosition()}
                 {this.renderOrigin()}
             </ControlBoxElement>
@@ -128,7 +130,8 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         return (<div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>);
     }
     public renderDiagonalPosition() {
-        if (!this.props.resizable && !this.props.scalable && !this.props.warpable) {
+        const { resizable, scalable, warpable } = this.props;
+        if (!resizable && !scalable && !warpable) {
             return null;
         }
         const { pos1, pos2, pos3, pos4 } = this.state;
@@ -141,6 +144,29 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
                 style={getControlTransform(pos3)}></div>,
             <div className={prefix("control", "se")} data-position="se" key="se"
                 style={getControlTransform(pos4)}></div>,
+        ];
+    }
+    public renderMiddleLine() {
+        const { resizable, scalable } = this.props;
+        if (resizable || scalable) {
+            return;
+        }
+        const { pos1, pos2, pos3, pos4 } = this.state;
+
+        const linePosFrom1 = pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
+        const linePosFrom2 = pos1.map((pos, i) => dot(pos, pos2[i], 2, 1));
+        const linePosFrom3 = pos1.map((pos, i) => dot(pos, pos3[i], 1, 2));
+        const linePosFrom4 = pos1.map((pos, i) => dot(pos, pos3[i], 2, 1));
+        const linePosTo1 = pos3.map((pos, i) => dot(pos, pos4[i], 1, 2));
+        const linePosTo2 = pos3.map((pos, i) => dot(pos, pos4[i], 2, 1));
+        const linePosTo3 = pos2.map((pos, i) => dot(pos, pos4[i], 1, 2));
+        const linePosTo4 = pos2.map((pos, i) => dot(pos, pos4[i], 2, 1));
+
+        return [
+            <div className={prefix("line")} key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1)}></div>,
+            <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2)}></div>,
+            <div className={prefix("line")} style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
+            <div className={prefix("line")} style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
         ];
     }
     public renderPosition() {
@@ -164,6 +190,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         /* rotatable */
         /* resizable */
         /* scalable */
+        /* warpable */
         this.moveableDragger = getMoveableDragger(this, this.controlBox.getElement());
     }
     public componentWillUnmount() {
@@ -201,71 +228,57 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         const container = this.props.container;
         this.updateState(getTargetInfo(target, container), isNotSetState);
     }
-    public updatePosition() {
-        const { target, container } = this.props;
-
-        if (target) {
-            const rect = target.getBoundingClientRect();
-            let left = rect.left;
-            let top = rect.top;
-
-            if (container) {
-                const containerRect = container.getBoundingClientRect();
-
-                left -= containerRect.left;
-                top -= containerRect.top;
-            }
-            this.setState({
-                left,
-                top,
-            });
-        }
-
-    }
-    public updateTargetRect(target: HTMLElement | SVGElement, nextState: {
-        beforeMatrix: number[],
-        left?: number,
-        top?: number,
+    public updateTarget(nextState: {
+        beforeMatrix?: number[],
+        matrix?: number[],
         width?: number,
         height?: number,
         origin?: number[],
         transformOrigin?: number[],
-    }) {
+    } = {}) {
         const state = this.state;
         const {
-            left = state.left,
-            top = state.top,
             width = state.width,
             height = state.height,
             transformOrigin = state.transformOrigin,
-            origin: originalOrigin = state.origin,
+            beforeMatrix = state.beforeMatrix,
+            matrix = state.matrix,
         } = nextState;
-        let { beforeMatrix } = nextState;
+        const target = this.props.target!;
         let is3d = beforeMatrix.length === 16;
         let nextTransform = convertCSStoMatrix(getTransform(target, true));
         const isNext3d = nextTransform.length === 16;
-
+        let nextBeforeMatrix = beforeMatrix;
+        let nextMatrix = matrix;
         if (is3d && !isNext3d) {
             nextTransform = convertDimension(nextTransform, 3, 4);
         }
         if (!is3d && isNext3d) {
             is3d = true;
-            beforeMatrix = convertDimension(beforeMatrix, 3, 4);
+            nextBeforeMatrix = convertDimension(beforeMatrix, 3, 4);
         }
+        const n = is3d ? 4 : 3;
+        const originMatrix = createOriginMatrix(target, is3d);
+        nextMatrix = multiply(nextBeforeMatrix, originMatrix, n);
+        nextMatrix = multiply(nextMatrix, nextTransform, n);
 
-        const [origin, pos1, pos2, pos3, pos4] = caculatePosition(
-            multiply(beforeMatrix, nextTransform, is3d ? 4 : 3),
+        const [[nextLeft, nextTop], nextOrigin, pos1, pos2, pos3, pos4] = caculatePosition(
+            nextMatrix,
             transformOrigin, width, height,
         );
-        const nextLeft = left + originalOrigin[0] - origin[0];
-        const nextTop = top + originalOrigin[1] - origin[1];
+        // const nextLeft = left + origin[0] - nextOrigin[0];
+        // const nextTop = top + origin[1] - nextOrigin[1];
         const [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
 
         this.setState({
             direction,
             rotationRad,
             rotationPos,
-            origin, pos1, pos2, pos3, pos4,
+            pos1, pos2, pos3, pos4,
+            origin: nextOrigin,
+            beforeMatrix: nextBeforeMatrix,
+            matrix: nextMatrix,
+            targetMatrix: nextTransform,
             left: nextLeft,
             top: nextTop,
         });

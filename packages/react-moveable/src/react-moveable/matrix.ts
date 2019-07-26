@@ -58,7 +58,7 @@ export function ignoreTranslate(
 ) {
     const newMatrix = matrix.slice();
 
-    for (let i = 0; i < n - 1; ++i) {
+    for (let i = 0; i < n; ++i) {
         newMatrix[i * n - 1] = 0;
     }
     return newMatrix;
