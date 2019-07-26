@@ -1,7 +1,8 @@
 import Moveable from "./Moveable";
 import { drag } from "@daybrush/drag";
 import { throttleArray } from "./utils";
-import { invert, caculate, ignoreTranslate } from "./matrix";
+import { invert, caculate, ignoreTranslate, minus, caculateWithOrigin, sum, convertPositionMatrix } from "./matrix";
+import { transform } from "@babel/core";
 
 export function getDraggableDragger(
     moveable: Moveable,
@@ -11,16 +12,20 @@ export function getDraggableDragger(
         container: window,
         dragstart: ({ datas, clientX, clientY }) => {
             const style = window.getComputedStyle(target!);
-            const { matrix, beforeMatrix, is3d} = moveable.state;
+            const { matrix, beforeMatrix, is3d, transformOrigin, offset } = moveable.state;
             const n = is3d ? 4 : 3;
             datas.is3d = is3d;
+            datas.offset = offset;
             datas.matrix = invert(ignoreTranslate(matrix, n), n);
-            datas.beforeMatrix = invert(ignoreTranslate(beforeMatrix, n), n);
+            datas.beforeMatrix = invert(beforeMatrix, n);
             datas.left = parseFloat(style.left || "") || 0;
             datas.top = parseFloat(style.top || "") || 0;
             datas.bottom = parseFloat(style.bottom || "") || 0;
             datas.right = parseFloat(style.right || "") || 0;
             datas.transform = style.transform;
+
+            datas.transformOrigin = caculate(beforeMatrix, sum(convertPositionMatrix(transformOrigin, is3d ? 4 : 3), offset), is3d ? 4 : 3)
+            datas.startDist = caculate(datas.beforeMatrix, sum(convertPositionMatrix([0, 0], is3d ? 4 : 3), datas.transformOrigin), is3d ? 4 : 3);
             datas.prevDist = [0, 0];
             datas.prevBeforeDist = [0, 0];
 
@@ -35,10 +40,13 @@ export function getDraggableDragger(
         },
         drag: ({ datas, distX, distY, clientX, clientY }) => {
             const throttleDrag = moveable.props.throttleDrag!;
-            const { beforeMatrix, matrix, prevDist, prevBeforeDist, is3d } = datas;
-            const beforeDist = caculate(beforeMatrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
-            const dist = caculate(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], is3d ? 4 : 3);
+            const { beforeMatrix, matrix, prevDist, prevBeforeDist, is3d, startDist, transformOrigin, offset } = datas;
+            const n = is3d ? 4 : 3;
 
+            const beforeDist = minus(caculate(beforeMatrix, sum(is3d ? [distX, distY, 0, 1] : [distX, distY, 1], transformOrigin), n), startDist);
+            const dist = caculate(matrix, is3d ? [distX, distY, 0, 1] : [distX, distY, 1], n);
+
+            console.log(beforeDist);
             throttleArray(dist, throttleDrag);
             throttleArray(beforeDist, throttleDrag);
 

@@ -5,7 +5,7 @@ import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
     convertCSStoMatrix, convertMatrixtoCSS,
-    convertDimension, createIdentityMatrix, caculateWithOrigin,
+    convertDimension, createIdentityMatrix, caculateWithOrigin, createOriginMatrix, getOrigin,
 } from "./matrix";
 
 export function prefix(...classNames: string[]) {
@@ -22,7 +22,13 @@ export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean)
     }
     return getTransformMatrix(transform);
 }
+export function getOriginMatrix(el: HTMLElement | SVGElement, n: number, parentOrigin: number[]) {
+    return createOriginMatrix(n, [
+        (el as any).offsetLeft - parentOrigin[0],
+        (el as any).offsetTop - parentOrigin[1],
+    ]);
 
+}
 export function getTransformMatrix(transform: string | number[]) {
     if (transform === "none") {
         return [1, 0, 0, 1, 0, 0];
@@ -33,26 +39,19 @@ export function getTransformMatrix(transform: string | number[]) {
     const value = splitBracket(transform).value!;
     return value.split(/s*,\s*/g).map(v => parseFloat(v));
 }
-export function createOriginMatrix(el: HTMLElement | SVGElement, is3d: boolean) {
-    const m = createIdentityMatrix(is3d ? 4 : 3);
-
-    m[is3d ? 3 : 2] = (el as any).offsetLeft;
-    m[is3d ? 7 : 5] = (el as any).offsetTop;
-
-    return m;
-}
 
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null | undefined,
-): [number[], number[], string, number[]] {
+): [number[], number[], string, number[], number[], number[]] {
     let el: SVGElement | HTMLElement | null = target;
+    let style: CSSStyleDeclaration | null = el && window.getComputedStyle(el);
     const matrixes: number[][] = [];
     const isContainer = el === container;
     let is3d = false;
-
+    const totalTransformOrigin = [0, 0];
     while (el && (isContainer || el !== container)) {
-        let matrix = convertCSStoMatrix(getTransform(el, true));
+        let matrix = convertCSStoMatrix(getTransformMatrix(style!.transform!));
 
         if (is3d && matrix.length === 9) {
             matrix = convertDimension(matrix, 3, 4);
@@ -66,21 +65,30 @@ export function caculateMatrixStack(
                 matrixes[i] = convertDimension(matrixes[i], 3, 4);
             }
         }
-        const m = createOriginMatrix(el, is3d);
+        const parentElement: HTMLElement | null = el.parentElement;
+        style = parentElement ? window.getComputedStyle(parentElement) : null;
+        const parentOrigin = style ? style.transformOrigin!.split(" ").map(pos => parseFloat(pos)) : [0, 0];
+        const m = getOriginMatrix(el, is3d ? 4 : 3, parentOrigin);
 
+        totalTransformOrigin[0] += parentOrigin[0];
+        totalTransformOrigin[1] += parentOrigin[1];
         matrixes.push(m);
 
-        el = el.parentElement;
+        el = parentElement;
         if (isContainer) {
             break;
         }
     }
-    const length = matrixes.length;
     const n = is3d ? 4 : 3;
     const targetMatrix = matrixes[0] || createIdentityMatrix(n);
+    const offset = getOrigin((matrixes[1] || createIdentityMatrix(n)), n);
+
     let mat = createIdentityMatrix(n);
     let beforeMatrix = createIdentityMatrix(n);
+    let offsetMatrix = createIdentityMatrix(n);
 
+    matrixes.push(createOriginMatrix(n, totalTransformOrigin));
+    const length = matrixes.length;
     matrixes.reverse();
     matrixes.forEach((matrix, i) => {
         if (length - 2 === i) {
@@ -94,7 +102,7 @@ export function caculateMatrixStack(
     });
     const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
-    return [beforeMatrix, mat, transform, targetMatrix];
+    return [beforeMatrix, mat, transform, targetMatrix, offset, offsetMatrix];
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
@@ -248,6 +256,8 @@ export function getTargetInfo(
     let beforeMatrix = createIdentityMatrix(3);
     let matrix = createIdentityMatrix(3);
     let targetMatrix = createIdentityMatrix(3);
+    let offsetMatrix = createIdentityMatrix(3);
+    let offset = [0, 0];
     let width = 0;
     let height = 0;
     let transformOrigin = [0, 0];
@@ -266,7 +276,7 @@ export function getTargetInfo(
         if (isUndefined(width)) {
             [width, height] = getSize(target, style, true);
         }
-        [beforeMatrix, matrix, targetTransform, targetMatrix] = caculateMatrixStack(target, container);
+        [beforeMatrix, matrix, targetTransform, targetMatrix, offset, offsetMatrix] = caculateMatrixStack(target, container);
 
         is3d = matrix.length === 16;
         transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
@@ -291,6 +301,8 @@ export function getTargetInfo(
         height,
         beforeMatrix,
         matrix,
+        offset,
+        offsetMatrix,
         targetTransform,
         targetMatrix,
         is3d,

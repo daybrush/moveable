@@ -7,7 +7,7 @@ import {
     getTransform,
     caculatePosition,
     getRotationInfo,
-    createOriginMatrix,
+    getOriginMatrix,
 } from "./utils";
 import styler from "react-css-styler";
 import { drag } from "@daybrush/drag";
@@ -57,12 +57,14 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         matrix: createIdentityMatrix(3),
         targetTransform: "",
         targetMatrix: createIdentityMatrix(3),
+        offsetMatrix: createIdentityMatrix(3),
         is3d: false,
         left: 0,
         top: 0,
         width: 0,
         height: 0,
         transformOrigin: [0, 0],
+        offset: [0, 0],
         direction: 1,
         rotationRad: 0,
         rotationPos: [0, 0],
@@ -258,7 +260,11 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             nextBeforeMatrix = convertDimension(beforeMatrix, 3, 4);
         }
         const n = is3d ? 4 : 3;
-        const originMatrix = createOriginMatrix(target, is3d);
+        const parentElement: HTMLElement | null = target.parentElement;
+        const parentStyle = parentElement ? window.getComputedStyle(parentElement) : null;
+        const parentOrigin = parentStyle ? parentStyle.transformOrigin!.split(" ").map(pos => parseFloat(pos)) : [0, 0];
+        const originMatrix = getOriginMatrix(target, n, parentOrigin);
+
         nextMatrix = multiply(nextBeforeMatrix, originMatrix, n);
         nextMatrix = multiply(nextMatrix, nextTransform, n);
 

@@ -42,6 +42,8 @@ export interface MoveableState {
     width: number;
     height: number;
     beforeMatrix: number[];
+    offsetMatrix: number[];
+    offset: number[];
     matrix: number[];
     targetTransform: string;
     targetMatrix: number[];

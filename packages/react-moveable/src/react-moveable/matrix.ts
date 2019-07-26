@@ -52,6 +52,14 @@ export function createIdentityMatrix(n: number) {
     }
     return matrix;
 }
+export function createOriginMatrix(n: number, origin: number[]) {
+    const m = createIdentityMatrix(n);
+
+    origin.forEach((p, i) => {
+        m[n * (i + 1) - 1] = p;
+    });
+    return m;
+}
 export function ignoreTranslate(
     matrix: number[],
     n: number = Math.sqrt(matrix.length),
@@ -129,6 +137,15 @@ export function transpose(matrix: number[], n: number = Math.sqrt(matrix.length)
     }
     return newMatrix;
 }
+export function convertPositionMatrix(matrix: number[], n: number) {
+    const newMatrix = matrix.slice();
+
+    for (let i = matrix.length; i < n - 1; ++i) {
+        newMatrix[i] = 0;
+    }
+    newMatrix[n - 1] = 1;
+    return newMatrix;
+}
 export function convertDimension(matrix: number[], n: number = Math.sqrt(matrix.length), m: number) {
     // n < m
     const newMatrix = createIdentityMatrix(m);
@@ -180,10 +197,22 @@ export function multiplyCSS(matrix: number[], matrix2: number[], n: number = Mat
     return newMatrix;
 }
 export function sum(pos1: number[], pos2: number[]) {
-    return pos1.map((p, i) => p + pos2[i]);
+    const length = Math.min(pos1.length, pos2.length);
+    const nextPos = pos1.slice();
+
+    for (let i = 0; i < length; ++i) {
+        nextPos[i] = nextPos[i] + pos2[i];
+    }
+    return nextPos;
 }
 export function minus(pos1: number[], pos2: number[]) {
-    return pos1.map((p, i) => p - pos2[i]);
+    const length = Math.min(pos1.length, pos2.length);
+    const nextPos = pos1.slice();
+
+    for (let i = 0; i < length; ++i) {
+        nextPos[i] = nextPos[i] - pos2[i];
+    }
+    return nextPos;
 }
 export function caculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
     const result = multiply(matrix, matrix2, n);
