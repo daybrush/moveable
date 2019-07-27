@@ -67,7 +67,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
 export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
     const { posNum, poses, targetInverseMatrix, prevMatrix } = datas;
     const target = moveable.props.target!;
-    const dist = getDragDist({ datas, distX, distY });
+    const dist = getDragDist({ datas, distX, distY }, true);
     const nextPoses = datas.nextPoses.slice();
 
     nextPoses[posNum] = [nextPoses[posNum][0] + dist[0], nextPoses[posNum][1] + dist[1]];
