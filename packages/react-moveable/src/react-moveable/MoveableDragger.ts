@@ -5,7 +5,7 @@ import { hasClass } from "@daybrush/utils";
 import { scaleStart, scale, scaleEnd } from "./Scalable";
 import { rotateStart, rotate, rotateEnd } from "./Rotatable";
 import { resizeStart, resize, resizeEnd } from "./Resizable";
-import { warpStart, warp } from "./Warpable";
+import { warpStart, warp, warpEnd } from "./Warpable";
 
 export function getMoveableDragger(
     moveable: Moveable,
@@ -64,6 +64,8 @@ export function getMoveableDragger(
                 return scaleEnd(moveable, { isDrag, clientX, clientY });
             } else if (type === "resize") {
                 return resizeEnd(moveable, { isDrag, clientX, clientY });
+            } else if (type === "warp") {
+                return warpEnd(moveable, { isDrag, clientX, clientY });
             }
         },
     });
