@@ -146,8 +146,8 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         ];
     }
     public renderMiddleLine() {
-        const { resizable, scalable } = this.props;
-        if (resizable || scalable) {
+        const { resizable, scalable, warpable } = this.props;
+        if (resizable || scalable || !warpable) {
             return;
         }
         const { pos1, pos2, pos3, pos4 } = this.state;

@@ -7,17 +7,17 @@
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.</p>
+<p align="middle">A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable.</p>
 
 <table width="100%" align="center">
 <tr>
 <th colspan="4">Moveable</th>
 </tr>
 <tr>
-<th>Draggable</th>
-<th>Resizable</th>
-<th>Scalable</th>
-<th>Rotatable</th>
+<td align="center"><strong>Draggable</strong></td>
+<td align="center"><strong>Resizable</strong></td>
+<td align="center"><strong>Scalable</strong></td>
+<td align="center"><strong>Rotatable</strong></td>
 </tr>
 <tr>
 <td align="center">
@@ -33,6 +33,18 @@
 <img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif">
 </td>
 </tr>
+<tr>
+<td align="center"><strong>Warpable</strong></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+</tr>
+<tr>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+<td align="center"><strong></strong></td>
+</tr>
 </table>
 
 
@@ -41,32 +53,24 @@
 $ npm i preact-moveable
 ```
 
+## 📄 Documents
+* [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
+
 ## 🚀 How to use
 ```tsx
-import Moveable, {
-    OnDragStart
-    OnDrag,
-    OnDragEnd,
-    OnResizableStart
-    OnResizable,
-    OnResizableEnd,
-    OnScaleStart
-    OnScale,
-    OnScaleEnd,
-    OnRotateStart
-    OnRotate,
-    OnRotateEnd,
-} from "preact-moveable";
+import Moveable from "preact-moveable";
 
 render() {
     return (
         <Moveable
             target={document.querySelector(".target")}
+            container={null}
+            origin={true}
 
             /* draggable */
             draggable={true}
             throttleDrag={0}
-            onDragStart={({ target, clientX, clientY, }: OnDragStart) => {
+            onDragStart={({ target, clientX, clientY }) => {
                 console.log("onDragStart", target);
             }}
             onDrag={({
@@ -84,7 +88,7 @@ render() {
                 console.log("onDrag translate", dist);
                 target!.style.transform = transform;
             }}
-            onDragEnd={({ target, isDrag, clientX, clientY }: OnDragEnd) => {
+            onDragEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onDragEnd", target, isDrag);
             }}
 
@@ -92,10 +96,10 @@ render() {
             keepRatio={true}
 
             /* resizable*/
-            /* Only one of resizable, scalable can be used. */
+            /* Only one of resizable, scalable, warpable can be used. */
             resizable={true}
             throttleResize={0}
-            onResizeStart={({ target , clientX, clientY}: OnResizeStart) => {
+            onResizeStart={({ target , clientX, clientY}) => {
                 console.log("onResizeStart", target);
             }}
             onResize={({
@@ -107,15 +111,15 @@ render() {
                 delta[0] && (target!.style.width = `${width}px`);
                 delta[1] && (target!.style.height = `${height}px`);
             }}
-            onResizeEnd={({ target, isDrag, clientX, clientY }: OnResizeEnd) => {
+            onResizeEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onResizeEnd", target, isDrag);
             }}
 
             /* scalable */
-            /* Only one of resizable, scalable can be used. */
+            /* Only one of resizable, scalable, warpable can be used. */
             scalable={true}
             throttleScale={0}
-            onScaleStart={({ target, clientX, clientY }: OnScalableStart) => {
+            onScaleStart={({ target, clientX, clientY }) => {
                 console.log("onScaleStart", target);
             }}
             onScale={({
@@ -125,14 +129,14 @@ render() {
                 console.log("onScale scale", scale);
                 target!.style.transform = transform;
             }}
-            onScaleEnd={({ target, isDrag, clientX, clientY }: OnScaleEnd) => {
+            onScaleEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onScaleEnd", target, isDrag);
             }}
 
             /* rotatable */
             rotatable={true}
             throttleRotate={0}
-            onRotateStart={({ target, clientX, clientY }: OnRotateStart) => {
+            onRotateStart={({ target, clientX, clientY }) => {
                 console.log("onRotateStart", target);
             }}
             onRotate={({
@@ -144,8 +148,40 @@ render() {
                 console.log("onRotate", dist);
                 target!.style.transform = transform;
             }}
-            onRotateEnd={({ target, isDrag, clientX, clientY }: OnRotateEnd) => {
+            onRotateEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onRotateEnd", target, isDrag);
+            }}
+
+            /* warpable */
+            /* Only one of resizable, scalable, warpable can be used. */
+            /*
+            this.matrix = [
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1,
+            ]
+            */
+            warpable={true}
+            onWarpStart={({ target, clientX, clientY }) => {
+                console.log("onWarpStart", target);
+            }}
+            onWarp={({
+                target,
+                clientX,
+                clientY,
+                delta,
+                dist,
+                multiply,
+                transform,
+            }) => {
+                console.log("onWarp", target);
+                // target.style.transform = transform;
+                this.matrix = multiply(this.matrix, delta);
+                target.style.transform = `matrix3d(${this.matrix.join(",")})`;
+            }}
+            onWarpEnd={({ target, isDrag, clientX, clientY }) => {
+                console.log("onWarpEnd", target, isDrag);
             }}
         />
     )
