@@ -481,3 +481,20 @@ class Moveable extends EgComponent {
  * });
  */
 export default Moveable;
+
+declare interface Moveable {
+    on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
+    on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
+    on(eventName: "dragEnd", handlerToAttach: (event: OnDragEnd) => any): this;
+    on(eventName: "resize", handlerToAttach: (event: OnResize) => any): this;
+    on(eventName: "resizeStart", handlerToAttach: (event: OnResizeStart) => any): this;
+    on(eventName: "resizeEnd", handlerToAttach: (event: OnResizeEnd) => any): this;
+    on(eventName: "scale", handlerToAttach: (event: OnScale) => any): this;
+    on(eventName: "scaleStart", handlerToAttach: (event: OnScaleStart) => any): this;
+    on(eventName: "scaleEnd", handlerToAttach: (event: OnScaleEnd) => any): this;
+    on(eventName: "rotate", handlerToAttach: (event: OnRotate) => any): this;
+    on(eventName: "rotateStart", handlerToAttach: (event: OnRotateStart) => any): this;
+    on(eventName: "rotateEnd", handlerToAttach: (event: OnRotateEnd) => any): this;
+    on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
+    on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
+}
