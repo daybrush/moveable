@@ -1,5 +1,4 @@
 import Moveable from "../../src/Moveable";
-import { OnDrag, OnScale, OnRotate, OnResize } from "preact-moveable";
 import { codes } from "./consts";
 import "./index.css";
 
@@ -32,20 +31,20 @@ const moveable = new Moveable(moveableElement.parentElement, {
     throttleDrag: 1,
     throttleScale: 0.01,
     throttleRotate: 0.2,
-}).on("drag", ({ target, left, top, clientX, clientY }: OnDrag) => {
+}).on("drag", ({ target, left, top, clientX, clientY }) => {
     target.style.left = `${left}px`;
     target.style.top = `${top}px`;
     setLabel(clientX, clientY, `X: ${left}px<br/>Y: ${top}px`);
-}).on("scale", ({ target, dist, clientX, clientY }: OnScale) => {
+}).on("scale", ({ target, dist, clientX, clientY }) => {
     scale[0] *= dist[0];
     scale[1] *= dist[1];
     setTransform(target);
     setLabel(clientX, clientY, `S: ${scale[0].toFixed(2)}, ${scale[1].toFixed(2)}`);
-}).on("rotate", ({ target, beforeDelta, clientX, clientY }: OnRotate) => {
+}).on("rotate", ({ target, beforeDelta, clientX, clientY }) => {
     rotate += beforeDelta;
     setTransform(target);
     setLabel(clientX, clientY, `R: ${rotate.toFixed(1)}`);
-}).on("resize", ({ target, width, height }: OnResize) => {
+}).on("resize", ({ target, width, height }) => {
     target.style.width = `${width}px`;
     target.style.height = `${height}px`;
 }).on("dragEnd", () => {
@@ -62,7 +61,7 @@ const draggable = new Moveable(draggableElement.parentElement, {
     container: draggableElement.parentElement,
     origin: false,
     draggable: true,
-}).on("drag", ({ target, transform }: OnDrag) => {
+}).on("drag", ({ target, transform }) => {
     target.style.transform = transform;
 });
 
@@ -72,7 +71,7 @@ const resizable = new Moveable(resizableElement.parentElement, {
     container: resizableElement.parentElement,
     origin: false,
     resizable: true,
-}).on("resize", ({ target, width, height}: OnResize) => {
+}).on("resize", ({ target, width, height}) => {
     target.style.width = `${width}px`;
     target.style.height = `${height}px`;
 });
@@ -83,7 +82,7 @@ const scalable = new Moveable(scalableElement.parentElement, {
     container: scalableElement.parentElement,
     origin: false,
     scalable: true,
-}).on("scale", ({ target, transform }: OnScale) => {
+}).on("scale", ({ target, transform }) => {
     target.style.transform = transform;
 });
 
@@ -93,7 +92,7 @@ const rotatable = new Moveable(rotatableElement.parentElement, {
     container: rotatableElement.parentElement,
     origin: false,
     rotatable: true,
-}).on("rotate", ({ target, transform }: OnRotate) => {
+}).on("rotate", ({ target, transform }) => {
     target.style.transform = transform;
 });
 
@@ -107,7 +106,7 @@ const origin = new Moveable(originElement.parentElement, {
 }).on("drag", ({ target, left, top }) => {
     target.style.left = `${left}px`;
     target.style.top = `${top}px`;
-}).on("rotate", ({ target, transform }: OnRotate) => {
+}).on("rotate", ({ target, transform }) => {
     target.style.transform = transform;
 });
 

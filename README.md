@@ -77,20 +77,7 @@ $ npm i moveable
 
 ## 🚀 How to use
 ```ts
-import Moveable, {
-    OnDragStart
-    OnDrag,
-    OnDragEnd,
-    OnResizableStart
-    OnResizable,
-    OnResizableEnd,
-    OnScaleStart
-    OnScale,
-    OnScaleEnd,
-    OnRotateStart
-    OnRotate,
-    OnRotateEnd,
-} from "moveable";
+import Moveable from "moveable";
 
 const moveable = new Moveable(document.body, {
     target: document.querySelector(".target"),
@@ -107,53 +94,53 @@ const moveable = new Moveable(document.body, {
     throttleRotate: 0,
 });
 /* draggable */
-moveable.on("dragStart", ({ target, clientX, clientY }: OnDragStart) => {
+moveable.on("dragStart", ({ target, clientX, clientY }) => {
     console.log("onDragStart", target);
 }).on("drag", ({
     target, transform,
     left, top, right, bottom,
     beforeDelta, beforeDist, delta, dist,
     clientX, clientY,
-}: OnDrag) => {
+}) => {
     console.log("onDrag left, top", left, top);
     target!.style.left = `${left}px`;
     target!.style.top = `${top}px`;
     // console.log("onDrag translate", dist);
     // target!.style.transform = transform;
-}).on("dragEnd", ({ target, isDrag, clientX, clientY }: OnDragEnd) => {
+}).on("dragEnd", ({ target, isDrag, clientX, clientY }) => {
     console.log("onDragEnd", target, isDrag);
 });
 
 /* resizable */
-moveable.on("resizeStart", ({ target, clientX, clientY }: OnResizeStart) => {
+moveable.on("resizeStart", ({ target, clientX, clientY }) => {
     console.log("onResizeStart", target);
-}).on("resize", ({ target, width, height, dist, delta, clientX, clientY }: OnResize) => {
+}).on("resize", ({ target, width, height, dist, delta, clientX, clientY }) => {
     console.log("onResize", target);
     delta[0] && (target!.style.width = `${width}px`);
     delta[1] && (target!.style.height = `${height}px`);
-}).on("resizeEnd", ({ target, isDrag, clientX, clientY }: OnResizeEnd) => {
+}).on("resizeEnd", ({ target, isDrag, clientX, clientY }) => {
     console.log("onResizeEnd", target, isDrag);
 });
 
 /* scalable */
-moveable.on("scaleStart", ({ target, clientX, clientY }: OnScalableStart) => {
+moveable.on("scaleStart", ({ target, clientX, clientY }) => {
     console.log("onScaleStart", target);
 }).on("scale", ({
     target, scale, dist, delta, transform, clientX, clientY,
 }: OnScale) => {
     console.log("onScale scale", scale);
     target!.style.transform = transform;
-}).on("scaleEnd", ({ target, isDrag, clientX, clientY }: OnScaleEnd) => {
+}).on("scaleEnd", ({ target, isDrag, clientX, clientY }) => {
     console.log("onScaleEnd", target, isDrag);
 });
 
 /* rotatable */
-moveable.on("rotateStart", ({ target, clientX, clientY }: OnRotateStart) => {
+moveable.on("rotateStart", ({ target, clientX, clientY }) => {
     console.log("onRotateStart", target);
-}).on("rotate", ({ target, delta, dist, transform, clientX, clientY }: onRotate) => {
+}).on("rotate", ({ target, delta, dist, transform, clientX, clientY }) => {
     console.log("onRotate", dist);
     target!.style.transform = transform;
-}).on("rotateEnd", ({ target, isDrag, clientX, clientY }: OnRotateEnd) => {
+}).on("rotateEnd", ({ target, isDrag, clientX, clientY }) => {
     console.log("onRotateEnd", target, isDrag);
 });
 ```
