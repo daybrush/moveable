@@ -41,9 +41,9 @@ export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[])
 
     return multiplies(
         n,
-        createOriginMatrix(n, origin),
+        createOriginMatrix(origin, n),
         matrix,
-        createOriginMatrix(n, origin.map(a => -a)),
+        createOriginMatrix(origin.map(a => -a), n),
     );
 }
 export function caculateMatrixStack(
@@ -88,10 +88,12 @@ export function caculateMatrixStack(
 
         const offsetLeft = (el as any).offsetLeft;
         const hasNotOffset = isUndefined(offsetLeft);
-        matrixes.push(createOriginMatrix(n, [
-            hasNotOffset ? el : offsetLeft,
-            hasNotOffset ? origin : (el as any).offsetTop,
-        ]));
+        matrixes.push(createOriginMatrix([
+                hasNotOffset ? el : offsetLeft,
+                hasNotOffset ? origin : (el as any).offsetTop,
+            ],
+            n,
+        ));
 
         if (isContainer) {
             break;
@@ -138,12 +140,17 @@ export function getSVGOffset(
     n: number, origin: number[], beforeMatrix: number[], absoluteMatrix: number[]) {
     const [width, height] = getSize(el);
 
-    const mat = multiply(
+    const containerRect = (container || document.documentElement).getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const rectLeft = rect.left - containerRect.left;
+    const rectTop = rect.top - containerRect.top;
+    const rectWidth = rect.width;
+    const rectHeight = rect.height;
+    const mat = multiplies(
+        n,
         beforeMatrix,
         absoluteMatrix,
-        n,
     );
-
     const pos1 = caculate(mat, convertPositionMatrix([0, 0], n), n);
     const pos2 = caculate(mat, convertPositionMatrix([width, 0], n), n);
     const pos3 = caculate(mat, convertPositionMatrix([0, height], n), n);
@@ -154,23 +161,40 @@ export function getSVGOffset(
     const prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
     const prevWidth = Math.max(pos1[0], pos2[0], pos3[0], pos4[0]) - prevLeft;
     const prevHeight = Math.max(pos1[1], pos2[1], pos3[1], pos4[1]) - prevTop;
-    const containerRect = (container || document.documentElement).getBoundingClientRect();
-    const rect = el.getBoundingClientRect();
-    const rectLeft = rect.left - containerRect.left;
-    const rectTop = rect.top - containerRect.top;
-    const rectWidth = rect.width;
-    const rectHeight = rect.height;
     const rectOrigin = [
         rectLeft + prevOrigin[0] * rectWidth / prevWidth,
         rectTop + prevOrigin[1] * rectHeight / prevHeight,
     ];
+    const offset = [0, 0];
+    let count = 0;
 
-    const dist = minus(
-        caculate(invert(beforeMatrix, n), convertPositionMatrix(rectOrigin, n), n),
-        caculate(invert(beforeMatrix, n), convertPositionMatrix(posOrigin, n), n),
-    );
+    while (++count < 10) {
+        [offset[0], offset[1]] = minus(
+            caculate(invert(beforeMatrix, n), convertPositionMatrix(rectOrigin, n), n),
+            caculate(invert(beforeMatrix, n), convertPositionMatrix(posOrigin, n), n),
+        );
+        const mat2 = multiplies(
+            n,
+            beforeMatrix,
+            createOriginMatrix(offset, n),
+            absoluteMatrix,
+        );
+        const nextPos1 = caculate(mat2, convertPositionMatrix([0, 0], n), n);
+        const nextPos2 = caculate(mat2, convertPositionMatrix([width, 0], n), n);
+        const nextPos3 = caculate(mat2, convertPositionMatrix([0, height], n), n);
+        const nextPos4 = caculate(mat2, convertPositionMatrix([width, height], n), n);
+        const nextLeft = Math.min(nextPos1[0], nextPos2[0], nextPos3[0], nextPos4[0]);
+        const nextTop = Math.min(nextPos1[1], nextPos2[1], nextPos3[1], nextPos4[1]);
+        const distLeft = nextLeft - rectLeft;
+        const distTop = nextTop - rectTop;
 
-    return dist;
+        if (Math.abs(distLeft) < 2 && Math.abs(distTop) < 2) {
+            break;
+        }
+        rectOrigin[0] -= distLeft;
+        rectOrigin[1] -= distTop;
+    }
+    return offset.map(p => Math.round(p));
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;

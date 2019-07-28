@@ -52,7 +52,7 @@ export function createIdentityMatrix(n: number) {
     }
     return matrix;
 }
-export function createOriginMatrix(n: number, origin: number[]) {
+export function createOriginMatrix(origin: number[], n: number) {
     const m = createIdentityMatrix(n);
     const length = Math.min(origin.length, n - 1);
 
