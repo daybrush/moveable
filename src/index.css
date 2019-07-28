@@ -67,7 +67,10 @@ a {
 .badges img {
     height: 20px;
 }
-
+.buttons.able a {
+    min-width: auto;
+    padding: 8px 20px;
+}
 .buttons {
     text-align: center;
     margin: 0;
@@ -90,7 +93,7 @@ a {
     transition: all ease 0.5s;
 }
 
-.buttons a:hover {
+.buttons a:hover, .buttons a.selected {
     background: #333;
     color: #fff;
 }

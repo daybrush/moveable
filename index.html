@@ -27,6 +27,11 @@
         <div class="container">
 
             <div class="moveable"><span>Moveable</span></div>
+            <div class="buttons able">
+                <a href="#" data-able="scalable" class="selected">Scalable</a>
+                <a href="#" data-able="resizable" >Resizable</a>
+                <a href="#" data-able="warpable" >Warpable</a>
+            </div>
             <p class="badges">
                 <a href="https://www.npmjs.com/package/moveable" target="_blank">
                     <img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version"
@@ -117,6 +122,21 @@
                     data-group="rotatable"><code class="javascript"></code></pre>
                 <pre class="panel" data-panel="react" data-group="rotatable"><code class="javascript"></code></pre>
                 <pre class="panel" data-panel="preact" data-group="rotatable"><code class="javascript"></code></pre>
+            </div>
+        </div>
+        <div class="container">
+            <div class="left">
+                <div class="moveable warpable"><span>Warpable</span></div>
+            </div>
+            <div class="right">
+                <p class="description"><strong>Warpable</strong> indicates whether the target can be warped.</p>
+                <button class="tab selected" data-tab="vanilla" data-group="warpable">Vanilla</button>
+                <button class="tab" data-tab="react" data-group="warpable">React</button>
+                <button class="tab" data-tab="preact" data-group="warpable">Preact</button>
+                <pre class="panel selected" data-panel="vanilla"
+                    data-group="warpable"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="react" data-group="warpable"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="preact" data-group="warpable"><code class="javascript"></code></pre>
             </div>
         </div>
         <div class="container">

@@ -122,8 +122,8 @@ const rotatable = new Moveable(document.body, {
     target: document.querySelector(".rotatable"),
     rotatable: true,
     throttleRotate: 0,
-}).on("rotate", ({ beforeDelta }) => {
-    rotate += beforeDelta;
+}).on("rotate", ({ delta }) => {
+    rotate += delta;
     e.target.style.transform
         = "rotate(" + rotate +  "deg)";
 });
@@ -138,10 +138,54 @@ return (
         target={document.querySelector(".rotatable")}
         rotatable={true}
         throttleRotate={0}
-        onRotate={({ beforeDelta }) => {
-            this.rotate += beforeDelta;
+        onRotate={({ delta }) => {
+            this.rotate += delta;
             e.target.style.transform
                 = "rotate(" + this.rotate +  "deg)";
+        }}
+    />
+);
+        `,
+    },
+    warpable: {
+        vanilla: `
+import Moveable from "moveable";
+
+let matrix = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+];
+
+const warpable = new Moveable(document.body, {
+    target: document.querySelector(".warpable"),
+    warpable: true,
+    throttleRotate: 0,
+}).on("warp", ({ multiply, delta }) => {
+    matrix = multiply(matrix, delta);
+    e.target.style.transform
+        = "matrix3d(" + matrix.join(",") +  ")";
+});
+        `,
+        react: `
+import Moveable from "react-moveable";
+
+this.matrix = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+];
+
+return (
+    <Moveable
+        target={document.querySelector(".warpable")}
+        warpable={true}
+        onWarp={({ multiply, delta }) => {
+            this.matrix = multiply(this.matrix, delta);
+            e.target.style.transform
+                = "matrix3d(" + matrix.join(",") +  ")";
         }}
     />
 );
