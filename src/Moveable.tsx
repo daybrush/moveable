@@ -522,6 +522,53 @@ class Moveable extends EgComponent {
  *     console.log(target, isDrag);
  * });
  */
+
+ /**
+ * When the warp starts, the warpStart event is called.
+ * @memberof Moveable
+ * @event warpStart
+ * @param {Moveable.OnWarpStart} - Parameters for the warpStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { warpable: true });
+ * moveable.on("warpStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When warping, the warp event is called.
+ * @memberof Moveable
+ * @event warp
+ * @param {Moveable.OnWarp} - Parameters for the warp event
+ * @example
+ * import Moveable from "moveable";
+ * let matrix = [
+ *  1, 0, 0, 0,
+ *  0, 1, 0, 0,
+ *  0, 0, 1, 0,
+ *  0, 0, 0, 1,
+ * ];
+ * const moveable = new Moveable(document.body, { warpable: true });
+ * moveable.on("warp", ({ target, transform, delta, multiply }) => {
+ *    // target.style.transform = transform;
+ *    matrix = multiply(matrix, delta);
+ *    target.style.transform = `matrix3d(${matrix.join(",")})`;
+ * });
+ */
+/**
+ * When the warp finishes, the warpEnd event is called.
+ * @memberof Moveable
+ * @event warpEnd
+ * @param {Moveable.OnWarpEnd} - Parameters for the warpEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { warpable: true });
+ * moveable.on("warpEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
 export default Moveable;
 
 declare interface Moveable {
