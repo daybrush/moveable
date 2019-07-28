@@ -1,6 +1,6 @@
 {
     "name": "preact-moveable",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "description": "A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -55,7 +55,7 @@
         "typescript": "^3.4.5"
     },
     "dependencies": {
-        "@daybrush/drag": "^0.5.0",
+        "@daybrush/drag": "^0.6.0",
         "@daybrush/utils": "^0.10.0",
         "framework-utils": "^0.1.0",
         "preact-compat": "^3.19.0",
