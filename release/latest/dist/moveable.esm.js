@@ -1474,7 +1474,7 @@ name: preact-moveable
 license: MIT
 author: Daybrush
 repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-version: 0.6.1
+version: 0.6.2
 */
 
 /*
