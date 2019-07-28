@@ -1,7 +1,7 @@
 {
   "name": "moveable",
-  "version": "0.3.0",
-  "description": "Moveable is Draggable, Resizable, Scalable, Rotatable.",
+  "version": "0.4.0",
+  "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
   "sideEffects": false,
@@ -25,11 +25,13 @@
     "draggable",
     "rotatable",
     "movable",
+    "warpable",
     "dom",
     "resize",
     "scale",
     "drag",
     "move",
+    "warp",
     "rotate",
     "react",
     "preact",
@@ -46,11 +48,11 @@
   },
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
-    "@daybrush/drag": "^0.5.0",
+    "@daybrush/drag": "^0.6.0",
     "@daybrush/utils": "^0.10.0",
     "@egjs/component": "^2.1.2",
     "framework-utils": "^0.1.0",
-    "preact-moveable": "^0.5.2"
+    "preact-moveable": "^0.6.1"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.1",
@@ -64,6 +66,7 @@
     "print-sizes": "0.0.4",
     "rollup-plugin-css-bundle": "^1.0.4",
     "rollup-plugin-preact": "^0.4.1",
+    "scenejs": "^1.1.4",
     "tslint": "^5.18.0",
     "typescript": "^3.5.2"
   }

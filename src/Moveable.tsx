@@ -6,7 +6,7 @@ import { MoveableOptions } from "./types";
 import {
     OnDragStart, OnDrag, OnResize, OnResizeStart,
     OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
-    OnRotateEnd, OnDragEnd, OnRotate, OnScale,
+    OnRotateEnd, OnDragEnd, OnRotate, OnScale, OnWarpStart, OnWarpEnd, OnWarp,
 } from "react-moveable/declaration/types";
 
 /**
@@ -40,6 +40,9 @@ class Moveable extends EgComponent {
                 onRotateStart={this.onRotateStart}
                 onRotate={this.onRotate}
                 onRotateEnd={this.onRotateEnd}
+                onWarpStart={this.onWarpStart}
+                onWarp={this.onWarp}
+                onWarpEnd={this.onWarpEnd}
             />,
             element,
         );
@@ -148,6 +151,23 @@ class Moveable extends EgComponent {
     set rotatable(rotatable: boolean) {
         this.innerMoveable.setState({
             rotatable,
+        });
+    }
+    /**
+     * Whether or not target can be warped.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.warpable = true;
+     */
+    get warpable(): boolean {
+        return this.getMoveableProps().warpable;
+    }
+    set warpable(warpable: boolean) {
+        this.innerMoveable.setState({
+            warpable,
         });
     }
     /**
@@ -266,7 +286,7 @@ class Moveable extends EgComponent {
         return this.getMoveable().isMoveableElement(target);
     }
     /**
-     * If the width, height, left, and top of the target change, update the shape of the moveable.
+     * If the width, height, left, and top of all elements change, update the shape of the moveable.
      * @example
      * import Moveable from "moveable";
      *
@@ -278,6 +298,19 @@ class Moveable extends EgComponent {
      */
     public updateRect() {
         this.getMoveable().updateRect();
+    }
+    /**
+     * If the width, height, left, and top of the only target change, update the shape of the moveable.
+     * @param - the values of x and y to move moveable.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.updateTarget();
+     */
+    public updateTarget(): void {
+        this.getMoveable().updateTarget();
     }
     private getMoveable() {
         return this.innerMoveable.preactMoveable;
@@ -320,6 +353,15 @@ class Moveable extends EgComponent {
     }
     private onRotateEnd = (e: OnRotateEnd) => {
         this.trigger("rotateEnd", e);
+    }
+    private onWarpStart = (e: OnWarpStart) => {
+        this.trigger("warpStart", e);
+    }
+    private onWarp = (e: OnWarp) => {
+        this.trigger("warp", e);
+    }
+    private onWarpEnd = (e: OnWarpEnd) => {
+        this.trigger("warpEnd", e);
     }
 }
 
@@ -495,6 +537,9 @@ declare interface Moveable {
     on(eventName: "rotate", handlerToAttach: (event: OnRotate) => any): this;
     on(eventName: "rotateStart", handlerToAttach: (event: OnRotateStart) => any): this;
     on(eventName: "rotateEnd", handlerToAttach: (event: OnRotateEnd) => any): this;
+    on(eventName: "warp", handlerToAttach: (event: OnWarp) => any): this;
+    on(eventName: "warpStart", handlerToAttach: (event: OnWarpStart) => any): this;
+    on(eventName: "warpEnd", handlerToAttach: (event: OnWarpEnd) => any): this;
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
 }
