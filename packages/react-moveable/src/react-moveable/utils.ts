@@ -7,6 +7,8 @@ import {
     convertCSStoMatrix, convertMatrixtoCSS,
     convertDimension, createIdentityMatrix,
     createOriginMatrix, convertPositionMatrix, caculate,
+    multiplies,
+    minus,
 } from "./matrix";
 
 export function prefix(...classNames: string[]) {
@@ -23,16 +25,11 @@ export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean)
     }
     return getTransformMatrix(transform);
 }
-export function getOriginMatrix(el: HTMLElement | SVGElement, n: number, parentOrigin: number[]) {
-    return createOriginMatrix(n, [
-        (el as any).offsetLeft - parentOrigin[0],
-        (el as any).offsetTop - parentOrigin[1],
-    ]);
 
-}
 export function getTransformMatrix(transform: string | number[]) {
     if (transform === "none") {
         return [1, 0, 0, 1, 0, 0];
+
     }
     if (isObject(transform)) {
         return transform;
@@ -40,65 +37,90 @@ export function getTransformMatrix(transform: string | number[]) {
     const value = splitBracket(transform).value!;
     return value.split(/s*,\s*/g).map(v => parseFloat(v));
 }
+export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[]) {
 
+    return multiplies(
+        n,
+        createOriginMatrix(n, origin),
+        matrix,
+        createOriginMatrix(n, origin.map(a => -a)),
+    );
+}
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
-    container: SVGElement | HTMLElement | null | undefined,
+    container: SVGElement | HTMLElement | null,
+    isContainer: boolean = target === container,
     prevMatrix?: number[],
     prevN?: number,
-): [number[], number[], number[], number[], string, number[]] {
+
+): [number[], number[], number[], string, number[]] {
     let el: SVGElement | HTMLElement | null = target;
-    let style: CSSStyleDeclaration | null = window.getComputedStyle(el);
-    const transformOrigin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
-    const totalTransformOrigin = [0, 0];
     const matrixes: number[][] = [];
-    const isContainer = el === container;
     let is3d = false;
+    let n = 3;
+    let transformOrigin!: number[];
+    let targetMatrix!: number[];
 
     while (el && (isContainer || el !== container)) {
+        const style: CSSStyleDeclaration | null = window.getComputedStyle(el);
         let matrix = convertCSStoMatrix(getTransformMatrix(style!.transform!));
 
-        if (is3d && matrix.length === 9) {
-            matrix = convertDimension(matrix, 3, 4);
-        }
-        matrixes.push(matrix);
         if (!is3d && matrix.length === 16) {
             is3d = true;
-            const matrixesLength = matrixes.length - 1;
+            n = 4;
+            const matrixesLength = matrixes.length;
 
             for (let i = 0; i < matrixesLength; ++i) {
                 matrixes[i] = convertDimension(matrixes[i], 3, 4);
             }
         }
-        const parentElement: HTMLElement | null = el.parentElement;
-        style = parentElement ? window.getComputedStyle(parentElement) : null;
-        const parentOrigin = style ? style.transformOrigin!.split(" ").map(pos => parseFloat(pos)) : [0, 0];
-        const m = getOriginMatrix(el, is3d ? 4 : 3, parentOrigin);
+        if (is3d && matrix.length === 9) {
+            matrix = convertDimension(matrix, 3, 4);
+        }
+        const origin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
+        if (!targetMatrix) {
+            targetMatrix = matrix;
+        }
+        if (!transformOrigin) {
+            transformOrigin = origin;
+        }
+        matrixes.push(getAbsoluteMatrix(matrix, n, origin));
 
-        matrixes.push(m);
+        const offsetLeft = (el as any).offsetLeft;
+        const hasNotOffset = isUndefined(offsetLeft);
+        matrixes.push(createOriginMatrix(n, [
+            hasNotOffset ? el : offsetLeft,
+            hasNotOffset ? origin : (el as any).offsetTop,
+        ]));
+
         if (isContainer) {
             break;
         }
-        totalTransformOrigin[0] += parentOrigin[0];
-        totalTransformOrigin[1] += parentOrigin[1];
-        el = parentElement;
+        el = el.parentElement;
     }
-    const n = is3d ? 4 : 3;
-    const targetMatrix = matrixes[0] || createIdentityMatrix(n);
-
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
     let beforeMatrix = createIdentityMatrix(n);
-    let offsetMatrix = createIdentityMatrix(n);
-
-    matrixes.push(createOriginMatrix(n, totalTransformOrigin));
     const length = matrixes.length;
+
     matrixes.reverse();
     matrixes.forEach((matrix, i) => {
         if (length - 2 === i) {
             beforeMatrix = mat.slice();
         }
-        if (length - 1 === i) {
-            offsetMatrix = mat.slice();
+
+        if (isObject(matrix[n - 1])) {
+            [matrix[n - 1], matrix[2 * n - 1]] =
+            getSVGOffset(
+                matrix[n - 1] as any,
+                container,
+                n,
+                matrix[2 * n - 1] as any,
+                mat,
+                matrixes[i + 1],
+            );
+
+            // matrix[n - 1] = 0;
+            // matrix[2 * n - 1] = 0;
         }
         mat = multiply(
             mat,
@@ -108,21 +130,47 @@ export function caculateMatrixStack(
     });
     const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
-    const absoluteMatrix = multiply(
-        offsetMatrix,
-        multiply(
-            createOriginMatrix(n, transformOrigin),
-            multiply(
-                targetMatrix,
-                createOriginMatrix(n, transformOrigin.map(a => -a)),
-                n,
-            ),
-            n,
-        ),
+    return [beforeMatrix, mat, targetMatrix, transform, transformOrigin];
+}
+export function getSVGOffset(
+    el: SVGElement,
+    container: HTMLElement | SVGElement | null,
+    n: number, origin: number[], beforeMatrix: number[], absoluteMatrix: number[]) {
+    const [width, height] = getSize(el);
+
+    const mat = multiply(
+        beforeMatrix,
+        absoluteMatrix,
         n,
     );
 
-    return [beforeMatrix, mat, targetMatrix, absoluteMatrix, transform, transformOrigin];
+    const pos1 = caculate(mat, convertPositionMatrix([0, 0], n), n);
+    const pos2 = caculate(mat, convertPositionMatrix([width, 0], n), n);
+    const pos3 = caculate(mat, convertPositionMatrix([0, height], n), n);
+    const pos4 = caculate(mat, convertPositionMatrix([width, height], n), n);
+    const posOrigin = caculate(mat, convertPositionMatrix(origin, n), n);
+    const prevLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
+    const prevTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
+    const prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
+    const prevWidth = Math.max(pos1[0], pos2[0], pos3[0], pos4[0]) - prevLeft;
+    const prevHeight = Math.max(pos1[1], pos2[1], pos3[1], pos4[1]) - prevTop;
+    const containerRect = (container || document.documentElement).getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    const rectLeft = rect.left - containerRect.left;
+    const rectTop = rect.top - containerRect.top;
+    const rectWidth = rect.width;
+    const rectHeight = rect.height;
+    const rectOrigin = [
+        rectLeft + prevOrigin[0] * rectWidth / prevWidth,
+        rectTop + prevOrigin[1] * rectHeight / prevHeight,
+    ];
+
+    const dist = minus(
+        caculate(invert(beforeMatrix, n), convertPositionMatrix(rectOrigin, n), n),
+        caculate(invert(beforeMatrix, n), convertPositionMatrix(posOrigin, n), n),
+    );
+
+    return dist;
 }
 export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
@@ -273,7 +321,6 @@ export function getTargetInfo(
     let beforeMatrix = createIdentityMatrix(3);
     let matrix = createIdentityMatrix(3);
     let targetMatrix = createIdentityMatrix(3);
-    let absoluteMatrix = createIdentityMatrix(3);
     let width = 0;
     let height = 0;
     let transformOrigin = [0, 0];
@@ -294,9 +341,9 @@ export function getTargetInfo(
         }
         [
             beforeMatrix, matrix,
-            targetMatrix, absoluteMatrix,
+            targetMatrix,
             targetTransform, transformOrigin,
-        ] = caculateMatrixStack(target, container);
+        ] = caculateMatrixStack(target, container!);
 
         is3d = matrix.length === 16;
 
@@ -307,7 +354,7 @@ export function getTargetInfo(
             pos2,
             pos3,
             pos4,
-        ] = caculatePosition(absoluteMatrix, transformOrigin, width, height);
+        ] = caculatePosition(matrix, transformOrigin, width, height);
         // 1 : clockwise
         // -1 : counterclockwise
         [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
@@ -328,7 +375,6 @@ export function getTargetInfo(
         height,
         beforeMatrix,
         matrix,
-        absoluteMatrix,
         targetTransform,
         targetMatrix,
         is3d,

@@ -97,6 +97,10 @@ class App extends React.Component {
                         >
                             Learn React
                         </a>
+                        <svg data-target="svg" viewBox="0 0 88 107.28203230275507" style={{width: "200px"}}>
+                            <path d="M 74 53.64101615137753 L 14.000000000000027 88.28203230275507 L 14 19 L 74 53.64101615137753 Z" fill="#333" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#333" origin="50% 50%" />
+                            <path d="M 84 68.64101615137753 L 24.00000000000003 103.28203230275507 L 24 34 L 84 68.64101615137753 Z" fill="#333" stroke-linejoin="round" stroke-width="8" opacity="0.2" stroke="#333" origin="50% 50%" />
+                        </svg>
                     </header>
                 </div>
             </div>

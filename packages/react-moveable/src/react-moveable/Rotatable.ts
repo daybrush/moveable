@@ -38,10 +38,9 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     if (!target) {
         return false;
     }
-    const { matrix, left, top, origin, rotationPos, direction } = moveable.state;
+    const { left, top, origin, rotationPos, direction, targetTransform } = moveable.state;
 
-    datas.transform = window.getComputedStyle(target!).transform;
-    datas.matrix = matrix;
+    datas.transform = targetTransform;
     datas.left = left;
     datas.top = top;
     datas.startAbsoluteOrigin = [clientX - rotationPos[0] + origin[0], clientY - rotationPos[1] + origin[1]];

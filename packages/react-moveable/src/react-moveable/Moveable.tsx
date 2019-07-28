@@ -56,7 +56,6 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         matrix: createIdentityMatrix(3),
         targetTransform: "",
         targetMatrix: createIdentityMatrix(3),
-        absoluteMatrix: createIdentityMatrix(3),
         is3d: false,
         left: 0,
         top: 0,
@@ -77,7 +76,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
     private controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
     public isMoveableElement(target: HTMLElement) {
-        return target && target.className.indexOf(PREFIX) > -1;
+        return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
     }
     public render() {
         if (this.state.target !== this.props.target) {
@@ -235,11 +234,13 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             beforeMatrix,
         } = this.state;
         const target = this.props.target!;
+        const container = this.props.container!;
         const is3d = beforeMatrix.length === 16;
         const n = is3d ? 4 : 3;
-        const [, matrix,  targetMatrix, absoluteMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
+        const [, matrix,  targetMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
             target,
-            target,
+            container,
+            true,
             beforeMatrix,
             n,
         );
@@ -251,7 +252,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             pos3,
             pos4,
         ] = caculatePosition(
-            absoluteMatrix,
+            matrix,
             transformOrigin, width, height,
         );
         const [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
@@ -262,7 +263,6 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             rotationPos,
             pos1, pos2, pos3, pos4,
             origin: nextOrigin,
-            absoluteMatrix,
             beforeMatrix,
             targetMatrix,
             matrix,

@@ -156,6 +156,14 @@ export function convertDimension(matrix: number[], n: number = Math.sqrt(matrix.
 
     return newMatrix;
 }
+export function multiplies(n: number, ...matrixes: number[][]) {
+    let m: number[] = createIdentityMatrix(n);
+
+    matrixes.forEach(matrix => {
+        m = multiply(m, matrix, n);
+    });
+    return m;
+}
 export function multiply(matrix: number[], matrix2: number[], n: number) {
     const newMatrix = [];
     // n * m X m * k
@@ -214,7 +222,6 @@ export function caculate(matrix: number[], matrix2: number[], n: number = matrix
     return result.map(v => v / k);
 }
 export function caculateWithOrigin(matrix: number[], matrix2: number[], origin: number[], n: number = matrix2.length) {
-    console.log(matrix, origin, n);
     const result = multiply(matrix, matrix2, n);
     const k = result[n - 1];
 

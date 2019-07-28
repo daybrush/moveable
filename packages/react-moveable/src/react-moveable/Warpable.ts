@@ -6,6 +6,7 @@ import {
     createIdentityMatrix,
     ignoreDimension,
     multiplyCSS,
+    minus,
 } from "./matrix";
 import { NEARBY_POS } from "./consts";
 import { dragStart, getDragDist } from "./Draggable";
@@ -51,7 +52,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         [width, 0],
         [0, height],
         [width, height],
-    ].map(pos => pos.map((p, i) => p - transformOrigin[i]));
+    ].map((p, i) => minus(p, transformOrigin));
 
     datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.targetMatrix, [x, y, 0, 1], 4));
     datas.posNum =
