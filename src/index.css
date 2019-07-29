@@ -99,6 +99,7 @@ a {
 }
 .page.main {
     z-index: 1;
+    min-height: 700px;
 }
 .label {
     position: fixed;
