@@ -122,7 +122,7 @@ const rotatable = new Moveable(document.body, {
     target: document.querySelector(".rotatable"),
     rotatable: true,
     throttleRotate: 0,
-}).on("rotate", ({ delta }) => {
+}).on("rotate", ({ beforeDelta, delta }) => {
     rotate += delta;
     e.target.style.transform
         = "rotate(" + rotate +  "deg)";
@@ -138,7 +138,7 @@ return (
         target={document.querySelector(".rotatable")}
         rotatable={true}
         throttleRotate={0}
-        onRotate={({ delta }) => {
+        onRotate={({ beforeDelta, delta }) => {
             this.rotate += delta;
             e.target.style.transform
                 = "rotate(" + this.rotate +  "deg)";

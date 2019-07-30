@@ -59,8 +59,8 @@ const moveable = new Moveable(moveableElement.parentElement, {
     frame.set("transform", "scaleY", scaleY);
     setTransform(target);
     setLabel(clientX, clientY, `S: ${scaleX.toFixed(2)}, ${scaleY.toFixed(2)}`);
-}).on("rotate", ({ target, delta, clientX, clientY }) => {
-    const deg = parseFloat(frame.get("transform", "rotate")) + delta;
+}).on("rotate", ({ target, beforeDelta, clientX, clientY }) => {
+    const deg = parseFloat(frame.get("transform", "rotate")) + beforeDelta;
 
     frame.set("transform", "rotate", `${deg}deg`);
     setTransform(target);

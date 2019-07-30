@@ -138,7 +138,7 @@ moveable.on("scaleStart", ({ target, clientX, clientY }) => {
 /* rotatable */
 moveable.on("rotateStart", ({ target, clientX, clientY }) => {
     console.log("onRotateStart", target);
-}).on("rotate", ({ target, delta, dist, transform, clientX, clientY }) => {
+}).on("rotate", ({ target, beforeDelta, delta, dist, transform, clientX, clientY }) => {
     console.log("onRotate", dist);
     target!.style.transform = transform;
 }).on("rotateEnd", ({ target, isDrag, clientX, clientY }) => {
