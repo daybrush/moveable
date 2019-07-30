@@ -138,7 +138,7 @@ return (
         target={document.querySelector(".rotatable")}
         rotatable={true}
         throttleRotate={0}
-        onRotate={({ delta }) => {
+        onRotate={({ beforeDelta, delta }) => {
             this.rotate += delta;
             e.target.style.transform
                 = "rotate(" + this.rotate +  "deg)";

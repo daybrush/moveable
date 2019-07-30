@@ -52,7 +52,6 @@ a {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    white-space: nowrap;
 }
 
 .description {
@@ -67,10 +66,7 @@ a {
 .badges img {
     height: 20px;
 }
-.buttons.able a {
-    min-width: auto;
-    padding: 8px 20px;
-}
+
 .buttons {
     text-align: center;
     margin: 0;
@@ -93,27 +89,9 @@ a {
     transition: all ease 0.5s;
 }
 
-.buttons a:hover, .buttons a.selected {
+.buttons a:hover {
     background: #333;
     color: #fff;
-}
-.page.main {
-    z-index: 1;
-    min-height: 700px;
-}
-.label {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 5px;
-    border-radius: 5px;
-    background: #333;
-    z-index: 10;
-    color: #fff;
-    font-weight: bold;
-    font-size: 12px;
-    display: none;
-    transform: translate(-100%, -100%);
 }
 
 .page.feature, .page.footer {
@@ -169,12 +147,9 @@ a {
     font-weight: 600;
 }
 
-.draggable, .resizable, .scalable, .rotatable, .origin {
+.draggable, .resizable, .scalable, .rotatable {
     position: absolute;
     left: 0;
-}
-.origin {
-    transform-origin: 30% 50%;
 }
 
 pre {
