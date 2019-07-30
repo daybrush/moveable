@@ -41,6 +41,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         targetTransform, targetMatrix, width, height,
     } = moveable.state;
 
+    datas.datas = {};
     datas.targetTransform = targetTransform;
     datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
     datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
@@ -63,6 +64,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         target,
         clientX,
         clientY,
+        datas: datas.datas,
     });
 }
 export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
@@ -107,17 +109,19 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
         multiply: multiplyCSS,
         dist: matrix,
         transform,
+        datas: datas.datas,
     });
 
     moveable.updateRect();
 }
 
-export function warpEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
+export function warpEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
     moveable.props.onWarpEnd!({
         target: moveable.props.target!,
         clientX,
         clientY,
         isDrag,
+        datas: datas.datas,
     });
     if (isDrag) {
         moveable.updateRect();

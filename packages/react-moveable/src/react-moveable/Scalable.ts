@@ -16,6 +16,7 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
 
     dragStart(moveable, { datas });
 
+    datas.datas = {};
     datas.transform = targetTransform;
     datas.prevDist = [1, 1];
     datas.position = position;
@@ -26,6 +27,7 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
         target,
         clientX,
         clientY,
+        datas: datas.datas,
     });
 }
 export function scale(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
@@ -86,16 +88,18 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         transform: `${transform} scale(${scaleX}, ${scaleY})`,
         clientX,
         clientY,
+        datas: datas.datas,
     });
 
     moveable.updateTarget();
 }
-export function scaleEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
+export function scaleEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
     moveable.props.onScaleEnd!({
         target: moveable.props.target!,
         isDrag,
         clientX,
         clientY,
+        datas: datas.datas,
     });
     if (isDrag) {
         moveable.updateRect();

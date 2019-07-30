@@ -49,11 +49,13 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     datas.startDeg = datas.prevDeg;
     datas.loop = 0;
     datas.direction = direction;
+    datas.datas = {};
 
     if (datas.transform === "none") {
         datas.transform = "";
     }
     moveable.props.onRotateStart!({
+        datas: datas.datas,
         target,
         clientX,
         clientY,
@@ -72,6 +74,7 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
     }
     moveable.props.onRotate!({
         target: moveable.props.target!,
+        datas: datas.datas,
         delta,
         dist,
         clientX,
@@ -83,8 +86,9 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
 
     moveable.updateTarget();
 }
-export function rotateEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
+export function rotateEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
     moveable.props.onRotateEnd!({
+        datas: datas.datas,
         clientX,
         clientY,
         target: moveable.props.target!,

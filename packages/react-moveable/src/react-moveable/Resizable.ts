@@ -12,6 +12,7 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
 
     dragStart(moveable, { datas });
 
+    datas.datas = {};
     datas.position = position;
     datas.width = width;
     datas.height = height;
@@ -19,6 +20,7 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     datas.prevHeight = 0;
 
     moveable.props.onResizeStart!({
+        datas: datas.datas,
         target,
         clientX,
         clientY,
@@ -72,6 +74,7 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
         width: nextWidth,
         height: nextHeight,
         dist: [distWidth, distHeight],
+        datas: datas.datas,
         delta,
         clientX,
         clientY,
@@ -79,9 +82,10 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
 
     moveable.updateRect();
 }
-export function resizeEnd(moveable: Moveable, { isDrag, clientX, clientY }: any) {
+export function resizeEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
     moveable.props.onScaleEnd!({
         target: moveable.props.target!,
+        datas: datas.datas,
         clientX,
         clientY,
         isDrag,

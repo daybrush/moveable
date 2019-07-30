@@ -16,6 +16,7 @@ export function getDraggableDragger(
                 targetTransform,
             } = moveable.state;
 
+            datas.datas = {};
             datas.left = parseFloat(style.left || "") || 0;
             datas.top = parseFloat(style.top || "") || 0;
             datas.bottom = parseFloat(style.bottom || "") || 0;
@@ -27,6 +28,7 @@ export function getDraggableDragger(
             datas.prevDist = [0, 0];
             datas.prevBeforeDist = [0, 0];
             return moveable.props.onDragStart!({
+                datas: datas.datas,
                 target,
                 clientX,
                 clientY,
@@ -58,6 +60,7 @@ export function getDraggableDragger(
                 return;
             }
             moveable.props.onDrag!({
+                datas: datas.datas,
                 target,
                 transform: nextTransform,
                 dist,
@@ -73,12 +76,13 @@ export function getDraggableDragger(
             });
             moveable.updateTarget();
         },
-        dragend: ({ isDrag, clientX, clientY }) => {
+        dragend: ({ datas, isDrag, clientX, clientY }) => {
             moveable.props.onDragEnd!({
                 target,
                 isDrag,
                 clientX,
                 clientY,
+                datas: datas.datas,
             });
             if (isDrag) {
                 moveable.updateRect();

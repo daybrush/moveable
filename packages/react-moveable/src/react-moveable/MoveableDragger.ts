@@ -15,8 +15,8 @@ export function getMoveableDragger(
 
     return drag(target, {
         container: window,
-        dragstart: ({ datas, inputEvent, clientX, clientY }) => {
-            const inputTarget: HTMLElement = inputEvent.target;
+        dragstart: e => {
+            const inputTarget: HTMLElement = e.inputEvent.target;
 
             type = "";
             if (!hasClass(inputTarget, prefix("control"))) {
@@ -24,20 +24,20 @@ export function getMoveableDragger(
             }
             if (hasClass(inputTarget, prefix("rotation"))) {
                 type = "rotate";
-                return rotateStart(moveable, { datas, clientX, clientY });
+                return rotateStart(moveable, e);
             } else if (moveable.props.scalable) {
                 const position = getPosition(inputTarget);
                 type = "scale";
-                return scaleStart(moveable, position, { datas, clientX, clientY });
+                return scaleStart(moveable, position, e);
             } else if (moveable.props.resizable) {
                 const position = getPosition(inputTarget);
                 type = "resize";
-                return resizeStart(moveable, position, { datas, clientX, clientY });
+                return resizeStart(moveable, position, e);
             } else if (moveable.props.warpable) {
                 const position = getPosition(inputTarget);
 
                 type = "warp";
-                return warpStart(moveable, position, { datas, clientX, clientY });
+                return warpStart(moveable, position, e);
             } else {
                 return false;
             }
@@ -55,17 +55,17 @@ export function getMoveableDragger(
                 return warp(moveable, e);
             }
         },
-        dragend: ({ isDrag, clientX, clientY }) => {
+        dragend: e => {
             if (!type) {
                 return;
             } else if (type === "rotate") {
-                return rotateEnd(moveable, { isDrag, clientX, clientY });
+                return rotateEnd(moveable, e);
             } else if (type === "scale") {
-                return scaleEnd(moveable, { isDrag, clientX, clientY });
+                return scaleEnd(moveable, e);
             } else if (type === "resize") {
-                return resizeEnd(moveable, { isDrag, clientX, clientY });
+                return resizeEnd(moveable, e);
             } else if (type === "warp") {
-                return warpEnd(moveable, { isDrag, clientX, clientY });
+                return warpEnd(moveable, e);
             }
         },
     });
