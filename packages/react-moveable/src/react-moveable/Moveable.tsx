@@ -14,7 +14,7 @@ import { ref } from "framework-utils";
 import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
-import { createIdentityMatrix } from "./matrix";
+import { createIdentityMatrix, minus, caculate, convertPositionMatrix, sum, getOrigin } from "./matrix";
 import { dot } from "@daybrush/utils";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
@@ -63,8 +63,10 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         height: 0,
         transformOrigin: [0, 0],
         direction: 1,
+        beforeDirection: 1,
         rotationRad: 0,
         rotationPos: [0, 0],
+        beforeOrigin: [0, 0],
         origin: [0, 0],
         pos1: [0, 0],
         pos2: [0, 0],
@@ -124,9 +126,13 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         if (!this.props.origin) {
             return null;
         }
-        const { origin } = this.state;
+        const { beforeOrigin } = this.state;
 
-        return (<div className={prefix("control", "origin")} style={getControlTransform(origin)}></div>);
+        return [
+            // <div className={prefix("control", "origin")} style={getControlTransform(origin)} key="origin"></div>,
+            <div className={prefix("control", "origin")}
+                style={getControlTransform(beforeOrigin)} key="beforeOrigin"></div>,
+        ];
     }
     public renderDiagonalPosition() {
         const { resizable, scalable, warpable } = this.props;
@@ -237,7 +243,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         const container = this.props.container!;
         const is3d = beforeMatrix.length === 16;
         const n = is3d ? 4 : 3;
-        const [, matrix,  targetMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
+        const [, offsetMatrix, matrix,  targetMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
             target,
             container,
             true,
@@ -251,14 +257,27 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             pos2,
             pos3,
             pos4,
+            direction,
         ] = caculatePosition(
             matrix,
             transformOrigin, width, height,
         );
-        const [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
+        const beforeOrigin = minus(
+            sum(
+                caculate(
+                    offsetMatrix,
+                    convertPositionMatrix(transformOrigin, n),
+                    n,
+                ),
+                getOrigin(targetMatrix, n),
+            ),
+            [left, top],
+        );
+        const [rotationRad, rotationPos] = getRotationInfo(pos1, pos2, direction);
 
         this.setState({
             direction,
+            beforeOrigin,
             rotationRad,
             rotationPos,
             pos1, pos2, pos3, pos4,

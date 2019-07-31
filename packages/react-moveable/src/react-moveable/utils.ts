@@ -9,6 +9,7 @@ import {
     createOriginMatrix, convertPositionMatrix, caculate,
     multiplies,
     minus,
+    getOrigin,
 } from "./matrix";
 
 export function prefix(...classNames: string[]) {
@@ -53,7 +54,7 @@ export function caculateMatrixStack(
     prevMatrix?: number[],
     prevN?: number,
 
-): [number[], number[], number[], string, number[]] {
+): [number[], number[], number[], number[], string, number[]] {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
     let is3d = false;
@@ -102,12 +103,16 @@ export function caculateMatrixStack(
     }
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
     let beforeMatrix = createIdentityMatrix(n);
+    let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
 
     matrixes.reverse();
     matrixes.forEach((matrix, i) => {
         if (length - 2 === i) {
             beforeMatrix = mat.slice();
+        }
+        if (length - 1 === i) {
+            offsetMatrix = mat.slice();
         }
 
         if (isObject(matrix[n - 1])) {
@@ -132,7 +137,7 @@ export function caculateMatrixStack(
     });
     const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
-    return [beforeMatrix, mat, targetMatrix, transform, transformOrigin];
+    return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin];
 }
 export function getSVGOffset(
     el: SVGElement,
@@ -196,7 +201,15 @@ export function getSVGOffset(
     }
     return offset.map(p => Math.round(p));
 }
-export function caculatePosition(matrix: number[], origin: number[], width: number, height: number) {
+export function caculatePosition(matrix: number[], origin: number[], width: number, height: number): [
+    number[],
+    number[],
+    number[],
+    number[],
+    number[],
+    number[],
+    1 | -1,
+] {
     const is3d = matrix.length === 16;
     const n = is3d ? 4 : 3;
     let [x1, y1] = caculate(matrix, convertPositionMatrix([0, 0], n), n);
@@ -221,6 +234,16 @@ export function caculatePosition(matrix: number[], origin: number[], width: numb
     originX = (originX - minX) || 0;
     originY = (originY - minY) || 0;
 
+    const center = [
+        (x1 + x2 + x3 + x4) / 4,
+        (y1 + y2 + y3 + y4) / 4,
+    ];
+    const pos1Rad = getRad(center, [x1, y1]);
+    const pos2Rad = getRad(center, [x2, y2]);
+    const direction =
+        (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
+            ? 1 : -1;
+
     return [
         [minX, minY],
         [originX, originY],
@@ -228,6 +251,7 @@ export function caculatePosition(matrix: number[], origin: number[], width: numb
         [x2, y2],
         [x3, y3],
         [x4, y4],
+        direction,
     ];
 }
 
@@ -309,18 +333,8 @@ export function getSize(
 export function getRotationInfo(
     pos1: number[],
     pos2: number[],
-    pos3: number[],
-    pos4: number[],
-): [1 | -1, number, number[]] {
-    const center = [
-        (pos1[0] + pos2[0] + pos3[0] + pos4[0]) / 4,
-        (pos1[1] + pos2[1] + pos3[1] + pos4[1]) / 4,
-    ];
-    const pos1Rad = getRad(center, pos1);
-    const pos2Rad = getRad(center, pos2);
-    const direction =
-        (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
-            ? 1 : -1;
+    direction: number,
+): [number, number[]] {
     const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
     const relativeRotationPos = rotateMatrix([0, -40, 0], rotationRad);
 
@@ -329,7 +343,7 @@ export function getRotationInfo(
         (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
     ];
 
-    return [direction, rotationRad, rotationPos];
+    return [rotationRad, rotationPos];
 }
 export function getTargetInfo(
     target?: MoveableProps["target"],
@@ -349,10 +363,12 @@ export function getTargetInfo(
     let height = 0;
     let transformOrigin = [0, 0];
     let direction: 1 | -1 = 1;
+    let beforeDirection: 1 | -1 = 1;
     let rotationPos = [0, 0];
     let rotationRad = 0;
     let is3d = false;
     let targetTransform = "";
+    let beforeOrigin = [0, 0];
 
     if (target) {
         const style = window.getComputedStyle(target);
@@ -363,8 +379,9 @@ export function getTargetInfo(
         if (isUndefined(width)) {
             [width, height] = getSize(target, style, true);
         }
+        let offsetMatrix: number[];
         [
-            beforeMatrix, matrix,
+            beforeMatrix, offsetMatrix, matrix,
             targetMatrix,
             targetTransform, transformOrigin,
         ] = caculateMatrixStack(target, container!);
@@ -378,13 +395,27 @@ export function getTargetInfo(
             pos2,
             pos3,
             pos4,
+            direction,
         ] = caculatePosition(matrix, transformOrigin, width, height);
+
+        let prevPos = [0, 0];
+        [
+            prevPos, beforeOrigin, , , , , beforeDirection,
+        ] = caculatePosition(offsetMatrix, transformOrigin, width, height);
+        const n = is3d ? 4 : 3;
+        const targetOrigin = getOrigin(targetMatrix, n);
+
+        beforeOrigin = [
+            beforeOrigin[0] + prevPos[0] + targetOrigin[0] - left,
+            beforeOrigin[1] + prevPos[1] + targetOrigin[1] - top,
+        ];
         // 1 : clockwise
         // -1 : counterclockwise
-        [direction, rotationRad, rotationPos] = getRotationInfo(pos1, pos2, pos3, pos4);
+        [rotationRad, rotationPos] = getRotationInfo(pos1, pos2, direction);
     }
 
     return {
+        beforeDirection,
         direction,
         rotationRad,
         rotationPos,
@@ -402,6 +433,7 @@ export function getTargetInfo(
         targetTransform,
         targetMatrix,
         is3d,
+        beforeOrigin,
         origin,
         transformOrigin,
     };

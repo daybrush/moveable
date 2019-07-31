@@ -41,9 +41,9 @@ class App extends React.Component {
                     keepRatio={false}
                     origin={true}
                     draggable={true}
-                    // scalable={!isResizable}
-                    // resizable={isResizable}
-                    warpable={true}
+                    scalable={!isResizable}
+                    resizable={isResizable}
+                    // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}

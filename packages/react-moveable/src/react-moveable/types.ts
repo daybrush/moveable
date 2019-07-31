@@ -48,7 +48,9 @@ export interface MoveableState {
     targetMatrix: number[];
     is3d: boolean;
     transformOrigin: number[];
+    beforeOrigin: number[];
     origin: number[];
+    beforeDirection: 1 | -1;
     direction: 1 | -1;
     rotationRad: number;
     rotationPos: number[];
