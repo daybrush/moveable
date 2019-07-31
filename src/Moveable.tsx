@@ -15,7 +15,7 @@ import {
  * @extends eg.Component
  */
 class Moveable extends EgComponent {
-    private innerMoveable!: any;
+    private innerMoveable!: InnerMoveable;
 
     /**
      *
@@ -180,7 +180,7 @@ class Moveable extends EgComponent {
      * moveable.keepRatio = true;
      */
     get keepRatio(): boolean {
-        return this.getMoveable().keepRatio;
+        return this.getMoveable().props.keepRatio;
     }
     set keepRatio(keepRatio: boolean) {
         this.innerMoveable.setState({
@@ -197,7 +197,7 @@ class Moveable extends EgComponent {
      * moveable.throttleDrag = 1;
      */
     get throttleDrag(): number {
-        return this.getMoveable().throttleDrag;
+        return this.getMoveable().props.throttleDrag;
     }
     set throttleDrag(throttleDrag: number) {
         this.innerMoveable.setState({
@@ -214,7 +214,7 @@ class Moveable extends EgComponent {
      * moveable.throttleResize = 1;
      */
     get throttleResize(): number {
-        return this.getMoveable().throttleResize;
+        return this.getMoveable().props.throttleResize;
     }
     set throttleResize(throttleResize: number) {
         this.innerMoveable.setState({
@@ -231,7 +231,7 @@ class Moveable extends EgComponent {
      * moveable.throttleScale = 0.1;
      */
     get throttleScale(): number {
-        return this.getMoveable().throttleScale;
+        return this.getMoveable().props.throttleScale;
     }
     set throttleScale(throttleScale: number) {
         this.innerMoveable.setState({
@@ -248,7 +248,7 @@ class Moveable extends EgComponent {
      * moveable.throttleRotate = 1;
      */
     get throttleRotate(): number {
-        return this.getMoveable().throttleRotate;
+        return this.getMoveable().props.throttleRotate;
     }
     set throttleRotate(throttleRotate: number) {
         this.innerMoveable.setState({
@@ -311,6 +311,22 @@ class Moveable extends EgComponent {
      */
     public updateTarget(): void {
         this.getMoveable().updateTarget();
+    }
+    /**
+     * Remove the Moveable object and the events.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.destroy();
+     */
+    public destroy() {
+        const el = this.getMoveable().base;
+
+        el.remove ? el.remove() : el.parentElement.removeChild(el);
+        this.innerMoveable = null;
+        this.getMoveable().componentWillUnmount();
     }
     private getMoveable() {
         return this.innerMoveable.preactMoveable;
