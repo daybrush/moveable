@@ -10,6 +10,8 @@ import {
     multiplies,
     minus,
     getOrigin,
+    createScaleMatrix,
+    sum,
 } from "./matrix";
 
 export function prefix(...classNames: string[]) {
@@ -63,11 +65,10 @@ export function caculateMatrixStack(
     let targetMatrix!: number[];
 
     while (el && (isContainer || el !== container)) {
-        if (el.tagName === "G") {
-            continue;
-        }
+        const tagName = el.tagName.toLowerCase();
         const style: CSSStyleDeclaration | null = window.getComputedStyle(el);
-        let matrix = convertCSStoMatrix(getTransformMatrix(style!.transform!));
+        const origin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style!.transform!));
 
         if (!is3d && matrix.length === 16) {
             is3d = true;
@@ -81,24 +82,43 @@ export function caculateMatrixStack(
         if (is3d && matrix.length === 9) {
             matrix = convertDimension(matrix, 3, 4);
         }
-        const origin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
+
+        let offsetLeft = (el as any).offsetLeft;
+        let offsetTop = (el as any).offsetTop;
+        // svg
+        let hasNotOffset = isUndefined(offsetLeft);
+        // inner svg element
+        if (hasNotOffset && tagName !== "svg") {
+            hasNotOffset = false;
+
+            if (tagName === "g") {
+                offsetLeft = 0;
+                offsetTop = 0;
+            } else {
+                [
+                    offsetLeft, offsetTop, origin[0], origin[1],
+                ] = getSVGGraphicsOffset(el as SVGGraphicsElement, origin);
+            }
+        }
+        matrixes.push(getAbsoluteMatrix(matrix, n, origin));
+        matrixes.push(createOriginMatrix([
+            hasNotOffset ? el : offsetLeft,
+            hasNotOffset ? origin : offsetTop,
+        ],
+            n,
+        ));
+        if (tagName === "svg" && targetMatrix) {
+            const svgMatrix = createScaleMatrix(getSVGScale(el as SVGSVGElement), n);
+
+            matrixes.push(svgMatrix);
+            matrixes.push(createIdentityMatrix(n));
+        }
         if (!targetMatrix) {
             targetMatrix = matrix;
         }
         if (!transformOrigin) {
             transformOrigin = origin;
         }
-        matrixes.push(getAbsoluteMatrix(matrix, n, origin));
-
-        const offsetLeft = (el as any).offsetLeft;
-        const hasNotOffset = isUndefined(offsetLeft);
-        matrixes.push(createOriginMatrix([
-                hasNotOffset ? el : offsetLeft,
-                hasNotOffset ? origin : (el as any).offsetTop,
-            ],
-            n,
-        ));
-
         if (isContainer) {
             break;
         }
@@ -120,17 +140,14 @@ export function caculateMatrixStack(
 
         if (isObject(matrix[n - 1])) {
             [matrix[n - 1], matrix[2 * n - 1]] =
-            getSVGOffset(
-                matrix[n - 1] as any,
-                container,
-                n,
-                matrix[2 * n - 1] as any,
-                mat,
-                matrixes[i + 1],
-            );
-
-            // matrix[n - 1] = 0;
-            // matrix[2 * n - 1] = 0;
+                getSVGOffset(
+                    matrix[n - 1] as any,
+                    container,
+                    n,
+                    matrix[2 * n - 1] as any,
+                    mat,
+                    matrixes[i + 1],
+                );
         }
         mat = multiply(
             mat,
@@ -142,6 +159,41 @@ export function caculateMatrixStack(
 
     return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin];
 }
+export function getSVGScale(
+    el: SVGSVGElement,
+) {
+    const clientWidth = el.clientWidth;
+    const clientHeight = el.clientHeight;
+    const viewBox = el.viewBox.baseVal;
+    const viewBoxWidth = viewBox.width || clientWidth;
+    const viewBoxHeight = viewBox.height || clientHeight;
+    const scaleX = clientWidth / viewBoxWidth;
+    const scaleY = clientHeight / viewBoxHeight;
+
+    return [scaleX, scaleY];
+}
+export function getSVGGraphicsOffset(
+    el: SVGGraphicsElement,
+    origin: number[],
+) {
+    if (!(el as SVGGraphicsElement).getBBox) {
+        return [0, 0];
+    }
+    const bbox = (el as SVGGraphicsElement).getBBox();
+    const svgElement = el.ownerSVGElement!;
+    const viewBox = svgElement.viewBox.baseVal;
+    const left = bbox.x - viewBox.x;
+    const top = bbox.y - viewBox.y;
+
+    return [
+        left,
+        top,
+        origin[0] - left,
+        origin[1] - top,
+    ];
+}
+
+
 export function getSVGOffset(
     el: SVGElement,
     container: HTMLElement | SVGElement | null,
@@ -406,16 +458,15 @@ export function getTargetInfo(
             direction,
         ] = caculatePosition(matrix, transformOrigin, width, height);
 
-        let prevPos = [0, 0];
-        [
-            prevPos, beforeOrigin, , , , , beforeDirection,
-        ] = caculatePosition(offsetMatrix, transformOrigin, width, height);
         const n = is3d ? 4 : 3;
-        const targetOrigin = getOrigin(targetMatrix, n);
+        let beforePos = [0, 0];
+        [
+            beforePos, beforeOrigin, , , , , beforeDirection,
+        ] = caculatePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height);
 
         beforeOrigin = [
-            beforeOrigin[0] + prevPos[0] + targetOrigin[0] - left,
-            beforeOrigin[1] + prevPos[1] + targetOrigin[1] - top,
+            beforeOrigin[0] + beforePos[0] - left,
+            beforeOrigin[1] + beforePos[1] - top,
         ];
         // 1 : clockwise
         // -1 : counterclockwise

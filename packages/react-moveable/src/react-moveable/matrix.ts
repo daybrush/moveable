@@ -52,6 +52,15 @@ export function createIdentityMatrix(n: number) {
     }
     return matrix;
 }
+export function createScaleMatrix(scale: number[], n: number) {
+    const m = createIdentityMatrix(n);
+    const length = Math.min(scale.length, n - 1);
+
+    for (let i = 0; i < length; ++i) {
+        m[(n + 1) * i] = scale[i];
+    }
+    return m;
+}
 export function createOriginMatrix(origin: number[], n: number) {
     const m = createIdentityMatrix(n);
     const length = Math.min(origin.length, n - 1);
