@@ -1,5 +1,5 @@
 import Moveable from "./Moveable";
-import { getRad, getSize, throttle } from "./utils";
+import { getRad, throttle } from "./utils";
 import { dragStart, getDragDist } from "./Draggable";
 
 export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
@@ -8,8 +8,7 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     if (!target || !position) {
         return false;
     }
-    const [width, height] = getSize(target!);
-
+    const { width, height } = moveable.state;
     dragStart(moveable, { datas });
 
     datas.datas = {};

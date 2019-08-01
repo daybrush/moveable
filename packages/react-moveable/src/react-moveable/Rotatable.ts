@@ -82,7 +82,6 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     });
 }
 export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
-
     const {
         direction,
         beforeDirection,
