@@ -106,6 +106,23 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             </ControlBoxElement>
         );
     }
+    public componentDidMount() {
+        /* rotatable */
+        /* resizable */
+        /* scalable */
+        /* warpable */
+        this.moveableDragger = getMoveableDragger(this, this.controlBox.getElement());
+    }
+    public componentWillUnmount() {
+        if (this.draggableDragger) {
+            this.draggableDragger.unset();
+            this.draggableDragger = null;
+        }
+        if (this.moveableDragger) {
+            this.moveableDragger.unset();
+            this.moveableDragger = null;
+        }
+    }
     public renderRotation() {
         if (!this.props.rotatable) {
             return null;
@@ -191,21 +208,9 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         ];
 
     }
-    public componentDidMount() {
-        /* rotatable */
-        /* resizable */
-        /* scalable */
-        /* warpable */
-        this.moveableDragger = getMoveableDragger(this, this.controlBox.getElement());
-    }
-    public componentWillUnmount() {
+    public dragstart(e: any) {
         if (this.draggableDragger) {
-            this.draggableDragger.unset();
-            this.draggableDragger = null;
-        }
-        if (this.moveableDragger) {
-            this.moveableDragger.unset();
-            this.moveableDragger = null;
+            this.draggableDragger.onDragStart(e);
         }
     }
     public move(pos: number[]) {

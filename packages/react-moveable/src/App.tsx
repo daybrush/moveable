@@ -146,9 +146,12 @@ class App extends React.Component {
             if (this.state.target === e.target) {
                 this.moveable.updateRect();
             } else {
+                const nativeEvent = e.nativeEvent;
                 this.setState({
                     target: e.target,
                     item: items[id],
+                }, () => {
+                    this.moveable.dragstart(nativeEvent);
                 });
             }
         }
