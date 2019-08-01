@@ -308,6 +308,11 @@ export function getSize(
     width = target.clientWidth;
     height = target.clientHeight;
 
+    if (!hasOffset && !width && !height) {
+        const bbox = (target as SVGGraphicsElement).getBBox();
+
+        return [bbox.width, bbox.height];
+    }
     if (isOffset || isBoxSizing) {
         const borderLeft = parseFloat(style.borderLeftWidth!) || 0;
         const borderRight = parseFloat(style.borderRightWidth!) || 0;
