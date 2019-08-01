@@ -108,6 +108,9 @@ class App extends React.Component {
     }
     public onClick = (e: any) => {
         const target = e.target;
+
+
+        console.log(target);
         const id = target.getAttribute("data-target");
         e.preventDefault();
 

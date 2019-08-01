@@ -63,6 +63,9 @@ export function caculateMatrixStack(
     let targetMatrix!: number[];
 
     while (el && (isContainer || el !== container)) {
+        if (el.tagName === "G") {
+            continue;
+        }
         const style: CSSStyleDeclaration | null = window.getComputedStyle(el);
         let matrix = convertCSStoMatrix(getTransformMatrix(style!.transform!));
 

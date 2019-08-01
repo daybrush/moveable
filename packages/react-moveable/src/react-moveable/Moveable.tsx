@@ -242,7 +242,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         const target = this.props.target!;
         const container = this.props.container!;
         const is3d = beforeMatrix.length === 16;
-        const n = is3d ? 4 : 3;
+        let n = is3d ? 4 : 3;
         const [, offsetMatrix, matrix,  targetMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
             target,
             container,
@@ -262,6 +262,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             matrix,
             transformOrigin, width, height,
         );
+        n = offsetMatrix.length === 16 ? 4 : 3;
         const beforeOrigin = minus(
             sum(
                 caculate(
