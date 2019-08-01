@@ -60,7 +60,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         (position[0] === -1 ? 0 : 1)
         + (position[1] === -1 ? 0 : 2);
     datas.prevMatrix = createIdentityMatrix(4);
-    moveable.props.onWarpStart!({
+    return moveable.props.onWarpStart!({
         target,
         clientX,
         clientY,

@@ -100,6 +100,11 @@ export function caculateMatrixStack(
                 ] = getSVGGraphicsOffset(el as SVGGraphicsElement, origin);
             }
         }
+        if (tagName === "svg" && targetMatrix) {
+            matrixes.push(getSVGMatrix(el as SVGSVGElement, n));
+            matrixes.push(createIdentityMatrix(n));
+        }
+
         matrixes.push(getAbsoluteMatrix(matrix, n, origin));
         matrixes.push(createOriginMatrix([
             hasNotOffset ? el : offsetLeft,
@@ -107,12 +112,6 @@ export function caculateMatrixStack(
         ],
             n,
         ));
-        if (tagName === "svg" && targetMatrix) {
-            const svgMatrix = createScaleMatrix(getSVGScale(el as SVGSVGElement), n);
-
-            matrixes.push(svgMatrix);
-            matrixes.push(createIdentityMatrix(n));
-        }
         if (!targetMatrix) {
             targetMatrix = matrix;
         }
@@ -159,18 +158,54 @@ export function caculateMatrixStack(
 
     return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin];
 }
-export function getSVGScale(
+export function getSVGMatrix(
     el: SVGSVGElement,
+    n: number,
 ) {
     const clientWidth = el.clientWidth;
     const clientHeight = el.clientHeight;
-    const viewBox = el.viewBox.baseVal;
+    const viewBox = (el as SVGSVGElement).viewBox.baseVal;
     const viewBoxWidth = viewBox.width || clientWidth;
     const viewBoxHeight = viewBox.height || clientHeight;
     const scaleX = clientWidth / viewBoxWidth;
     const scaleY = clientHeight / viewBoxHeight;
 
-    return [scaleX, scaleY];
+    const preserveAspectRatio = (el as SVGSVGElement).preserveAspectRatio.baseVal;
+    // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
+    const align = preserveAspectRatio.align;
+    // 1 : meet 2: slice
+    const meetOrSlice = preserveAspectRatio.meetOrSlice;
+    const svgOrigin = [0, 0];
+    const scale = [scaleX, scaleY];
+    const translate = [0, 0];
+
+    if (align !== 1) {
+        const xAlign = (align - 2) % 3;
+        const yAlign = Math.floor((align - 2) / 3);
+
+        svgOrigin[0] = viewBoxWidth * xAlign / 2;
+        svgOrigin[1] = viewBoxHeight * yAlign / 2;
+
+        const scaleDimension = meetOrSlice === 2 ? Math.max(scaleY, scaleX) : Math.min(scaleX, scaleY);
+
+        scale[0] = scaleDimension;
+        scale[1] = scaleDimension;
+
+        translate[0] = (clientWidth - viewBoxWidth) / 2 * xAlign;
+        translate[1] = (clientHeight - viewBoxHeight) / 2 * yAlign;
+    }
+
+    const scaleMatrix = createScaleMatrix(scale, n);
+    [
+        scaleMatrix[n - 1],
+        scaleMatrix[2 * n - 1],
+    ] = translate;
+
+    return getAbsoluteMatrix(
+        scaleMatrix,
+        n,
+        svgOrigin,
+    );
 }
 export function getSVGGraphicsOffset(
     el: SVGGraphicsElement,
@@ -192,7 +227,6 @@ export function getSVGGraphicsOffset(
         origin[1] - top,
     ];
 }
-
 
 export function getSVGOffset(
     el: SVGElement,

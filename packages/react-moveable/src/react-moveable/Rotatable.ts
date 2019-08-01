@@ -71,10 +71,7 @@ export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any
     datas.beforeDirection = beforeDirection;
     datas.datas = {};
 
-    if (datas.transform === "none") {
-        datas.transform = "";
-    }
-    moveable.props.onRotateStart!({
+    return moveable.props.onRotateStart!({
         datas: datas.datas,
         target,
         clientX,

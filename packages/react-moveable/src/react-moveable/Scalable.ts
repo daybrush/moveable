@@ -23,7 +23,7 @@ export function scaleStart(moveable: Moveable, position: number[] | undefined, {
     datas.width = width;
     datas.height = height;
 
-    moveable.props.onScaleStart!({
+    return moveable.props.onScaleStart!({
         target,
         clientX,
         clientY,
