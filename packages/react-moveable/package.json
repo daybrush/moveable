@@ -61,7 +61,7 @@
     "@daybrush/utils": "^0.10.0",
     "@egjs/agent": "^2.1.5",
     "framework-utils": "^0.1.0",
-    "react-css-styler": "^0.3.4",
+    "react-css-styler": "^0.4.0",
     "react-pure-props": "^0.1.5"
   },
   "browserslist": {

@@ -41,7 +41,7 @@
 </tr>
 <tr>
 <td align="center"><strong>Warpable</strong></td>
-<td align="center"><strong></strong></td>
+<td align="center"><strong>Pinchable(Soon)</strong></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
