@@ -38,6 +38,9 @@ img {
 .App-link {
   color: #61dafb;
 }
+.App svg * {
+    transform-origin: 20% 50%;
+}
 
 @keyframes App-logo-spin {
   from {

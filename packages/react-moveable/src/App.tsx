@@ -34,6 +34,7 @@ class App extends React.Component {
         (window as any).a = this;
         return (
             <div>
+                <div id="test" style={{position: "fixed", height: "69.28203582763672px", width: "60px", top: 0, left: 0, backgroundColor: "#f5f", zIndex: 4000 }}></div>
                 <Moveable
                     target={selectedTarget}
                     container={document.body}
@@ -41,9 +42,9 @@ class App extends React.Component {
                     keepRatio={false}
                     origin={true}
                     draggable={true}
-                    scalable={!isResizable}
-                    resizable={isResizable}
-                    // warpable={true}
+                    // scalable={!isResizable}
+                    // resizable={isResizable}
+                    warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}

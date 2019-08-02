@@ -1,6 +1,6 @@
-import { PREFIX } from "./consts";
+import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
@@ -49,6 +49,25 @@ export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[])
         createOriginMatrix(origin.map(a => -a), n),
     );
 }
+export function measureSVGSize(el: SVGElement, unit: string, isHorizontal: boolean) {
+    if (unit === "%") {
+        const viewBox = el.ownerSVGElement!.viewBox.baseVal;
+        return viewBox[isHorizontal ? "width" : "height"] / 100;
+    }
+    return 1;
+}
+export function getBeforeTransformOrigin(el: SVGElement) {
+    const relativeOrigin = getTransformOrigin(window.getComputedStyle(el, ":before"));
+
+    return relativeOrigin.map((o, i) => {
+        const { value, unit } = splitUnit(o);
+
+        return value * measureSVGSize(el, unit, i === 0);
+    });
+}
+export function getTransformOrigin(style: CSSStyleDeclaration) {
+    return style.transformOrigin!.split(" ");
+}
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
@@ -67,7 +86,6 @@ export function caculateMatrixStack(
     while (el && (isContainer || el !== container)) {
         const tagName = el.tagName.toLowerCase();
         const style: CSSStyleDeclaration | null = window.getComputedStyle(el);
-        const origin = style.transformOrigin!.split(" ").map(pos => parseFloat(pos));
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style!.transform!));
 
         if (!is3d && matrix.length === 16) {
@@ -87,8 +105,14 @@ export function caculateMatrixStack(
         let offsetTop = (el as any).offsetTop;
         // svg
         let hasNotOffset = isUndefined(offsetLeft);
+        let origin: number[];
+
         // inner svg element
         if (hasNotOffset && tagName !== "svg") {
+            origin = isNotSupportTransformOrigin
+                ? getBeforeTransformOrigin(el as SVGElement)
+                    : getTransformOrigin(style).map(pos => parseFloat(pos));
+
             hasNotOffset = false;
 
             if (tagName === "g") {
@@ -99,6 +123,8 @@ export function caculateMatrixStack(
                     offsetLeft, offsetTop, origin[0], origin[1],
                 ] = getSVGGraphicsOffset(el as SVGGraphicsElement, origin);
             }
+        } else {
+            origin = getTransformOrigin(style).map(pos => parseFloat(pos));
         }
         if (tagName === "svg" && targetMatrix) {
             matrixes.push(getSVGMatrix(el as SVGSVGElement, n));

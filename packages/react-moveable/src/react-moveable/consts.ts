@@ -1,5 +1,9 @@
 import { prefixCSS } from "framework-utils";
+import getAgent from "@egjs/agent";
 
+export const agent = getAgent();
+export const isNotSupportTransformOrigin
+    = agent.os.name.indexOf("ios") > -1 || agent.browser.name.indexOf("safari") > -1;
 export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 {
@@ -62,6 +66,10 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 }
 .control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {
     cursor: nesw-resize;
+}
+:global svg *:before {
+    content:"";
+    transform-origin: inherit;
 }
 `);
 
