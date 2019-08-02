@@ -67,10 +67,10 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {
     cursor: nesw-resize;
 }
-:global svg *:before {
+${isNotSupportTransformOrigin ? `:global svg *:before {
     content:"";
     transform-origin: inherit;
-}
+}` : ""}
 `);
 
 export const NEARBY_POS = [
