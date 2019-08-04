@@ -7,12 +7,15 @@
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
 <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img alt="Preact" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
+<a href="https://github.com/probil/vue-moveable" target="_blank"><img
+    alt="Vue"
+    src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
 </p>
-<p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable</p>
+<p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable</p>
 <p align="middle">
-    <a href="https://daybrush.com/moveable"><strong>Demo</strong></a> /
-    <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable"><strong>React Moveable</strong></a> /
-    <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable"><strong>Preact Moveable</strong></a>
+    <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
+    <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
+    <a href="https://github.com/daybrush/scenejs-timeline" target="_blank"><strong>Main Project</strong></a>
 </p>
 
 <table width="100%" align="center">
@@ -47,7 +50,7 @@
 </tr>
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
-<td align="center"><strong></strong></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
@@ -59,6 +62,7 @@
 * **Scalable** indicates whether the target's x and y can be scale of transform.
 * **Rotatable** indicates whether the target can be rotated.
 * **Warpable** indicates whether the target can be warped(distorted, bented).
+* **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 
 
 ## ⚙️ Installation
@@ -87,6 +91,9 @@ const moveable = new Moveable(document.body, {
     scalable: true,
     rotatable: true,
     warpable: true,
+    // Enabling pincable lets you use events that
+    // can be used in draggable, resizable, scalable, and rotateable.
+    pinchable: true, // ["draggable", "resizable", "scalable", "rotatable"]
     origin: true,
     keepRatio: true,
     throttleDrag: 0,
@@ -174,8 +181,9 @@ moveable.on("warpStart", ({ target, clientX, clientY }) => {
 
 
 ## 📦 Packages
-* [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
-* [**preact-moveable**](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable): A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable.
+* [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
+* [**preact-moveable**](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable): A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
+* [**vue-moveable**(@probil)](https://github.com/probil/vue-moveable): A Vue Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 
 
 

@@ -7,7 +7,12 @@
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable.</p>
+<p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.</p>
+<p align="middle">
+    <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
+    <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
+    <a href="https://github.com/daybrush/scenejs-timeline" target="_blank"><strong>Main Project</strong></a>
+</p>
 
 <table width="100%" align="center">
 <tr>
@@ -35,17 +40,26 @@
 </tr>
 <tr>
 <td align="center"><strong>Warpable</strong></td>
-<td align="center"><strong></strong></td>
+<td align="center"><strong>Pinchable(Soon)</strong></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
-<td align="center"><strong></strong></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
 </table>
+
+
+## 🔥 Able!
+* **Draggable** refers to the ability to drag and move targets.
+* **Resizable** indicates whether the target's width and height can be increased or decreased.
+* **Scalable** indicates whether the target's x and y can be scale of transform.
+* **Rotatable** indicates whether the target can be rotated.
+* **Warpable** indicates whether the target can be warped(distorted, bented).
+* **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 
 
 ## ⚙️ Installation
@@ -183,6 +197,10 @@ render() {
             onWarpEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onWarpEnd", target, isDrag);
             }}
+
+            // Enabling pincable lets you use events that
+            // can be used in draggable, resizable, scalable, and rotateable.
+            pinchable={true}
         />
     )
 }
