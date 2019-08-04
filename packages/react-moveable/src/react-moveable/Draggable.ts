@@ -1,41 +1,90 @@
-import Moveable from "./Moveable";
-import { invert, caculate, minus, sum, convertPositionMatrix } from "./matrix";
+import Moveable from ".";
+import { getDragDist, setDragStart } from "./Dragger";
+import { throttleArray } from "./utils";
+import { minus } from "./matrix";
 
-export function dragStart(moveable: Moveable, { datas }: any) {
+export function dragStart(moveable: Moveable, { datas, clientX, clientY }: any) {
+    const target = moveable.props.target!;
+    const style = window.getComputedStyle(target);
     const {
-        matrix,
-        beforeMatrix,
-        is3d,
-        left,
-        top,
-        origin,
+        targetTransform,
     } = moveable.state;
 
-    const n = is3d ? 4 : 3;
-    datas.is3d = is3d;
-    datas.matrix = matrix;
-    datas.inverseMatrix = invert(matrix, n);
-    datas.beforeMatrix = beforeMatrix;
-    datas.inverseBeforeMatrix = invert(beforeMatrix, n);
-    datas.absoluteOrigin = convertPositionMatrix(sum([left, top], origin), n);
-    datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, is3d ? 4 : 3);
-    datas.startDragDist = caculate(datas.inverseMatrix, datas.absoluteOrigin, is3d ? 4 : 3);
-}
-export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
-    const {
-        inverseBeforeMatrix,
-        inverseMatrix, is3d,
-        startDragBeforeDist,
-        startDragDist, absoluteOrigin,
-    } = datas;
-    const n = is3d ? 4 : 3;
+    datas.datas = {};
+    datas.left = parseFloat(style.left || "") || 0;
+    datas.top = parseFloat(style.top || "") || 0;
+    datas.bottom = parseFloat(style.bottom || "") || 0;
+    datas.right = parseFloat(style.right || "") || 0;
+    datas.transform = targetTransform;
 
-    return minus(
-        caculate(
-            isBefore ? inverseBeforeMatrix : inverseMatrix,
-            sum(absoluteOrigin, [distX, distY]),
-            n,
-        ),
-        isBefore ? startDragBeforeDist : startDragDist,
-    );
+    setDragStart(moveable, { datas });
+
+    datas.prevDist = [0, 0];
+    datas.prevBeforeDist = [0, 0];
+    return moveable.props.onDragStart!({
+        datas: datas.datas,
+        target,
+        clientX,
+        clientY,
+    });
+}
+export function drag(moveable: Moveable, { datas, distX, distY, clientX, clientY, inputEvent }: any) {
+    inputEvent.preventDefault();
+    inputEvent.stopPropagation();
+
+    const target = moveable.props.target!;
+    const throttleDrag = moveable.props.throttleDrag!;
+    const { prevDist, prevBeforeDist, transform } = datas;
+
+    const beforeDist = getDragDist({ datas, distX, distY }, true);
+    const dist = getDragDist({ datas, distX, distY }, false);
+
+    throttleArray(dist, throttleDrag);
+    throttleArray(beforeDist, throttleDrag);
+
+    const delta = minus(dist, prevDist);
+    const beforeDelta = minus(beforeDist, prevBeforeDist);
+
+    datas.prevDist = dist;
+    datas.prevBeforeDist = beforeDist;
+
+    const left = datas.left + beforeDist[0];
+    const top = datas.top + beforeDist[1];
+    const right = datas.right - beforeDist[0];
+    const bottom = datas.bottom - beforeDist[1];
+    const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
+
+    if (delta.every(num => !num) && beforeDelta.some(num => !num)) {
+        return;
+    }
+    moveable.props.onDrag!({
+        datas: datas.datas,
+        target,
+        transform: nextTransform,
+        dist,
+        delta,
+        beforeDist,
+        beforeDelta,
+        left,
+        top,
+        right,
+        bottom,
+        clientX,
+        clientY,
+    });
+    moveable.updateTarget();
+}
+
+export function dragEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
+    const { target, onDragEnd } = moveable.props;
+    onDragEnd!({
+        target: target!,
+        isDrag,
+        clientX,
+        clientY,
+        datas: datas.datas,
+    });
+    if (isDrag) {
+        moveable.updateRect();
+    }
 }

@@ -12,23 +12,18 @@ function setRotateStartInfo(
     datas.startDeg = datas.prevDeg;
     datas.loop = 0;
 }
-function getRotateInfo(
+function getDeg(
     datas: IObject<any>,
+    deg: number,
     direction: number,
-    clientX: number, clientY: number,
     throttleRotate: number,
 ) {
     const {
-        startAbsoluteOrigin,
         prevDeg,
         startDeg,
         loop: prevLoop,
     } = datas;
-    const deg = throttle(
-        getRad(startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
-        throttleRotate,
-    );
-
+    deg = throttle(deg, throttleRotate);
     if (prevDeg > deg && prevDeg > 270 && deg < 90) {
         // 360 => 0
         ++datas.loop;
@@ -46,48 +41,82 @@ function getRotateInfo(
 
     return [delta, dist];
 }
-export function rotateStart(moveable: Moveable, { datas, clientX, clientY }: any) {
+function getRotateInfo(
+    datas: IObject<any>,
+    direction: number,
+    clientX: number, clientY: number,
+    throttleRotate: number,
+) {
+    return getDeg(
+        datas,
+        getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
+        direction,
+        throttleRotate,
+    );
+}
+export function rotateStart(moveable: Moveable, { datas, clientX, clientY, pinchRotate, pinchFlag }: any) {
     const target = moveable.props.target;
 
     if (!target) {
         return false;
     }
+    const state = moveable.state;
     const {
         left, top, origin, beforeOrigin,
         rotationPos, direction, beforeDirection, targetTransform,
-    } = moveable.state;
+    } = state;
 
     datas.transform = targetTransform;
     datas.left = left;
     datas.top = top;
 
-    datas.afterInfo = {};
-    datas.beforeInfo = {};
-
-    setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rotationPos);
-    setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, rotationPos);
+    if (pinchFlag) {
+        datas.beforeInfo = { prevDeg: pinchRotate, startDeg: pinchRotate, loop: 0 };
+        datas.afterInfo = { prevDeg: pinchRotate, startDeg: pinchRotate, loop: 0 };
+    } else {
+        datas.afterInfo = {};
+        datas.beforeInfo = {};
+        setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rotationPos);
+        setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, rotationPos);
+    }
 
     datas.direction = direction;
     datas.beforeDirection = beforeDirection;
     datas.datas = {};
 
-    return moveable.props.onRotateStart!({
+    const result = moveable.props.onRotateStart!({
         datas: datas.datas,
         target,
         clientX,
         clientY,
     });
+    if (result !== false) {
+        state.isRotate = true;
+    }
+    return result;
 }
-export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
+export function rotate(moveable: Moveable, { datas, clientX, clientY, pinchRotate, pinchFlag }: any) {
     const {
         direction,
         beforeDirection,
+        beforeInfo,
+        afterInfo,
     } = datas;
     const throttleRotate = moveable.props.throttleRotate!;
-    const [delta, dist] = getRotateInfo(datas.afterInfo, direction, clientX, clientY, throttleRotate);
-    const [beforeDelta, beforeDist] = getRotateInfo(
-        datas.beforeInfo, beforeDirection, clientX, clientY, throttleRotate);
 
+    let delta: number;
+    let dist: number;
+    let beforeDelta: number;
+    let beforeDist: number;
+
+    if (pinchFlag) {
+        [delta, dist] = getDeg(afterInfo, pinchRotate, direction, throttleRotate);
+        [beforeDelta, beforeDist] = getDeg(beforeInfo, pinchRotate, direction, throttleRotate);
+    } else {
+        [delta, dist] = getRotateInfo(afterInfo, direction, clientX, clientY, throttleRotate);
+        [beforeDelta, beforeDist] = getRotateInfo(
+            beforeInfo, beforeDirection, clientX, clientY, throttleRotate);
+    }
     if (!delta && !beforeDelta) {
         return;
     }
@@ -103,9 +132,10 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY }: any) {
         transform: `${datas.transform} rotate(${dist}deg)`,
     });
 
-    moveable.updateTarget();
+    !pinchFlag && moveable.updateTarget();
 }
-export function rotateEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
+export function rotateEnd(moveable: Moveable, { datas, isDrag, clientX, clientY, pinchFlag }: any) {
+    moveable.state.isRotate = false;
     moveable.props.onRotateEnd!({
         datas: datas.datas,
         clientX,
@@ -113,7 +143,7 @@ export function rotateEnd(moveable: Moveable, { datas, isDrag, clientX, clientY 
         target: moveable.props.target!,
         isDrag,
     });
-    if (isDrag) {
+    if (isDrag && !pinchFlag) {
         moveable.updateRect();
     }
 }

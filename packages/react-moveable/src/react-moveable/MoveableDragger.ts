@@ -1,5 +1,5 @@
 import Moveable from "./Moveable";
-import { drag } from "@daybrush/drag";
+import Dragger from "@daybrush/drag";
 import { prefix, getPosition } from "./utils";
 import { hasClass } from "@daybrush/utils";
 import { scaleStart, scale, scaleEnd } from "./Scalable";
@@ -13,11 +13,11 @@ export function getMoveableDragger(
 ) {
     let type: "rotate" | "scale" | "resize" | "warp" | "";
 
-    return drag(target, {
+    return new Dragger(target, {
         container: window,
         dragstart: e => {
             const inputTarget: HTMLElement = e.inputEvent.target;
-
+            const { scalable, resizable, warpable } = moveable.props;
             type = "";
             if (!hasClass(inputTarget, prefix("control"))) {
                 return false;
@@ -25,24 +25,26 @@ export function getMoveableDragger(
             if (hasClass(inputTarget, prefix("rotation"))) {
                 type = "rotate";
                 return rotateStart(moveable, e);
-            } else if (moveable.props.scalable) {
-                const position = getPosition(inputTarget);
-                type = "scale";
-                return scaleStart(moveable, position, e);
-            } else if (moveable.props.resizable) {
-                const position = getPosition(inputTarget);
-                type = "resize";
-                return resizeStart(moveable, position, e);
-            } else if (moveable.props.warpable) {
+            } else {
                 const position = getPosition(inputTarget);
 
-                type = "warp";
-                return warpStart(moveable, position, e);
-            } else {
-                return false;
+                if (scalable) {
+                    type = "scale";
+                    return scaleStart(moveable, position, e);
+                } else if (resizable) {
+                    type = "resize";
+                    return resizeStart(moveable, position, e);
+                } else if (warpable) {
+                    type = "warp";
+                    return warpStart(moveable, position, e);
+                }
             }
+            return false;
         },
         drag: e => {
+            e.inputEvent.preventDefault();
+            e.inputEvent.stopPropagation();
+
             if (!type) {
                 return;
             } else if (type === "rotate") {

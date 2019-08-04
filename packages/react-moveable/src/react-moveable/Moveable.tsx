@@ -4,18 +4,21 @@ import {
     prefix, getLineStyle,
     getTargetInfo,
     getControlTransform,
-    caculatePosition,
+    caculateMoveablePosition,
     getRotationInfo,
     caculateMatrixStack,
+    getMiddleLinePos,
+    unset,
+    createIdentityMatrix3,
+    caculatePosition,
 } from "./utils";
 import styler from "react-css-styler";
-import { drag } from "@daybrush/drag";
+import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableState, MoveableProps } from "./types";
 import { getDraggableDragger } from "./DraggableDragger";
 import { getMoveableDragger } from "./MoveableDragger";
-import { createIdentityMatrix, minus, caculate, convertPositionMatrix, sum, getOrigin } from "./matrix";
-import { dot } from "@daybrush/utils";
+import { minus, sum, getOrigin } from "./matrix";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -28,6 +31,7 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         scalable: false,
         resizable: false,
         warpable: false,
+        pinchable: false,
         keepRatio: true,
         origin: true,
         throttleDrag: 0,
@@ -52,10 +56,10 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
     };
     public state: MoveableState = {
         target: null,
-        beforeMatrix: createIdentityMatrix(3),
-        matrix: createIdentityMatrix(3),
+        beforeMatrix: createIdentityMatrix3(),
+        matrix: createIdentityMatrix3(),
+        targetMatrix: createIdentityMatrix3(),
         targetTransform: "",
-        targetMatrix: createIdentityMatrix(3),
         is3d: false,
         left: 0,
         top: 0,
@@ -72,9 +76,13 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
+        isRotate: false,
+        isScale: false,
+        isResize: false,
     };
-    private moveableDragger!: ReturnType<typeof drag> | null;
-    private draggableDragger!: ReturnType<typeof drag> | null;
+    private moveableDragger!: Dragger;
+    private draggableDragger!: Dragger;
+    private pinchableDragger!: Dragger;
     private controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
     public isMoveableElement(target: HTMLElement) {
@@ -114,14 +122,8 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         this.moveableDragger = getMoveableDragger(this, this.controlBox.getElement());
     }
     public componentWillUnmount() {
-        if (this.draggableDragger) {
-            this.draggableDragger.unset();
-            this.draggableDragger = null;
-        }
-        if (this.moveableDragger) {
-            this.moveableDragger.unset();
-            this.moveableDragger = null;
-        }
+        unset(this, "draggableDragger");
+        unset(this, "moveableDragger");
     }
     public renderRotation() {
         if (!this.props.rotatable) {
@@ -175,14 +177,14 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         }
         const { pos1, pos2, pos3, pos4 } = this.state;
 
-        const linePosFrom1 = pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
-        const linePosFrom2 = pos1.map((pos, i) => dot(pos, pos2[i], 2, 1));
-        const linePosFrom3 = pos1.map((pos, i) => dot(pos, pos3[i], 1, 2));
-        const linePosFrom4 = pos1.map((pos, i) => dot(pos, pos3[i], 2, 1));
-        const linePosTo1 = pos3.map((pos, i) => dot(pos, pos4[i], 1, 2));
-        const linePosTo2 = pos3.map((pos, i) => dot(pos, pos4[i], 2, 1));
-        const linePosTo3 = pos2.map((pos, i) => dot(pos, pos4[i], 1, 2));
-        const linePosTo4 = pos2.map((pos, i) => dot(pos, pos4[i], 2, 1));
+        const linePosFrom1 = getMiddleLinePos(pos1, pos2);
+        const linePosFrom2 = getMiddleLinePos(pos2, pos1);
+        const linePosFrom3 = getMiddleLinePos(pos1, pos3);
+        const linePosFrom4 = getMiddleLinePos(pos3, pos1);
+        const linePosTo1 = getMiddleLinePos(pos3, pos4);
+        const linePosTo2 = getMiddleLinePos(pos4, pos3);
+        const linePosTo3 = getMiddleLinePos(pos2, pos4);
+        const linePosTo4 = getMiddleLinePos(pos4, pos2);
 
         return [
             <div className={prefix("line")} key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1)}></div>,
@@ -224,18 +226,15 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         });
     }
     public updateRect(isNotSetState?: boolean) {
-        const target = this.props.target;
+        const { target, container, draggable, pinchable } = this.props;
         const state = this.state;
+
         if (state.target !== target) {
-            if (this.draggableDragger) {
-                this.draggableDragger.unset();
-                this.draggableDragger = null;
-            }
-            if (target && this.props.draggable) {
-                this.draggableDragger = getDraggableDragger(this, target);
+            unset(this, "draggableDragger");
+            if (target && (draggable || pinchable)) {
+                this.draggableDragger = getDraggableDragger(this, target, draggable, pinchable);
             }
         }
-        const container = this.props.container;
         this.updateState(getTargetInfo(target, container), isNotSetState);
     }
     public updateTarget() {
@@ -243,14 +242,15 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             width,
             height,
             beforeMatrix,
+            is3d,
         } = this.state;
-        const target = this.props.target!;
-        const container = this.props.container!;
-        const is3d = beforeMatrix.length === 16;
+        const {
+            target, container,
+        } = this.props;
         let n = is3d ? 4 : 3;
         const [, offsetMatrix, matrix, targetMatrix, targetTransform, transformOrigin] = caculateMatrixStack(
-            target,
-            container,
+            target!,
+            container!,
             true,
             beforeMatrix,
             n,
@@ -263,17 +263,13 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             pos3,
             pos4,
             direction,
-        ] = caculatePosition(
+        ] = caculateMoveablePosition(
             matrix,
             transformOrigin, width, height,
         );
         n = offsetMatrix.length === 16 ? 4 : 3;
         const beforeOrigin = minus(
-            caculate(
-                offsetMatrix,
-                convertPositionMatrix(sum(transformOrigin, getOrigin(targetMatrix, n)), n),
-                n,
-            ),
+            caculatePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), n),
             [left, top],
         );
         const [rotationRad, rotationPos] = getRotationInfo(pos1, pos2, direction);

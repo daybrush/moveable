@@ -1,6 +1,6 @@
 import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, dot } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
@@ -16,6 +16,10 @@ import {
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
+}
+
+export function createIdentityMatrix3() {
+    return createIdentityMatrix(3);
 }
 
 export function getTransform(target: SVGElement | HTMLElement, isInit: true): number[];
@@ -127,17 +131,19 @@ export function caculateMatrixStack(
             origin = getTransformOrigin(style).map(pos => parseFloat(pos));
         }
         if (tagName === "svg" && targetMatrix) {
-            matrixes.push(getSVGMatrix(el as SVGSVGElement, n));
-            matrixes.push(createIdentityMatrix(n));
+            matrixes.push(
+                getSVGMatrix(el as SVGSVGElement, n),
+                createIdentityMatrix(n),
+            );
         }
 
-        matrixes.push(getAbsoluteMatrix(matrix, n, origin));
-        matrixes.push(createOriginMatrix([
-            hasNotOffset ? el : offsetLeft,
-            hasNotOffset ? origin : offsetTop,
-        ],
-            n,
-        ));
+        matrixes.push(
+            getAbsoluteMatrix(matrix, n, origin),
+            createOriginMatrix([
+                hasNotOffset ? el : offsetLeft,
+                hasNotOffset ? origin : offsetTop,
+            ], n),
+        );
         if (!targetMatrix) {
             targetMatrix = matrix;
         }
@@ -253,7 +259,17 @@ export function getSVGGraphicsOffset(
         origin[1] - top,
     ];
 }
+export function caculatePosition(matrix: number[], pos: number[], n: number) {
+    return caculate(matrix, convertPositionMatrix(pos, n), n);
+}
+export function caculateRect(matrix: number[], width: number, height: number, n: number) {
+    const pos1 = caculatePosition(matrix, [0, 0], n);
+    const pos2 = caculatePosition(matrix, [width, 0], n);
+    const pos3 = caculatePosition(matrix, [0, height], n);
+    const pos4 = caculatePosition(matrix, [width, height], n);
 
+    return [pos1, pos2, pos3, pos4];
+}
 export function getSVGOffset(
     el: SVGElement,
     container: HTMLElement | SVGElement | null,
@@ -271,16 +287,15 @@ export function getSVGOffset(
         beforeMatrix,
         absoluteMatrix,
     );
-    const pos1 = caculate(mat, convertPositionMatrix([0, 0], n), n);
-    const pos2 = caculate(mat, convertPositionMatrix([width, 0], n), n);
-    const pos3 = caculate(mat, convertPositionMatrix([0, height], n), n);
-    const pos4 = caculate(mat, convertPositionMatrix([width, height], n), n);
-    const posOrigin = caculate(mat, convertPositionMatrix(origin, n), n);
-    const prevLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
-    const prevTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
+    const poses = caculateRect(mat, width, height, n);
+    const posesX = poses.map(pos => pos[0]);
+    const posesY = poses.map(pos => pos[1]);
+    const posOrigin = caculatePosition(mat, origin, n);
+    const prevLeft = Math.min(...posesX);
+    const prevTop = Math.min(...posesY);
     const prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
-    const prevWidth = Math.max(pos1[0], pos2[0], pos3[0], pos4[0]) - prevLeft;
-    const prevHeight = Math.max(pos1[1], pos2[1], pos3[1], pos4[1]) - prevTop;
+    const prevWidth = Math.max(...posesX) - prevLeft;
+    const prevHeight = Math.max(...posesY) - prevTop;
     const rectOrigin = [
         rectLeft + prevOrigin[0] * rectWidth / prevWidth,
         rectTop + prevOrigin[1] * rectHeight / prevHeight,
@@ -289,9 +304,10 @@ export function getSVGOffset(
     let count = 0;
 
     while (++count < 10) {
+        const inverseBeforeMatrix = invert(beforeMatrix, n);
         [offset[0], offset[1]] = minus(
-            caculate(invert(beforeMatrix, n), convertPositionMatrix(rectOrigin, n), n),
-            caculate(invert(beforeMatrix, n), convertPositionMatrix(posOrigin, n), n),
+            caculatePosition(inverseBeforeMatrix, rectOrigin, n),
+            caculatePosition(inverseBeforeMatrix, posOrigin, n),
         );
         const mat2 = multiplies(
             n,
@@ -299,12 +315,9 @@ export function getSVGOffset(
             createOriginMatrix(offset, n),
             absoluteMatrix,
         );
-        const nextPos1 = caculate(mat2, convertPositionMatrix([0, 0], n), n);
-        const nextPos2 = caculate(mat2, convertPositionMatrix([width, 0], n), n);
-        const nextPos3 = caculate(mat2, convertPositionMatrix([0, height], n), n);
-        const nextPos4 = caculate(mat2, convertPositionMatrix([width, height], n), n);
-        const nextLeft = Math.min(nextPos1[0], nextPos2[0], nextPos3[0], nextPos4[0]);
-        const nextTop = Math.min(nextPos1[1], nextPos2[1], nextPos3[1], nextPos4[1]);
+        const nextPoses = caculateRect(mat2, width, height, n);
+        const nextLeft = Math.min(...nextPoses.map(pos => pos[0]));
+        const nextTop = Math.min(...nextPoses.map(pos => pos[1]));
         const distLeft = nextLeft - rectLeft;
         const distTop = nextTop - rectTop;
 
@@ -316,7 +329,7 @@ export function getSVGOffset(
     }
     return offset.map(p => Math.round(p));
 }
-export function caculatePosition(matrix: number[], origin: number[], width: number, height: number): [
+export function caculateMoveablePosition(matrix: number[], origin: number[], width: number, height: number): [
     number[],
     number[],
     number[],
@@ -327,11 +340,13 @@ export function caculatePosition(matrix: number[], origin: number[], width: numb
 ] {
     const is3d = matrix.length === 16;
     const n = is3d ? 4 : 3;
-    let [x1, y1] = caculate(matrix, convertPositionMatrix([0, 0], n), n);
-    let [x2, y2] = caculate(matrix, convertPositionMatrix([width, 0], n), n);
-    let [x3, y3] = caculate(matrix, convertPositionMatrix([0, height], n), n);
-    let [x4, y4] = caculate(matrix, convertPositionMatrix([width, height], n), n);
-    let [originX, originY] = caculate(matrix, convertPositionMatrix(origin, n), n);
+    let [
+        [x1, y1],
+        [x2, y2],
+        [x3, y3],
+        [x4, y4],
+    ] = caculateRect(matrix, width, height, n);
+    let [originX, originY] = caculatePosition(matrix, origin, n);
 
     const minX = Math.min(x1, x2, x3, x4);
     const minY = Math.min(y1, y2, y3, y4);
@@ -468,7 +483,7 @@ export function getRotationInfo(
 export function getTargetInfo(
     target?: MoveableProps["target"],
     container?: MoveableProps["container"],
-): MoveableState {
+): Partial<MoveableState> {
     let left = 0;
     let top = 0;
     let origin = [0, 0];
@@ -476,9 +491,9 @@ export function getTargetInfo(
     let pos2 = [0, 0];
     let pos3 = [0, 0];
     let pos4 = [0, 0];
-    let beforeMatrix = createIdentityMatrix(3);
-    let matrix = createIdentityMatrix(3);
-    let targetMatrix = createIdentityMatrix(3);
+    let beforeMatrix = createIdentityMatrix3();
+    let matrix = createIdentityMatrix3();
+    let targetMatrix = createIdentityMatrix3();
     let width = 0;
     let height = 0;
     let transformOrigin = [0, 0];
@@ -516,13 +531,13 @@ export function getTargetInfo(
             pos3,
             pos4,
             direction,
-        ] = caculatePosition(matrix, transformOrigin, width, height);
+        ] = caculateMoveablePosition(matrix, transformOrigin, width, height);
 
         const n = is3d ? 4 : 3;
         let beforePos = [0, 0];
         [
             beforePos, beforeOrigin, , , , , beforeDirection,
-        ] = caculatePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height);
+        ] = caculateMoveablePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height);
 
         beforeOrigin = [
             beforeOrigin[0] + beforePos[0] - left,
@@ -557,7 +572,9 @@ export function getTargetInfo(
         transformOrigin,
     };
 }
-
+export function getMiddleLinePos(pos1: number[], pos2: number[]) {
+    return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
+}
 export function getPosition(target: SVGElement | HTMLElement) {
     const position = target.getAttribute("data-position")!;
 
@@ -626,7 +643,12 @@ export function warp(
     h[8] = 1;
     return convertDimension(h, 3, 4);
 }
-
+export function unset(self: any, name: string) {
+    if (self[name]) {
+        self[name].unset();
+        self[name] = null;
+    }
+}
 export function getTargetPosition(target: HTMLElement | SVGElement, container?: HTMLElement | SVGElement | null) {
     const rect = target.getBoundingClientRect();
     let left = rect.left;

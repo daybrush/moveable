@@ -8,6 +8,8 @@ export interface MoveableProps {
     draggable?: boolean;
     scalable?: boolean;
     resizable?: boolean;
+    pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
+
     warpable?: boolean;
     keepRatio?: boolean;
 
@@ -19,19 +21,19 @@ export interface MoveableProps {
     onWarpStart?: (e: OnWarpStart) => void;
     onWarp?: (e: OnWarp) => void;
     onWarpEnd?: (e: OnWarpEnd) => void;
-    onRotateStart?: (e: OnRotateStart) => void;
+    onRotateStart?: (e: OnRotateStart) => any;
     onRotate?: (e: OnRotate) => void;
     onRotateEnd?: (e: OnRotateEnd) => void;
 
-    onDragStart?: (e: OnDragStart) => void;
+    onDragStart?: (e: OnDragStart) => any;
     onDrag?: (e: OnDrag) => void;
     onDragEnd?: (e: OnDragEnd) => void;
 
-    onScaleStart?: (e: OnScaleStart) => void;
+    onScaleStart?: (e: OnScaleStart) => any;
     onScale?: (e: OnScale) => void;
     onScaleEnd?: (e: OnScaleEnd) => void;
 
-    onResizeStart?: (e: OnResizeStart) => void;
+    onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => void;
     onResizeEnd?: (e: OnResizeEnd) => void;
 }
@@ -58,6 +60,9 @@ export interface MoveableState {
     pos2: number[];
     pos3: number[];
     pos4: number[];
+    isRotate: boolean;
+    isResize: boolean;
+    isScale: boolean;
 }
 
 /**

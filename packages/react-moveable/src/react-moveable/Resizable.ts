@@ -1,15 +1,17 @@
 import Moveable from "./Moveable";
 import { getRad, throttle } from "./utils";
-import { dragStart, getDragDist } from "./Draggable";
+import { setDragStart, getDragDist } from "./Dragger";
 
-export function resizeStart(moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY }: any) {
+export function resizeStart(
+    moveable: Moveable, position: number[] | undefined, { datas, clientX, clientY, pinchFlag }: any) {
     const target = moveable.props.target;
 
     if (!target || !position) {
         return false;
     }
     const { width, height } = moveable.state;
-    dragStart(moveable, { datas });
+
+    !pinchFlag && setDragStart(moveable, { datas });
 
     datas.datas = {};
     datas.position = position;
@@ -18,14 +20,19 @@ export function resizeStart(moveable: Moveable, position: number[] | undefined, 
     datas.prevWidth = 0;
     datas.prevHeight = 0;
 
-    moveable.props.onResizeStart!({
+    const result = moveable.props.onResizeStart!({
         datas: datas.datas,
         target,
         clientX,
         clientY,
     });
+
+    if (result !== false) {
+        moveable.state.isResize = true;
+    }
+    return result;
 }
-export function resize(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
+export function resize(moveable: Moveable, { datas, clientX, clientY, distX, distY, pinchFlag, pinchDistance }: any) {
     const {
         position,
         width,
@@ -33,30 +40,40 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
         prevWidth,
         prevHeight,
     } = datas;
-    const dist = getDragDist({ datas, distX, distY });
-
-    let distWidth = position[0] * dist[0];
-    let distHeight = position[1] * dist[1];
+    const {
+        target,
+        keepRatio,
+        throttleResize,
+        onResize,
+    } = moveable.props;
+    let distWidth: number;
+    let distHeight: number;
 
     // diagonal
-    if (
-        moveable.props.keepRatio
-        && position[0] && position[1]
-        && width && height
-    ) {
-        const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
-        const rad = getRad([0, 0], dist);
-        const standardRad = getRad([0, 0], position);
-        const distDiagonal = Math.cos(rad - standardRad) * size;
+    if (pinchFlag) {
+        distWidth = pinchDistance;
+        distHeight = pinchDistance * height / width;
+    } else {
+        const dist = getDragDist({ datas, distX, distY });
 
-        distWidth = distDiagonal;
-        distHeight = distDiagonal * height / width;
+        distWidth = position[0] * dist[0];
+        distHeight = position[1] * dist[1];
+        if (
+            keepRatio
+            && position[0] && position[1]
+            && width && height
+        ) {
+            const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+            const rad = getRad([0, 0], dist);
+            const standardRad = getRad([0, 0], position);
+            const distDiagonal = Math.cos(rad - standardRad) * size;
+
+            distWidth = distDiagonal;
+            distHeight = distDiagonal * height / width;
+        }
     }
-
-    const throttleResize = moveable.props.throttleResize!;
-
-    distWidth = throttle(distWidth, throttleResize);
-    distHeight = throttle(distHeight, throttleResize);
+    distWidth = throttle(distWidth, throttleResize!);
+    distHeight = throttle(distHeight, throttleResize!);
 
     const nextWidth = width + distWidth;
     const nextHeight = height + distHeight;
@@ -68,8 +85,8 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
     if (delta.every(num => !num)) {
         return;
     }
-    moveable.props.onResize!({
-        target: moveable.props.target!,
+    onResize!({
+        target: target!,
         width: nextWidth,
         height: nextHeight,
         dist: [distWidth, distHeight],
@@ -79,9 +96,10 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
         clientY,
     });
 
-    moveable.updateRect();
+    !pinchFlag && moveable.updateRect();
 }
-export function resizeEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
+export function resizeEnd(moveable: Moveable, { datas, isDrag, clientX, clientY, pinchFlag }: any) {
+    moveable.state.isResize = false;
     moveable.props.onScaleEnd!({
         target: moveable.props.target!,
         datas: datas.datas,
@@ -89,7 +107,7 @@ export function resizeEnd(moveable: Moveable, { datas, isDrag, clientX, clientY 
         clientY,
         isDrag,
     });
-    if (isDrag) {
+    if (isDrag && !pinchFlag) {
         moveable.updateRect();
     }
 }

@@ -9,7 +9,7 @@ import {
     minus,
 } from "./matrix";
 import { NEARBY_POS } from "./consts";
-import { dragStart, getDragDist } from "./Draggable";
+import { setDragStart, getDragDist } from "./Dragger";
 
 function getTriangleRad(pos1: number[], pos2: number[], pos3: number[]) {
     // pos1 Rad
@@ -47,7 +47,7 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
     datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
     datas.position = position;
 
-    dragStart(moveable, { datas });
+    setDragStart(moveable, { datas });
     datas.poses = [
         [0, 0],
         [width, 0],

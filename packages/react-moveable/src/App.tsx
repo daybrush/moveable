@@ -42,14 +42,15 @@ class App extends React.Component {
                     keepRatio={false}
                     origin={true}
                     draggable={true}
-                    // scalable={!isResizable}
-                    // resizable={isResizable}
-                    warpable={true}
+                    scalable={!isResizable}
+                    resizable={isResizable}
+                    // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
                     throttleRotate={0}
                     rotatable={true}
+                    pinchable={true}
                     onRotate={({ target, beforeDelta }) => {
                         item.set("rotate", `${parseFloat(item.get("rotate")) + beforeDelta}deg`);
                         target.style.cssText += item.toCSS();
