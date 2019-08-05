@@ -30,46 +30,63 @@ const frame = new Frame({
 function setTransform(target: HTMLElement | SVGElement) {
     target.style.cssText = frame.toCSS();
 }
-function setLabel(clientX: number, clientY: number, text) {
+function setLabel(clientX: number, clientY: number, text: string) {
     // tslint:disable-next-line: max-line-length
-    labelElement.style.cssText = `display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
+
+    labelElement.style.cssText = `
+    display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
+
     labelElement.innerHTML = text;
 }
+
+
 const moveable = new Moveable(moveableElement.parentElement, {
     target: moveableElement,
-    container: moveableElement.parentElement,
     origin: false,
     draggable: true,
     rotatable: true,
     scalable: true,
+    pinchable: true,
     keepRatio: false,
     throttleDrag: 1,
     throttleScale: 0.01,
     throttleRotate: 0.2,
     throttleResize: 1,
-}).on("drag", ({ target, left, top, clientX, clientY }) => {
+}).on("pinch", ({ clientX, clientY }) => {
+    setTimeout(() => {
+        setLabel(clientX, clientY, `X: ${frame.get("left")}
+        <br/>Y: ${frame.get("top")}
+        <br/>W: ${frame.get("width")}
+        <br/>H: ${frame.get("height")}
+        <br/>S: ${frame.get("transform", "scaleX").toFixed(2)}, ${frame.get("transform", "scaleY").toFixed(2)}
+        <br/>R: ${parseFloat(frame.get("transform", "rotate")).toFixed(1)}deg
+        `);
+    });
+}).on("drag", ({ target, left, top, clientX, clientY, isPinch }) => {
     frame.set("left", `${left}px`);
     frame.set("top", `${top}px`);
     setTransform(target);
-    setLabel(clientX, clientY, `X: ${left}px<br/>Y: ${top}px`);
-}).on("scale", ({ target, dist, clientX, clientY }) => {
+    !isPinch && setLabel(clientX, clientY, `X: ${left}px<br/>Y: ${top}px`);
+
+}).on("scale", ({ target, dist, clientX, clientY, isPinch }) => {
     const scaleX = frame.get("transform", "scaleX") * dist[0];
     const scaleY = frame.get("transform", "scaleY") * dist[1];
     frame.set("transform", "scaleX", scaleX);
     frame.set("transform", "scaleY", scaleY);
     setTransform(target);
-    setLabel(clientX, clientY, `S: ${scaleX.toFixed(2)}, ${scaleY.toFixed(2)}`);
-}).on("rotate", ({ target, beforeDelta, clientX, clientY }) => {
+    !isPinch && setLabel(clientX, clientY, `S: ${scaleX.toFixed(2)}, ${scaleY.toFixed(2)}`);
+
+}).on("rotate", ({ target, beforeDelta, clientX, clientY, isPinch }) => {
     const deg = parseFloat(frame.get("transform", "rotate")) + beforeDelta;
 
     frame.set("transform", "rotate", `${deg}deg`);
     setTransform(target);
-    setLabel(clientX, clientY, `R: ${deg.toFixed(1)}`);
-}).on("resize", ({ target, width, height, clientX, clientY }) => {
+    !isPinch && setLabel(clientX, clientY, `R: ${deg.toFixed(1)}`);
+}).on("resize", ({ target, width, height, clientX, clientY, isPinch }) => {
     frame.set("width", `${width}px`);
     frame.set("height", `${height}px`);
     setTransform(target);
-    setLabel(clientX, clientY, `W: ${width}px<br/>H: ${height}px`);
+    !isPinch &&  setLabel(clientX, clientY, `W: ${width}px<br/>H: ${height}px`);
 }).on("warp", ({ target, multiply, delta, clientX, clientY }) => {
     frame.set("transform", "matrix3d", multiply(frame.get("transform", "matrix3d"), delta));
     setTransform(target);
@@ -89,7 +106,6 @@ const moveable = new Moveable(moveableElement.parentElement, {
 const draggableElement: HTMLElement = document.querySelector(".draggable");
 const draggable = new Moveable(draggableElement.parentElement, {
     target: draggableElement,
-    container: draggableElement.parentElement,
     origin: false,
     draggable: true,
 }).on("drag", ({ target, transform }) => {
@@ -99,7 +115,6 @@ const draggable = new Moveable(draggableElement.parentElement, {
 const resizableElement: HTMLElement = document.querySelector(".resizable");
 const resizable = new Moveable(resizableElement.parentElement, {
     target: resizableElement,
-    container: resizableElement.parentElement,
     origin: false,
     resizable: true,
 }).on("resize", ({ target, width, height }) => {
@@ -110,7 +125,6 @@ const resizable = new Moveable(resizableElement.parentElement, {
 const scalableElement: HTMLElement = document.querySelector(".scalable");
 const scalable = new Moveable(scalableElement.parentElement, {
     target: scalableElement,
-    container: scalableElement.parentElement,
     origin: false,
     scalable: true,
 }).on("scale", ({ target, transform }) => {
@@ -120,7 +134,6 @@ const scalable = new Moveable(scalableElement.parentElement, {
 const rotatableElement: HTMLElement = document.querySelector(".rotatable");
 const rotatable = new Moveable(rotatableElement.parentElement, {
     target: rotatableElement,
-    container: rotatableElement.parentElement,
     origin: false,
     rotatable: true,
 }).on("rotate", ({ target, transform }) => {
@@ -129,7 +142,6 @@ const rotatable = new Moveable(rotatableElement.parentElement, {
 const warpableElement: HTMLElement = document.querySelector(".warpable");
 const warpable = new Moveable(warpableElement.parentElement, {
     target: warpableElement,
-    container: warpableElement.parentElement,
     warpable: true,
     origin: false,
 }).on("warp", ({ target, transform }) => {
@@ -139,7 +151,6 @@ const warpable = new Moveable(warpableElement.parentElement, {
 const originElement: HTMLElement = document.querySelector(".origin");
 const origin = new Moveable(originElement.parentElement, {
     target: originElement,
-    container: originElement.parentElement,
     origin: true,
     draggable: true,
     rotatable: true,
@@ -150,6 +161,24 @@ const origin = new Moveable(originElement.parentElement, {
     target.style.transform = transform;
 });
 
+const pinchableElement: HTMLElement = document.querySelector(".pinchable");
+const scale = [1, 1];
+let rotate = 0;
+const pinchable = new Moveable(pinchableElement.parentElement, {
+    target: pinchableElement,
+    pinchable: ["rotatable", "scalable"],
+    origin: false,
+}).on("rotate", ({ beforeDelta }) => {
+    rotate += beforeDelta;
+
+    pinchableElement.style.transform = `scale(${scale.join(", ")}) rotate(${rotate}deg)`;
+}).on("scale", ({ delta }) => {
+    scale[0] += delta[0];
+    scale[1] += delta[1];
+
+    pinchableElement.style.transform = `scale(${scale.join(", ")}) rotate(${rotate}deg)`;
+});
+
 window.addEventListener("resize", () => {
     moveable.updateRect();
     draggable.updateRect();
@@ -157,6 +186,7 @@ window.addEventListener("resize", () => {
     scalable.updateRect();
     rotatable.updateRect();
     warpable.updateRect();
+    pinchable.updateRect();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
