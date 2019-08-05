@@ -1,7 +1,7 @@
 {
   "name": "moveable",
-  "version": "0.5.0",
-  "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable.",
+  "version": "0.6.0",
+  "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
   "sideEffects": false,
@@ -26,6 +26,7 @@
     "rotatable",
     "movable",
     "warpable",
+    "pinchable",
     "dom",
     "resize",
     "scale",
@@ -35,7 +36,8 @@
     "rotate",
     "react",
     "preact",
-    "throttle"
+    "throttle",
+    "pinchi"
   ],
   "repository": {
     "type": "git",

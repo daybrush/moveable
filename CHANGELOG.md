@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [0.6.0] - 2019-08-06
+### Added
+- Support SVG Elements #13
+- Support SVG Transform Origin in Safari, iOS #13
+- Add datas parameter to send data #12
+- Add pinchable option and events #11
+
+### Fixed
+* The default value of `container` option is fixed to `parentElement`.
+* Fix Rotatable for distorted axis.
+
 ## [0.5.0] - 2019-07-31
 ### Added
 - Add destroy method. #14
