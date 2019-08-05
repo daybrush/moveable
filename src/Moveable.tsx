@@ -6,7 +6,7 @@ import { MoveableOptions } from "./types";
 import {
     OnDragStart, OnDrag, OnResize, OnResizeStart,
     OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
-    OnRotateEnd, OnDragEnd, OnRotate, OnScale, OnWarpStart, OnWarpEnd, OnWarp,
+    OnRotateEnd, OnDragEnd, OnRotate, OnScale, OnWarpStart, OnWarpEnd, OnWarp, OnPinchStart, OnPinch, OnPinchEnd,
 } from "react-moveable/declaration/types";
 
 /**
@@ -23,11 +23,12 @@ class Moveable extends EgComponent {
     constructor(parentElement: HTMLElement | SVGElement, options: MoveableOptions = {}) {
         super();
         const element = document.createElement("div");
+        const nextOptions = { container: parentElement, ...options };
 
         render(
             <InnerMoveable
                 ref={ref(this, "innerMoveable")}
-                {...options}
+                {...nextOptions}
                 onDragStart={this.onDragStart}
                 onDrag={this.onDrag}
                 onDragEnd={this.onDragEnd}
@@ -43,6 +44,9 @@ class Moveable extends EgComponent {
                 onWarpStart={this.onWarpStart}
                 onWarp={this.onWarp}
                 onWarpEnd={this.onWarpEnd}
+                onPinchStart={this.onPinchStart}
+                onPinch={this.onPinch}
+                onPinchEnd={this.onPinchEnd}
             />,
             element,
         );
@@ -171,6 +175,23 @@ class Moveable extends EgComponent {
         });
     }
     /**
+     * Whether or not target can be pinched with draggable, resizable, scalable, rotatable
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.pinchable = true;
+     */
+    get pinchable(): boolean | Array<"rotatable" | "scalable" | "resizable"> {
+        return this.getMoveableProps().pinchable;
+    }
+    set pinchable(pinchable: boolean | Array<"rotatable" | "scalable" | "resizable">) {
+        this.innerMoveable.setState({
+            pinchable,
+        });
+    }
+    /**
      * When resize or scale, keeps a ratio of the width, height.
      * @example
      * import Moveable from "moveable";
@@ -254,19 +275,6 @@ class Moveable extends EgComponent {
         this.innerMoveable.setState({
             throttleRotate,
         });
-    }
-    /**
-     * Move the moveable as much as the `pos`.
-     * @param - the values of x and y to move moveable.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.move([0, -10]);
-     */
-    public move(pos: number[]) {
-        this.getMoveable().move(pos);
     }
     /**
      * Check if the target is an element included in the moveable.
@@ -378,6 +386,15 @@ class Moveable extends EgComponent {
     }
     private onWarpEnd = (e: OnWarpEnd) => {
         this.trigger("warpEnd", e);
+    }
+    private onPinchStart = (e: OnPinchStart) => {
+        this.trigger("pinchStart", e);
+    }
+    private onPinch = (e: OnPinch) => {
+        this.trigger("pinch", e);
+    }
+    private onPinchEnd = (e: OnPinchEnd) => {
+        this.trigger("pinchEnd", e);
     }
 }
 
@@ -539,19 +556,19 @@ class Moveable extends EgComponent {
  * });
  */
 
- /**
- * When the warp starts, the warpStart event is called.
- * @memberof Moveable
- * @event warpStart
- * @param {Moveable.OnWarpStart} - Parameters for the warpStart event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, { warpable: true });
- * moveable.on("warpStart", ({ target }) => {
- *     console.log(target);
- * });
- */
+/**
+* When the warp starts, the warpStart event is called.
+* @memberof Moveable
+* @event warpStart
+* @param {Moveable.OnWarpStart} - Parameters for the warpStart event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, { warpable: true });
+* moveable.on("warpStart", ({ target }) => {
+*     console.log(target);
+* });
+*/
 /**
  * When warping, the warp event is called.
  * @memberof Moveable
@@ -585,6 +602,76 @@ class Moveable extends EgComponent {
  *     console.log(target, isDrag);
  * });
  */
+/**
+ * When the pinch starts, the pinchStart event is called with part of scaleStart, rotateStart, resizeStart
+ * @memberof Moveable
+ * @event pinchStart
+ * @param {Moveable.OnPinchStart} - Parameters for the pinchStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     rotatable: true,
+ *     scalable: true,
+ *     pinchable: true, // ["rotatable", "scalable"]
+ * });
+ * moveable.on("pinchStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("rotateStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("scaleStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When pinching, the pinch event is called with part of scale, rotate, resize
+ * @memberof Moveable
+ * @event pinch
+ * @param {Moveable.OnPinch} - Parameters for the pinch event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     rotatable: true,
+ *     scalable: true,
+ *     pinchable: true, // ["rotatable", "scalable"]
+ * });
+ * moveable.on("pinch", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("rotate", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("scale", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When the pinch finishes, the pinchEnd event is called.
+ * @memberof Moveable
+ * @event pinchEnd
+ * @param {Moveable.OnPinchEnd} - Parameters for the pinchEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     rotatable: true,
+ *     scalable: true,
+ *     pinchable: true, // ["rotatable", "scalable"]
+ * });
+ * moveable.on("pinchEnd", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("rotateEnd", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("scaleEnd", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+
 export default Moveable;
 
 declare interface Moveable {
@@ -603,6 +690,9 @@ declare interface Moveable {
     on(eventName: "warp", handlerToAttach: (event: OnWarp) => any): this;
     on(eventName: "warpStart", handlerToAttach: (event: OnWarpStart) => any): this;
     on(eventName: "warpEnd", handlerToAttach: (event: OnWarpEnd) => any): this;
+    on(eventName: "pinch", handlerToAttach: (event: OnPinch) => any): this;
+    on(eventName: "pinchStart", handlerToAttach: (event: OnPinchStart) => any): this;
+    on(eventName: "pinchEnd", handlerToAttach: (event: OnPinchEnd) => any): this;
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
 }

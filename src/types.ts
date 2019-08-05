@@ -6,6 +6,7 @@
  * @property - Whether or not target can be scaled.
  * @property - Whether or not target can be rotated.
  * @property - Whether or not target can be warped.
+ * @property - Whether or not target can be pinched with draggable, resizable, scalable, rotatable.
  * @property - Whether or not the origin controlbox will be visible or not
  * @property - The target to indicate Moveable Control Box.
  * @property - Moveable Container.
@@ -21,6 +22,7 @@ export interface MoveableOptions {
     scalable?: boolean;
     rotatable?: boolean;
     warpable?: boolean;
+    pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
     origin?: boolean;
     target?: SVGElement | HTMLElement;
     container?: SVGElement | HTMLElement | null;

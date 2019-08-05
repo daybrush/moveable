@@ -104,6 +104,7 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         clientX,
         clientY,
         datas: datas.datas,
+        isPinch: !!pinchFlag,
     });
 
     !pinchFlag && moveable.updateTarget();

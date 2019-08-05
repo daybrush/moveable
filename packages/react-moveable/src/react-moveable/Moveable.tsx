@@ -53,6 +53,9 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         onWarpStart: () => { },
         onWarp: () => { },
         onWarpEnd: () => { },
+        onPinchStart: () => { },
+        onPinch: () => { },
+        onPinchEnd: () => { },
     };
     public state: MoveableState = {
         target: null,
@@ -76,9 +79,12 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
+        isDrag: false,
         isRotate: false,
         isScale: false,
         isResize: false,
+        isPinch: false,
+        isWarp: false,
     };
     private moveableDragger!: Dragger;
     private draggableDragger!: Dragger;
@@ -215,22 +221,20 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
             this.draggableDragger.onDragStart(e);
         }
     }
-    public move(pos: number[]) {
-        if (!pos[0] && !pos[1]) {
-            return;
-        }
-        const { left, top } = this.state;
-        this.setState({
-            left: left + pos[0],
-            top: top + pos[1],
-        });
-    }
     public updateRect(isNotSetState?: boolean) {
         const { target, container, draggable, pinchable } = this.props;
         const state = this.state;
 
         if (state.target !== target) {
             unset(this, "draggableDragger");
+            this.updateState({
+                isDrag: false,
+                isRotate: false,
+                isScale: false,
+                isResize: false,
+                isWarp: false,
+                isPinch: false,
+            }, true);
             if (target && (draggable || pinchable)) {
                 this.draggableDragger = getDraggableDragger(this, target, draggable, pinchable);
             }

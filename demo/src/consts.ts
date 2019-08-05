@@ -191,6 +191,48 @@ return (
 );
         `,
     },
+    pinchable: {
+        vanilla: `
+import Moveable from "moveable";
+const scale = [1, 1];
+let rotate = 0;
+
+const pinchable = new Moveable(document.body, {
+    target: document.querySelector(".pinchable"),
+    pinchable: ["rotatable", "scalable"],
+}).on("rotate", ({ target, beforeDelta }) => {
+    rotate += beforeDelta;
+    target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";
+}).on("scale", ({ target, delta }) => {
+    scale[0] += delta[0];
+    scale[1] += delta[1];
+    target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";
+});`,
+    react: `
+import Moveable from "react-moveable";
+this.scale = [1, 1];
+this.rotate = 0;
+
+return (
+    <Moveable
+        target={document.querySelector(".pinchable")}
+        pinchable={["rotatable", "scalable"]},
+        onRotate={({ target, beforeDelta }) => {
+            this.rotate += beforeDelta;
+            target.style.transform
+                = "scale(" + this.scale.join(", ") + ") "
+                + "rotate(" + this.rotate + "deg)";
+        }}
+        onScale={({ target, beforeDelta }) => {
+            this.scale[0] += delta[0];
+            this.scale[1] += delta[1];
+            target.style.transform
+                = "scale(" + this.scale.join(", ") + ") "
+                + "rotate(" + this.rotate + "deg)";
+        }}
+    />
+);`,
+    },
     origin: {
         vanilla: `
 import Moveable from "moveable";

@@ -169,7 +169,7 @@ a {
     font-weight: 600;
 }
 
-.draggable, .resizable, .scalable, .rotatable, .origin {
+.draggable, .resizable, .scalable, .rotatable, .origin, .warpable, .pinchable {
     position: absolute;
     left: 0;
 }

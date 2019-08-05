@@ -94,6 +94,7 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
         delta,
         clientX,
         clientY,
+        isPinch: !!pinchFlag,
     });
 
     !pinchFlag && moveable.updateRect();

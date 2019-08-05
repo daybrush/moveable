@@ -44,7 +44,7 @@
 </tr>
 <tr>
 <td align="center"><strong>Warpable</strong></td>
-<td align="center"><strong>Pinchable(Soon)</strong></td>
+<td align="center"><strong>Pinchable</strong></td>
 <td align="center"><strong></strong></td>
 <td align="center"><strong></strong></td>
 </tr>
@@ -85,7 +85,8 @@ import Moveable from "moveable";
 
 const moveable = new Moveable(document.body, {
     target: document.querySelector(".target"),
-    container: null,
+    // If the container is null, the position is fixed. (default: parentElement(document.body))
+    container: document.body,
     draggable: true,
     resizable: true,
     scalable: true,
@@ -176,6 +177,20 @@ moveable.on("warpStart", ({ target, clientX, clientY }) => {
     target.style.transform = `matrix3d(${this.matrix.join(",")})`;
 }).on("warpEnd", ({ target, isDrag, clientX, clientY }) => {
     console.log("onWarpEnd", target, isDrag);
+});
+
+/* pinchable */
+// Enabling pincable lets you use events that
+// can be used in draggable, resizable, scalable, and rotateable.
+moveable.on("pinchStart", ({ target, clientX, clientY }) => {
+    // pinchStart event occur before dragStart, rotateStart, scaleStart, resizeStart
+    console.log("onPinchStart");
+}).on("pinch", ({ target, clientX, clientY, datas }) => {
+    // pinch event occur before drag, rotate, scale, resize
+    console.log("onPinch");
+}).on("pinchEnd", ({ isDrag, target, clientX, clientY, datas }) => {
+    // pinchEnd event occur before dragEnd, rotateEnd, scaleEnd, resizeEnd
+    console.log("onPinchEnd");
 });
 ```
 

@@ -130,6 +130,7 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY, pinchRotat
         beforeDist,
         beforeDelta,
         transform: `${datas.transform} rotate(${dist}deg)`,
+        isPinch: !!pinchFlag,
     });
 
     !pinchFlag && moveable.updateTarget();

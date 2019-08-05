@@ -60,12 +60,16 @@ export function warpStart(moveable: Moveable, position: number[] | undefined, { 
         (position[0] === -1 ? 0 : 1)
         + (position[1] === -1 ? 0 : 2);
     datas.prevMatrix = createIdentityMatrix(4);
-    return moveable.props.onWarpStart!({
+    const result = moveable.props.onWarpStart!({
         target,
         clientX,
         clientY,
         datas: datas.datas,
     });
+    if (result !== false) {
+        moveable.state.isWarp = true;
+    }
+    return result;
 }
 export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY }: any) {
     const { posNum, poses, targetInverseMatrix, prevMatrix } = datas;
@@ -116,6 +120,7 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
 }
 
 export function warpEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
+    moveable.state.isWarp = false;
     moveable.props.onWarpEnd!({
         target: moveable.props.target!,
         clientX,

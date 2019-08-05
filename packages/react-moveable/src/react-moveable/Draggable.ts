@@ -6,9 +6,10 @@ import { minus } from "./matrix";
 export function dragStart(moveable: Moveable, { datas, clientX, clientY }: any) {
     const target = moveable.props.target!;
     const style = window.getComputedStyle(target);
+    const state = moveable.state;
     const {
         targetTransform,
-    } = moveable.state;
+    } = state;
 
     datas.datas = {};
     datas.left = parseFloat(style.left || "") || 0;
@@ -21,12 +22,19 @@ export function dragStart(moveable: Moveable, { datas, clientX, clientY }: any) 
 
     datas.prevDist = [0, 0];
     datas.prevBeforeDist = [0, 0];
-    return moveable.props.onDragStart!({
+    const result = moveable.props.onDragStart!({
         datas: datas.datas,
         target,
         clientX,
         clientY,
     });
+
+    if (result !== false) {
+        state.isDrag = true;
+    } else {
+        state.isPinch = false;
+    }
+    return result;
 }
 export function drag(moveable: Moveable, { datas, distX, distY, clientX, clientY, inputEvent }: any) {
     inputEvent.preventDefault();
@@ -71,12 +79,15 @@ export function drag(moveable: Moveable, { datas, distX, distY, clientX, clientY
         bottom,
         clientX,
         clientY,
+        isPinch: moveable.state.isPinch,
     });
     moveable.updateTarget();
 }
 
 export function dragEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
     const { target, onDragEnd } = moveable.props;
+
+    moveable.state.isDrag = false;
     onDragEnd!({
         target: target!,
         isDrag,

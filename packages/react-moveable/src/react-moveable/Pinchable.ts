@@ -17,8 +17,9 @@ function getRotatiion(touches: Client[]) {
 export function pinchStart(moveable: Moveable, { datas, clientX, clientY, touches }: OnPinchStart) {
     datas.scaleDatas = {};
     datas.rotateDatas = {};
+    datas.pinchDatas = {};
 
-    const { pinchable, rotatable, scalable, resizable } = moveable.props;
+    const { pinchable, rotatable, scalable, resizable, target } = moveable.props;
 
     const isRotatable = pinchable && (pinchable === true ? rotatable : pinchable.indexOf("rotatable") > -1);
     const isResizable = pinchable && (pinchable === true ? resizable : pinchable.indexOf("resizable") > -1);
@@ -26,6 +27,13 @@ export function pinchStart(moveable: Moveable, { datas, clientX, clientY, touche
         ? false
         : (pinchable && (pinchable === true ? scalable : pinchable.indexOf("scalable") > -1));
 
+    moveable.state.isPinch = true;
+    moveable.props.onPinchStart!({
+        target: target!,
+        clientX,
+        clientY,
+        datas: datas.pinchDatas,
+    });
     if (isRotatable) {
         rotateStart(moveable, {
             datas: datas.rotateDatas,
@@ -51,6 +59,7 @@ export function pinchStart(moveable: Moveable, { datas, clientX, clientY, touche
             pinchFlag: true,
         });
     }
+    moveable.state.isPinch = true;
 }
 export function pinch(
     moveable: Moveable, { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent }: OnPinch) {
@@ -59,6 +68,12 @@ export function pinch(
     inputEvent.preventDefault();
     inputEvent.stopPropagation();
 
+    moveable.props.onPinch!({
+        target: moveable.props.target!,
+        clientX,
+        clientY,
+        datas: datas.pinchDatas,
+    });
     if (isRotate) {
         rotate(moveable, {
             datas: datas.rotateDatas,
@@ -86,12 +101,19 @@ export function pinch(
             pinchFlag: true,
         });
     }
-
     moveable.updateRect();
 }
 export function pinchEnd(moveable: Moveable, { datas, clientX, clientY, isPinch }: OnPinchEnd) {
     const { isRotate, isScale, isResize } = moveable.state;
 
+    moveable.state.isPinch = false;
+    moveable.props.onPinchEnd!({
+        target: moveable.props.target!,
+        isDrag: isPinch,
+        clientX,
+        clientY,
+        datas: datas.pinchDatas,
+    });
     if (isRotate) {
         rotateEnd(moveable, {
             datas: datas.rotateDatas,

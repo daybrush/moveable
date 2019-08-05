@@ -48,11 +48,12 @@
   },
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
-    "@daybrush/drag": "^0.6.0",
+    "@daybrush/drag": "^0.8.0",
     "@daybrush/utils": "^0.10.0",
+    "@egjs/agent": "^2.1.5",
     "@egjs/component": "^2.1.2",
     "framework-utils": "^0.1.0",
-    "preact-moveable": "^0.6.3"
+    "preact-moveable": "^0.8.1"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.1",

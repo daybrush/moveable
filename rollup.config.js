@@ -13,6 +13,7 @@ const external = {
     "@daybrush/utils": "@daybrush/utils",
     "@daybrush/drag": "@daybrush/drag",
     "framework-utils": "framework-utils",
+    "@egjs/agent": "eg.Agent",
 };
 export default builder([
     {
