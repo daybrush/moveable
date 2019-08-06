@@ -1,3 +1,11 @@
+import {
+    OnDragStart, OnDrag, OnDragEnd,
+    OnResizeStart, OnResize, OnResizeEnd,
+    OnScaleStart, OnScale, OnScaleEnd,
+    OnWarpStart, OnWarp, OnWarpEnd,
+    OnPinchStart, OnPinch, OnPinchEnd,
+} from "react-moveable/declaration/types";
+
 /**
  * @memberof Moveable
  * @typedef
@@ -31,4 +39,25 @@ export interface MoveableOptions {
     throttleScale?: number;
     throttleRotate?: number;
     keepRatio?: boolean;
+}
+
+export interface MoveableGetterSetter extends Pick<MoveableOptions, Exclude<keyof MoveableOptions, "container">> {
+
+}
+export interface MoveableEvents {
+    dragStart: OnDragStart;
+    drag: OnDrag;
+    dragEnd: OnDragEnd;
+    resizeStart: OnResizeStart;
+    resize: OnResize;
+    resizeEnd: OnResizeEnd;
+    scaleStart: OnScaleStart;
+    scale: OnScale;
+    scaleEnd: OnScaleEnd;
+    warpStart: OnWarpStart;
+    warp: OnWarp;
+    warpEnd: OnWarpEnd;
+    pinchStart: OnPinchStart;
+    pinch: OnPinch;
+    pinchEnd: OnPinchEnd;
 }

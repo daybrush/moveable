@@ -7,7 +7,8 @@
 		"jsdoc-format": false,
 		"forin": false,
 		"no-console": false,
-		"no-any": false,
+        "no-any": false,
+        "no-empty-interface": false,
 		"interface-name": false,
 		"indent": [
 			true,

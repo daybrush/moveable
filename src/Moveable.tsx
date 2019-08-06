@@ -1,19 +1,35 @@
 import EgComponent from "@egjs/component";
-import { ref } from "framework-utils";
+import { ref, Properties } from "framework-utils";
 import { h, render } from "preact";
 import InnerMoveable from "./InnerMoveable";
-import { MoveableOptions } from "./types";
+import { MoveableOptions, MoveableGetterSetter } from "./types";
 import {
     OnDragStart, OnDrag, OnResize, OnResizeStart,
     OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
     OnRotateEnd, OnDragEnd, OnRotate, OnScale, OnWarpStart, OnWarpEnd, OnWarp, OnPinchStart, OnPinch, OnPinchEnd,
 } from "react-moveable/declaration/types";
+import { PROPERTIES, EVENTS } from "./consts";
+import { camelize } from "@daybrush/utils";
 
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
  * @sort 1
  * @extends eg.Component
  */
+@Properties(PROPERTIES, (prototype, property) => {
+    Object.defineProperty(prototype, property, {
+        get() {
+            return this.getMoveable().props[property];
+        },
+        set(value) {
+            this.innerMoveable.setState({
+                [property]: value,
+            });
+        },
+        enumerable: true,
+        configurable: true,
+    });
+})
 class Moveable extends EgComponent {
     private innerMoveable!: InnerMoveable;
 
@@ -25,256 +41,21 @@ class Moveable extends EgComponent {
         const element = document.createElement("div");
         const nextOptions = { container: parentElement, ...options };
 
+        const events: any = {};
+
+        EVENTS.forEach(name => {
+            events[camelize(`on ${name}`)] = (e: any) => this.trigger(name, e);
+        });
+
         render(
             <InnerMoveable
                 ref={ref(this, "innerMoveable")}
                 {...nextOptions}
-                onDragStart={this.onDragStart}
-                onDrag={this.onDrag}
-                onDragEnd={this.onDragEnd}
-                onResizeStart={this.onResizeStart}
-                onResize={this.onResize}
-                onResizeEnd={this.onResizeEnd}
-                onScaleStart={this.onScaleStart}
-                onScale={this.onScale}
-                onScaleEnd={this.onScaleEnd}
-                onRotateStart={this.onRotateStart}
-                onRotate={this.onRotate}
-                onRotateEnd={this.onRotateEnd}
-                onWarpStart={this.onWarpStart}
-                onWarp={this.onWarp}
-                onWarpEnd={this.onWarpEnd}
-                onPinchStart={this.onPinchStart}
-                onPinch={this.onPinch}
-                onPinchEnd={this.onPinchEnd}
+                {...events}
             />,
             element,
         );
         parentElement.appendChild(element.children[0]);
-    }
-    /**
-     * Whether or not the origin controlbox will be visible or not
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.origin = true;
-     */
-    get origin() {
-        return this.getMoveableProps().origin;
-    }
-    set origin(origin: boolean) {
-        this.innerMoveable.setState({
-            origin,
-        });
-    }
-    /**
-     * The target to indicate Moveable Control Box.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     * moveable.target = document.querySelector(".target");
-     */
-    get target(): HTMLElement | SVGElement {
-        return this.getMoveableProps().target;
-    }
-    set target(target: HTMLElement | SVGElement) {
-        if (target !== this.target) {
-            this.innerMoveable.setState({
-                target,
-            });
-        } else {
-            this.updateRect();
-        }
-    }
-    /**
-     * Whether or not target can be dragged.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.draggable = true;
-     */
-    get draggable(): boolean {
-        return this.getMoveableProps().draggable || false;
-    }
-    set draggable(draggable: boolean) {
-        this.innerMoveable.setState({
-            draggable,
-        });
-    }
-    /**
-     * Whether or not target can be resized.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.resizable = true;
-     */
-    get resizable(): boolean {
-        return this.getMoveableProps().resizable;
-    }
-    set resizable(resizable: boolean) {
-        this.innerMoveable.setState({
-            resizable,
-        });
-    }
-    /**
-     * Whether or not target can scaled.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.scalable = true;
-     */
-    get scalable(): boolean {
-        return this.getMoveableProps().scalable;
-    }
-    set scalable(scalable: boolean) {
-        this.innerMoveable.setState({
-            scalable,
-        });
-    }
-    /**
-     * Whether or not target can be rotated.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.rotatable = true;
-     */
-    get rotatable(): boolean {
-        return this.getMoveableProps().rotatable;
-    }
-    set rotatable(rotatable: boolean) {
-        this.innerMoveable.setState({
-            rotatable,
-        });
-    }
-    /**
-     * Whether or not target can be warped.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.warpable = true;
-     */
-    get warpable(): boolean {
-        return this.getMoveableProps().warpable;
-    }
-    set warpable(warpable: boolean) {
-        this.innerMoveable.setState({
-            warpable,
-        });
-    }
-    /**
-     * Whether or not target can be pinched with draggable, resizable, scalable, rotatable
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.pinchable = true;
-     */
-    get pinchable(): boolean | Array<"rotatable" | "scalable" | "resizable"> {
-        return this.getMoveableProps().pinchable;
-    }
-    set pinchable(pinchable: boolean | Array<"rotatable" | "scalable" | "resizable">) {
-        this.innerMoveable.setState({
-            pinchable,
-        });
-    }
-    /**
-     * When resize or scale, keeps a ratio of the width, height.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.keepRatio = true;
-     */
-    get keepRatio(): boolean {
-        return this.getMoveable().props.keepRatio;
-    }
-    set keepRatio(keepRatio: boolean) {
-        this.innerMoveable.setState({
-            keepRatio,
-        });
-    }
-    /**
-     * throttle of x, y when drag.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.throttleDrag = 1;
-     */
-    get throttleDrag(): number {
-        return this.getMoveable().props.throttleDrag;
-    }
-    set throttleDrag(throttleDrag: number) {
-        this.innerMoveable.setState({
-            throttleDrag,
-        });
-    }
-    /**
-     * throttle of width, height when resize.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.throttleResize = 1;
-     */
-    get throttleResize(): number {
-        return this.getMoveable().props.throttleResize;
-    }
-    set throttleResize(throttleResize: number) {
-        this.innerMoveable.setState({
-            throttleResize,
-        });
-    }
-    /**
-     * throttle of scaleX, scaleY when scale.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.throttleScale = 0.1;
-     */
-    get throttleScale(): number {
-        return this.getMoveable().props.throttleScale;
-    }
-    set throttleScale(throttleScale: number) {
-        this.innerMoveable.setState({
-            throttleScale,
-        });
-    }
-    /**
-     * hrottle of angle(degree) when rotate.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.throttleRotate = 1;
-     */
-    get throttleRotate(): number {
-        return this.getMoveable().props.throttleRotate;
-    }
-    set throttleRotate(throttleRotate: number) {
-        this.innerMoveable.setState({
-            throttleRotate,
-        });
     }
     /**
      * Check if the target is an element included in the moveable.
@@ -339,65 +120,136 @@ class Moveable extends EgComponent {
     private getMoveable() {
         return this.innerMoveable.preactMoveable;
     }
-    private getMoveableProps() {
-        return this.getMoveable().props;
-    }
-    private onDragStart = (e: OnDragStart) => {
-        this.trigger("dragStart", e);
-    }
-    private onDrag = (e: OnDrag) => {
-        this.trigger("drag", e);
-    }
-    private onDragEnd = (e: OnDragEnd) => {
-        this.trigger("dragEnd", e);
-    }
-    private onResizeStart = (e: OnResizeStart) => {
-        this.trigger("resizeStart", e);
-    }
-    private onResize = (e: OnResize) => {
-        this.trigger("resize", e);
-    }
-    private onResizeEnd = (e: OnResizeEnd) => {
-        this.trigger("resizeEnd", e);
-    }
-    private onScaleStart = (e: OnScaleStart) => {
-        this.trigger("scaleStart", e);
-    }
-    private onScale = (e: OnScale) => {
-        this.trigger("scale", e);
-    }
-    private onScaleEnd = (e: OnScaleEnd) => {
-        this.trigger("scaleEnd", e);
-    }
-    private onRotateStart = (e: OnRotateStart) => {
-        this.trigger("rotateStart", e);
-    }
-    private onRotate = (e: OnRotate) => {
-        this.trigger("rotate", e);
-    }
-    private onRotateEnd = (e: OnRotateEnd) => {
-        this.trigger("rotateEnd", e);
-    }
-    private onWarpStart = (e: OnWarpStart) => {
-        this.trigger("warpStart", e);
-    }
-    private onWarp = (e: OnWarp) => {
-        this.trigger("warp", e);
-    }
-    private onWarpEnd = (e: OnWarpEnd) => {
-        this.trigger("warpEnd", e);
-    }
-    private onPinchStart = (e: OnPinchStart) => {
-        this.trigger("pinchStart", e);
-    }
-    private onPinch = (e: OnPinch) => {
-        this.trigger("pinch", e);
-    }
-    private onPinchEnd = (e: OnPinchEnd) => {
-        this.trigger("pinchEnd", e);
-    }
 }
-
+/**
+ * Whether or not the origin controlbox will be visible or not
+ * @name Moveable#origin
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.origin = true;
+ */
+/**
+ * The target to indicate Moveable Control Box.
+ * @name Moveable#target
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.target = document.querySelector(".target");
+ */
+/**
+ * Whether or not target can be dragged.
+ * @name Moveable#draggable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.draggable = true;
+ */
+/**
+ * Whether or not target can be resized.
+ * @name Moveable#resizable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.resizable = true;
+ */
+/**
+ * Whether or not target can scaled.
+ * @name Moveable#scalable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.scalable = true;
+ */
+/**
+ * Whether or not target can be rotated.
+ * @name Moveable#rotatable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.rotatable = true;
+ */
+/**
+ * Whether or not target can be warped.
+ * @name Moveable#warpable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.warpable = true;
+ */
+/**
+ * Whether or not target can be pinched with draggable, resizable, scalable, rotatable
+ * @name Moveable#pinchable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.pinchable = true;
+ */
+/**
+ * When resize or scale, keeps a ratio of the width, height.
+ * @name Moveable#keepRatio
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.keepRatio = true;
+ */
+/**
+ * throttle of x, y when drag.
+ * @name Moveable#throttleDrag
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleDrag = 1;
+ */
+/**
+ * throttle of width, height when resize.
+ * @name Moveable#throttleResize
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleResize = 1;
+ */
+/**
+ * throttle of scaleX, scaleY when scale.
+ * @name Moveable#throttleScale
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleScale = 0.1;
+ */
+/**
+ * hrottle of angle(degree) when rotate.
+ * @name Moveable#throttleRotate
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleRotate = 1;
+ */
 /**
  * When the drag starts, the dragStart event is called.
  * @memberof Moveable
@@ -672,9 +524,7 @@ class Moveable extends EgComponent {
  * });
  */
 
-export default Moveable;
-
-declare interface Moveable {
+interface Moveable extends MoveableGetterSetter {
     on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
     on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
     on(eventName: "dragEnd", handlerToAttach: (event: OnDragEnd) => any): this;
@@ -696,3 +546,5 @@ declare interface Moveable {
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
 }
+
+export default Moveable;
