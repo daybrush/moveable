@@ -333,8 +333,8 @@ class Moveable extends EgComponent {
         const el = this.getMoveable().base;
 
         el.remove ? el.remove() : el.parentElement.removeChild(el);
-        this.innerMoveable = null;
         this.getMoveable().componentWillUnmount();
+        this.innerMoveable = null;
     }
     private getMoveable() {
         return this.innerMoveable.preactMoveable;
