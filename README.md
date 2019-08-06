@@ -94,7 +94,7 @@ const moveable = new Moveable(document.body, {
     warpable: true,
     // Enabling pincable lets you use events that
     // can be used in draggable, resizable, scalable, and rotateable.
-    pinchable: true, // ["draggable", "resizable", "scalable", "rotatable"]
+    pinchable: true, // ["resizable", "scalable", "rotatable"]
     origin: true,
     keepRatio: true,
     throttleDrag: 0,
