@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [0.6.1] - 2019-08-06
 ### Fixed
-- fix destroy method for property release issue.
+- fix destroy method for property release issue. #18
 
 ## [0.6.0] - 2019-08-06
 ### Added
