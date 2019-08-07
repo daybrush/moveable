@@ -1,0 +1,244 @@
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+.page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.page:nth-child(2n) {
+  background: #f0f0f0;
+}
+
+.container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.moveable {
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  width: 250px;
+  height: 200px;
+  text-align: center;
+  font-size: 40px;
+  margin: 0px auto;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
+.moveable span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.description {
+  text-align: center;
+}
+
+.badges {
+  padding: 10px;
+  text-align: center;
+}
+
+.badges img {
+  height: 20px;
+}
+
+.buttons.able a {
+  min-width: auto;
+  padding: 8px 20px;
+}
+
+.buttons {
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+}
+
+.buttons a {
+  margin: 0;
+  position: relative;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #333;
+  padding: 12px 30px;
+  min-width: 140px;
+  text-align: center;
+  /* font-weight: 400; */
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 5px;
+  transition: all ease 0.5s;
+}
+
+.buttons a:hover, .buttons a.selected {
+  background: #333;
+  color: #fff;
+}
+
+.page.main {
+  z-index: 1;
+  min-height: 700px;
+}
+
+.label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 5px;
+  border-radius: 5px;
+  background: #333;
+  z-index: 10;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  display: none;
+  transform: translate(-100%, -100%);
+}
+
+.page.feature, .page.footer {
+  height: auto;
+  text-align: left;
+  padding: 60px 20px;
+}
+
+.page.feature .container, .page.footer .container {
+  top: 0;
+  left: 0;
+  padding: 60px 0px;
+  margin: auto;
+  transform: none;
+  width: auto;
+  max-width: 800px;
+}
+
+.page.feature .container {
+  display: flex;
+}
+
+.page.footer .container {
+  padding: 0px;
+}
+
+.page.feature h2.container {
+  padding: 10px 0px;
+  font-weight: 300;
+  font-size: 40px;
+}
+
+.feature .container .left {
+  position: relative;
+  width: 300px;
+  height: 205px;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 2000;
+  margin-bottom: 20px;
+}
+
+.feature .container .right {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  flex: 1;
+}
+
+.feature .right .description {
+  text-align: left;
+  margin: 0px 0px 10px;
+}
+
+.feature .right .description strong {
+  font-weight: 600;
+}
+
+.draggable, .resizable, .scalable, .rotatable, .origin, .warpable, .pinchable {
+  position: absolute;
+  left: 0;
+}
+
+.origin {
+  transform-origin: 30% 50%;
+}
+
+pre {
+  position: relative;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  padding: 10px;
+  max-width: 500px;
+}
+
+code.hljs {
+  padding: 0;
+}
+
+.tab {
+  padding: 10px 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 1px solid #ccc;
+  box-shadow: none;
+  font-weight: bold;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.tab.selected {
+  background: #333;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.selected {
+  display: block;
+}
+
+.page.footer {
+  font-weight: 400;
+}
+
+.page.footer a {
+  text-decoration: underline;
+}
+
+.page.footer span:first-child:before {
+  content: "";
+}
+
+.page.footer span:before {
+  content: "/";
+}
+
+@media screen and (max-width: 750px) {
+  .page.feature .container {
+    display: block;
+  }
+  .page.feature .container {
+    text-align: center;
+  }
+  .page.feature .left, .page.feature .right {
+    display: block;
+    margin: 0px auto 20px;
+  }
+  .page.feature .right {
+    text-align: left;
+  }
+}

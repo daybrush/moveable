@@ -1,0 +1,35 @@
+<div class="label"></div>
+<div class="page main">
+  <div class="container">
+    <div class="moveable" #target><span>Moveable</span></div>
+    <div class="buttons able">
+      <a href="#" data-able="scalable" [class]="scalable ? 'selected' : ''" (click)="clickScalable()" >Scalable</a>
+      <a href="#" data-able="resizable" [class]="resizable ? 'selected' : ''" (click)="clickResizable()">Resizable</a>
+      <a href="#" data-able="warpable" [class]="warpable ? 'selected' : ''" (click)="clickWarpable()">Warpable</a>
+    </div>
+    <p align="middle">An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable,
+      Pinchable.</p>
+    <p align="middle">
+      <a href="https://github.com/daybrush/moveable" target="_blank"><strong>About Moveable</strong></a> /
+      <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
+      <a href="https://github.com/daybrush/scenejs-timeline" target="_blank"><strong>Main Project</strong></a>
+    </p>
+
+    <ngx-moveable
+      [target]="target"
+      [draggable]="true"
+      [origin]="false"
+      [rotatable]="true"
+      [pinchable]="true"
+      [scalable]="scalable"
+      [resizable]="resizable"
+      [warpable]="warpable"
+      [keepRatio]="false"
+      [throttleDrag]="1"
+      [throttleScale]="0.01"
+      [throttleRotate]="0.2"
+      [throttleResize]="1"
+      >
+    </ngx-moveable>
+  </div>
+</div>
