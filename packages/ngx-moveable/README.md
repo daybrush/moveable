@@ -6,6 +6,12 @@
 <a href="https://www.npmjs.com/package/ngx-moveable" target="_blank"><img src="https://img.shields.io/npm/v/ngx-moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
+<a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
+<a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img alt="Preact" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
+<a href="https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&color=C82B38"></a>
+<a href="https://github.com/probil/vue-moveable" target="_blank"><img
+    alt="Vue"
+    src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
 </p>
 <p align="middle">An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.</p>
 <p align="middle">
@@ -14,7 +20,7 @@
   <a href="https://github.com/daybrush/scenejs-timeline" target="_blank"><strong>Main Project</strong></a>
 </p>
 <p align="middle">
-  <a href="#"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" /></a>
+  <a href="https://codesandbox.io/s/ngx-moveable-demo-o6o5w" target="_blank"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" /></a>
 </p>
 
 <table width="100%" align="center">
@@ -74,7 +80,70 @@ $ npm i ngx-moveable
 
 ## 🚀 How to use
 ```js
-import { NgxMoveableComponent } from "ngx-moveable";
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { NgxMoveableModule, NgxMoveableComponent } from '../ngx-moveable';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    NgxMoveableComponent,
+  ],
+  imports: [
+    BrowserModule,
+    // NgxMoveableModule,
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+### Template
+```html
+<ngx-moveable
+  [target]="target"
+  [origin]="true"
+
+  [draggable]="true"
+  [throttleDrag]="0"
+  (drgStart)="onDragStart($event)"
+  (drag)="onDrag($event)"
+  (dragEnd)="onDragEnd($event)"
+
+
+  [keepRatio]="false"
+
+  [resizable]="false"
+  [throttleResize]="0"
+  (resizeStart)="onResizeStart($event)"
+  (resize)="onDrag($event)"
+  (resizeEnd)="onResizeEnd($event)"
+  
+  [scalable]="false"
+  [throttleScale]="0"
+  (scaleStart)="onScaleStart($event)"
+  (scale)="onScale($event)"
+  (sacleEnd)="onScaleEnd($event)"
+
+
+  [rotatable]="false"
+  [throttleRotate]="0"
+  (rotateStart)="onRotateStart($event)"
+  (rotate)="onRotate($event)"
+  (rotateEnd)="onRotateEnd($event)"
+
+  [warpable]="false"
+  (warpStart)="onRotateStart($event)"
+  (warp)="onRotate($event)"
+  (warpEnd)="onRotateEnd($event)"
+
+  [pinchable]="false"
+  (pinchStart)="onPinchStart($event)"
+  (pinch)="onPinch($event)"
+  (pinchEnd)="onPinchEnd($event)"
+/>
 ```
 
 
