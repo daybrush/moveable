@@ -30,7 +30,7 @@ export default builder([
         uglify: true,
     },
     {
-        input: "src/index.umd.ts",
+        input: "src/index.esm.ts",
         output: "./dist/moveable.esm.js",
         exports: "named",
         format: "es",

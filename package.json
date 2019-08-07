@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
