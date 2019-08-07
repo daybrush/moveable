@@ -42,7 +42,7 @@
     "bugs": {
         "url": "https://github.com/daybrush/moveable/issues"
     },
-    "homepage": "https://github.com/daybrush/moveable#readme",
+    "homepage": "https://daybrush.com/moveable",
     "devDependencies": {
         "@daybrush/builder": "^0.1.0",
         "@scenejs/effects": "^1.0.1",
