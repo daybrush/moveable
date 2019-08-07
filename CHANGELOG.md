@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.3] - 2019-08-07
+### Fixed
+- fix missing throttleScale
+
 ## [0.6.2] - 2019-08-07
 ### Fixed
 - Update framework-utils and It reduced sizes by 2 kb based on min file.
