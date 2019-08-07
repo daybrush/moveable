@@ -1,4 +1,4 @@
-<div class="label"></div>
+<div class="label" #label></div>
 <div class="page main">
   <div class="container">
     <div class="moveable" #target><span>Moveable</span></div>
@@ -16,6 +16,7 @@
     </p>
 
     <ngx-moveable
+      #moveable
       [target]="target"
       [draggable]="true"
       [origin]="false"
@@ -29,6 +30,18 @@
       [throttleScale]="0.01"
       [throttleRotate]="0.2"
       [throttleResize]="1"
+      (drag)="onDrag($event)"
+      (resize)="onResize($event)"
+      (scale)="onScale($event)"
+      (warp)="onWarp($event)"
+      (rotate)="onRotate($event)"
+      (pinch)="onPinch($event)"
+      (dragEnd)="onEnd()"
+      (resizeEnd)="onEnd()"
+      (scaleEnd)="onEnd()"
+      (warpEnd)="onEnd()"
+      (rotateEnd)="onEnd()"
+      (pinchEnd)="onEnd()"
       >
     </ngx-moveable>
   </div>
