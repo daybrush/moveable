@@ -8,13 +8,13 @@ const draggable = new Moveable(document.body, {
     target: document.querySelector(".draggable"),
     draggable: true,
     throttleDrag: 0,
-}).on("drag", ({ left, top, beforeDelta }) => {
-    e.target.style.left = left + "px";
-    e.target.style.top = top + "px";
+}).on("drag", ({ target, left, top, beforeDelta }) => {
+    target.style.left = left + "px";
+    target.style.top = top + "px";
 
     /* translate[0] += beforeDelta[0]; */
     /* translate[1] += beforeDelta[1]; */
-    /* e.target.style.transform
+    /* target.style.transform
         = "translateX(" + translate[0] + "px) "
         + "translateY(" + translate[1] + "px)"; */
 });
@@ -27,20 +27,53 @@ return (
         target={document.querySelector(".draggable")}
         draggable={true}
         throttleDrag={0}
-        onDrag={({ left, top, beforeDelta }) => {
-            e.target.style.left = left + "px";
-            e.target.style.top = top + "px";
+        onDrag={({ target, left, top, beforeDelta }) => {
+            target.style.left = left + "px";
+            target.style.top = top + "px";
 
             /* const translate = this.translate */
             /* translate[0] += beforeDelta[0]; */
             /* translate[1] += beforeDelta[1]; */
-            /* e.target.style.transform
+            /* target.style.transform
                 = "translateX(" + translate[0] + "px) "
                 + "translateY(" + translate[1] + "px)"; */
         }}
     />
 );
         `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [draggable]="true"
+    [throttleDrag]="0"
+    (drag)="onDrag($event)
+    />
+${"`"},
+})
+export class AppComponent {
+    translate = [0, 0];
+    onDrag({ target, left, top, beforeDelta }) {
+        target.style.left = left + "px";
+        target.style.top = top + "px";
+
+        /* const translate = this.translate */
+        /* translate[0] += beforeDelta[0]; */
+        /* translate[1] += beforeDelta[1]; */
+        /* target.style.transform
+            = "translateX(" + translate[0] + "px) "
+            + "translateY(" + translate[1] + "px)"; */
+    }
+}
+`,
     },
     resizable: {
         vanilla: `
@@ -51,10 +84,10 @@ const resizable = new Moveable(document.body, {
     resizable: true,
     throttleResize: 0,
     keepRatio: true,
-}).on("resize", e => {
-    console.log(e.width, e.height, e.dist);
-    e.target.style.width = e.width + "px";
-    e.target.style.height = e.height + "px";
+}).on("resize", ({ target, width, height, dist }) => {
+    console.log(width, height, dist);
+    target.style.width = width + "px";
+    target.style.height = height + "px";
 });
         `,
         react: `
@@ -66,13 +99,40 @@ return (
         resizable={true}
         throttleResize={0}
         keepRatio={true}
-        onResize={e => {
-            console.log(e.width, e.height, e.dist);
-            e.target.style.width = e.width + "px";
-            e.target.style.height = e.height + "px";
+        onResize={({ target, width, height, dist }) => {
+            console.log(width, height, dist);
+            target.style.width = width + "px";
+            target.style.height = height + "px";
         }}
     />
 );
+        `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [resizable]="true"
+    [throttleResize]="0"
+    [keepRatio]="true"
+    (resize)="onResize($event)
+    />
+${"`"},
+})
+export class AppComponent {
+    onResize({ target, width, height, dist }) {
+        console.log(width, height, dist);
+        target.style.width = width + "px";
+        target.style.height = height + "px";
+    }
+}
         `,
     },
     scalable: {
@@ -85,10 +145,10 @@ const scalable = new Moveable(document.body, {
     scalable: true,
     throttleScale: 0,
     keepRatio: true,
-}).on("scale", ({ dist }) => {
+}).on("scale", ({ target, dist }) => {
     scale[0] *= dist[0];
     scale[1] *= dist[1];
-    e.target.style.transform = "scale(" + scale[0] +  "," + scale[1] + ")";
+    target.style.transform = "scale(" + scale[0] +  "," + scale[1] + ")";
 });
         `,
         react: `
@@ -101,15 +161,45 @@ return (
         scalable={true}
         throttleScale={0}
         keepRatio={true}
-        onScale={({ dist }) => {
+        onScale={({ target, dist }) => {
             const scale = this.scale;
             scale[0] *= dist[0];
             scale[1] *= dist[1];
-            e.target.style.transform
+            target.style.transform
                 = "scale(" + scale[0] +  "," + scale[1] + ")";
         }}
     />
 );
+        `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [scalable]="true"
+    [throttleScale]="0"
+    [keepRatio]="true"
+    (scale)="onScale($event)
+    />
+${"`"},
+})
+export class AppComponent {
+    scale = [1, 1];
+    onScale({ target, dist }) {
+        const scale = this.scale;
+        scale[0] *= dist[0];
+        scale[1] *= dist[1];
+        target.style.transform
+            = "scale(" + scale[0] +  "," + scale[1] + ")";
+    }
+}
         `,
     },
     rotatable: {
@@ -122,9 +212,9 @@ const rotatable = new Moveable(document.body, {
     target: document.querySelector(".rotatable"),
     rotatable: true,
     throttleRotate: 0,
-}).on("rotate", ({ beforeDelta, delta }) => {
+}).on("rotate", ({ target, beforeDelta, delta }) => {
     rotate += delta;
-    e.target.style.transform
+    target.style.transform
         = "rotate(" + rotate +  "deg)";
 });
         `,
@@ -138,13 +228,41 @@ return (
         target={document.querySelector(".rotatable")}
         rotatable={true}
         throttleRotate={0}
-        onRotate={({ beforeDelta, delta }) => {
+        onRotate={({ target, beforeDelta, delta }) => {
             this.rotate += delta;
-            e.target.style.transform
+            target.style.transform
                 = "rotate(" + this.rotate +  "deg)";
         }}
     />
 );
+        `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [rotatable]="true"
+    [throttleRotate]="0"
+    [keepRatio]="true"
+    (rotate)="onRotate($event)
+    />
+${"`"},
+})
+export class AppComponent {
+    rotate = 0;
+    onRotate({ target, delta }) {
+        this.rotate += delta;
+        target.style.transform
+            = "rotate(" + this.rotate +  "deg)";
+    }
+}
         `,
     },
     warpable: {
@@ -162,9 +280,9 @@ const warpable = new Moveable(document.body, {
     target: document.querySelector(".warpable"),
     warpable: true,
     throttleRotate: 0,
-}).on("warp", ({ multiply, delta }) => {
+}).on("warp", ({ target, multiply, delta }) => {
     matrix = multiply(matrix, delta);
-    e.target.style.transform
+    target.style.transform
         = "matrix3d(" + matrix.join(",") +  ")";
 });
         `,
@@ -182,13 +300,44 @@ return (
     <Moveable
         target={document.querySelector(".warpable")}
         warpable={true}
-        onWarp={({ multiply, delta }) => {
+        onWarp={({ target, multiply, delta }) => {
             this.matrix = multiply(this.matrix, delta);
-            e.target.style.transform
+            target.style.transform
                 = "matrix3d(" + matrix.join(",") +  ")";
         }}
     />
 );
+        `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [warpable]="true"
+    (warp)="onWarp($event)
+    />
+${"`"},
+})
+export class AppComponent {
+    matrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+    onWarp({ target, dist }) {
+        this.matrix = multiply(this.matrix, delta);
+        target.style.transform
+            = "matrix3d(" + matrix.join(",") +  ")";
+    }
+}
         `,
     },
     pinchable: {
@@ -208,7 +357,7 @@ const pinchable = new Moveable(document.body, {
     scale[1] += delta[1];
     target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";
 });`,
-    react: `
+        react: `
 import Moveable from "react-moveable";
 this.scale = [1, 1];
 this.rotate = 0;
@@ -232,6 +381,42 @@ return (
         }}
     />
 );`,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+    <div #target class="target">target</div>
+    <ngx-moveable
+        [target]="target"
+        [pinchable]="['rotatable', 'scalable']"
+        [rotate]="onRotate($event)"
+        [scale]="onScale($event)"
+/>
+${"`"},
+})
+export class AppComponent {
+    scale = [1, 1];
+    rotate = 0;
+    onRotate({ target, beforeDelta }) {
+        this.rotate += beforeDelta;
+        target.style.transform
+            = "scale(" + this.scale.join(", ") + ") "
+            + "rotate(" + this.rotate + "deg)";
+    }
+    onScale({ target, beforeDelta }) {
+        this.scale[0] += delta[0];
+        this.scale[1] += delta[1];
+        target.style.transform
+            = "scale(" + this.scale.join(", ") + ") "
+            + "rotate(" + this.rotate + "deg)";
+    }
+}
+`,
     },
     origin: {
         vanilla: `
@@ -239,7 +424,6 @@ import Moveable from "moveable";
 
 const rotatable = new Moveable(document.body, {
     target: document.querySelector(".origin"),
-    rotatable: true,
     origin: true,
 });
         `,
@@ -249,10 +433,28 @@ import Moveable from "react-moveable";
 return (
     <Moveable
         target={document.querySelector(".origin")}
-        rotatable={true}
         origin={true}
     />
 );
         `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [origin]="true"
+    />
+${"`"},
+})
+export class AppComponent {
+}
+`,
     },
 };

@@ -34,13 +34,12 @@ export class AppComponent implements OnInit, OnDestroy {
     },
   });
   ngOnInit(): void {
-    window.addEventListener('resize', this.onReisze);
+    window.addEventListener('resize', this.onWindowReisze);
   }
   ngOnDestroy(): void {
-    window.removeEventListener('resize', this.onReisze);
+    window.removeEventListener('resize', this.onWindowReisze);
   }
-  onReisze = () => {
-    console.log(this.moveable);
+  onWindowReisze = () => {
     this.moveable.updateRect();
   }
   clickScalable() {
