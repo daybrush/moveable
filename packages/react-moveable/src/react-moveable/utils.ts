@@ -665,3 +665,28 @@ export function getTargetPosition(target: HTMLElement | SVGElement, container?: 
         top,
     };
 }
+
+export function getOrientationDirection(pos: number[], pos1: number[], pos2: number[]) {
+    return (pos[0] - pos1[0]) * (pos2[1] - pos1[1]) - (pos[1] - pos1[1]) * (pos2[0] - pos1[0]);
+}
+export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: number[], pos4: number[]) {
+    const k1 = getOrientationDirection(pos, pos1, pos2);
+    const k2 = getOrientationDirection(pos, pos2, pos4);
+    const k3 = getOrientationDirection(pos, pos4, pos1);
+
+    const k4 = getOrientationDirection(pos, pos2, pos4);
+    const k5 = getOrientationDirection(pos, pos4, pos3);
+    const k6 = getOrientationDirection(pos, pos3, pos2);
+    const signs1 = [k1, k2, k3];
+    const signs2 = [k4, k5, k6];
+
+    if (
+        signs1.every(sign => sign >= 0)
+        || signs1.every(sign => sign <= 0)
+        || signs2.every(sign => sign >= 0)
+        || signs2.every(sign => sign <= 0)
+    ) {
+        return true;
+    }
+    return false;
+}

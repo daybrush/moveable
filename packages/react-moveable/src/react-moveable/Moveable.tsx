@@ -11,6 +11,8 @@ import {
     unset,
     createIdentityMatrix3,
     caculatePosition,
+    getOrientationDirection,
+    isInside,
 } from "./utils";
 import styler from "react-css-styler";
 import Dragger from "@daybrush/drag";
@@ -91,6 +93,17 @@ export default class Moveable extends React.PureComponent<MoveableProps, Moveabl
     private pinchableDragger!: Dragger;
     private controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
+    public isInside(clientX: number, clientY: number) {
+        const target = this.props.target;
+        if (!target) {
+            return false;
+        }
+        const { pos1, pos2, pos3, pos4 } = this.state;
+        const { left, top } = target.getBoundingClientRect();
+        const pos = [clientX - left, clientY - top];
+
+        return isInside(pos, pos1, pos2, pos3, pos4);
+    }
     public isMoveableElement(target: HTMLElement) {
         return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
     }
