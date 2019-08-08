@@ -38,5 +38,6 @@ export default builder([
         input: "src/preact-moveable/Moveable.ts",
         output: "./dist/moveable.cjs.js",
         format: "cjs",
+        exports: "default",
     },
 ]);
