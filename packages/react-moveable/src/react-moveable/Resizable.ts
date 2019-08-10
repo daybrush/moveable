@@ -83,7 +83,7 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
     datas.prevHeight = distHeight;
 
     if (delta.every(num => !num)) {
-        return;
+        return false;
     }
     onResize!({
         target: target!,
@@ -97,7 +97,7 @@ export function resize(moveable: Moveable, { datas, clientX, clientY, distX, dis
         isPinch: !!pinchFlag,
     });
 
-    !pinchFlag && moveable.updateRect();
+    return true;
 }
 export function resizeEnd(moveable: Moveable, { datas, isDrag, clientX, clientY, pinchFlag }: any) {
     moveable.state.isResize = false;

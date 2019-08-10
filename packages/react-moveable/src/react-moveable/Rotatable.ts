@@ -118,7 +118,7 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY, pinchRotat
             beforeInfo, beforeDirection, clientX, clientY, throttleRotate);
     }
     if (!delta && !beforeDelta) {
-        return;
+        return false;
     }
     moveable.props.onRotate!({
         target: moveable.props.target!,
@@ -133,7 +133,7 @@ export function rotate(moveable: Moveable, { datas, clientX, clientY, pinchRotat
         isPinch: !!pinchFlag,
     });
 
-    !pinchFlag && moveable.updateTarget();
+    return true;
 }
 export function rotateEnd(moveable: Moveable, { datas, isDrag, clientX, clientY, pinchFlag }: any) {
     moveable.state.isRotate = false;

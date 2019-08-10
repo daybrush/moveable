@@ -82,7 +82,7 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
     if (!NEARBY_POS.every(
         nearByPoses => isValidPos(nearByPoses.map(i => poses[i]), nearByPoses.map(i => nextPoses[i])),
     )) {
-        return;
+        return false;
     }
     const h = warpMatrix(
         poses[0],
@@ -96,7 +96,7 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
     );
 
     if (!h.length) {
-        return;
+        return false;
     }
 
     const matrix = convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4));
@@ -115,8 +115,7 @@ export function warp(moveable: Moveable, { datas, clientX, clientY, distX, distY
         transform,
         datas: datas.datas,
     });
-
-    moveable.updateRect();
+    return true;
 }
 
 export function warpEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {

@@ -92,7 +92,7 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
     datas.prevDist = nowScale;
 
     if (scaleX === prevDist[0] && scaleY === prevDist[1]) {
-        return;
+        return false;
     }
 
     onScale!({
@@ -107,7 +107,7 @@ export function scale(moveable: Moveable, { datas, clientX, clientY, distX, dist
         isPinch: !!pinchFlag,
     });
 
-    !pinchFlag && moveable.updateTarget();
+    return true;
 }
 export function scaleEnd(moveable: Moveable, { datas, isDrag, clientX, clientY, pinchFlag }: any) {
     moveable.state.isScale = false;

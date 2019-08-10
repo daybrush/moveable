@@ -45,17 +45,20 @@ export function getMoveableDragger(
             e.inputEvent.preventDefault();
             e.inputEvent.stopPropagation();
 
+            let result: boolean = false;
             if (!type) {
                 return;
             } else if (type === "rotate") {
-                return rotate(moveable, e);
+                result = rotate(moveable, e);
             } else if (type === "scale") {
-                return scale(moveable, e);
+                result = scale(moveable, e);
             } else if (type === "resize") {
-                return resize(moveable, e);
+                result = resize(moveable, e);
             } else if (type === "warp") {
-                return warp(moveable, e);
+                result = warp(moveable, e);
             }
+            result && moveable.updateTarget();
+            return result;
         },
         dragend: e => {
             if (!type) {
