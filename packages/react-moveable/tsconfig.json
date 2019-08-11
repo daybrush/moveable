@@ -23,6 +23,6 @@
     "noEmit": true
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts", "src/react-moveable/Rotatable.tsx", "src/react-moveable/Warpable.tsx"
   ]
 }

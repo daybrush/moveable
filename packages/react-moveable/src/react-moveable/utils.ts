@@ -1,6 +1,6 @@
 import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit, dot } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
@@ -75,13 +75,13 @@ export function getTransformOrigin(style: CSSStyleDeclaration) {
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
-    isContainer: boolean = target === container,
     prevMatrix?: number[],
     prevN?: number,
 
-): [number[], number[], number[], number[], string, number[]] {
+): [number[], number[], number[], number[], string, number[], boolean] {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
+    const isContainer: boolean = !!prevMatrix || target === container;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -115,7 +115,7 @@ export function caculateMatrixStack(
         if (hasNotOffset && tagName !== "svg") {
             origin = isNotSupportTransformOrigin
                 ? getBeforeTransformOrigin(el as SVGElement)
-                    : getTransformOrigin(style).map(pos => parseFloat(pos));
+                : getTransformOrigin(style).map(pos => parseFloat(pos));
 
             hasNotOffset = false;
 
@@ -156,7 +156,7 @@ export function caculateMatrixStack(
         el = el.parentElement;
     }
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
-    let beforeMatrix = createIdentityMatrix(n);
+    let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
 
@@ -188,7 +188,7 @@ export function caculateMatrixStack(
     });
     const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
 
-    return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin];
+    return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d];
 }
 export function getSVGMatrix(
     el: SVGSVGElement,
@@ -385,16 +385,6 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
     ];
 }
 
-export function rotateMatrix(matrix: number[], rad: number) {
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-
-    return multiply([
-        cos, -sin, 0,
-        sin, cos, 0,
-        0, 0, 1,
-    ], matrix, 3);
-}
 export function getRad(pos1: number[], pos2: number[]) {
     const distX = pos2[0] - pos1[0];
     const distY = pos2[1] - pos1[1];
@@ -471,7 +461,14 @@ export function getRotationInfo(
     direction: number,
 ): [number, number[]] {
     const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-    const relativeRotationPos = rotateMatrix([0, -40, 0], rotationRad);
+
+    const cos = Math.cos(rotationRad);
+    const sin = Math.sin(rotationRad);
+    const relativeRotationPos = multiply([
+        cos, -sin, 0,
+        sin, cos, 0,
+        0, 0, 1,
+    ], [0, -40, 1], 3);
 
     const rotationPos = [
         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
@@ -483,6 +480,7 @@ export function getRotationInfo(
 export function getTargetInfo(
     target?: MoveableProps["target"],
     container?: MoveableProps["container"],
+    state?: Partial<MoveableState> | false | undefined,
 ): Partial<MoveableState> {
     let left = 0;
     let top = 0;
@@ -505,23 +503,29 @@ export function getTargetInfo(
     let targetTransform = "";
     let beforeOrigin = [0, 0];
 
+    const prevMatrix = state ? state.beforeMatrix : undefined;
+    const prevN = state ? (state.is3d ? 4 : 3) : undefined;
+
     if (target) {
-        const style = window.getComputedStyle(target);
+        if (state) {
+            width = state.width!;
+            height = state.height!;
+        } else {
+            const style = window.getComputedStyle(target);
 
-        width = (target as HTMLElement).offsetWidth;
-        height = (target as HTMLElement).offsetHeight;
+            width = (target as HTMLElement).offsetWidth;
+            height = (target as HTMLElement).offsetHeight;
 
-        if (isUndefined(width)) {
-            [width, height] = getSize(target, style, true);
+            if (isUndefined(width)) {
+                [width, height] = getSize(target, style, true);
+            }
         }
         let offsetMatrix: number[];
         [
             beforeMatrix, offsetMatrix, matrix,
             targetMatrix,
-            targetTransform, transformOrigin,
-        ] = caculateMatrixStack(target, container!);
-
-        is3d = matrix.length === 16;
+            targetTransform, transformOrigin, is3d,
+        ] = caculateMatrixStack(target, container!, prevMatrix, prevN);
 
         [
             [left, top],
@@ -535,6 +539,7 @@ export function getTargetInfo(
 
         const n = is3d ? 4 : 3;
         let beforePos = [0, 0];
+
         [
             beforePos, beforeOrigin, , , , , beforeDirection,
         ] = caculateMoveablePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height);
@@ -572,23 +577,23 @@ export function getTargetInfo(
         transformOrigin,
     };
 }
-export function getMiddleLinePos(pos1: number[], pos2: number[]) {
-    return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
-}
-export function getPosition(target: SVGElement | HTMLElement) {
-    const position = target.getAttribute("data-position")!;
-
-    if (!position) {
+export function getDirection(target: SVGElement | HTMLElement) {
+    if (!target) {
         return;
     }
-    const pos = [0, 0];
+    const direciton = target.getAttribute("data-direction")!;
 
-    (position.indexOf("w") > -1) && (pos[0] = -1);
-    (position.indexOf("e") > -1) && (pos[0] = 1);
-    (position.indexOf("n") > -1) && (pos[1] = -1);
-    (position.indexOf("s") > -1) && (pos[1] = 1);
+    if (!direciton) {
+        return;
+    }
+    const dir = [0, 0];
 
-    return pos;
+    (direciton.indexOf("w") > -1) && (dir[0] = -1);
+    (direciton.indexOf("e") > -1) && (dir[0] = 1);
+    (direciton.indexOf("n") > -1) && (dir[1] = -1);
+    (direciton.indexOf("s") > -1) && (dir[1] = 1);
+
+    return dir;
 }
 
 export function throttle(num: number, unit: number) {

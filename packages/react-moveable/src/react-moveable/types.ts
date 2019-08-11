@@ -1,4 +1,37 @@
 import { IObject } from "@daybrush/utils";
+import * as Dragger from "@daybrush/drag";
+export type MoveableManagerProps<T = {}> = {
+    target?: SVGElement | HTMLElement | null;
+    container?: SVGElement | HTMLElement | null;
+    origin?: boolean;
+    keepRatio?: boolean;
+    ables?: Array<Able<T>>;
+} & T;
+export interface MoveableManagerState<T = {}> {
+    target: SVGElement | HTMLElement | null | undefined;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    beforeMatrix: number[];
+    matrix: number[];
+    targetTransform: string;
+    targetMatrix: number[];
+    is3d: boolean;
+    transformOrigin: number[];
+    beforeOrigin: number[];
+    origin: number[];
+    beforeDirection: 1 | -1;
+    direction: 1 | -1;
+    rotationRad: number;
+    rotationPos: number[];
+    pos1: number[];
+    pos2: number[];
+    pos3: number[];
+    pos4: number[];
+    targetAbles: Array<Able<T>>;
+    controlAbles: Array<Able<T>>;
+}
 
 export interface MoveableProps {
     target?: SVGElement | HTMLElement | null;
@@ -446,4 +479,71 @@ export interface OnWarpEnd {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+}
+
+export interface Able<T = any> {
+    name: keyof MoveableManagerProps<T>;
+
+    dragControlOnly?: boolean;
+    updateRect?: boolean;
+
+    render?: (moveable: MoveableManagerProps<any>) => any;
+
+    dragStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    drag?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;
+    dragEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+
+    pinchStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchStart) => any;
+    pinch?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinch) => any;
+    pinchEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchEnd) => any;
+
+    dragControlStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    dragControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    dragControlEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+}
+export interface OriginProps {
+    origin: boolean;
+}
+export interface DraggableProps {
+    draggable?: boolean;
+    throttleDrag?: number;
+    onDragStart?: (e: OnDragStart) => any;
+    onDrag?: (e: OnDrag) => any;
+    onDragEnd?: (e: OnDragEnd) => any;
+}
+export interface ResizableProps {
+    resizable?: boolean;
+    throttleResize?: number;
+    onResizeStart?: (e: OnResizeStart) => any;
+    onResize?: (e: OnResize) => any;
+    onResizeEnd?: (e: OnResizeEnd) => any;
+}
+export interface ScalableProps {
+    scalable?: boolean;
+    throttleScale?: number;
+    onScaleStart?: (e: OnScaleStart) => any;
+    onScale?: (e: OnScale) => any;
+    onScaleEnd?: (e: OnScaleEnd) => any;
+}
+
+export interface RotatableProps {
+    rotatable?: boolean;
+    throttleRotate?: number;
+    onRotateStart?: (e: OnRotateStart) => any;
+    onRotate?: (e: OnRotate) => any;
+    onRotateEnd?: (e: OnRotateEnd) => any;
+}
+
+export interface WarpableProps {
+    warpable?: boolean;
+    onWarpStart?: (e: OnWarpStart) => any;
+    onWarp?: (e: OnWarp) => any;
+    onWarpEnd?: (e: OnWarpEnd) => any;
+}
+
+export interface PinchableProps extends ResizableProps, ScalableProps, RotatableProps {
+    pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
+    onPinchStart?: (e: OnPinchStart) => any;
+    onPinch?: (e: OnPinch) => any;
+    onPinchEnd?: (e: OnPinchEnd) => any;
 }

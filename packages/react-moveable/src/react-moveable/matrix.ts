@@ -230,12 +230,7 @@ export function caculate(matrix: number[], matrix2: number[], n: number = matrix
     const k = result[n - 1];
     return result.map(v => v / k);
 }
-export function caculateWithOrigin(matrix: number[], matrix2: number[], origin: number[], n: number = matrix2.length) {
-    const result = multiply(matrix, matrix2, n);
-    const k = result[n - 1];
 
-    return result.map(v => v / k);
-}
 export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
     const originMatrix = [];
 

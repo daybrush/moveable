@@ -113,13 +113,24 @@ class App extends React.Component {
             </div>
         );
     }
+    public onCLickOuside = (e: any) => {
+
+    }
+    public onClickInside = (e: any) => {
+        const target = e.target;
+
+    }
     public onClick = (e: any) => {
         const target = e.target;
 
         const id = target.getAttribute("data-target");
         e.preventDefault();
 
-        if (!id) {
+        const clientX = e.clientX;
+        const clientY = e.clientY;
+
+        console.log(this.moveable.isInside(clientX, clientY));
+        if (!id || this.state.target && this.moveable.isInside(clientX, clientY)) {
             return;
         }
         const items = this.items;
@@ -143,7 +154,7 @@ class App extends React.Component {
                     target: e.target,
                     item: items[id],
                 }, () => {
-                    this.moveable.dragstart(nativeEvent);
+                    this.moveable.dragStart(nativeEvent);
                 });
             }
         }
