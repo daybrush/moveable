@@ -23,6 +23,7 @@ export default class MoveableManager<T = {}>
         container: null,
         origin: true,
         keepRatio: true,
+        parentRect: null,
         ables: [],
     };
     public state: MoveableManagerState<T> = {
@@ -60,15 +61,18 @@ export default class MoveableManager<T = {}>
     }
     public render() {
         this.update();
+
+
+        const { left: parentLeft, top: parentTop } = this.props.parentRect! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
                 className={prefix("control-box", direction === -1 ? "reverse" : "")} style={{
-                    position: this.props.container ? "absolute" : "fixed",
+                    position: "absolute",
                     display: target ? "block" : "none",
-                    transform: `translate(${left}px, ${top}px) translateZ(50px)`,
+                    transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
                 }}>
                 <div className={prefix("line")} style={getLineStyle(pos1, pos2)}></div>
                 <div className={prefix("line")} style={getLineStyle(pos2, pos4)}></div>
@@ -86,6 +90,9 @@ export default class MoveableManager<T = {}>
         unset(this, "targetDragger");
         unset(this, "controlDragger");
     }
+    public getContainer() {
+        return this.props.container || this.controlBoxElement.offsetParent as HTMLElement;
+    }
     public dragStart(e: MouseEvent | TouchEvent) {
         this.targetDragger.onDragStart(e);
     }
@@ -101,15 +108,15 @@ export default class MoveableManager<T = {}>
         return isInside(pos, pos1, pos2, pos3, pos4);
     }
     public updateRect(isTarget?: boolean) {
-        const { target, container } = this.props;
-        this.updateState(getTargetInfo(target, container, isTarget ? this.state : undefined), true);
+        const { target } = this.props;
+        this.updateState(getTargetInfo(target, this.getContainer(), isTarget ? this.state : undefined), this.props.parentRect ? true : false);
     }
     public updateTarget() {
         this.updateRect(true);
     }
     private update(isSetState?: boolean) {
         const props = this.props;
-        const { target, container, ables } = props;
+        const { target, ables } = props;
         const stateTarget = this.state.target;
         const controlBoxElement = this.controlBoxElement;
 
@@ -151,7 +158,7 @@ export default class MoveableManager<T = {}>
             this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
         }
         if (isTargetChanged) {
-            this.updateState(getTargetInfo(target, container), isSetState);
+            this.updateState(getTargetInfo(target, this.getContainer()), isSetState);
         }
     }
     private renderAbles() {

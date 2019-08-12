@@ -1,8 +1,10 @@
 import { IObject } from "@daybrush/utils";
 import * as Dragger from "@daybrush/drag";
+
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
+    parentRect?: { left: number, top: number } | null;
     origin?: boolean;
     keepRatio?: boolean;
     ables?: Array<Able<T>>;
@@ -33,46 +35,17 @@ export interface MoveableManagerState<T = {}> {
     controlAbles: Array<Able<T>>;
 }
 
-export interface MoveableProps {
+export interface MoveableProps
+    extends DraggableProps,
+    RotatableProps,
+    ResizableProps,
+    ScalableProps,
+    WarpableProps,
+    PinchableProps {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
-    rotatable?: boolean;
-    draggable?: boolean;
-    scalable?: boolean;
-    resizable?: boolean;
-    pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
-
-    warpable?: boolean;
     keepRatio?: boolean;
-
-    throttleDrag?: number;
-    throttleResize?: number;
-    throttleScale?: number;
-    throttleRotate?: number;
-
-    onWarpStart?: (e: OnWarpStart) => any;
-    onWarp?: (e: OnWarp) => void;
-    onWarpEnd?: (e: OnWarpEnd) => void;
-    onRotateStart?: (e: OnRotateStart) => any;
-    onRotate?: (e: OnRotate) => void;
-    onRotateEnd?: (e: OnRotateEnd) => void;
-
-    onDragStart?: (e: OnDragStart) => any;
-    onDrag?: (e: OnDrag) => void;
-    onDragEnd?: (e: OnDragEnd) => void;
-
-    onScaleStart?: (e: OnScaleStart) => any;
-    onScale?: (e: OnScale) => void;
-    onScaleEnd?: (e: OnScaleEnd) => void;
-
-    onResizeStart?: (e: OnResizeStart) => any;
-    onResize?: (e: OnResize) => void;
-    onResizeEnd?: (e: OnResizeEnd) => void;
-
-    onPinchStart?: (e: OnPinchStart) => any;
-    onPinch?: (e: OnPinch) => void;
-    onPinchEnd?: (e: OnPinchEnd) => void;
 }
 
 export interface MoveableState {
@@ -548,4 +521,10 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinchStart?: (e: OnPinchStart) => any;
     onPinch?: (e: OnPinch) => any;
     onPinchEnd?: (e: OnPinchEnd) => any;
+}
+
+
+export interface GroupableProps {
+    groupable?: boolean;
+    targets?: Array<HTMLElement | SVGElement>;
 }

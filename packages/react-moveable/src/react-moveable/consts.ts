@@ -1,5 +1,13 @@
 import { prefixCSS } from "framework-utils";
 import getAgent from "@egjs/agent";
+import { Able } from ".";
+import Pinchable from "./ables/Pinchable";
+import Draggable from "./ables/Draggable";
+import Rotatable from "./ables/Rotatable";
+import Resizable from "./ables/Resizable";
+import Scalable from "./ables/Scalable";
+import Warpable from "./ables/Warpable";
+import Groupable from "./ables/Groupable";
 
 export const agent = getAgent();
 export const isNotSupportTransformOrigin
@@ -82,3 +90,5 @@ export const NEARBY_POS = [
 ];
 
 export const MIN_SCALE = 0.000000001;
+export const MOVEABLE_ABLES: Able[] = [Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable];
+export const MOVEABLE_GROUP_ABLES: Able[] = [Groupable, Pinchable, Draggable, Rotatable, Resizable, Scalable];

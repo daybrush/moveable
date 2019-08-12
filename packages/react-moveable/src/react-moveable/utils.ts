@@ -654,22 +654,6 @@ export function unset(self: any, name: string) {
         self[name] = null;
     }
 }
-export function getTargetPosition(target: HTMLElement | SVGElement, container?: HTMLElement | SVGElement | null) {
-    const rect = target.getBoundingClientRect();
-    let left = rect.left;
-    let top = rect.top;
-
-    if (container) {
-        const containerRect = container.getBoundingClientRect();
-
-        left -= containerRect.left;
-        top -= containerRect.top;
-    }
-    return {
-        left,
-        top,
-    };
-}
 
 export function getOrientationDirection(pos: number[], pos1: number[], pos2: number[]) {
     return (pos[0] - pos1[0]) * (pos2[1] - pos1[1]) - (pos[1] - pos1[1]) * (pos2[0] - pos1[0]);
