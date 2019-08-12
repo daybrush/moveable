@@ -1,5 +1,5 @@
 import React from "react";
-import Moveable from "./react-moveable";
+import Moveable, { MoveableGroup } from "./react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";
@@ -35,6 +35,13 @@ class App extends React.Component {
         return (
             <div>
                 <div id="test" style={{position: "fixed", height: "69.28203582763672px", width: "60px", top: 0, left: 0, backgroundColor: "#f5f", zIndex: 4000 }}></div>
+                <MoveableGroup
+                    rotatable={true}
+                    scalable={true}
+                    ref={ref(this, "ab")}
+                    targets={[].slice.call(document.querySelectorAll("path"))}
+                    origin={false}
+                    />
                 <Moveable
                     target={selectedTarget}
                     container={document.body}
@@ -129,8 +136,9 @@ class App extends React.Component {
         const clientX = e.clientX;
         const clientY = e.clientY;
 
-        console.log(this.moveable.isInside(clientX, clientY));
-        if (!id || this.state.target && this.moveable.isInside(clientX, clientY)) {
+        // console.log(this.moveable.isInside(clientX, clientY));
+        // this.state.target && this.moveable.isInside(clientX, clientY)
+        if (!id) {
             return;
         }
         const items = this.items;

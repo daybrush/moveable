@@ -1,10 +1,12 @@
 import { IObject } from "@daybrush/utils";
 import * as Dragger from "@daybrush/drag";
+import MoveableManager from "./MoveableManager";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
-    parentRect?: { left: number, top: number } | null;
+    parentMoveable?: MoveableManager | null;
+    parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
     keepRatio?: boolean;
     ables?: Array<Able<T>>;
@@ -523,8 +525,7 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinchEnd?: (e: OnPinchEnd) => any;
 }
 
-
-export interface GroupableProps {
+export interface GroupableProps extends RotatableProps, ResizableProps, ScalableProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
 }

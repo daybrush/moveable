@@ -11,10 +11,11 @@ export default builder([
         output: "./dist/moveable.esm.js",
         visualizer: true,
         format: "es",
+        exports: "named",
     },
     {
         ...defaultOptions,
-        input: "src/react-moveable/index.ts",
+        input: "src/react-moveable/index.umd.ts",
         output: "./dist/moveable.cjs.js",
         format: "cjs",
     },

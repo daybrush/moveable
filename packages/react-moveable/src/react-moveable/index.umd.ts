@@ -1,6 +1,6 @@
 import Moveable from "./Moveable";
 import MoveableGroup from "./MoveableGroup";
 
-export * from "./types";
+(Moveable as any).MoveableGroup = MoveableGroup;
+
 export default Moveable;
-export { MoveableGroup };

@@ -61,8 +61,8 @@ export default {
         return [
             <div className={prefix("line")} key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1)}></div>,
             <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2)}></div>,
-            <div className={prefix("line")} style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
-            <div className={prefix("line")} style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
+            <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
+            <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
         ];
     },
     dragControlCondition(target: HTMLElement | SVGElement) {
