@@ -116,6 +116,7 @@ export default {
             target: target!,
             width: nextWidth,
             height: nextHeight,
+            direction,
             dist: [distWidth, distHeight],
             datas: datas.datas,
             delta,

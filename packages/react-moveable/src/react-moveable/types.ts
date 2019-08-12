@@ -340,6 +340,7 @@ export interface OnResizeStart {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - The direction of resize.
  * @property - a target's width
  * @property - a target's height
  * @property - The distance of [width, height]
@@ -350,6 +351,7 @@ export interface OnResize {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    direction: number[];
     width: number;
     height: number;
     dist: number[];
