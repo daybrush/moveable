@@ -63,7 +63,7 @@ export default class MoveableManager<T = {}>
     public render() {
         this.update(false);
 
-        const { left: parentLeft, top: parentTop } = this.props.parentPosition! || { left : 0, top: 0};
+        const { left: parentLeft, top: parentTop } = this.props.parentPosition! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
         return (
