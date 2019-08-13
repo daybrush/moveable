@@ -52,10 +52,9 @@ export default class MoveableManager<T = {}>
         targetAbles: [],
         controlAbles: [],
     };
-    private controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
-    private controlBoxElement!: HTMLElement;
-    private targetDragger!: Dragger;
-    private controlDragger!: Dragger;
+    protected targetDragger!: Dragger;
+    protected controlDragger!: Dragger;
+    protected controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
     public isMoveableElement(target: HTMLElement) {
         return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);

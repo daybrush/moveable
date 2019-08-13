@@ -2,6 +2,8 @@ import MoveableManager from "./MoveableManager";
 import { GroupableProps } from "./types";
 import { MOVEABLE_GROUP_ABLES } from "./consts";
 import ChildrenDiffer from "@egjs/children-differ";
+import { getAbleDragger } from "./getAbleDragger";
+import Groupable from "./ables/Groupable";
 
 function getMaxPos(moveables: MoveableManager[], index: number) {
     return Math.max(...moveables.map(({ state: { left, top, pos1, pos2, pos3, pos4 } }) => {
@@ -43,7 +45,14 @@ export default class MoveableGroup extends MoveableManager<GroupableProps> {
         }
         const state = this.state;
         if (!state.target) {
-            state.target = document.createElement("div");
+            state.target = this.groupTargetElement;
+
+            this.updateState({
+                targetAbles: [Groupable],
+                controlAbles: [Groupable],
+            });
+            this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "");
+            this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "Control");
         }
         this.moveables.forEach(moveable => moveable.update(false));
 
