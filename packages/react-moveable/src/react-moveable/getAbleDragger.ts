@@ -5,7 +5,7 @@ import { IObject } from "@daybrush/utils";
 
 function triggerAble<T>(
     moveable: MoveableManager<T>,
-    ableType: "targetAbles" | "controlAbles",
+    ableType: string,
     eventOperation: string,
     prefix: string,
     eventType: string,
@@ -14,7 +14,7 @@ function triggerAble<T>(
     const eventName = `${eventOperation}${prefix}${eventType}`;
     const conditionName = `${eventOperation}${prefix}Condition`;
     const isStart = eventType === "Start";
-    const ables: Array<Able<T>> = moveable.state[ableType];
+    const ables: Array<Able<T>> = (moveable as any)[ableType];
     const result = ables.filter((able: any) => {
         const condition = isStart && able[conditionName];
         const event = able[eventName];
@@ -36,7 +36,7 @@ function triggerAble<T>(
 export function getAbleDragger<T>(
     moveable: MoveableManager<T>,
     target: HTMLElement | SVGElement,
-    ableType: "targetAbles" | "controlAbles",
+    ableType: string,
     prefix: string,
 
 ) {

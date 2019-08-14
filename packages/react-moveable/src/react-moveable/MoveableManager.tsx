@@ -22,6 +22,7 @@ export default class MoveableManager<T = {}>
         target: null,
         container: null,
         origin: true,
+        line: true,
         keepRatio: true,
         parentMoveable: null,
         parentPosition: null,
@@ -49,9 +50,9 @@ export default class MoveableManager<T = {}>
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
-        targetAbles: [],
-        controlAbles: [],
     };
+    public targetAbles: Array<Able<T>> = [];
+    public controlAbles: Array<Able<T>> = [];
     protected targetDragger!: Dragger;
     protected controlDragger!: Dragger;
     protected controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
@@ -123,28 +124,18 @@ export default class MoveableManager<T = {}>
     }
     public update(isSetState?: boolean) {
         const props = this.props;
-        const { target, ables, parentMoveable } = props;
+        const { target, parentMoveable } = props;
         const stateTarget = this.state.target;
         const controlBox = this.controlBox;
 
         if (!controlBox || (!stateTarget && !target)) {
             return;
         }
+        this.updateAbles();
+
         const controlBoxElement = controlBox.getElement();
-        const enabledAbles = ables!.filter(able => props[able.name]);
-        let controlAbleOnly: boolean = false;
-        const targetAbles = enabledAbles.filter(able => able.dragStart);
-        const controlAbles = enabledAbles.filter(({ dragControlStart, dragControlOnly }) => {
-            if (!dragControlStart || (dragControlOnly && controlAbleOnly)) {
-                return false;
-            }
-            if (dragControlOnly) {
-                controlAbleOnly = true;
-            }
-            return true;
-        });
-        const hasTargetAble = targetAbles.length;
-        const hasControlAble = controlAbles.length;
+        const hasTargetAble = this.targetAbles.length;
+        const hasControlAble = this.controlAbles.length;
         const isTargetChanged = stateTarget !== target;
 
         if (!hasTargetAble || isTargetChanged) {
@@ -153,10 +144,6 @@ export default class MoveableManager<T = {}>
         if (!hasControlAble) {
             unset(this, "controlDragger");
         }
-        this.updateState({
-            targetAbles,
-            controlAbles,
-        });
 
         if (target && ((!this.targetDragger && hasTargetAble) || isTargetChanged)) {
             this.targetDragger = getAbleDragger(this, target!, "targetAbles", "");
@@ -169,6 +156,31 @@ export default class MoveableManager<T = {}>
         }
         return isTargetChanged;
     }
+    public triggerEvent<U extends keyof T>(
+        name: U, e: T[U] extends ((e: infer P) => any) | undefined ? P : {}): any;
+    public triggerEvent(name: string, e: any): any {
+        const callback = (this.props as any)[name];
+
+        return callback && callback(e);
+    }
+    protected updateAbles() {
+        const props = this.props;
+        const enabledAbles = props.ables!.filter(able => props[able.name]);
+        let controlAbleOnly: boolean = false;
+        const targetAbles = enabledAbles.filter(able => able.dragStart);
+        const controlAbles = enabledAbles.filter(({ dragControlStart, dragControlOnly }) => {
+            if (!dragControlStart || (dragControlOnly && controlAbleOnly)) {
+                return false;
+            }
+            if (dragControlOnly) {
+                controlAbleOnly = true;
+            }
+            return true;
+        });
+
+        this.targetAbles = targetAbles;
+        this.controlAbles = controlAbles;
+    }
     protected updateState(nextState: any, isSetState?: boolean) {
         if (isSetState) {
             this.setState(nextState);
@@ -180,7 +192,7 @@ export default class MoveableManager<T = {}>
             }
         }
     }
-    private renderAbles() {
+    protected renderAbles() {
         const ables = [...this.props.ables!, Origin as Able<T>];
 
         return ables.map(({ render }) => render && render(this));

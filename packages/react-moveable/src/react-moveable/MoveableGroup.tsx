@@ -1,9 +1,10 @@
 import MoveableManager from "./MoveableManager";
-import { GroupableProps } from "./types";
-import { MOVEABLE_GROUP_ABLES } from "./consts";
+import { GroupableProps, Able } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
+import Origin from "./ables/Origin";
+import { MOVEABLE_ABLES } from "./consts";
 
 function getMaxPos(moveables: MoveableManager[], index: number) {
     return Math.max(...moveables.map(({ state: { left, top, pos1, pos2, pos3, pos4 } }) => {
@@ -25,11 +26,13 @@ function getGroupRect(moveables: MoveableManager[]) {
 export default class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
-        ables: MOVEABLE_GROUP_ABLES,
+        groupable: true,
+        ables: MOVEABLE_ABLES,
         targets: [],
     };
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
+    public groupAbles: Able[] = [Groupable];
     private groupTargetElement!: HTMLElement;
 
     public componentDidMount() {
@@ -47,12 +50,9 @@ export default class MoveableGroup extends MoveableManager<GroupableProps> {
         if (!state.target) {
             state.target = this.groupTargetElement;
 
-            this.updateState({
-                targetAbles: [Groupable],
-                controlAbles: [Groupable],
-            });
-            this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "");
-            this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "Control");
+            this.updateAbles();
+            this.targetDragger = getAbleDragger(this, state.target!, "groupAbles", "");
+            this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "groupAbles", "Control");
         }
         this.moveables.forEach(moveable => moveable.update(false));
 
@@ -83,5 +83,15 @@ export default class MoveableGroup extends MoveableManager<GroupableProps> {
             pos3,
             pos4,
         }, isSetState);
+    }
+    public triggerEvent(name: string, e: any) {
+        if (name.indexOf("onGroup") === 0) {
+            return super.triggerEvent(name as any, e);
+        }
+    }
+    protected renderAbles() {
+        const ables = [...this.props.ables!, Groupable, Origin];
+
+        return ables.map(({ render }) => render && render(this));
     }
 }

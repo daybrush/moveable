@@ -3,17 +3,20 @@ import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray } from "../utils";
 import { minus } from "../matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps } from "../types";
+import { DraggableProps, OnDrag } from "../types";
 
 export default {
     name: "draggable",
-    dragStart(moveable: MoveableManager<DraggableProps>, { datas, clientX, clientY }: any) {
-        const { target, onDragStart } = moveable.props;
-        const style = window.getComputedStyle(target!);
-        const state = moveable.state;
+    dragStart(
+        moveable: MoveableManager<DraggableProps>,
+        { datas, clientX, clientY }: any,
+    ) {
+        const { onDragStart } = moveable.props;
         const {
             targetTransform,
-        } = state;
+            target,
+        } = moveable.state;
+        const style = window.getComputedStyle(target!);
 
         datas.datas = {};
         datas.left = parseFloat(style.left || "") || 0;
@@ -40,21 +43,21 @@ export default {
         }
         return result;
     },
-    drag(moveable: Moveable, { datas, distX, distY, clientX, clientY, inputEvent }: any) {
-        const { isPinch, isDrag } = datas;
+    drag(
+        moveable: MoveableManager<DraggableProps>,
+        { datas, distX, distY, clientX, clientY, inputEvent }: any,
+    ): OnDrag | undefined {
+        const { isPinch, isDrag, prevDist, prevBeforeDist, transform } = datas;
         if (!isDrag) {
-            return false;
+            return;
         }
         inputEvent.preventDefault();
         inputEvent.stopPropagation();
 
         const {
-            target,
-            onDrag,
             throttleDrag = 0,
         } = moveable.props;
-        const { prevDist, prevBeforeDist, transform } = datas;
-
+        const target = moveable.state.target;
         const beforeDist = getDragDist({ datas, distX, distY }, true);
         const dist = getDragDist({ datas, distX, distY }, false);
 
@@ -76,7 +79,7 @@ export default {
         if (delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }
-        onDrag && onDrag!({
+        const params = {
             datas: datas.datas,
             target: target!,
             transform: nextTransform,
@@ -91,18 +94,18 @@ export default {
             clientX,
             clientY,
             isPinch,
-        });
-        return true;
-    },
-    dragEnd(moveable: Moveable, { datas, isDrag, clientX, clientY }: any) {
-        const { target, onDragEnd } = moveable.props;
+        };
 
+        moveable.triggerEvent("onDrag", params);
+        return params;
+    },
+    dragEnd(moveable: MoveableManager<DraggableProps>, { datas, isDrag, clientX, clientY }: any) {
         if (!datas.isDrag) {
             return;
         }
         datas.isDrag = false;
-        onDragEnd && onDragEnd!({
-            target: target!,
+        moveable.triggerEvent("onDragEnd", {
+            target: moveable.state.target!,
             isDrag,
             clientX,
             clientY,

@@ -41,6 +41,12 @@ class App extends React.Component {
                     ref={ref(this, "ab")}
                     targets={[].slice.call(document.querySelectorAll("path"))}
                     origin={false}
+                    onGroupDragStart={e => {
+                        console.log("start", e);
+                    }}
+                    onGroupDrag={e => {
+                        console.log("뭐", e);
+                    }}
                     />
                 <Moveable
                     target={selectedTarget}

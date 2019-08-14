@@ -8,6 +8,7 @@ export type MoveableManagerProps<T = {}> = {
     parentMoveable?: MoveableManager | null;
     parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
+    line?: boolean;
     keepRatio?: boolean;
     ables?: Array<Able<T>>;
 } & T;
@@ -33,8 +34,6 @@ export interface MoveableManagerState<T = {}> {
     pos2: number[];
     pos3: number[];
     pos4: number[];
-    targetAbles: Array<Able<T>>;
-    controlAbles: Array<Able<T>>;
 }
 
 export interface MoveableProps
@@ -445,17 +444,34 @@ export interface OnWarp {
  * @typedef
  * @memberof Moveable
  * @property - a warp finished target
- * @property - Whether rotate called
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Whether rotate called
  * @property - Objects that can send information to the following events.
  */
 export interface OnWarpEnd {
     target: HTMLElement | SVGElement;
-    isDrag: boolean;
     clientX: number;
     clientY: number;
+    isDrag: boolean;
     datas: IObject<any>;
+}
+export interface OnGroupDragStart {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+}
+
+export interface OnGroupDrag {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+    events: Array<OnDrag | undefined>;
+}
+export interface OnGroupDragEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
 }
 
 export interface Able<T = any> {
@@ -525,7 +541,10 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinchEnd?: (e: OnPinchEnd) => any;
 }
 
-export interface GroupableProps extends RotatableProps, ResizableProps, ScalableProps {
+export interface GroupableProps extends DraggableProps, RotatableProps, ResizableProps, ScalableProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
+    onGroupDragStart?: (e: OnGroupDragStart) => any;
+    onGroupDrag?: (e: OnGroupDrag) => any;
+    onGroupDragEnd?: (e: OnGroupDragEnd) => any;
 }
