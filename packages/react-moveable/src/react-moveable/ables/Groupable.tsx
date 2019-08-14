@@ -31,25 +31,6 @@ export default {
         }} />,
         ];
     },
-    dragStart(moveable: MoveableGroup, e: OnDragStart) {
-        console.log("start");
-        const datas = e.datas;
-        const draggableDatas = datas.draggable || (datas.draggable = []);
-
-        moveable.moveables.forEach((child, i) => {
-            const childDatas = draggableDatas[i] || (draggableDatas[i] = {});
-
-            Draggable.dragStart(child, { ...e, datas: childDatas });
-        });
-
-        const { clientX, clientY } = e;
-
-        moveable.triggerEvent("onGroupDragStart", {
-            targets: moveable.props.targets,
-            clientX,
-            clientY,
-        });
-    },
     drag(moveable: MoveableGroup, e: OnDrag) {
         const draggableDatas = e.datas.draggable;
 
@@ -75,6 +56,13 @@ export default {
             const childDatas = draggableDatas[i];
 
             Draggable.dragEnd(child, { ...e, datas: childDatas });
+        });
+        const { clientX, clientY } = e;
+
+        moveable.triggerEvent("onGroupDragEnd", {
+            targets: moveable.props.targets,
+            clientX,
+            clientY,
         });
     },
 };

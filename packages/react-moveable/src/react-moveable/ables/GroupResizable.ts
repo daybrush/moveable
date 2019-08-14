@@ -3,25 +3,19 @@ import { setDragStart, getDragDist } from "../DraggerUtils";
 import { ResizableProps } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection } from "../renderDirection";
-import { hasClass, IObject } from "@daybrush/utils";
-import { OnDragStart, OnDrag } from "@daybrush/drag";
+import { hasClass } from "@daybrush/utils";
+import { OnDragStart } from "@daybrush/drag";
+import Resizable from "./Resizable";
 
 export default {
     name: "resizable",
     dragControlOnly: true,
     updateRect: true,
-
-    render(moveable: MoveableManager<Partial<ResizableProps>>) {
-        if (moveable.props.resizable) {
-            return renderAllDirection(moveable);
-        }
-    },
-    dragControlCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, prefix("direction"));
-    },
+    render: Resizable.render,
+    dragControlCondition: Resizable.dragControlCondition,
     dragControlStart(
         moveable: MoveableManager<ResizableProps>,
-        e: any,
+        e: OnDragStart & { pinchFlag? : boolean, direction?: number[] | undefined },
     ) {
         const {
             inputEvent: {
@@ -31,12 +25,12 @@ export default {
             direction = getDirection(inputTarget),
         } = e;
 
-        const { target, width, height } = moveable.state;
-        const { clientX, clientY, datas } = e;
-
-        if (!direction || !target) {
+        if (!direction) {
             return false;
         }
+        const { width, height } = moveable.state;
+        const datas = e.datas;
+
         !pinchFlag && setDragStart(moveable, { datas });
 
         datas.datas = {};
@@ -46,7 +40,8 @@ export default {
         datas.prevWidth = 0;
         datas.prevHeight = 0;
 
-        const result = triggerEvent(moveable, "onResizeStart", {
+
+        const result = triggerEvent(moveable, "resizeStart", {
             datas: datas.datas,
             target,
             clientX,
@@ -71,25 +66,21 @@ export default {
         } = datas;
 
         if (!isResize) {
-            return;
+            return false;
         }
         const {
+            target,
             keepRatio,
             throttleResize = 0,
+            onResize,
         } = moveable.props;
-        const {
-            target,
-        } = moveable.state;
-
-        let distWidth: number = 0;
-        let distHeight: number = 0;
+        let distWidth: number;
+        let distHeight: number;
 
         // diagonal
         if (pinchFlag) {
-            if (pinchDistance) {
-                distWidth = pinchDistance;
-                distHeight = pinchDistance * height / width;
-            }
+            distWidth = pinchDistance;
+            distHeight = pinchDistance * height / width;
         } else {
             const dist = getDragDist({ datas, distX, distY });
 
@@ -120,9 +111,9 @@ export default {
         datas.prevHeight = distHeight;
 
         if (delta.every(num => !num)) {
-            return;
+            return false;
         }
-        const params = {
+        onResize && onResize({
             target: target!,
             width: nextWidth,
             height: nextHeight,
@@ -133,18 +124,18 @@ export default {
             clientX,
             clientY,
             isPinch: !!pinchFlag,
-        };
-        triggerEvent(moveable, "onResize", params);
-        return params;
+        });
+
+        return true;
     },
-    dragControlEnd(moveable: MoveableManager<ResizableProps>, { datas, isDrag, clientX, clientY }: any) {
+    dragControlEnd(moveable: MoveableManager<ResizableProps>, { datas, isDrag, clientX, clientY, pinchFlag }: any) {
         if (!datas.isResize) {
             return false;
         }
+        const { target, onResizeEnd } = moveable.props;
         datas.isResize = false;
-
-        triggerEvent(moveable, "onResizeEnd", {
-            target: moveable.state.target!,
+        onResizeEnd && onResizeEnd({
+            target: target!,
             datas: datas.datas,
             clientX,
             clientY,

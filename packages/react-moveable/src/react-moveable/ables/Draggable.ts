@@ -1,4 +1,3 @@
-import Moveable from "..";
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray } from "../utils";
 import { minus } from "../matrix";

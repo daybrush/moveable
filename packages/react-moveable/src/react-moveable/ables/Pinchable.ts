@@ -56,6 +56,7 @@ export default {
                 clientY,
                 pinchFlag: true,
                 inputEvent,
+                direction: [1, 1],
             });
         }
         if (isScalable) {

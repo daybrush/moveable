@@ -23,7 +23,7 @@ function getGroupRect(moveables: MoveableManager[]) {
     return [groupLeft, groupTop, groupWidth, groupHeight];
 }
 
-export default class MoveableGroup extends MoveableManager<GroupableProps> {
+class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
         groupable: true,
@@ -84,7 +84,7 @@ export default class MoveableGroup extends MoveableManager<GroupableProps> {
             pos4,
         }, isSetState);
     }
-    public triggerEvent(name: string, e: any) {
+    public triggerEvent(name: string, e: any): any {
         if (name.indexOf("onGroup") === 0) {
             return super.triggerEvent(name as any, e);
         }
@@ -95,3 +95,5 @@ export default class MoveableGroup extends MoveableManager<GroupableProps> {
         return ables.map(({ render }) => render && render(this));
     }
 }
+
+export default MoveableGroup;

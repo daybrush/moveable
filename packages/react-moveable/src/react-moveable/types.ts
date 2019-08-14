@@ -462,21 +462,19 @@ export interface OnGroupDragStart {
     clientY: number;
 }
 
-export interface OnGroupDrag {
+export interface OnGroupDrag extends OnDrag {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
     events: Array<OnDrag | undefined>;
 }
 export interface OnGroupDragEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
+    isDrag: boolean;
 }
 
 export interface Able<T = any> {
-    name: keyof MoveableManagerProps<T>;
-
+    name: string & keyof MoveableManagerProps<T>;
     dragControlOnly?: boolean;
     updateRect?: boolean;
 

@@ -1,6 +1,6 @@
 import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
@@ -13,6 +13,7 @@ import {
     createScaleMatrix,
     sum,
 } from "./matrix";
+import MoveableManager from "./MoveableManager";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -678,4 +679,12 @@ export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: nu
         return true;
     }
     return false;
+}
+
+export function triggerEvent<T extends IObject<any>, U extends keyof T>(
+    moveable: MoveableManager<T>,
+    name: U,
+    e: T[U] extends ((e: infer P) => any) | undefined ? P : {},
+): any {
+    return moveable.triggerEvent(name, e as any);
 }
