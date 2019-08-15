@@ -111,16 +111,18 @@ export default class MoveableManager<T = {}>
 
         return isInside(pos, pos1, pos2, pos3, pos4);
     }
-    public updateRect(isTarget?: boolean, isSetState: boolean = true) {
-        const { target, parentMoveable } = this.props;
+    public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
+        const parentMoveable = this.props.parentMoveable;
+        const state = this.state;
+        const target = state.target || this.props.target;
 
         this.updateState(
-            getTargetInfo(target, this.getContainer(), isTarget ? this.state : undefined),
+            getTargetInfo(target, this.getContainer(), isTarget ? state : undefined),
             parentMoveable ? false : isSetState,
         );
     }
-    public updateTarget() {
-        this.updateRect(true);
+    public updateTarget(type?: "Start" | "" | "End") {
+        this.updateRect(type, true);
     }
     public update(isSetState?: boolean) {
         const props = this.props;
@@ -152,7 +154,7 @@ export default class MoveableManager<T = {}>
             this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
         }
         if (isTargetChanged && !parentMoveable) {
-            this.updateRect(false, isSetState);
+            this.updateRect("End", false, isSetState);
         }
         return isTargetChanged;
     }

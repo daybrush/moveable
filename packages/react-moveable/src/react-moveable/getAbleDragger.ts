@@ -2,34 +2,39 @@ import MoveableManager from "./MoveableManager";
 import Dragger, { OnDragStart, OnDrag, OnDragEnd, OnPinchEnd } from "@daybrush/drag";
 import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
+import MoveableGroup from "./MoveableGroup";
 
 function triggerAble<T>(
     moveable: MoveableManager<T>,
     ableType: string,
     eventOperation: string,
     prefix: string,
-    eventType: string,
+    eventType: any,
     e: OnDragStart | OnDrag | OnDragEnd | OnPinchEnd,
 ) {
     const eventName = `${eventOperation}${prefix}${eventType}`;
     const conditionName = `${eventOperation}${prefix}Condition`;
     const isStart = eventType === "Start";
+    const isGrouping = prefix.indexOf("Group") > -1 && eventType === "";
     const ables: Array<Able<T>> = (moveable as any)[ableType];
-    const result = ables.filter((able: any) => {
+    const results = ables.filter((able: any) => {
         const condition = isStart && able[conditionName];
-        const event = able[eventName];
 
-        if (event && (!condition || condition(e.inputEvent.target))) {
-            return event(moveable, e);
+        if (able[eventName] && (!condition || condition(e.inputEvent.target))) {
+            const result =  able[eventName](moveable, e);
+
+            if (result && isGrouping && able.groupStyle) {
+                able.groupStyle((moveable as any).frame, result);
+            }
+            return result;
         }
         return false;
     });
-
-    if (!isStart && result.length) {
-        if (result.some(able => able.updateRect)) {
-            moveable.updateRect();
+    if (!isStart && results.length) {
+        if (results.some(able => able.updateRect)) {
+            moveable.updateRect(eventType);
         } else {
-            moveable.updateTarget();
+            moveable.updateTarget(eventType);
         }
     }
 }

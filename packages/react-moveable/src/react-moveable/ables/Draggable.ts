@@ -1,16 +1,18 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray } from "../utils";
+import { throttleArray, triggerEvent } from "../utils";
 import { minus } from "../matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps, OnDrag } from "../types";
+import { DraggableProps, OnDrag, OnDragGroup } from "../types";
+import MoveableGroup from "../MoveableGroup";
+import { triggerChildAble } from "../groupUtils";
+import { Frame } from "scenejs";
 
-export default {
+const draggable = {
     name: "draggable",
     dragStart(
         moveable: MoveableManager<DraggableProps>,
         { datas, clientX, clientY }: any,
     ) {
-        const { onDragStart } = moveable.props;
         const {
             targetTransform,
             target,
@@ -28,7 +30,7 @@ export default {
 
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
-        const result = onDragStart && onDragStart!({
+        const result = triggerEvent(moveable, "onDragStart", {
             datas: datas.datas,
             target: target!,
             clientX,
@@ -95,7 +97,7 @@ export default {
             isPinch,
         };
 
-        moveable.triggerEvent("onDrag", params);
+        triggerEvent(moveable, "onDrag", params);
         return params;
     },
     dragEnd(moveable: MoveableManager<DraggableProps>, { datas, isDrag, clientX, clientY }: any) {
@@ -103,7 +105,7 @@ export default {
             return;
         }
         datas.isDrag = false;
-        moveable.triggerEvent("onDragEnd", {
+        triggerEvent(moveable, "onDragEnd", {
             target: moveable.state.target!,
             isDrag,
             clientX,
@@ -112,4 +114,64 @@ export default {
         });
         return isDrag;
     },
+    groupStyle(frame: Frame, e: OnDragGroup) {
+        const tx = parseFloat(frame.get("transform", "translateX"));
+        const ty = parseFloat(frame.get("transform", "translateY"));
+
+        frame.set("transform", "translateX", `${tx + e.beforeDelta[0]}px`);
+        frame.set("transform", "translateY", `${ty + e.beforeDelta[1]}px`);
+    },
+
+    dragGroupStart(moveable: MoveableGroup, e: any) {
+        const { clientX, clientY, datas } = e;
+
+        triggerChildAble(moveable, this, "dragStart", e);
+
+        this.dragStart(moveable, e);
+        const result = triggerEvent(moveable, "onDragGroupStart", {
+            targets: moveable.props.targets!,
+            clientX,
+            clientY,
+        });
+
+        datas.isDrag = result !== false;
+        return datas.isDrag;
+    },
+    dragGroup(moveable: MoveableGroup, e: any) {
+        if (!e.datas.isDrag) {
+            return;
+        }
+        const events = triggerChildAble(moveable, this, "drag", e);
+        const params = this.drag(moveable, e);
+
+        if (!params) {
+            return;
+        }
+        const nextParams: OnDragGroup = {
+            targets: moveable.props.targets!,
+            events,
+            ...params,
+        };
+
+        triggerEvent(moveable, "onDragGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupEnd(moveable: MoveableGroup, e: any) {
+        const { clientX, clientY, isDrag, datas } = e;
+
+        if (!datas.isDrag) {
+            return;
+        }
+        triggerChildAble(moveable, this, "dragEnd", e);
+        triggerEvent(moveable, "onDragGroupEnd", {
+            targets: moveable.props.targets!,
+            isDrag,
+            clientX,
+            clientY,
+        });
+
+        return isDrag;
+    },
 };
+
+export default draggable;

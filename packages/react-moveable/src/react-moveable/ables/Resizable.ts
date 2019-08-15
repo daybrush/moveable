@@ -3,8 +3,7 @@ import { setDragStart, getDragDist } from "../DraggerUtils";
 import { ResizableProps } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection } from "../renderDirection";
-import { hasClass, IObject } from "@daybrush/utils";
-import { OnDragStart, OnDrag } from "@daybrush/drag";
+import { hasClass } from "@daybrush/utils";
 
 export default {
     name: "resizable",

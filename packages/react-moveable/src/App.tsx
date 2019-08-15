@@ -36,16 +36,32 @@ class App extends React.Component {
             <div>
                 <div id="test" style={{position: "fixed", height: "69.28203582763672px", width: "60px", top: 0, left: 0, backgroundColor: "#f5f", zIndex: 4000 }}></div>
                 <MoveableGroup
+                    draggable={true}
                     rotatable={true}
                     scalable={true}
                     ref={ref(this, "ab")}
                     targets={[].slice.call(document.querySelectorAll("path"))}
                     origin={false}
-                    onGroupDragStart={e => {
+                    onDragGroupStart={e => {
                         console.log("start", e);
                     }}
-                    onGroupDrag={e => {
+                    onDragGroup={e => {
                         console.log("뭐", e);
+                        e.events.forEach(ev => {
+                            ev.target.style.transform = ev.transform;
+                        });
+                    }}
+                    onRotateGroupStart={e => {
+                        console.log("rgs", e);
+                    }}
+                    onRotateGroup={e => {
+                        // console.log("rg", e);
+                        e.events.forEach(ev => {
+                            if (!ev) {
+                                return;
+                            }
+                            ev.target.style.transform = ev.transform;
+                        });
                     }}
                     />
                 <Moveable

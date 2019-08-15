@@ -1,10 +1,10 @@
 import MoveableGroup from "./MoveableGroup";
 import { Able } from "./types";
 
-export function triggerChildAble<T> (
+export function triggerChildAble<T extends Able>(
     moveable: MoveableGroup,
-    able: Able<T>,
-    type: any,
+    able: T,
+    type: keyof T,
     e: any,
 ) {
     const name = able.name!;
@@ -14,6 +14,6 @@ export function triggerChildAble<T> (
     return moveable.moveables.map((child, i) => {
         const childDatas = ableDatas[i] || (ableDatas[i] = {});
 
-        return (able as any)[type]!(child, { ...e, datas: childDatas });
+        return (able as any)[type]!(child, { ...e, datas: childDatas, parentFlag: true });
     });
 }

@@ -3,8 +3,6 @@ import { refs, ref } from "framework-utils";
 import MoveableGroup from "../MoveableGroup";
 import MoveableManager from "../MoveableManager";
 import { prefix } from "../utils";
-import Draggable from "./Draggable";
-import { OnDragStart, OnDrag, OnDragEnd } from "@daybrush/drag";
 
 export default {
     name: "groupable",
@@ -25,44 +23,7 @@ export default {
                 parentPosition={position}
             />;
         }),
-        <div key="groupTarget" ref={ref(moveable, "groupTargetElement")} className={prefix("group")} style={{
-            width: `${width}px`,
-            height: `${height}px`,
-        }} />,
+        <div key="groupTarget" ref={ref(moveable, "groupTargetElement")} className={prefix("group")} />,
         ];
-    },
-    drag(moveable: MoveableGroup, e: OnDrag) {
-        const draggableDatas = e.datas.draggable;
-
-        const events = moveable.moveables.map((child, i) => {
-            const childDatas = draggableDatas[i];
-
-            return Draggable.drag(child, { ...e, datas: childDatas });
-        });
-
-        const { clientX, clientY } = e;
-
-        moveable.triggerEvent("onGroupDrag", {
-            targets: moveable.props.targets,
-            clientX,
-            clientY,
-            events,
-        });
-    },
-    dragEnd(moveable: MoveableGroup, e: OnDragEnd) {
-        const draggableDatas = e.datas.draggable;
-
-        moveable.moveables.forEach((child, i) => {
-            const childDatas = draggableDatas[i];
-
-            Draggable.dragEnd(child, { ...e, datas: childDatas });
-        });
-        const { clientX, clientY } = e;
-
-        moveable.triggerEvent("onGroupDragEnd", {
-            targets: moveable.props.targets,
-            clientX,
-            clientY,
-        });
     },
 };

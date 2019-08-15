@@ -1,6 +1,7 @@
 import { IObject } from "@daybrush/utils";
 import * as Dragger from "@daybrush/drag";
 import MoveableManager from "./MoveableManager";
+import { Frame } from "scenejs";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
@@ -456,17 +457,35 @@ export interface OnWarpEnd {
     isDrag: boolean;
     datas: IObject<any>;
 }
-export interface OnGroupDragStart {
+
+export interface OnDragGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
 }
 
-export interface OnGroupDrag extends OnDrag {
+export interface OnDragGroup extends OnDrag {
     targets: Array<HTMLElement | SVGElement>;
     events: Array<OnDrag | undefined>;
 }
-export interface OnGroupDragEnd {
+export interface OnDragGroupEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+    isDrag: boolean;
+}
+
+export interface OnRotateGroupStart {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+}
+
+export interface OnRotateGroup extends OnRotate {
+    targets: Array<HTMLElement | SVGElement>;
+    events: Array<OnRotate | undefined>;
+}
+export interface OnRotateGroupEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
@@ -488,9 +507,24 @@ export interface Able<T = any> {
     pinch?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinch) => any;
     pinchEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchEnd) => any;
 
+    dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
     dragControlStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
     dragControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
     dragControlEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+
+    dragGroupCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragGroupStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    dragGroup?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;
+    dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+
+    pinchGroupStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchStart) => any;
+    pinchGroup?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinch) => any;
+    pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchEnd) => any;
+
+    dragGroupControlCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    dragGroupControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
 }
 export interface OriginProps {
     origin: boolean;
@@ -498,13 +532,19 @@ export interface OriginProps {
 export interface DraggableProps {
     draggable?: boolean;
     throttleDrag?: number;
+
     onDragStart?: (e: OnDragStart) => any;
     onDrag?: (e: OnDrag) => any;
     onDragEnd?: (e: OnDragEnd) => any;
+
+    onDragGroupStart?: (e: OnDragGroupStart) => any;
+    onDragGroup?: (e: OnDragGroup) => any;
+    onDragGroupEnd?: (e: OnDragGroupEnd) => any;
 }
 export interface ResizableProps {
     resizable?: boolean;
     throttleResize?: number;
+
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
     onResizeEnd?: (e: OnResizeEnd) => any;
@@ -520,9 +560,14 @@ export interface ScalableProps {
 export interface RotatableProps {
     rotatable?: boolean;
     throttleRotate?: number;
+
     onRotateStart?: (e: OnRotateStart) => any;
     onRotate?: (e: OnRotate) => any;
     onRotateEnd?: (e: OnRotateEnd) => any;
+
+    onRotateGroupStart?: (e: OnRotateGroupStart) => any;
+    onRotateGroup?: (e: OnRotateGroup) => any;
+    onRotateGroupEnd?: (e: OnRotateGroupEnd) => any;
 }
 
 export interface WarpableProps {
@@ -542,7 +587,5 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
 export interface GroupableProps extends DraggableProps, RotatableProps, ResizableProps, ScalableProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
-    onGroupDragStart?: (e: OnGroupDragStart) => any;
-    onGroupDrag?: (e: OnGroupDrag) => any;
-    onGroupDragEnd?: (e: OnGroupDragEnd) => any;
+    updateGroup?: boolean;
 }
