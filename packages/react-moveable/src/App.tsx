@@ -40,8 +40,8 @@ class App extends React.Component {
                     rotatable={true}
                     scalable={true}
                     ref={ref(this, "ab")}
-                    targets={[].slice.call(document.querySelectorAll("path"))}
-                    origin={false}
+                    targets={[].slice.call(document.querySelectorAll("ellipse, path, a"))}
+                    // origin={false}
                     onDragGroupStart={e => {
                         console.log("start", e);
                     }}
@@ -55,7 +55,6 @@ class App extends React.Component {
                         console.log("rgs", e);
                     }}
                     onRotateGroup={e => {
-                        // console.log("rg", e);
                         e.events.forEach(ev => {
                             if (!ev) {
                                 return;

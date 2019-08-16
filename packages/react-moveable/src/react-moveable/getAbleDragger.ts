@@ -2,7 +2,6 @@ import MoveableManager from "./MoveableManager";
 import Dragger, { OnDragStart, OnDrag, OnDragEnd, OnPinchEnd } from "@daybrush/drag";
 import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
-import MoveableGroup from "./MoveableGroup";
 
 function triggerAble<T>(
     moveable: MoveableManager<T>,

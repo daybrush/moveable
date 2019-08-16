@@ -22,7 +22,13 @@ export function triggerChildAble<T extends Able>(
         return result;
     });
 }
-export function getCustomDragEvent(
+export function getCustomEvent(
+    datas: any
+) {
+    return datas.custom;
+}
+
+export function setCustomEvent(
     clientX: number,
     clientY: number,
     datas: any,

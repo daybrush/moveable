@@ -140,6 +140,11 @@ export default class MoveableManager<T = {}>
         const hasControlAble = this.controlAbles.length;
         const isTargetChanged = stateTarget !== target;
 
+        if (isTargetChanged) {
+            this.updateState({
+                target,
+            });
+        }
         if (!hasTargetAble || isTargetChanged) {
             unset(this, "targetDragger");
         }

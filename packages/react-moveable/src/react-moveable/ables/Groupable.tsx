@@ -10,7 +10,7 @@ export default {
         const targets = moveable.props.targets || [];
 
         moveable.moveables = [];
-        const { left, top, width, height } = moveable.state;
+        const { left, top } = moveable.state;
         const position = { left, top };
 
         return [...targets.map((target, i) => {

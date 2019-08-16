@@ -49,7 +49,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const { width, height } = this.state;
         this.frame = new Frame({
             width: `${width}px`,
-            height: `${height}0px`,
+            height: `${height}px`,
             transform: {
                 translateX: "0px",
                 translateY: "0px",
@@ -106,13 +106,14 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
             this.clearFrame();
         }
+        console.log(this.frame.toCSS());
         target!.style.cssText = this.frame.toCSS();
 
         this.updateState(
             getTargetInfo(target, this.controlBox.getElement(), isTarget ? state : undefined), false,
         );
 
-        const { pos1, pos2, pos3, pos4 } = state;
+        const { pos1, pos2, pos3, pos4, beforeOrigin } = state;
         const pos = [state.left, state.top];
 
         this.setState({
@@ -122,6 +123,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             pos2: sum(pos2, pos),
             pos3: sum(pos3, pos),
             pos4: sum(pos4, pos),
+            beforeOrigin: sum(beforeOrigin, pos),
         });
     }
     public triggerEvent(name: string, e: any): any {

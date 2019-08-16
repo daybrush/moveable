@@ -4,10 +4,10 @@ import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import { RotatableProps, OnRotateGroup, OnRotateGroupEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
-import { triggerChildAble, getCustomDragEvent } from "../groupUtils";
+import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import { Frame } from "scenejs";
 import Draggable from "./Draggable";
-import { caculate, minus, convertPositionMatrix, rotate } from "../matrix";
+import { minus, rotate, sum } from "../matrix";
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
     datas.startAbsoluteOrigin = [
@@ -200,21 +200,30 @@ export default {
     dragGroupControlCondition: dragControlCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
         const { clientX, clientY, datas, inputEvent } = e;
-        const parentBeforeOrigin = moveable.state.transformOrigin;
+        const {
+            left: parentLeft,
+            top: parentTop,
+            beforeOrigin: parentBeforeOrigin
+        } = moveable.state;
 
         triggerChildAble(
             moveable,
             this,
             "dragControlStart",
             { ...e, parentRotate: 0 },
-            (child, childDatas, i) => {
-                const beforeOrigin = child.state.beforeOrigin;
-                const childClient = minus(beforeOrigin, parentBeforeOrigin);
+            (child, childDatas, result, i) => {
+                const { left, top, beforeOrigin } = child.state;
+                const childClient = sum(
+                    minus([left, top], [parentLeft, parentTop]),
+                    minus(beforeOrigin, parentBeforeOrigin)
+                );
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
 
+
+                i === 0 && console.log(childClient);
                 Draggable.dragStart(
                     child,
-                    getCustomDragEvent(childClient[0], childClient[1], dragDatas, inputEvent),
+                    setCustomEvent(childClient[0], childClient[1], dragDatas, inputEvent),
                 );
             },
         );
@@ -241,25 +250,23 @@ export default {
             return;
         }
         const parentRotate = params.beforeDist;
-        const parentBeforeOrigin = moveable.state.beforeOrigin;
         const deg = params.beforeDelta;
 
+        console.log("rotate");
         const events = triggerChildAble(
             moveable,
             this,
             "dragControl",
             { ...e, parentRotate },
-            (child, childDatas, result) => {
-                const beforeOrigin = child.state.beforeOrigin;
-                const childClient = minus(beforeOrigin, parentBeforeOrigin);
+            (child, childDatas, result, i) => {
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
-                const [clientX, clientY] = rotate(childClient, deg);
+                const { prevX, prevY } = getCustomEvent(dragDatas);
+                const [clientX, clientY] = rotate([prevX, prevY], deg);
 
-                !childDatas.drag && (childDatas.drag = {});
-
+                console.log(prevX, prevY, clientX, clientY);
                 const dragResult = Draggable.drag(
                     child,
-                    getCustomDragEvent(clientX, clientY, dragDatas, inputEvent),
+                    setCustomEvent(clientX, clientY, dragDatas, inputEvent),
                 );
 
                 result.drag = dragResult;

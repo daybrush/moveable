@@ -1,7 +1,6 @@
 import { IObject } from "@daybrush/utils";
 import * as Dragger from "@daybrush/drag";
 import MoveableManager from "./MoveableManager";
-import { Frame } from "scenejs";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
