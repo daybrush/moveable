@@ -1,13 +1,14 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray, triggerEvent } from "../utils";
+import { throttleArray, triggerEvent, prefix } from "../utils";
 import { minus } from "../matrix";
 import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { Frame } from "scenejs";
+import { hasClass } from "@daybrush/utils";
 
-const draggable = {
+const Draggable = {
     name: "draggable",
     dragStart(
         moveable: MoveableManager<DraggableProps>,
@@ -121,7 +122,9 @@ const draggable = {
         frame.set("transform", "translateX", `${tx + e.beforeDelta[0]}px`);
         frame.set("transform", "translateY", `${ty + e.beforeDelta[1]}px`);
     },
-
+    dragGroupCondition(target: HTMLElement | SVGElement) {
+        return hasClass(target, prefix("group"));
+    },
     dragGroupStart(moveable: MoveableGroup, e: any) {
         const { clientX, clientY, datas } = e;
 
@@ -174,4 +177,4 @@ const draggable = {
     },
 };
 
-export default draggable;
+export default Draggable;

@@ -491,6 +491,24 @@ export interface OnRotateGroupEnd {
     isDrag: boolean;
 }
 
+export interface OnResizeGroupStart {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+}
+
+export interface OnResizeGroup extends OnResize {
+    targets: Array<HTMLElement | SVGElement>;
+    events: Array<OnResize & { drag: OnDrag } | undefined>;
+}
+
+export interface OnResizeGroupEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+    isDrag: boolean;
+}
+
 export interface Able<T = any> {
     name: string & keyof MoveableManagerProps<T>;
     dragControlOnly?: boolean;
@@ -547,6 +565,10 @@ export interface ResizableProps {
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
     onResizeEnd?: (e: OnResizeEnd) => any;
+
+    onResizeGroupStart?: (e: OnResizeGroupStart) => any;
+    onResizeGroup?: (e: OnResizeGroup) => any;
+    onResizeGroupEnd?: (e: OnResizeGroupEnd) => any;
 }
 export interface ScalableProps {
     scalable?: boolean;

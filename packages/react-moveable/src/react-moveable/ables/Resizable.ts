@@ -1,9 +1,17 @@
 import { getRad, throttle, prefix, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
-import { ResizableProps } from "../types";
+import { ResizableProps, OnRotateGroup, OnRotateGroupEnd, OnResizeGroup, OnResizeGroupEnd } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection } from "../renderDirection";
 import { hasClass } from "@daybrush/utils";
+import MoveableGroup from "../MoveableGroup";
+import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
+import { sum, minus, rotate } from "../matrix";
+import Draggable from "./Draggable";
+
+function dragControlCondition(target: HTMLElement | SVGElement) {
+    return hasClass(target, prefix("direction"));
+}
 
 export default {
     name: "resizable",
@@ -15,9 +23,7 @@ export default {
             return renderAllDirection(moveable);
         }
     },
-    dragControlCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, prefix("direction"));
-    },
+    dragControlCondition,
     dragControlStart(
         moveable: MoveableManager<ResizableProps>,
         e: any,
@@ -149,6 +155,99 @@ export default {
             clientY,
             isDrag,
         });
+        return isDrag;
+    },
+    dragGroupControlCondition: dragControlCondition,
+    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+        const { clientX, clientY, datas, inputEvent } = e;
+
+        triggerChildAble(
+            moveable,
+            this,
+            "dragControlStart",
+            { ...e, parentRotate: 0 },
+            (child, childDatas) => {
+                const { left, top } = child.state;
+                const dragDatas = childDatas.drag || (childDatas.drag = {});
+
+                Draggable.dragStart(
+                    child,
+                    setCustomEvent(left, top, dragDatas, inputEvent),
+                );
+            },
+        );
+
+        this.dragControlStart(moveable, e);
+
+        const result = triggerEvent(moveable, "onResizeGroupStart", {
+            targets: moveable.props.targets!,
+            clientX,
+            clientY,
+        });
+
+        datas.isResize = result !== false;
+        return datas.isDrag;
+    },
+    dragGroupControl(moveable: MoveableGroup, e: any) {
+        const { inputEvent, datas } = e;
+        if (!datas.isResize) {
+            return;
+        }
+        const params = this.dragControl(moveable, e);
+
+        if (!params) {
+            return;
+        }
+        const {width, height, dist } = params;
+        const parentScale = [
+            width / (width - dist[0]),
+            height / (height - dist[1]),
+        ];
+        const events = triggerChildAble(
+            moveable,
+            this,
+            "dragControl",
+            { ...e, parentScale },
+            (child, childDatas, result, i) => {
+                const dragDatas = childDatas.drag || (childDatas.drag = {});
+                const { startX, startY } = getCustomEvent(dragDatas);
+                const clientX = parentScale[0] * startX;
+                const clientY = parentScale[1] * startY;
+
+                const dragResult = Draggable.drag(
+                    child,
+                    setCustomEvent(clientX, clientY, dragDatas, inputEvent),
+                );
+
+                result.drag = dragResult;
+            },
+        );
+        const nextParams: OnResizeGroup = {
+            targets: moveable.props.targets!,
+            events,
+            ...params,
+        };
+
+        triggerEvent(moveable, "onResizeGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+        if (!e.datas.isResize) {
+            return;
+        }
+        const { clientX, clientY, isDrag } = e;
+
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
+
+        const nextParams: OnResizeGroupEnd = {
+            targets: moveable.props.targets!,
+            clientX,
+            clientY,
+            isDrag,
+        };
+
+        triggerEvent(moveable, "onResizeGroupEnd", nextParams);
         return isDrag;
     },
 };

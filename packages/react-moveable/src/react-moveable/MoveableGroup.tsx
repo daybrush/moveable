@@ -94,7 +94,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         let width = 0;
         let height = 0;
 
-        const isUpdate = !isTarget || type !== "" && this.props.updateGroup;
+        const isUpdate = !isTarget || (type !== "" && this.props.updateGroup);
 
         if (isUpdate) {
             [left, top, width, height] = getGroupRect(this.moveables);

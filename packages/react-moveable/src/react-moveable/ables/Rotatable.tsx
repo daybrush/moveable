@@ -8,6 +8,7 @@ import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils"
 import { Frame } from "scenejs";
 import Draggable from "./Draggable";
 import { minus, rotate, sum } from "../matrix";
+
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
     datas.startAbsoluteOrigin = [
@@ -219,8 +220,6 @@ export default {
                 );
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
 
-
-                i === 0 && console.log(childClient);
                 Draggable.dragStart(
                     child,
                     setCustomEvent(childClient[0], childClient[1], dragDatas, inputEvent),
@@ -241,6 +240,8 @@ export default {
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
         const { inputEvent, datas } = e;
+
+        console.log(e);
         if (!datas.isRotate) {
             return;
         }
@@ -252,7 +253,6 @@ export default {
         const parentRotate = params.beforeDist;
         const deg = params.beforeDelta;
 
-        console.log("rotate");
         const events = triggerChildAble(
             moveable,
             this,
@@ -263,7 +263,6 @@ export default {
                 const { prevX, prevY } = getCustomEvent(dragDatas);
                 const [clientX, clientY] = rotate([prevX, prevY], deg);
 
-                console.log(prevX, prevY, clientX, clientY);
                 const dragResult = Draggable.drag(
                     child,
                     setCustomEvent(clientX, clientY, dragDatas, inputEvent),

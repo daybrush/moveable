@@ -38,7 +38,7 @@ class App extends React.Component {
                 <MoveableGroup
                     draggable={true}
                     rotatable={true}
-                    scalable={true}
+                    resizable={true}
                     ref={ref(this, "ab")}
                     targets={[].slice.call(document.querySelectorAll("ellipse, path, a"))}
                     // origin={false}
@@ -60,6 +60,19 @@ class App extends React.Component {
                                 return;
                             }
                             ev.target.style.transform = `${ev.drag.transform} rotate(${ev.beforeDist}deg)`;
+                        });
+                    }}
+                    onResizeGroupStart={e => {
+                        console.log("rgs", e);
+                    }}
+                    onResizeGroup={e => {
+                        e.events.forEach(ev => {
+                            if (!ev) {
+                                return;
+                            }
+                            ev.target.style.transform = `${ev.drag.transform}`;
+                            ev.target.style.width = `${e.width}px`;
+                            ev.target.style.height = `${e.height}px`;
                         });
                     }}
                     />
