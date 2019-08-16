@@ -7,7 +7,7 @@ export function triggerChildAble<T extends Able>(
     able: T,
     type: keyof T,
     e: any,
-    callback?: (moveable: MoveableManager<any>, datas: any, index: number) => any,
+    callback?: (moveable: MoveableManager<any>, datas: any, result: any, index: number) => any,
 ) {
     const name = able.name!;
     const datas = e.datas;
@@ -18,7 +18,7 @@ export function triggerChildAble<T extends Able>(
 
         const result = (able as any)[type]!(child, { ...e, datas: childDatas, parentFlag: true });
 
-        result && callback && callback(child, childDatas, i);
+        result && callback && callback(child, childDatas, result, i);
         return result;
     });
 }
@@ -26,6 +26,7 @@ export function getCustomDragEvent(
     clientX: number,
     clientY: number,
     datas: any,
+    inputEvent: any,
 ) {
     const e = datas.custom || (datas.custom = {
         startX: clientX,
@@ -51,5 +52,6 @@ export function getCustomDragEvent(
         deltaY: clientY - prevY,
         isDrag: e.isDrag,
         datas,
+        inputEvent,
     };
 }

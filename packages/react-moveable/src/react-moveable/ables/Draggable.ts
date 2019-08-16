@@ -42,7 +42,7 @@ const draggable = {
         } else {
             datas.isPinch = false;
         }
-        return result;
+        return datas.isDrag;
     },
     drag(
         moveable: MoveableManager<DraggableProps>,

@@ -483,7 +483,7 @@ export interface OnRotateGroupStart {
 
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotate | undefined>;
+    events: Array<OnRotate & { drag: OnDrag } | undefined>;
 }
 export interface OnRotateGroupEnd {
     targets: Array<HTMLElement | SVGElement>;

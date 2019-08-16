@@ -60,7 +60,7 @@ class App extends React.Component {
                             if (!ev) {
                                 return;
                             }
-                            ev.target.style.transform = ev.transform;
+                            ev.target.style.transform = `${ev.drag.transform} rotate(${ev.beforeDist}deg)`;
                         });
                     }}
                     />

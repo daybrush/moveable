@@ -12,6 +12,7 @@ import {
     getOrigin,
     createScaleMatrix,
     sum,
+    getRotateMatrix,
 } from "./matrix";
 import MoveableManager from "./MoveableManager";
 
@@ -456,20 +457,14 @@ export function getSize(
         ];
     }
 }
+
 export function getRotationInfo(
     pos1: number[],
     pos2: number[],
     direction: number,
 ): [number, number[]] {
     const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-
-    const cos = Math.cos(rotationRad);
-    const sin = Math.sin(rotationRad);
-    const relativeRotationPos = multiply([
-        cos, -sin, 0,
-        sin, cos, 0,
-        0, 0, 1,
-    ], [0, -40, 1], 3);
+    const relativeRotationPos = multiply(getRotateMatrix(rotationRad), [0, -40, 1], 3);
 
     const rotationPos = [
         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
