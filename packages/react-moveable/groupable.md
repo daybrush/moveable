@@ -1,4 +1,5 @@
 ## 🚀 How to use Groupable
+* **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 

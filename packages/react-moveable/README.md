@@ -65,7 +65,7 @@
 * **Rotatable** indicates whether the target can be rotated.
 * **Warpable** indicates whether the target can be warped(distorted, bented).
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
-* **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
+* **[Groupable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/groupable.md)** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 * Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
 * Support 3d Transform
 
@@ -76,11 +76,11 @@ $ npm i react-moveable
 ```
 
 ## 📄 Documents
+
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
 ## 🚀 How to use
 
-* [How to use Groupable](./README_GROUP.md)
 ```tsx
 import Moveable from "react-moveable";
 
@@ -230,7 +230,7 @@ render() {
     );
 }
 ```
-
+## 🚀 [How to use Groupable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/groupable.md)
 
 ## ⚙️ Developments
 ### `npm start`
