@@ -1,6 +1,8 @@
 import MoveableGroup from "./MoveableGroup";
 import { Able } from "./types";
 import MoveableManager from "./MoveableManager";
+import { hasClass } from "@daybrush/utils";
+import { prefix } from "./utils";
 
 export function triggerChildAble<T extends Able>(
     moveable: MoveableGroup,
@@ -22,9 +24,7 @@ export function triggerChildAble<T extends Able>(
         return result;
     });
 }
-export function getCustomEvent(
-    datas: any
-) {
+export function getCustomEvent(datas: any) {
     return datas.custom;
 }
 
@@ -60,4 +60,8 @@ export function setCustomEvent(
         datas,
         inputEvent,
     };
+}
+
+export function directionCondition(target: HTMLElement | SVGElement) {
+    return hasClass(target, prefix("direction"));
 }

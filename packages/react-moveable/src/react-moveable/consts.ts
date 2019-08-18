@@ -7,7 +7,6 @@ import Rotatable from "./ables/Rotatable";
 import Resizable from "./ables/Resizable";
 import Scalable from "./ables/Scalable";
 import Warpable from "./ables/Warpable";
-import Groupable from "./ables/Groupable";
 
 export const agent = getAgent();
 export const isNotSupportTransformOrigin
@@ -35,7 +34,8 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	box-sizing: border-box;
 	background: #4af;
 	margin-top: -7px;
-	margin-left: -7px;
+    margin-left: -7px;
+    z-index: 10;
 }
 .line {
 	position: absolute;
@@ -75,6 +75,9 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {
 	cursor: nesw-resize;
 }
+.group {
+    z-index: -1;
+}
 ${isNotSupportTransformOrigin ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;
@@ -91,4 +94,5 @@ export const NEARBY_POS = [
 
 export const MIN_SCALE = 0.000000001;
 export const MOVEABLE_ABLES: Able[] = [Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable];
-export const MOVEABLE_GROUP_ABLES: Able[] = [Groupable, Pinchable, Draggable, Rotatable, Resizable, Scalable];
+export const MAX_NUM = Math.pow(10, 10);
+export const MIN_NUM = -MAX_NUM;

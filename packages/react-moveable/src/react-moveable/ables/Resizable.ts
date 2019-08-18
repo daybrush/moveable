@@ -1,29 +1,24 @@
-import { getRad, throttle, prefix, getDirection, triggerEvent } from "../utils";
+import { getRad, throttle, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
-import { ResizableProps, OnRotateGroup, OnRotateGroupEnd, OnResizeGroup, OnResizeGroupEnd } from "../types";
+import { ResizableProps, OnResizeGroup, OnResizeGroupEnd } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection } from "../renderDirection";
-import { hasClass } from "@daybrush/utils";
 import MoveableGroup from "../MoveableGroup";
-import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
-import { sum, minus, rotate } from "../matrix";
+import { triggerChildAble, setCustomEvent, getCustomEvent, directionCondition } from "../groupUtils";
 import Draggable from "./Draggable";
-
-function dragControlCondition(target: HTMLElement | SVGElement) {
-    return hasClass(target, prefix("direction"));
-}
 
 export default {
     name: "resizable",
     dragControlOnly: true,
     updateRect: true,
+    canPinch: true,
 
     render(moveable: MoveableManager<Partial<ResizableProps>>) {
         if (moveable.props.resizable) {
             return renderAllDirection(moveable);
         }
     },
-    dragControlCondition,
+    dragControlCondition: directionCondition,
     dragControlStart(
         moveable: MoveableManager<ResizableProps>,
         e: any,
@@ -33,9 +28,9 @@ export default {
                 target: inputTarget,
             },
             pinchFlag,
-            direction = getDirection(inputTarget),
         } = e;
 
+        const direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
         const { target, width, height } = moveable.state;
         const { clientX, clientY, datas } = e;
 
@@ -60,11 +55,11 @@ export default {
         if (result !== false) {
             datas.isResize = true;
         }
-        return result;
+        return datas.isResize;
     },
     dragControl(
         moveable: MoveableManager<ResizableProps>,
-        { datas, clientX, clientY, distX, distY, pinchFlag, pinchDistance }: any,
+        { datas, clientX, clientY, distX, distY, pinchFlag, parentDistance, parentScale }: any,
     ) {
         const {
             direction,
@@ -81,6 +76,7 @@ export default {
         const {
             keepRatio,
             throttleResize = 0,
+            parentMoveable,
         } = moveable.props;
         const {
             target,
@@ -90,10 +86,13 @@ export default {
         let distHeight: number = 0;
 
         // diagonal
-        if (pinchFlag) {
-            if (pinchDistance) {
-                distWidth = pinchDistance;
-                distHeight = pinchDistance * height / width;
+        if (parentScale) {
+            distWidth = (parentScale - 1) * width;
+            distHeight = (parentScale - 1) * height;
+        } else if (pinchFlag) {
+            if (parentDistance) {
+                distWidth = parentDistance;
+                distHeight = parentDistance * height / width;
             }
         } else {
             const dist = getDragDist({ datas, distX, distY });
@@ -124,7 +123,7 @@ export default {
         datas.prevWidth = distWidth;
         datas.prevHeight = distHeight;
 
-        if (delta.every(num => !num)) {
+        if (!parentMoveable && delta.every(num => !num)) {
             return;
         }
         const params = {
@@ -157,9 +156,13 @@ export default {
         });
         return isDrag;
     },
-    dragGroupControlCondition: dragControlCondition,
+    dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
         const { clientX, clientY, datas, inputEvent } = e;
+        const {
+            left: parentLeft,
+            top: parentTop,
+        } = moveable.state;
 
         triggerChildAble(
             moveable,
@@ -172,7 +175,7 @@ export default {
 
                 Draggable.dragStart(
                     child,
-                    setCustomEvent(left, top, dragDatas, inputEvent),
+                    setCustomEvent(left - parentLeft, top - parentTop, dragDatas, inputEvent),
                 );
             },
         );
@@ -186,7 +189,7 @@ export default {
         });
 
         datas.isResize = result !== false;
-        return datas.isDrag;
+        return datas.isResize;
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
         const { inputEvent, datas } = e;
@@ -198,17 +201,18 @@ export default {
         if (!params) {
             return;
         }
-        const {width, height, dist } = params;
+        const { width, height, dist } = params;
         const parentScale = [
             width / (width - dist[0]),
             height / (height - dist[1]),
         ];
+
         const events = triggerChildAble(
             moveable,
             this,
             "dragControl",
             { ...e, parentScale },
-            (child, childDatas, result, i) => {
+            (child, childDatas, result) => {
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
                 const { startX, startY } = getCustomEvent(dragDatas);
                 const clientX = parentScale[0] * startX;

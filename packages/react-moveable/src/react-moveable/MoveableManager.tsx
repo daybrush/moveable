@@ -174,7 +174,7 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const enabledAbles = props.ables!.filter(able => props[able.name]);
         let controlAbleOnly: boolean = false;
-        const targetAbles = enabledAbles.filter(able => able.dragStart);
+        const targetAbles = enabledAbles.filter(able => able.dragStart || able.pinchStart);
         const controlAbles = enabledAbles.filter(({ dragControlStart, dragControlOnly }) => {
             if (!dragControlStart || (dragControlOnly && controlAbleOnly)) {
                 return false;

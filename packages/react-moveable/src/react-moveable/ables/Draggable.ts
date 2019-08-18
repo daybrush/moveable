@@ -5,7 +5,6 @@ import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
-import { Frame } from "scenejs";
 import { hasClass } from "@daybrush/utils";
 
 const Draggable = {
@@ -58,6 +57,7 @@ const Draggable = {
 
         const {
             throttleDrag = 0,
+            parentMoveable,
         } = moveable.props;
         const target = moveable.state.target;
         const beforeDist = getDragDist({ datas, distX, distY }, true);
@@ -78,7 +78,7 @@ const Draggable = {
         const bottom = datas.bottom - beforeDist[1];
         const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
-        if (delta.every(num => !num) && beforeDelta.some(num => !num)) {
+        if (!parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }
         const params = {
@@ -114,13 +114,6 @@ const Draggable = {
             datas: datas.datas,
         });
         return isDrag;
-    },
-    groupStyle(frame: Frame, e: OnDragGroup) {
-        const tx = parseFloat(frame.get("transform", "translateX"));
-        const ty = parseFloat(frame.get("transform", "translateY"));
-
-        frame.set("transform", "translateX", `${tx + e.beforeDelta[0]}px`);
-        frame.set("transform", "translateY", `${ty + e.beforeDelta[1]}px`);
     },
     dragGroupCondition(target: HTMLElement | SVGElement) {
         return hasClass(target, prefix("group"));

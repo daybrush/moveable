@@ -84,6 +84,7 @@ export function caculateMatrixStack(
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
     const isContainer: boolean = !!prevMatrix || target === container;
+    const isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" || "ownerSVGElement" in el;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -188,7 +189,11 @@ export function caculateMatrixStack(
             n,
         );
     });
-    const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
+    const isMatrix3d = !isSVGGraphicElement && is3d;
+    const transform = `${isMatrix3d ? "matrix3d" : "matrix"}(${
+        convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16
+                ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
+    })`;
 
     return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d];
 }

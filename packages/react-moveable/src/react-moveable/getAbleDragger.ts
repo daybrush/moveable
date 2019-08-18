@@ -14,23 +14,18 @@ function triggerAble<T>(
     const eventName = `${eventOperation}${prefix}${eventType}`;
     const conditionName = `${eventOperation}${prefix}Condition`;
     const isStart = eventType === "Start";
-    const isGrouping = prefix.indexOf("Group") > -1 && eventType === "";
+    const isGroup = prefix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
     const results = ables.filter((able: any) => {
         const condition = isStart && able[conditionName];
 
         if (able[eventName] && (!condition || condition(e.inputEvent.target))) {
-            const result =  able[eventName](moveable, e);
-
-            if (result && isGrouping && able.groupStyle) {
-                able.groupStyle((moveable as any).frame, result);
-            }
-            return result;
+            return able[eventName](moveable, e);
         }
         return false;
     });
     if (!isStart && results.length) {
-        if (results.some(able => able.updateRect)) {
+        if (results.some(able => able.updateRect) && !isGroup) {
             moveable.updateRect(eventType);
         } else {
             moveable.updateTarget(eventType);

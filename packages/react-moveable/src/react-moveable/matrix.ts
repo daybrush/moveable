@@ -165,6 +165,8 @@ export function convertDimension(matrix: number[], n: number = Math.sqrt(matrix.
 
     return newMatrix;
 }
+
+(window as any).b = convertDimension;
 export function multiplies(n: number, ...matrixes: number[][]) {
     let m: number[] = createIdentityMatrix(n);
 

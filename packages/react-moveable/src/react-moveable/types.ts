@@ -260,6 +260,7 @@ export interface OnScaleStart {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - The direction of scale.
  * @property - a target's scale
  * @property - The distance of scale
  * @property - The delta of scale
@@ -270,10 +271,13 @@ export interface OnScale {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    direction: number[];
     scale: number[];
     dist: number[];
     delta: number[];
     transform: string;
+    width: number;
+    height: number;
     isPinch: boolean;
 }
 /**
@@ -508,11 +512,29 @@ export interface OnResizeGroupEnd {
     clientY: number;
     isDrag: boolean;
 }
+export interface OnScaleGroupStart {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+}
+
+export interface OnScaleGroup extends OnScale {
+    targets: Array<HTMLElement | SVGElement>;
+    events: Array<OnScale & { drag: OnDrag } | undefined>;
+}
+
+export interface OnScaleGroupEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+    isDrag: boolean;
+}
 
 export interface Able<T = any> {
     name: string & keyof MoveableManagerProps<T>;
     dragControlOnly?: boolean;
     updateRect?: boolean;
+    canPinch?: boolean;
 
     render?: (moveable: MoveableManagerProps<any>) => any;
 
@@ -526,7 +548,7 @@ export interface Able<T = any> {
 
     dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
     dragControlStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
-    dragControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
+    dragControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;
     dragControlEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
 
     dragGroupCondition?: (target: SVGElement | HTMLElement) => boolean;
@@ -576,6 +598,10 @@ export interface ScalableProps {
     onScaleStart?: (e: OnScaleStart) => any;
     onScale?: (e: OnScale) => any;
     onScaleEnd?: (e: OnScaleEnd) => any;
+
+    onScaleGroupStart?: (e: OnScaleGroupStart) => any;
+    onScaleGroup?: (e: OnScaleGroup) => any;
+    onScaleGroupEnd?: (e: OnScaleGroupEnd) => any;
 }
 
 export interface RotatableProps {
@@ -603,9 +629,13 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinchStart?: (e: OnPinchStart) => any;
     onPinch?: (e: OnPinch) => any;
     onPinchEnd?: (e: OnPinchEnd) => any;
+
+    onPinchGroupStart?: (e: OnPinchStart) => any;
+    onPinchGroup?: (e: OnPinch) => any;
+    onPinchGroupEnd?: (e: OnPinchEnd) => any;
 }
 
-export interface GroupableProps extends DraggableProps, RotatableProps, ResizableProps, ScalableProps {
+export interface GroupableProps extends PinchableProps, DraggableProps, RotatableProps, ResizableProps, ScalableProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;

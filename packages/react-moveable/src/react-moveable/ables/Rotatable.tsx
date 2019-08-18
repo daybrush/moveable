@@ -5,7 +5,6 @@ import MoveableManager from "../MoveableManager";
 import { RotatableProps, OnRotateGroup, OnRotateGroupEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
-import { Frame } from "scenejs";
 import Draggable from "./Draggable";
 import { minus, rotate, sum } from "../matrix";
 
@@ -67,6 +66,8 @@ function dragControlCondition(target: HTMLElement | SVGElement) {
 
 export default {
     name: "rotatable",
+    canPinch: true,
+
     render(moveable: MoveableManager<RotatableProps>) {
         if (!moveable.props.rotatable) {
             return null;
@@ -87,7 +88,6 @@ export default {
     dragControlStart(
         moveable: MoveableManager<RotatableProps>,
         { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag }: any) {
-        const { onRotateStart } = moveable.props;
         const {
             target, left, top, origin, beforeOrigin,
             rotationPos, direction, beforeDirection, targetTransform,
@@ -115,7 +115,7 @@ export default {
         datas.beforeDirection = beforeDirection;
         datas.datas = {};
 
-        const result = onRotateStart && onRotateStart!({
+        const result = triggerEvent(moveable, "onRotateStart", {
             datas: datas.datas,
             target,
             clientX,
@@ -141,6 +141,7 @@ export default {
         }
         const {
             throttleRotate = 0,
+            parentMoveable,
         } = moveable.props;
 
         let delta: number;
@@ -157,7 +158,7 @@ export default {
                 beforeInfo, beforeDirection, clientX, clientY, throttleRotate);
         }
 
-        if (!delta && !beforeDelta) {
+        if (!delta && !beforeDelta && !parentMoveable) {
             return;
         }
         const params = {
@@ -178,25 +179,20 @@ export default {
     },
     dragControlEnd(
         moveable: MoveableManager<RotatableProps>, { datas, isDrag, clientX, clientY }: any) {
-        const onRotateEnd = moveable.props.onRotateEnd;
 
         if (!datas.isRotate) {
             return false;
         }
         datas.isRotate = false;
-        onRotateEnd && onRotateEnd!({
+
+        triggerEvent(moveable, "onRotateEnd", {
             datas: datas.datas,
             clientX,
             clientY,
-            target: moveable.props.target!,
+            target: moveable.state.target!,
             isDrag,
         });
         return isDrag;
-    },
-    groupStyle(frame: Frame, e: OnRotateGroup) {
-        const deg = parseFloat(frame.get("transform", "rotate"));
-
-        frame.set("transform", "rotate", `${deg + e.beforeDelta}deg`);
     },
     dragGroupControlCondition: dragControlCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
@@ -204,7 +200,7 @@ export default {
         const {
             left: parentLeft,
             top: parentTop,
-            beforeOrigin: parentBeforeOrigin
+            beforeOrigin: parentBeforeOrigin,
         } = moveable.state;
 
         triggerChildAble(
@@ -212,11 +208,11 @@ export default {
             this,
             "dragControlStart",
             { ...e, parentRotate: 0 },
-            (child, childDatas, result, i) => {
+            (child, childDatas) => {
                 const { left, top, beforeOrigin } = child.state;
                 const childClient = sum(
                     minus([left, top], [parentLeft, parentTop]),
-                    minus(beforeOrigin, parentBeforeOrigin)
+                    minus(beforeOrigin, parentBeforeOrigin),
                 );
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
 
@@ -241,7 +237,6 @@ export default {
     dragGroupControl(moveable: MoveableGroup, e: any) {
         const { inputEvent, datas } = e;
 
-        console.log(e);
         if (!datas.isRotate) {
             return;
         }
@@ -277,6 +272,7 @@ export default {
             ...params,
         };
 
+        moveable.rotation += params.beforeDelta;
         triggerEvent(moveable, "onRotateGroup", nextParams);
         return nextParams;
     },
