@@ -1,5 +1,5 @@
 import React from "react";
-import Moveable from "./react-moveable";
+import Moveable, { MoveableGroup } from "./react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";
@@ -19,22 +19,107 @@ class App extends React.Component {
     public moveable: Moveable;
     public state = {
         target: null,
+        targets: [],
         isResizable: true,
-        item: null,
     } as {
         target: any,
+        targets: Array<HTMLElement | SVGElement>,
         isResizable: boolean,
-        item: Frame,
     };
+    private itemMap: Map<HTMLElement |SVGElement, Frame> = new Map();
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
         const isResizable = this.state.isResizable;
-        const item = this.state.item;
+        const item = this.itemMap.get(selectedTarget);
+
         (window as any).a = this;
         return (
             <div>
-                <div id="test" style={{position: "fixed", height: "69.28203582763672px", width: "60px", top: 0, left: 0, backgroundColor: "#f5f", zIndex: 4000 }}></div>
+                <div id="test" style={{
+                    position: "fixed",
+                    height: "69.28203582763672px",
+                    width: "60px",
+                    top: 0, left: 0, backgroundColor: "#f5f", zIndex: 4000,
+                }}></div>
+                <MoveableGroup
+                    pinchable={true}
+                    draggable={true}
+                    rotatable={true}
+                    resizable={false}
+                    scalable={true}
+                    ref={ref(this, "ab")}
+                    keepRatio={false}
+                    targets={this.state.targets}
+                    // origin={false}
+                    onDragGroupStart={e => {
+                        console.log("start", e);
+                    }}
+                    onDragGroup={e => {
+                        e.events.forEach(ev => {
+                            const groupItem = this.itemMap.get(ev.target);
+                            groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.beforeDelta[0]}px`);
+                            groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.beforeDelta[1]}px`);
+
+                            ev.target.style.cssText += groupItem.toCSS();
+                        });
+                    }}
+                    onRotateGroupStart={e => {
+                        console.log("rgs", e);
+                    }}
+                    onRotateGroup={e => {
+                        e.events.forEach(ev => {
+                            const groupItem = this.itemMap.get(ev.target);
+
+                            if (!e.isPinch) {
+                                groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
+                                groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
+                            }
+                            groupItem.set("rotate", `${parseFloat(groupItem.get("rotate")) + ev.beforeDelta}deg`);
+
+                            ev.target.style.cssText += groupItem.toCSS();
+                        });
+                    }}
+                    onResizeGroupStart={e => {
+                        console.log("rgs", e);
+                    }}
+                    onResizeGroup={e => {
+                        const direction = e.direction;
+
+                        e.events.forEach(ev => {
+                            if (!ev) {
+                                return;
+                            }
+                            const offset = [
+                                direction[0] < 0 ? -ev.delta[0] : 0,
+                                direction[1] < 0 ? -ev.delta[1] : 0,
+                            ];
+
+                            const groupItem = this.itemMap.get(ev.target);
+                            groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + offset[0] + ev.drag.beforeDelta[0]}px`);
+                            groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + offset[1] + ev.drag.beforeDelta[1]}px`);
+                            groupItem.set("width", `${ev.width}px`);
+                            groupItem.set("height", `${ev.height}px`);
+
+                            ev.target.style.cssText += groupItem.toCSS();
+                        });
+                    }}
+                    onScaleGroupStart={e => {
+                        console.log("scs", e);
+                    }}
+                    onScaleGroup={e => {
+                        e.events.forEach(ev => {
+                            // console.log("sca", ev.drag.dist);
+                            const groupItem = this.itemMap.get(ev.target);
+                            groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
+                            groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
+                            groupItem.set("sx", groupItem.get("sx") * ev.delta[0]);
+                            groupItem.set("sy", groupItem.get("sy") * ev.delta[1]);
+
+                            ev.target.style.cssText += groupItem.toCSS();
+                        });
+                    }}
+                    />
                 <Moveable
                     target={selectedTarget}
                     container={document.body}
@@ -63,10 +148,10 @@ class App extends React.Component {
                         // target!.style.top = `${top}px`;
                         target.style.cssText += item.toCSS();
                     }}
-                    onScale={({ target, dist }) => {
+                    onScale={({ target, delta }) => {
                         // console.log(delta);
-                        item.set("sx", item.get("sx") * dist[0]);
-                        item.set("sy", item.get("sy") * dist[1]);
+                        item.set("sx", item.get("sx") * delta[0]);
+                        item.set("sy", item.get("sy") * delta[1]);
 
                         target.style.cssText += item.toCSS();
                     }}
@@ -120,6 +205,16 @@ class App extends React.Component {
         const target = e.target;
 
     }
+    public setItem(el: HTMLElement | SVGElement) {
+        this.itemMap.set(el, new Frame({
+            tz: "5px",
+            tx: "0px",
+            ty: "0px",
+            rotate: "0deg",
+            sx: 1,
+            sy: 1,
+        }));
+    }
     public onClick = (e: any) => {
         const target = e.target;
 
@@ -129,22 +224,14 @@ class App extends React.Component {
         const clientX = e.clientX;
         const clientY = e.clientY;
 
-        console.log(this.moveable.isInside(clientX, clientY));
-        if (!id || this.state.target && this.moveable.isInside(clientX, clientY)) {
+        // console.log(this.moveable.isInside(clientX, clientY));
+        // this.state.target && this.moveable.isInside(clientX, clientY)
+        if (!id) {
             return;
         }
-        const items = this.items;
-        if (!items[id]) {
-            items[id] = new Frame({
-                tz: "5px",
-                tx: "0px",
-                ty: "0px",
-                rotate: "0deg",
-                sx: 1,
-                sy: 1,
-            });
+        if (!this.itemMap.get(target)) {
+            this.setItem(target);
         }
-
         if (!this.moveable.isMoveableElement(e.target)) {
             if (this.state.target === e.target) {
                 this.moveable.updateRect();
@@ -152,7 +239,6 @@ class App extends React.Component {
                 const nativeEvent = e.nativeEvent;
                 this.setState({
                     target: e.target,
-                    item: items[id],
                 }, () => {
                     this.moveable.dragStart(nativeEvent);
                 });
@@ -166,6 +252,15 @@ class App extends React.Component {
             this.setState({ isResizable: false });
         }).keyup("shift", () => {
             this.setState({ isResizable: true });
+        });
+
+        const targets: any[] = [].slice.call(document.querySelectorAll("ellipse, path, a"));
+
+        targets.forEach(target => {
+            this.setItem(target);
+        });
+        this.setState({
+            targets,
         });
     }
 }

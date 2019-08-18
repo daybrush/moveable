@@ -1,6 +1,6 @@
 import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
 import { MoveableState, MoveableProps } from "./types";
 import {
     multiply, invert,
@@ -12,7 +12,9 @@ import {
     getOrigin,
     createScaleMatrix,
     sum,
+    getRotateMatrix,
 } from "./matrix";
+import MoveableManager from "./MoveableManager";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -82,6 +84,7 @@ export function caculateMatrixStack(
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
     const isContainer: boolean = !!prevMatrix || target === container;
+    const isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" || "ownerSVGElement" in el;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -186,7 +189,11 @@ export function caculateMatrixStack(
             n,
         );
     });
-    const transform = `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(targetMatrix)})`;
+    const isMatrix3d = !isSVGGraphicElement && is3d;
+    const transform = `${isMatrix3d ? "matrix3d" : "matrix"}(${
+        convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16
+                ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
+    })`;
 
     return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d];
 }
@@ -455,20 +462,14 @@ export function getSize(
         ];
     }
 }
+
 export function getRotationInfo(
     pos1: number[],
     pos2: number[],
     direction: number,
 ): [number, number[]] {
     const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-
-    const cos = Math.cos(rotationRad);
-    const sin = Math.sin(rotationRad);
-    const relativeRotationPos = multiply([
-        cos, -sin, 0,
-        sin, cos, 0,
-        0, 0, 1,
-    ], [0, -40, 1], 3);
+    const relativeRotationPos = multiply(getRotateMatrix(rotationRad), [0, -40, 1], 3);
 
     const rotationPos = [
         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
@@ -654,22 +655,6 @@ export function unset(self: any, name: string) {
         self[name] = null;
     }
 }
-export function getTargetPosition(target: HTMLElement | SVGElement, container?: HTMLElement | SVGElement | null) {
-    const rect = target.getBoundingClientRect();
-    let left = rect.left;
-    let top = rect.top;
-
-    if (container) {
-        const containerRect = container.getBoundingClientRect();
-
-        left -= containerRect.left;
-        top -= containerRect.top;
-    }
-    return {
-        left,
-        top,
-    };
-}
 
 export function getOrientationDirection(pos: number[], pos1: number[], pos2: number[]) {
     return (pos[0] - pos1[0]) * (pos2[1] - pos1[1]) - (pos[1] - pos1[1]) * (pos2[0] - pos1[0]);
@@ -694,4 +679,12 @@ export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: nu
         return true;
     }
     return false;
+}
+
+export function triggerEvent<T extends IObject<any>, U extends keyof T>(
+    moveable: MoveableManager<T>,
+    name: U,
+    e: T[U] extends ((e: infer P) => any) | undefined ? P : {},
+): any {
+    return moveable.triggerEvent(name, e as any);
 }

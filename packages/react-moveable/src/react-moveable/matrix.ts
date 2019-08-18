@@ -165,6 +165,8 @@ export function convertDimension(matrix: number[], n: number = Math.sqrt(matrix.
 
     return newMatrix;
 }
+
+(window as any).b = convertDimension;
 export function multiplies(n: number, ...matrixes: number[][]) {
     let m: number[] = createIdentityMatrix(n);
 
@@ -259,4 +261,21 @@ export function convertMatrixtoCSS(a: number[]) {
         ];
     }
     return transpose(a);
+}
+export function getRotateMatrix(rad: number) {
+    const cos = Math.cos(rad);
+    const sin = Math.sin(rad);
+
+    return [
+        cos, -sin, 0,
+        sin, cos, 0,
+        0, 0, 1,
+    ];
+}
+
+export function rotate(pos: number[], deg: number) {
+    return caculate(
+        getRotateMatrix(deg * Math.PI / 180),
+        convertPositionMatrix(pos, 3),
+    );
 }

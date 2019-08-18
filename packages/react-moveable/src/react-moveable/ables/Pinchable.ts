@@ -1,10 +1,8 @@
-import { OnPinchStart, OnPinch, OnPinchEnd, Client } from "@daybrush/drag";
-import { getRad } from "../utils";
-import Scalable from "./Scalable";
-import Rotatable from "./Rotatable";
-import Resizable from "./Resizable";
+import { Client } from "@daybrush/drag";
+import { getRad, triggerEvent } from "../utils";
 import MoveableManager from "../MoveableManager";
-import { PinchableProps } from "../types";
+import { PinchableProps, Able } from "../types";
+import MoveableGroup from "../MoveableGroup";
 
 function getRotatiion(touches: Client[]) {
     return getRad([
@@ -18,145 +16,135 @@ function getRotatiion(touches: Client[]) {
 
 export default {
     name: "pinchable",
+    updateRect: true,
     pinchStart(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, touches, inputEvent }: OnPinchStart,
+        { datas, clientX, clientY, touches, inputEvent, isGroup }: any,
     ) {
-        datas.scaleDatas = {};
-        datas.rotateDatas = {};
-        datas.pinchDatas = {};
+        const { pinchable, ables } = moveable.props;
 
-        const { pinchable, rotatable, scalable, resizable, target, onPinchStart } = moveable.props;
-        const isRotatable = pinchable && (pinchable === true ? rotatable : pinchable.indexOf("rotatable") > -1);
-        const isResizable = pinchable && (pinchable === true ? resizable : pinchable.indexOf("resizable") > -1);
-        const isScalable = isResizable
-            ? false
-            : (pinchable && (pinchable === true ? scalable : pinchable.indexOf("scalable") > -1));
+        if (!pinchable) {
+            return false;
+        }
+        const state = moveable.state;
+        const eventName = `onPinch${isGroup ? "Group" : ""}Start` as "onPinchStart";
+        const controlEventName = `drag${isGroup ? "Group" : ""}ControlStart` as "dragControlStart";
 
-        datas.isPinch = true;
-        onPinchStart && onPinchStart!({
-            target: target!,
+        const pinchAbles = (pinchable === true ? moveable.controlAbles : ables!.filter(able => {
+            return pinchable.indexOf(able.name as any) > -1;
+        })).filter(able => able.canPinch && able[controlEventName]);
+
+        datas.pinchableDatas = {};
+
+        const result = triggerEvent(moveable, eventName, {
+            target: state.target!,
             clientX,
             clientY,
-            datas: datas.pinchDatas,
+            datas: datas.pinchableDatas,
         });
-        if (isRotatable) {
-            Rotatable.dragControlStart(moveable, {
-                datas: datas.rotateDatas,
-                clientX,
-                clientY,
-                pinchFlag: true,
-                pinchRotate: getRotatiion(touches),
-            });
+
+        datas.isPinch = result !== false;
+        datas.ables = pinchAbles;
+
+        const isPinch = datas.isPinch;
+
+        if (!isPinch) {
+            return false;
         }
-        if (isResizable) {
-            Resizable.dragControlStart(moveable, {
-                datas: datas.scaleDatas,
+        const parentRotate = getRotatiion(touches);
+
+        pinchAbles.forEach(able => {
+            datas[able.name + "Datas"] = {};
+            const e: any = {
+                datas: datas[able.name + "Datas"],
                 clientX,
                 clientY,
-                pinchFlag: true,
                 inputEvent,
-            });
-        }
-        if (isScalable) {
-            Scalable.dragControlStart(moveable, {
-                datas: datas.scaleDatas,
-                clientX,
-                clientY,
+                parentRotate,
                 pinchFlag: true,
-                inputEvent,
-            });
-        }
-        datas.isPinch = true;
+            };
+            able[controlEventName]!(moveable, e);
+        });
+
+        return isPinch;
     },
     pinch(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent }: OnPinch,
+        { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent, isGroup }: any,
     ) {
-        const {
-            rotateDatas: { isRotate },
-            scaleDatas: { isScale },
-            resizeDatas: { isResize },
-        } = datas;
-        const { target, onPinch } = moveable.props;
+        if (!datas.isPinch) {
+            return;
+        }
+        const parentRotate = getRotatiion(touches);
+        const parentDistance = distance * (1 - 1 / pinchScale);
+        const target = moveable.state.target!;
 
         inputEvent.preventDefault();
         inputEvent.stopPropagation();
 
-        onPinch && onPinch!({
-            target: target!,
+        const params = {
+            target,
             clientX,
             clientY,
-            datas: datas.pinchDatas,
+            datas: datas.pinchableDatas,
+        };
+        const eventName = `onPinch${isGroup ? "Group" : ""}` as "onPinch";
+        triggerEvent(moveable, eventName, params);
+
+        const ables: Able[] = datas.ables;
+        const controlEventName = `drag${isGroup ? "Group" : ""}Control` as "dragControl";
+
+        ables.forEach(able => {
+            able[controlEventName]!(moveable, {
+                clientX,
+                clientY,
+                datas: datas[able.name + "Datas"],
+                inputEvent,
+                parentDistance,
+                parentRotate,
+                pinchFlag: true,
+            } as any);
         });
-        if (isRotate) {
-            Rotatable.dragControl(moveable, {
-                datas: datas.rotateDatas,
-                pinchRotate: getRotatiion(touches),
-                pinchFlag: true,
-            });
-        }
-        if (isResize) {
-            const pinchDistance = distance * (1 - 1 / pinchScale);
-
-            Resizable.dragControl(moveable, {
-                datas: datas.scaleDatas,
-                clientX, clientY,
-                pinchDistance,
-                pinchFlag: true,
-            });
-        }
-        if (isScale) {
-            const pinchDistance = distance * (1 - 1 / pinchScale);
-
-            Scalable.dragControl(moveable, {
-                datas: datas.scaleDatas,
-                clientX, clientY,
-                pinchDistance,
-                pinchFlag: true,
-            });
-        }
-        return true;
+        return params;
     },
-    pinchEnd(moveable: MoveableManager<PinchableProps>, { datas, clientX, clientY, isPinch }: OnPinchEnd) {
-        const {
-            rotateDatas: { isRotate },
-            scaleDatas: { isScale },
-            resizeDatas: { isResize },
-        } = datas;
-        const { target, onPinchEnd } = moveable.props;
-        datas.isPinch = false;
-        onPinchEnd && onPinchEnd!({
-            target: target!,
+    pinchEnd(
+        moveable: MoveableManager<PinchableProps>,
+        { datas, clientX, clientY, isPinch, inputEvent, isGroup }: any,
+    ) {
+        if (!datas.isPinch) {
+            return;
+        }
+        const target = moveable.state.target!;
+        const eventName = `onPinch${isGroup ? "Group" : ""}End` as "onPinchEnd";
+        triggerEvent(moveable, eventName, {
+            target,
             isDrag: isPinch,
             clientX,
             clientY,
-            datas: datas.pinchDatas,
+            datas: datas.pinchableDatas,
         });
-        if (isRotate) {
-            Rotatable.dragControlEnd(moveable, {
-                datas: datas.rotateDatas,
-                clientX, clientY,
+        const ables: Able[] = datas.ables;
+        const controlEventName = `drag${isGroup ? "Group" : ""}ControlEnd` as "dragControlEnd";
+
+        ables.forEach(able => {
+            able[controlEventName]!(moveable, {
+                clientX,
+                clientY,
                 isDrag: isPinch,
+                datas: datas[able.name + "Datas"],
+                inputEvent,
                 pinchFlag: true,
-            });
-        }
-        if (isResize) {
-            Resizable.dragControlEnd(moveable, {
-                datas: datas.scaleDatas,
-                clientX, clientY,
-                isDrag: isPinch,
-                pinchFlag: true,
-            });
-        }
-        if (isScale) {
-            Scalable.dragControlEnd(moveable, {
-                datas: datas.scaleDatas,
-                clientX, clientY,
-                isDrag: isPinch,
-                pinchFlag: true,
-            });
-        }
+            } as any);
+        });
         return isPinch;
+    },
+    pinchGroupStart(moveable: MoveableGroup, e: any) {
+        return this.pinchStart(moveable, {...e, isGroup: true });
+    },
+    pinchGroup(moveable: MoveableGroup, e: any) {
+        return this.pinch(moveable, {...e, isGroup: true });
+    },
+    pinchGroupEnd(moveable: MoveableGroup, e: any) {
+        return this.pinchEnd(moveable, {...e, isGroup: true });
     },
 };

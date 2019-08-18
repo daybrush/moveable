@@ -5,38 +5,37 @@ import { IObject } from "@daybrush/utils";
 
 function triggerAble<T>(
     moveable: MoveableManager<T>,
-    ableType: "targetAbles" | "controlAbles",
+    ableType: string,
     eventOperation: string,
     prefix: string,
-    eventType: string,
+    eventType: any,
     e: OnDragStart | OnDrag | OnDragEnd | OnPinchEnd,
 ) {
     const eventName = `${eventOperation}${prefix}${eventType}`;
     const conditionName = `${eventOperation}${prefix}Condition`;
     const isStart = eventType === "Start";
-    const ables: Array<Able<T>> = moveable.state[ableType];
-    const result = ables.filter((able: any) => {
+    const isGroup = prefix.indexOf("Group") > -1;
+    const ables: Array<Able<T>> = (moveable as any)[ableType];
+    const results = ables.filter((able: any) => {
         const condition = isStart && able[conditionName];
-        const event = able[eventName];
 
-        if (event && (!condition || condition(e.inputEvent.target))) {
-            return event(moveable, e);
+        if (able[eventName] && (!condition || condition(e.inputEvent.target))) {
+            return able[eventName](moveable, e);
         }
         return false;
     });
-
-    if (!isStart && result.length) {
-        if (result.some(able => able.updateRect)) {
-            moveable.updateRect();
+    if (!isStart && results.length) {
+        if (results.some(able => able.updateRect) && !isGroup) {
+            moveable.updateRect(eventType);
         } else {
-            moveable.updateTarget();
+            moveable.updateTarget(eventType);
         }
     }
 }
 export function getAbleDragger<T>(
     moveable: MoveableManager<T>,
     target: HTMLElement | SVGElement,
-    ableType: "targetAbles" | "controlAbles",
+    ableType: string,
     prefix: string,
 
 ) {

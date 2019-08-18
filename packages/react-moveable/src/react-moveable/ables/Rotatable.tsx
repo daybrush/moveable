@@ -1,8 +1,12 @@
 import React from "react";
-import { getRad, throttle, prefix } from "../utils";
+import { getRad, throttle, prefix, triggerEvent } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
-import { RotatableProps } from "../types";
+import { RotatableProps, OnRotateGroup, OnRotateGroupEnd } from "../types";
+import MoveableGroup from "../MoveableGroup";
+import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
+import Draggable from "./Draggable";
+import { minus, rotate, sum } from "../matrix";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
@@ -56,9 +60,14 @@ function getRotateInfo(
         throttleRotate,
     );
 }
+function dragControlCondition(target: HTMLElement | SVGElement) {
+    return hasClass(target, prefix("rotation"));
+}
 
 export default {
     name: "rotatable",
+    canPinch: true,
+
     render(moveable: MoveableManager<RotatableProps>) {
         if (!moveable.props.rotatable) {
             return null;
@@ -75,30 +84,26 @@ export default {
             </div>
         );
     },
-    dragControlCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, prefix("rotation"));
-    },
+    dragControlCondition,
     dragControlStart(
         moveable: MoveableManager<RotatableProps>,
-        { datas, clientX, clientY, pinchRotate, pinchFlag }: any) {
-        const { target, onRotateStart } = moveable.props;
+        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag }: any) {
+        const {
+            target, left, top, origin, beforeOrigin,
+            rotationPos, direction, beforeDirection, targetTransform,
+        } = moveable.state;
 
         if (!target) {
             return false;
         }
-        const state = moveable.state;
-        const {
-            left, top, origin, beforeOrigin,
-            rotationPos, direction, beforeDirection, targetTransform,
-        } = state;
 
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
 
-        if (pinchFlag) {
-            datas.beforeInfo = { prevDeg: pinchRotate, startDeg: pinchRotate, loop: 0 };
-            datas.afterInfo = { prevDeg: pinchRotate, startDeg: pinchRotate, loop: 0 };
+        if (pinchFlag || parentFlag) {
+            datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
+            datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
         } else {
             datas.afterInfo = {};
             datas.beforeInfo = {};
@@ -110,19 +115,19 @@ export default {
         datas.beforeDirection = beforeDirection;
         datas.datas = {};
 
-        const result = onRotateStart && onRotateStart!({
+        const result = triggerEvent(moveable, "onRotateStart", {
             datas: datas.datas,
             target,
             clientX,
             clientY,
         });
-        if (result !== false) {
-            datas.isRotate = true;
-        }
-        return result;
+        datas.isRotate = result !== false;
+        return datas.isRotate;
     },
     dragControl(
-        moveable: MoveableManager<RotatableProps>, { datas, clientX, clientY, pinchRotate, pinchFlag }: any) {
+        moveable: MoveableManager<RotatableProps>,
+        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag }: any,
+    ) {
         const {
             direction,
             beforeDirection,
@@ -132,11 +137,11 @@ export default {
         } = datas;
 
         if (!isRotate) {
-            return false;
+            return;
         }
         const {
             throttleRotate = 0,
-            onRotate,
+            parentMoveable,
         } = moveable.props;
 
         let delta: number;
@@ -144,18 +149,19 @@ export default {
         let beforeDelta: number;
         let beforeDist: number;
 
-        if (pinchFlag) {
-            [delta, dist] = getDeg(afterInfo, pinchRotate, direction, throttleRotate);
-            [beforeDelta, beforeDist] = getDeg(beforeInfo, pinchRotate, direction, throttleRotate);
+        if (pinchFlag || parentFlag) {
+            [delta, dist] = getDeg(afterInfo, parentRotate, direction, throttleRotate);
+            [beforeDelta, beforeDist] = getDeg(beforeInfo, parentRotate, direction, throttleRotate);
         } else {
             [delta, dist] = getRotateInfo(afterInfo, direction, clientX, clientY, throttleRotate);
             [beforeDelta, beforeDist] = getRotateInfo(
                 beforeInfo, beforeDirection, clientX, clientY, throttleRotate);
         }
-        if (!delta && !beforeDelta) {
-            return false;
+
+        if (!delta && !beforeDelta && !parentMoveable) {
+            return;
         }
-        onRotate && onRotate({
+        const params = {
             target: moveable.props.target!,
             datas: datas.datas,
             delta,
@@ -166,25 +172,127 @@ export default {
             beforeDelta,
             transform: `${datas.transform} rotate(${dist}deg)`,
             isPinch: !!pinchFlag,
-        });
+        };
+        triggerEvent(moveable, "onRotate", params);
 
-        return true;
+        return params;
     },
     dragControlEnd(
         moveable: MoveableManager<RotatableProps>, { datas, isDrag, clientX, clientY }: any) {
-        const onRotateEnd = moveable.props.onRotateEnd;
 
         if (!datas.isRotate) {
             return false;
         }
         datas.isRotate = false;
-        onRotateEnd && onRotateEnd!({
+
+        triggerEvent(moveable, "onRotateEnd", {
             datas: datas.datas,
             clientX,
             clientY,
-            target: moveable.props.target!,
+            target: moveable.state.target!,
             isDrag,
         });
+        return isDrag;
+    },
+    dragGroupControlCondition: dragControlCondition,
+    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+        const { clientX, clientY, datas, inputEvent } = e;
+        const {
+            left: parentLeft,
+            top: parentTop,
+            beforeOrigin: parentBeforeOrigin,
+        } = moveable.state;
+
+        triggerChildAble(
+            moveable,
+            this,
+            "dragControlStart",
+            { ...e, parentRotate: 0 },
+            (child, childDatas) => {
+                const { left, top, beforeOrigin } = child.state;
+                const childClient = sum(
+                    minus([left, top], [parentLeft, parentTop]),
+                    minus(beforeOrigin, parentBeforeOrigin),
+                );
+                const dragDatas = childDatas.drag || (childDatas.drag = {});
+
+                Draggable.dragStart(
+                    child,
+                    setCustomEvent(childClient[0], childClient[1], dragDatas, inputEvent),
+                );
+            },
+        );
+
+        this.dragControlStart(moveable, e);
+
+        const result = triggerEvent(moveable, "onRotateGroupStart", {
+            targets: moveable.props.targets!,
+            clientX,
+            clientY,
+        });
+
+        datas.isRotate = result !== false;
+        return datas.isDrag;
+    },
+    dragGroupControl(moveable: MoveableGroup, e: any) {
+        const { inputEvent, datas } = e;
+
+        if (!datas.isRotate) {
+            return;
+        }
+        const params = this.dragControl(moveable, e);
+
+        if (!params) {
+            return;
+        }
+        const parentRotate = params.beforeDist;
+        const deg = params.beforeDelta;
+
+        const events = triggerChildAble(
+            moveable,
+            this,
+            "dragControl",
+            { ...e, parentRotate },
+            (child, childDatas, result, i) => {
+                const dragDatas = childDatas.drag || (childDatas.drag = {});
+                const { prevX, prevY } = getCustomEvent(dragDatas);
+                const [clientX, clientY] = rotate([prevX, prevY], deg);
+
+                const dragResult = Draggable.drag(
+                    child,
+                    setCustomEvent(clientX, clientY, dragDatas, inputEvent),
+                );
+
+                result.drag = dragResult;
+            },
+        );
+        const nextParams: OnRotateGroup = {
+            targets: moveable.props.targets!,
+            events,
+            ...params,
+        };
+
+        moveable.rotation += params.beforeDelta;
+        triggerEvent(moveable, "onRotateGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+        if (!e.datas.isRotate) {
+            return;
+        }
+        const { clientX, clientY, isDrag } = e;
+
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
+
+        const nextParams: OnRotateGroupEnd = {
+            targets: moveable.props.targets!,
+            clientX,
+            clientY,
+            isDrag,
+        };
+
+        triggerEvent(moveable, "onRotateGroupEnd", nextParams);
         return isDrag;
     },
 };
