@@ -13,6 +13,7 @@ import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { WarpableProps, ScalableProps, ResizableProps } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
+import { renderDiagonalDirection } from "../renderDirection";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {
     return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
@@ -63,6 +64,7 @@ export default {
             <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2)}></div>,
             <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
             <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
+            ...renderDiagonalDirection(moveable),
         ];
     },
     dragControlCondition(target: HTMLElement | SVGElement) {

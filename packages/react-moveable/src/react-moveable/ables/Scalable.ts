@@ -2,12 +2,12 @@ import { getRad, throttle, getDirection, triggerEvent } from "../utils";
 import { MIN_SCALE } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
-import { renderAllDirection } from "../renderDirection";
+import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd } from "../types";
 import { directionCondition, triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
-import { rotate, sum } from "../matrix";
+import { rotate } from "../matrix";
 
 export default {
     name: "scalable",
@@ -15,8 +15,11 @@ export default {
     canPinch: true,
 
     render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>) {
-        const { resizable, scalable } = moveable.props;
+        const { resizable, scalable, edge } = moveable.props;
         if (!resizable && scalable) {
+            if (edge) {
+                return renderDiagonalDirection(moveable);
+            }
             return renderAllDirection(moveable);
         }
     },
@@ -135,8 +138,6 @@ export default {
             transform: `${transform} scale(${scaleX}, ${scaleY})`,
             clientX,
             clientY,
-            width: width * scaleX,
-            height: height * scaleY,
             datas: datas.datas,
             isPinch: !!pinchFlag,
         };
@@ -177,7 +178,7 @@ export default {
         ];
 
         datas.rotation = moveable.rotation;
-        triggerChildAble(
+        const enabledEvents = triggerChildAble(
             moveable,
             this,
             "dragControlStart",
@@ -197,6 +198,10 @@ export default {
                 );
             },
         );
+
+        if (enabledEvents.every(ev => !ev)) {
+            return false;
+        }
 
         this.dragControlStart(moveable, e);
 

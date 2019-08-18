@@ -42,7 +42,8 @@ class App extends React.Component {
                     width: "60px",
                     top: 0, left: 0, backgroundColor: "#f5f", zIndex: 4000,
                 }}></div>
-                <MoveableGroup
+                <Moveable
+                    // edge={true}
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
@@ -51,7 +52,7 @@ class App extends React.Component {
                     ref={ref(this, "ab")}
                     keepRatio={false}
                     targets={this.state.targets}
-                    // origin={false}
+                    origin={false}
                     onDragGroupStart={e => {
                         console.log("start", e);
                     }}
@@ -129,7 +130,7 @@ class App extends React.Component {
                     draggable={true}
                     scalable={!isResizable}
                     resizable={isResizable}
-                    // warpable={true}
+                    warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
@@ -171,7 +172,7 @@ class App extends React.Component {
                     }}
                 />
                 <div className="App" onMouseDown={this.onClick} onTouchStart={this.onClick} data-target="app">
-                    <div className="box" data-target="box"><span>A</span></div>
+                    <div className="box" data-target="box"><span>A</span><span>B</span><span>C</span></div>
                     <header className="App-header" data-target="header">
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />
                         <p data-target="p">
@@ -254,7 +255,7 @@ class App extends React.Component {
             this.setState({ isResizable: true });
         });
 
-        const targets: any[] = [].slice.call(document.querySelectorAll("ellipse, path, a"));
+        const targets: any[] = [].slice.call(document.querySelectorAll(`[data-target="box"] span`));
 
         targets.forEach(target => {
             this.setItem(target);

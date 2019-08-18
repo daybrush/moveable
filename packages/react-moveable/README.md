@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.</p>
+<p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
 <p align="middle">
     <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
     <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
@@ -46,13 +46,13 @@
 <tr>
 <td align="center"><strong>Warpable</strong></td>
 <td align="center"><strong>Pinchable</strong></td>
-<td align="center"><strong></strong></td>
+<td align="center"><strong>Groupable(Soon)</strong></td>
 <td align="center"><strong></strong></td>
 </tr>
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
-<td align="center"><strong></strong></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"></td>
 <td align="center"><strong></strong></td>
 </tr>
 </table>
@@ -65,6 +65,7 @@
 * **Rotatable** indicates whether the target can be rotated.
 * **Warpable** indicates whether the target can be warped(distorted, bented).
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
+* **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 * Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
 * Support 3d Transform
 
@@ -78,6 +79,8 @@ $ npm i react-moveable
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
 ## 🚀 How to use
+
+* [How to use Groupable](./README_GROUP.md)
 ```tsx
 import Moveable from "react-moveable";
 
@@ -87,6 +90,9 @@ render() {
             target={document.querySelector(".target")}
             container={null}
             origin={true}
+
+            /* Resize event edges */
+            edge={false}
 
             /* draggable */
             draggable={true}
@@ -125,7 +131,7 @@ render() {
             }}
             onResize={({
                 target, width, height,
-                dist, delta,
+                dist, delta, direction,
                 clientX, clientY,
             }: OnResize) => {
                 console.log("onResize", target);
@@ -221,9 +227,8 @@ render() {
                 console.log("onPinchEnd");
             }}
         />
-    )
+    );
 }
-
 ```
 
 

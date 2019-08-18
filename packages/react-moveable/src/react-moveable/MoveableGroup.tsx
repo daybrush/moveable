@@ -103,7 +103,6 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
     public componentDidMount() {
         super.componentDidMount();
-        this.updateRect();
     }
     public componentDidUpdate() {
         this.update(true);
@@ -116,6 +115,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         if (!state.target) {
             state.target = this.groupTargetElement;
 
+            this.controlBox.getElement().style.display = "block";
             this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "Group");
             this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
         }
@@ -131,6 +131,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         return true;
     }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
+        if (!this.controlBox) {
+            return;
+        }
         this.moveables.forEach(moveable => {
             moveable.updateRect(type, false, false);
         });

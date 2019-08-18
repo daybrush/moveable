@@ -8,7 +8,7 @@ export type MoveableManagerProps<T = {}> = {
     parentMoveable?: MoveableManager | null;
     parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
-    line?: boolean;
+    edge?: boolean;
     keepRatio?: boolean;
     ables?: Array<Able<T>>;
 } & T;
@@ -42,7 +42,8 @@ export interface MoveableProps
     ResizableProps,
     ScalableProps,
     WarpableProps,
-    PinchableProps {
+    PinchableProps,
+    GroupableProps {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
@@ -276,8 +277,6 @@ export interface OnScale {
     dist: number[];
     delta: number[];
     transform: string;
-    width: number;
-    height: number;
     isPinch: boolean;
 }
 /**
@@ -595,6 +594,7 @@ export interface ResizableProps {
 export interface ScalableProps {
     scalable?: boolean;
     throttleScale?: number;
+
     onScaleStart?: (e: OnScaleStart) => any;
     onScale?: (e: OnScale) => any;
     onScaleEnd?: (e: OnScaleEnd) => any;

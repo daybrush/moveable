@@ -54,21 +54,25 @@ img {
 .box {
     position: relative;
     width: 120px;
-    height: 120px;
+    height: 150px;
 }
 .box span {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     font-size: 60px;
     text-align: center;
-    background: #000;
-    color: #fff;
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    line-height: 70px;
+    background: #fff;
+    color: #333;
+    font-weight: bold;
+    padding: 5px 10px;
+    /* display: inline-block; */
+}
+.box span:nth-child(2) {
+    top: 40px;
+    left: -10px;
+}
+.box span:nth-child(3) {
+    top: 90px;
+    left: 80px;
 }
 .rCSnba4d7 .moveable-control {
     width: 16px!important;

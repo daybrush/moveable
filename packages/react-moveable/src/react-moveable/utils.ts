@@ -71,7 +71,7 @@ export function getBeforeTransformOrigin(el: SVGElement) {
         return value * measureSVGSize(el, unit, i === 0);
     });
 }
-export function getTransformOrigin(style: CSSStyleDeclaration) {
+export function getTransformOrigin(style: CSSStyleDeclaration, ) {
     return style.transformOrigin!.split(" ");
 }
 export function caculateMatrixStack(
@@ -192,8 +192,8 @@ export function caculateMatrixStack(
     const isMatrix3d = !isSVGGraphicElement && is3d;
     const transform = `${isMatrix3d ? "matrix3d" : "matrix"}(${
         convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16
-                ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
-    })`;
+            ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
+        })`;
 
     return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d];
 }

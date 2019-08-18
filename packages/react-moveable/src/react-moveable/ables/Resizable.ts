@@ -2,7 +2,7 @@ import { getRad, throttle, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import { ResizableProps, OnResizeGroup, OnResizeGroupEnd } from "../types";
 import MoveableManager from "../MoveableManager";
-import { renderAllDirection } from "../renderDirection";
+import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent, directionCondition } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -14,7 +14,11 @@ export default {
     canPinch: true,
 
     render(moveable: MoveableManager<Partial<ResizableProps>>) {
-        if (moveable.props.resizable) {
+        const { resizable, edge } = moveable.props;
+        if (resizable) {
+            if (edge) {
+                return renderDiagonalDirection(moveable);
+            }
             return renderAllDirection(moveable);
         }
     },
@@ -164,7 +168,7 @@ export default {
             top: parentTop,
         } = moveable.state;
 
-        triggerChildAble(
+        const enabledEvents = triggerChildAble(
             moveable,
             this,
             "dragControlStart",
@@ -180,6 +184,9 @@ export default {
             },
         );
 
+        if (enabledEvents.every(ev => !ev)) {
+            return false;
+        }
         this.dragControlStart(moveable, e);
 
         const result = triggerEvent(moveable, "onResizeGroupStart", {

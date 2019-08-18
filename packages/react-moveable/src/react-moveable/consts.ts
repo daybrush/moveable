@@ -21,6 +21,9 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	top: 0;
 	z-index: 3000;
 }
+.control-box {
+    z-index: 0;
+}
 .line, .control {
 	left: 0;
 	top: 0;
@@ -63,16 +66,16 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	margin-left: -6px;
 	pointer-events: none;
 }
-.control.e, .control.w {
+.direction.e, .direction.w {
 	cursor: ew-resize;
 }
-.control.s, .control.n {
+.direction.s, .direction.n {
 	cursor: ns-resize;
 }
-.control.nw, .control.se, :host.reverse .control.ne, :host.reverse .control.sw {
+.direction.nw, .direction.se, :host.reverse .direction.ne, :host.reverse .direction.sw {
 	cursor: nwse-resize;
 }
-.control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {
+.direction.ne, .direction.sw, :host.reverse .direction.nw, :host.reverse .direction.se {
 	cursor: nesw-resize;
 }
 .group {

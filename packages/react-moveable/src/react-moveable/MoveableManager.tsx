@@ -16,14 +16,18 @@ import { getAbleDragger } from "./getAbleDragger";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
+function renderLine(direction: string, pos1: number[], pos2: number[]) {
+    return <div className={prefix("line", "direction", direction)}
+        data-direction={direction} style={getLineStyle(pos1, pos2)}></div>;
+}
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState<T>> {
     public static defaultProps: Required<MoveableManagerProps> = {
         target: null,
         container: null,
         origin: true,
-        line: true,
         keepRatio: true,
+        edge: false,
         parentMoveable: null,
         parentPosition: null,
         ables: [],
@@ -57,13 +61,11 @@ export default class MoveableManager<T = {}>
     protected controlDragger!: Dragger;
     protected controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
-    public isMoveableElement(target: HTMLElement) {
-        return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
-    }
     public render() {
         this.update(false);
 
-        const { left: parentLeft, top: parentTop } = this.props.parentPosition! || { left: 0, top: 0 };
+        const { edge, parentPosition} = this.props;
+        const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
         return (
@@ -74,11 +76,11 @@ export default class MoveableManager<T = {}>
                     display: target ? "block" : "none",
                     transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
                 }}>
-                <div className={prefix("line")} style={getLineStyle(pos1, pos2)}></div>
-                <div className={prefix("line")} style={getLineStyle(pos2, pos4)}></div>
-                <div className={prefix("line")} style={getLineStyle(pos1, pos3)}></div>
-                <div className={prefix("line")} style={getLineStyle(pos3, pos4)}></div>
                 {this.renderAbles()}
+                {renderLine(edge ? "n" : "", pos1, pos2)}
+                {renderLine(edge ? "e" : "", pos2, pos4)}
+                {renderLine(edge ? "w" : "", pos1, pos3)}
+                {renderLine(edge ? "s" : "", pos3, pos4)}
             </ControlBoxElement>
         );
     }
@@ -96,6 +98,9 @@ export default class MoveableManager<T = {}>
         return container!
             || (parentMoveable && parentMoveable.getContainer())
             || this.controlBox.getElement().offsetParent as HTMLElement;
+    }
+    public isMoveableElement(target: HTMLElement) {
+        return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
     }
     public dragStart(e: MouseEvent | TouchEvent) {
         this.targetDragger.onDragStart(e);

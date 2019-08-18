@@ -18,7 +18,7 @@ export default {
                 key={i}
                 ref={refs(moveable, "moveables", i)}
                 target={target}
-                origin={true}
+                origin={false}
                 parentMoveable={moveable}
                 parentPosition={position}
             />;
