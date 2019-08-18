@@ -46,7 +46,7 @@
 <tr>
 <td align="center"><strong>Warpable</strong></td>
 <td align="center"><strong>Pinchable</strong></td>
-<td align="center"><strong>Groupable(Soon)</strong></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/packages/react-moveable/groupable.md"><strong>Groupable(Soon)</strong></a></td>
 <td align="center"><strong></strong></td>
 </tr>
 <tr>
