@@ -70,10 +70,10 @@ render() {
             onResizeGroupStart={({ targets, clientX, clientY }) => {
                 console.log("onResizeGroupStart", targets);
             }}
-            onResizeGroup={({ targets, direction }) => {
+            onResizeGroup={({ events, targets, direction }) => {
                 console.log("onResizeGroup", targets);
 
-                e.events.forEach(ev => {
+                events.forEach(ev => {
                     const offset = [
                         direction[0] < 0 ? -ev.delta[0] : 0,
                         direction[1] < 0 ? -ev.delta[1] : 0,
@@ -110,7 +110,6 @@ render() {
                     const scaleX = ev.scale[0];
                     const scaleX = ev.scale[1];
                 });
-                target!.style.transform = transform;
             }}
             onScaleEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onScaleGroupEnd", target, isDrag);

@@ -201,6 +201,7 @@ moveable.on("pinchStart", ({ target, clientX, clientY }) => {
     console.log("onPinchEnd");
 });
 ```
+## 🚀 [How to use Groupable](https://github.com/daybrush/moveable/blob/master/groupable.md)
 
 
 ## 📦 Packages
