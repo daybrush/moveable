@@ -44,7 +44,7 @@
 <tr>
 <td align="center"><strong>Warpable</strong></td>
 <td align="center"><strong>Pinchable</strong></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/packages/react-moveable/groupable.md"><strong>Groupable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/groupable.md"><strong>Groupable</strong></a></td>
 <td align="center"><strong></strong></td>
 </tr>
 <tr>
@@ -62,7 +62,7 @@
 * **Rotatable** indicates whether the target can be rotated.
 * **Warpable** indicates whether the target can be warped(distorted, bented).
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
-* **[Groupable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/groupable.md)** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
+* **[Groupable](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/groupable.md)** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 * Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
 * Support 3d Transform
 
