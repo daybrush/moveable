@@ -6,10 +6,16 @@ import { MoveableOptions, MoveableGetterSetter } from "./types";
 import {
     OnDragStart, OnDrag, OnResize, OnResizeStart,
     OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
-    OnRotateEnd, OnDragEnd, OnRotate, OnScale, OnWarpStart, OnWarpEnd, OnWarp, OnPinchStart, OnPinch, OnPinchEnd,
+    OnRotateEnd, OnDragEnd, OnRotate, OnScale,
+    OnWarpStart, OnWarpEnd, OnWarp, OnPinchStart,
+    OnPinch, OnPinchEnd, OnDragGroup, OnDragGroupStart,
+    OnDragGroupEnd, OnResizeGroup, OnResizeGroupStart,
+    OnResizeGroupEnd, OnScaleGroup, OnScaleGroupEnd,
+    OnRotateGroup, OnRotateGroupStart, OnRotateGroupEnd,
+    OnPinchGroup, OnPinchGroupStart, OnPinchGroupEnd, OnScaleGroupStart,
 } from "react-moveable/declaration/types";
 import { PROPERTIES, EVENTS } from "./consts";
-import { camelize } from "@daybrush/utils";
+import { camelize, isArray } from "@daybrush/utils";
 
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
@@ -56,6 +62,11 @@ class Moveable extends EgComponent {
             element,
         );
         parentElement.appendChild(element.children[0]);
+
+        const target = nextOptions.target!;
+        if (isArray(target) && target.length > 1) {
+            this.updateRect();
+        }
     }
     /**
      * Check if the target is an element included in the moveable.
@@ -210,6 +221,15 @@ class Moveable extends EgComponent {
  * const moveable = new Moveable(document.body);
  *
  * moveable.keepRatio = true;
+ */
+/**
+ * Resize, Scale Events at edges
+ * @name Moveable#edge
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.edge = true;
  */
 /**
  * throttle of x, y when drag.
@@ -525,25 +545,339 @@ class Moveable extends EgComponent {
  * });
  */
 
+ /**
+ * When the group drag starts, the `dragGroupStart` event is called.
+ * @memberof Moveable
+ * @event dragGroupStart
+ * @param {Moveable.OnDragGroupStart} - Parameters for the `dragGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroupStart", ({ targets }) => {
+ *     console.log("onDragGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group drag, the `dragGroup` event is called.
+ * @memberof Moveable
+ * @event dragGroup
+ * @param {Moveable.onDragGroup} - Parameters for the `dragGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroup", ({ targets, events }) => {
+ *     console.log("onDragGroup", targets);
+ *     events.forEach(ev => {
+ *          // drag event
+ *          console.log("onDrag left, top", ev.left, ev.top);
+ *          // ev.target!.style.left = `${ev.left}px`;
+ *          // ev.target!.style.top = `${ev.top}px`;
+ *          console.log("onDrag translate", ev.dist);
+ *          ev.target!.style.transform = ev.transform;)
+ *     });
+ * });
+ */
+
+/**
+ * When the group drag finishes, the `dragGroupEnd` event is called.
+ * @memberof Moveable
+ * @event dragGroupEnd
+ * @param {Moveable.OnDragGroupEnd} - Parameters for the `dragGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onDragGroupEnd", targets, isDrag);
+ * });
+ */
+
+ /**
+ * When the group resize starts, the `resizeGroupStart` event is called.
+ * @memberof Moveable
+ * @event resizeGroupStart
+ * @param {Moveable.OnResizeGroupStart} - Parameters for the `resizeGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroupStart", ({ targets }) => {
+ *     console.log("onResizeGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group resize, the `resizeGroup` event is called.
+ * @memberof Moveable
+ * @event resizeGroup
+ * @param {Moveable.onResizeGroup} - Parameters for the `resizeGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroup", ({ targets, events }) => {
+ *     console.log("onResizeGroup", targets);
+ *     events.forEach(ev => {
+ *         const offset = [
+ *             direction[0] < 0 ? -ev.delta[0] : 0,
+ *             direction[1] < 0 ? -ev.delta[1] : 0,
+ *         ];
+ *         // ev.drag is a drag event that occurs when the group resize.
+ *         const left = offset[0] + ev.drag.beforeDist[0];
+ *         const top = offset[1] + ev.drag.beforeDist[1];
+ *         const width = ev.width;
+ *         const top = ev.top;
+ *     });
+ * });
+ */
+
+/**
+ * When the group resize finishes, the `resizeGroupEnd` event is called.
+ * @memberof Moveable
+ * @event resizeGroupEnd
+ * @param {Moveable.OnResizeGroupEnd} - Parameters for the `resizeGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onResizeGroupEnd", targets, isDrag);
+ * });
+ */
+
+ /**
+ * When the group scale starts, the `scaleGroupStart` event is called.
+ * @memberof Moveable
+ * @event scaleGroupStart
+ * @param {Moveable.OnScaleGroupStart} - Parameters for the `scaleGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     scalable: true
+ * });
+ * moveable.on("scaleGroupStart", ({ targets }) => {
+ *     console.log("onScaleGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group scale, the `scaleGroup` event is called.
+ * @memberof Moveable
+ * @event scaleGroup
+ * @param {Moveable.OnScaleGroup} - Parameters for the `scaleGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     scalable: true
+ * });
+ * moveable.on("scaleGroup", ({ targets, events }) => {
+ *     console.log("onScaleGroup", targets);
+ *     events.forEach(ev => {
+ *         const target = ev.target;
+ *         // ev.drag is a drag event that occurs when the group scale.
+ *         const left = ev.drag.beforeDist[0];
+ *         const top = ev.drag.beforeDist[0];
+ *         const scaleX = ev.scale[0];
+ *         const scaleX = ev.scale[1];
+ *     });
+ * });
+ */
+
+/**
+ * When the group scale finishes, the `scaleGroupEnd` event is called.
+ * @memberof Moveable
+ * @event scaleGroupEnd
+ * @param {Moveable.OnScaleGroupEnd} - Parameters for the `scaleGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     scalable: true
+ * });
+ * moveable.on("scaleGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onScaleGroupEnd", targets, isDrag);
+ * });
+ */
+
+/**
+ * When the group rotate starts, the `rotateGroupStart` event is called.
+ * @memberof Moveable
+ * @event rotateGroupStart
+ * @param {Moveable.OnRotateGroupStart} - Parameters for the `rotateGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     rotatable: true
+ * });
+ * moveable.on("rotateGroupStart", ({ targets }) => {
+ *     console.log("onRotateGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group rotate, the `rotateGroup` event is called.
+ * @memberof Moveable
+ * @event rotateGroup
+ * @param {Moveable.OnRotateGroup} - Parameters for the `rotateGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     rotatable: true
+ * });
+ * moveable.on("rotateGroup", ({ targets, events }) => {
+ *     console.log("onRotateGroup", targets);
+ *     events.forEach(ev => {
+ *         const target = ev.target;
+ *         // ev.drag is a drag event that occurs when the group rotate.
+ *         const left = ev.drag.beforeDist[0];
+ *         const top = ev.drag.beforeDist[1];
+ *         const deg = ev.beforeDist;
+ *     });
+ * });
+ */
+
+/**
+ * When the group rotate finishes, the `rotateGroupEnd` event is called.
+ * @memberof Moveable
+ * @event rotateGroupEnd
+ * @param {Moveable.OnRotateGroupEnd} - Parameters for the `rotateGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     rotatable: true
+ * });
+ * moveable.on("rotateGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onRotateGroupEnd", targets, isDrag);
+ * });
+ */
+
+/**
+ * When the group pinch starts, the `pinchGroupStart` event is called.
+ * @memberof Moveable
+ * @event pinchGroupStart
+ * @param {Moveable.OnPinchGroupStart} - Parameters for the `pinchGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     pinchable: true
+ * });
+ * moveable.on("pinchGroupStart", ({ targets }) => {
+ *     console.log("onPinchGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group pinch, the `pinchGroup` event is called.
+ * @memberof Moveable
+ * @event pinchGroup
+ * @param {Moveable.OnPinchGroup} - Parameters for the `pinchGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     pinchable: true
+ * });
+ * moveable.on("pinchGroup", ({ targets, events }) => {
+ *     console.log("onPinchGroup", targets);
+ * });
+ */
+
+/**
+ * When the group pinch finishes, the `pinchGroupEnd` event is called.
+ * @memberof Moveable
+ * @event pinchGroupEnd
+ * @param {Moveable.OnPinchGroupEnd} - Parameters for the `pinchGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     pinchable: true
+ * });
+ * moveable.on("pinchGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onPinchGroupEnd", targets, isDrag);
+ * });
+ */
 interface Moveable extends MoveableGetterSetter {
     on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
     on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
     on(eventName: "dragEnd", handlerToAttach: (event: OnDragEnd) => any): this;
+
     on(eventName: "resize", handlerToAttach: (event: OnResize) => any): this;
     on(eventName: "resizeStart", handlerToAttach: (event: OnResizeStart) => any): this;
     on(eventName: "resizeEnd", handlerToAttach: (event: OnResizeEnd) => any): this;
+
     on(eventName: "scale", handlerToAttach: (event: OnScale) => any): this;
     on(eventName: "scaleStart", handlerToAttach: (event: OnScaleStart) => any): this;
     on(eventName: "scaleEnd", handlerToAttach: (event: OnScaleEnd) => any): this;
+
     on(eventName: "rotate", handlerToAttach: (event: OnRotate) => any): this;
     on(eventName: "rotateStart", handlerToAttach: (event: OnRotateStart) => any): this;
     on(eventName: "rotateEnd", handlerToAttach: (event: OnRotateEnd) => any): this;
+
     on(eventName: "warp", handlerToAttach: (event: OnWarp) => any): this;
     on(eventName: "warpStart", handlerToAttach: (event: OnWarpStart) => any): this;
     on(eventName: "warpEnd", handlerToAttach: (event: OnWarpEnd) => any): this;
+
     on(eventName: "pinch", handlerToAttach: (event: OnPinch) => any): this;
     on(eventName: "pinchStart", handlerToAttach: (event: OnPinchStart) => any): this;
     on(eventName: "pinchEnd", handlerToAttach: (event: OnPinchEnd) => any): this;
+
+    on(eventName: "dragGroup", handlerToAttach: (event: OnDragGroup) => any): this;
+    on(eventName: "dragGroupStart", handlerToAttach: (event: OnDragGroupStart) => any): this;
+    on(eventName: "dragGroupEnd", handlerToAttach: (event: OnDragGroupEnd) => any): this;
+
+    on(eventName: "resizeGroup", handlerToAttach: (event: OnResizeGroup) => any): this;
+    on(eventName: "resizeGroupStart", handlerToAttach: (event: OnResizeGroupStart) => any): this;
+    on(eventName: "resizeGroupEnd", handlerToAttach: (event: OnResizeGroupEnd) => any): this;
+
+    on(eventName: "scaleGroup", handlerToAttach: (event: OnScaleGroup) => any): this;
+    on(eventName: "scaleGroupStart", handlerToAttach: (event: OnScaleGroupStart) => any): this;
+    on(eventName: "scaleGroupEnd", handlerToAttach: (event: OnScaleGroupEnd) => any): this;
+
+    on(eventName: "rotateGroup", handlerToAttach: (event: OnRotateGroup) => any): this;
+    on(eventName: "rotateGroupStart", handlerToAttach: (event: OnRotateGroupStart) => any): this;
+    on(eventName: "rotateGroupEnd", handlerToAttach: (event: OnRotateGroupEnd) => any): this;
+
+    on(eventName: "pinchGroup", handlerToAttach: (event: OnPinchGroup) => any): this;
+    on(eventName: "pinchGroupStart", handlerToAttach: (event: OnPinchGroupStart) => any): this;
+    on(eventName: "pinchGroupEnd", handlerToAttach: (event: OnPinchGroupEnd) => any): this;
+
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
 }

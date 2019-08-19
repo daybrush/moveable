@@ -16,6 +16,6 @@ export default builder([
         exports: "named",
         plugins: [cssbundle({output: "./demo/dist/index.css"}), preactPlugin],
         resolve: true,
-        uglify: true,
+        // uglify: true,
     },
 ]);

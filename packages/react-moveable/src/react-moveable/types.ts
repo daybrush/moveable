@@ -128,57 +128,6 @@ export interface OnPinchEnd {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a dragging target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- * @property - The delta of [left, top]
- * @property - The distance of [left, top]
- * @property - The delta of [translateX, translateY]
- * @property - The distance of [translateX, translateY]
- * @property - a target's transform
- * @property - a target's left
- * @property - a target's top
- * @property - a target's bottom
- * @property - a target's right
- * @property - Whether or not it is being pinched.
- */
-export interface OnDrag {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
-    beforeDelta: number[];
-    beforeDist: number[];
-    delta: number[];
-    dist: number[];
-    transform: string;
-    left: number;
-    top: number;
-    bottom: number;
-    right: number;
-    isPinch: boolean;
-}
-/**
- * @typedef
- * @memberof Moveable
- * @property - a drag finished target
- * @property - Whether drag called
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- */
-export interface OnDragEnd {
-    target: HTMLElement | SVGElement;
-    isDrag: boolean;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
-}
-
-/**
- * @typedef
- * @memberof Moveable
  * @property - a target to drag
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.

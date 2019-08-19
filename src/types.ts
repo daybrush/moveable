@@ -3,7 +3,13 @@ import {
     OnResizeStart, OnResize, OnResizeEnd,
     OnScaleStart, OnScale, OnScaleEnd,
     OnWarpStart, OnWarp, OnWarpEnd,
-    OnPinchStart, OnPinch, OnPinchEnd,
+    OnPinchStart, OnPinch, OnPinchEnd, OnRotateStart,
+    OnRotate, OnRotateEnd, OnDragGroupStart,
+    OnDragGroup, OnDragGroupEnd, OnResizeGroupStart,
+    OnResizeGroup, OnResizeGroupEnd, OnScaleGroupStart,
+    OnScaleGroup, OnScaleGroupEnd, OnRotateGroupStart,
+    OnRotateGroup, OnRotateGroupEnd, OnPinchGroupStart,
+    OnPinchGroup, OnPinchGroupEnd,
 } from "react-moveable/declaration/types";
 
 /**
@@ -16,7 +22,7 @@ import {
  * @property - Whether or not target can be warped.
  * @property - Whether or not target can be pinched with draggable, resizable, scalable, rotatable.
  * @property - Whether or not the origin controlbox will be visible or not
- * @property - The target to indicate Moveable Control Box.
+ * @property - The target(s) to indicate Moveable Control Box.
  * @property - Moveable Container.
  * @property - throttle of x, y when drag.
  * @property - throttle of width, height when resize.
@@ -32,7 +38,7 @@ export interface MoveableOptions {
     warpable?: boolean;
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
     origin?: boolean;
-    target?: SVGElement | HTMLElement;
+    target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement>;
     container?: SVGElement | HTMLElement | null;
     throttleDrag?: number;
     throttleResize?: number;
@@ -48,16 +54,44 @@ export interface MoveableEvents {
     dragStart: OnDragStart;
     drag: OnDrag;
     dragEnd: OnDragEnd;
+
     resizeStart: OnResizeStart;
     resize: OnResize;
     resizeEnd: OnResizeEnd;
+
     scaleStart: OnScaleStart;
     scale: OnScale;
     scaleEnd: OnScaleEnd;
+
+    rotateStart: OnRotateStart;
+    rotate: OnRotate;
+    rotateEnd: OnRotateEnd;
+
     warpStart: OnWarpStart;
     warp: OnWarp;
     warpEnd: OnWarpEnd;
+
     pinchStart: OnPinchStart;
     pinch: OnPinch;
     pinchEnd: OnPinchEnd;
+
+    dragGroupStart: OnDragGroupStart;
+    dragGroup: OnDragGroup;
+    dragGroupEnd: OnDragGroupEnd;
+
+    resizeGroupStart: OnResizeGroupStart;
+    resizeGroup: OnResizeGroup;
+    resizeGroupEnd: OnResizeGroupEnd;
+
+    scaleGroupStart: OnScaleGroupStart;
+    scaleGroup: OnScaleGroup;
+    scaleGroupEnd: OnScaleGroupEnd;
+
+    rotateGroupStart: OnRotateGroupStart;
+    rotateGroup: OnRotateGroup;
+    rotateGroupEnd: OnRotateGroupEnd;
+
+    pinchGroupStart: OnPinchGroupStart;
+    pinchGroup: OnPinchGroup;
+    pinchGroupEnd: OnPinchGroupEnd;
 }

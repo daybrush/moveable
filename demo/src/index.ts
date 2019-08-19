@@ -2,7 +2,6 @@ import Moveable from "../../src/Moveable";
 import { codes } from "./consts";
 import { Frame } from "scenejs";
 import "./index.css";
-import { hasClass } from "@daybrush/utils";
 
 declare const hljs: any;
 
@@ -38,7 +37,6 @@ function setLabel(clientX: number, clientY: number, text: string) {
 
     labelElement.innerHTML = text;
 }
-
 
 const moveable = new Moveable(moveableElement.parentElement, {
     target: moveableElement,
@@ -179,6 +177,26 @@ const pinchable = new Moveable(pinchableElement.parentElement, {
     pinchableElement.style.transform = `scale(${scale.join(", ")}) rotate(${rotate}deg)`;
 });
 
+const groupableElement: HTMLElement = document.querySelector(".groupable");
+const poses = [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+];
+
+const groupable = new Moveable(groupableElement.parentElement, {
+    target: [].slice.call(groupableElement.querySelectorAll("span")),
+    origin: false,
+    draggable: true,
+}).on("dragGroup", ({ events }) => {
+    events.forEach(({ target, beforeDelta }, i) => {
+        poses[i][0] += beforeDelta[0];
+        poses[i][1] += beforeDelta[1];
+
+        target.style.transform = `translate(${poses[i][0]}px, ${poses[i][1]}px)`;
+    });
+});
+
 window.addEventListener("resize", () => {
     moveable.updateRect();
     draggable.updateRect();
@@ -187,6 +205,7 @@ window.addEventListener("resize", () => {
     rotatable.updateRect();
     warpable.updateRect();
     pinchable.updateRect();
+    groupable.updateRect();
 });
 
 document.addEventListener("DOMContentLoaded", () => {

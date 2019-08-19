@@ -29,14 +29,14 @@ export function getTransform(target: SVGElement | HTMLElement): "none" | number[
 export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
     const transform = window.getComputedStyle(target).transform!;
 
-    if (transform === "none" && !isInit) {
+    if (!transform || transform === "none" && !isInit) {
         return "none";
     }
     return getTransformMatrix(transform);
 }
 
 export function getTransformMatrix(transform: string | number[]) {
-    if (transform === "none") {
+    if (!transform || transform === "none") {
         return [1, 0, 0, 1, 0, 0];
 
     }

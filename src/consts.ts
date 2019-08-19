@@ -1,10 +1,11 @@
+import { MoveableEvents } from "./types";
 
 export const PROPERTIES = [
   "draggable", "resizable", "scalable", "rotatable",
-  "warpable", "pinchable", "origin", "target",
+  "warpable", "pinchable", "origin", "target", "edge",
   "throttleDrag", "throttleResize", "throttleScale", "throttleRotate", "keepRatio",
 ];
-export const EVENTS = [
+export const EVENTS: Array<keyof MoveableEvents> = [
   "dragStart",
   "drag",
   "dragEnd",
@@ -23,4 +24,20 @@ export const EVENTS = [
   "pinchStart",
   "pinch",
   "pinchEnd",
+
+  "dragGroupStart",
+  "dragGroup",
+  "dragGroupEnd",
+  "resizeGroupStart",
+  "resizeGroup",
+  "resizeGroupEnd",
+  "scaleGroupStart",
+  "scaleGroup",
+  "scaleGroupEnd",
+  "rotateGroupStart",
+  "rotateGroup",
+  "rotateGroupEnd",
+  "pinchGroupStart",
+  "pinchGroup",
+  "pinchGroupEnd",
 ];

@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] - 2019-08-20
+### Added
+- Add [Groupable](https://github.com/daybrush/moveable/blob/master/groupable.md)
+- Add edge option
+
+### Fixed
+- fix that do not call `resizeEnd` #19
+
+
 ## [0.6.4] - 2019-08-07
 ### Fixed
 - fix ESM config
