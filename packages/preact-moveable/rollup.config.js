@@ -12,6 +12,7 @@ const defaultOptions = {
         "framework-utils": "framework-utils",
         "preact-css-styler": "preact-css-styler",
         "@egjs/agent": "eg.Agent",
+        "@egjs/children-differ": "eg.ChildrenDiffer",
     },
     exports: "named",
     plugins: [
