@@ -3,7 +3,7 @@ import builder from "@daybrush/builder";
 import preact from "rollup-plugin-preact";
 
 const preactPlugin = preact({
-    usePreactCompat2: true,
+    // usePreactCompat2: true,
     noPropTypes: true,
     resolvePreactCompat: true,
 });
@@ -14,6 +14,7 @@ const external = {
     "@daybrush/drag": "@daybrush/drag",
     "framework-utils": "framework-utils",
     "@egjs/agent": "eg.Agent",
+    "@egjs/children-differ": "eg.ChildrenDiffer",
 };
 export default builder([
     {
