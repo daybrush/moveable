@@ -1,8 +1,8 @@
+import * as React from "react";
 import { MoveableProps } from "./types";
 import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./consts";
 import MoveableGroup from "./MoveableGroup";
-import React from "react";
 import { ref } from "framework-utils";
 import { isArray } from "@daybrush/utils";
 

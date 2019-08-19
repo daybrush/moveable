@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { warp as warpMatrix, getRad, prefix, getLineStyle, getDirection } from "../utils";
 import {
     convertDimension, invert, multiply,

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { getRad, throttle, prefix, triggerEvent } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";

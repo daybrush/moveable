@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import MoveableManager from "./MoveableManager";
 import { prefix, getControlTransform } from "./utils";
 import { ResizableProps, ScalableProps, WarpableProps } from "./types";

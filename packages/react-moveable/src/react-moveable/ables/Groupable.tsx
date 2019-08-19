@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { refs, ref } from "framework-utils";
 import MoveableGroup from "../MoveableGroup";
 import MoveableManager from "../MoveableManager";
