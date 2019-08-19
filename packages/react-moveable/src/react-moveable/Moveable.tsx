@@ -4,20 +4,27 @@ import { MOVEABLE_ABLES } from "./consts";
 import { MoveableGroup } from ".";
 import React from "react";
 import { ref } from "framework-utils";
+import { isArray } from "@daybrush/utils";
 
 export default class Moveable extends React.PureComponent<MoveableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
-        targets: [],
         ables: MOVEABLE_ABLES,
     };
     public moveable!: MoveableManager<MoveableProps> | MoveableGroup;
     public render() {
-        const isGroup = !!this.props.targets!.length;
+        const target = this.props.target || this.props.targets;
+        const isArr = isArray(target);
+        const isGroup = isArr && (target as any[]).length > 1;
 
-        return isGroup
-            ? <MoveableGroup key="group" ref={ref(this, "moveable")} {...this.props} />
-            : <MoveableManager key="single" ref={ref(this, "moveable")} {...this.props}/>;
+        if (isGroup) {
+            return <MoveableGroup key="group" ref={ref(this, "moveable")}
+                {...{ ...this.props, target: null, targets: target as any[] }} />;
+        } else {
+            const moveableTarget = isArr ? (target as any[])[0] : target;
+            return <MoveableManager key="single" ref={ref(this, "moveable")}
+                {...{ ...this.props, target: moveableTarget }} />;
+        }
     }
     public isMoveableElement(target: HTMLElement) {
         return this.moveable.isMoveableElement(target);

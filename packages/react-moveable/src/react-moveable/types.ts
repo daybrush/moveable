@@ -44,7 +44,7 @@ export interface MoveableProps
     WarpableProps,
     PinchableProps,
     GroupableProps {
-    target?: SVGElement | HTMLElement | null;
+    target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
     keepRatio?: boolean;

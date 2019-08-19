@@ -3,25 +3,25 @@
 
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 * **draggable**
-    * onDragGroupStart
-    * onDragGroup
-    * onDragGroupEnd
+    * [onDragGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroupStart)
+    * [onDragGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroup)
+    * [onDragGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroupEnd)
 * **resizable**
-    * onResizeGroupStart
-    * onResizeGroup
-    * onResizeGroupEnd
+    * [onResizeGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupStart)
+    * [onResizeGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroup)
+    * [onResizeGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupEnd)
 * **scalable**
-    * onScaleGroupStart
-    * onScaleGroup
-    * onScaleGroupEnd
+    * [onScaleGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scaleGroupStart)
+    * [onScaleGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scaleGroup)
+    * [onScaleGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rscaleGroupEnd)
 * **rotatable**
-    * onRotateGroupStart
-    * onRotateGroup
-    * onRotateGroupEnd
+    * [onRotateGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupStart)
+    * [onRotateGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroup)
+    * [onRotateGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupEnd)
 * **pinchable**
-    * onPinchGroupStart
-    * onPinchGroup
-    * onPinchGroupEnd
+    * [onPinchGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:pinchGroupStart)
+    * [onPinchGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:pinchGroup)
+    * [onPinchGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:pinchGroupEnd)
 
 
 ```tsx
@@ -31,7 +31,7 @@ render() {
     return (
         <Moveable
             /* multiple targets */
-            targets={[].slice.call(document.querySelectorAll(".target"))}
+            target={[].slice.call(document.querySelectorAll(".target"))}
             container={null}
             origin={true}
 

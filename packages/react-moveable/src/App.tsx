@@ -51,7 +51,7 @@ class App extends React.Component {
                     scalable={true}
                     ref={ref(this, "ab")}
                     keepRatio={false}
-                    targets={this.state.targets}
+                    target={this.state.targets}
                     origin={false}
                     onDragGroupStart={e => {
                         console.log("start", e);

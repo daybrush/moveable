@@ -479,8 +479,8 @@ export function getRotationInfo(
     return [rotationRad, rotationPos];
 }
 export function getTargetInfo(
-    target?: MoveableProps["target"],
-    container?: MoveableProps["container"],
+    target?: HTMLElement | SVGElement,
+    container?: HTMLElement | SVGElement,
     state?: Partial<MoveableState> | false | undefined,
 ): Partial<MoveableState> {
     let left = 0;
