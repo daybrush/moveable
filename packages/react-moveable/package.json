@@ -1,7 +1,7 @@
 {
   "name": "react-moveable",
-  "version": "0.9.3",
-  "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.",
+  "version": "0.10.1",
+  "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
   "sideEffects": false,
@@ -20,6 +20,7 @@
     "rotatable",
     "warpable",
     "pinchable",
+    "groupable",
     "movable",
     "throttle",
     "ratio",
