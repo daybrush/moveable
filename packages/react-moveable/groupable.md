@@ -2,6 +2,27 @@
 * **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
+* **draggable**
+    * onDragGroupStart
+    * onDragGroup
+    * onDragGroupEnd
+* **resizable**
+    * onResizeGroupStart
+    * onResizeGroup
+    * onResizeGroupEnd
+* **scalable**
+    * onScaleGroupStart
+    * onScaleGroup
+    * onScaleGroupEnd
+* **rotatable**
+    * onRotateGroupStart
+    * onRotateGroup
+    * onRotateGroupEnd
+* **pinchable**
+    * onPinchGroupStart
+    * onPinchGroup
+    * onPinchGroupEnd
+
 
 ```tsx
 import Moveable from "react-moveable";
@@ -66,6 +87,73 @@ render() {
             }}
             onResizeGroupEnd={({ targets, isDrag, clientX, clientY }) => {
                 console.log("onResizeGroupEnd", targets, isDrag);
+            }}
+
+            /* scalable */
+            /* Only one of resizable, scalable, warpable can be used. */
+            scalable={true}
+            throttleScale={0}
+            onScaleGroupStart={({ targets, clientX, clientY }) => {
+                console.log("onScaleGroupStart", targets);
+            }}
+            onScale={({
+                targets,
+                events,
+            }) => {
+                console.log("onScaleGroup", targets);
+
+                events.forEach(ev => {
+                    const target = ev.target;
+                    // ev.drag is a drag event that occurs when the group scale.
+                    const left = ev.drag.beforeDist[0];
+                    const top = ev.drag.beforeDist[0];
+                    const scaleX = ev.scale[0];
+                    const scaleX = ev.scale[1];
+                });
+                target!.style.transform = transform;
+            }}
+            onScaleEnd={({ target, isDrag, clientX, clientY }) => {
+                console.log("onScaleGroupEnd", target, isDrag);
+            }}
+
+            /* rotatable */
+            rotatable={true}
+            throttleRotate={0}
+            onRotateGroupStart={({ targets, clientX, clientY }) => {
+                console.log("onRotateGroupStart", targets);
+            }}
+            onRotateGroup={({
+                targets,
+                events
+                delta, dist,
+            }) => {
+                e.events.forEach(ev => {
+                    const target = ev.target;
+                    // ev.drag is a drag event that occurs when the group rotate.
+                    const left = ev.drag.beforeDist[0];
+                    const top = ev.drag.beforeDist[1];
+                    const deg = ev.beforeDist;
+                });
+
+            }}
+            onRotateGroupEnd={({ targets, isDrag, clientX, clientY }) => {
+                console.log("onRotateGroupEnd", targets, isDrag);
+            }}
+
+            // Enabling pincable lets you use events that
+            // can be used in draggable, resizable, scalable, and rotateable.
+            pinchable={true}
+            onPinchGroupStart={({ targets, clientX, clientY, datas }) => {
+                // pinchGroupStart event occur before dragGroupStart, rotateGroupStart, scaleGroupStart, resizeGroupStart
+                console.log("onPinchGroupStart");
+            }}
+            onPinchGroup={({ targets, clientX, clientY, datas }) => {
+                // pinchGroup event occur before dragGroup, rotateGroup, scaleGroup, resizeGroup
+                console.log("onPinchGroup");
+            }}
+            onPinchGroupEnd={({ isDrag, targets, clientX, clientY, datas }) => {
+                // pinchGroupEnd event occur before dragGroupEnd, rotateGroupEnd, scaleGroupEnd, resizeGroupEnd
+                console.log("onPinchGroupEnd");
             }}
         />
     );
