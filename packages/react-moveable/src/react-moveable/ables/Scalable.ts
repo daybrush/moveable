@@ -209,6 +209,7 @@ export default {
             targets: moveable.props.targets!,
             clientX,
             clientY,
+            datas: datas.datas,
         });
 
         datas.isScale = result !== false;
@@ -260,11 +261,11 @@ export default {
         return nextParams;
     },
     dragGroupControlEnd(moveable: MoveableGroup, e: any) {
-        if (!e.datas.isScale) {
+        const { clientX, clientY, isDrag, datas } = e;
+
+        if (!datas.isScale) {
             return;
         }
-        const { clientX, clientY, isDrag } = e;
-
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", e);
 
@@ -273,6 +274,7 @@ export default {
             clientX,
             clientY,
             isDrag,
+            datas: datas.datas,
         };
 
         triggerEvent(moveable, "onScaleGroupEnd", nextParams);

@@ -19,7 +19,7 @@ export default {
     updateRect: true,
     pinchStart(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, touches, inputEvent, isGroup }: any,
+        { datas, clientX, clientY, touches, inputEvent, targets }: any,
     ) {
         const { pinchable, ables } = moveable.props;
 
@@ -27,8 +27,8 @@ export default {
             return false;
         }
         const state = moveable.state;
-        const eventName = `onPinch${isGroup ? "Group" : ""}Start` as "onPinchStart";
-        const controlEventName = `drag${isGroup ? "Group" : ""}ControlStart` as "dragControlStart";
+        const eventName = `onPinch${targets ? "Group" : ""}Start` as "onPinchStart";
+        const controlEventName = `drag${targets ? "Group" : ""}ControlStart` as "dragControlStart";
 
         const pinchAbles = (pinchable === true ? moveable.controlAbles : ables!.filter(able => {
             return pinchable.indexOf(able.name as any) > -1;
@@ -37,11 +37,11 @@ export default {
         datas.pinchableDatas = {};
 
         const result = triggerEvent(moveable, eventName, {
-            target: state.target!,
+            [targets ? "targets" : "target"]: targets ? targets : state.target!,
             clientX,
             clientY,
             datas: datas.pinchableDatas,
-        });
+        } as any);
 
         datas.isPinch = result !== false;
         datas.ables = pinchAbles;
@@ -70,7 +70,7 @@ export default {
     },
     pinch(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent, isGroup }: any,
+        { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent, targets }: any,
     ) {
         if (!datas.isPinch) {
             return;
@@ -82,17 +82,17 @@ export default {
         inputEvent.preventDefault();
         inputEvent.stopPropagation();
 
-        const params = {
-            target,
+        const params: any = {
+            [targets ? "targets" : "target"]: targets ? targets : target,
             clientX,
             clientY,
             datas: datas.pinchableDatas,
         };
-        const eventName = `onPinch${isGroup ? "Group" : ""}` as "onPinch";
+        const eventName = `onPinch${targets ? "Group" : ""}` as "onPinch";
         triggerEvent(moveable, eventName, params);
 
         const ables: Able[] = datas.ables;
-        const controlEventName = `drag${isGroup ? "Group" : ""}Control` as "dragControl";
+        const controlEventName = `drag${targets ? "Group" : ""}Control` as "dragControl";
 
         ables.forEach(able => {
             able[controlEventName]!(moveable, {
@@ -109,22 +109,22 @@ export default {
     },
     pinchEnd(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, isPinch, inputEvent, isGroup }: any,
+        { datas, clientX, clientY, isPinch, inputEvent, targets }: any,
     ) {
         if (!datas.isPinch) {
             return;
         }
         const target = moveable.state.target!;
-        const eventName = `onPinch${isGroup ? "Group" : ""}End` as "onPinchEnd";
+        const eventName = `onPinch${targets ? "Group" : ""}End` as "onPinchEnd";
         triggerEvent(moveable, eventName, {
-            target,
+            [targets ? "targets" : "target"]: targets ? targets : target,
             isDrag: isPinch,
             clientX,
             clientY,
             datas: datas.pinchableDatas,
-        });
+        } as any);
         const ables: Able[] = datas.ables;
-        const controlEventName = `drag${isGroup ? "Group" : ""}ControlEnd` as "dragControlEnd";
+        const controlEventName = `drag${targets ? "Group" : ""}ControlEnd` as "dragControlEnd";
 
         ables.forEach(able => {
             able[controlEventName]!(moveable, {
@@ -139,12 +139,12 @@ export default {
         return isPinch;
     },
     pinchGroupStart(moveable: MoveableGroup, e: any) {
-        return this.pinchStart(moveable, {...e, isGroup: true });
+        return this.pinchStart(moveable, {...e, targets: moveable.props.targets });
     },
     pinchGroup(moveable: MoveableGroup, e: any) {
-        return this.pinch(moveable, {...e, isGroup: true });
+        return this.pinch(moveable, {...e, targets: moveable.props.targets });
     },
     pinchGroupEnd(moveable: MoveableGroup, e: any) {
-        return this.pinchEnd(moveable, {...e, isGroup: true });
+        return this.pinchEnd(moveable, {...e, targets: moveable.props.targets });
     },
 };

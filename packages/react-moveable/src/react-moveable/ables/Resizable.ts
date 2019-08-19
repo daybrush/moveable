@@ -193,6 +193,7 @@ export default {
             targets: moveable.props.targets!,
             clientX,
             clientY,
+            datas: datas.datas,
         });
 
         datas.isResize = result !== false;
@@ -243,10 +244,11 @@ export default {
         return nextParams;
     },
     dragGroupControlEnd(moveable: MoveableGroup, e: any) {
-        if (!e.datas.isResize) {
+        const { clientX, clientY, isDrag, datas } = e;
+
+        if (!datas.isResize) {
             return;
         }
-        const { clientX, clientY, isDrag } = e;
 
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", e);
@@ -256,6 +258,7 @@ export default {
             clientX,
             clientY,
             isDrag,
+            datas: datas.datas,
         };
 
         triggerEvent(moveable, "onResizeGroupEnd", nextParams);

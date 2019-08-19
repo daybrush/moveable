@@ -128,6 +128,7 @@ const Draggable = {
             targets: moveable.props.targets!,
             clientX,
             clientY,
+            datas: datas.datas,
         });
 
         datas.isDrag = result !== false;
@@ -164,6 +165,7 @@ const Draggable = {
             isDrag,
             clientX,
             clientY,
+            datas: datas.datas,
         });
 
         return isDrag;

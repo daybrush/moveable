@@ -460,10 +460,19 @@ export interface OnWarpEnd {
     datas: IObject<any>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - targets to drag
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ */
 export interface OnDragGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
+    datas: IObject<any>;
 }
 
 export interface OnDragGroup extends OnDrag {
@@ -475,34 +484,38 @@ export interface OnDragGroupEnd {
     clientX: number;
     clientY: number;
     isDrag: boolean;
+    datas: IObject<any>;
 }
 
 export interface OnRotateGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
+    datas: IObject<any>;
 }
 
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotate & { drag: OnDrag } | undefined>;
+    events: Array<OnRotate & { drag: OnDrag }>;
 }
 export interface OnRotateGroupEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
     isDrag: boolean;
+    datas: IObject<any>;
 }
 
 export interface OnResizeGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
+    datas: IObject<any>;
 }
 
 export interface OnResizeGroup extends OnResize {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnResize & { drag: OnDrag } | undefined>;
+    events: Array<OnResize & { drag: OnDrag }>;
 }
 
 export interface OnResizeGroupEnd {
@@ -510,16 +523,18 @@ export interface OnResizeGroupEnd {
     clientX: number;
     clientY: number;
     isDrag: boolean;
+    datas: IObject<any>;
 }
 export interface OnScaleGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
+    datas: IObject<any>;
 }
 
 export interface OnScaleGroup extends OnScale {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnScale & { drag: OnDrag } | undefined>;
+    events: Array<OnScale & { drag: OnDrag }>;
 }
 
 export interface OnScaleGroupEnd {
@@ -527,6 +542,7 @@ export interface OnScaleGroupEnd {
     clientX: number;
     clientY: number;
     isDrag: boolean;
+    datas: IObject<any>;
 }
 
 export interface Able<T = any> {

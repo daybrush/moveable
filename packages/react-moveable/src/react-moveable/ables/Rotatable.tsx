@@ -229,6 +229,7 @@ export default {
             targets: moveable.props.targets!,
             clientX,
             clientY,
+            datas: datas.datas,
         });
 
         datas.isRotate = result !== false;
@@ -277,10 +278,11 @@ export default {
         return nextParams;
     },
     dragGroupControlEnd(moveable: MoveableGroup, e: any) {
-        if (!e.datas.isRotate) {
+        const { clientX, clientY, isDrag, datas } = e;
+
+        if (!datas.isRotate) {
             return;
         }
-        const { clientX, clientY, isDrag } = e;
 
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", e);
@@ -290,6 +292,7 @@ export default {
             clientX,
             clientY,
             isDrag,
+            datas: datas.datas,
         };
 
         triggerEvent(moveable, "onRotateGroupEnd", nextParams);
