@@ -457,4 +457,99 @@ export class AppComponent {
 }
 `,
     },
+    groupable: {
+        vanilla: `
+import Moveable from "moveable";
+const poses = [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+];
+const target = [].slice.call(
+    document.querySelectorAll(".target"),
+);
+const groupable = new Moveable(document.body, {
+    target,
+    draggable: true,
+}).on("dragGroup", ({ events }) => {
+    events.forEach(({ target, beforeDelta }, i) => {
+        poses[i][0] += beforeDelta[0];
+        poses[i][1] += beforeDelta[1];
+
+        target.style.transform
+            = "translate("
+            + poses[i][0] + "px, "
+            + poses[i][1] + "px)";
+    });
+});
+        `,
+        react: `
+import Moveable from "react-moveable";
+
+this.poses = [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+];
+
+const target = [].slice.call(
+    document.querySelectorAll(".target"),
+);
+return (
+    <Moveable
+        target={target}
+        draggable={true}
+        onDragGroup={({ events }) => {
+            events.forEach(({ target, beforeDelta }, i) => {
+                this.poses[i][0] += beforeDelta[0];
+                this.poses[i][1] += beforeDelta[1];
+
+                target.style.transform
+                    = "translate("
+                    + this.poses[i][0] + "px, "
+                    + this.poses[i][1] + "px)";
+            });
+        }}
+    />
+);
+        `,
+        angular: `
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: ${"`"}
+<div #target1 class="target">target1</div>
+<div #target2 class="target">target2</div>
+<div #target3 class="target">target3</div>
+<ngx-moveable
+    [target]="[target1, target2, target3]"
+    [draggable]="true"
+    (dragGroup)="onDragGroup($event)
+    />
+${"`"},
+})
+export class AppComponent {
+    poses = [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+    ];
+    onDragGroup({ events }) {
+        events.forEach(({ target, beforeDelta }, i) => {
+            this.poses[i][0] += beforeDelta[0];
+            this.poses[i][1] += beforeDelta[1];
+
+            target.style.transform
+                = "translate("
+                + this.poses[i][0] + "px, "
+                + this.poses[i][1] + "px)";
+        });
+    }
+}
+        `,
+    },
 };

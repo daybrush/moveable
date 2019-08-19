@@ -4,7 +4,8595 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.6.5
+version: 0.7.0
 */
-!function(){"use strict";var r=function(t,e){return(r=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n])})(t,e)};function a(t,e){function n(){this.constructor=t}r(t,e),t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}var s=function(){return(s=Object.assign||function(t){for(var e,n=1,r=arguments.length;n<r;n++)for(var a in e=arguments[n])Object.prototype.hasOwnProperty.call(e,a)&&(t[a]=e[a]);return t}).apply(this,arguments)};function l(t){return void 0===t}var t=function(){var t=function(){function t(){this._eventHandler={},this.options={}}var e=t.prototype;return e.trigger=function(t,e){void 0===e&&(e={});var n=this._eventHandler[t]||[];if(!(0<n.length))return!0;n=n.concat(),e.eventType=t;var r=!1,a=[e],o=0;e.stop=function(){r=!0},e.currentTarget=this;for(var i=arguments.length,s=new Array(2<i?i-2:0),l=2;l<i;l++)s[l-2]=arguments[l];for(1<=s.length&&(a=a.concat(s)),o=0;n[o];o++)n[o].apply(this,a);return!r},e.once=function(a,o){if("object"==typeof a&&l(o)){var t,e=a;for(t in e)this.once(t,e[t]);return this}if("string"==typeof a&&"function"==typeof o){var i=this;this.on(a,function t(){for(var e=arguments.length,n=new Array(e),r=0;r<e;r++)n[r]=arguments[r];o.apply(i,n),i.off(a,t)})}return this},e.hasOn=function(t){return!!this._eventHandler[t]},e.on=function(t,e){if("object"==typeof t&&l(e)){var n,r=t;for(n in r)this.on(n,r[n]);return this}if("string"==typeof t&&"function"==typeof e){var a=this._eventHandler[t];l(a)&&(this._eventHandler[t]=[],a=this._eventHandler[t]),a.push(e)}return this},e.off=function(t,e){if(l(t))return this._eventHandler={},this;if(l(e)){if("string"==typeof t)return this._eventHandler[t]=void 0,this;var n,r=t;for(n in r)this.off(n,r[n]);return this}var a,o,i=this._eventHandler[t];if(i)for(a=0;void 0!==(o=i[a]);a++)if(o===e){i=i.splice(a,1);break}return this},t}();return t.VERSION="2.1.2",t}();function c(e,n){return function(t){t&&(e[n]=t)}}var u=function(){},p={},f=[],d=[];function h(t,e){var n,r,a,o,i=d;for(o=arguments.length;2<o--;)f.push(arguments[o]);for(e&&null!=e.children&&(f.length||f.push(e.children),delete e.children);f.length;)if((r=f.pop())&&void 0!==r.pop)for(o=r.length;o--;)f.push(r[o]);else"boolean"==typeof r&&(r=null),(a="function"!=typeof t)&&(null==r?r="":"number"==typeof r?r=String(r):"string"!=typeof r&&(a=!1)),a&&n?i[i.length-1]+=r:i===d?i=[r]:i.push(r),n=a;var s=new u;return s.nodeName=t,s.children=i,s.attributes=null==e?void 0:e,s.key=null==e?void 0:e.key,void 0!==p.vnode&&p.vnode(s),s}function C(t,e){for(var n in e)t[n]=e[n];return t}function g(t,e){t&&("function"==typeof t?t(e):t.current=e)}var e="function"==typeof Promise?Promise.resolve().then.bind(Promise.resolve()):setTimeout,v=/acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i,n=[];function o(t){!t._dirty&&(t._dirty=!0)&&1==n.push(t)&&e(i)}function i(){for(var t;t=n.pop();)t._dirty&&F(t)}function _(t,e){return t.normalizedNodeName===e||t.nodeName.toLowerCase()===e.toLowerCase()}function P(t){var e=C({},t.attributes);e.children=t.children;var n=t.nodeName.defaultProps;if(void 0!==n)for(var r in n)void 0===e[r]&&(e[r]=n[r]);return e}function R(t){var e=t.parentNode;e&&e.removeChild(t)}function m(t,e,n,r,a){if("className"===e&&(e="class"),"key"===e);else if("ref"===e)g(n,null),g(r,t);else if("class"!==e||a)if("style"===e){if(r&&"string"!=typeof r&&"string"!=typeof n||(t.style.cssText=r||""),r&&"object"==typeof r){if("string"!=typeof n)for(var o in n)o in r||(t.style[o]="");for(var o in r)t.style[o]="number"==typeof r[o]&&!1===v.test(o)?r[o]+"px":r[o]}}else if("dangerouslySetInnerHTML"===e)r&&(t.innerHTML=r.__html||"");else if("o"==e[0]&&"n"==e[1]){var i=e!==(e=e.replace(/Capture$/,""));e=e.toLowerCase().substring(2),r?n||t.addEventListener(e,b,i):t.removeEventListener(e,b,i),(t._listeners||(t._listeners={}))[e]=r}else if("list"!==e&&"type"!==e&&!a&&e in t){try{t[e]=null==r?"":r}catch(t){}null!=r&&!1!==r||"spellcheck"==e||t.removeAttribute(e)}else{var s=a&&e!==(e=e.replace(/^xlink:?/,""));null==r||!1===r?s?t.removeAttributeNS("http://www.w3.org/1999/xlink",e.toLowerCase()):t.removeAttribute(e):"function"!=typeof r&&(s?t.setAttributeNS("http://www.w3.org/1999/xlink",e.toLowerCase(),r):t.setAttribute(e,r))}else t.className=r||""}function b(t){return this._listeners[t.type](p.event&&p.event(t)||t)}var N=[],O=0,y=!1,x=!1;function E(){for(var t;t=N.shift();)t.componentDidMount&&t.componentDidMount()}function X(t,e,n,r,a,o){O++||(y=null!=a&&void 0!==a.ownerSVGElement,x=null!=t&&!("__preactattr_"in t));var i=Y(t,e,n,r,o);return a&&i.parentNode!==a&&a.appendChild(i),--O||(x=!1,o||E()),i}function Y(t,e,n,r,a){var o=t,i=y;if(null!=e&&"boolean"!=typeof e||(e=""),"string"==typeof e||"number"==typeof e)return t&&void 0!==t.splitText&&t.parentNode&&(!t._component||a)?t.nodeValue!=e&&(t.nodeValue=e):(o=document.createTextNode(e),t&&(t.parentNode&&t.parentNode.replaceChild(o,t),k(t,!0))),o.__preactattr_=!0,o;var s=e.nodeName;if("function"==typeof s)return function(t,e,n,r){var a=t&&t._component,o=a,i=t,s=a&&t._componentConstructor===e.nodeName,l=s,c=P(e);for(;a&&!l&&(a=a._parentComponent);)l=a.constructor===e.nodeName;a&&l&&(!r||a._component)?(A(a,c,3,n,r),t=a.base):(o&&!s&&(j(o),t=i=null),a=z(e.nodeName,c,n),t&&!a.nextBase&&(a.nextBase=t,i=null),A(a,c,1,n,r),t=a.base,i&&t!==i&&(i._component=null,k(i,!1)));return t}(t,e,n,r);if(y="svg"===s||"foreignObject"!==s&&y,s=String(s),(!t||!_(t,s))&&(o=function(t,e){var n=e?document.createElementNS("http://www.w3.org/2000/svg",t):document.createElement(t);return n.normalizedNodeName=t,n}(s,y),t)){for(;t.firstChild;)o.appendChild(t.firstChild);t.parentNode&&t.parentNode.replaceChild(o,t),k(t,!0)}var l=o.firstChild,c=o.__preactattr_,u=e.children;if(null==c){c=o.__preactattr_={};for(var p=o.attributes,f=p.length;f--;)c[p[f].name]=p[f].value}return!x&&u&&1===u.length&&"string"==typeof u[0]&&null!=l&&void 0!==l.splitText&&null==l.nextSibling?l.nodeValue!=u[0]&&(l.nodeValue=u[0]):(u&&u.length||null!=l)&&function(t,e,n,r,a){var o,i,s,l,c,u=t.childNodes,p=[],f={},d=0,h=0,g=u.length,v=0,m=e?e.length:0;if(0!==g)for(var b=0;b<g;b++){var y=u[b],x=y.__preactattr_;null!=(w=m&&x?y._component?y._component.__key:x.key:null)?(d++,f[w]=y):(x||(void 0!==y.splitText?!a||y.nodeValue.trim():a))&&(p[v++]=y)}if(0!==m)for(b=0;b<m;b++){var w;if(l=e[b],(c=null)!=(w=l.key))d&&void 0!==f[w]&&(c=f[w],f[w]=void 0,d--);else if(h<v)for(o=h;o<v;o++)if(void 0!==p[o]&&(S=i=p[o],D=a,"string"==typeof(M=l)||"number"==typeof M?void 0!==S.splitText:"string"==typeof M.nodeName?!S._componentConstructor&&_(S,M.nodeName):D||S._componentConstructor===M.nodeName)){c=i,p[o]=void 0,o===v-1&&v--,o===h&&h++;break}c=Y(c,l,n,r),s=u[b],c&&c!==t&&c!==s&&(null==s?t.appendChild(c):c===s.nextSibling?R(s):t.insertBefore(c,s))}var S,M,D;if(d)for(var b in f)void 0!==f[b]&&k(f[b],!1);for(;h<=v;)void 0!==(c=p[v--])&&k(c,!1)}(o,u,n,r,x||null!=c.dangerouslySetInnerHTML),function(t,e,n){var r;for(r in n)e&&null!=e[r]||null==n[r]||m(t,r,n[r],n[r]=void 0,y);for(r in e)"children"===r||"innerHTML"===r||r in n&&e[r]===("value"===r||"checked"===r?t[r]:n[r])||m(t,r,n[r],n[r]=e[r],y)}(o,e.attributes,c),y=i,o}function k(t,e){var n=t._component;n?j(n):(null!=t.__preactattr_&&g(t.__preactattr_.ref,null),!1!==e&&null!=t.__preactattr_||R(t),w(t))}function w(t){for(t=t.lastChild;t;){var e=t.previousSibling;k(t,!0),t=e}}var S=[];function z(t,e,n){var r,a=S.length;for(t.prototype&&t.prototype.render?(r=new t(e,n),D.call(r,e,n)):((r=new D(e,n)).constructor=t,r.render=M);a--;)if(S[a].constructor===t)return r.nextBase=S[a].nextBase,S.splice(a,1),r;return r}function M(t,e,n){return this.constructor(t,n)}function A(t,e,n,r,a){t._disable||(t._disable=!0,t.__ref=e.ref,t.__key=e.key,delete e.ref,delete e.key,void 0===t.constructor.getDerivedStateFromProps&&(!t.base||a?t.componentWillMount&&t.componentWillMount():t.componentWillReceiveProps&&t.componentWillReceiveProps(e,r)),r&&r!==t.context&&(t.prevContext||(t.prevContext=t.context),t.context=r),t.prevProps||(t.prevProps=t.props),t.props=e,t._disable=!1,0!==n&&(1!==n&&!1===p.syncComponentUpdates&&t.base?o(t):F(t,1,a)),g(t.__ref,t))}function F(t,e,n,r){if(!t._disable){var a,o,i,s=t.props,l=t.state,c=t.context,u=t.prevProps||s,p=t.prevState||l,f=t.prevContext||c,d=t.base,h=t.nextBase,g=d||h,v=t._component,m=!1,b=f;if(t.constructor.getDerivedStateFromProps&&(l=C(C({},l),t.constructor.getDerivedStateFromProps(s,l)),t.state=l),d&&(t.props=u,t.state=p,t.context=f,2!==e&&t.shouldComponentUpdate&&!1===t.shouldComponentUpdate(s,l,c)?m=!0:t.componentWillUpdate&&t.componentWillUpdate(s,l,c),t.props=s,t.state=l,t.context=c),t.prevProps=t.prevState=t.prevContext=t.nextBase=null,t._dirty=!1,!m){a=t.render(s,l,c),t.getChildContext&&(c=C(C({},c),t.getChildContext())),d&&t.getSnapshotBeforeUpdate&&(b=t.getSnapshotBeforeUpdate(u,p));var y,x,w=a&&a.nodeName;if("function"==typeof w){var S=P(a);(o=v)&&o.constructor===w&&S.key==o.__key?A(o,S,1,c,!1):(y=o,t._component=o=z(w,S,c),o.nextBase=o.nextBase||h,o._parentComponent=t,A(o,S,0,c,!1),F(o,1,n,!0)),x=o.base}else i=g,(y=v)&&(i=t._component=null),!g&&1!==e||(i&&(i._component=null),x=X(i,a,c,n||!d,g&&g.parentNode,!0));if(g&&x!==g&&o!==v){var M=g.parentNode;M&&x!==M&&(M.replaceChild(x,g),y||(g._component=null,k(g,!1)))}if(y&&j(y),(t.base=x)&&!r){for(var D=t,_=t;_=_._parentComponent;)(D=_).base=x;x._component=D,x._componentConstructor=D.constructor}}for(!d||n?N.push(t):m||t.componentDidUpdate&&t.componentDidUpdate(u,p,b);t._renderCallbacks.length;)t._renderCallbacks.pop().call(t);O||r||E()}}function j(t){var e=t.base;t._disable=!0,t.componentWillUnmount&&t.componentWillUnmount(),t.base=null;var n=t._component;n?j(n):e&&(null!=e.__preactattr_&&g(e.__preactattr_.ref,null),R(t.nextBase=e),S.push(t),w(e)),g(t.__ref,null)}function D(t,e){this._dirty=!0,this.context=e,this.props=t,this.state=this.state||{},this._renderCallbacks=[]}C(D.prototype,{setState:function(t,e){this.prevState||(this.prevState=this.state),this.state=C(C({},this.state),"function"==typeof t?t(this.state,this.props):t),e&&this._renderCallbacks.push(e),o(this)},forceUpdate:function(t){t&&this._renderCallbacks.push(t),F(this,2)},render:function(){}});W=function(t,e){return(W=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n])})(t,e)};var W,T="a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan".split(" "),B="undefined"!=typeof Symbol&&Symbol.for&&Symbol.for("react.element")||60103,L="undefined"!=typeof Symbol&&Symbol.for?Symbol.for("__preactCompatWrapper"):"__preactCompatWrapper",q={constructor:1,render:1,shouldComponentUpdate:1,componentWillReceiveProps:1,componentWillUpdate:1,componentDidUpdate:1,componentWillMount:1,componentDidMount:1,componentWillUnmount:1,componentDidUnmount:1},I=/^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vector|vert|word|writing|x)[A-Z]/,V={},U=!1;try{U="production"!==process.env.NODE_ENV}catch(t){}var H=h("a",null).constructor;H.prototype.$$typeof=B,H.prototype.preactCompatUpgraded=!1,H.prototype.preactCompatNormalized=!1,Object.defineProperty(H.prototype,"type",{get:function(){return this.nodeName},set:function(t){this.nodeName=t},configurable:!0}),Object.defineProperty(H.prototype,"props",{get:function(){return this.attributes},set:function(t){this.attributes=t},configurable:!0});var $=p.event;p.event=function(t){return $&&(t=$(t)),t.persist=Object,t.nativeEvent=t};var G=p.vnode;p.vnode=function(t){if(!t.preactCompatUpgraded){t.preactCompatUpgraded=!0;var e=t.nodeName,n=t.attributes=null==t.attributes?{}:ot({},t.attributes);"function"==typeof e?(!0===e[L]||e.prototype&&"isReactComponent"in e.prototype)&&(t.children&&""===String(t.children)&&(t.children=void 0),t.children&&(n.children=t.children),t.preactCompatNormalized||rt(t),function(t){var e=t.nodeName,n=t.attributes;t.attributes={},e.defaultProps&&ot(t.attributes,e.defaultProps);n&&ot(t.attributes,n)}(t)):(t.children&&""===String(t.children)&&(t.children=void 0),t.children&&(n.children=t.children),n.defaultValue&&(n.value||0===n.value||(n.value=n.defaultValue),delete n.defaultValue),function(t,e){var n,r,a;if(e){for(a in e)if(n=I.test(a))break;if(n)for(a in r=t.attributes={},e)e.hasOwnProperty(a)&&(r[I.test(a)?a.replace(/([A-Z0-9])/,"-$1").toLowerCase():a]=e[a])}}(t,n))}G&&G(t)};var Z,J=[];for(var K,Q={},tt=T.length;tt--;)Q[T[tt]]=(K=T[tt],nt.bind(null,K));function et(t){return function(t){function e(t,e){!function(t){for(var e in t){var n=t[e];"function"!=typeof n||n.__bound||q.hasOwnProperty(e)||((t[e]=n.bind(t)).__bound=!0)}}(this),ht.call(this,t,e,V),ut.call(this,t,e)}(t=ot({constructor:e},t)).mixins&&function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=ct(e[n].concat(t[n]||J),"getDefaultProps"===n||"getInitialState"===n||"getChildContext"===n))}(t,function(t){for(var e={},n=0;n<t.length;n++){var r=t[n];for(var a in r)r.hasOwnProperty(a)&&"function"==typeof r[a]&&(e[a]||(e[a]=[])).push(r[a])}return e}(t.mixins));t.statics&&ot(e,t.statics);t.propTypes&&(e.propTypes=t.propTypes);t.defaultProps&&(e.defaultProps=t.defaultProps);t.getDefaultProps&&(e.defaultProps=t.getDefaultProps.call(e));return st.prototype=ht.prototype,e.prototype=ot(new st,t),e.displayName=t.displayName||"Component",e}({displayName:t.displayName||t.name,render:function(){return t(this.props,this.context)}})}function nt(){for(var t=[],e=arguments.length;e--;)t[e]=arguments[e];return function t(e,n){for(var r=n||0;r<e.length;r++){var a=e[r];Array.isArray(a)?t(a):!a||"object"!=typeof a||(o=a)&&(o instanceof H||o.$$typeof===B)||!(a.props&&a.type||a.attributes&&a.nodeName||a.children)||(e[r]=nt(a.type||a.nodeName,a.props||a.attributes,a.children))}var o}(t,2),rt(h.apply(void 0,t))}function rt(t){t.preactCompatNormalized=!0,function(t){var e=t.attributes||(t.attributes={});at.enumerable="className"in e,e.className&&(e.class=e.className);Object.defineProperty(e,"className",at)}(t),function(t){return"function"==typeof t&&!(t.prototype&&t.prototype.render)}(t.nodeName)&&(t.nodeName=function(t){var e=t[L];return e?!0===e?t:e:(e=et(t),Object.defineProperty(e,L,{configurable:!0,value:!0}),e.displayName=t.displayName,e.propTypes=t.propTypes,e.defaultProps=t.defaultProps,Object.defineProperty(t,L,{configurable:!0,value:e}),e)}(t.nodeName));var e=t.attributes.ref,n=e&&typeof e;return!Z||"string"!==n&&"number"!==n||(t.attributes.ref=function(e,n){return n._refProxies[e]||(n._refProxies[e]=function(t){n&&n.refs&&null===(n.refs[e]=t)&&(delete n._refProxies[e],n=null)})}(e,Z)),function(t){var e=t.nodeName,n=t.attributes;if(!n||"string"!=typeof e)return;var r={};for(var a in n)r[a.toLowerCase()]=a;r.ondoubleclick&&(n.ondblclick=n[r.ondoubleclick],delete n[r.ondoubleclick]);if(r.onchange&&("textarea"===e||"input"===e.toLowerCase()&&!/^fil|che|rad/i.test(n.type))){var o=r.oninput||"oninput";n[o]||(n[o]=ct([n[o],n[r.onchange]]),delete n[r.onchange])}}(t),t}var at={configurable:!0,get:function(){return this.class},set:function(t){this.class=t}};function ot(t){for(var e=arguments,n=1,r=void 0;n<arguments.length;n++)if(r=e[n])for(var a in r)r.hasOwnProperty(a)&&(t[a]=r[a]);return t}function it(t,e){for(var n in t)if(!(n in e))return!0;for(var r in e)if(t[r]!==e[r])return!0;return!1}function st(){}function lt(t,e,n){if("string"==typeof e&&(e=t.constructor.prototype[e]),"function"==typeof e)return e.apply(t,n)}function ct(o,i){return function(){for(var t,e=arguments,n=0;n<o.length;n++){var r=lt(this,o[n],e);if(i&&null!=r)for(var a in t=t||{},r)r.hasOwnProperty(a)&&(t[a]=r[a]);else void 0!==r&&(t=r)}return t}}function ut(t,e){pt.call(this,t,e),this.componentWillReceiveProps=ct([pt,this.componentWillReceiveProps||"componentWillReceiveProps"]),this.render=ct([pt,ft,this.render||"render",dt])}function pt(t,e){if(t){var n=t.children;if(n&&Array.isArray(n)&&1===n.length&&("string"==typeof n[0]||"function"==typeof n[0]||n[0]instanceof H)&&(t.children=n[0],t.children&&"object"==typeof t.children&&(t.children.length=1,t.children[0]=t.children)),U){var r="function"==typeof this?this:this.constructor;this.propTypes||r.propTypes,this.displayName||r.name}}}function ft(t){Z=this}function dt(){Z===this&&(Z=null)}function ht(t,e,n){D.call(this,t,e),this.state=this.getInitialState?this.getInitialState():{},this.refs={},this._refProxies={},n!==V&&ut.call(this,t,e)}function gt(t,e){ht.call(this,t,e)}ot(ht.prototype=new D,{constructor:ht,isReactComponent:{},replaceState:function(t,e){for(var n in this.setState(t,e),this.state)n in t||delete this.state[n]},getDOMNode:function(){return this.base},isMounted:function(){return!!this.base}}),st.prototype=ht.prototype,(gt.prototype=new st).isPureReactComponent=!0,gt.prototype.shouldComponentUpdate=function(t,e){return it(this.props,t)||it(this.state,e)};var vt="undefined"!=typeof window&&window||{},mt=(vt.RegExp,vt.navigator),bt={browser:[{criteria:"PhantomJS",identity:"PhantomJS"},{criteria:/Whale/,identity:"Whale",versionSearch:"Whale"},{criteria:/Edge/,identity:"Edge",versionSearch:"Edge"},{criteria:/MSIE|Trident|Windows Phone/,identity:"IE",versionSearch:"IEMobile|MSIE|rv"},{criteria:/MiuiBrowser/,identity:"MIUI Browser",versionSearch:"MiuiBrowser"},{criteria:/SamsungBrowser/,identity:"Samsung Internet",versionSearch:"SamsungBrowser"},{criteria:/SAMSUNG /,identity:"Samsung Internet",versionSearch:"Version"},{criteria:/Chrome|CriOS/,identity:"Chrome"},{criteria:/Android/,identity:"Android Browser",versionSearch:"Version"},{criteria:/iPhone|iPad/,identity:"Safari",versionSearch:"Version"},{criteria:"Apple",identity:"Safari",versionSearch:"Version"},{criteria:"Firefox",identity:"Firefox"}],os:[{criteria:/Windows Phone/,identity:"Windows Phone",versionSearch:"Windows Phone"},{criteria:"Windows 2000",identity:"Window",versionAlias:"5.0"},{criteria:/Windows NT/,identity:"Window",versionSearch:"Windows NT"},{criteria:/iPhone|iPad/,identity:"iOS",versionSearch:"iPhone OS|CPU OS"},{criteria:"Mac",versionSearch:"OS X",identity:"MAC"},{criteria:/Android/,identity:"Android"},{criteria:/Tizen/,identity:"Tizen"},{criteria:/Web0S/,identity:"WebOS"}],webview:[{criteria:/iPhone|iPad/,browserVersionSearch:"Version",webviewBrowserVersion:/-1/},{criteria:/iPhone|iPad|Android/,webviewToken:/NAVER|DAUM|; wv/}],defaultString:{browser:{version:"-1",name:"unknown"},os:{version:"-1",name:"unknown"}}};function yt(t,e){for(var n=[],r=0;r<t.length;r++)e(t[r])&&n.push(t[r]);return n}var xt=void 0;function wt(t,e){return e&&e.test?!!e.test(t):-1<t.indexOf(e)}function St(t,e){var n=yt(t,function(t){return wt(xt,t.criteria)})[0];return n&&n.identity||e.name}function Mt(t,r){return yt(t,function(t){var e=t.criteria,n=new RegExp(t.identity,"i").test(r);return!!(e?n&&wt(xt,e):n)})[0]}function Dt(t,e){var n=bt.defaultString.browser.version,r=new RegExp("("+t+")","i").exec(e);if(!r)return n;var a=r.index,o=r[0];if(-1<a){var i=a+o.length+1;n=e.substring(i).split(" ")[0].replace(/_/g,".").replace(/;|\)/g,"")}return n}function _t(t){if(t)return Dt(function(t){var e=Mt(bt.browser,t);return e=e||{criteria:t,versionSearch:t,identity:t}}(t).versionSearch||t,xt)}function Ct(t){var e=function(t){return Mt(bt.os,t)}(t)||{},n=bt.defaultString.os.version,r=void 0;if(t){if(e.versionAlias)return e.versionAlias;var a=e.versionSearch||t,o=new RegExp("("+a+")\\s([\\d_\\.]+|\\d_0)","i");return o.exec(xt)&&(r=o.exec(xt)[2].replace(/_/g,".").replace(/;|\)/g,"")),r||n}}function Pt(){var t=St(bt.os,bt.defaultString.os);return{name:t,version:Ct(t)}}function Rt(){var t=St(bt.browser,bt.defaultString.browser);return{name:t,version:_t(t),webview:function(){var t=bt.webview,e=void 0;return function(t,e){for(var n=0;n<t.length;n++)if(e(t[n]))return!0;return!1}(yt(t,function(t){return wt(xt,t.criteria)}),function(t){return e=Dt(t.browserVersionSearch,xt),!(!wt(xt,t.webviewToken)&&!wt(e,t.webviewBrowserVersion))})}()}}function Nt(){!function(t){xt=t}(0<arguments.length&&void 0!==arguments[0]?arguments[0]:mt.userAgent);var t={os:Pt(),browser:Rt(),isMobile:-1!==xt.indexOf("Mobi")};return t.browser.name=t.browser.name.toLowerCase(),t.os.name=t.os.name.toLowerCase(),t.os.version=t.os.version.toLowerCase(),"ios"===t.os.name&&t.browser.webview&&(t.browser.version="-1"),t}Nt.VERSION="2.1.5";function Ot(t){if(!qt)return"";var e=(qt.body||qt.documentElement).style,n=It.length;if(typeof e[t]!==Lt)return t;for(var r=0;r<n;++r){var a="-"+It[r]+"-"+t;if(typeof e[a]!==Lt)return a}return""}var Et="rgb",Xt="rgba",Yt="hsl",kt="hsla",zt=[Et,Xt,Yt,kt],At="function",Ft="property",jt="array",Wt="object",Tt="string",Bt="number",Lt="undefined",qt=typeof document!==Lt&&document,It=["webkit","ms","moz","o"],Vt=Ot("transform"),Ut=Ot("filter"),Ht=Ot("animation");function $t(t){return typeof t===Lt}function Gt(t){return t&&typeof t===Wt}function Zt(t){return Array.isArray(t)}function Jt(t){return typeof t===Tt}function Kt(t){var e=t.match(/("[^"]*"|'[^']*'|[^,\s()]*\((?:[^()]*|\([^()]*\))*\)[^,\s()]*|[^,])+/g);return e?e.map(function(t){return t.trim()}):[]}function Qt(t){var e=/([^(]*)\(([\s\S]*)\)([\s\S]*)/g.exec(t);return!e||e.length<4?{}:{prefix:e[1],value:e[2],suffix:e[3]}}function te(t){var e=function(t){return t.replace("#","")}(t),n=parseInt(e.substring(0,2),16),r=parseInt(e.substring(2,4),16),a=parseInt(e.substring(4,6),16),o=parseInt(e.substring(6,8),16)/255;return isNaN(o)&&(o=1),[n,r,a,o]}function ee(t){if("#"===t.charAt(0))return 4===t.length||5===t.length?te(function(t){var e=t.charAt(1),n=t.charAt(2),r=t.charAt(3),a=t.charAt(4);return["#",e,e,n,n,r,r,a,a].join("")}(t)):te(t);if(-1!==t.indexOf("(")){var e=Qt(t),n=e.prefix,r=e.value;if(!n||!r)return;var a=Kt(r),o=[],i=a.length;switch(n){case Et:case Xt:for(var s=0;s<i;++s)o[s]=parseFloat(a[s]);return o;case Yt:case kt:for(s=0;s<i;++s)-1!==a[s].indexOf("%")?o[s]=parseFloat(a[s])/100:o[s]=parseFloat(a[s]);return function(t){var e=t[0],n=t[1],r=t[2];e<0&&(e+=360*Math.floor((Math.abs(e)+360)/360)),e%=360;var a,o=(1-Math.abs(2*r-1))*n,i=o*(1-Math.abs(e/60%2-1)),s=r-o/2;return e<60?a=[o,i,0]:e<120?a=[i,o,0]:e<180?a=[0,o,i]:e<240?a=[0,i,o]:e<300?a=[i,0,o]:e<360&&(a=[o,0,i]),[Math.round(255*(a[0]+s)),Math.round(255*(a[1]+s)),Math.round(255*(a[2]+s)),3<t.length?t[3]:1]}(o)}}}function ne(t,e){return t.classList?t.classList.contains(e):!!t.className.match(new RegExp("(\\s|^)"+e+"(\\s|$)"))}function re(t,e,n,r){t.addEventListener(e,n,r)}function ae(t,e,n){t.removeEventListener(e,n)}var oe=function(t,e){return(oe=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n])})(t,e)};var ie=function(){return(ie=Object.assign||function(t){for(var e,n=1,r=arguments.length;n<r;n++)for(var a in e=arguments[n])Object.prototype.hasOwnProperty.call(e,a)&&(t[a]=e[a]);return t}).apply(this,arguments)};var se=function(t){for(var e=5381,n=t.length;n;)e=33*e^t.charCodeAt(--n);return e>>>0};var le=function(){return(le=Object.assign||function(t){for(var e,n=1,r=arguments.length;n<r;n++)for(var a in e=arguments[n])Object.prototype.hasOwnProperty.call(e,a)&&(t[a]=e[a]);return t}).apply(this,arguments)};function ce(t,e,n){var r=ve(t),a=ve(e),o=ve(n);return pe(me(n[0],be(r,o)),me(n[0],be(a,o)),n[0])}function ue(t){return t.touches?he(t.touches):[ge(t)]}function pe(t,e,n){var r=t.clientX,a=t.clientY;return{clientX:r,clientY:a,deltaX:r-e.clientX,deltaY:a-e.clientY,distX:r-n.clientX,distY:a-n.clientY}}function fe(t){return Math.sqrt(Math.pow(t[0].clientX-t[1].clientX,2)+Math.pow(t[0].clientY-t[1].clientY,2))}function de(t,n,r){return t.map(function(t,e){return pe(t,n[e],r[e])})}function he(t){for(var e=Math.min(t.length,2),n=[],r=0;r<e;++r)n.push(ge(t[r]));return n}function ge(t){return{clientX:t.clientX,clientY:t.clientY}}function ve(t){return{clientX:(t[0].clientX+t[1].clientX)/2,clientY:(t[0].clientY+t[1].clientY)/2}}function me(t,e){return{clientX:t.clientX+e.clientX,clientY:t.clientY+e.clientY}}function be(t,e){return{clientX:t.clientX-e.clientX,clientY:t.clientY-e.clientY}}var ye=function(){function t(t,e){var i=this;void 0===e&&(e={}),this.el=t,this.options={},this.flag=!1,this.pinchFlag=!1,this.datas={},this.isDrag=!1,this.isPinch=!1,this.isMouse=!1,this.isTouch=!1,this.prevClients=[],this.startClients=[],this.onDragStart=function(t){if(i.isDrag||!function(t){return t.touches&&2<=t.touches.length}(t)||i.pinchFlag||i.onPinchStart(t),!i.flag){var e=i.startClients[0]?i.startClients:ue(t);i.flag=!0,i.isDrag=!1,i.startClients=e,i.prevClients=e,i.datas={};var n=pe(e[0],i.prevClients[0],i.startClients[0]),r=i.options,a=r.dragstart;(r.preventRightClick&&3===t.which||!1===(a&&a(le({datas:i.datas,inputEvent:t},n))))&&(i.flag=!1),i.flag&&t.preventDefault()}},this.onDrag=function(t){if(i.flag){var e=ue(t);i.pinchFlag&&i.onPinch(t,e);var n=i.prevClients,r=i.startClients,a=i.pinchFlag?ce(e,n,r):pe(e[0],n[0],r[0]);if(a.deltaX||a.deltaY){i.isDrag=!0;var o=i.options.drag;o&&o(le({datas:i.datas},a,{inputEvent:t})),i.prevClients=e}}},this.onDragEnd=function(t){if(i.flag){i.pinchFlag&&i.onPinchEnd(t),i.flag=!1;var e=i.options.dragend,n=i.prevClients,r=i.startClients,a=i.pinchFlag?ce(n,n,r):pe(n[0],n[0],r[0]);i.startClients=[],i.prevClients=[],e&&e(le({datas:i.datas,isDrag:i.isDrag,inputEvent:t},a))}},this.options=le({container:t,preventRightClick:!0,events:["touch","mouse"]},e);var n=this.options,r=n.container,a=n.events;this.isTouch=-1<a.indexOf("touch"),this.isMouse=-1<a.indexOf("mouse"),this.isMouse&&(re(t,"mousedown",this.onDragStart),re(r,"mousemove",this.onDrag),re(r,"mouseup",this.onDragEnd)),this.isTouch&&(re(t,"touchstart",this.onDragStart),re(r,"touchmove",this.onDrag),re(r,"touchend",this.onDragEnd))}var e=t.prototype;return e.isDragging=function(){return this.isDrag},e.isPinching=function(){return this.isPinch},e.onPinchStart=function(t){var e,n;if(this.flag){this.pinchFlag=!0;var r=this.options.pinchstart,a=he(t.changedTouches);if((e=this.startClients).push.apply(e,a),(n=this.prevClients).push.apply(n,a),r){var o=this.startClients,i=ve(o),s=pe(i,i,i);r(le({datas:this.datas,touches:de(o,o,o)},s,{inputEvent:t}))}}},e.onPinch=function(t,e){if(this.flag&&this.pinchFlag){this.isPinch=!0;var n=this.options.pinch;if(n){var r=this.prevClients,a=this.startClients,o=pe(ve(e),ve(r),ve(a)),i=fe(e),s=fe(a);n(le({datas:this.datas,touches:de(e,r,a),scale:i/s,distance:i},o,{inputEvent:t}))}}},e.onPinchEnd=function(t){if(this.flag&&this.pinchFlag){var e=this.isPinch;this.isPinch=!1,this.pinchFlag=!1;var n=this.options.pinchend;if(n){var r=this.prevClients,a=this.startClients,o=pe(ve(r),ve(r),ve(a));n(le({datas:this.datas,isPinch:e,touches:de(r,r,a)},o,{inputEvent:t})),this.isPinch=!1,this.pinchFlag=!1}}},e.unset=function(){var t=this.el,e=this.options.container;this.isMouse&&(ae(t,"mousedown",this.onDragStart),ae(e,"mousemove",this.onDrag),ae(e,"mouseup",this.onDragEnd)),this.isTouch&&(ae(t,"touchstart",this.onDragStart),ae(e,"touchmove",this.onDrag),ae(e,"touchend",this.onDragEnd))},t}(),xe=function(t,e){return(xe=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)e.hasOwnProperty(n)&&(t[n]=e[n])})(t,e)};var we=Nt(),Se=-1<we.os.name.indexOf("ios")||-1<we.browser.name.indexOf("safari"),Me="moveable-",De=("\n{\n    position: fixed;\n    width: 0;\n    height: 0;\n    left: 0;\n    top: 0;\n    z-index: 3000;\n}\n.line, .control {\n    left: 0;\n    top: 0;\n}\n.control {\n    position: absolute;\n    width: 14px;\n    height: 14px;\n    border-radius: 50%;\n    border: 2px solid #fff;\n    box-sizing: border-box;\n    background: #4af;\n    margin-top: -7px;\n    margin-left: -7px;\n}\n.line {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    background: #4af;\n    transform-origin: 0px 0.5px;\n}\n.line.rotation {\n    height: 40px;\n    width: 1px;\n    transform-origin: 0.5px 39.5px;\n}\n.line.rotation .control {\n    border-color: #4af;\n    background:#fff;\n    cursor: alias;\n}\n.control.origin {\n    border-color: #f55;\n    background: #fff;\n    width: 12px;\n    height: 12px;\n    margin-top: -6px;\n    margin-left: -6px;\n    pointer-events: none;\n}\n.control.e, .control.w {\n    cursor: ew-resize;\n}\n.control.s, .control.n {\n    cursor: ns-resize;\n}\n.control.nw, .control.se, :host.reverse .control.ne, :host.reverse .control.sw {\n    cursor: nwse-resize;\n}\n.control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {\n    cursor: nesw-resize;\n}\n"+(Se?':global svg *:before {\n    content:"";\n    transform-origin: inherit;\n}':"")+"\n").replace(/\.([^{,\s\d.]+)/g,"."+Me+"$1"),_e=[[0,1,2],[1,0,3],[2,0,3],[3,1,2]],Ce=1e-9;function Pe(t,e,n,r,a,o){for(var i=n;i<r;++i)t[i]+=t[a+i-n]*o,e[i]+=e[a+i-n]*o}function Re(t,e,n,r,a){for(var o=n;o<r;++o){var i=t[o],s=e[o];t[o]=t[a+o-n],t[a+o-n]=i,e[o]=e[a+o-n],e[a+o-n]=s}}function Ne(t,e,n,r,a){for(var o=n;o<r;++o)t[o]/=a,e[o]/=a}function Oe(t){for(var e=t*t,n=[],r=0;r<e;++r)n[r]=r%(t+1)?0:1;return n}function Ee(t,e){for(var n=Oe(e),r=Math.min(t.length,e-1),a=0;a<r;++a)n[e*(a+1)-1]=t[a];return n}function Xe(t,e){void 0===e&&(e=Math.sqrt(t.length));for(var n=t.slice(),r=Oe(e),a=0;a<e;++a){var o=e*a,i=e*(a+1),s=o+a;if(0===n[s])for(var l=a+1;l<e;++l)if(n[e*l+a]){Re(n,r,o,i,e*l);break}if(!n[s])return[];Ne(n,r,o,i,n[s]);for(l=0;l<e;++l){var c=e*l,u=c+e,p=n[c+a];0!==p&&a!==l&&Pe(n,r,c,u,o,-p)}}return r}function Ye(t,e){void 0===e&&(e=Math.sqrt(t.length));for(var n=[],r=0;r<e;++r)for(var a=0;a<e;++a)n[a*e+r]=t[e*r+a];return n}function ke(t,e){for(var n=t.slice(),r=t.length;r<e-1;++r)n[r]=0;return n[e-1]=1,n}function ze(t,e,n){if(void 0===e&&(e=Math.sqrt(t.length)),e===n)return t;for(var r=Oe(n),a=Math.min(e,n),o=0;o<a-1;++o){for(var i=0;i<a-1;++i)r[o*n+i]=t[o*e+i];r[(o+1)*n-1]=t[(o+1)*e-1],r[(n-1)*n+o]=t[(e-1)*e+o]}return r[n*n-1]=t[e*e-1],r}function Ae(e){for(var t=[],n=1;n<arguments.length;n++)t[n-1]=arguments[n];var r=Oe(e);return t.forEach(function(t){r=Fe(r,t,e)}),r}function Fe(t,e,n){for(var r=[],a=t.length/n,o=e.length/a,i=0;i<n;++i)for(var s=0;s<o;++s)for(var l=r[i*o+s]=0;l<a;++l)r[i*o+s]+=t[i*a+l]*e[l*o+s];return r}function je(t,e,n){void 0===n&&(n=Math.sqrt(t.length));for(var r=[],a=t.length/n,o=e.length/a,i=0;i<n;++i)for(var s=0;s<o;++s)for(var l=r[i+s*o]=0;l<a;++l)r[i+s*o]+=t[i+l*a]*e[l+s*o];return r}function We(t,e){for(var n=Math.min(t.length,e.length),r=t.slice(),a=0;a<n;++a)r[a]=r[a]+e[a];return r}function Te(t,e){for(var n=Math.min(t.length,e.length),r=t.slice(),a=0;a<n;++a)r[a]=r[a]-e[a];return r}function Be(t,e,n){void 0===n&&(n=e.length);var r=Fe(t,e,n),a=r[n-1];return r.map(function(t){return t/a})}function Le(t,e){void 0===e&&(e=Math.sqrt(t.length));for(var n=[],r=0;r<e-1;++r)n[r]=t[(r+1)*e-1];return n[e-1]=0,n}function qe(t){return 9===t.length?[t[0],t[3],t[1],t[4],t[2],t[5]]:Ye(t)}function Ie(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];return function(e){for(var t=[],n=1;n<arguments.length;n++)t[n-1]=arguments[n];return t.map(function(t){return t.split(" ").map(function(t){return""+e+t}).join(" ")}).join(" ")}.apply(void 0,[Me].concat(t))}function Ve(){return Oe(3)}function Ue(t,e,n){return Ae(e,Ee(n,e),t,Ee(n.map(function(t){return-t}),e))}function He(o){return $e(window.getComputedStyle(o,":before")).map(function(t,e){var n=function(t){var e=/^([^\d|e|\-|\+]*)((?:\d|\.|-|e-|e\+)+)(\S*)$/g.exec(t);if(!e)return{prefix:"",unit:"",value:NaN};var n=e[1],r=e[2];return{prefix:n,unit:e[3],value:parseFloat(r)}}(t),r=n.value,a=n.unit;return r*function(t,e,n){return"%"!==e?1:t.ownerSVGElement.viewBox.baseVal[n?"width":"height"]/100}(o,a,0===e)})}function $e(t){return t.transformOrigin.split(" ")}function Ge(t,r,e,n,a){var o;void 0===e&&(e=t===r);for(var i,s,l,c,u=t,p=[],f=!1,d=3;u&&(e||u!==r);){var h=u.tagName.toLowerCase(),g=window.getComputedStyle(u),v=(c=g.transform,6===(l="none"===c?[1,0,0,1,0,0]:Gt(c)?c:Qt(c).value.split(/s*,\s*/g).map(function(t){return parseFloat(t)})).length?[l[0],l[2],l[4],l[1],l[3],l[5],0,0,1]:Ye(l));if(!f&&16===v.length){f=!0,d=4;for(var m=p.length,b=0;b<m;++b)p[b]=ze(p[b],3,4)}f&&9===v.length&&(v=ze(v,3,4));var y=u.offsetLeft,x=u.offsetTop,w=$t(y),S=void 0;if(w&&"svg"!==h?(S=Se?He(u):$e(g).map(function(t){return parseFloat(t)}),w=!1,"g"===h?x=y=0:(y=(o=Je(u,S))[0],x=o[1],S[0]=o[2],S[1]=o[3])):S=$e(g).map(function(t){return parseFloat(t)}),"svg"===h&&s&&p.push(Ze(u,d),Oe(d)),p.push(Ue(v,d,S),Ee([w?u:y,w?S:x],d)),s=s||v,i=i||S,e)break;u=u.parentElement}var M=n?ze(n,a,d):Oe(d),D=Oe(d),_=Oe(d),C=p.length;p.reverse(),p.forEach(function(t,e){var n;C-2===e&&(D=M.slice()),C-1===e&&(_=M.slice()),Gt(t[d-1])&&(n=function(t,e,n,r,a,o){var i,s=an(t),l=s[0],c=s[1],u=(e||document.documentElement).getBoundingClientRect(),p=t.getBoundingClientRect(),f=p.left-u.left,d=p.top-u.top,h=p.width,g=p.height,v=Ae(n,a,o),m=Qe(v,l,c,n),b=m.map(function(t){return t[0]}),y=m.map(function(t){return t[1]}),x=Ke(v,r,n),w=Math.min.apply(Math,b),S=Math.min.apply(Math,y),M=Te(x,[w,S]),D=Math.max.apply(Math,b)-w,_=Math.max.apply(Math,y)-S,C=[f+M[0]*h/D,d+M[1]*g/_],P=[0,0],R=0;for(;++R<10;){var N=Xe(a,n);i=Te(Ke(N,C,n),Ke(N,x,n)),P[0]=i[0],P[1]=i[1];var O=Qe(Ae(n,a,Ee(P,n),o),l,c,n),E=Math.min.apply(Math,O.map(function(t){return t[0]})),X=Math.min.apply(Math,O.map(function(t){return t[1]})),Y=E-f,k=X-d;if(Math.abs(Y)<2&&Math.abs(k)<2)break;C[0]-=Y,C[1]-=k}return P.map(function(t){return Math.round(t)})}(t[d-1],r,d,t[2*d-1],M,p[e+1]),t[d-1]=n[0],t[2*d-1]=n[1]),M=Fe(M,t,d)});var P=(f?"matrix3d":"matrix")+"("+qe(s)+")";return[D,_,M,s,P,i]}function Ze(t,e){var n=t.clientWidth,r=t.clientHeight,a=t.viewBox.baseVal,o=a.width||n,i=a.height||r,s=n/o,l=r/i,c=t.preserveAspectRatio.baseVal,u=c.align,p=c.meetOrSlice,f=[0,0],d=[s,l],h=[0,0];if(1!==u){var g=(u-2)%3,v=Math.floor((u-2)/3);f[0]=o*g/2,f[1]=i*v/2;var m=2===p?Math.max(l,s):Math.min(s,l);d[0]=m,d[1]=m,h[0]=(n-o)/2*g,h[1]=(r-i)/2*v}var b=function(t,e){for(var n=Oe(e),r=Math.min(t.length,e-1),a=0;a<r;++a)n[(e+1)*a]=t[a];return n}(d,e);return b[e-1]=h[0],b[2*e-1]=h[1],Ue(b,e,f)}function Je(t,e){if(!t.getBBox)return[0,0];var n=t.getBBox(),r=t.ownerSVGElement.viewBox.baseVal,a=n.x-r.x,o=n.y-r.y;return[a,o,e[0]-a,e[1]-o]}function Ke(t,e,n){return Be(t,ke(e,n),n)}function Qe(t,e,n,r){return[Ke(t,[0,0],r),Ke(t,[e,0],r),Ke(t,[0,n],r),Ke(t,[e,n],r)]}function tn(t,e,n,r){var a=16===t.length?4:3,o=Qe(t,n,r,a),i=o[0],s=i[0],l=i[1],c=o[1],u=c[0],p=c[1],f=o[2],d=f[0],h=f[1],g=o[3],v=g[0],m=g[1],b=Ke(t,e,a),y=b[0],x=b[1],w=Math.min(s,u,d,v),S=Math.min(l,p,h,m);y=y-w||0,x=x-S||0;var M=[((s=s-w||0)+(u=u-w||0)+(d=d-w||0)+(v=v-w||0))/4,((l=l-S||0)+(p=p-S||0)+(h=h-S||0)+(m=m-S||0))/4],D=en(M,[s,l]),_=en(M,[u,p]);return[[w,S],[y,x],[s,l],[u,p],[d,h],[v,m],D<_&&_-D<Math.PI||_<D&&_-D<-Math.PI?1:-1]}function en(t,e){var n=e[0]-t[0],r=e[1]-t[1],a=Math.atan2(r,n);return 0<a?a:a+2*Math.PI}function nn(t,e){var n=e[0]-t[0],r=e[1]-t[1],a=Math.sqrt(n*n+r*r),o=en(t,e);return{transform:"translate("+t[0]+"px, "+t[1]+"px) rotate("+o+"rad)",width:a+"px"}}function rn(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=t.length;return{transform:"translate("+t.reduce(function(t,e){return t+e[0]},0)/n+"px, "+t.reduce(function(t,e){return t+e[1]},0)/n+"px)"}}function an(t,e,n,r){void 0===e&&(e=window.getComputedStyle(t)),void 0===r&&(r=n||"border-box"===e.boxSizing);var a=t.offsetWidth,o=t.offsetHeight,i=!$t(a);if((n||r)&&i)return[a,o];if(a=t.clientWidth,o=t.clientHeight,i||a||o)return n||r?[a+(parseFloat(e.borderLeftWidth)||0)+(parseFloat(e.borderRightWidth)||0),o+(parseFloat(e.borderTopWidth)||0)+(parseFloat(e.borderBottomWidth)||0)]:[a-(parseFloat(e.paddingLeft)||0)-(parseFloat(e.paddingRight)||0),o-(parseFloat(e.paddingTop)||0)-(parseFloat(e.paddingBottom)||0)];var s=t.getBBox();return[s.width,s.height]}function on(t,e,n){var r=en(0<n?t:e,0<n?e:t),a=function(t,e){var n=Math.cos(e),r=Math.sin(e);return Fe([n,-r,0,r,n,0,0,0,1],t,3)}([0,-40,0],r);return[r,[(t[0]+e[0])/2+a[0],(t[1]+e[1])/2+a[1]]]}function sn(t,n){return t.map(function(t,e){return function(t,e,n,r){return(t*r+e*n)/(n+r)}(t,n[e],1,2)})}function ln(t,e){return e?Math.round(t/e)*e:t}function cn(n,r){n.forEach(function(t,e){n[e]=ln(n[e],r)})}function un(t,e){t[e]&&(t[e].unset(),t[e]=null)}function pn(t,e){var n=e.datas,r=t.state,a=r.matrix,o=r.beforeMatrix,i=r.is3d,s=r.left,l=r.top,c=r.origin,u=i?4:3;n.is3d=i,n.matrix=a,n.inverseMatrix=Xe(a,u),n.beforeMatrix=o,n.inverseBeforeMatrix=Xe(o,u),n.absoluteOrigin=ke(We([s,l],c),u),n.startDragBeforeDist=Be(n.inverseBeforeMatrix,n.absoluteOrigin,i?4:3),n.startDragDist=Be(n.inverseMatrix,n.absoluteOrigin,i?4:3)}function fn(t,e){var n=t.datas,r=t.distX,a=t.distY,o=n.inverseBeforeMatrix,i=n.inverseMatrix,s=n.is3d,l=n.startDragBeforeDist,c=n.startDragDist,u=s?4:3;return Te(Be(e?o:i,We(n.absoluteOrigin,[r,a]),u),e?l:c)}function dn(t,e,n){var r=n.datas,a=n.clientX,o=n.clientY,i=n.pinchFlag,s=t.props.target;if(!e||!s)return!1;var l=t.state,c=l.width,u=l.height,p=l.targetTransform;i||pn(t,{datas:r}),r.datas={},r.transform=p,r.prevDist=[1,1],r.position=e,r.width=c,r.height=u;var f=t.props.onScaleStart({target:s,clientX:a,clientY:o,datas:r.datas});return!1!==f&&(t.state.isScale=!0),f}function hn(t,e){var n,r,a=e.datas,o=e.clientX,i=e.clientY,s=e.distX,l=e.distY,c=e.pinchDistance,u=e.pinchFlag,p=a.prevDist,f=a.position,d=a.width,h=a.height,g=a.transform,v=t.props,m=v.keepRatio,b=v.target,y=v.throttleScale,x=v.onScale;if(u)n=(d+c)/d,r=(h+c*h/d)/h;else{var w=fn({datas:a,distX:s,distY:l}),S=f[0]*w[0],M=f[1]*w[1];if(m&&f[0]&&f[1]&&d&&h){var D=Math.sqrt(S*S+M*M),_=en([0,0],w),C=en([0,0],f),P=Math.cos(_-C)*D;M=(S=P)*h/d}n=(d+S)/d,r=(h+M)/h}n=ln(n,y),r=ln(r,y),0===n&&(n=(0<p[0]?1:-1)*Ce),0===r&&(r=(0<p[1]?1:-1)*Ce);var R=[n,r];a.prevDist=R,n===p[0]&&r===p[1]||(x({target:b,scale:R,dist:[n/p[0],r/p[1]],delta:Te(R,p),transform:g+" scale("+n+", "+r+")",clientX:o,clientY:i,datas:a.datas,isPinch:!!u}),u||t.updateTarget())}function gn(t,e){var n=e.datas,r=e.isDrag,a=e.clientX,o=e.clientY,i=e.pinchFlag;t.state.isScale=!1,t.props.onScaleEnd({target:t.props.target,isDrag:r,clientX:a,clientY:o,datas:n.datas}),r&&!i&&t.updateRect()}function vn(t,e,n,r,a){t.startAbsoluteOrigin=[e-a[0]+r[0],n-a[1]+r[1]],t.prevDeg=en(t.startAbsoluteOrigin,[e,n])/Math.PI*180,t.startDeg=t.prevDeg,t.loop=0}function mn(t,e,n,r){var a=t.prevDeg,o=t.startDeg,i=t.loop;(e=ln(e,r))<a&&270<a&&e<90?++t.loop:a<e&&a<90&&270<e&&--t.loop;var s=360*i+a,l=360*t.loop+e,c=n*(l-s),u=n*(l-o);return t.prevDeg=e,[c,u]}function bn(t,e,n,r,a){return mn(t,en(t.startAbsoluteOrigin,[n,r])/Math.PI*180,e,a)}function yn(t,e){var n=e.datas,r=e.clientX,a=e.clientY,o=e.pinchRotate,i=e.pinchFlag,s=t.props.target;if(!s)return!1;var l=t.state,c=l.left,u=l.top,p=l.origin,f=l.beforeOrigin,d=l.rotationPos,h=l.direction,g=l.beforeDirection,v=l.targetTransform;n.transform=v,n.left=c,n.top=u,i?(n.beforeInfo={prevDeg:o,startDeg:o,loop:0},n.afterInfo={prevDeg:o,startDeg:o,loop:0}):(n.afterInfo={},n.beforeInfo={},vn(n.afterInfo,r,a,p,d),vn(n.beforeInfo,r,a,f,d)),n.direction=h,n.beforeDirection=g,n.datas={};var m=t.props.onRotateStart({datas:n.datas,target:s,clientX:r,clientY:a});return!1!==m&&(l.isRotate=!0),m}function xn(t,e){var n,r,a,o,i,s,l,c,u=e.datas,p=e.clientX,f=e.clientY,d=e.pinchRotate,h=e.pinchFlag,g=u.direction,v=u.beforeDirection,m=u.beforeInfo,b=u.afterInfo,y=t.props.throttleRotate;c=h?(i=(n=mn(b,d,g,y))[0],s=n[1],l=(r=mn(m,d,g,y))[0],r[1]):(i=(a=bn(b,g,p,f,y))[0],s=a[1],l=(o=bn(m,v,p,f,y))[0],o[1]),(i||l)&&(t.props.onRotate({target:t.props.target,datas:u.datas,delta:i,dist:s,clientX:p,clientY:f,beforeDist:c,beforeDelta:l,transform:u.transform+" rotate("+s+"deg)",isPinch:!!h}),h||t.updateTarget())}function wn(t,e){var n=e.datas,r=e.isDrag,a=e.clientX,o=e.clientY,i=e.pinchFlag;t.state.isRotate=!1,t.props.onRotateEnd({datas:n.datas,clientX:a,clientY:o,target:t.props.target,isDrag:r}),r&&!i&&t.updateRect()}function Sn(t,e,n){var r=n.datas,a=n.clientX,o=n.clientY,i=n.pinchFlag,s=t.props.target;if(!s||!e)return!1;var l=t.state,c=l.width,u=l.height;i||pn(t,{datas:r}),r.datas={},r.position=e,r.width=c,r.height=u,r.prevWidth=0,r.prevHeight=0;var p=t.props.onResizeStart({datas:r.datas,target:s,clientX:a,clientY:o});return!1!==p&&(t.state.isResize=!0),p}function Mn(t,e){var n,r,a=e.datas,o=e.clientX,i=e.clientY,s=e.distX,l=e.distY,c=e.pinchFlag,u=e.pinchDistance,p=a.position,f=a.width,d=a.height,h=a.prevWidth,g=a.prevHeight,v=t.props,m=v.target,b=v.keepRatio,y=v.throttleResize,x=v.onResize;if(c)r=(n=u)*d/f;else{var w=fn({datas:a,distX:s,distY:l});if(n=p[0]*w[0],r=p[1]*w[1],b&&p[0]&&p[1]&&f&&d){var S=Math.sqrt(n*n+r*r),M=en([0,0],w),D=en([0,0],p),_=Math.cos(M-D)*S;r=(n=_)*d/f}}var C=f+(n=ln(n,y)),P=d+(r=ln(r,y)),R=[n-h,r-g];a.prevWidth=n,a.prevHeight=r,R.every(function(t){return!t})||(x({target:m,width:C,height:P,dist:[n,r],datas:a.datas,delta:R,clientX:o,clientY:i,isPinch:!!c}),c||t.updateRect())}function Dn(t,e){var n=e.datas,r=e.isDrag,a=e.clientX,o=e.clientY,i=e.pinchFlag;t.state.isResize=!1,t.props.onScaleEnd({target:t.props.target,datas:n.datas,clientX:a,clientY:o,isDrag:r}),r&&!i&&t.updateRect()}function _n(t){return en([t[0].clientX,t[0].clientY],[t[1].clientX,t[1].clientY])/Math.PI*180}function Cn(e,t,n,r){var a={container:window};return n&&(a.dragstart=function(t){return function(t,e){var n=e.datas,r=e.clientX,a=e.clientY,o=t.props.target,i=window.getComputedStyle(o),s=t.state,l=s.targetTransform;n.datas={},n.left=parseFloat(i.left||"")||0,n.top=parseFloat(i.top||"")||0,n.bottom=parseFloat(i.bottom||"")||0,n.right=parseFloat(i.right||"")||0,n.transform=l,pn(t,{datas:n}),n.prevDist=[0,0],n.prevBeforeDist=[0,0];var c=t.props.onDragStart({datas:n.datas,target:o,clientX:r,clientY:a});return!1!==c?s.isDrag=!0:s.isPinch=!1,c}(e,t)},a.drag=function(t){return function(t,e){var n=e.datas,r=e.distX,a=e.distY,o=e.clientX,i=e.clientY,s=e.inputEvent;s.preventDefault(),s.stopPropagation();var l=t.props.target,c=t.props.throttleDrag,u=n.prevDist,p=n.prevBeforeDist,f=n.transform,d=fn({datas:n,distX:r,distY:a},!0),h=fn({datas:n,distX:r,distY:a},!1);cn(h,c),cn(d,c);var g=Te(h,u),v=Te(d,p);n.prevDist=h,n.prevBeforeDist=d;var m=n.left+d[0],b=n.top+d[1],y=n.right-d[0],x=n.bottom-d[1],w=f+" translate("+h[0]+"px, "+h[1]+"px)";g.every(function(t){return!t})&&v.some(function(t){return!t})||(t.props.onDrag({datas:n.datas,target:l,transform:w,dist:h,delta:g,beforeDist:d,beforeDelta:v,left:m,top:b,right:y,bottom:x,clientX:o,clientY:i,isPinch:t.state.isPinch}),t.updateTarget())}(e,t)},a.dragend=function(t){return function(t,e){var n=e.datas,r=e.isDrag,a=e.clientX,o=e.clientY,i=t.props,s=i.target,l=i.onDragEnd;t.state.isDrag=!1,l({target:s,isDrag:r,clientX:a,clientY:o,datas:n.datas}),r&&t.updateRect()}(e,t)}),r&&(a.pinchstart=function(t){return function(t,e){var n=e.datas,r=e.clientX,a=e.clientY,o=e.touches;n.scaleDatas={},n.rotateDatas={},n.pinchDatas={};var i=t.props,s=i.pinchable,l=i.rotatable,c=i.scalable,u=i.resizable,p=i.target,f=s&&(!0===s?l:-1<s.indexOf("rotatable")),d=s&&(!0===s?u:-1<s.indexOf("resizable")),h=!d&&(s&&(!0===s?c:-1<s.indexOf("scalable")));t.state.isPinch=!0,t.props.onPinchStart({target:p,clientX:r,clientY:a,datas:n.pinchDatas}),f&&yn(t,{datas:n.rotateDatas,clientX:r,clientY:a,pinchFlag:!0,pinchRotate:_n(o)}),d&&Sn(t,[1,1],{datas:n.scaleDatas,clientX:r,clientY:a,pinchFlag:!0}),h&&dn(t,[1,1],{datas:n.scaleDatas,clientX:r,clientY:a,pinchFlag:!0}),t.state.isPinch=!0}(e,t)},a.pinch=function(t){return function(t,e){var n=e.datas,r=e.clientX,a=e.clientY,o=e.scale,i=e.distance,s=e.touches,l=e.inputEvent,c=t.state,u=c.isRotate,p=c.isScale,f=c.isResize;if(l.preventDefault(),l.stopPropagation(),t.props.onPinch({target:t.props.target,clientX:r,clientY:a,datas:n.pinchDatas}),u&&xn(t,{datas:n.rotateDatas,pinchRotate:_n(s),pinchFlag:!0}),f){var d=i*(1-1/o);Mn(t,{datas:n.scaleDatas,clientX:r,clientY:a,pinchDistance:d,pinchFlag:!0})}if(p){d=i*(1-1/o);hn(t,{datas:n.scaleDatas,clientX:r,clientY:a,pinchDistance:d,pinchFlag:!0})}t.updateRect()}(e,t)},a.pinchend=function(t){return function(t,e){var n=e.datas,r=e.clientX,a=e.clientY,o=e.isPinch,i=t.state,s=i.isRotate,l=i.isScale,c=i.isResize;t.state.isPinch=!1,t.props.onPinchEnd({target:t.props.target,isDrag:o,clientX:r,clientY:a,datas:n.pinchDatas}),s&&wn(t,{datas:n.rotateDatas,clientX:r,clientY:a,isDrag:o,pinchFlag:!0}),c&&Dn(t,{datas:n.scaleDatas,clientX:r,clientY:a,isDrag:o,pinchFlag:!0}),l&&gn(t,{datas:n.scaleDatas,clientX:r,clientY:a,isDrag:o,pinchFlag:!0}),t.updateRect()}(e,t)}),new ye(t,a)}function Pn(t,e,n){var r=en(t,e),a=en(t,n)-r;return 0<=a?a:a+2*Math.PI}function Rn(t,e,n){var r=n.datas,a=n.clientX,o=n.clientY,i=t.props.target;if(!e||!i)return!1;var s=t.state,l=s.transformOrigin,c=s.is3d,u=s.targetTransform,p=s.targetMatrix,f=s.width,d=s.height;r.datas={},r.targetTransform=u,r.targetMatrix=c?p:ze(p,3,4),r.targetInverseMatrix=function(t,e,n){void 0===n&&(n=Math.sqrt(t.length));for(var r=t.slice(),a=0;a<n;++a)r[a*n+e-1]=0,r[(e-1)*n+a]=0;return r[(e-1)*(n+1)]=1,r}(Xe(r.targetMatrix,4),3,4),r.position=e,pn(t,{datas:r}),r.poses=[[0,0],[f,0],[0,d],[f,d]].map(function(t,e){return Te(t,l)}),r.nextPoses=r.poses.map(function(t){var e=t[0],n=t[1];return Be(r.targetMatrix,[e,n,0,1],4)}),r.posNum=(-1===e[0]?0:1)+(-1===e[1]?0:2),r.prevMatrix=Oe(4);var h=t.props.onWarpStart({target:i,clientX:a,clientY:o,datas:r.datas});return!1!==h&&(t.state.isWarp=!0),h}function Nn(t,e){var n=e.datas,r=e.clientX,a=e.clientY,o=e.distX,i=e.distY,s=n.posNum,l=n.poses,c=n.targetInverseMatrix,u=n.prevMatrix,p=t.props.target,f=fn({datas:n,distX:o,distY:i},!0),d=n.nextPoses.slice();if(d[s]=[d[s][0]+f[0],d[s][1]+f[1]],_e.every(function(t){return function(t,e){var n=Pn(t[0],t[1],t[2]),r=Pn(e[0],e[1],e[2]),a=Math.PI;return!(a<=n&&r<=a||n<=a&&a<=r)}(t.map(function(t){return l[t]}),t.map(function(t){return d[t]}))})){var h=function(t,e,n,r,a,o,i,s){var l=t[0],c=t[1],u=e[0],p=e[1],f=n[0],d=n[1],h=r[0],g=r[1],v=a[0],m=a[1],b=o[0],y=o[1],x=i[0],w=i[1],S=s[0],M=s[1],D=Xe([l,c,1,0,0,0,-v*l,-v*c,0,0,0,l,c,1,-m*l,-m*c,u,p,1,0,0,0,-b*u,-b*p,0,0,0,u,p,1,-y*u,-y*p,f,d,1,0,0,0,-x*f,-x*d,0,0,0,f,d,1,-w*f,-w*d,h,g,1,0,0,0,-S*h,-S*g,0,0,0,h,g,1,-M*h,-M*g],8);if(!D.length)return[];var _=Fe(D,[v,m,b,y,x,w,S,M],8);return _[8]=1,ze(_,3,4)}(l[0],l[1],l[2],l[3],d[0],d[1],d[2],d[3]);if(h.length){var g=qe(Fe(c,h,4)),v=n.targetTransform+" matrix3d("+g.join(",")+")",m=Fe(Xe(u,4),g,4);n.prevMatrix=g,t.props.onWarp({target:p,clientX:r,clientY:a,delta:m,multiply:je,dist:g,transform:v,datas:n.datas}),t.updateRect()}}}var On,En,Xn,Yn,kn,zn=(On="div",Yn="rCS"+function(t){return se(t).toString(36)}(En=De),kn=0,function(e){function t(t){return e.call(this,t)||this}return function(t,e){function n(){this.constructor=t}oe(t,e),t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}(t,e),t.prototype.render=function(){var t=this.props,e=t.className,n=function(t,e){var n={};for(var r in t)Object.prototype.hasOwnProperty.call(t,r)&&e.indexOf(r)<0&&(n[r]=t[r]);if(null!=t&&"function"==typeof Object.getOwnPropertySymbols){var a=0;for(r=Object.getOwnPropertySymbols(t);a<r.length;a++)e.indexOf(r[a])<0&&Object.prototype.propertyIsEnumerable.call(t,r[a])&&(n[r[a]]=t[r[a]])}return n}(t,["className"]);return nt(On,ie({className:e+" "+Yn},n))},t.prototype.componentDidMount=function(){0===kn&&(Xn=function(n,t){var e=document.createElement("style");return e.setAttribute("type","text/css"),e.innerHTML=t.replace(/([^}{]*){/gm,function(t,e){return function(t){var e=t.match(/("[^"]*"|'[^']*'|[^,\s()]*\((?:[^()]*|\([^()]*\))*\)[^,\s()]*|[^,])+/g);return e?e.map(function(t){return t.trim()}):[]}(e).map(function(t){return-1<t.indexOf(":global")?t.replace(/\:global/g,""):-1<t.indexOf(":host")?""+t.replace(/\:host/g,"."+n):"."+n+" "+t}).join(", ")+"{"}),(document.head||document.body).appendChild(e),e}(Yn,En)),++kn},t.prototype.componentWillUnmount=function(){0==--kn&&Xn&&Xn.parentNode.removeChild(Xn)},t.prototype.getElement=function(){return this.element||(this.element=function(t){return t&&(t.base||1===t.nodeType&&t)||null}(this))},t}(ht)),An=function(e){function t(){var t=null!==e&&e.apply(this,arguments)||this;return t.state={target:null,beforeMatrix:Ve(),matrix:Ve(),targetMatrix:Ve(),targetTransform:"",is3d:!1,left:0,top:0,width:0,height:0,transformOrigin:[0,0],direction:1,beforeDirection:1,rotationRad:0,rotationPos:[0,0],beforeOrigin:[0,0],origin:[0,0],pos1:[0,0],pos2:[0,0],pos3:[0,0],pos4:[0,0],isDrag:!1,isRotate:!1,isScale:!1,isResize:!1,isPinch:!1,isWarp:!1},t}!function(t,e){function n(){this.constructor=t}xe(t,e),t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}(t,e);var n=t.prototype;return n.isMoveableElement=function(t){return t&&-1<(t.getAttribute("class")||"").indexOf(Me)},n.render=function(){this.state.target!==this.props.target&&this.updateRect(!0);var t=this.state,e=t.left,n=t.top,r=t.pos1,a=t.pos2,o=t.pos3,i=t.pos4,s=t.target,l=t.direction;return nt(zn,{ref:c(this,"controlBox"),className:Ie("control-box",-1===l?"reverse":""),style:{position:this.props.container?"absolute":"fixed",display:s?"block":"none",transform:"translate("+e+"px, "+n+"px) translateZ(50px)"}},nt("div",{className:Ie("line"),style:nn(r,a)}),nt("div",{className:Ie("line"),style:nn(a,i)}),nt("div",{className:Ie("line"),style:nn(r,o)}),nt("div",{className:Ie("line"),style:nn(o,i)}),this.renderRotation(),this.renderPosition(),this.renderMiddleLine(),this.renderDiagonalPosition(),this.renderOrigin())},n.componentDidMount=function(){this.moveableDragger=function(s,t){var l;return new ye(t,{container:window,dragstart:function(t){var e=t.inputEvent.target,n=s.props,r=n.scalable,a=n.resizable,o=n.warpable;if(l="",!ne(e,Ie("control")))return!1;if(ne(e,Ie("rotation")))return l="rotate",yn(s,t);var i=function(t){var e=t.getAttribute("data-position");if(e){var n=[0,0];return-1<e.indexOf("w")&&(n[0]=-1),-1<e.indexOf("e")&&(n[0]=1),-1<e.indexOf("n")&&(n[1]=-1),-1<e.indexOf("s")&&(n[1]=1),n}}(e);return r?(l="scale",dn(s,i,t)):a?(l="resize",Sn(s,i,t)):!!o&&(l="warp",Rn(s,i,t))},drag:function(t){if(t.inputEvent.preventDefault(),t.inputEvent.stopPropagation(),l)return"rotate"===l?xn(s,t):"scale"===l?hn(s,t):"resize"===l?Mn(s,t):"warp"===l?Nn(s,t):void 0},dragend:function(t){if(l)return"rotate"===l?wn(s,t):"scale"===l?gn(s,t):"resize"===l?Dn(s,t):"warp"===l?function(t,e){var n=e.datas,r=e.isDrag,a=e.clientX,o=e.clientY;t.state.isWarp=!1,t.props.onWarpEnd({target:t.props.target,clientX:a,clientY:o,isDrag:r,datas:n.datas}),r&&t.updateRect()}(s,t):void 0}})}(this,this.controlBox.getElement())},n.componentWillUnmount=function(){un(this,"draggableDragger"),un(this,"moveableDragger")},n.renderRotation=function(){if(!this.props.rotatable)return null;var t=this.state,e=t.pos1,n=t.pos2,r=t.rotationRad;return nt("div",{className:Ie("line rotation"),style:{transform:"translate("+(e[0]+n[0])/2+"px, "+(e[1]+n[1])/2+"px) translateY(-40px) rotate("+r+"rad)"}},nt("div",{className:Ie("control","rotation"),ref:c(this,"rotationElement")}))},n.renderOrigin=function(){if(!this.props.origin)return null;var t=this.state.beforeOrigin;return[nt("div",{className:Ie("control","origin"),style:rn(t),key:"beforeOrigin"})]},n.renderDiagonalPosition=function(){var t=this.props,e=t.resizable,n=t.scalable,r=t.warpable;if(!e&&!n&&!r)return null;var a=this.state,o=a.pos1,i=a.pos2,s=a.pos3,l=a.pos4;return[nt("div",{className:Ie("control","nw"),"data-position":"nw",key:"nw",style:rn(o)}),nt("div",{className:Ie("control","ne"),"data-position":"ne",key:"ne",style:rn(i)}),nt("div",{className:Ie("control","sw"),"data-position":"sw",key:"sw",style:rn(s)}),nt("div",{className:Ie("control","se"),"data-position":"se",key:"se",style:rn(l)})]},n.renderMiddleLine=function(){var t=this.props,e=t.resizable,n=t.scalable,r=t.warpable;if(!e&&!n&&r){var a=this.state,o=a.pos1,i=a.pos2,s=a.pos3,l=a.pos4,c=sn(o,i),u=sn(i,o),p=sn(o,s),f=sn(s,o),d=sn(s,l),h=sn(l,s),g=sn(i,l),v=sn(l,i);return[nt("div",{className:Ie("line"),key:"middeLine1",style:nn(c,d)}),nt("div",{className:Ie("line"),key:"middeLine2",style:nn(u,h)}),nt("div",{className:Ie("line"),style:nn(p,g)}),nt("div",{className:Ie("line"),style:nn(f,v)})]}},n.renderPosition=function(){if(!this.props.resizable&&!this.props.scalable)return null;var t=this.state,e=t.pos1,n=t.pos2,r=t.pos3,a=t.pos4;return[nt("div",{className:Ie("control","n"),"data-position":"n",key:"n",style:rn(e,n)}),nt("div",{className:Ie("control","w"),"data-position":"w",key:"w",style:rn(e,r)}),nt("div",{className:Ie("control","e"),"data-position":"e",key:"e",style:rn(n,a)}),nt("div",{className:Ie("control","s"),"data-position":"s",key:"s",style:rn(r,a)})]},n.dragstart=function(t){this.draggableDragger&&this.draggableDragger.onDragStart(t)},n.updateRect=function(t){var e=this.props,n=e.target,r=e.container,a=e.draggable,o=e.pinchable;this.state.target!==n&&(un(this,"draggableDragger"),this.updateState({isDrag:!1,isRotate:!1,isScale:!1,isResize:!1,isWarp:!1,isPinch:!1},!0),n&&(a||o)&&(this.draggableDragger=Cn(this,n,a,o))),this.updateState(function(t,e){var n,r,a,o,i,s,l=0,c=0,u=[0,0],p=[0,0],f=[0,0],d=[0,0],h=[0,0],g=Ve(),v=Ve(),m=Ve(),b=0,y=0,x=[0,0],w=1,S=1,M=[0,0],D=0,_=!1,C="",P=[0,0];if(t){var R=window.getComputedStyle(t);b=t.offsetWidth,y=t.offsetHeight,$t(b)&&(b=(n=an(t,R,!0))[0],y=n[1]);var N;g=(r=Ge(t,e))[0],N=r[1],v=r[2],m=r[3],C=r[4],x=r[5],_=16===v.length,l=(o=(a=tn(v,x,b,y))[0])[0],c=o[1],u=a[1],p=a[2],f=a[3],d=a[4],h=a[5],w=a[6];var O;O=(i=tn(N,We(x,Le(m,_?4:3)),b,y))[0],P=i[1],S=i[6],P=[P[0]+O[0]-l,P[1]+O[1]-c],D=(s=on(p,f,w))[0],M=s[1]}return{beforeDirection:S,direction:w,rotationRad:D,rotationPos:M,target:t,left:l,top:c,pos1:p,pos2:f,pos3:d,pos4:h,width:b,height:y,beforeMatrix:g,matrix:v,targetTransform:C,targetMatrix:m,is3d:_,beforeOrigin:P,origin:u,transformOrigin:x}}(n,r),t)},n.updateTarget=function(){var t=this.state,e=t.width,n=t.height,r=t.beforeMatrix,a=t.is3d,o=this.props,i=a?4:3,s=Ge(o.target,o.container,!0,r,i),l=s[1],c=s[2],u=s[3],p=s[4],f=s[5],d=tn(c,f,e,n),h=d[0],g=h[0],v=h[1],m=d[1],b=d[2],y=d[3],x=d[4],w=d[5],S=d[6],M=Te(Ke(l,We(f,Le(u,i=16===l.length?4:3)),i),[g,v]),D=on(b,y,S),_=D[0],C=D[1];this.setState({direction:S,beforeOrigin:M,rotationRad:_,rotationPos:C,pos1:b,pos2:y,pos3:x,pos4:w,origin:m,beforeMatrix:r,targetMatrix:u,matrix:c,transformOrigin:f,targetTransform:p,left:g,top:v})},n.updateState=function(t,e){var n=this.state;if(e)for(var r in t)n[r]=t[r];else this.setState(t)},t.defaultProps={target:null,container:null,rotatable:!1,draggable:!1,scalable:!1,resizable:!1,warpable:!1,pinchable:!1,keepRatio:!0,origin:!0,throttleDrag:0,throttleResize:0,throttleScale:0,throttleRotate:0,onRotateStart:function(){},onRotate:function(){},onRotateEnd:function(){},onDragStart:function(){},onDrag:function(){},onDragEnd:function(){},onScaleStart:function(){},onScale:function(){},onScaleEnd:function(){},onResizeStart:function(){},onResize:function(){},onResizeEnd:function(){},onWarpStart:function(){},onWarp:function(){},onWarpEnd:function(){},onPinchStart:function(){},onPinch:function(){},onPinchEnd:function(){}},t}(gt),Fn=function(n){function t(t){var e=n.call(this,t)||this;return e.state={},e.state=e.props,e}return a(t,n),t.prototype.render=function(){return h(An,s({ref:c(this,"preactMoveable")},this.state))},t}(D),jn=["draggable","resizable","scalable","rotatable","warpable","pinchable","origin","target","throttleDrag","throttleResize","throttleScale","throttleRotate","keepRatio"],Wn=["dragStart","drag","dragEnd","resizeStart","resize","resizeEnd","scaleStart","scale","scaleEnd","rotateStart","rotate","rotateEnd","warpStart","warp","warpEnd","pinchStart","pinch","pinchEnd"],Tn=function(i){function t(t,e){void 0===e&&(e={});var n=i.call(this)||this,r=document.createElement("div"),a=s({container:t},e),o={};return Wn.forEach(function(e){o[function(t){return t.replace(/[\s-_]([a-z])/g,function(t,e){return e.toUpperCase()})}("on "+e)]=function(t){return n.trigger(e,t)}}),function(t,e,n){X(n,t,{},!1,e,!1)}(h(Fn,s({ref:c(n,"innerMoveable")},a,o)),r),t.appendChild(r.children[0]),n}a(t,i);var e=t.prototype;return e.isMoveableElement=function(t){return this.getMoveable().isMoveableElement(t)},e.updateRect=function(){this.getMoveable().updateRect()},e.updateTarget=function(){this.getMoveable().updateTarget()},e.destroy=function(){var t=this.getMoveable().base;t.remove?t.remove():t.parentElement.removeChild(t),this.off(),this.getMoveable().componentWillUnmount(),this.innerMoveable=null},e.getMoveable=function(){return this.innerMoveable.preactMoveable},t=function(t,e,n,r){var a,o=arguments.length,i=o<3?e:null===r?r=Object.getOwnPropertyDescriptor(e,n):r;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)i=Reflect.decorate(t,e,n,r);else for(var s=t.length-1;0<=s;s--)(a=t[s])&&(i=(o<3?a(i):3<o?a(e,n,i):a(e,n))||i);return 3<o&&i&&Object.defineProperty(e,n,i),i}([function(n,r){return function(t){var e=t.prototype;n.forEach(function(t){r(e,t)})}}(jn,function(t,n){Object.defineProperty(t,n,{get:function(){return this.getMoveable().props[n]},set:function(t){var e;this.innerMoveable.setState(((e={})[n]=t,e))},enumerable:!0,configurable:!0})})],t)}(t),Bn={draggable:{vanilla:'\nimport Moveable from "moveable";\n\n/* const translate = [0, 0]; */\nconst draggable = new Moveable(document.body, {\n    target: document.querySelector(".draggable"),\n    draggable: true,\n    throttleDrag: 0,\n}).on("drag", ({ target, left, top, beforeDelta }) => {\n    target.style.left = left + "px";\n    target.style.top = top + "px";\n\n    /* translate[0] += beforeDelta[0]; */\n    /* translate[1] += beforeDelta[1]; */\n    /* target.style.transform\n        = "translateX(" + translate[0] + "px) "\n        + "translateY(" + translate[1] + "px)"; */\n});\n        ',react:'\nimport Moveable from "react-moveable";\nthis.translate = [0, 0];\nreturn (\n    <Moveable\n        target={document.querySelector(".draggable")}\n        draggable={true}\n        throttleDrag={0}\n        onDrag={({ target, left, top, beforeDelta }) => {\n            target.style.left = left + "px";\n            target.style.top = top + "px";\n\n            /* const translate = this.translate */\n            /* translate[0] += beforeDelta[0]; */\n            /* translate[1] += beforeDelta[1]; */\n            /* target.style.transform\n                = "translateX(" + translate[0] + "px) "\n                + "translateY(" + translate[1] + "px)"; */\n        }}\n    />\n);\n        ',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n<div #target class="target">target</div>\n<ngx-moveable\n    [target]="target"\n    [draggable]="true"\n    [throttleDrag]="0"\n    (drag)="onDrag($event)\n    />\n`,\n})\nexport class AppComponent {\n    translate = [0, 0];\n    onDrag({ target, left, top, beforeDelta }) {\n        target.style.left = left + "px";\n        target.style.top = top + "px";\n\n        /* const translate = this.translate */\n        /* translate[0] += beforeDelta[0]; */\n        /* translate[1] += beforeDelta[1]; */\n        /* target.style.transform\n            = "translateX(" + translate[0] + "px) "\n            + "translateY(" + translate[1] + "px)"; */\n    }\n}\n'},resizable:{vanilla:'\nimport Moveable from "moveable";\n\nconst resizable = new Moveable(document.body, {\n    target: document.querySelector(".resizable"),\n    resizable: true,\n    throttleResize: 0,\n    keepRatio: true,\n}).on("resize", ({ target, width, height, dist }) => {\n    console.log(width, height, dist);\n    target.style.width = width + "px";\n    target.style.height = height + "px";\n});\n        ',react:'\nimport Moveable from "react-moveable";\n\nreturn (\n    <Moveable\n        target={document.querySelector(".resizable")}\n        resizable={true}\n        throttleResize={0}\n        keepRatio={true}\n        onResize={({ target, width, height, dist }) => {\n            console.log(width, height, dist);\n            target.style.width = width + "px";\n            target.style.height = height + "px";\n        }}\n    />\n);\n        ',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n<div #target class="target">target</div>\n<ngx-moveable\n    [target]="target"\n    [resizable]="true"\n    [throttleResize]="0"\n    [keepRatio]="true"\n    (resize)="onResize($event)\n    />\n`,\n})\nexport class AppComponent {\n    onResize({ target, width, height, dist }) {\n        console.log(width, height, dist);\n        target.style.width = width + "px";\n        target.style.height = height + "px";\n    }\n}\n        '},scalable:{vanilla:'\nimport Moveable from "moveable";\n\nconst scale = [1, 1];\nconst scalable = new Moveable(document.body, {\n    target: document.querySelector(".scalable"),\n    scalable: true,\n    throttleScale: 0,\n    keepRatio: true,\n}).on("scale", ({ target, dist }) => {\n    scale[0] *= dist[0];\n    scale[1] *= dist[1];\n    target.style.transform = "scale(" + scale[0] +  "," + scale[1] + ")";\n});\n        ',react:'\nimport Moveable from "react-moveable";\n\nthis.scale = [1, 1];\nreturn (\n    <Moveable\n        target={document.querySelector(".scalable")}\n        scalable={true}\n        throttleScale={0}\n        keepRatio={true}\n        onScale={({ target, dist }) => {\n            const scale = this.scale;\n            scale[0] *= dist[0];\n            scale[1] *= dist[1];\n            target.style.transform\n                = "scale(" + scale[0] +  "," + scale[1] + ")";\n        }}\n    />\n);\n        ',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n<div #target class="target">target</div>\n<ngx-moveable\n    [target]="target"\n    [scalable]="true"\n    [throttleScale]="0"\n    [keepRatio]="true"\n    (scale)="onScale($event)\n    />\n`,\n})\nexport class AppComponent {\n    scale = [1, 1];\n    onScale({ target, dist }) {\n        const scale = this.scale;\n        scale[0] *= dist[0];\n        scale[1] *= dist[1];\n        target.style.transform\n            = "scale(" + scale[0] +  "," + scale[1] + ")";\n    }\n}\n        '},rotatable:{vanilla:'\nimport Moveable from "moveable";\n\nlet rotate = 0;\n\nconst rotatable = new Moveable(document.body, {\n    target: document.querySelector(".rotatable"),\n    rotatable: true,\n    throttleRotate: 0,\n}).on("rotate", ({ target, beforeDelta, delta }) => {\n    rotate += delta;\n    target.style.transform\n        = "rotate(" + rotate +  "deg)";\n});\n        ',react:'\nimport Moveable from "react-moveable";\n\nthis.rotate = 0;\n\nreturn (\n    <Moveable\n        target={document.querySelector(".rotatable")}\n        rotatable={true}\n        throttleRotate={0}\n        onRotate={({ target, beforeDelta, delta }) => {\n            this.rotate += delta;\n            target.style.transform\n                = "rotate(" + this.rotate +  "deg)";\n        }}\n    />\n);\n        ',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n<div #target class="target">target</div>\n<ngx-moveable\n    [target]="target"\n    [rotatable]="true"\n    [throttleRotate]="0"\n    [keepRatio]="true"\n    (rotate)="onRotate($event)\n    />\n`,\n})\nexport class AppComponent {\n    rotate = 0;\n    onRotate({ target, delta }) {\n        this.rotate += delta;\n        target.style.transform\n            = "rotate(" + this.rotate +  "deg)";\n    }\n}\n        '},warpable:{vanilla:'\nimport Moveable from "moveable";\n\nlet matrix = [\n    1, 0, 0, 0,\n    0, 1, 0, 0,\n    0, 0, 1, 0,\n    0, 0, 0, 1,\n];\n\nconst warpable = new Moveable(document.body, {\n    target: document.querySelector(".warpable"),\n    warpable: true,\n    throttleRotate: 0,\n}).on("warp", ({ target, multiply, delta }) => {\n    matrix = multiply(matrix, delta);\n    target.style.transform\n        = "matrix3d(" + matrix.join(",") +  ")";\n});\n        ',react:'\nimport Moveable from "react-moveable";\n\nthis.matrix = [\n    1, 0, 0, 0,\n    0, 1, 0, 0,\n    0, 0, 1, 0,\n    0, 0, 0, 1,\n];\n\nreturn (\n    <Moveable\n        target={document.querySelector(".warpable")}\n        warpable={true}\n        onWarp={({ target, multiply, delta }) => {\n            this.matrix = multiply(this.matrix, delta);\n            target.style.transform\n                = "matrix3d(" + matrix.join(",") +  ")";\n        }}\n    />\n);\n        ',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n<div #target class="target">target</div>\n<ngx-moveable\n    [target]="target"\n    [warpable]="true"\n    (warp)="onWarp($event)\n    />\n`,\n})\nexport class AppComponent {\n    matrix = [\n        1, 0, 0, 0,\n        0, 1, 0, 0,\n        0, 0, 1, 0,\n        0, 0, 0, 1,\n    ];\n    onWarp({ target, dist }) {\n        this.matrix = multiply(this.matrix, delta);\n        target.style.transform\n            = "matrix3d(" + matrix.join(",") +  ")";\n    }\n}\n        '},pinchable:{vanilla:'\nimport Moveable from "moveable";\nconst scale = [1, 1];\nlet rotate = 0;\n\nconst pinchable = new Moveable(document.body, {\n    target: document.querySelector(".pinchable"),\n    pinchable: ["rotatable", "scalable"],\n}).on("rotate", ({ target, beforeDelta }) => {\n    rotate += beforeDelta;\n    target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";\n}).on("scale", ({ target, delta }) => {\n    scale[0] += delta[0];\n    scale[1] += delta[1];\n    target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";\n});',react:'\nimport Moveable from "react-moveable";\nthis.scale = [1, 1];\nthis.rotate = 0;\n\nreturn (\n    <Moveable\n        target={document.querySelector(".pinchable")}\n        pinchable={["rotatable", "scalable"]},\n        onRotate={({ target, beforeDelta }) => {\n            this.rotate += beforeDelta;\n            target.style.transform\n                = "scale(" + this.scale.join(", ") + ") "\n                + "rotate(" + this.rotate + "deg)";\n        }}\n        onScale={({ target, beforeDelta }) => {\n            this.scale[0] += delta[0];\n            this.scale[1] += delta[1];\n            target.style.transform\n                = "scale(" + this.scale.join(", ") + ") "\n                + "rotate(" + this.rotate + "deg)";\n        }}\n    />\n);',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n    <div #target class="target">target</div>\n    <ngx-moveable\n        [target]="target"\n        [pinchable]="[\'rotatable\', \'scalable\']"\n        [rotate]="onRotate($event)"\n        [scale]="onScale($event)"\n/>\n`,\n})\nexport class AppComponent {\n    scale = [1, 1];\n    rotate = 0;\n    onRotate({ target, beforeDelta }) {\n        this.rotate += beforeDelta;\n        target.style.transform\n            = "scale(" + this.scale.join(", ") + ") "\n            + "rotate(" + this.rotate + "deg)";\n    }\n    onScale({ target, beforeDelta }) {\n        this.scale[0] += delta[0];\n        this.scale[1] += delta[1];\n        target.style.transform\n            = "scale(" + this.scale.join(", ") + ") "\n            + "rotate(" + this.rotate + "deg)";\n    }\n}\n'},origin:{vanilla:'\nimport Moveable from "moveable";\n\nconst rotatable = new Moveable(document.body, {\n    target: document.querySelector(".origin"),\n    origin: true,\n});\n        ',react:'\nimport Moveable from "react-moveable";\n\nreturn (\n    <Moveable\n        target={document.querySelector(".origin")}\n        origin={true}\n    />\n);\n        ',angular:'\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from "ngx-moveable";\n\n@Component({\n    selector: \'AppComponent\',\n    template: `\n<div #target class="target">target</div>\n<ngx-moveable\n    [target]="target"\n    [origin]="true"\n    />\n`,\n})\nexport class AppComponent {\n}\n'}};function Ln(t,e,n){var r=1-n;return n*n*n+3*n*n*r*e+3*n*r*r*t}function qn(n,r,a,o){function t(t){var e=function(t,e,n){for(var r=n,a=1;.001<Math.abs(a);){if(a=Ln(t,e,r)-n,Math.abs(a)<.001)return r;r-=a/2}return r}(n,a,Math.max(Math.min(1,t),0));return Ln(r,o,e)}return t.easingName="cubic-bezier("+n+","+r+","+a+","+o+")",t}function In(n,r){function t(t){var e=1/n;return 1<=t?1:("start"===r?e:0)+Math.floor(t/e)*e}return t.easingName="steps("+n+", "+r+")",t}var Vn,Un=In(1,"start"),Hn=In(1,"end"),$n=qn(0,0,1,1),Gn=qn(.25,.1,.25,1),Zn=qn(.42,0,1,1),Jn=qn(0,0,.58,1),Kn=qn(.42,0,.58,1),Qn="animation-timing-function",tr={transform:{},filter:{},attribute:{},html:!0},er={easing:[Qn]},nr=((Vn={})[Qn]=!0,Vn.contents=!0,Vn.html=!0,Vn),rr={linear:$n,ease:Gn,"ease-in":Zn,"ease-out":Jn,"ease-in-out":Kn,"step-start":Un,"step-end":Hn},ar=function(){function i(t,e){this.prefix="",this.suffix="",this.model="",this.type="",this.separator=",",e&&this.setOptions(e),this.value=Jt(t)?t.split(this.separator):t}var t=i.prototype;return t.setOptions=function(t){for(var e in t)this[e]=t[e];return this},t.size=function(){return this.value.length},t.get=function(t){return this.value[t]},t.set=function(t,e){return this.value[t]=e,this},t.clone=function(){var t=this,e=t.separator,n=t.prefix,r=t.suffix,a=t.model,o=t.type;return new i(this.value.map(function(t){return t instanceof i?t.clone():t}),{separator:e,prefix:n,suffix:r,model:a,type:o})},t.toValue=function(){return this.prefix+this.join()+this.suffix},t.join=function(){return this.value.map(function(t){return t instanceof i?t.toValue():t}).join(this.separator)},t.forEach=function(t){return this.value.forEach(t),this},i}();function or(t){var e=Xt;return 3===t.length&&(t[3]=1),new ar(t,{model:e,separator:",",type:"color",prefix:e+"(",suffix:")"})}function ir(t,e){return new ar(t,{type:"array",separator:e})}function sr(t){if(!Jt(t))return Zt(t)?ir(t,","):t;var e=Kt(t);return 1<e.length?ir(e.map(function(t){return sr(t)}),","):1<(e=function(t){return t.match(/("[^"]*")|('[^']*')|([^\s()]*(?:\((?:[^()]*|\([^()]*\))*\))[^\s()]*)|\S+/g)||[]}(t)).length?ir(e.map(function(t){return sr(t)})," "):(e=/^(['"])([^'"]*)(['"])$/g.exec(t))&&e[1]===e[3]?new ar([sr(e[2])],{prefix:e[1],suffix:e[1]}):-1!==t.indexOf("(")?function(t){var e=Qt(t),n=e.prefix,r=e.value,a=e.suffix;if(void 0===r)return t;if(-1!==zt.indexOf(n))return or(ee(t));var o=sr(r),i=[r],s=",",l=n+"(",c=")"+a;return o instanceof ar&&(s=o.separator,i=o.value,l+=o.prefix,c=o.suffix+c),new ar(i,{separator:s,model:n,prefix:l,suffix:c})}(t):"#"===t.charAt(0)?function(t){var e=ee(t);return e?or(e):t}(t):t}function lr(t){return t instanceof ar}function cr(t){var e=typeof t;if(e===Wt){if(Zt(t))return jt;if(lr(t))return Ft}else if(e===Tt||e===Bt)return"value";return e}function ur(t,e){var n=[];if(function(t){return Gt(t)&&t.constructor===Object}(t))for(var r in t)e.push(r),n=n.concat(ur(t[r],e)),e.pop();else n.push(e.slice());return n}function pr(t,e,n){void 0===n&&(n=t.length);for(var r=e,a=0;a<n;++a){if(!Gt(r))return;r=r[t[a]]}return r}function fr(t,e,n){var r=e.length,a=t;if(0===r)return!1;for(var o=0;o<r;++o){if(!0===a)return!1;if(!(a=a[e[o]])||!n&&!0===a)return!1}return!0}function dr(t,e){return fr(tr,t,e)}function hr(t){if(!t)return"";var e=[];for(var n in t)e.push(n.replace(/\d$/g,"")+"("+t[n]+")");return e.join(" ")}function gr(t,e){return void 0===e&&(e=!1),vr({},t,e)}function vr(t,e,n){for(var r in void 0===n&&(n=!1),e){var a=e[r],o=cr(a);o===Ft?t[r]=n?a.toValue():a.clone():o===At?t[r]=n?br([r],a):a:o===jt?t[r]=a.slice():o===Wt?Gt(t[r])&&!lr(t[r])?vr(t[r],a,n):t[r]=gr(a,n):t[r]=e[r]}return t}function mr(t){return t[0]in er?er[t[0]]:t}function br(t,e){var n=cr(e);if(n===Ft)return e.toValue();if(n===At){if(t[0]!==Qn)return br(t,e())}else if(n===Wt)return gr(e,!0);return e}var yr=function(){function f(t){void 0===t&&(t={}),this.properties={},this.set(t)}var t=f.prototype;return t.get=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=this.raw.apply(this,t);return br(mr(t),n)},t.raw=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];return pr(mr(t),this.properties)},t.remove=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=mr(t),r=n.length;if(!r)return this;var a=pr(n,this.properties,r-1);return Gt(a)&&delete a[n[r-1]],this},t.set=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=this,r=t.length,a=t.slice(0,-1),o=t[r-1],i=a[0];if(1===r&&o instanceof f)n.merge(o);else if(i in er)n._set(er[i],o);else if(2===r&&Zt(i))n._set(i,o);else if(lr(o))dr(a)?n.set.apply(n,a.concat([function e(t,n){void 0===n&&(n={});var r=t.model;if(r){t.setOptions({model:"",suffix:"",prefix:""});var a=1<t.size()?t:t.get(0);n[r]=a}else t.forEach(function(t){e(t,n)});return n}(o)])):n._set(a,o);else if(Zt(o))n._set(a,o);else if(Gt(o))for(var s in!n.has.apply(n,a)&&dr(a)&&n._set(a,{}),o)n.set.apply(n,a.concat([s,o[s]]));else if(Jt(o)){if(dr(a,!0)){if(function(t){return fr(nr,t,!0)}(a)||!dr(a))this._set(a,o);else{var l=sr(o);Gt(l)&&n.set.apply(n,a.concat([l]))}return this}var c=function(t){for(var e=t.split(";"),n={},r=e.length,a=0;a<r;++a){var o=/([^:]*):([\S\s]*)/g.exec(e[a]);!o||o.length<3||!o[1]?--r:n[o[1].trim()]=sr(o[2].trim())}return{styles:n,length:r}}(o),u=c.styles,p=c.length;for(var s in u)n.set.apply(n,a.concat([s,u[s]]));if(p)return this;n._set(a,o)}else n._set(a,o);return n},t.getNames=function(){return ur(this.properties,[])},t.has=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var n=mr(t),r=n.length;return!!r&&!$t(pr(n,this.properties,r))},t.clone=function(){return(new f).merge(this)},t.merge=function(t){var e=this.properties,n=t.properties;return n&&vr(e,n),this},t.toCSSObject=function(){var t=this.get(),e={};for(var n in t)if(!dr([n],!0)){var r=t[n];n===Qn?e[Qn.replace("animation",Ht)]=(Jt(r)?r:r.easingName)||"initial":e[n]=r}var a=hr(t.transform),o=hr(t.filter);return Vt&&a&&(e[Vt]=a),Ut&&o&&(e[Ut]=o),e},t.toCSS=function(){var t=this.toCSSObject(),e=[];for(var n in t)e.push(n+":"+t[n]+";");return e.join("")},t._set=function(t,e){for(var n=this.properties,r=t.length,a=0;a<r-1;++a){var o=t[a];o in n||(n[o]={}),n=n[o]}r&&(1===t.length&&t[0]===Qn?n[Qn]=function(t){var e;if(Jt(t))if(t in rr)e=rr[t];else{var n=sr(t);if(Jt(n))return 0;if("cubic-bezier"===n.model)e=qn((t=n.value.map(function(t){return parseFloat(t)}))[0],t[1],t[2],t[3]);else{if("steps"!==n.model)return 0;e=In(parseFloat(n.value[0]),n.value[1])}}else e=Zt(t)?qn(t[0],t[1],t[2],t[3]):t;return e}(e):n[t[r-1]]=Jt(e)?sr(e):e)},f}(),xr=document.querySelector(".moveable"),wr=document.querySelector(".label"),Sr=new yr({width:"250px",height:"200px",left:"0px",top:"0px",transform:{rotate:"0deg",scaleX:1,scaleY:1,matrix3d:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}});function Mr(t){t.style.cssText=Sr.toCSS()}function Dr(t,e,n){wr.style.cssText="\n    display: block; transform: translate("+t+"px, "+(e-10)+"px) translate(-100%, -100%);",wr.innerHTML=n}var _r=new Tn(xr.parentElement,{target:xr,origin:!1,draggable:!0,rotatable:!0,scalable:!0,pinchable:!0,keepRatio:!1,throttleDrag:1,throttleScale:.01,throttleRotate:.2,throttleResize:1}).on("pinch",function(t){var e=t.clientX,n=t.clientY;setTimeout(function(){Dr(e,n,"X: "+Sr.get("left")+"\n        <br/>Y: "+Sr.get("top")+"\n        <br/>W: "+Sr.get("width")+"\n        <br/>H: "+Sr.get("height")+"\n        <br/>S: "+Sr.get("transform","scaleX").toFixed(2)+", "+Sr.get("transform","scaleY").toFixed(2)+"\n        <br/>R: "+parseFloat(Sr.get("transform","rotate")).toFixed(1)+"deg\n        ")})}).on("drag",function(t){var e=t.target,n=t.left,r=t.top,a=t.clientX,o=t.clientY,i=t.isPinch;Sr.set("left",n+"px"),Sr.set("top",r+"px"),Mr(e),i||Dr(a,o,"X: "+n+"px<br/>Y: "+r+"px")}).on("scale",function(t){var e=t.target,n=t.dist,r=t.clientX,a=t.clientY,o=t.isPinch,i=Sr.get("transform","scaleX")*n[0],s=Sr.get("transform","scaleY")*n[1];Sr.set("transform","scaleX",i),Sr.set("transform","scaleY",s),Mr(e),o||Dr(r,a,"S: "+i.toFixed(2)+", "+s.toFixed(2))}).on("rotate",function(t){var e=t.target,n=t.beforeDelta,r=t.clientX,a=t.clientY,o=t.isPinch,i=parseFloat(Sr.get("transform","rotate"))+n;Sr.set("transform","rotate",i+"deg"),Mr(e),o||Dr(r,a,"R: "+i.toFixed(1))}).on("resize",function(t){var e=t.target,n=t.width,r=t.height,a=t.clientX,o=t.clientY,i=t.isPinch;Sr.set("width",n+"px"),Sr.set("height",r+"px"),Mr(e),i||Dr(a,o,"W: "+n+"px<br/>H: "+r+"px")}).on("warp",function(t){var e=t.target,n=t.multiply,r=t.delta,a=t.clientX,o=t.clientY;Sr.set("transform","matrix3d",n(Sr.get("transform","matrix3d"),r)),Mr(e),Dr(a,o,"X: "+a+"px<br/>Y: "+o+"px")}).on("dragEnd",function(){wr.style.display="none"}).on("scaleEnd",function(){wr.style.display="none"}).on("rotateEnd",function(){wr.style.display="none"}).on("resizeEnd",function(){wr.style.display="none"}).on("warpEnd",function(){wr.style.display="none"}),Cr=document.querySelector(".draggable"),Pr=new Tn(Cr.parentElement,{target:Cr,origin:!1,draggable:!0}).on("drag",function(t){var e=t.target,n=t.transform;e.style.transform=n}),Rr=document.querySelector(".resizable"),Nr=new Tn(Rr.parentElement,{target:Rr,origin:!1,resizable:!0}).on("resize",function(t){var e=t.target,n=t.width,r=t.height;e.style.width=n+"px",e.style.height=r+"px"}),Or=document.querySelector(".scalable"),Er=new Tn(Or.parentElement,{target:Or,origin:!1,scalable:!0}).on("scale",function(t){var e=t.target,n=t.transform;e.style.transform=n}),Xr=document.querySelector(".rotatable"),Yr=new Tn(Xr.parentElement,{target:Xr,origin:!1,rotatable:!0}).on("rotate",function(t){var e=t.target,n=t.transform;e.style.transform=n}),kr=document.querySelector(".warpable"),zr=new Tn(kr.parentElement,{target:kr,warpable:!0,origin:!1}).on("warp",function(t){var e=t.target,n=t.transform;e.style.transform=n}),Ar=document.querySelector(".origin"),Fr=(new Tn(Ar.parentElement,{target:Ar,origin:!0,draggable:!0,rotatable:!0}).on("drag",function(t){var e=t.target,n=t.left,r=t.top;e.style.left=n+"px",e.style.top=r+"px"}).on("rotate",function(t){var e=t.target,n=t.transform;e.style.transform=n}),document.querySelector(".pinchable")),jr=[1,1],Wr=0,Tr=new Tn(Fr.parentElement,{target:Fr,pinchable:["rotatable","scalable"],origin:!1}).on("rotate",function(t){var e=t.beforeDelta;Wr+=e,Fr.style.transform="scale("+jr.join(", ")+") rotate("+Wr+"deg)"}).on("scale",function(t){var e=t.delta;jr[0]+=e[0],jr[1]+=e[1],Fr.style.transform="scale("+jr.join(", ")+") rotate("+Wr+"deg)"});window.addEventListener("resize",function(){_r.updateRect(),Pr.updateRect(),Nr.updateRect(),Er.updateRect(),Yr.updateRect(),zr.updateRect(),Tr.updateRect()}),document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("pre").forEach(function(t){var e=t.getAttribute("data-group"),n=t.getAttribute("data-panel"),r=t.querySelector("code"),a=Bn[e]["preact"===n?"react":n].trim();"preact"===n&&(a=a.replace(/react/g,"preact")),r.innerText=a,hljs.highlightBlock(r)})});var Br=document.querySelector(".buttons.able"),Lr=[].slice.call(Br.children);Br.addEventListener("click",function(t){var e=t.target,n=e.getAttribute("data-able");n&&(Lr.forEach(function(t){t.classList.remove("selected")}),e.classList.add("selected"),"warpable"===n?(_r.resizable=!1,_r.scalable=!1,_r.warpable=!0):"scalable"===n?(_r.resizable=!1,_r.scalable=!0,_r.warpable=!1):"resizable"===n&&(_r.resizable=!0,_r.scalable=!1,_r.warpable=!1))});var qr={};[].slice.call(document.querySelectorAll("[data-tab]")).forEach(function(r){var t=r.getAttribute("data-group"),e=r.getAttribute("data-tab"),n=document.querySelector('[data-group="'+t+'"][data-panel="'+e+'"]');qr[t]||(qr[t]=[]),qr[t].push([r,n]),r.addEventListener("click",function(){qr[t].forEach(function(t){var e=t[0],n=t[1];r!==e&&(e.classList.remove("selected"),n.classList.remove("selected"))}),r.classList.add("selected"),n.classList.add("selected")})})}();
+(function () {
+    'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    function __decorate(decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    }
+
+    /*
+    Copyright (c) 2017 NAVER Corp.
+    @egjs/component project is licensed under the MIT license
+
+    @egjs/component JavaScript library
+    https://naver.github.io/egjs-component
+
+    @version 2.1.2
+    */
+    /**
+     * Copyright (c) 2015 NAVER Corp.
+     * egjs projects are licensed under the MIT license
+     */
+    function isUndefined(value) {
+      return typeof value === "undefined";
+    }
+    /**
+     * A class used to manage events in a component
+     * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
+     * @alias eg.Component
+     */
+
+
+    var Component =
+    /*#__PURE__*/
+    function () {
+      var Component =
+      /*#__PURE__*/
+      function () {
+        /**
+        * Version info string
+        * @ko 버전정보 문자열
+        * @name VERSION
+        * @static
+        * @type {String}
+        * @example
+        * eg.Component.VERSION;  // ex) 2.0.0
+        * @memberof eg.Component
+        */
+
+        /**
+         * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
+         */
+        function Component() {
+          this._eventHandler = {};
+          this.options = {};
+        }
+        /**
+         * Triggers a custom event.
+         * @ko 커스텀 이벤트를 발생시킨다
+         * @param {String} eventName The name of the custom event to be triggered <ko>발생할 커스텀 이벤트의 이름</ko>
+         * @param {Object} customEvent Event data to be sent when triggering a custom event <ko>커스텀 이벤트가 발생할 때 전달할 데이터</ko>
+         * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. <a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref</a> <ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. <a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고</a></ko>
+         * @example
+        class Some extends eg.Component {
+         some(){
+         	if(this.trigger("beforeHi")){ // When event call to stop return false.
+        	this.trigger("hi");// fire hi event.
+         	}
+         }
+        }
+        const some = new Some();
+        some.on("beforeHi", (e) => {
+        if(condition){
+        	e.stop(); // When event call to stop, `hi` event not call.
+        }
+        });
+        some.on("hi", (e) => {
+        // `currentTarget` is component instance.
+        console.log(some === e.currentTarget); // true
+        });
+        // If you want to more know event design. You can see article.
+        // https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
+         */
+
+
+        var _proto = Component.prototype;
+
+        _proto.trigger = function trigger(eventName, customEvent) {
+          if (customEvent === void 0) {
+            customEvent = {};
+          }
+
+          var handlerList = this._eventHandler[eventName] || [];
+          var hasHandlerList = handlerList.length > 0;
+
+          if (!hasHandlerList) {
+            return true;
+          } // If detach method call in handler in first time then handler list calls.
+
+
+          handlerList = handlerList.concat();
+          customEvent.eventType = eventName;
+          var isCanceled = false;
+          var arg = [customEvent];
+          var i = 0;
+
+          customEvent.stop = function () {
+            isCanceled = true;
+          };
+
+          customEvent.currentTarget = this;
+
+          for (var _len = arguments.length, restParam = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+            restParam[_key - 2] = arguments[_key];
+          }
+
+          if (restParam.length >= 1) {
+            arg = arg.concat(restParam);
+          }
+
+          for (i = 0; handlerList[i]; i++) {
+            handlerList[i].apply(this, arg);
+          }
+
+          return !isCanceled;
+        };
+        /**
+         * Executed event just one time.
+         * @ko 이벤트가 한번만 실행된다.
+         * @param {eventName} eventName The name of the event to be attached <ko>등록할 이벤트의 이름</ko>
+         * @param {Function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+         * @return {eg.Component} An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+         * @example
+        class Some extends eg.Component {
+         hi() {
+           alert("hi");
+         }
+         thing() {
+           this.once("hi", this.hi);
+         }
+        }
+        var some = new Some();
+        some.thing();
+        some.trigger("hi");
+        // fire alert("hi");
+        some.trigger("hi");
+        // Nothing happens
+         */
+
+
+        _proto.once = function once(eventName, handlerToAttach) {
+          if (typeof eventName === "object" && isUndefined(handlerToAttach)) {
+            var eventHash = eventName;
+            var i;
+
+            for (i in eventHash) {
+              this.once(i, eventHash[i]);
+            }
+
+            return this;
+          } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+            var self = this;
+            this.on(eventName, function listener() {
+              for (var _len2 = arguments.length, arg = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+                arg[_key2] = arguments[_key2];
+              }
+
+              handlerToAttach.apply(self, arg);
+              self.off(eventName, listener);
+            });
+          }
+
+          return this;
+        };
+        /**
+         * Checks whether an event has been attached to a component.
+         * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
+         * @param {String} eventName The name of the event to be attached <ko>등록 여부를 확인할 이벤트의 이름</ko>
+         * @return {Boolean} Indicates whether the event is attached. <ko>이벤트 등록 여부</ko>
+         * @example
+        class Some extends eg.Component {
+         some() {
+           this.hasOn("hi");// check hi event.
+         }
+        }
+         */
+
+
+        _proto.hasOn = function hasOn(eventName) {
+          return !!this._eventHandler[eventName];
+        };
+        /**
+         * Attaches an event to a component.
+         * @ko 컴포넌트에 이벤트를 등록한다.
+         * @param {eventName} eventName The name of the event to be attached <ko>등록할 이벤트의 이름</ko>
+         * @param {Function} handlerToAttach The handler function of the event to be attached <ko>등록할 이벤트의 핸들러 함수</ko>
+         * @return {eg.Component} An instance of a component itself<ko>컴포넌트 자신의 인스턴스</ko>
+         * @example
+        class Some extends eg.Component {
+         hi() {
+           console.log("hi");
+         }
+         some() {
+           this.on("hi",this.hi); //attach event
+         }
+        }
+        */
+
+
+        _proto.on = function on(eventName, handlerToAttach) {
+          if (typeof eventName === "object" && isUndefined(handlerToAttach)) {
+            var eventHash = eventName;
+            var name;
+
+            for (name in eventHash) {
+              this.on(name, eventHash[name]);
+            }
+
+            return this;
+          } else if (typeof eventName === "string" && typeof handlerToAttach === "function") {
+            var handlerList = this._eventHandler[eventName];
+
+            if (isUndefined(handlerList)) {
+              this._eventHandler[eventName] = [];
+              handlerList = this._eventHandler[eventName];
+            }
+
+            handlerList.push(handlerToAttach);
+          }
+
+          return this;
+        };
+        /**
+         * Detaches an event from the component.
+         * @ko 컴포넌트에 등록된 이벤트를 해제한다
+         * @param {eventName} eventName The name of the event to be detached <ko>해제할 이벤트의 이름</ko>
+         * @param {Function} handlerToDetach The handler function of the event to be detached <ko>해제할 이벤트의 핸들러 함수</ko>
+         * @return {eg.Component} An instance of a component itself <ko>컴포넌트 자신의 인스턴스</ko>
+         * @example
+        class Some extends eg.Component {
+         hi() {
+           console.log("hi");
+         }
+         some() {
+           this.off("hi",this.hi); //detach event
+         }
+        }
+         */
+
+
+        _proto.off = function off(eventName, handlerToDetach) {
+          // All event detach.
+          if (isUndefined(eventName)) {
+            this._eventHandler = {};
+            return this;
+          } // All handler of specific event detach.
+
+
+          if (isUndefined(handlerToDetach)) {
+            if (typeof eventName === "string") {
+              this._eventHandler[eventName] = undefined;
+              return this;
+            } else {
+              var eventHash = eventName;
+              var name;
+
+              for (name in eventHash) {
+                this.off(name, eventHash[name]);
+              }
+
+              return this;
+            }
+          } // The handler of specific event detach.
+
+
+          var handlerList = this._eventHandler[eventName];
+
+          if (handlerList) {
+            var k;
+            var handlerFunction;
+
+            for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
+              if (handlerFunction === handlerToDetach) {
+                handlerList = handlerList.splice(k, 1);
+                break;
+              }
+            }
+          }
+
+          return this;
+        };
+
+        return Component;
+      }();
+
+      Component.VERSION = "2.1.2";
+      return Component;
+    }();
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: framework-utils
+    license: MIT
+    author: Daybrush
+    repository: git+https://github.com/daybrush/framework-utils.git
+    version: 0.2.0
+    */
+    function prefixNames(prefix) {
+      var classNames = [];
+
+      for (var _i = 1; _i < arguments.length; _i++) {
+        classNames[_i - 1] = arguments[_i];
+      }
+
+      return classNames.map(function (className) {
+        return className.split(" ").map(function (name) {
+          return "" + prefix + name;
+        }).join(" ");
+      }).join(" ");
+    }
+    function prefixCSS(prefix, css) {
+      return css.replace(/\.([^{,\s\d.]+)/g, "." + prefix + "$1");
+    }
+    /* react */
+
+    function ref(target, name) {
+      return function (e) {
+        e && (target[name] = e);
+      };
+    }
+    function refs(target, name, i) {
+      return function (e) {
+        e && (target[name][i] = e);
+      };
+    }
+    /* Class Decorator */
+
+    function Properties(properties, action) {
+      return function (component) {
+        var prototype = component.prototype;
+        properties.forEach(function (property) {
+          action(prototype, property);
+        });
+      };
+    }
+
+    var VNode = function VNode() {};
+
+    var options = {};
+
+    var stack = [];
+
+    var EMPTY_CHILDREN = [];
+
+    function h(nodeName, attributes) {
+    	var children = EMPTY_CHILDREN,
+    	    lastSimple,
+    	    child,
+    	    simple,
+    	    i;
+    	for (i = arguments.length; i-- > 2;) {
+    		stack.push(arguments[i]);
+    	}
+    	if (attributes && attributes.children != null) {
+    		if (!stack.length) stack.push(attributes.children);
+    		delete attributes.children;
+    	}
+    	while (stack.length) {
+    		if ((child = stack.pop()) && child.pop !== undefined) {
+    			for (i = child.length; i--;) {
+    				stack.push(child[i]);
+    			}
+    		} else {
+    			if (typeof child === 'boolean') child = null;
+
+    			if (simple = typeof nodeName !== 'function') {
+    				if (child == null) child = '';else if (typeof child === 'number') child = String(child);else if (typeof child !== 'string') simple = false;
+    			}
+
+    			if (simple && lastSimple) {
+    				children[children.length - 1] += child;
+    			} else if (children === EMPTY_CHILDREN) {
+    				children = [child];
+    			} else {
+    				children.push(child);
+    			}
+
+    			lastSimple = simple;
+    		}
+    	}
+
+    	var p = new VNode();
+    	p.nodeName = nodeName;
+    	p.children = children;
+    	p.attributes = attributes == null ? undefined : attributes;
+    	p.key = attributes == null ? undefined : attributes.key;
+
+    	if (options.vnode !== undefined) options.vnode(p);
+
+    	return p;
+    }
+
+    function extend(obj, props) {
+      for (var i in props) {
+        obj[i] = props[i];
+      }return obj;
+    }
+
+    function applyRef(ref, value) {
+      if (ref) {
+        if (typeof ref == 'function') ref(value);else ref.current = value;
+      }
+    }
+
+    var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
+
+    function cloneElement(vnode, props) {
+      return h(vnode.nodeName, extend(extend({}, vnode.attributes), props), arguments.length > 2 ? [].slice.call(arguments, 2) : vnode.children);
+    }
+
+    var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+
+    var items = [];
+
+    function enqueueRender(component) {
+    	if (!component._dirty && (component._dirty = true) && items.push(component) == 1) {
+    		( defer)(rerender);
+    	}
+    }
+
+    function rerender() {
+    	var p;
+    	while (p = items.pop()) {
+    		if (p._dirty) renderComponent(p);
+    	}
+    }
+
+    function isSameNodeType(node, vnode, hydrating) {
+    	if (typeof vnode === 'string' || typeof vnode === 'number') {
+    		return node.splitText !== undefined;
+    	}
+    	if (typeof vnode.nodeName === 'string') {
+    		return !node._componentConstructor && isNamedNode(node, vnode.nodeName);
+    	}
+    	return hydrating || node._componentConstructor === vnode.nodeName;
+    }
+
+    function isNamedNode(node, nodeName) {
+    	return node.normalizedNodeName === nodeName || node.nodeName.toLowerCase() === nodeName.toLowerCase();
+    }
+
+    function getNodeProps(vnode) {
+    	var props = extend({}, vnode.attributes);
+    	props.children = vnode.children;
+
+    	var defaultProps = vnode.nodeName.defaultProps;
+    	if (defaultProps !== undefined) {
+    		for (var i in defaultProps) {
+    			if (props[i] === undefined) {
+    				props[i] = defaultProps[i];
+    			}
+    		}
+    	}
+
+    	return props;
+    }
+
+    function createNode(nodeName, isSvg) {
+    	var node = isSvg ? document.createElementNS('http://www.w3.org/2000/svg', nodeName) : document.createElement(nodeName);
+    	node.normalizedNodeName = nodeName;
+    	return node;
+    }
+
+    function removeNode(node) {
+    	var parentNode = node.parentNode;
+    	if (parentNode) parentNode.removeChild(node);
+    }
+
+    function setAccessor(node, name, old, value, isSvg) {
+    	if (name === 'className') name = 'class';
+
+    	if (name === 'key') ; else if (name === 'ref') {
+    		applyRef(old, null);
+    		applyRef(value, node);
+    	} else if (name === 'class' && !isSvg) {
+    		node.className = value || '';
+    	} else if (name === 'style') {
+    		if (!value || typeof value === 'string' || typeof old === 'string') {
+    			node.style.cssText = value || '';
+    		}
+    		if (value && typeof value === 'object') {
+    			if (typeof old !== 'string') {
+    				for (var i in old) {
+    					if (!(i in value)) node.style[i] = '';
+    				}
+    			}
+    			for (var i in value) {
+    				node.style[i] = typeof value[i] === 'number' && IS_NON_DIMENSIONAL.test(i) === false ? value[i] + 'px' : value[i];
+    			}
+    		}
+    	} else if (name === 'dangerouslySetInnerHTML') {
+    		if (value) node.innerHTML = value.__html || '';
+    	} else if (name[0] == 'o' && name[1] == 'n') {
+    		var useCapture = name !== (name = name.replace(/Capture$/, ''));
+    		name = name.toLowerCase().substring(2);
+    		if (value) {
+    			if (!old) node.addEventListener(name, eventProxy, useCapture);
+    		} else {
+    			node.removeEventListener(name, eventProxy, useCapture);
+    		}
+    		(node._listeners || (node._listeners = {}))[name] = value;
+    	} else if (name !== 'list' && name !== 'type' && !isSvg && name in node) {
+    		try {
+    			node[name] = value == null ? '' : value;
+    		} catch (e) {}
+    		if ((value == null || value === false) && name != 'spellcheck') node.removeAttribute(name);
+    	} else {
+    		var ns = isSvg && name !== (name = name.replace(/^xlink:?/, ''));
+
+    		if (value == null || value === false) {
+    			if (ns) node.removeAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase());else node.removeAttribute(name);
+    		} else if (typeof value !== 'function') {
+    			if (ns) node.setAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase(), value);else node.setAttribute(name, value);
+    		}
+    	}
+    }
+
+    function eventProxy(e) {
+    	return this._listeners[e.type](options.event && options.event(e) || e);
+    }
+
+    var mounts = [];
+
+    var diffLevel = 0;
+
+    var isSvgMode = false;
+
+    var hydrating = false;
+
+    function flushMounts() {
+    	var c;
+    	while (c = mounts.shift()) {
+    		if (c.componentDidMount) c.componentDidMount();
+    	}
+    }
+
+    function diff(dom, vnode, context, mountAll, parent, componentRoot) {
+    	if (!diffLevel++) {
+    		isSvgMode = parent != null && parent.ownerSVGElement !== undefined;
+
+    		hydrating = dom != null && !('__preactattr_' in dom);
+    	}
+
+    	var ret = idiff(dom, vnode, context, mountAll, componentRoot);
+
+    	if (parent && ret.parentNode !== parent) parent.appendChild(ret);
+
+    	if (! --diffLevel) {
+    		hydrating = false;
+
+    		if (!componentRoot) flushMounts();
+    	}
+
+    	return ret;
+    }
+
+    function idiff(dom, vnode, context, mountAll, componentRoot) {
+    	var out = dom,
+    	    prevSvgMode = isSvgMode;
+
+    	if (vnode == null || typeof vnode === 'boolean') vnode = '';
+
+    	if (typeof vnode === 'string' || typeof vnode === 'number') {
+    		if (dom && dom.splitText !== undefined && dom.parentNode && (!dom._component || componentRoot)) {
+    			if (dom.nodeValue != vnode) {
+    				dom.nodeValue = vnode;
+    			}
+    		} else {
+    			out = document.createTextNode(vnode);
+    			if (dom) {
+    				if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+    				recollectNodeTree(dom, true);
+    			}
+    		}
+
+    		out['__preactattr_'] = true;
+
+    		return out;
+    	}
+
+    	var vnodeName = vnode.nodeName;
+    	if (typeof vnodeName === 'function') {
+    		return buildComponentFromVNode(dom, vnode, context, mountAll);
+    	}
+
+    	isSvgMode = vnodeName === 'svg' ? true : vnodeName === 'foreignObject' ? false : isSvgMode;
+
+    	vnodeName = String(vnodeName);
+    	if (!dom || !isNamedNode(dom, vnodeName)) {
+    		out = createNode(vnodeName, isSvgMode);
+
+    		if (dom) {
+    			while (dom.firstChild) {
+    				out.appendChild(dom.firstChild);
+    			}
+    			if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+
+    			recollectNodeTree(dom, true);
+    		}
+    	}
+
+    	var fc = out.firstChild,
+    	    props = out['__preactattr_'],
+    	    vchildren = vnode.children;
+
+    	if (props == null) {
+    		props = out['__preactattr_'] = {};
+    		for (var a = out.attributes, i = a.length; i--;) {
+    			props[a[i].name] = a[i].value;
+    		}
+    	}
+
+    	if (!hydrating && vchildren && vchildren.length === 1 && typeof vchildren[0] === 'string' && fc != null && fc.splitText !== undefined && fc.nextSibling == null) {
+    		if (fc.nodeValue != vchildren[0]) {
+    			fc.nodeValue = vchildren[0];
+    		}
+    	} else if (vchildren && vchildren.length || fc != null) {
+    			innerDiffNode(out, vchildren, context, mountAll, hydrating || props.dangerouslySetInnerHTML != null);
+    		}
+
+    	diffAttributes(out, vnode.attributes, props);
+
+    	isSvgMode = prevSvgMode;
+
+    	return out;
+    }
+
+    function innerDiffNode(dom, vchildren, context, mountAll, isHydrating) {
+    	var originalChildren = dom.childNodes,
+    	    children = [],
+    	    keyed = {},
+    	    keyedLen = 0,
+    	    min = 0,
+    	    len = originalChildren.length,
+    	    childrenLen = 0,
+    	    vlen = vchildren ? vchildren.length : 0,
+    	    j,
+    	    c,
+    	    f,
+    	    vchild,
+    	    child;
+
+    	if (len !== 0) {
+    		for (var i = 0; i < len; i++) {
+    			var _child = originalChildren[i],
+    			    props = _child['__preactattr_'],
+    			    key = vlen && props ? _child._component ? _child._component.__key : props.key : null;
+    			if (key != null) {
+    				keyedLen++;
+    				keyed[key] = _child;
+    			} else if (props || (_child.splitText !== undefined ? isHydrating ? _child.nodeValue.trim() : true : isHydrating)) {
+    				children[childrenLen++] = _child;
+    			}
+    		}
+    	}
+
+    	if (vlen !== 0) {
+    		for (var i = 0; i < vlen; i++) {
+    			vchild = vchildren[i];
+    			child = null;
+
+    			var key = vchild.key;
+    			if (key != null) {
+    				if (keyedLen && keyed[key] !== undefined) {
+    					child = keyed[key];
+    					keyed[key] = undefined;
+    					keyedLen--;
+    				}
+    			} else if (min < childrenLen) {
+    					for (j = min; j < childrenLen; j++) {
+    						if (children[j] !== undefined && isSameNodeType(c = children[j], vchild, isHydrating)) {
+    							child = c;
+    							children[j] = undefined;
+    							if (j === childrenLen - 1) childrenLen--;
+    							if (j === min) min++;
+    							break;
+    						}
+    					}
+    				}
+
+    			child = idiff(child, vchild, context, mountAll);
+
+    			f = originalChildren[i];
+    			if (child && child !== dom && child !== f) {
+    				if (f == null) {
+    					dom.appendChild(child);
+    				} else if (child === f.nextSibling) {
+    					removeNode(f);
+    				} else {
+    					dom.insertBefore(child, f);
+    				}
+    			}
+    		}
+    	}
+
+    	if (keyedLen) {
+    		for (var i in keyed) {
+    			if (keyed[i] !== undefined) recollectNodeTree(keyed[i], false);
+    		}
+    	}
+
+    	while (min <= childrenLen) {
+    		if ((child = children[childrenLen--]) !== undefined) recollectNodeTree(child, false);
+    	}
+    }
+
+    function recollectNodeTree(node, unmountOnly) {
+    	var component = node._component;
+    	if (component) {
+    		unmountComponent(component);
+    	} else {
+    		if (node['__preactattr_'] != null) applyRef(node['__preactattr_'].ref, null);
+
+    		if (unmountOnly === false || node['__preactattr_'] == null) {
+    			removeNode(node);
+    		}
+
+    		removeChildren(node);
+    	}
+    }
+
+    function removeChildren(node) {
+    	node = node.lastChild;
+    	while (node) {
+    		var next = node.previousSibling;
+    		recollectNodeTree(node, true);
+    		node = next;
+    	}
+    }
+
+    function diffAttributes(dom, attrs, old) {
+    	var name;
+
+    	for (name in old) {
+    		if (!(attrs && attrs[name] != null) && old[name] != null) {
+    			setAccessor(dom, name, old[name], old[name] = undefined, isSvgMode);
+    		}
+    	}
+
+    	for (name in attrs) {
+    		if (name !== 'children' && name !== 'innerHTML' && (!(name in old) || attrs[name] !== (name === 'value' || name === 'checked' ? dom[name] : old[name]))) {
+    			setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
+    		}
+    	}
+    }
+
+    var recyclerComponents = [];
+
+    function createComponent(Ctor, props, context) {
+    	var inst,
+    	    i = recyclerComponents.length;
+
+    	if (Ctor.prototype && Ctor.prototype.render) {
+    		inst = new Ctor(props, context);
+    		Component$1.call(inst, props, context);
+    	} else {
+    		inst = new Component$1(props, context);
+    		inst.constructor = Ctor;
+    		inst.render = doRender;
+    	}
+
+    	while (i--) {
+    		if (recyclerComponents[i].constructor === Ctor) {
+    			inst.nextBase = recyclerComponents[i].nextBase;
+    			recyclerComponents.splice(i, 1);
+    			return inst;
+    		}
+    	}
+
+    	return inst;
+    }
+
+    function doRender(props, state, context) {
+    	return this.constructor(props, context);
+    }
+
+    function setComponentProps(component, props, renderMode, context, mountAll) {
+    	if (component._disable) return;
+    	component._disable = true;
+
+    	component.__ref = props.ref;
+    	component.__key = props.key;
+    	delete props.ref;
+    	delete props.key;
+
+    	if (typeof component.constructor.getDerivedStateFromProps === 'undefined') {
+    		if (!component.base || mountAll) {
+    			if (component.componentWillMount) component.componentWillMount();
+    		} else if (component.componentWillReceiveProps) {
+    			component.componentWillReceiveProps(props, context);
+    		}
+    	}
+
+    	if (context && context !== component.context) {
+    		if (!component.prevContext) component.prevContext = component.context;
+    		component.context = context;
+    	}
+
+    	if (!component.prevProps) component.prevProps = component.props;
+    	component.props = props;
+
+    	component._disable = false;
+
+    	if (renderMode !== 0) {
+    		if (renderMode === 1 || options.syncComponentUpdates !== false || !component.base) {
+    			renderComponent(component, 1, mountAll);
+    		} else {
+    			enqueueRender(component);
+    		}
+    	}
+
+    	applyRef(component.__ref, component);
+    }
+
+    function renderComponent(component, renderMode, mountAll, isChild) {
+    	if (component._disable) return;
+
+    	var props = component.props,
+    	    state = component.state,
+    	    context = component.context,
+    	    previousProps = component.prevProps || props,
+    	    previousState = component.prevState || state,
+    	    previousContext = component.prevContext || context,
+    	    isUpdate = component.base,
+    	    nextBase = component.nextBase,
+    	    initialBase = isUpdate || nextBase,
+    	    initialChildComponent = component._component,
+    	    skip = false,
+    	    snapshot = previousContext,
+    	    rendered,
+    	    inst,
+    	    cbase;
+
+    	if (component.constructor.getDerivedStateFromProps) {
+    		state = extend(extend({}, state), component.constructor.getDerivedStateFromProps(props, state));
+    		component.state = state;
+    	}
+
+    	if (isUpdate) {
+    		component.props = previousProps;
+    		component.state = previousState;
+    		component.context = previousContext;
+    		if (renderMode !== 2 && component.shouldComponentUpdate && component.shouldComponentUpdate(props, state, context) === false) {
+    			skip = true;
+    		} else if (component.componentWillUpdate) {
+    			component.componentWillUpdate(props, state, context);
+    		}
+    		component.props = props;
+    		component.state = state;
+    		component.context = context;
+    	}
+
+    	component.prevProps = component.prevState = component.prevContext = component.nextBase = null;
+    	component._dirty = false;
+
+    	if (!skip) {
+    		rendered = component.render(props, state, context);
+
+    		if (component.getChildContext) {
+    			context = extend(extend({}, context), component.getChildContext());
+    		}
+
+    		if (isUpdate && component.getSnapshotBeforeUpdate) {
+    			snapshot = component.getSnapshotBeforeUpdate(previousProps, previousState);
+    		}
+
+    		var childComponent = rendered && rendered.nodeName,
+    		    toUnmount,
+    		    base;
+
+    		if (typeof childComponent === 'function') {
+
+    			var childProps = getNodeProps(rendered);
+    			inst = initialChildComponent;
+
+    			if (inst && inst.constructor === childComponent && childProps.key == inst.__key) {
+    				setComponentProps(inst, childProps, 1, context, false);
+    			} else {
+    				toUnmount = inst;
+
+    				component._component = inst = createComponent(childComponent, childProps, context);
+    				inst.nextBase = inst.nextBase || nextBase;
+    				inst._parentComponent = component;
+    				setComponentProps(inst, childProps, 0, context, false);
+    				renderComponent(inst, 1, mountAll, true);
+    			}
+
+    			base = inst.base;
+    		} else {
+    			cbase = initialBase;
+
+    			toUnmount = initialChildComponent;
+    			if (toUnmount) {
+    				cbase = component._component = null;
+    			}
+
+    			if (initialBase || renderMode === 1) {
+    				if (cbase) cbase._component = null;
+    				base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, true);
+    			}
+    		}
+
+    		if (initialBase && base !== initialBase && inst !== initialChildComponent) {
+    			var baseParent = initialBase.parentNode;
+    			if (baseParent && base !== baseParent) {
+    				baseParent.replaceChild(base, initialBase);
+
+    				if (!toUnmount) {
+    					initialBase._component = null;
+    					recollectNodeTree(initialBase, false);
+    				}
+    			}
+    		}
+
+    		if (toUnmount) {
+    			unmountComponent(toUnmount);
+    		}
+
+    		component.base = base;
+    		if (base && !isChild) {
+    			var componentRef = component,
+    			    t = component;
+    			while (t = t._parentComponent) {
+    				(componentRef = t).base = base;
+    			}
+    			base._component = componentRef;
+    			base._componentConstructor = componentRef.constructor;
+    		}
+    	}
+
+    	if (!isUpdate || mountAll) {
+    		mounts.push(component);
+    	} else if (!skip) {
+
+    		if (component.componentDidUpdate) {
+    			component.componentDidUpdate(previousProps, previousState, snapshot);
+    		}
+    	}
+
+    	while (component._renderCallbacks.length) {
+    		component._renderCallbacks.pop().call(component);
+    	}if (!diffLevel && !isChild) flushMounts();
+    }
+
+    function buildComponentFromVNode(dom, vnode, context, mountAll) {
+    	var c = dom && dom._component,
+    	    originalComponent = c,
+    	    oldDom = dom,
+    	    isDirectOwner = c && dom._componentConstructor === vnode.nodeName,
+    	    isOwner = isDirectOwner,
+    	    props = getNodeProps(vnode);
+    	while (c && !isOwner && (c = c._parentComponent)) {
+    		isOwner = c.constructor === vnode.nodeName;
+    	}
+
+    	if (c && isOwner && (!mountAll || c._component)) {
+    		setComponentProps(c, props, 3, context, mountAll);
+    		dom = c.base;
+    	} else {
+    		if (originalComponent && !isDirectOwner) {
+    			unmountComponent(originalComponent);
+    			dom = oldDom = null;
+    		}
+
+    		c = createComponent(vnode.nodeName, props, context);
+    		if (dom && !c.nextBase) {
+    			c.nextBase = dom;
+
+    			oldDom = null;
+    		}
+    		setComponentProps(c, props, 1, context, mountAll);
+    		dom = c.base;
+
+    		if (oldDom && dom !== oldDom) {
+    			oldDom._component = null;
+    			recollectNodeTree(oldDom, false);
+    		}
+    	}
+
+    	return dom;
+    }
+
+    function unmountComponent(component) {
+
+    	var base = component.base;
+
+    	component._disable = true;
+
+    	if (component.componentWillUnmount) component.componentWillUnmount();
+
+    	component.base = null;
+
+    	var inner = component._component;
+    	if (inner) {
+    		unmountComponent(inner);
+    	} else if (base) {
+    		if (base['__preactattr_'] != null) applyRef(base['__preactattr_'].ref, null);
+
+    		component.nextBase = base;
+
+    		removeNode(base);
+    		recyclerComponents.push(component);
+
+    		removeChildren(base);
+    	}
+
+    	applyRef(component.__ref, null);
+    }
+
+    function Component$1(props, context) {
+    	this._dirty = true;
+
+    	this.context = context;
+
+    	this.props = props;
+
+    	this.state = this.state || {};
+
+    	this._renderCallbacks = [];
+    }
+
+    extend(Component$1.prototype, {
+    	setState: function setState(state, callback) {
+    		if (!this.prevState) this.prevState = this.state;
+    		this.state = extend(extend({}, this.state), typeof state === 'function' ? state(this.state, this.props) : state);
+    		if (callback) this._renderCallbacks.push(callback);
+    		enqueueRender(this);
+    	},
+    	forceUpdate: function forceUpdate(callback) {
+    		if (callback) this._renderCallbacks.push(callback);
+    		renderComponent(this, 2);
+    	},
+    	render: function render() {}
+    });
+
+    function render(vnode, parent, merge) {
+      return diff(merge, vnode, {}, false, parent, false);
+    }
+
+    function createRef() {
+    	return {};
+    }
+
+    var PropTypes = {
+        checkPropTypes: function () {}
+    };
+
+    function createEmitter(initialValue, bitmaskFactory) {
+        var registeredUpdaters = [];
+        var value = initialValue;
+        var diff = function (newValue) { return bitmaskFactory(value, newValue) | 0; };
+        return {
+            register: function (updater) {
+                registeredUpdaters.push(updater);
+                updater(value, diff(value));
+            },
+            unregister: function (updater) {
+                registeredUpdaters = registeredUpdaters.filter(function (i) { return i !== updater; });
+            },
+            val: function (newValue) {
+                if (newValue === undefined || newValue == value) {
+                    return value;
+                }
+                var bitmask = diff(newValue);
+                value = newValue;
+                registeredUpdaters.forEach(function (up) { return up(newValue, bitmask); });
+                return value;
+            }
+        };
+    }
+    var noopEmitter = {
+        register: function (_) {
+            console.warn("Consumer used without a Provider");
+        },
+        unregister: function (_) {
+            // do nothing
+        },
+        val: function (_) {
+            //do nothing;
+        }
+    };
+
+    /*
+     * Extracts the children from the props and returns an object containing the
+     * only element of the given array (preact always passes children as an array)
+     * or null otherwise. The result contains always a reference to the original
+     * array of children
+     *
+     * @param {RenderableProps<*>} props - the component's properties
+     * @return {{ child: JSX.Element | null, children: JSX.Element[]}}
+     */
+    function getOnlyChildAndChildren(props) {
+        var children = props.children;
+        var child = children.length === 1 ? children[0] : null;
+        return { child: child, children: children };
+    }
+
+    var __extends$1 = (undefined && undefined.__extends) || (function () {
+        var extendStatics = function (d, b) {
+            extendStatics = Object.setPrototypeOf ||
+                ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+                function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            return extendStatics(d, b);
+        };
+        return function (d, b) {
+            extendStatics(d, b);
+            function __() { this.constructor = d; }
+            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+        };
+    })();
+    function getRenderer(props) {
+        var child = getOnlyChildAndChildren(props).child;
+        // TODO: "render" in props check is only done to make TS happy
+        return child || ("render" in props && props.render);
+    }
+    var MAX_SIGNED_31_BIT_INT = 1073741823;
+    var defaultBitmaskFactory = function () { return MAX_SIGNED_31_BIT_INT; };
+    var ids = 0;
+    function _createContext(value, bitmaskFactory) {
+        var key = "_preactContextProvider-" + ids++;
+        var Provider = /*#__PURE__*/ (function (_super) {
+            __extends$1(Provider, _super);
+            function Provider(props) {
+                var _this = _super.call(this, props) || this;
+                _this._emitter = createEmitter(props.value, bitmaskFactory || defaultBitmaskFactory);
+                return _this;
+            }
+            Provider.prototype.getChildContext = function () {
+                var _a;
+                return _a = {}, _a[key] = this._emitter, _a;
+            };
+            Provider.prototype.componentDidUpdate = function () {
+                this._emitter.val(this.props.value);
+            };
+            Provider.prototype.render = function () {
+                var _a = getOnlyChildAndChildren(this.props), child = _a.child, children = _a.children;
+                if (child) {
+                    return child;
+                }
+                // preact does not support fragments,
+                // therefore we wrap the children in a span
+                return h("span", null, children);
+            };
+            return Provider;
+        }(Component$1));
+        var Consumer = /*#__PURE__*/ (function (_super) {
+            __extends$1(Consumer, _super);
+            function Consumer(props, ctx) {
+                var _this = _super.call(this, props, ctx) || this;
+                _this._updateContext = function (value, bitmask) {
+                    var unstable_observedBits = _this.props.unstable_observedBits;
+                    var observed = unstable_observedBits === undefined || unstable_observedBits === null
+                        ? MAX_SIGNED_31_BIT_INT
+                        : unstable_observedBits;
+                    observed = observed | 0;
+                    if ((observed & bitmask) === 0) {
+                        return;
+                    }
+                    _this.setState({ value: value });
+                };
+                _this.state = { value: _this._getEmitter().val() || value };
+                return _this;
+            }
+            Consumer.prototype.componentDidMount = function () {
+                this._getEmitter().register(this._updateContext);
+            };
+            Consumer.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+                return (this.state.value !== nextState.value ||
+                    getRenderer(this.props) !== getRenderer(nextProps));
+            };
+            Consumer.prototype.componentWillUnmount = function () {
+                this._getEmitter().unregister(this._updateContext);
+            };
+            Consumer.prototype.componentDidUpdate = function (_, __, prevCtx) {
+                var previousProvider = prevCtx[key];
+                if (previousProvider === this.context[key]) {
+                    return;
+                }
+                (previousProvider || noopEmitter).unregister(this._updateContext);
+                this.componentDidMount();
+            };
+            Consumer.prototype.render = function () {
+                // TODO: "render" in props check is only done to make TS happy
+                var render = "render" in this.props && this.props.render;
+                var r = getRenderer(this.props);
+                if (render && render !== r) {
+                    console.warn("Both children and a render function are defined. Children will be used");
+                }
+                if (typeof r === "function") {
+                    return r(this.state.value);
+                }
+                console.warn("Consumer is expecting a function as one and only child but didn't find any");
+            };
+            Consumer.prototype._getEmitter = function () {
+                return this.context[key] || noopEmitter;
+            };
+            return Consumer;
+        }(Component$1));
+        return {
+            Provider: Provider,
+            Consumer: Consumer
+        };
+    }
+    var createContext = _createContext;
+
+    var version = '15.1.0'; // trick libraries to think we are react
+
+    var ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(
+    	' '
+    );
+
+    var REACT_ELEMENT_TYPE = (typeof Symbol !== 'undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
+
+    var COMPONENT_WRAPPER_KEY =
+    	typeof Symbol !== 'undefined' && Symbol.for ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
+
+    // don't autobind these methods since they already have guaranteed context.
+    var AUTOBIND_BLACKLIST = {
+    	constructor: 1,
+    	render: 1,
+    	shouldComponentUpdate: 1,
+    	componentWillReceiveProps: 1,
+    	componentWillUpdate: 1,
+    	componentDidUpdate: 1,
+    	componentWillMount: 1,
+    	componentDidMount: 1,
+    	componentWillUnmount: 1,
+    	componentDidUnmount: 1
+    };
+
+    var CAMEL_PROPS = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vector|vert|word|writing|x)[A-Z]/;
+
+    var BYPASS_HOOK = {};
+
+    /*global process*/
+    var DEV = false;
+    try {
+    	DEV = process.env.NODE_ENV !== 'production';
+    }
+    catch (e) { }
+
+    // a component that renders nothing. Used to replace components for unmountComponentAtNode.
+    function EmptyComponent() {
+    	return null;
+    }
+
+    // make react think we're react.
+    var VNode$1 = h('a', null).constructor;
+    VNode$1.prototype.$$typeof = REACT_ELEMENT_TYPE;
+    VNode$1.prototype.preactCompatUpgraded = false;
+    VNode$1.prototype.preactCompatNormalized = false;
+
+    Object.defineProperty(VNode$1.prototype, 'type', {
+    	get: function() {
+    		return this.nodeName;
+    	},
+    	set: function(v) {
+    		this.nodeName = v;
+    	},
+    	configurable: true
+    });
+
+    Object.defineProperty(VNode$1.prototype, 'props', {
+    	get: function() {
+    		return this.attributes;
+    	},
+    	set: function(v) {
+    		this.attributes = v;
+    	},
+    	configurable: true
+    });
+
+    var oldEventHook = options.event;
+    options.event = function (e) {
+    	if (oldEventHook) { e = oldEventHook(e); }
+    	e.persist = Object;
+    	e.nativeEvent = e;
+    	return e;
+    };
+
+    var oldVnodeHook = options.vnode;
+    options.vnode = function (vnode) {
+    	if (!vnode.preactCompatUpgraded) {
+    		vnode.preactCompatUpgraded = true;
+
+    		var tag = vnode.nodeName,
+    			attrs = (vnode.attributes = vnode.attributes == null ? {} : extend$1({}, vnode.attributes));
+
+    		if (typeof tag === 'function') {
+    			if (tag[COMPONENT_WRAPPER_KEY] === true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
+    				if (vnode.children && String(vnode.children) === '') { vnode.children = undefined; }
+    				if (vnode.children) { attrs.children = vnode.children; }
+
+    				if (!vnode.preactCompatNormalized) {
+    					normalizeVNode(vnode);
+    				}
+    				handleComponentVNode(vnode);
+    			}
+    		}
+    		else {
+    			if (vnode.children && String(vnode.children) === '') { vnode.children = undefined; }
+    			if (vnode.children) { attrs.children = vnode.children; }
+
+    			if (attrs.defaultValue) {
+    				if (!attrs.value && attrs.value !== 0) {
+    					attrs.value = attrs.defaultValue;
+    				}
+    				delete attrs.defaultValue;
+    			}
+
+    			handleElementVNode(vnode, attrs);
+    		}
+    	}
+
+    	if (oldVnodeHook) { oldVnodeHook(vnode); }
+    };
+
+    function handleComponentVNode(vnode) {
+    	var tag = vnode.nodeName,
+    		a = vnode.attributes;
+
+    	vnode.attributes = {};
+    	if (tag.defaultProps) { extend$1(vnode.attributes, tag.defaultProps); }
+    	if (a) { extend$1(vnode.attributes, a); }
+    }
+
+    function handleElementVNode(vnode, a) {
+    	var shouldSanitize, attrs, i;
+    	if (a) {
+    		for (i in a) { if ((shouldSanitize = CAMEL_PROPS.test(i))) { break; } }
+    		if (shouldSanitize) {
+    			attrs = vnode.attributes = {};
+    			for (i in a) {
+    				if (a.hasOwnProperty(i)) {
+    					attrs[CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i] = a[i];
+    				}
+    			}
+    		}
+    	}
+    }
+
+    // proxy render() since React returns a Component reference.
+    function render$1(vnode, parent, callback) {
+    	var prev = parent && parent._preactCompatRendered && parent._preactCompatRendered.base;
+
+    	// ignore impossible previous renders
+    	if (prev && prev.parentNode !== parent) { prev = null; }
+
+    	// default to first Element child
+    	if (!prev && parent) { prev = parent.firstElementChild; }
+
+    	// remove unaffected siblings
+    	for (var i = parent.childNodes.length; i--;) {
+    		if (parent.childNodes[i] !== prev) {
+    			parent.removeChild(parent.childNodes[i]);
+    		}
+    	}
+
+    	var out = render(vnode, parent, prev);
+    	if (parent) { parent._preactCompatRendered = out && (out._component || { base: out }); }
+    	if (typeof callback === 'function') { callback(); }
+    	return (out && out._component) || out;
+    }
+
+    var ContextProvider = function () {};
+
+    ContextProvider.prototype.getChildContext = function () {
+    	return this.props.context;
+    };
+    ContextProvider.prototype.render = function (props) {
+    	return props.children[0];
+    };
+
+    function renderSubtreeIntoContainer(parentComponent, vnode, container, callback) {
+    	var wrap = h(ContextProvider, { context: parentComponent.context }, vnode);
+    	var renderContainer = render$1(wrap, container);
+    	var component = renderContainer._component || renderContainer.base;
+    	if (callback) { callback.call(component, renderContainer); }
+    	return component;
+    }
+
+    function Portal(props) {
+    	renderSubtreeIntoContainer(this, props.vnode, props.container);
+    }
+
+    function createPortal(vnode, container) {
+    	return h(Portal, { vnode: vnode, container: container });
+    }
+
+    function unmountComponentAtNode(container) {
+    	var existing = container._preactCompatRendered && container._preactCompatRendered.base;
+    	if (existing && existing.parentNode === container) {
+    		render(h(EmptyComponent), container, existing);
+    		return true;
+    	}
+    	return false;
+    }
+
+    var ARR = [];
+
+    // This API is completely unnecessary for Preact, so it's basically passthrough.
+    var Children = {
+    	map: function(children, fn, ctx) {
+    		if (children == null) { return null; }
+    		children = Children.toArray(children);
+    		if (ctx && ctx !== children) { fn = fn.bind(ctx); }
+    		return children.map(fn);
+    	},
+    	forEach: function(children, fn, ctx) {
+    		if (children == null) { return null; }
+    		children = Children.toArray(children);
+    		if (ctx && ctx !== children) { fn = fn.bind(ctx); }
+    		children.forEach(fn);
+    	},
+    	count: function(children) {
+    		return (children && children.length) || 0;
+    	},
+    	only: function(children) {
+    		children = Children.toArray(children);
+    		if (children.length !== 1) { throw new Error('Children.only() expects only one child.'); }
+    		return children[0];
+    	},
+    	toArray: function(children) {
+    		if (children == null) { return []; }
+    		return ARR.concat(children);
+    	}
+    };
+
+    /** Track current render() component for ref assignment */
+    var currentComponent;
+
+    function createFactory(type) {
+    	return createElement.bind(null, type);
+    }
+
+    var DOM = {};
+    for (var i = ELEMENTS.length; i--;) {
+    	DOM[ELEMENTS[i]] = createFactory(ELEMENTS[i]);
+    }
+
+    function upgradeToVNodes(arr, offset) {
+    	for (var i = offset || 0; i < arr.length; i++) {
+    		var obj = arr[i];
+    		if (Array.isArray(obj)) {
+    			upgradeToVNodes(obj);
+    		}
+    		else if (
+    			obj &&
+    			typeof obj === 'object' &&
+    			!isValidElement(obj) &&
+    			((obj.props && obj.type) || (obj.attributes && obj.nodeName) || obj.children)
+    		) {
+    			arr[i] = createElement(obj.type || obj.nodeName, obj.props || obj.attributes, obj.children);
+    		}
+    	}
+    }
+
+    function isStatelessComponent(c) {
+    	return typeof c === 'function' && !(c.prototype && c.prototype.render);
+    }
+
+    // wraps stateless functional components in a PropTypes validator
+    function wrapStatelessComponent(WrappedComponent) {
+    	return createClass({
+    		displayName: WrappedComponent.displayName || WrappedComponent.name,
+    		render: function() {
+    			return WrappedComponent(this.props, this.context);
+    		}
+    	});
+    }
+
+    function statelessComponentHook(Ctor) {
+    	var Wrapped = Ctor[COMPONENT_WRAPPER_KEY];
+    	if (Wrapped) { return Wrapped === true ? Ctor : Wrapped; }
+
+    	Wrapped = wrapStatelessComponent(Ctor);
+
+    	Object.defineProperty(Wrapped, COMPONENT_WRAPPER_KEY, { configurable: true, value: true });
+    	Wrapped.displayName = Ctor.displayName;
+    	Wrapped.propTypes = Ctor.propTypes;
+    	Wrapped.defaultProps = Ctor.defaultProps;
+
+    	Object.defineProperty(Ctor, COMPONENT_WRAPPER_KEY, { configurable: true, value: Wrapped });
+
+    	return Wrapped;
+    }
+
+    function createElement() {
+    	var args = [], len = arguments.length;
+    	while ( len-- ) args[ len ] = arguments[ len ];
+
+    	upgradeToVNodes(args, 2);
+    	return normalizeVNode(h.apply(void 0, args));
+    }
+
+    function normalizeVNode(vnode) {
+    	vnode.preactCompatNormalized = true;
+
+    	applyClassName(vnode);
+
+    	if (isStatelessComponent(vnode.nodeName)) {
+    		vnode.nodeName = statelessComponentHook(vnode.nodeName);
+    	}
+
+    	var ref = vnode.attributes.ref,
+    		type = ref && typeof ref;
+    	if (currentComponent && (type === 'string' || type === 'number')) {
+    		vnode.attributes.ref = createStringRefProxy(ref, currentComponent);
+    	}
+
+    	applyEventNormalization(vnode);
+
+    	return vnode;
+    }
+
+    function cloneElement$1(element, props) {
+    	var children = [], len = arguments.length - 2;
+    	while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
+
+    	if (!isValidElement(element)) { return element; }
+    	var elementProps = element.attributes || element.props;
+    	var node = h(
+    		element.nodeName || element.type,
+    		extend$1({}, elementProps),
+    		element.children || (elementProps && elementProps.children)
+    	);
+    	// Only provide the 3rd argument if needed.
+    	// Arguments 3+ overwrite element.children in preactCloneElement
+    	var cloneArgs = [node, props];
+    	if (children && children.length) {
+    		cloneArgs.push(children);
+    	}
+    	else if (props && props.children) {
+    		cloneArgs.push(props.children);
+    	}
+    	return normalizeVNode(cloneElement.apply(void 0, cloneArgs));
+    }
+
+    function isValidElement(element) {
+    	return element && (element instanceof VNode$1 || element.$$typeof === REACT_ELEMENT_TYPE);
+    }
+
+    function createStringRefProxy(name, component) {
+    	return (
+    		component._refProxies[name] ||
+    		(component._refProxies[name] = function (resolved) {
+    			if (component && component.refs) {
+    				component.refs[name] = resolved;
+    				if (resolved === null) {
+    					delete component._refProxies[name];
+    					component = null;
+    				}
+    			}
+    		})
+    	);
+    }
+
+    function applyEventNormalization(ref) {
+    	var nodeName = ref.nodeName;
+    	var attributes = ref.attributes;
+
+    	if (!attributes || typeof nodeName !== 'string') { return; }
+    	var props = {};
+    	for (var i in attributes) {
+    		props[i.toLowerCase()] = i;
+    	}
+    	if (props.ondoubleclick) {
+    		attributes.ondblclick = attributes[props.ondoubleclick];
+    		delete attributes[props.ondoubleclick];
+    	}
+    	// for *textual inputs* (incl textarea), normalize `onChange` -> `onInput`:
+    	if (
+    		props.onchange &&
+    		(nodeName === 'textarea' || (nodeName.toLowerCase() === 'input' && !/^fil|che|rad/i.test(attributes.type)))
+    	) {
+    		var normalized = props.oninput || 'oninput';
+    		if (!attributes[normalized]) {
+    			attributes[normalized] = multihook([attributes[normalized], attributes[props.onchange]]);
+    			delete attributes[props.onchange];
+    		}
+    	}
+    }
+
+    function applyClassName(vnode) {
+    	var a = vnode.attributes || (vnode.attributes = {});
+    	classNameDescriptor.enumerable = 'className' in a;
+    	if (a.className) { a.class = a.className; }
+    	Object.defineProperty(a, 'className', classNameDescriptor);
+    }
+
+    var classNameDescriptor = {
+    	configurable: true,
+    	get: function() {
+    		return this.class;
+    	},
+    	set: function(v) {
+    		this.class = v;
+    	}
+    };
+
+    function extend$1(base, props) {
+    	var arguments$1 = arguments;
+
+    	for (var i = 1, obj = (void 0); i < arguments.length; i++) {
+    		if ((obj = arguments$1[i])) {
+    			for (var key in obj) {
+    				if (obj.hasOwnProperty(key)) {
+    					base[key] = obj[key];
+    				}
+    			}
+    		}
+    	}
+    	return base;
+    }
+
+    function shallowDiffers(a, b) {
+    	for (var i in a) { if (!(i in b)) { return true; } }
+    	for (var i$1 in b) { if (a[i$1] !== b[i$1]) { return true; } }
+    	return false;
+    }
+
+    function findDOMNode(component) {
+    	return (component && (component.base || (component.nodeType === 1 && component))) || null;
+    }
+
+    function F() { }
+
+    function createClass(obj) {
+    	function cl(props, context) {
+    		bindAll(this);
+    		Component$1$1.call(this, props, context, BYPASS_HOOK);
+    		newComponentHook.call(this, props, context);
+    	}
+
+    	obj = extend$1({ constructor: cl }, obj);
+
+    	// We need to apply mixins here so that getDefaultProps is correctly mixed
+    	if (obj.mixins) {
+    		applyMixins(obj, collateMixins(obj.mixins));
+    	}
+    	if (obj.statics) {
+    		extend$1(cl, obj.statics);
+    	}
+    	if (obj.propTypes) {
+    		cl.propTypes = obj.propTypes;
+    	}
+    	if (obj.defaultProps) {
+    		cl.defaultProps = obj.defaultProps;
+    	}
+    	if (obj.getDefaultProps) {
+    		cl.defaultProps = obj.getDefaultProps.call(cl);
+    	}
+
+    	F.prototype = Component$1$1.prototype;
+    	cl.prototype = extend$1(new F(), obj);
+
+    	cl.displayName = obj.displayName || 'Component';
+
+    	return cl;
+    }
+
+    // Flatten an Array of mixins to a map of method name to mixin implementations
+    function collateMixins(mixins) {
+    	var keyed = {};
+    	for (var i = 0; i < mixins.length; i++) {
+    		var mixin = mixins[i];
+    		for (var key in mixin) {
+    			if (mixin.hasOwnProperty(key) && typeof mixin[key] === 'function') {
+    				(keyed[key] || (keyed[key] = [])).push(mixin[key]);
+    			}
+    		}
+    	}
+    	return keyed;
+    }
+
+    // apply a mapping of Arrays of mixin methods to a component prototype
+    function applyMixins(proto, mixins) {
+    	for (var key in mixins)
+    		{ if (mixins.hasOwnProperty(key)) {
+    			proto[key] = multihook(
+    				mixins[key].concat(proto[key] || ARR),
+    				key === 'getDefaultProps' || key === 'getInitialState' || key === 'getChildContext'
+    			);
+    		} }
+    }
+
+    function bindAll(ctx) {
+    	for (var i in ctx) {
+    		var v = ctx[i];
+    		if (typeof v === 'function' && !v.__bound && !AUTOBIND_BLACKLIST.hasOwnProperty(i)) {
+    			(ctx[i] = v.bind(ctx)).__bound = true;
+    		}
+    	}
+    }
+
+    function callMethod(ctx, m, args) {
+    	if (typeof m === 'string') {
+    		m = ctx.constructor.prototype[m];
+    	}
+    	if (typeof m === 'function') {
+    		return m.apply(ctx, args);
+    	}
+    }
+
+    function multihook(hooks, skipDuplicates) {
+    	return function () {
+    		var arguments$1 = arguments;
+    		var this$1 = this;
+
+    		var ret;
+    		for (var i = 0; i < hooks.length; i++) {
+    			var r = callMethod(this$1, hooks[i], arguments$1);
+
+    			if (skipDuplicates && r != null) {
+    				if (!ret) { ret = {}; }
+    				for (var key in r)
+    					{ if (r.hasOwnProperty(key)) {
+    						ret[key] = r[key];
+    					} }
+    			}
+    			else if (typeof r !== 'undefined') { ret = r; }
+    		}
+    		return ret;
+    	};
+    }
+
+    function newComponentHook(props, context) {
+    	propsHook.call(this, props, context);
+    	this.componentWillReceiveProps = multihook([
+    		propsHook,
+    		this.componentWillReceiveProps || 'componentWillReceiveProps'
+    	]);
+    	this.render = multihook([propsHook, beforeRender, this.render || 'render', afterRender]);
+    }
+
+    function propsHook(props, context) {
+    	if (!props) { return; }
+
+    	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
+    	var c = props.children;
+    	if (
+    		c &&
+    		Array.isArray(c) &&
+    		c.length === 1 &&
+    		(typeof c[0] === 'string' || typeof c[0] === 'function' || c[0] instanceof VNode$1)
+    	) {
+    		props.children = c[0];
+
+    		// but its totally still going to be an Array.
+    		if (props.children && typeof props.children === 'object') {
+    			props.children.length = 1;
+    			props.children[0] = props.children;
+    		}
+    	}
+
+    	// add proptype checking
+    	if (DEV) {
+    		var ctor = typeof this === 'function' ? this : this.constructor,
+    			propTypes = this.propTypes || ctor.propTypes;
+    		var displayName = this.displayName || ctor.name;
+    	}
+    }
+
+    function beforeRender(props) {
+    	currentComponent = this;
+    }
+
+    function afterRender() {
+    	if (currentComponent === this) {
+    		currentComponent = null;
+    	}
+    }
+
+    function Component$1$1(props, context, opts) {
+    	Component$1.call(this, props, context);
+    	this.state = this.getInitialState ? this.getInitialState() : {};
+    	this.refs = {};
+    	this._refProxies = {};
+    	if (opts !== BYPASS_HOOK) {
+    		newComponentHook.call(this, props, context);
+    	}
+    }
+    extend$1((Component$1$1.prototype = new Component$1()), {
+    	constructor: Component$1$1,
+
+    	isReactComponent: {},
+
+    	replaceState: function(state, callback) {
+    		var this$1 = this;
+
+    		this.setState(state, callback);
+    		for (var i in this$1.state) {
+    			if (!(i in state)) {
+    				delete this$1.state[i];
+    			}
+    		}
+    	},
+
+    	getDOMNode: function() {
+    		return this.base;
+    	},
+
+    	isMounted: function() {
+    		return !!this.base;
+    	}
+    });
+
+    function PureComponent(props, context) {
+    	Component$1$1.call(this, props, context);
+    }
+    F.prototype = Component$1$1.prototype;
+    PureComponent.prototype = new F();
+    PureComponent.prototype.isPureReactComponent = true;
+    PureComponent.prototype.shouldComponentUpdate = function (props, state) {
+    	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
+    };
+
+    function unstable_batchedUpdates(callback) {
+    	callback();
+    }
+
+    var index = {
+    	version: version,
+    	DOM: DOM,
+    	PropTypes: PropTypes,
+    	Children: Children,
+    	render: render$1,
+    	hydrate: render$1,
+    	createClass: createClass,
+    	createContext: createContext,
+    	createPortal: createPortal,
+    	createFactory: createFactory,
+    	createElement: createElement,
+    	cloneElement: cloneElement$1,
+    	createRef: createRef,
+    	isValidElement: isValidElement,
+    	findDOMNode: findDOMNode,
+    	unmountComponentAtNode: unmountComponentAtNode,
+    	Component: Component$1$1,
+    	PureComponent: PureComponent,
+    	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
+    	unstable_batchedUpdates: unstable_batchedUpdates,
+    	__spread: extend$1
+    };
+
+    /*
+    Copyright (c) 2017 NAVER Corp.
+    @egjs/agent project is licensed under the MIT license
+
+    @egjs/agent JavaScript library
+
+
+    @version 2.1.5
+    */
+    var win = typeof window !== "undefined" && window || {};
+    var RegExp$1 = win.RegExp;
+    var navigator = win.navigator;
+
+    var parseRules = {
+    	browser: [{
+    		criteria: "PhantomJS",
+    		identity: "PhantomJS"
+    	}, {
+    		criteria: /Whale/,
+    		identity: "Whale",
+    		versionSearch: "Whale"
+    	}, {
+    		criteria: /Edge/,
+    		identity: "Edge",
+    		versionSearch: "Edge"
+    	}, {
+    		criteria: /MSIE|Trident|Windows Phone/,
+    		identity: "IE",
+    		versionSearch: "IEMobile|MSIE|rv"
+    	}, {
+    		criteria: /MiuiBrowser/,
+    		identity: "MIUI Browser",
+    		versionSearch: "MiuiBrowser"
+    	}, {
+    		criteria: /SamsungBrowser/,
+    		identity: "Samsung Internet",
+    		versionSearch: "SamsungBrowser"
+    	}, {
+    		criteria: /SAMSUNG /,
+    		identity: "Samsung Internet",
+    		versionSearch: "Version"
+    	}, {
+    		criteria: /Chrome|CriOS/,
+    		identity: "Chrome"
+    	}, {
+    		criteria: /Android/,
+    		identity: "Android Browser",
+    		versionSearch: "Version"
+    	}, {
+    		criteria: /iPhone|iPad/,
+    		identity: "Safari",
+    		versionSearch: "Version"
+    	}, {
+    		criteria: "Apple",
+    		identity: "Safari",
+    		versionSearch: "Version"
+    	}, {
+    		criteria: "Firefox",
+    		identity: "Firefox"
+    	}],
+    	os: [{
+    		criteria: /Windows Phone/,
+    		identity: "Windows Phone",
+    		versionSearch: "Windows Phone"
+    	}, {
+    		criteria: "Windows 2000",
+    		identity: "Window",
+    		versionAlias: "5.0"
+    	}, {
+    		criteria: /Windows NT/,
+    		identity: "Window",
+    		versionSearch: "Windows NT"
+    	}, {
+    		criteria: /iPhone|iPad/,
+    		identity: "iOS",
+    		versionSearch: "iPhone OS|CPU OS"
+    	}, {
+    		criteria: "Mac",
+    		versionSearch: "OS X",
+    		identity: "MAC"
+    	}, {
+    		criteria: /Android/,
+    		identity: "Android"
+    	}, {
+    		criteria: /Tizen/,
+    		identity: "Tizen"
+    	}, {
+    		criteria: /Web0S/,
+    		identity: "WebOS"
+    	}],
+
+    	// Webview check condition
+    	// ios: If has no version information
+    	// Android 5.0 && chrome 40+: Presence of "; wv" in userAgent
+    	// Under android 5.0: Presence of "NAVER" or "Daum" in userAgent
+    	webview: [{
+    		criteria: /iPhone|iPad/,
+    		browserVersionSearch: "Version",
+    		webviewBrowserVersion: /-1/
+    	}, {
+    		criteria: /iPhone|iPad|Android/,
+    		webviewToken: /NAVER|DAUM|; wv/
+
+    	}],
+    	defaultString: {
+    		browser: {
+    			version: "-1",
+    			name: "unknown"
+    		},
+    		os: {
+    			version: "-1",
+    			name: "unknown"
+    		}
+    	}
+    };
+
+    function filter(arr, compare) {
+    	var result = [];
+
+    	for (var i = 0; i < arr.length; i++) {
+    		compare(arr[i]) && result.push(arr[i]);
+    	}
+    	return result;
+    }
+
+    function some(arr, compare) {
+    	for (var i = 0; i < arr.length; i++) {
+    		if (compare(arr[i])) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
+    var UA = void 0;
+
+    function setUa(ua) {
+    	UA = ua;
+    }
+
+    function isMatched(base, target) {
+    	return target && target.test ? !!target.test(base) : base.indexOf(target) > -1;
+    }
+
+    function getIdentityStringFromArray(rules, defaultStrings) {
+    	var matchedRule = filter(rules, function (rule) {
+    		return isMatched(UA, rule.criteria);
+    	})[0];
+
+    	return matchedRule && matchedRule.identity || defaultStrings.name;
+    }
+
+    function getRule(rules, targetIdentity) {
+    	return filter(rules, function (rule) {
+    		var criteria = rule.criteria;
+    		var identityMatched = new RegExp(rule.identity, "i").test(targetIdentity);
+
+    		if (criteria ? identityMatched && isMatched(UA, criteria) : identityMatched) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	})[0];
+    }
+
+    function getBrowserName() {
+    	return getIdentityStringFromArray(parseRules.browser, parseRules.defaultString.browser);
+    }
+
+    function getBrowserRule(browserName) {
+    	var rule = getRule(parseRules.browser, browserName);
+
+    	if (!rule) {
+    		rule = {
+    			criteria: browserName,
+    			versionSearch: browserName,
+    			identity: browserName
+    		};
+    	}
+
+    	return rule;
+    }
+
+    function extractBrowserVersion(versionToken, ua) {
+    	var browserVersion = parseRules.defaultString.browser.version;
+    	var versionRegexResult = new RegExp("(" + versionToken + ")", "i").exec(ua);
+
+    	if (!versionRegexResult) {
+    		return browserVersion;
+    	}
+
+    	var versionTokenIndex = versionRegexResult.index;
+    	var verTkn = versionRegexResult[0];
+
+    	if (versionTokenIndex > -1) {
+    		var versionIndex = versionTokenIndex + verTkn.length + 1;
+
+    		browserVersion = ua.substring(versionIndex).split(" ")[0].replace(/_/g, ".").replace(/;|\)/g, "");
+    	}
+    	return browserVersion;
+    }
+
+    function getBrowserVersion(browserName) {
+    	if (!browserName) {
+    		return undefined;
+    	}
+
+    	// console.log(browserRule);
+    	// const versionToken = browserRule ? browserRule.versionSearch : browserName;
+    	var browserRule = getBrowserRule(browserName);
+    	var versionToken = browserRule.versionSearch || browserName;
+    	var browserVersion = extractBrowserVersion(versionToken, UA);
+
+    	return browserVersion;
+    }
+
+    function isWebview() {
+    	var webviewRules = parseRules.webview;
+    	var browserVersion = void 0;
+
+    	return some(filter(webviewRules, function (rule) {
+    		return isMatched(UA, rule.criteria);
+    	}), function (rule) {
+    		browserVersion = extractBrowserVersion(rule.browserVersionSearch, UA);
+    		if (isMatched(UA, rule.webviewToken) || isMatched(browserVersion, rule.webviewBrowserVersion)) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	});
+    }
+
+    function getOSRule(osName) {
+    	return getRule(parseRules.os, osName);
+    }
+
+    function getOsName() {
+    	return getIdentityStringFromArray(parseRules.os, parseRules.defaultString.os);
+    }
+
+    function getOsVersion(osName) {
+    	var osRule = getOSRule(osName) || {};
+    	var defaultOSVersion = parseRules.defaultString.os.version;
+    	var osVersion = void 0;
+
+    	if (!osName) {
+    		return undefined;
+    	}
+    	if (osRule.versionAlias) {
+    		return osRule.versionAlias;
+    	}
+    	var osVersionToken = osRule.versionSearch || osName;
+    	var osVersionRegex = new RegExp("(" + osVersionToken + ")\\s([\\d_\\.]+|\\d_0)", "i");
+    	var osVersionRegexResult = osVersionRegex.exec(UA);
+
+    	if (osVersionRegexResult) {
+    		osVersion = osVersionRegex.exec(UA)[2].replace(/_/g, ".").replace(/;|\)/g, "");
+    	}
+    	return osVersion || defaultOSVersion;
+    }
+
+    function getOs() {
+    	var name = getOsName();
+    	var version = getOsVersion(name);
+
+    	return { name: name, version: version };
+    }
+
+    function getBrowser() {
+    	var name = getBrowserName();
+    	var version = getBrowserVersion(name);
+
+    	return { name: name, version: version, webview: isWebview() };
+    }
+
+    function getIsMobile() {
+    	return UA.indexOf("Mobi") !== -1;
+    }
+
+    /**
+     * Copyright (c) NAVER Corp.
+     * egjs-agent projects are licensed under the MIT license
+     */
+
+    /**
+     * @namespace eg.agent
+     */
+    /**
+     * Extracts browser and operating system information from the user agent string.
+     * @ko 유저 에이전트 문자열에서 브라우저와 운영체제 정보를 추출한다.
+     * @function eg.agent#agent
+     * @param {String} [userAgent=navigator.userAgent] user agent string to parse <ko>파싱할 유저에이전트 문자열</ko>
+     * @return {Object} agentInfo
+     * @return {Object} agentInfo.os os Operating system information <ko>운영체제 정보</ko>
+     * @return {String} agentInfo.os.name Operating system name (android, ios, window, mac, unknown) <ko>운영체제 이름 (android, ios, window, mac, unknown)</ko>
+     * @return {String} agentInfo.os.version Operating system version <ko>운영체제 버전</ko>
+     * @return {String} agentInfo.browser Browser information <ko>브라우저 정보</ko>
+     * @return {String} agentInfo.browser.name Browser name (safari, chrome, sbrowser, ie, firefox, unknown) <ko>브라우저 이름 (safari, chrome, sbrowser, ie, firefox, unknown)</ko>
+     * @return {String} agentInfo.browser.version Browser version <ko>브라우저 버전 </ko>
+     * @return {Boolean} agentInfo.browser.webview Indicates whether the browser is inapp<ko>웹뷰 브라우저 여부</ko>
+     * @return {Boolean} agentInfo.isMobile Indicates whether the browser is for mobile<ko>모바일 브라우저 여부</ko>
+     * @example
+    import agent from "@egjs/agent";
+
+    const {os, browser, isMobile} = agent();
+     */
+    function agent() {
+      var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : navigator.userAgent;
+
+      setUa(ua);
+
+      var agentInfo = {
+        os: getOs(),
+        browser: getBrowser(),
+        isMobile: getIsMobile()
+      };
+
+      agentInfo.browser.name = agentInfo.browser.name.toLowerCase();
+      agentInfo.os.name = agentInfo.os.name.toLowerCase();
+      agentInfo.os.version = agentInfo.os.version.toLowerCase();
+
+      if (agentInfo.os.name === "ios" && agentInfo.browser.webview) {
+        agentInfo.browser.version = "-1";
+      }
+
+      return agentInfo;
+    }
+    /**
+     * Version info string
+     * @ko 버전정보 문자열
+     * @name VERSION
+     * @static
+     * @type {String}
+     * @example
+     * eg.agent.VERSION;  // ex) 2.2.0
+     * @memberof eg.agent
+     */
+    agent.VERSION = "2.1.5";
+
+    /*
+    Copyright (c) 2018 Daybrush
+    @name: @daybrush/utils
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/utils
+    @version 0.10.0
+    */
+    /**
+    * @namespace
+    * @name Consts
+    */
+
+    /**
+    * get string "rgb"
+    * @memberof Color
+    * @example
+    import {RGB} from "@daybrush/utils";
+
+    console.log(RGB); // "rgb"
+    */
+    var RGB = "rgb";
+    /**
+    * get string "rgba"
+    * @memberof Color
+    * @example
+    import {RGBA} from "@daybrush/utils";
+
+    console.log(RGBA); // "rgba"
+    */
+
+    var RGBA = "rgba";
+    /**
+    * get string "hsl"
+    * @memberof Color
+    * @example
+    import {HSL} from "@daybrush/utils";
+
+    console.log(HSL); // "hsl"
+    */
+
+    var HSL = "hsl";
+    /**
+    * get string "hsla"
+    * @memberof Color
+    * @example
+    import {HSLA} from "@daybrush/utils";
+
+    console.log(HSLA); // "hsla"
+    */
+
+    var HSLA = "hsla";
+    /**
+    * gets an array of color models.
+    * @memberof Color
+    * @example
+    import {COLOR_MODELS} from "@daybrush/utils";
+
+    console.log(COLOR_MODELS); // ["rgb", "rgba", "hsl", "hsla"];
+    */
+
+    var COLOR_MODELS = [RGB, RGBA, HSL, HSLA];
+    /**
+    * get string "function"
+    * @memberof Consts
+    * @example
+    import {FUNCTION} from "@daybrush/utils";
+
+    console.log(FUNCTION); // "function"
+    */
+
+    var FUNCTION = "function";
+    /**
+    * get string "property"
+    * @memberof Consts
+    * @example
+    import {PROPERTY} from "@daybrush/utils";
+
+    console.log(PROPERTY); // "property"
+    */
+
+    var PROPERTY = "property";
+    /**
+    * get string "array"
+    * @memberof Consts
+    * @example
+    import {ARRAY} from "@daybrush/utils";
+
+    console.log(ARRAY); // "array"
+    */
+
+    var ARRAY = "array";
+    /**
+    * get string "object"
+    * @memberof Consts
+    * @example
+    import {OBJECT} from "@daybrush/utils";
+
+    console.log(OBJECT); // "object"
+    */
+
+    var OBJECT = "object";
+    /**
+    * get string "string"
+    * @memberof Consts
+    * @example
+    import {STRING} from "@daybrush/utils";
+
+    console.log(STRING); // "string"
+    */
+
+    var STRING = "string";
+    /**
+    * get string "number"
+    * @memberof Consts
+    * @example
+    import {NUMBER} from "@daybrush/utils";
+
+    console.log(NUMBER); // "number"
+    */
+
+    var NUMBER = "number";
+    /**
+    * get string "undefined"
+    * @memberof Consts
+    * @example
+    import {UNDEFINED} from "@daybrush/utils";
+
+    console.log(UNDEFINED); // "undefined"
+    */
+
+    var UNDEFINED = "undefined";
+    /**
+    * Check whether the environment is window or node.js.
+    * @memberof Consts
+    * @name document
+    * @example
+    import {IS_WINDOW} from "@daybrush/utils";
+
+    console.log(IS_WINDOW); // false in node.js
+    console.log(IS_WINDOW); // true in browser
+    */
+
+    var doc = typeof document !== UNDEFINED && document;
+    var prefixes = ["webkit", "ms", "moz", "o"];
+    /**
+     * @namespace CrossBrowser
+     */
+
+    /**
+    * Get a CSS property with a vendor prefix that supports cross browser.
+    * @function
+    * @param {string} property - A CSS property
+    * @return {string} CSS property with cross-browser vendor prefix
+    * @memberof CrossBrowser
+    * @example
+    import {getCrossBrowserProperty} from "@daybrush/utils";
+
+    console.log(getCrossBrowserProperty("transform")); // "transform", "-ms-transform", "-webkit-transform"
+    console.log(getCrossBrowserProperty("filter")); // "filter", "-webkit-filter"
+    */
+
+    var getCrossBrowserProperty =
+    /*#__PURE__*/
+    function (property) {
+      if (!doc) {
+        return "";
+      }
+
+      var styles = (doc.body || doc.documentElement).style;
+      var length = prefixes.length;
+
+      if (typeof styles[property] !== UNDEFINED) {
+        return property;
+      }
+
+      for (var i = 0; i < length; ++i) {
+        var name = "-" + prefixes[i] + "-" + property;
+
+        if (typeof styles[name] !== UNDEFINED) {
+          return name;
+        }
+      }
+
+      return "";
+    };
+    /**
+    * get string "transfrom" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {TRANSFORM} from "@daybrush/utils";
+
+    console.log(TRANSFORM); // "transform", "-ms-transform", "-webkit-transform"
+    */
+
+    var TRANSFORM =
+    /*#__PURE__*/
+    getCrossBrowserProperty("transform");
+    /**
+    * get string "filter" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {FILTER} from "@daybrush/utils";
+
+    console.log(FILTER); // "filter", "-ms-filter", "-webkit-filter"
+    */
+
+    var FILTER =
+    /*#__PURE__*/
+    getCrossBrowserProperty("filter");
+    /**
+    * get string "animation" with the vendor prefix.
+    * @memberof CrossBrowser
+    * @example
+    import {ANIMATION} from "@daybrush/utils";
+
+    console.log(ANIMATION); // "animation", "-ms-animation", "-webkit-animation"
+    */
+
+    var ANIMATION =
+    /*#__PURE__*/
+    getCrossBrowserProperty("animation");
+
+    /**
+    * @namespace
+    * @name Utils
+    */
+
+    /**
+     * Returns the inner product of two numbers(`a1`, `a2`) by two criteria(`b1`, `b2`).
+     * @memberof Utils
+     * @param - The first number
+     * @param - The second number
+     * @param - The first number to base on the inner product
+     * @param - The second number to base on the inner product
+     * @return - Returns the inner product
+    import { dot } from "@daybrush/utils";
+
+    console.log(dot(0, 15, 2, 3)); // 6
+    console.log(dot(5, 15, 2, 3)); // 9
+    console.log(dot(5, 15, 1, 1)); // 10
+     */
+
+    function dot(a1, a2, b1, b2) {
+      return (a1 * b2 + a2 * b1) / (b1 + b2);
+    }
+    /**
+    * Check the type that the value is undefined.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {boolean} true if the type is correct, false otherwise
+    * @example
+    import {isUndefined} from "@daybrush/utils";
+
+    console.log(isUndefined(undefined)); // true
+    console.log(isUndefined("")); // false
+    console.log(isUndefined(1)); // false
+    console.log(isUndefined(null)); // false
+    */
+
+    function isUndefined$1(value) {
+      return typeof value === UNDEFINED;
+    }
+    /**
+    * Check the type that the value is object.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isObject} from "@daybrush/utils";
+
+    console.log(isObject({})); // true
+    console.log(isObject(undefined)); // false
+    console.log(isObject("")); // false
+    console.log(isObject(null)); // false
+    */
+
+    function isObject(value) {
+      return value && typeof value === OBJECT;
+    }
+    /**
+    * Check the type that the value is isArray.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isArray} from "@daybrush/utils";
+
+    console.log(isArray([])); // true
+    console.log(isArray({})); // false
+    console.log(isArray(undefined)); // false
+    console.log(isArray(null)); // false
+    */
+
+    function isArray(value) {
+      return Array.isArray(value);
+    }
+    /**
+    * Check the type that the value is string.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isString} from "@daybrush/utils";
+
+    console.log(isString("1234")); // true
+    console.log(isString(undefined)); // false
+    console.log(isString(1)); // false
+    console.log(isString(null)); // false
+    */
+
+    function isString(value) {
+      return typeof value === STRING;
+    }
+    /**
+    * divide text by space.
+    * @memberof Utils
+    * @param {string} text - text to divide
+    * @return {Array} divided texts
+    * @example
+    import {spliceSpace} from "@daybrush/utils";
+
+    console.log(splitSpace("a b c d e f g"));
+    // ["a", "b", "c", "d", "e", "f", "g"]
+    console.log(splitSpace("'a,b' c 'd,e' f g"));
+    // ["'a,b'", "c", "'d,e'", "f", "g"]
+    */
+
+    function splitSpace(text) {
+      // divide comma(,)
+      var matches = text.match(/("[^"]*")|('[^']*')|([^\s()]*(?:\((?:[^()]*|\([^()]*\))*\))[^\s()]*)|\S+/g);
+      return matches || [];
+    }
+    /**
+    * divide text by comma.
+    * @memberof Utils
+    * @param {string} text - text to divide
+    * @return {Array} divided texts
+    * @example
+    import {splitComma} from "@daybrush/utils";
+
+    console.log(splitComma("a,b,c,d,e,f,g"));
+    // ["a", "b", "c", "d", "e", "f", "g"]
+    console.log(splitComma("'a,b',c,'d,e',f,g"));
+    // ["'a,b'", "c", "'d,e'", "f", "g"]
+    */
+
+    function splitComma(text) {
+      // divide comma(,)
+      // "[^"]*"|'[^']*'
+      var matches = text.match(/("[^"]*"|'[^']*'|[^,\s()]*\((?:[^()]*|\([^()]*\))*\)[^,\s()]*|[^,])+/g);
+      return matches ? matches.map(function (str) {
+        return str.trim();
+      }) : [];
+    }
+    /**
+    * divide text by bracket "(", ")".
+    * @memberof Utils
+    * @param {string} text - text to divide
+    * @return {object} divided texts
+    * @example
+    import {splitBracket} from "@daybrush/utils";
+
+    console.log(splitBracket("a(1, 2)"));
+    // {prefix: "a", value: "1, 2", suffix: ""}
+    console.log(splitBracket("a(1, 2)b"));
+    // {prefix: "a", value: "1, 2", suffix: "b"}
+    */
+
+    function splitBracket(text) {
+      var matches = /([^(]*)\(([\s\S]*)\)([\s\S]*)/g.exec(text);
+
+      if (!matches || matches.length < 4) {
+        return {};
+      } else {
+        return {
+          prefix: matches[1],
+          value: matches[2],
+          suffix: matches[3]
+        };
+      }
+    }
+    /**
+    * divide text by number and unit.
+    * @memberof Utils
+    * @param {string} text - text to divide
+    * @return {} divided texts
+    * @example
+    import {splitUnit} from "@daybrush/utils";
+
+    console.log(splitUnit("10px"));
+    // {prefix: "", value: 10, unit: "px"}
+    console.log(splitUnit("-10px"));
+    // {prefix: "", value: -10, unit: "px"}
+    console.log(splitUnit("a10%"));
+    // {prefix: "a", value: 10, unit: "%"}
+    */
+
+    function splitUnit(text) {
+      var matches = /^([^\d|e|\-|\+]*)((?:\d|\.|-|e-|e\+)+)(\S*)$/g.exec(text);
+
+      if (!matches) {
+        return {
+          prefix: "",
+          unit: "",
+          value: NaN
+        };
+      }
+
+      var prefix = matches[1];
+      var value = matches[2];
+      var unit = matches[3];
+      return {
+        prefix: prefix,
+        unit: unit,
+        value: parseFloat(value)
+      };
+    }
+    /**
+    * transform strings to camel-case
+    * @memberof Utils
+    * @param {String} text - string
+    * @return {String} camel-case string
+    * @example
+    import {camelize} from "@daybrush/utils";
+
+    console.log(camelize("transform-origin")); // transformOrigin
+    console.log(camelize("abcd_efg")); // abcdEfg
+    console.log(camelize("abcd efg")); // abcdEfg
+    */
+
+    function camelize(str) {
+      return str.replace(/[\s-_]([a-z])/g, function (all, letter) {
+        return letter.toUpperCase();
+      });
+    }
+
+    /**
+    * @namespace
+    * @name Color
+    */
+
+    /**
+    * Remove the # from the hex color.
+    * @memberof Color
+    * @param {} hex - hex color
+    * @return {} hex color
+    * @example
+    import {cutHex} from "@daybrush/utils";
+
+    console.log(cutHex("#000000")) // "000000"
+    */
+
+    function cutHex(hex) {
+      return hex.replace("#", "");
+    }
+    /**
+    * convert hex color to rgb color.
+    * @memberof Color
+    * @param {} hex - hex color
+    * @return {} rgb color
+    * @example
+    import {hexToRGBA} from "@daybrush/utils";
+
+    console.log(hexToRGBA("#00000005"));
+    // [0, 0, 0, 1]
+    console.log(hexToRGBA("#201045"));
+    // [32, 16, 69, 1]
+    */
+
+    function hexToRGBA(hex) {
+      var h = cutHex(hex);
+      var r = parseInt(h.substring(0, 2), 16);
+      var g = parseInt(h.substring(2, 4), 16);
+      var b = parseInt(h.substring(4, 6), 16);
+      var a = parseInt(h.substring(6, 8), 16) / 255;
+
+      if (isNaN(a)) {
+        a = 1;
+      }
+
+      return [r, g, b, a];
+    }
+    /**
+    * convert 3(or 4)-digit hex color to 6(or 8)-digit hex color.
+    * @memberof Color
+    * @param {} hex - 3(or 4)-digit hex color
+    * @return {} 6(or 8)-digit hex color
+    * @example
+    import {toFullHex} from "@daybrush/utils";
+
+    console.log(toFullHex("#123")); // "#112233"
+    console.log(toFullHex("#123a")); // "#112233aa"
+    */
+
+    function toFullHex(h) {
+      var r = h.charAt(1);
+      var g = h.charAt(2);
+      var b = h.charAt(3);
+      var a = h.charAt(4);
+      var arr = ["#", r, r, g, g, b, b, a, a];
+      return arr.join("");
+    }
+    /**
+    * convert hsl color to rgba color.
+    * @memberof Color
+    * @param {} hsl - hsl color(hue: 0 ~ 360, saturation: 0 ~ 1, lightness: 0 ~ 1, alpha: 0 ~ 1)
+    * @return {} rgba color
+    * @example
+    import {hslToRGBA} from "@daybrush/utils";
+
+    console.log(hslToRGBA([150, 0.5, 0.4]));
+    // [51, 153, 102, 1]
+    */
+
+    function hslToRGBA(hsl) {
+      var h = hsl[0];
+      var s = hsl[1];
+      var l = hsl[2];
+
+      if (h < 0) {
+        h += Math.floor((Math.abs(h) + 360) / 360) * 360;
+      }
+
+      h %= 360;
+      var c = (1 - Math.abs(2 * l - 1)) * s;
+      var x = c * (1 - Math.abs(h / 60 % 2 - 1));
+      var m = l - c / 2;
+      var rgb;
+
+      if (h < 60) {
+        rgb = [c, x, 0];
+      } else if (h < 120) {
+        rgb = [x, c, 0];
+      } else if (h < 180) {
+        rgb = [0, c, x];
+      } else if (h < 240) {
+        rgb = [0, x, c];
+      } else if (h < 300) {
+        rgb = [x, 0, c];
+      } else if (h < 360) {
+        rgb = [c, 0, x];
+      }
+
+      var result = [Math.round((rgb[0] + m) * 255), Math.round((rgb[1] + m) * 255), Math.round((rgb[2] + m) * 255), hsl.length > 3 ? hsl[3] : 1];
+      return result;
+    }
+    /**
+    * convert string to rgba color.
+    * @memberof Color
+    * @param {} - 3-hex(#000), 4-hex(#0000) 6-hex(#000000), 8-hex(#00000000) or RGB(A), or HSL(A)
+    * @return {} rgba color
+    * @example
+    import {stringToRGBA} from "@daybrush/utils";
+
+    console.log(stringToRGBA("#000000")); // [0, 0, 0, 1]
+    console.log(stringToRGBA("rgb(100, 100, 100)")); // [100, 100, 100, 1]
+    console.log(stringToRGBA("hsl(150, 0.5, 0.4)")); // [51, 153, 102, 1]
+    */
+
+    function stringToRGBA(color) {
+      if (color.charAt(0) === "#") {
+        if (color.length === 4 || color.length === 5) {
+          return hexToRGBA(toFullHex(color));
+        } else {
+          return hexToRGBA(color);
+        }
+      } else if (color.indexOf("(") !== -1) {
+        // in bracket.
+        var _a = splitBracket(color),
+            prefix = _a.prefix,
+            value = _a.value;
+
+        if (!prefix || !value) {
+          return;
+        }
+
+        var arr = splitComma(value);
+        var colorArr = [];
+        var length = arr.length;
+
+        switch (prefix) {
+          case RGB:
+          case RGBA:
+            for (var i = 0; i < length; ++i) {
+              colorArr[i] = parseFloat(arr[i]);
+            }
+
+            return colorArr;
+
+          case HSL:
+          case HSLA:
+            for (var i = 0; i < length; ++i) {
+              if (arr[i].indexOf("%") !== -1) {
+                colorArr[i] = parseFloat(arr[i]) / 100;
+              } else {
+                colorArr[i] = parseFloat(arr[i]);
+              }
+            } // hsl, hsla to rgba
+
+
+            return hslToRGBA(colorArr);
+        }
+      }
+
+      return;
+    }
+    /**
+    * Checks if the specified class value exists in the element's class attribute.
+    * @memberof DOM
+    * @param element - target
+    * @param className - the class name to search
+    * @return {boolean} return false if the class is not found.
+    * @example
+    import {hasClass} from "@daybrush/utils";
+
+    console.log(hasClass(element, "start")); // true or false
+    */
+
+    function hasClass(element, className) {
+      if (element.classList) {
+        return element.classList.contains(className);
+      }
+
+      return !!element.className.match(new RegExp("(\\s|^)" + className + "(\\s|$)"));
+    }
+    /**
+    * Sets up a function that will be called whenever the specified event is delivered to the target
+    * @memberof DOM
+    * @param - event target
+    * @param - A case-sensitive string representing the event type to listen for.
+    * @param - The object which receives a notification (an object that implements the Event interface) when an event of the specified type occurs
+    * @param - An options object that specifies characteristics about the event listener. The available options are:
+    * @example
+    import {addEvent} from "@daybrush/utils";
+
+    addEvent(el, "click", e => {
+      console.log(e);
+    });
+    */
+
+    function addEvent(el, type, listener, options) {
+      el.addEventListener(type, listener, options);
+    }
+    /**
+    * removes from the EventTarget an event listener previously registered with EventTarget.addEventListener()
+    * @memberof DOM
+    * @param - event target
+    * @param - A case-sensitive string representing the event type to listen for.
+    * @param - The EventListener function of the event handler to remove from the event target.
+    * @example
+    import {addEvent, removeEvent} from "@daybrush/utils";
+    const listener = e => {
+      console.log(e);
+    };
+    addEvent(el, "click", listener);
+    removeEvent(el, "click", listener);
+    */
+
+    function removeEvent(el, type, listener) {
+      el.removeEventListener(type, listener);
+    }
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: preact-css-styler
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/css-styler/tree/master/preact-css-styler
+    version: 0.4.1
+    */
+
+    /*
+    Copyright (c) 2018 Daybrush
+    @name: @daybrush/utils
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/utils
+    @version 0.10.0
+    */
+    /**
+    * divide text by comma.
+    * @memberof Utils
+    * @param {string} text - text to divide
+    * @return {Array} divided texts
+    * @example
+    import {splitComma} from "@daybrush/utils";
+
+    console.log(splitComma("a,b,c,d,e,f,g"));
+    // ["a", "b", "c", "d", "e", "f", "g"]
+    console.log(splitComma("'a,b',c,'d,e',f,g"));
+    // ["'a,b'", "c", "'d,e'", "f", "g"]
+    */
+
+    function splitComma$1(text) {
+      // divide comma(,)
+      // "[^"]*"|'[^']*'
+      var matches = text.match(/("[^"]*"|'[^']*'|[^,\s()]*\((?:[^()]*|\([^()]*\))*\)[^,\s()]*|[^,])+/g);
+      return matches ? matches.map(function (str) {
+        return str.trim();
+      }) : [];
+    }
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: react-css-styler
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/css-styler/tree/master/react-css-styler
+    version: 0.4.0
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    /* global Reflect, Promise */
+    var extendStatics$1 = function (d, b) {
+      extendStatics$1 = Object.setPrototypeOf || {
+        __proto__: []
+      } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+      } || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      };
+
+      return extendStatics$1(d, b);
+    };
+
+    function __extends$2(d, b) {
+      extendStatics$1(d, b);
+
+      function __() {
+        this.constructor = d;
+      }
+
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+    var __assign$1 = function () {
+      __assign$1 = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+
+        return t;
+      };
+
+      return __assign$1.apply(this, arguments);
+    };
+    function __rest(s, e) {
+      var t = {};
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+
+      if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+      }
+      return t;
+    }
+
+    function hash(str) {
+      var hash = 5381,
+          i    = str.length;
+
+      while(i) {
+        hash = (hash * 33) ^ str.charCodeAt(--i);
+      }
+
+      /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
+       * integers. Since we want the results to be always positive, convert the
+       * signed int to an unsigned by doing an unsigned bitshift. */
+      return hash >>> 0;
+    }
+
+    var stringHash = hash;
+
+    function getHash(str) {
+      return stringHash(str).toString(36);
+    }
+    function injectStyle(className, css) {
+      var style = document.createElement("style");
+      style.setAttribute("type", "text/css");
+      style.innerHTML = css.replace(/([^}{]*){/mg, function (all, selector) {
+        return splitComma$1(selector).map(function (subSelector) {
+          if (subSelector.indexOf(":global") > -1) {
+            return subSelector.replace(/\:global/g, "");
+          } else if (subSelector.indexOf(":host") > -1) {
+            return "" + subSelector.replace(/\:host/g, "." + className);
+          }
+
+          return "." + className + " " + subSelector;
+        }).join(", ") + "{";
+      });
+      (document.head || document.body).appendChild(style);
+      return style;
+    }
+
+    function styled(Tag, css) {
+      var injectClassName = "rCS" + getHash(css);
+      var injectCount = 0;
+      var injectElement;
+      return (
+        /*#__PURE__*/
+        function (_super) {
+          __extends$2(Styler, _super);
+
+          function Styler(props) {
+            return _super.call(this, props) || this;
+          }
+
+          Styler.prototype.render = function () {
+            var _a = this.props,
+                className = _a.className,
+                attributes = __rest(_a, ["className"]);
+
+            return createElement(Tag, __assign$1({
+              className: className + " " + injectClassName
+            }, attributes));
+          };
+
+          Styler.prototype.componentDidMount = function () {
+            if (injectCount === 0) {
+              injectElement = injectStyle(injectClassName, css);
+            }
+
+            ++injectCount;
+          };
+
+          Styler.prototype.componentWillUnmount = function () {
+            --injectCount;
+
+            if (injectCount === 0 && injectElement) {
+              injectElement.parentNode.removeChild(injectElement);
+            }
+          };
+
+          Styler.prototype.getElement = function () {
+            return this.element || (this.element = findDOMNode(this));
+          };
+
+          return Styler;
+        }(Component$1$1)
+      );
+    }
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: @daybrush/drag
+    license: MIT
+    author: Daybrush
+    repository: git+https://github.com/daybrush/drag.git
+    version: 0.8.1
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+    var __assign$2 = function () {
+      __assign$2 = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+
+        return t;
+      };
+
+      return __assign$2.apply(this, arguments);
+    };
+
+    function getPinchDragPosition(clients, prevClients, startClients) {
+      var nowCenter = getAverageClient(clients);
+      var prevCenter = getAverageClient(prevClients);
+      var startCenter = getAverageClient(startClients);
+      var pinchClient = getAddClient(startClients[0], getMinusClient(nowCenter, startCenter));
+      var pinchPrevClient = getAddClient(startClients[0], getMinusClient(prevCenter, startCenter));
+      return getPosition(pinchClient, pinchPrevClient, startClients[0]);
+    }
+    function isMultiTouch(e) {
+      return e.touches && e.touches.length >= 2;
+    }
+    function getPositionEvent(e) {
+      if (e.touches) {
+        return getClients(e.touches);
+      } else {
+        return [getClient(e)];
+      }
+    }
+    function getPosition(client, prevClient, startClient) {
+      var clientX = client.clientX,
+          clientY = client.clientY;
+      var prevX = prevClient.clientX,
+          prevY = prevClient.clientY;
+      var startX = startClient.clientX,
+          startY = startClient.clientY;
+      var deltaX = clientX - prevX;
+      var deltaY = clientY - prevY;
+      var distX = clientX - startX;
+      var distY = clientY - startY;
+      return {
+        clientX: clientX,
+        clientY: clientY,
+        deltaX: deltaX,
+        deltaY: deltaY,
+        distX: distX,
+        distY: distY
+      };
+    }
+    function getDist(clients) {
+      return Math.sqrt(Math.pow(clients[0].clientX - clients[1].clientX, 2) + Math.pow(clients[0].clientY - clients[1].clientY, 2));
+    }
+    function getPositions(clients, prevClients, startClients) {
+      return clients.map(function (client, i) {
+        return getPosition(client, prevClients[i], startClients[i]);
+      });
+    }
+    function getClients(touches) {
+      var length = Math.min(touches.length, 2);
+      var clients = [];
+
+      for (var i = 0; i < length; ++i) {
+        clients.push(getClient(touches[i]));
+      }
+
+      return clients;
+    }
+    function getClient(e) {
+      return {
+        clientX: e.clientX,
+        clientY: e.clientY
+      };
+    }
+    function getAverageClient(clients) {
+      return {
+        clientX: (clients[0].clientX + clients[1].clientX) / 2,
+        clientY: (clients[0].clientY + clients[1].clientY) / 2
+      };
+    }
+    function getAddClient(client1, client2) {
+      return {
+        clientX: client1.clientX + client2.clientX,
+        clientY: client1.clientY + client2.clientY
+      };
+    }
+    function getMinusClient(client1, client2) {
+      return {
+        clientX: client1.clientX - client2.clientX,
+        clientY: client1.clientY - client2.clientY
+      };
+    }
+
+    var Dragger =
+    /*#__PURE__*/
+    function () {
+      function Dragger(el, options) {
+        var _this = this;
+
+        if (options === void 0) {
+          options = {};
+        }
+
+        this.el = el;
+        this.options = {};
+        this.flag = false;
+        this.pinchFlag = false;
+        this.datas = {};
+        this.isDrag = false;
+        this.isPinch = false;
+        this.isMouse = false;
+        this.isTouch = false;
+        this.prevClients = [];
+        this.startClients = [];
+
+        this.onDragStart = function (e) {
+          if (!_this.isDrag && isMultiTouch(e) && !_this.pinchFlag) {
+            _this.onPinchStart(e);
+          }
+
+          if (_this.flag) {
+            return;
+          }
+
+          var clients = _this.startClients[0] ? _this.startClients : getPositionEvent(e);
+          _this.flag = true;
+          _this.isDrag = false;
+          _this.startClients = clients;
+          _this.prevClients = clients;
+          _this.datas = {};
+          var position = getPosition(clients[0], _this.prevClients[0], _this.startClients[0]);
+          var _a = _this.options,
+              dragstart = _a.dragstart,
+              preventRightClick = _a.preventRightClick;
+
+          if (preventRightClick && e.which === 3 || (dragstart && dragstart(__assign$2({
+            datas: _this.datas,
+            inputEvent: e
+          }, position))) === false) {
+            _this.flag = false;
+          }
+
+          _this.flag && e.preventDefault();
+        };
+
+        this.onDrag = function (e) {
+          if (!_this.flag) {
+            return;
+          }
+
+          var clients = getPositionEvent(e);
+
+          if (_this.pinchFlag) {
+            _this.onPinch(e, clients);
+          }
+
+          var prevClients = _this.prevClients;
+          var startClients = _this.startClients;
+          var position = _this.pinchFlag ? getPinchDragPosition(clients, prevClients, startClients) : getPosition(clients[0], prevClients[0], startClients[0]);
+
+          if (!position.deltaX && !position.deltaY) {
+            return;
+          }
+
+          _this.isDrag = true;
+          var drag = _this.options.drag;
+          drag && drag(__assign$2({
+            datas: _this.datas
+          }, position, {
+            inputEvent: e
+          }));
+          _this.prevClients = clients;
+        };
+
+        this.onDragEnd = function (e) {
+          if (!_this.flag) {
+            return;
+          }
+
+          if (_this.pinchFlag) {
+            _this.onPinchEnd(e);
+          }
+
+          _this.flag = false;
+          var dragend = _this.options.dragend;
+          var prevClients = _this.prevClients;
+          var startClients = _this.startClients;
+          var position = _this.pinchFlag ? getPinchDragPosition(prevClients, prevClients, startClients) : getPosition(prevClients[0], prevClients[0], startClients[0]);
+          _this.startClients = [];
+          _this.prevClients = [];
+          dragend && dragend(__assign$2({
+            datas: _this.datas,
+            isDrag: _this.isDrag,
+            inputEvent: e
+          }, position));
+        };
+
+        this.options = __assign$2({
+          container: el,
+          preventRightClick: true,
+          events: ["touch", "mouse"]
+        }, options);
+        var _a = this.options,
+            container = _a.container,
+            events = _a.events;
+        this.isTouch = events.indexOf("touch") > -1;
+        this.isMouse = events.indexOf("mouse") > -1;
+
+        if (this.isMouse) {
+          addEvent(el, "mousedown", this.onDragStart);
+          addEvent(container, "mousemove", this.onDrag);
+          addEvent(container, "mouseup", this.onDragEnd);
+        }
+
+        if (this.isTouch) {
+          addEvent(el, "touchstart", this.onDragStart);
+          addEvent(container, "touchmove", this.onDrag);
+          addEvent(container, "touchend", this.onDragEnd);
+        }
+      }
+
+      var __proto = Dragger.prototype;
+
+      __proto.isDragging = function () {
+        return this.isDrag;
+      };
+
+      __proto.isPinching = function () {
+        return this.isPinch;
+      };
+
+      __proto.onPinchStart = function (e) {
+        var _a, _b;
+
+        if (!this.flag) {
+          return;
+        }
+
+        this.pinchFlag = true;
+        var pinchstart = this.options.pinchstart;
+        var pinchClients = getClients(e.changedTouches);
+
+        (_a = this.startClients).push.apply(_a, pinchClients);
+
+        (_b = this.prevClients).push.apply(_b, pinchClients);
+
+        if (!pinchstart) {
+          return;
+        }
+
+        var startClients = this.startClients;
+        var startAverageClient = getAverageClient(startClients);
+        var centerPosition = getPosition(startAverageClient, startAverageClient, startAverageClient);
+        pinchstart(__assign$2({
+          datas: this.datas,
+          touches: getPositions(startClients, startClients, startClients)
+        }, centerPosition, {
+          inputEvent: e
+        }));
+      };
+
+      __proto.onPinch = function (e, clients) {
+        if (!this.flag || !this.pinchFlag) {
+          return;
+        }
+
+        this.isPinch = true;
+        var pinch = this.options.pinch;
+
+        if (!pinch) {
+          return;
+        }
+
+        var prevClients = this.prevClients;
+        var startClients = this.startClients;
+        var centerPosition = getPosition(getAverageClient(clients), getAverageClient(prevClients), getAverageClient(startClients));
+        var distance = getDist(clients);
+        var startDistance = getDist(startClients);
+        pinch(__assign$2({
+          datas: this.datas,
+          touches: getPositions(clients, prevClients, startClients),
+          scale: distance / startDistance,
+          distance: distance
+        }, centerPosition, {
+          inputEvent: e
+        }));
+      };
+
+      __proto.onPinchEnd = function (e) {
+        if (!this.flag || !this.pinchFlag) {
+          return;
+        }
+
+        var isPinch = this.isPinch;
+        this.isPinch = false;
+        this.pinchFlag = false;
+        var pinchend = this.options.pinchend;
+
+        if (!pinchend) {
+          return;
+        }
+
+        var prevClients = this.prevClients;
+        var startClients = this.startClients;
+        var centerPosition = getPosition(getAverageClient(prevClients), getAverageClient(prevClients), getAverageClient(startClients));
+        pinchend(__assign$2({
+          datas: this.datas,
+          isPinch: isPinch,
+          touches: getPositions(prevClients, prevClients, startClients)
+        }, centerPosition, {
+          inputEvent: e
+        }));
+        this.isPinch = false;
+        this.pinchFlag = false;
+      };
+
+      __proto.unset = function () {
+        var el = this.el;
+        var container = this.options.container;
+
+        if (this.isMouse) {
+          removeEvent(el, "mousedown", this.onDragStart);
+          removeEvent(container, "mousemove", this.onDrag);
+          removeEvent(container, "mouseup", this.onDragEnd);
+        }
+
+        if (this.isTouch) {
+          removeEvent(el, "touchstart", this.onDragStart);
+          removeEvent(container, "touchmove", this.onDrag);
+          removeEvent(container, "touchend", this.onDragEnd);
+        }
+      };
+
+      return Dragger;
+    }();
+
+    /*
+    Copyright (c) 2019-present NAVER Corp.
+    name: @egjs/list-differ
+    license: MIT
+    author: NAVER Corp.
+    repository: https://github.com/naver/egjs-list-differ
+    version: 1.0.0
+    */
+    /*
+    egjs-list-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    var PolyMap =
+    /*#__PURE__*/
+    function () {
+      function PolyMap() {
+        this.keys = [];
+        this.values = [];
+      }
+
+      var __proto = PolyMap.prototype;
+
+      __proto.get = function (key) {
+        return this.values[this.keys.indexOf(key)];
+      };
+
+      __proto.set = function (key, value) {
+        var keys = this.keys;
+        var values = this.values;
+        var prevIndex = keys.indexOf(key);
+        var index = prevIndex === -1 ? keys.length : prevIndex;
+        keys[index] = key;
+        values[index] = value;
+      };
+
+      return PolyMap;
+    }();
+
+    /*
+    egjs-list-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    var HashMap =
+    /*#__PURE__*/
+    function () {
+      function HashMap() {
+        this.object = {};
+      }
+
+      var __proto = HashMap.prototype;
+
+      __proto.get = function (key) {
+        return this.object[key];
+      };
+
+      __proto.set = function (key, value) {
+        this.object[key] = value;
+      };
+
+      return HashMap;
+    }();
+
+    /*
+    egjs-list-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    var SUPPORT_MAP = typeof Map === "function";
+
+    /*
+    egjs-list-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    var Link =
+    /*#__PURE__*/
+    function () {
+      function Link() {}
+
+      var __proto = Link.prototype;
+
+      __proto.connect = function (prevLink, nextLink) {
+        this.prev = prevLink;
+        this.next = nextLink;
+        prevLink && (prevLink.next = this);
+        nextLink && (nextLink.prev = this);
+      };
+
+      __proto.disconnect = function () {
+        // In double linked list, diconnect the interconnected relationship.
+        var prevLink = this.prev;
+        var nextLink = this.next;
+        prevLink && (prevLink.next = nextLink);
+        nextLink && (nextLink.prev = prevLink);
+      };
+
+      __proto.getIndex = function () {
+        var link = this;
+        var index = -1;
+
+        while (link) {
+          link = link.prev;
+          ++index;
+        }
+
+        return index;
+      };
+
+      return Link;
+    }();
+
+    /*
+    egjs-list-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+
+    function orderChanged(changed, fixed) {
+      // It is roughly in the order of these examples.
+      // 4, 6, 0, 2, 1, 3, 5, 7
+      var fromLinks = []; // 0, 1, 2, 3, 4, 5, 6, 7
+
+      var toLinks = [];
+      changed.forEach(function (_a) {
+        var from = _a[0],
+            to = _a[1];
+        var link = new Link();
+        fromLinks[from] = link;
+        toLinks[to] = link;
+      }); // `fromLinks` are connected to each other by double linked list.
+
+      fromLinks.forEach(function (link, i) {
+        link.connect(fromLinks[i - 1]);
+      });
+      return changed.filter(function (_, i) {
+        return !fixed[i];
+      }).map(function (_a, i) {
+        var from = _a[0],
+            to = _a[1];
+
+        if (from === to) {
+          return [0, 0];
+        }
+
+        var fromLink = fromLinks[from];
+        var toLink = toLinks[to - 1];
+        var fromIndex = fromLink.getIndex(); // Disconnect the link connected to `fromLink`.
+
+        fromLink.disconnect(); // Connect `fromLink` to the right of `toLink`.
+
+        if (!toLink) {
+          fromLink.connect(undefined, fromLinks[0]);
+        } else {
+          fromLink.connect(toLink, toLink.next);
+        }
+
+        var toIndex = fromLink.getIndex();
+        return [fromIndex, toIndex];
+      });
+    }
+
+    var Result =
+    /*#__PURE__*/
+    function () {
+      function Result(prevList, list, added, removed, changed, maintained, changedBeforeAdded, fixed) {
+        this.prevList = prevList;
+        this.list = list;
+        this.added = added;
+        this.removed = removed;
+        this.changed = changed;
+        this.maintained = maintained;
+        this.changedBeforeAdded = changedBeforeAdded;
+        this.fixed = fixed;
+      }
+
+      var __proto = Result.prototype;
+      Object.defineProperty(__proto, "ordered", {
+        get: function () {
+          if (!this.cacheOrdered) {
+            this.caculateOrdered();
+          }
+
+          return this.cacheOrdered;
+        },
+        enumerable: true,
+        configurable: true
+      });
+      Object.defineProperty(__proto, "pureChanged", {
+        get: function () {
+          if (!this.cachePureChanged) {
+            this.caculateOrdered();
+          }
+
+          return this.cachePureChanged;
+        },
+        enumerable: true,
+        configurable: true
+      });
+
+      __proto.caculateOrdered = function () {
+        var ordered = orderChanged(this.changedBeforeAdded, this.fixed);
+        var changed = this.changed;
+        var pureChanged = [];
+        this.cacheOrdered = ordered.filter(function (_a, i) {
+          var from = _a[0],
+              to = _a[1];
+          var _b = changed[i],
+              fromBefore = _b[0],
+              toBefore = _b[1];
+
+          if (from !== to) {
+            pureChanged.push([fromBefore, toBefore]);
+            return true;
+          }
+        });
+        this.cachePureChanged = pureChanged;
+      };
+
+      return Result;
+    }();
+
+    /**
+     *
+     * @memberof eg.ListDiffer
+     * @static
+     * @function
+     * @param - Previous List <ko> 이전 목록 </ko>
+     * @param - List to Update <ko> 업데이트 할 목록 </ko>
+     * @param - This callback function returns the key of the item. <ko> 아이템의 키를 반환하는 콜백 함수입니다.</ko>
+     * @return - Returns the diff between `prevList` and `list` <ko> `prevList`와 `list`의 다른 점을 반환한다.</ko>
+     * @example
+     * import { diff } from "@egjs/list-differ";
+     * // script => eg.ListDiffer.diff
+     * const result = diff([0, 1, 2, 3, 4, 5], [7, 8, 0, 4, 3, 6, 2, 1], e => e);
+     * // List before update
+     * // [1, 2, 3, 4, 5]
+     * console.log(result.prevList);
+     * // Updated list
+     * // [4, 3, 6, 2, 1]
+     * console.log(result.list);
+     * // Index array of values added to `list`
+     * // [0, 1, 5]
+     * console.log(result.added);
+     * // Index array of values removed in `prevList`
+     * // [5]
+     * console.log(result.removed);
+     * // An array of index pairs of `prevList` and `list` with different indexes from `prevList` and `list`
+     * // [[0, 2], [4, 3], [3, 4], [2, 6], [1, 7]]
+     * console.log(result.changed);
+     * // The subset of `changed` and an array of index pairs that moved data directly. Indicate an array of absolute index pairs of `ordered`.(Formatted by: Array<[index of prevList, index of list]>)
+     * // [[4, 3], [3, 4], [2, 6]]
+     * console.log(result.pureChanged);
+     * // An array of index pairs to be `ordered` that can synchronize `list` before adding data. (Formatted by: Array<[prevIndex, nextIndex]>)
+     * // [[4, 1], [4, 2], [4, 3]]
+     * console.log(result.ordered);
+     * // An array of index pairs of `prevList` and `list` that have not been added/removed so data is preserved
+     * // [[0, 2], [4, 3], [3, 4], [2, 6], [1, 7]]
+     * console.log(result.maintained);
+     */
+
+    function diff$1(prevList, list, findKeyCallback) {
+      var mapClass = SUPPORT_MAP ? Map : findKeyCallback ? HashMap : PolyMap;
+
+      var callback = findKeyCallback || function (e) {
+        return e;
+      };
+
+      var added = [];
+      var removed = [];
+      var maintained = [];
+      var prevKeys = prevList.map(callback);
+      var keys = list.map(callback);
+      var prevKeyMap = new mapClass();
+      var keyMap = new mapClass();
+      var changedBeforeAdded = [];
+      var fixed = [];
+      var removedMap = {};
+      var changed = [];
+      var addedCount = 0;
+      var removedCount = 0; // Add prevKeys and keys to the hashmap.
+
+      prevKeys.forEach(function (key, prevListIndex) {
+        prevKeyMap.set(key, prevListIndex);
+      });
+      keys.forEach(function (key, listIndex) {
+        keyMap.set(key, listIndex);
+      }); // Compare `prevKeys` and `keys` and add them to `removed` if they are not in `keys`.
+
+      prevKeys.forEach(function (key, prevListIndex) {
+        var listIndex = keyMap.get(key); // In prevList, but not in list, it is removed.
+
+        if (typeof listIndex === "undefined") {
+          ++removedCount;
+          removed.push(prevListIndex);
+        } else {
+          removedMap[listIndex] = removedCount;
+        }
+      }); // Compare `prevKeys` and `keys` and add them to `added` if they are not in `prevKeys`.
+
+      keys.forEach(function (key, listIndex) {
+        var prevListIndex = prevKeyMap.get(key); // In list, but not in prevList, it is added.
+
+        if (typeof prevListIndex === "undefined") {
+          added.push(listIndex);
+          ++addedCount;
+        } else {
+          maintained.push([prevListIndex, listIndex]);
+          removedCount = removedMap[listIndex] || 0;
+          changedBeforeAdded.push([prevListIndex - removedCount, listIndex - addedCount]);
+          fixed.push(listIndex === prevListIndex);
+
+          if (prevListIndex !== listIndex) {
+            changed.push([prevListIndex, listIndex]);
+          }
+        }
+      }); // Sort by ascending order of 'to(list's index).
+
+      removed.reverse();
+      return new Result(prevList, list, added, removed, changed, maintained, changedBeforeAdded, fixed);
+    }
+
+    /**
+     * A module that checks diff when values are added, removed, or changed in an array.
+     * @ko 배열 또는 오브젝트에서 값이 추가되거나 삭제되거나 순서가 변경사항을 체크하는 모듈입니다.
+     * @memberof eg
+     */
+
+    var ListDiffer =
+    /*#__PURE__*/
+    function () {
+      /**
+       * @param - Initializing Data Array. <ko> 초기 설정할 데이터 배열.</ko>
+       * @param - This callback function returns the key of the item. <ko> 아이템의 키를 반환하는 콜백 함수입니다.</ko>
+       * @example
+       * import ListDiffer from "@egjs/list-differ";
+       * // script => eg.ListDiffer
+       * const differ = new ListDiffer([0, 1, 2, 3, 4, 5], e => e);
+       * const result = differ.update([7, 8, 0, 4, 3, 6, 2, 1]);
+       * // List before update
+       * // [1, 2, 3, 4, 5]
+       * console.log(result.prevList);
+       * // Updated list
+       * // [4, 3, 6, 2, 1]
+       * console.log(result.list);
+       * // Index array of values added to `list`.
+       * // [0, 1, 5]
+       * console.log(result.added);
+       * // Index array of values removed in `prevList`.
+       * // [5]
+       * console.log(result.removed);
+       * // An array of index pairs of `prevList` and `list` with different indexes from `prevList` and `list`.
+       * // [[0, 2], [4, 3], [3, 4], [2, 6], [1, 7]]
+       * console.log(result.changed);
+       * // The subset of `changed` and an array of index pairs that moved data directly. Indicate an array of absolute index pairs of `ordered`.(Formatted by: Array<[index of prevList, index of list]>)
+       * // [[4, 3], [3, 4], [2, 6]]
+       * console.log(result.pureChanged);
+       * // An array of index pairs to be `ordered` that can synchronize `list` before adding data. (Formatted by: Array<[prevIndex, nextIndex]>)
+       * // [[4, 1], [4, 2], [4, 3]]
+       * console.log(result.ordered);
+       * // An array of index pairs of `prevList` and `list` that have not been added/removed so data is preserved.
+       * // [[0, 2], [4, 3], [3, 4], [2, 6], [1, 7]]
+       * console.log(result.maintained);
+       */
+      function ListDiffer(list, findKeyCallback) {
+        if (list === void 0) {
+          list = [];
+        }
+
+        this.findKeyCallback = findKeyCallback;
+        this.list = [].slice.call(list);
+      }
+      /**
+       * Update list.
+       * @ko 리스트를 업데이트를 합니다.
+       * @param - List to update <ko> 업데이트할 리스트 </ko>
+       * @return - Returns the results of an update from `prevList` to `list`.<ko> `prevList`에서 `list`로 업데이트한 결과를 반환한다. </ko>
+       */
+
+
+      var __proto = ListDiffer.prototype;
+
+      __proto.update = function (list) {
+        var newData = [].slice.call(list);
+        var result = diff$1(this.list, newData, this.findKeyCallback);
+        this.list = newData;
+        return result;
+      };
+
+      return ListDiffer;
+    }();
+
+    /*
+    Copyright (c) 2019-present NAVER Corp.
+    name: @egjs/children-differ
+    license: MIT
+    author: NAVER Corp.
+    repository: https://github.com/naver/egjs-children-differ
+    version: 1.0.0
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    /* global Reflect, Promise */
+    var extendStatics$2 = function (d, b) {
+      extendStatics$2 = Object.setPrototypeOf || {
+        __proto__: []
+      } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+      } || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      };
+
+      return extendStatics$2(d, b);
+    };
+
+    function __extends$3(d, b) {
+      extendStatics$2(d, b);
+
+      function __() {
+        this.constructor = d;
+      }
+
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    /*
+    egjs-children-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    var findKeyCallback = typeof Map === "function" ? undefined : function () {
+      var childrenCount = 0;
+      return function (el) {
+        return el.__DIFF_KEY__ || (el.__DIFF_KEY__ = ++childrenCount);
+      };
+    }();
+
+    /**
+     * A module that checks diff when child are added, removed, or changed .
+     * @ko 자식 노드들에서 자식 노드가 추가되거나 삭제되거나 순서가 변경된 사항을 체크하는 모듈입니다.
+     * @memberof eg
+     * @extends eg.ListDiffer
+     */
+
+    var ChildrenDiffer =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$3(ChildrenDiffer, _super);
+      /**
+       * @param - Initializing Children <ko> 초기 설정할 자식 노드들</ko>
+       */
+
+
+      function ChildrenDiffer(list) {
+        if (list === void 0) {
+          list = [];
+        }
+
+        return _super.call(this, list, findKeyCallback) || this;
+      }
+
+      return ChildrenDiffer;
+    }(ListDiffer);
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: preact-moveable
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
+    version: 0.9.3
+    */
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: react-moveable
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
+    version: 0.10.3
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    /* global Reflect, Promise */
+    var extendStatics$3 = function (d, b) {
+      extendStatics$3 = Object.setPrototypeOf || {
+        __proto__: []
+      } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+      } || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      };
+
+      return extendStatics$3(d, b);
+    };
+
+    function __extends$4(d, b) {
+      extendStatics$3(d, b);
+
+      function __() {
+        this.constructor = d;
+      }
+
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+    var __assign$3 = function () {
+      __assign$3 = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+
+        return t;
+      };
+
+      return __assign$3.apply(this, arguments);
+    };
+
+    function add(matrix, inverseMatrix, startIndex, endIndex, fromStart, k) {
+      for (var i = startIndex; i < endIndex; ++i) {
+        matrix[i] += matrix[fromStart + i - startIndex] * k;
+        inverseMatrix[i] += inverseMatrix[fromStart + i - startIndex] * k;
+      }
+    }
+
+    function swap(matrix, inverseMatrix, startIndex, endIndex, fromStart) {
+      for (var i = startIndex; i < endIndex; ++i) {
+        var v = matrix[i];
+        var iv = inverseMatrix[i];
+        matrix[i] = matrix[fromStart + i - startIndex];
+        matrix[fromStart + i - startIndex] = v;
+        inverseMatrix[i] = inverseMatrix[fromStart + i - startIndex];
+        inverseMatrix[fromStart + i - startIndex] = iv;
+      }
+    }
+
+    function divide(matrix, inverseMatrix, startIndex, endIndex, k) {
+      for (var i = startIndex; i < endIndex; ++i) {
+        matrix[i] /= k;
+        inverseMatrix[i] /= k;
+      }
+    }
+
+    function createIdentityMatrix(n) {
+      var length = n * n;
+      var matrix = [];
+
+      for (var i = 0; i < length; ++i) {
+        matrix[i] = i % (n + 1) ? 0 : 1;
+      }
+
+      return matrix;
+    }
+    function createScaleMatrix(scale, n) {
+      var m = createIdentityMatrix(n);
+      var length = Math.min(scale.length, n - 1);
+
+      for (var i = 0; i < length; ++i) {
+        m[(n + 1) * i] = scale[i];
+      }
+
+      return m;
+    }
+    function createOriginMatrix(origin, n) {
+      var m = createIdentityMatrix(n);
+      var length = Math.min(origin.length, n - 1);
+
+      for (var i = 0; i < length; ++i) {
+        m[n * (i + 1) - 1] = origin[i];
+      }
+
+      return m;
+    }
+    function ignoreDimension(matrix, m, n) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      }
+
+      var newMatrix = matrix.slice();
+
+      for (var i = 0; i < n; ++i) {
+        newMatrix[i * n + m - 1] = 0;
+        newMatrix[(m - 1) * n + i] = 0;
+      }
+
+      newMatrix[(m - 1) * (n + 1)] = 1;
+      return newMatrix;
+    }
+    function invert(matrix, n) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      }
+
+      var newMatrix = matrix.slice();
+      var inverseMatrix = createIdentityMatrix(n);
+
+      for (var i = 0; i < n; ++i) {
+        var startIndex = n * i;
+        var endIndex = n * (i + 1);
+        var identityIndex = startIndex + i;
+
+        if (newMatrix[identityIndex] === 0) {
+          for (var j = i + 1; j < n; ++j) {
+            if (newMatrix[n * j + i]) {
+              swap(newMatrix, inverseMatrix, startIndex, endIndex, n * j);
+              break;
+            }
+          }
+        }
+
+        if (newMatrix[identityIndex]) {
+          divide(newMatrix, inverseMatrix, startIndex, endIndex, newMatrix[identityIndex]);
+        } else {
+          // no inverse matrix
+          return [];
+        }
+
+        for (var j = 0; j < n; ++j) {
+          var targetStartIndex = n * j;
+          var targetEndIndex = targetStartIndex + n;
+          var targetIndex = targetStartIndex + i;
+          var target = newMatrix[targetIndex];
+
+          if (target === 0 || i === j) {
+            continue;
+          }
+
+          add(newMatrix, inverseMatrix, targetStartIndex, targetEndIndex, startIndex, -target);
+        }
+      }
+
+      return inverseMatrix;
+    }
+    function transpose(matrix, n) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      }
+
+      var newMatrix = [];
+
+      for (var i = 0; i < n; ++i) {
+        for (var j = 0; j < n; ++j) {
+          newMatrix[j * n + i] = matrix[n * i + j];
+        }
+      }
+
+      return newMatrix;
+    }
+    function convertPositionMatrix(matrix, n) {
+      var newMatrix = matrix.slice();
+
+      for (var i = matrix.length; i < n - 1; ++i) {
+        newMatrix[i] = 0;
+      }
+
+      newMatrix[n - 1] = 1;
+      return newMatrix;
+    }
+    function convertDimension(matrix, n, m) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      } // n < m
+
+
+      if (n === m) {
+        return matrix;
+      }
+
+      var newMatrix = createIdentityMatrix(m);
+      var length = Math.min(n, m);
+
+      for (var i = 0; i < length - 1; ++i) {
+        for (var j = 0; j < length - 1; ++j) {
+          newMatrix[i * m + j] = matrix[i * n + j];
+        }
+
+        newMatrix[(i + 1) * m - 1] = matrix[(i + 1) * n - 1];
+        newMatrix[(m - 1) * m + i] = matrix[(n - 1) * n + i];
+      }
+
+      newMatrix[m * m - 1] = matrix[n * n - 1];
+      return newMatrix;
+    }
+    window.b = convertDimension;
+    function multiplies(n) {
+      var matrixes = [];
+
+      for (var _i = 1; _i < arguments.length; _i++) {
+        matrixes[_i - 1] = arguments[_i];
+      }
+
+      var m = createIdentityMatrix(n);
+      matrixes.forEach(function (matrix) {
+        m = multiply(m, matrix, n);
+      });
+      return m;
+    }
+    function multiply(matrix, matrix2, n) {
+      var newMatrix = []; // n * m X m * k
+
+      var m = matrix.length / n;
+      var k = matrix2.length / m;
+
+      for (var i = 0; i < n; ++i) {
+        for (var j = 0; j < k; ++j) {
+          newMatrix[i * k + j] = 0;
+
+          for (var l = 0; l < m; ++l) {
+            newMatrix[i * k + j] += matrix[i * m + l] * matrix2[l * k + j];
+          }
+        }
+      } // n * k
+
+
+      return newMatrix;
+    }
+    function multiplyCSS(matrix, matrix2, n) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      }
+
+      var newMatrix = []; // n(y) * m(x) X m(y) * k(x)
+
+      var m = matrix.length / n;
+      var k = matrix2.length / m;
+
+      for (var i = 0; i < n; ++i) {
+        for (var j = 0; j < k; ++j) {
+          newMatrix[i + j * k] = 0;
+
+          for (var l = 0; l < m; ++l) {
+            newMatrix[i + j * k] += matrix[i + l * m] * matrix2[l + j * k];
+          }
+        }
+      } // n * k
+
+
+      return newMatrix;
+    }
+    function sum(pos1, pos2) {
+      var length = Math.min(pos1.length, pos2.length);
+      var nextPos = pos1.slice();
+
+      for (var i = 0; i < length; ++i) {
+        nextPos[i] = nextPos[i] + pos2[i];
+      }
+
+      return nextPos;
+    }
+    function minus(pos1, pos2) {
+      var length = Math.min(pos1.length, pos2.length);
+      var nextPos = pos1.slice();
+
+      for (var i = 0; i < length; ++i) {
+        nextPos[i] = nextPos[i] - pos2[i];
+      }
+
+      return nextPos;
+    }
+    function caculate(matrix, matrix2, n) {
+      if (n === void 0) {
+        n = matrix2.length;
+      }
+
+      var result = multiply(matrix, matrix2, n);
+      var k = result[n - 1];
+      return result.map(function (v) {
+        return v / k;
+      });
+    }
+    function getOrigin(matrix, n) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      }
+
+      var originMatrix = [];
+
+      for (var i = 0; i < n - 1; ++i) {
+        originMatrix[i] = matrix[(i + 1) * n - 1];
+      }
+
+      originMatrix[n - 1] = 0;
+      return originMatrix;
+    }
+    function convertCSStoMatrix(a) {
+      if (a.length === 6) {
+        return [a[0], a[2], a[4], a[1], a[3], a[5], 0, 0, 1];
+      }
+
+      return transpose(a);
+    }
+    function convertMatrixtoCSS(a) {
+      if (a.length === 9) {
+        return [a[0], a[3], a[1], a[4], a[2], a[5]];
+      }
+
+      return transpose(a);
+    }
+    function getRotateMatrix(rad) {
+      var cos = Math.cos(rad);
+      var sin = Math.sin(rad);
+      return [cos, -sin, 0, sin, cos, 0, 0, 0, 1];
+    }
+    function rotate(pos, deg) {
+      return caculate(getRotateMatrix(deg * Math.PI / 180), convertPositionMatrix(pos, 3));
+    }
+
+    function prefix() {
+      var classNames = [];
+
+      for (var _i = 0; _i < arguments.length; _i++) {
+        classNames[_i] = arguments[_i];
+      }
+
+      return prefixNames.apply(void 0, [PREFIX].concat(classNames));
+    }
+    function createIdentityMatrix3() {
+      return createIdentityMatrix(3);
+    }
+    function getTransformMatrix(transform) {
+      if (!transform || transform === "none") {
+        return [1, 0, 0, 1, 0, 0];
+      }
+
+      if (isObject(transform)) {
+        return transform;
+      }
+
+      var value = splitBracket(transform).value;
+      return value.split(/s*,\s*/g).map(function (v) {
+        return parseFloat(v);
+      });
+    }
+    function getAbsoluteMatrix(matrix, n, origin) {
+      return multiplies(n, createOriginMatrix(origin, n), matrix, createOriginMatrix(origin.map(function (a) {
+        return -a;
+      }), n));
+    }
+    function measureSVGSize(el, unit, isHorizontal) {
+      if (unit === "%") {
+        var viewBox = el.ownerSVGElement.viewBox.baseVal;
+        return viewBox[isHorizontal ? "width" : "height"] / 100;
+      }
+
+      return 1;
+    }
+    function getBeforeTransformOrigin(el) {
+      var relativeOrigin = getTransformOrigin(window.getComputedStyle(el, ":before"));
+      return relativeOrigin.map(function (o, i) {
+        var _a = splitUnit(o),
+            value = _a.value,
+            unit = _a.unit;
+
+        return value * measureSVGSize(el, unit, i === 0);
+      });
+    }
+    function getTransformOrigin(style) {
+      return style.transformOrigin.split(" ");
+    }
+    function caculateMatrixStack(target, container, prevMatrix, prevN) {
+      var _a;
+
+      var el = target;
+      var matrixes = [];
+      var isContainer = !!prevMatrix || target === container;
+      var isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" || "ownerSVGElement" in el;
+      var is3d = false;
+      var n = 3;
+      var transformOrigin;
+      var targetMatrix;
+
+      while (el && (isContainer || el !== container)) {
+        var tagName = el.tagName.toLowerCase();
+        var style = window.getComputedStyle(el);
+        var matrix = convertCSStoMatrix(getTransformMatrix(style.transform));
+
+        if (!is3d && matrix.length === 16) {
+          is3d = true;
+          n = 4;
+          var matrixesLength = matrixes.length;
+
+          for (var i = 0; i < matrixesLength; ++i) {
+            matrixes[i] = convertDimension(matrixes[i], 3, 4);
+          }
+        }
+
+        if (is3d && matrix.length === 9) {
+          matrix = convertDimension(matrix, 3, 4);
+        }
+
+        var offsetLeft = el.offsetLeft;
+        var offsetTop = el.offsetTop; // svg
+
+        var hasNotOffset = isUndefined$1(offsetLeft);
+        var origin = void 0; // inner svg element
+
+        if (hasNotOffset && tagName !== "svg") {
+          origin = isNotSupportTransformOrigin ? getBeforeTransformOrigin(el) : getTransformOrigin(style).map(function (pos) {
+            return parseFloat(pos);
+          });
+          hasNotOffset = false;
+
+          if (tagName === "g") {
+            offsetLeft = 0;
+            offsetTop = 0;
+          } else {
+            _a = getSVGGraphicsOffset(el, origin), offsetLeft = _a[0], offsetTop = _a[1], origin[0] = _a[2], origin[1] = _a[3];
+          }
+        } else {
+          origin = getTransformOrigin(style).map(function (pos) {
+            return parseFloat(pos);
+          });
+        }
+
+        if (tagName === "svg" && targetMatrix) {
+          matrixes.push(getSVGMatrix(el, n), createIdentityMatrix(n));
+        }
+
+        matrixes.push(getAbsoluteMatrix(matrix, n, origin), createOriginMatrix([hasNotOffset ? el : offsetLeft, hasNotOffset ? origin : offsetTop], n));
+
+        if (!targetMatrix) {
+          targetMatrix = matrix;
+        }
+
+        if (!transformOrigin) {
+          transformOrigin = origin;
+        }
+
+        if (isContainer) {
+          break;
+        }
+
+        el = el.parentElement;
+      }
+
+      var mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
+      var beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
+      var offsetMatrix = createIdentityMatrix(n);
+      var length = matrixes.length;
+      matrixes.reverse();
+      matrixes.forEach(function (matrix, i) {
+        var _a;
+
+        if (length - 2 === i) {
+          beforeMatrix = mat.slice();
+        }
+
+        if (length - 1 === i) {
+          offsetMatrix = mat.slice();
+        }
+
+        if (isObject(matrix[n - 1])) {
+          _a = getSVGOffset(matrix[n - 1], container, n, matrix[2 * n - 1], mat, matrixes[i + 1]), matrix[n - 1] = _a[0], matrix[2 * n - 1] = _a[1];
+        }
+
+        mat = multiply(mat, matrix, n);
+      });
+      var isMatrix3d = !isSVGGraphicElement && is3d;
+      var transform = (isMatrix3d ? "matrix3d" : "matrix") + "(" + convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16 ? convertDimension(targetMatrix, 4, 3) : targetMatrix) + ")";
+      return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d];
+    }
+    function getSVGMatrix(el, n) {
+      var clientWidth = el.clientWidth;
+      var clientHeight = el.clientHeight;
+      var viewBox = el.viewBox.baseVal;
+      var viewBoxWidth = viewBox.width || clientWidth;
+      var viewBoxHeight = viewBox.height || clientHeight;
+      var scaleX = clientWidth / viewBoxWidth;
+      var scaleY = clientHeight / viewBoxHeight;
+      var preserveAspectRatio = el.preserveAspectRatio.baseVal; // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
+
+      var align = preserveAspectRatio.align; // 1 : meet 2: slice
+
+      var meetOrSlice = preserveAspectRatio.meetOrSlice;
+      var svgOrigin = [0, 0];
+      var scale = [scaleX, scaleY];
+      var translate = [0, 0];
+
+      if (align !== 1) {
+        var xAlign = (align - 2) % 3;
+        var yAlign = Math.floor((align - 2) / 3);
+        svgOrigin[0] = viewBoxWidth * xAlign / 2;
+        svgOrigin[1] = viewBoxHeight * yAlign / 2;
+        var scaleDimension = meetOrSlice === 2 ? Math.max(scaleY, scaleX) : Math.min(scaleX, scaleY);
+        scale[0] = scaleDimension;
+        scale[1] = scaleDimension;
+        translate[0] = (clientWidth - viewBoxWidth) / 2 * xAlign;
+        translate[1] = (clientHeight - viewBoxHeight) / 2 * yAlign;
+      }
+
+      var scaleMatrix = createScaleMatrix(scale, n);
+      scaleMatrix[n - 1] = translate[0], scaleMatrix[2 * n - 1] = translate[1];
+      return getAbsoluteMatrix(scaleMatrix, n, svgOrigin);
+    }
+    function getSVGGraphicsOffset(el, origin) {
+      if (!el.getBBox) {
+        return [0, 0];
+      }
+
+      var bbox = el.getBBox();
+      var svgElement = el.ownerSVGElement;
+      var viewBox = svgElement.viewBox.baseVal;
+      var left = bbox.x - viewBox.x;
+      var top = bbox.y - viewBox.y;
+      return [left, top, origin[0] - left, origin[1] - top];
+    }
+    function caculatePosition(matrix, pos, n) {
+      return caculate(matrix, convertPositionMatrix(pos, n), n);
+    }
+    function caculateRect(matrix, width, height, n) {
+      var pos1 = caculatePosition(matrix, [0, 0], n);
+      var pos2 = caculatePosition(matrix, [width, 0], n);
+      var pos3 = caculatePosition(matrix, [0, height], n);
+      var pos4 = caculatePosition(matrix, [width, height], n);
+      return [pos1, pos2, pos3, pos4];
+    }
+    function getSVGOffset(el, container, n, origin, beforeMatrix, absoluteMatrix) {
+      var _a;
+
+      var _b = getSize(el),
+          width = _b[0],
+          height = _b[1];
+
+      var containerRect = (container || document.documentElement).getBoundingClientRect();
+      var rect = el.getBoundingClientRect();
+      var rectLeft = rect.left - containerRect.left;
+      var rectTop = rect.top - containerRect.top;
+      var rectWidth = rect.width;
+      var rectHeight = rect.height;
+      var mat = multiplies(n, beforeMatrix, absoluteMatrix);
+      var poses = caculateRect(mat, width, height, n);
+      var posesX = poses.map(function (pos) {
+        return pos[0];
+      });
+      var posesY = poses.map(function (pos) {
+        return pos[1];
+      });
+      var posOrigin = caculatePosition(mat, origin, n);
+      var prevLeft = Math.min.apply(Math, posesX);
+      var prevTop = Math.min.apply(Math, posesY);
+      var prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
+      var prevWidth = Math.max.apply(Math, posesX) - prevLeft;
+      var prevHeight = Math.max.apply(Math, posesY) - prevTop;
+      var rectOrigin = [rectLeft + prevOrigin[0] * rectWidth / prevWidth, rectTop + prevOrigin[1] * rectHeight / prevHeight];
+      var offset = [0, 0];
+      var count = 0;
+
+      while (++count < 10) {
+        var inverseBeforeMatrix = invert(beforeMatrix, n);
+        _a = minus(caculatePosition(inverseBeforeMatrix, rectOrigin, n), caculatePosition(inverseBeforeMatrix, posOrigin, n)), offset[0] = _a[0], offset[1] = _a[1];
+        var mat2 = multiplies(n, beforeMatrix, createOriginMatrix(offset, n), absoluteMatrix);
+        var nextPoses = caculateRect(mat2, width, height, n);
+        var nextLeft = Math.min.apply(Math, nextPoses.map(function (pos) {
+          return pos[0];
+        }));
+        var nextTop = Math.min.apply(Math, nextPoses.map(function (pos) {
+          return pos[1];
+        }));
+        var distLeft = nextLeft - rectLeft;
+        var distTop = nextTop - rectTop;
+
+        if (Math.abs(distLeft) < 2 && Math.abs(distTop) < 2) {
+          break;
+        }
+
+        rectOrigin[0] -= distLeft;
+        rectOrigin[1] -= distTop;
+      }
+
+      return offset.map(function (p) {
+        return Math.round(p);
+      });
+    }
+    function caculateMoveablePosition(matrix, origin, width, height) {
+      var is3d = matrix.length === 16;
+      var n = is3d ? 4 : 3;
+
+      var _a = caculateRect(matrix, width, height, n),
+          _b = _a[0],
+          x1 = _b[0],
+          y1 = _b[1],
+          _c = _a[1],
+          x2 = _c[0],
+          y2 = _c[1],
+          _d = _a[2],
+          x3 = _d[0],
+          y3 = _d[1],
+          _e = _a[3],
+          x4 = _e[0],
+          y4 = _e[1];
+
+      var _f = caculatePosition(matrix, origin, n),
+          originX = _f[0],
+          originY = _f[1];
+
+      var minX = Math.min(x1, x2, x3, x4);
+      var minY = Math.min(y1, y2, y3, y4);
+      x1 = x1 - minX || 0;
+      x2 = x2 - minX || 0;
+      x3 = x3 - minX || 0;
+      x4 = x4 - minX || 0;
+      y1 = y1 - minY || 0;
+      y2 = y2 - minY || 0;
+      y3 = y3 - minY || 0;
+      y4 = y4 - minY || 0;
+      originX = originX - minX || 0;
+      originY = originY - minY || 0;
+      var center = [(x1 + x2 + x3 + x4) / 4, (y1 + y2 + y3 + y4) / 4];
+      var pos1Rad = getRad(center, [x1, y1]);
+      var pos2Rad = getRad(center, [x2, y2]);
+      var direction = pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI || pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI ? 1 : -1;
+      return [[minX, minY], [originX, originY], [x1, y1], [x2, y2], [x3, y3], [x4, y4], direction];
+    }
+    function getRad(pos1, pos2) {
+      var distX = pos2[0] - pos1[0];
+      var distY = pos2[1] - pos1[1];
+      var rad = Math.atan2(distY, distX);
+      return rad > 0 ? rad : rad + Math.PI * 2;
+    }
+    function getLineStyle(pos1, pos2) {
+      var distX = pos2[0] - pos1[0];
+      var distY = pos2[1] - pos1[1];
+      var width = Math.sqrt(distX * distX + distY * distY);
+      var rad = getRad(pos1, pos2);
+      return {
+        transform: "translate(" + pos1[0] + "px, " + pos1[1] + "px) rotate(" + rad + "rad)",
+        width: width + "px"
+      };
+    }
+    function getControlTransform() {
+      var poses = [];
+
+      for (var _i = 0; _i < arguments.length; _i++) {
+        poses[_i] = arguments[_i];
+      }
+
+      var length = poses.length;
+      var x = poses.reduce(function (prev, pos) {
+        return prev + pos[0];
+      }, 0) / length;
+      var y = poses.reduce(function (prev, pos) {
+        return prev + pos[1];
+      }, 0) / length;
+      return {
+        transform: "translate(" + x + "px, " + y + "px)"
+      };
+    }
+    function getSize(target, style, isOffset, isBoxSizing) {
+      if (style === void 0) {
+        style = window.getComputedStyle(target);
+      }
+
+      if (isBoxSizing === void 0) {
+        isBoxSizing = isOffset || style.boxSizing === "border-box";
+      }
+
+      var width = target.offsetWidth;
+      var height = target.offsetHeight;
+      var hasOffset = !isUndefined$1(width);
+
+      if ((isOffset || isBoxSizing) && hasOffset) {
+        return [width, height];
+      }
+
+      width = target.clientWidth;
+      height = target.clientHeight;
+
+      if (!hasOffset && !width && !height) {
+        var bbox = target.getBBox();
+        return [bbox.width, bbox.height];
+      }
+
+      if (isOffset || isBoxSizing) {
+        var borderLeft = parseFloat(style.borderLeftWidth) || 0;
+        var borderRight = parseFloat(style.borderRightWidth) || 0;
+        var borderTop = parseFloat(style.borderTopWidth) || 0;
+        var borderBottom = parseFloat(style.borderBottomWidth) || 0;
+        return [width + borderLeft + borderRight, height + borderTop + borderBottom];
+      } else {
+        var paddingLeft = parseFloat(style.paddingLeft) || 0;
+        var paddingRight = parseFloat(style.paddingRight) || 0;
+        var paddingTop = parseFloat(style.paddingTop) || 0;
+        var paddingBottom = parseFloat(style.paddingBottom) || 0;
+        return [width - paddingLeft - paddingRight, height - paddingTop - paddingBottom];
+      }
+    }
+    function getRotationInfo(pos1, pos2, direction) {
+      var rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
+      var relativeRotationPos = multiply(getRotateMatrix(rotationRad), [0, -40, 1], 3);
+      var rotationPos = [(pos1[0] + pos2[0]) / 2 + relativeRotationPos[0], (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1]];
+      return [rotationRad, rotationPos];
+    }
+    function getTargetInfo(target, container, state) {
+      var _a, _b, _c, _d, _e, _f;
+
+      var left = 0;
+      var top = 0;
+      var origin = [0, 0];
+      var pos1 = [0, 0];
+      var pos2 = [0, 0];
+      var pos3 = [0, 0];
+      var pos4 = [0, 0];
+      var beforeMatrix = createIdentityMatrix3();
+      var matrix = createIdentityMatrix3();
+      var targetMatrix = createIdentityMatrix3();
+      var width = 0;
+      var height = 0;
+      var transformOrigin = [0, 0];
+      var direction = 1;
+      var beforeDirection = 1;
+      var rotationPos = [0, 0];
+      var rotationRad = 0;
+      var is3d = false;
+      var targetTransform = "";
+      var beforeOrigin = [0, 0];
+      var prevMatrix = state ? state.beforeMatrix : undefined;
+      var prevN = state ? state.is3d ? 4 : 3 : undefined;
+
+      if (target) {
+        if (state) {
+          width = state.width;
+          height = state.height;
+        } else {
+          var style = window.getComputedStyle(target);
+          width = target.offsetWidth;
+          height = target.offsetHeight;
+
+          if (isUndefined$1(width)) {
+            _a = getSize(target, style, true), width = _a[0], height = _a[1];
+          }
+        }
+
+        var offsetMatrix = void 0;
+        _b = caculateMatrixStack(target, container, prevMatrix, prevN), beforeMatrix = _b[0], offsetMatrix = _b[1], matrix = _b[2], targetMatrix = _b[3], targetTransform = _b[4], transformOrigin = _b[5], is3d = _b[6];
+        _c = caculateMoveablePosition(matrix, transformOrigin, width, height), _d = _c[0], left = _d[0], top = _d[1], origin = _c[1], pos1 = _c[2], pos2 = _c[3], pos3 = _c[4], pos4 = _c[5], direction = _c[6];
+        var n = is3d ? 4 : 3;
+        var beforePos = [0, 0];
+        _e = caculateMoveablePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height), beforePos = _e[0], beforeOrigin = _e[1], beforeDirection = _e[6];
+        beforeOrigin = [beforeOrigin[0] + beforePos[0] - left, beforeOrigin[1] + beforePos[1] - top]; // 1 : clockwise
+        // -1 : counterclockwise
+
+        _f = getRotationInfo(pos1, pos2, direction), rotationRad = _f[0], rotationPos = _f[1];
+      }
+
+      return {
+        beforeDirection: beforeDirection,
+        direction: direction,
+        rotationRad: rotationRad,
+        rotationPos: rotationPos,
+        target: target,
+        left: left,
+        top: top,
+        pos1: pos1,
+        pos2: pos2,
+        pos3: pos3,
+        pos4: pos4,
+        width: width,
+        height: height,
+        beforeMatrix: beforeMatrix,
+        matrix: matrix,
+        targetTransform: targetTransform,
+        targetMatrix: targetMatrix,
+        is3d: is3d,
+        beforeOrigin: beforeOrigin,
+        origin: origin,
+        transformOrigin: transformOrigin
+      };
+    }
+    function getDirection(target) {
+      if (!target) {
+        return;
+      }
+
+      var direciton = target.getAttribute("data-direction");
+
+      if (!direciton) {
+        return;
+      }
+
+      var dir = [0, 0];
+      direciton.indexOf("w") > -1 && (dir[0] = -1);
+      direciton.indexOf("e") > -1 && (dir[0] = 1);
+      direciton.indexOf("n") > -1 && (dir[1] = -1);
+      direciton.indexOf("s") > -1 && (dir[1] = 1);
+      return dir;
+    }
+    function throttle(num, unit) {
+      if (!unit) {
+        return num;
+      }
+
+      return Math.round(num / unit) * unit;
+    }
+    function throttleArray(nums, unit) {
+      nums.forEach(function (_, i) {
+        nums[i] = throttle(nums[i], unit);
+      });
+    }
+    function warp(pos0, pos1, pos2, pos3, nextPos0, nextPos1, nextPos2, nextPos3) {
+      var x0 = pos0[0],
+          y0 = pos0[1];
+      var x1 = pos1[0],
+          y1 = pos1[1];
+      var x2 = pos2[0],
+          y2 = pos2[1];
+      var x3 = pos3[0],
+          y3 = pos3[1];
+      var u0 = nextPos0[0],
+          v0 = nextPos0[1];
+      var u1 = nextPos1[0],
+          v1 = nextPos1[1];
+      var u2 = nextPos2[0],
+          v2 = nextPos2[1];
+      var u3 = nextPos3[0],
+          v3 = nextPos3[1];
+      var matrix = [x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0, 0, 0, 0, x0, y0, 1, -v0 * x0, -v0 * y0, x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1, 0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1, x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2, 0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2, x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3, 0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3];
+      var inverseMatrix = invert(matrix, 8);
+
+      if (!inverseMatrix.length) {
+        return [];
+      }
+
+      var h = multiply(inverseMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
+      h[8] = 1;
+      return convertDimension(h, 3, 4);
+    }
+    function unset(self, name) {
+      if (self[name]) {
+        self[name].unset();
+        self[name] = null;
+      }
+    }
+    function getOrientationDirection(pos, pos1, pos2) {
+      return (pos[0] - pos1[0]) * (pos2[1] - pos1[1]) - (pos[1] - pos1[1]) * (pos2[0] - pos1[0]);
+    }
+    function isInside(pos, pos1, pos2, pos3, pos4) {
+      var k1 = getOrientationDirection(pos, pos1, pos2);
+      var k2 = getOrientationDirection(pos, pos2, pos4);
+      var k3 = getOrientationDirection(pos, pos4, pos1);
+      var k4 = getOrientationDirection(pos, pos2, pos4);
+      var k5 = getOrientationDirection(pos, pos4, pos3);
+      var k6 = getOrientationDirection(pos, pos3, pos2);
+      var signs1 = [k1, k2, k3];
+      var signs2 = [k4, k5, k6];
+
+      if (signs1.every(function (sign) {
+        return sign >= 0;
+      }) || signs1.every(function (sign) {
+        return sign <= 0;
+      }) || signs2.every(function (sign) {
+        return sign >= 0;
+      }) || signs2.every(function (sign) {
+        return sign <= 0;
+      })) {
+        return true;
+      }
+
+      return false;
+    }
+    function triggerEvent(moveable, name, e) {
+      return moveable.triggerEvent(name, e);
+    }
+
+    function getRotatiion(touches) {
+      return getRad([touches[0].clientX, touches[0].clientY], [touches[1].clientX, touches[1].clientY]) / Math.PI * 180;
+    }
+
+    var Pinchable = {
+      name: "pinchable",
+      updateRect: true,
+      pinchStart: function (moveable, _a) {
+        var _b;
+
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            touches = _a.touches,
+            inputEvent = _a.inputEvent,
+            targets = _a.targets;
+        var _c = moveable.props,
+            pinchable = _c.pinchable,
+            ables = _c.ables;
+
+        if (!pinchable) {
+          return false;
+        }
+
+        var state = moveable.state;
+        var eventName = "onPinch" + (targets ? "Group" : "") + "Start";
+        var controlEventName = "drag" + (targets ? "Group" : "") + "ControlStart";
+        var pinchAbles = (pinchable === true ? moveable.controlAbles : ables.filter(function (able) {
+          return pinchable.indexOf(able.name) > -1;
+        })).filter(function (able) {
+          return able.canPinch && able[controlEventName];
+        });
+        datas.pinchableDatas = {};
+        var result = triggerEvent(moveable, eventName, (_b = {}, _b[targets ? "targets" : "target"] = targets ? targets : state.target, _b.clientX = clientX, _b.clientY = clientY, _b.datas = datas.pinchableDatas, _b));
+        datas.isPinch = result !== false;
+        datas.ables = pinchAbles;
+        var isPinch = datas.isPinch;
+
+        if (!isPinch) {
+          return false;
+        }
+
+        var parentRotate = getRotatiion(touches);
+        pinchAbles.forEach(function (able) {
+          datas[able.name + "Datas"] = {};
+          var e = {
+            datas: datas[able.name + "Datas"],
+            clientX: clientX,
+            clientY: clientY,
+            inputEvent: inputEvent,
+            parentRotate: parentRotate,
+            pinchFlag: true
+          };
+          able[controlEventName](moveable, e);
+        });
+        return isPinch;
+      },
+      pinch: function (moveable, _a) {
+        var _b;
+
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            pinchScale = _a.scale,
+            distance = _a.distance,
+            touches = _a.touches,
+            inputEvent = _a.inputEvent,
+            targets = _a.targets;
+
+        if (!datas.isPinch) {
+          return;
+        }
+
+        var parentRotate = getRotatiion(touches);
+        var parentDistance = distance * (1 - 1 / pinchScale);
+        var target = moveable.state.target;
+        inputEvent.preventDefault();
+        inputEvent.stopPropagation();
+        var params = (_b = {}, _b[targets ? "targets" : "target"] = targets ? targets : target, _b.clientX = clientX, _b.clientY = clientY, _b.datas = datas.pinchableDatas, _b);
+        var eventName = "onPinch" + (targets ? "Group" : "");
+        triggerEvent(moveable, eventName, params);
+        var ables = datas.ables;
+        var controlEventName = "drag" + (targets ? "Group" : "") + "Control";
+        ables.forEach(function (able) {
+          able[controlEventName](moveable, {
+            clientX: clientX,
+            clientY: clientY,
+            datas: datas[able.name + "Datas"],
+            inputEvent: inputEvent,
+            parentDistance: parentDistance,
+            parentRotate: parentRotate,
+            pinchFlag: true
+          });
+        });
+        return params;
+      },
+      pinchEnd: function (moveable, _a) {
+        var _b;
+
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            isPinch = _a.isPinch,
+            inputEvent = _a.inputEvent,
+            targets = _a.targets;
+
+        if (!datas.isPinch) {
+          return;
+        }
+
+        var target = moveable.state.target;
+        var eventName = "onPinch" + (targets ? "Group" : "") + "End";
+        triggerEvent(moveable, eventName, (_b = {}, _b[targets ? "targets" : "target"] = targets ? targets : target, _b.isDrag = isPinch, _b.clientX = clientX, _b.clientY = clientY, _b.datas = datas.pinchableDatas, _b));
+        var ables = datas.ables;
+        var controlEventName = "drag" + (targets ? "Group" : "") + "ControlEnd";
+        ables.forEach(function (able) {
+          able[controlEventName](moveable, {
+            clientX: clientX,
+            clientY: clientY,
+            isDrag: isPinch,
+            datas: datas[able.name + "Datas"],
+            inputEvent: inputEvent,
+            pinchFlag: true
+          });
+        });
+        return isPinch;
+      },
+      pinchGroupStart: function (moveable, e) {
+        return this.pinchStart(moveable, __assign$3({}, e, {
+          targets: moveable.props.targets
+        }));
+      },
+      pinchGroup: function (moveable, e) {
+        return this.pinch(moveable, __assign$3({}, e, {
+          targets: moveable.props.targets
+        }));
+      },
+      pinchGroupEnd: function (moveable, e) {
+        return this.pinchEnd(moveable, __assign$3({}, e, {
+          targets: moveable.props.targets
+        }));
+      }
+    };
+
+    function setDragStart(moveable, _a) {
+      var datas = _a.datas;
+      var _b = moveable.state,
+          matrix = _b.matrix,
+          beforeMatrix = _b.beforeMatrix,
+          is3d = _b.is3d,
+          left = _b.left,
+          top = _b.top,
+          origin = _b.origin;
+      var n = is3d ? 4 : 3;
+      datas.is3d = is3d;
+      datas.matrix = matrix;
+      datas.inverseMatrix = invert(matrix, n);
+      datas.beforeMatrix = beforeMatrix;
+      datas.inverseBeforeMatrix = invert(beforeMatrix, n);
+      datas.absoluteOrigin = convertPositionMatrix(sum([left, top], origin), n);
+      datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
+      datas.startDragDist = caculate(datas.inverseMatrix, datas.absoluteOrigin, n);
+    }
+    function getDragDist(_a, isBefore) {
+      var datas = _a.datas,
+          distX = _a.distX,
+          distY = _a.distY;
+      var inverseBeforeMatrix = datas.inverseBeforeMatrix,
+          inverseMatrix = datas.inverseMatrix,
+          is3d = datas.is3d,
+          startDragBeforeDist = datas.startDragBeforeDist,
+          startDragDist = datas.startDragDist,
+          absoluteOrigin = datas.absoluteOrigin;
+      var n = is3d ? 4 : 3;
+      return minus(caculate(isBefore ? inverseBeforeMatrix : inverseMatrix, sum(absoluteOrigin, [distX, distY]), n), isBefore ? startDragBeforeDist : startDragDist);
+    }
+
+    function triggerChildAble(moveable, able, type, e, callback) {
+      var name = able.name;
+      var datas = e.datas;
+      var ableDatas = datas[name] || (datas[name] = []);
+      return moveable.moveables.map(function (child, i) {
+        var childDatas = ableDatas[i] || (ableDatas[i] = {});
+        var result = able[type](child, __assign$3({}, e, {
+          datas: childDatas,
+          parentFlag: true
+        }));
+        result && callback && callback(child, childDatas, result, i);
+        return result;
+      });
+    }
+    function getCustomEvent(datas) {
+      return datas.custom;
+    }
+    function setCustomEvent(clientX, clientY, datas, inputEvent) {
+      var e = datas.custom || (datas.custom = {
+        startX: clientX,
+        startY: clientY,
+        prevX: clientX,
+        prevY: clientY,
+        isDrag: false
+      });
+      var prevX = e.prevX,
+          prevY = e.prevY,
+          startX = e.startX,
+          startY = e.startY;
+      e.prevX = clientX;
+      e.prevY = clientY;
+
+      if (clientX !== prevX || clientY !== prevY) {
+        e.isDrag = true;
+      }
+
+      return {
+        clientX: clientX,
+        clientY: clientY,
+        distX: clientX - startX,
+        distY: clientY - startY,
+        deltaX: clientX - prevX,
+        deltaY: clientY - prevY,
+        isDrag: e.isDrag,
+        datas: datas,
+        inputEvent: inputEvent
+      };
+    }
+    function directionCondition(target) {
+      return hasClass(target, prefix("direction"));
+    }
+
+    var Draggable = {
+      name: "draggable",
+      dragStart: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+        var _b = moveable.state,
+            targetTransform = _b.targetTransform,
+            target = _b.target;
+        var style = window.getComputedStyle(target);
+        datas.datas = {};
+        datas.left = parseFloat(style.left || "") || 0;
+        datas.top = parseFloat(style.top || "") || 0;
+        datas.bottom = parseFloat(style.bottom || "") || 0;
+        datas.right = parseFloat(style.right || "") || 0;
+        datas.transform = targetTransform;
+        setDragStart(moveable, {
+          datas: datas
+        });
+        datas.prevDist = [0, 0];
+        datas.prevBeforeDist = [0, 0];
+        var result = triggerEvent(moveable, "onDragStart", {
+          datas: datas.datas,
+          target: target,
+          clientX: clientX,
+          clientY: clientY
+        });
+
+        if (result !== false) {
+          datas.isDrag = true;
+        } else {
+          datas.isPinch = false;
+        }
+
+        return datas.isDrag;
+      },
+      drag: function (moveable, _a) {
+        var datas = _a.datas,
+            distX = _a.distX,
+            distY = _a.distY,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            inputEvent = _a.inputEvent;
+        var isPinch = datas.isPinch,
+            isDrag = datas.isDrag,
+            prevDist = datas.prevDist,
+            prevBeforeDist = datas.prevBeforeDist,
+            transform = datas.transform;
+
+        if (!isDrag) {
+          return;
+        }
+
+        inputEvent.preventDefault();
+        inputEvent.stopPropagation();
+        var _b = moveable.props,
+            _c = _b.throttleDrag,
+            throttleDrag = _c === void 0 ? 0 : _c,
+            parentMoveable = _b.parentMoveable;
+        var target = moveable.state.target;
+        var beforeDist = getDragDist({
+          datas: datas,
+          distX: distX,
+          distY: distY
+        }, true);
+        var dist = getDragDist({
+          datas: datas,
+          distX: distX,
+          distY: distY
+        }, false);
+        throttleArray(dist, throttleDrag);
+        throttleArray(beforeDist, throttleDrag);
+        var delta = minus(dist, prevDist);
+        var beforeDelta = minus(beforeDist, prevBeforeDist);
+        datas.prevDist = dist;
+        datas.prevBeforeDist = beforeDist;
+        var left = datas.left + beforeDist[0];
+        var top = datas.top + beforeDist[1];
+        var right = datas.right - beforeDist[0];
+        var bottom = datas.bottom - beforeDist[1];
+        var nextTransform = transform + " translate(" + dist[0] + "px, " + dist[1] + "px)";
+
+        if (!parentMoveable && delta.every(function (num) {
+          return !num;
+        }) && beforeDelta.some(function (num) {
+          return !num;
+        })) {
+          return;
+        }
+
+        var params = {
+          datas: datas.datas,
+          target: target,
+          transform: nextTransform,
+          dist: dist,
+          delta: delta,
+          beforeDist: beforeDist,
+          beforeDelta: beforeDelta,
+          left: left,
+          top: top,
+          right: right,
+          bottom: bottom,
+          clientX: clientX,
+          clientY: clientY,
+          isPinch: isPinch
+        };
+        triggerEvent(moveable, "onDrag", params);
+        return params;
+      },
+      dragEnd: function (moveable, _a) {
+        var datas = _a.datas,
+            isDrag = _a.isDrag,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+
+        if (!datas.isDrag) {
+          return;
+        }
+
+        datas.isDrag = false;
+        triggerEvent(moveable, "onDragEnd", {
+          target: moveable.state.target,
+          isDrag: isDrag,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        return isDrag;
+      },
+      dragGroupCondition: function (target) {
+        return hasClass(target, prefix("group"));
+      },
+      dragGroupStart: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            datas = e.datas;
+        triggerChildAble(moveable, this, "dragStart", e);
+        this.dragStart(moveable, e);
+        var result = triggerEvent(moveable, "onDragGroupStart", {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        datas.isDrag = result !== false;
+        return datas.isDrag;
+      },
+      dragGroup: function (moveable, e) {
+        if (!e.datas.isDrag) {
+          return;
+        }
+
+        var events = triggerChildAble(moveable, this, "drag", e);
+        var params = this.drag(moveable, e);
+
+        if (!params) {
+          return;
+        }
+
+        var nextParams = __assign$3({
+          targets: moveable.props.targets,
+          events: events
+        }, params);
+
+        triggerEvent(moveable, "onDragGroup", nextParams);
+        return nextParams;
+      },
+      dragGroupEnd: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            isDrag = e.isDrag,
+            datas = e.datas;
+
+        if (!datas.isDrag) {
+          return;
+        }
+
+        triggerChildAble(moveable, this, "dragEnd", e);
+        triggerEvent(moveable, "onDragGroupEnd", {
+          targets: moveable.props.targets,
+          isDrag: isDrag,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        return isDrag;
+      }
+    };
+
+    function setRotateStartInfo(datas, clientX, clientY, origin, rotationPos) {
+      datas.startAbsoluteOrigin = [clientX - rotationPos[0] + origin[0], clientY - rotationPos[1] + origin[1]];
+      datas.prevDeg = getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
+      datas.startDeg = datas.prevDeg;
+      datas.loop = 0;
+    }
+
+    function getDeg(datas, deg, direction, throttleRotate) {
+      var prevDeg = datas.prevDeg,
+          startDeg = datas.startDeg,
+          prevLoop = datas.loop;
+      deg = throttle(deg, throttleRotate);
+
+      if (prevDeg > deg && prevDeg > 270 && deg < 90) {
+        // 360 => 0
+        ++datas.loop;
+      } else if (prevDeg < deg && prevDeg < 90 && deg > 270) {
+        // 0 => 360
+        --datas.loop;
+      }
+
+      var absolutePrevDeg = prevLoop * 360 + prevDeg;
+      var absoluteDeg = datas.loop * 360 + deg;
+      var delta = direction * (absoluteDeg - absolutePrevDeg);
+      var dist = direction * (absoluteDeg - startDeg);
+      datas.prevDeg = deg;
+      return [delta, dist];
+    }
+
+    function getRotateInfo(datas, direction, clientX, clientY, throttleRotate) {
+      return getDeg(datas, getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180, direction, throttleRotate);
+    }
+
+    function dragControlCondition(target) {
+      return hasClass(target, prefix("rotation"));
+    }
+
+    var Rotatable = {
+      name: "rotatable",
+      canPinch: true,
+      render: function (moveable) {
+        if (!moveable.props.rotatable) {
+          return null;
+        }
+
+        var _a = moveable.state,
+            pos1 = _a.pos1,
+            pos2 = _a.pos2,
+            rotationRad = _a.rotationRad;
+        return index.createElement("div", {
+          className: prefix("line rotation-line"),
+          style: {
+            // tslint:disable-next-line: max-line-length
+            transform: "translate(" + (pos1[0] + pos2[0]) / 2 + "px, " + (pos1[1] + pos2[1]) / 2 + "px) translateY(-40px) rotate(" + rotationRad + "rad)"
+          }
+        }, index.createElement("div", {
+          className: prefix("control", "rotation")
+        }));
+      },
+      dragControlCondition: dragControlCondition,
+      dragControlStart: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            parentRotate = _a.parentRotate,
+            parentFlag = _a.parentFlag,
+            pinchFlag = _a.pinchFlag;
+        var _b = moveable.state,
+            target = _b.target,
+            left = _b.left,
+            top = _b.top,
+            origin = _b.origin,
+            beforeOrigin = _b.beforeOrigin,
+            rotationPos = _b.rotationPos,
+            direction = _b.direction,
+            beforeDirection = _b.beforeDirection,
+            targetTransform = _b.targetTransform;
+
+        if (!target) {
+          return false;
+        }
+
+        datas.transform = targetTransform;
+        datas.left = left;
+        datas.top = top;
+
+        if (pinchFlag || parentFlag) {
+          datas.beforeInfo = {
+            prevDeg: parentRotate,
+            startDeg: parentRotate,
+            loop: 0
+          };
+          datas.afterInfo = {
+            prevDeg: parentRotate,
+            startDeg: parentRotate,
+            loop: 0
+          };
+        } else {
+          datas.afterInfo = {};
+          datas.beforeInfo = {};
+          setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rotationPos);
+          setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, rotationPos);
+        }
+
+        datas.direction = direction;
+        datas.beforeDirection = beforeDirection;
+        datas.datas = {};
+        var result = triggerEvent(moveable, "onRotateStart", {
+          datas: datas.datas,
+          target: target,
+          clientX: clientX,
+          clientY: clientY
+        });
+        datas.isRotate = result !== false;
+        return datas.isRotate;
+      },
+      dragControl: function (moveable, _a) {
+        var _b, _c, _d, _e;
+
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            parentRotate = _a.parentRotate,
+            parentFlag = _a.parentFlag,
+            pinchFlag = _a.pinchFlag;
+        var direction = datas.direction,
+            beforeDirection = datas.beforeDirection,
+            beforeInfo = datas.beforeInfo,
+            afterInfo = datas.afterInfo,
+            isRotate = datas.isRotate;
+
+        if (!isRotate) {
+          return;
+        }
+
+        var _f = moveable.props,
+            _g = _f.throttleRotate,
+            throttleRotate = _g === void 0 ? 0 : _g,
+            parentMoveable = _f.parentMoveable;
+        var delta;
+        var dist;
+        var beforeDelta;
+        var beforeDist;
+
+        if (pinchFlag || parentFlag) {
+          _b = getDeg(afterInfo, parentRotate, direction, throttleRotate), delta = _b[0], dist = _b[1];
+          _c = getDeg(beforeInfo, parentRotate, direction, throttleRotate), beforeDelta = _c[0], beforeDist = _c[1];
+        } else {
+          _d = getRotateInfo(afterInfo, direction, clientX, clientY, throttleRotate), delta = _d[0], dist = _d[1];
+          _e = getRotateInfo(beforeInfo, beforeDirection, clientX, clientY, throttleRotate), beforeDelta = _e[0], beforeDist = _e[1];
+        }
+
+        if (!delta && !beforeDelta && !parentMoveable) {
+          return;
+        }
+
+        var params = {
+          target: moveable.props.target,
+          datas: datas.datas,
+          delta: delta,
+          dist: dist,
+          clientX: clientX,
+          clientY: clientY,
+          beforeDist: beforeDist,
+          beforeDelta: beforeDelta,
+          transform: datas.transform + " rotate(" + dist + "deg)",
+          isPinch: !!pinchFlag
+        };
+        triggerEvent(moveable, "onRotate", params);
+        return params;
+      },
+      dragControlEnd: function (moveable, _a) {
+        var datas = _a.datas,
+            isDrag = _a.isDrag,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+
+        if (!datas.isRotate) {
+          return false;
+        }
+
+        datas.isRotate = false;
+        triggerEvent(moveable, "onRotateEnd", {
+          datas: datas.datas,
+          clientX: clientX,
+          clientY: clientY,
+          target: moveable.state.target,
+          isDrag: isDrag
+        });
+        return isDrag;
+      },
+      dragGroupControlCondition: dragControlCondition,
+      dragGroupControlStart: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            datas = e.datas,
+            inputEvent = e.inputEvent;
+        var _a = moveable.state,
+            parentLeft = _a.left,
+            parentTop = _a.top,
+            parentBeforeOrigin = _a.beforeOrigin;
+        triggerChildAble(moveable, this, "dragControlStart", __assign$3({}, e, {
+          parentRotate: 0
+        }), function (child, childDatas) {
+          var _a = child.state,
+              left = _a.left,
+              top = _a.top,
+              beforeOrigin = _a.beforeOrigin;
+          var childClient = sum(minus([left, top], [parentLeft, parentTop]), minus(beforeOrigin, parentBeforeOrigin));
+          var dragDatas = childDatas.drag || (childDatas.drag = {});
+          Draggable.dragStart(child, setCustomEvent(childClient[0], childClient[1], dragDatas, inputEvent));
+        });
+        this.dragControlStart(moveable, e);
+        var result = triggerEvent(moveable, "onRotateGroupStart", {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        datas.isRotate = result !== false;
+        return datas.isDrag;
+      },
+      dragGroupControl: function (moveable, e) {
+        var inputEvent = e.inputEvent,
+            datas = e.datas;
+
+        if (!datas.isRotate) {
+          return;
+        }
+
+        var params = this.dragControl(moveable, e);
+
+        if (!params) {
+          return;
+        }
+
+        var parentRotate = params.beforeDist;
+        var deg = params.beforeDelta;
+        var events = triggerChildAble(moveable, this, "dragControl", __assign$3({}, e, {
+          parentRotate: parentRotate
+        }), function (child, childDatas, result, i) {
+          var dragDatas = childDatas.drag || (childDatas.drag = {});
+
+          var _a = getCustomEvent(dragDatas),
+              prevX = _a.prevX,
+              prevY = _a.prevY;
+
+          var _b = rotate([prevX, prevY], deg),
+              clientX = _b[0],
+              clientY = _b[1];
+
+          var dragResult = Draggable.drag(child, setCustomEvent(clientX, clientY, dragDatas, inputEvent));
+          result.drag = dragResult;
+        });
+
+        var nextParams = __assign$3({
+          targets: moveable.props.targets,
+          events: events
+        }, params);
+
+        moveable.rotation += params.beforeDelta;
+        triggerEvent(moveable, "onRotateGroup", nextParams);
+        return nextParams;
+      },
+      dragGroupControlEnd: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            isDrag = e.isDrag,
+            datas = e.datas;
+
+        if (!datas.isRotate) {
+          return;
+        }
+
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
+        var nextParams = {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          isDrag: isDrag,
+          datas: datas.datas
+        };
+        triggerEvent(moveable, "onRotateGroupEnd", nextParams);
+        return isDrag;
+      }
+    };
+
+    function renderAllDirection(moveable) {
+      return renderDiagonalDirection(moveable).concat(renderDirection(moveable));
+    }
+    function renderDiagonalDirection(moveable) {
+      var _a = moveable.props,
+          resizable = _a.resizable,
+          scalable = _a.scalable,
+          warpable = _a.warpable;
+
+      if (!resizable && !scalable && !warpable) {
+        return [];
+      }
+
+      var _b = moveable.state,
+          pos1 = _b.pos1,
+          pos2 = _b.pos2,
+          pos3 = _b.pos3,
+          pos4 = _b.pos4;
+      return [index.createElement("div", {
+        className: prefix("control", "direction", "nw"),
+        "data-direction": "nw",
+        key: "nw",
+        style: getControlTransform(pos1)
+      }), index.createElement("div", {
+        className: prefix("control", "direction", "ne"),
+        "data-direction": "ne",
+        key: "ne",
+        style: getControlTransform(pos2)
+      }), index.createElement("div", {
+        className: prefix("control", "direction", "sw"),
+        "data-direction": "sw",
+        key: "sw",
+        style: getControlTransform(pos3)
+      }), index.createElement("div", {
+        className: prefix("control", "direction", "se"),
+        "data-direction": "se",
+        key: "se",
+        style: getControlTransform(pos4)
+      })];
+    }
+    function renderDirection(moveable) {
+      var _a = moveable.props,
+          resizable = _a.resizable,
+          scalable = _a.scalable;
+
+      if (!resizable && !scalable) {
+        return [];
+      }
+
+      var _b = moveable.state,
+          pos1 = _b.pos1,
+          pos2 = _b.pos2,
+          pos3 = _b.pos3,
+          pos4 = _b.pos4;
+      return [index.createElement("div", {
+        className: prefix("control", "direction", "n"),
+        "data-direction": "n",
+        key: "n",
+        style: getControlTransform(pos1, pos2)
+      }), index.createElement("div", {
+        className: prefix("control", "direction", "w"),
+        "data-direction": "w",
+        key: "w",
+        style: getControlTransform(pos1, pos3)
+      }), index.createElement("div", {
+        className: prefix("control", "direction", "e"),
+        "data-direction": "e",
+        key: "e",
+        style: getControlTransform(pos2, pos4)
+      }), index.createElement("div", {
+        className: prefix("control", "direction", "s"),
+        "data-direction": "s",
+        key: "s",
+        style: getControlTransform(pos3, pos4)
+      })];
+    }
+
+    var Resizable = {
+      name: "resizable",
+      dragControlOnly: true,
+      updateRect: true,
+      canPinch: true,
+      render: function (moveable) {
+        var _a = moveable.props,
+            resizable = _a.resizable,
+            edge = _a.edge;
+
+        if (resizable) {
+          if (edge) {
+            return renderDiagonalDirection(moveable);
+          }
+
+          return renderAllDirection(moveable);
+        }
+      },
+      dragControlCondition: directionCondition,
+      dragControlStart: function (moveable, e) {
+        var inputTarget = e.inputEvent.target,
+            pinchFlag = e.pinchFlag;
+        var direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
+        var _a = moveable.state,
+            target = _a.target,
+            width = _a.width,
+            height = _a.height;
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            datas = e.datas;
+
+        if (!direction || !target) {
+          return false;
+        }
+
+        !pinchFlag && setDragStart(moveable, {
+          datas: datas
+        });
+        datas.datas = {};
+        datas.direction = direction;
+        datas.width = width;
+        datas.height = height;
+        datas.prevWidth = 0;
+        datas.prevHeight = 0;
+        var result = triggerEvent(moveable, "onResizeStart", {
+          datas: datas.datas,
+          target: target,
+          clientX: clientX,
+          clientY: clientY
+        });
+
+        if (result !== false) {
+          datas.isResize = true;
+        }
+
+        return datas.isResize;
+      },
+      dragControl: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            distX = _a.distX,
+            distY = _a.distY,
+            pinchFlag = _a.pinchFlag,
+            parentDistance = _a.parentDistance,
+            parentScale = _a.parentScale;
+        var direction = datas.direction,
+            width = datas.width,
+            height = datas.height,
+            prevWidth = datas.prevWidth,
+            prevHeight = datas.prevHeight,
+            isResize = datas.isResize;
+
+        if (!isResize) {
+          return;
+        }
+
+        var _b = moveable.props,
+            keepRatio = _b.keepRatio,
+            _c = _b.throttleResize,
+            throttleResize = _c === void 0 ? 0 : _c,
+            parentMoveable = _b.parentMoveable;
+        var target = moveable.state.target;
+        var distWidth = 0;
+        var distHeight = 0; // diagonal
+
+        if (parentScale) {
+          distWidth = (parentScale - 1) * width;
+          distHeight = (parentScale - 1) * height;
+        } else if (pinchFlag) {
+          if (parentDistance) {
+            distWidth = parentDistance;
+            distHeight = parentDistance * height / width;
+          }
+        } else {
+          var dist = getDragDist({
+            datas: datas,
+            distX: distX,
+            distY: distY
+          });
+          distWidth = direction[0] * dist[0];
+          distHeight = direction[1] * dist[1];
+
+          if (keepRatio && direction[0] && direction[1] && width && height) {
+            var size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+            var rad = getRad([0, 0], dist);
+            var standardRad = getRad([0, 0], direction);
+            var distDiagonal = Math.cos(rad - standardRad) * size;
+            distWidth = distDiagonal;
+            distHeight = distDiagonal * height / width;
+          }
+        }
+
+        distWidth = throttle(distWidth, throttleResize);
+        distHeight = throttle(distHeight, throttleResize);
+        var nextWidth = width + distWidth;
+        var nextHeight = height + distHeight;
+        var delta = [distWidth - prevWidth, distHeight - prevHeight];
+        datas.prevWidth = distWidth;
+        datas.prevHeight = distHeight;
+
+        if (!parentMoveable && delta.every(function (num) {
+          return !num;
+        })) {
+          return;
+        }
+
+        var params = {
+          target: target,
+          width: nextWidth,
+          height: nextHeight,
+          direction: direction,
+          dist: [distWidth, distHeight],
+          datas: datas.datas,
+          delta: delta,
+          clientX: clientX,
+          clientY: clientY,
+          isPinch: !!pinchFlag
+        };
+        triggerEvent(moveable, "onResize", params);
+        return params;
+      },
+      dragControlEnd: function (moveable, _a) {
+        var datas = _a.datas,
+            isDrag = _a.isDrag,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+
+        if (!datas.isResize) {
+          return false;
+        }
+
+        datas.isResize = false;
+        triggerEvent(moveable, "onResizeEnd", {
+          target: moveable.state.target,
+          datas: datas.datas,
+          clientX: clientX,
+          clientY: clientY,
+          isDrag: isDrag
+        });
+        return isDrag;
+      },
+      dragGroupControlCondition: directionCondition,
+      dragGroupControlStart: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            datas = e.datas,
+            inputEvent = e.inputEvent;
+        var _a = moveable.state,
+            parentLeft = _a.left,
+            parentTop = _a.top;
+        var enabledEvents = triggerChildAble(moveable, this, "dragControlStart", __assign$3({}, e, {
+          parentRotate: 0
+        }), function (child, childDatas) {
+          var _a = child.state,
+              left = _a.left,
+              top = _a.top;
+          var dragDatas = childDatas.drag || (childDatas.drag = {});
+          Draggable.dragStart(child, setCustomEvent(left - parentLeft, top - parentTop, dragDatas, inputEvent));
+        });
+
+        if (enabledEvents.every(function (ev) {
+          return !ev;
+        })) {
+          return false;
+        }
+
+        this.dragControlStart(moveable, e);
+        var result = triggerEvent(moveable, "onResizeGroupStart", {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        datas.isResize = result !== false;
+        return datas.isResize;
+      },
+      dragGroupControl: function (moveable, e) {
+        var inputEvent = e.inputEvent,
+            datas = e.datas;
+
+        if (!datas.isResize) {
+          return;
+        }
+
+        var params = this.dragControl(moveable, e);
+
+        if (!params) {
+          return;
+        }
+
+        var width = params.width,
+            height = params.height,
+            dist = params.dist;
+        var parentScale = [width / (width - dist[0]), height / (height - dist[1])];
+        var events = triggerChildAble(moveable, this, "dragControl", __assign$3({}, e, {
+          parentScale: parentScale
+        }), function (child, childDatas, result) {
+          var dragDatas = childDatas.drag || (childDatas.drag = {});
+
+          var _a = getCustomEvent(dragDatas),
+              startX = _a.startX,
+              startY = _a.startY;
+
+          var clientX = parentScale[0] * startX;
+          var clientY = parentScale[1] * startY;
+          var dragResult = Draggable.drag(child, setCustomEvent(clientX, clientY, dragDatas, inputEvent));
+          result.drag = dragResult;
+        });
+
+        var nextParams = __assign$3({
+          targets: moveable.props.targets,
+          events: events
+        }, params);
+
+        triggerEvent(moveable, "onResizeGroup", nextParams);
+        return nextParams;
+      },
+      dragGroupControlEnd: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            isDrag = e.isDrag,
+            datas = e.datas;
+
+        if (!datas.isResize) {
+          return;
+        }
+
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
+        var nextParams = {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          isDrag: isDrag,
+          datas: datas.datas
+        };
+        triggerEvent(moveable, "onResizeGroupEnd", nextParams);
+        return isDrag;
+      }
+    };
+
+    var Scalable = {
+      name: "scalable",
+      dragControlOnly: true,
+      canPinch: true,
+      render: function (moveable) {
+        var _a = moveable.props,
+            resizable = _a.resizable,
+            scalable = _a.scalable,
+            edge = _a.edge;
+
+        if (!resizable && scalable) {
+          if (edge) {
+            return renderDiagonalDirection(moveable);
+          }
+
+          return renderAllDirection(moveable);
+        }
+      },
+      dragControlCondition: directionCondition,
+      dragControlStart: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            pinchFlag = _a.pinchFlag,
+            inputTarget = _a.inputEvent.target;
+        var direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
+        var _b = moveable.state,
+            width = _b.width,
+            height = _b.height,
+            targetTransform = _b.targetTransform,
+            target = _b.target;
+
+        if (!direction || !target) {
+          return false;
+        }
+
+        if (!pinchFlag) {
+          setDragStart(moveable, {
+            datas: datas
+          });
+        }
+
+        datas.datas = {};
+        datas.transform = targetTransform;
+        datas.prevDist = [1, 1];
+        datas.direction = direction;
+        datas.width = width;
+        datas.height = height;
+        var result = triggerEvent(moveable, "onScaleStart", {
+          target: target,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+
+        if (result !== false) {
+          datas.isScale = true;
+        }
+
+        return datas.isScale;
+      },
+      dragControl: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            distX = _a.distX,
+            distY = _a.distY,
+            parentScale = _a.parentScale,
+            parentDistance = _a.parentDistance,
+            pinchFlag = _a.pinchFlag;
+        var prevDist = datas.prevDist,
+            direction = datas.direction,
+            width = datas.width,
+            height = datas.height,
+            transform = datas.transform,
+            isScale = datas.isScale;
+
+        if (!isScale) {
+          return false;
+        }
+
+        var _b = moveable.props,
+            keepRatio = _b.keepRatio,
+            throttleScale = _b.throttleScale,
+            parentMoveable = _b.parentMoveable;
+        var target = moveable.state.target;
+        var scaleX = 1;
+        var scaleY = 1;
+
+        if (parentScale) {
+          scaleX = parentScale[0];
+          scaleY = parentScale[1];
+        } else if (pinchFlag) {
+          if (parentDistance) {
+            scaleX = (width + parentDistance) / width;
+            scaleY = (height + parentDistance * height / width) / height;
+          }
+        } else {
+          var dist = getDragDist({
+            datas: datas,
+            distX: distX,
+            distY: distY
+          });
+          var distWidth = direction[0] * dist[0];
+          var distHeight = direction[1] * dist[1]; // diagonal
+
+          if (keepRatio && direction[0] && direction[1] && width && height) {
+            var size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+            var rad = getRad([0, 0], dist);
+            var standardRad = getRad([0, 0], direction);
+            var distDiagonal = Math.cos(rad - standardRad) * size;
+            distWidth = distDiagonal;
+            distHeight = distDiagonal * height / width;
+          }
+
+          var nextWidth = width + distWidth;
+          var nextHeight = height + distHeight;
+          scaleX = nextWidth / width;
+          scaleY = nextHeight / height;
+        }
+
+        scaleX = throttle(scaleX, throttleScale);
+        scaleY = throttle(scaleY, throttleScale);
+
+        if (scaleX === 0) {
+          scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+        }
+
+        if (scaleY === 0) {
+          scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+        }
+
+        var nowScale = [scaleX, scaleY];
+        datas.prevDist = nowScale;
+
+        if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
+          return false;
+        }
+
+        var params = {
+          target: target,
+          scale: nowScale,
+          direction: direction,
+          dist: [scaleX - 1, scaleY - 1],
+          delta: [scaleX / prevDist[0], scaleY / prevDist[1]],
+          transform: transform + " scale(" + scaleX + ", " + scaleY + ")",
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas,
+          isPinch: !!pinchFlag
+        };
+        triggerEvent(moveable, "onScale", params);
+        return params;
+      },
+      dragControlEnd: function (moveable, _a) {
+        var datas = _a.datas,
+            isDrag = _a.isDrag,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            pinchFlag = _a.pinchFlag;
+
+        if (!datas.isScale) {
+          return false;
+        }
+
+        datas.isScale = false;
+        triggerEvent(moveable, "onScaleEnd", {
+          target: moveable.state.target,
+          isDrag: isDrag,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        return isDrag;
+      },
+      dragGroupControlCondition: directionCondition,
+      dragGroupControlStart: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            datas = e.datas,
+            inputEvent = e.inputEvent;
+        var _a = moveable.state,
+            parentLeft = _a.left,
+            parentTop = _a.top,
+            parentOrigin = _a.origin;
+        var parentAbsoluteOrigin = [parentLeft + parentOrigin[0], parentTop + parentOrigin[1]];
+        datas.rotation = moveable.rotation;
+        var enabledEvents = triggerChildAble(moveable, this, "dragControlStart", e, function (child, childDatas) {
+          var _a = child.state,
+              left = _a.left,
+              top = _a.top,
+              origin = _a.origin;
+          var dragDatas = childDatas.drag || (childDatas.drag = {});
+          Draggable.dragStart(child, setCustomEvent(left + origin[0] - parentAbsoluteOrigin[0], top + origin[1] - parentAbsoluteOrigin[1], dragDatas, inputEvent));
+        });
+
+        if (enabledEvents.every(function (ev) {
+          return !ev;
+        })) {
+          return false;
+        }
+
+        this.dragControlStart(moveable, e);
+        var result = triggerEvent(moveable, "onScaleGroupStart", {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+        datas.isScale = result !== false;
+        return datas.isScale;
+      },
+      dragGroupControl: function (moveable, e) {
+        var inputEvent = e.inputEvent,
+            datas = e.datas;
+
+        if (!datas.isScale) {
+          return;
+        }
+
+        var params = this.dragControl(moveable, e);
+
+        if (!params) {
+          return;
+        }
+
+        var scale = params.scale;
+        var events = triggerChildAble(moveable, this, "dragControl", __assign$3({}, e, {
+          parentScale: scale
+        }), function (child, childDatas, result) {
+          var dragDatas = childDatas.drag || (childDatas.drag = {});
+
+          var _a = getCustomEvent(dragDatas),
+              startX = _a.startX,
+              startY = _a.startY;
+
+          var startPos = rotate([startX, startY], -datas.rotation);
+
+          var _b = rotate([startPos[0] * scale[0], startPos[1] * scale[1]], moveable.rotation),
+              clientX = _b[0],
+              clientY = _b[1];
+
+          var dragResult = Draggable.drag(child, setCustomEvent(clientX, clientY, dragDatas, inputEvent));
+          result.drag = dragResult;
+        });
+
+        var nextParams = __assign$3({
+          targets: moveable.props.targets,
+          events: events
+        }, params);
+
+        triggerEvent(moveable, "onScaleGroup", nextParams);
+        return nextParams;
+      },
+      dragGroupControlEnd: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            isDrag = e.isDrag,
+            datas = e.datas;
+
+        if (!datas.isScale) {
+          return;
+        }
+
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
+        var nextParams = {
+          targets: moveable.props.targets,
+          clientX: clientX,
+          clientY: clientY,
+          isDrag: isDrag,
+          datas: datas.datas
+        };
+        triggerEvent(moveable, "onScaleGroupEnd", nextParams);
+        return isDrag;
+      }
+    };
+
+    function getMiddleLinePos(pos1, pos2) {
+      return pos1.map(function (pos, i) {
+        return dot(pos, pos2[i], 1, 2);
+      });
+    }
+
+    function getTriangleRad(pos1, pos2, pos3) {
+      // pos1 Rad
+      var rad1 = getRad(pos1, pos2);
+      var rad2 = getRad(pos1, pos3);
+      var rad = rad2 - rad1;
+      return rad >= 0 ? rad : rad + 2 * Math.PI;
+    }
+
+    function isValidPos(poses1, poses2) {
+      var rad1 = getTriangleRad(poses1[0], poses1[1], poses1[2]);
+      var rad2 = getTriangleRad(poses2[0], poses2[1], poses2[2]);
+      var pi = Math.PI;
+
+      if (rad1 >= pi && rad2 <= pi || rad1 <= pi && rad2 >= pi) {
+        return false;
+      }
+
+      return true;
+    }
+
+    var Warpable = {
+      name: "warpable",
+      dragControlOnly: true,
+      render: function (moveable) {
+        var _a = moveable.props,
+            resizable = _a.resizable,
+            scalable = _a.scalable,
+            warpable = _a.warpable;
+
+        if (resizable || scalable || !warpable) {
+          return;
+        }
+
+        var _b = moveable.state,
+            pos1 = _b.pos1,
+            pos2 = _b.pos2,
+            pos3 = _b.pos3,
+            pos4 = _b.pos4;
+        var linePosFrom1 = getMiddleLinePos(pos1, pos2);
+        var linePosFrom2 = getMiddleLinePos(pos2, pos1);
+        var linePosFrom3 = getMiddleLinePos(pos1, pos3);
+        var linePosFrom4 = getMiddleLinePos(pos3, pos1);
+        var linePosTo1 = getMiddleLinePos(pos3, pos4);
+        var linePosTo2 = getMiddleLinePos(pos4, pos3);
+        var linePosTo3 = getMiddleLinePos(pos2, pos4);
+        var linePosTo4 = getMiddleLinePos(pos4, pos2);
+        return [index.createElement("div", {
+          className: prefix("line"),
+          key: "middeLine1",
+          style: getLineStyle(linePosFrom1, linePosTo1)
+        }), index.createElement("div", {
+          className: prefix("line"),
+          key: "middeLine2",
+          style: getLineStyle(linePosFrom2, linePosTo2)
+        }), index.createElement("div", {
+          className: prefix("line"),
+          key: "middeLine3",
+          style: getLineStyle(linePosFrom3, linePosTo3)
+        }), index.createElement("div", {
+          className: prefix("line"),
+          key: "middeLine4",
+          style: getLineStyle(linePosFrom4, linePosTo4)
+        })].concat(renderDiagonalDirection(moveable));
+      },
+      dragControlCondition: function (target) {
+        return hasClass(target, prefix("direction"));
+      },
+      dragControlStart: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            inputTarget = _a.inputEvent.target;
+        var _b = moveable.props,
+            target = _b.target,
+            onWarpStart = _b.onWarpStart;
+        var direction = getDirection(inputTarget);
+
+        if (!direction || !target) {
+          return false;
+        }
+
+        var _c = moveable.state,
+            transformOrigin = _c.transformOrigin,
+            is3d = _c.is3d,
+            targetTransform = _c.targetTransform,
+            targetMatrix = _c.targetMatrix,
+            width = _c.width,
+            height = _c.height;
+        datas.datas = {};
+        datas.targetTransform = targetTransform;
+        datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
+        datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
+        datas.direction = direction;
+        setDragStart(moveable, {
+          datas: datas
+        });
+        datas.poses = [[0, 0], [width, 0], [0, height], [width, height]].map(function (p, i) {
+          return minus(p, transformOrigin);
+        });
+        datas.nextPoses = datas.poses.map(function (_a) {
+          var x = _a[0],
+              y = _a[1];
+          return caculate(datas.targetMatrix, [x, y, 0, 1], 4);
+        });
+        datas.posNum = (direction[0] === -1 ? 0 : 1) + (direction[1] === -1 ? 0 : 2);
+        datas.prevMatrix = createIdentityMatrix(4);
+        var result = onWarpStart && onWarpStart({
+          target: target,
+          clientX: clientX,
+          clientY: clientY,
+          datas: datas.datas
+        });
+
+        if (result !== false) {
+          datas.isWarp = true;
+        }
+
+        return result;
+      },
+      dragControl: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY,
+            distX = _a.distX,
+            distY = _a.distY;
+        var posNum = datas.posNum,
+            poses = datas.poses,
+            targetInverseMatrix = datas.targetInverseMatrix,
+            prevMatrix = datas.prevMatrix,
+            isWarp = datas.isWarp;
+
+        if (!isWarp) {
+          return false;
+        }
+
+        var _b = moveable.props,
+            target = _b.target,
+            onWarp = _b.onWarp;
+        var dist = getDragDist({
+          datas: datas,
+          distX: distX,
+          distY: distY
+        }, true);
+        var nextPoses = datas.nextPoses.slice();
+        nextPoses[posNum] = [nextPoses[posNum][0] + dist[0], nextPoses[posNum][1] + dist[1]];
+
+        if (!NEARBY_POS.every(function (nearByPoses) {
+          return isValidPos(nearByPoses.map(function (i) {
+            return poses[i];
+          }), nearByPoses.map(function (i) {
+            return nextPoses[i];
+          }));
+        })) {
+          return false;
+        }
+
+        var h = warp(poses[0], poses[1], poses[2], poses[3], nextPoses[0], nextPoses[1], nextPoses[2], nextPoses[3]);
+
+        if (!h.length) {
+          return false;
+        }
+
+        var matrix = convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4));
+        var transform = datas.targetTransform + " matrix3d(" + matrix.join(",") + ")";
+        var delta = multiply(invert(prevMatrix, 4), matrix, 4);
+        datas.prevMatrix = matrix;
+        onWarp && onWarp({
+          target: target,
+          clientX: clientX,
+          clientY: clientY,
+          delta: delta,
+          multiply: multiplyCSS,
+          dist: matrix,
+          transform: transform,
+          datas: datas.datas
+        });
+        return true;
+      },
+      dragControlEnd: function (moveable, _a) {
+        var datas = _a.datas,
+            isDrag = _a.isDrag,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+
+        if (!datas.isWarp) {
+          return false;
+        }
+
+        datas.isWarp = false;
+        var _b = moveable.props,
+            target = _b.target,
+            onWarpEnd = _b.onWarpEnd;
+        onWarpEnd && onWarpEnd({
+          target: target,
+          clientX: clientX,
+          clientY: clientY,
+          isDrag: isDrag,
+          datas: datas.datas
+        });
+        return isDrag;
+      }
+    };
+
+    var agent$1 = agent();
+    var isNotSupportTransformOrigin = agent$1.os.name.indexOf("ios") > -1 || agent$1.browser.name.indexOf("safari") > -1;
+    var PREFIX = "moveable-";
+    var MOVEABLE_CSS = prefixCSS(PREFIX, "\n{\n\tposition: fixed;\n\twidth: 0;\n\theight: 0;\n\tleft: 0;\n\ttop: 0;\n\tz-index: 3000;\n}\n.control-box {\n    z-index: 0;\n}\n.line, .control {\n\tleft: 0;\n\ttop: 0;\n}\n.control {\n\tposition: absolute;\n\twidth: 14px;\n\theight: 14px;\n\tborder-radius: 50%;\n\tborder: 2px solid #fff;\n\tbox-sizing: border-box;\n\tbackground: #4af;\n\tmargin-top: -7px;\n    margin-left: -7px;\n    z-index: 10;\n}\n.line {\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tbackground: #4af;\n\ttransform-origin: 0px 0.5px;\n}\n.line.rotation-line {\n\theight: 40px;\n\twidth: 1px;\n\ttransform-origin: 0.5px 39.5px;\n}\n.line.rotation-line .control {\n\tborder-color: #4af;\n\tbackground:#fff;\n\tcursor: alias;\n}\n.control.origin {\n\tborder-color: #f55;\n\tbackground: #fff;\n\twidth: 12px;\n\theight: 12px;\n\tmargin-top: -6px;\n\tmargin-left: -6px;\n\tpointer-events: none;\n}\n.direction.e, .direction.w {\n\tcursor: ew-resize;\n}\n.direction.s, .direction.n {\n\tcursor: ns-resize;\n}\n.direction.nw, .direction.se, :host.reverse .direction.ne, :host.reverse .direction.sw {\n\tcursor: nwse-resize;\n}\n.direction.ne, .direction.sw, :host.reverse .direction.nw, :host.reverse .direction.se {\n\tcursor: nesw-resize;\n}\n.group {\n    z-index: -1;\n}\n" + (isNotSupportTransformOrigin ? ":global svg *:before {\n\tcontent:\"\";\n\ttransform-origin: inherit;\n}" : "") + "\n");
+    var NEARBY_POS = [[0, 1, 2], [1, 0, 3], [2, 0, 3], [3, 1, 2]];
+    var MIN_SCALE = 0.000000001;
+    var MOVEABLE_ABLES = [Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable];
+    var MAX_NUM = Math.pow(10, 10);
+    var MIN_NUM = -MAX_NUM;
+
+    var Origin = {
+      name: "origin",
+      render: function (moveable) {
+        if (!moveable.props.origin) {
+          return null;
+        }
+
+        var beforeOrigin = moveable.state.beforeOrigin;
+        return [// <div className={prefix("control", "origin")} style={getControlTransform(origin)} key="origin"></div>,
+        index.createElement("div", {
+          className: prefix("control", "origin"),
+          style: getControlTransform(beforeOrigin),
+          key: "beforeOrigin"
+        })];
+      }
+    };
+
+    function triggerAble(moveable, ableType, eventOperation, prefix, eventType, e) {
+      var eventName = "" + eventOperation + prefix + eventType;
+      var conditionName = "" + eventOperation + prefix + "Condition";
+      var isStart = eventType === "Start";
+      var isGroup = prefix.indexOf("Group") > -1;
+      var ables = moveable[ableType];
+      var results = ables.filter(function (able) {
+        var condition = isStart && able[conditionName];
+
+        if (able[eventName] && (!condition || condition(e.inputEvent.target))) {
+          return able[eventName](moveable, e);
+        }
+
+        return false;
+      });
+
+      if (!isStart && results.length) {
+        if (results.some(function (able) {
+          return able.updateRect;
+        }) && !isGroup) {
+          moveable.updateRect(eventType);
+        } else {
+          moveable.updateTarget(eventType);
+        }
+      }
+    }
+
+    function getAbleDragger(moveable, target, ableType, prefix) {
+      var options = {
+        container: window
+      };
+      ["drag", "pinch"].forEach(function (eventOperation) {
+        ["Start", "", "End"].forEach(function (eventType) {
+          options["" + eventOperation + eventType.toLowerCase()] = function (e) {
+            return triggerAble(moveable, ableType, eventOperation, prefix, eventType, e);
+          };
+        });
+      });
+      return new Dragger(target, options);
+    }
+
+    var ControlBoxElement = styled("div", MOVEABLE_CSS);
+
+    function renderLine(direction, pos1, pos2) {
+      return createElement("div", {
+        className: prefix("line", "direction", direction),
+        "data-direction": direction,
+        style: getLineStyle(pos1, pos2)
+      });
+    }
+
+    var MoveableManager =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$4(MoveableManager, _super);
+
+      function MoveableManager() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+
+        _this.state = {
+          target: null,
+          beforeMatrix: createIdentityMatrix3(),
+          matrix: createIdentityMatrix3(),
+          targetMatrix: createIdentityMatrix3(),
+          targetTransform: "",
+          is3d: false,
+          left: 0,
+          top: 0,
+          width: 0,
+          height: 0,
+          transformOrigin: [0, 0],
+          direction: 1,
+          beforeDirection: 1,
+          rotationRad: 0,
+          rotationPos: [0, 0],
+          beforeOrigin: [0, 0],
+          origin: [0, 0],
+          pos1: [0, 0],
+          pos2: [0, 0],
+          pos3: [0, 0],
+          pos4: [0, 0]
+        };
+        _this.targetAbles = [];
+        _this.controlAbles = [];
+        return _this;
+      }
+
+      var __proto = MoveableManager.prototype;
+
+      __proto.render = function () {
+        this.update(false);
+        var _a = this.props,
+            edge = _a.edge,
+            parentPosition = _a.parentPosition;
+
+        var _b = parentPosition || {
+          left: 0,
+          top: 0
+        },
+            parentLeft = _b.left,
+            parentTop = _b.top;
+
+        var _c = this.state,
+            left = _c.left,
+            top = _c.top,
+            pos1 = _c.pos1,
+            pos2 = _c.pos2,
+            pos3 = _c.pos3,
+            pos4 = _c.pos4,
+            target = _c.target,
+            direction = _c.direction;
+        return createElement(ControlBoxElement, {
+          ref: ref(this, "controlBox"),
+          className: prefix("control-box", direction === -1 ? "reverse" : ""),
+          style: {
+            position: "absolute",
+            display: target ? "block" : "none",
+            transform: "translate(" + (left - parentLeft) + "px, " + (top - parentTop) + "px) translateZ(50px)"
+          }
+        }, this.renderAbles(), renderLine(edge ? "n" : "", pos1, pos2), renderLine(edge ? "e" : "", pos2, pos4), renderLine(edge ? "w" : "", pos1, pos3), renderLine(edge ? "s" : "", pos3, pos4));
+      };
+
+      __proto.componentDidMount = function () {
+        this.controlBox.getElement();
+        this.update(true);
+      };
+
+      __proto.componentWillUnmount = function () {
+        unset(this, "targetDragger");
+        unset(this, "controlDragger");
+      };
+
+      __proto.getContainer = function () {
+        var _a = this.props,
+            parentMoveable = _a.parentMoveable,
+            container = _a.container;
+        return container || parentMoveable && parentMoveable.getContainer() || this.controlBox.getElement().offsetParent;
+      };
+
+      __proto.isMoveableElement = function (target) {
+        return target && (target.getAttribute("class") || "").indexOf(PREFIX) > -1;
+      };
+
+      __proto.dragStart = function (e) {
+        this.targetDragger.onDragStart(e);
+      };
+
+      __proto.isInside = function (clientX, clientY) {
+        var _a = this.state,
+            pos1 = _a.pos1,
+            pos2 = _a.pos2,
+            pos3 = _a.pos3,
+            pos4 = _a.pos4,
+            target = _a.target;
+
+        if (!target) {
+          return false;
+        }
+
+        var _b = target.getBoundingClientRect(),
+            left = _b.left,
+            top = _b.top;
+
+        var pos = [clientX - left, clientY - top];
+        return isInside(pos, pos1, pos2, pos3, pos4);
+      };
+
+      __proto.updateRect = function (type, isTarget, isSetState) {
+        if (isSetState === void 0) {
+          isSetState = true;
+        }
+
+        var parentMoveable = this.props.parentMoveable;
+        var state = this.state;
+        var target = state.target || this.props.target;
+        this.updateState(getTargetInfo(target, this.getContainer(), isTarget ? state : undefined), parentMoveable ? false : isSetState);
+      };
+
+      __proto.updateTarget = function (type) {
+        this.updateRect(type, true);
+      };
+
+      __proto.update = function (isSetState) {
+        var props = this.props;
+        var target = props.target,
+            parentMoveable = props.parentMoveable;
+        var stateTarget = this.state.target;
+        var controlBox = this.controlBox;
+
+        if (!controlBox || !stateTarget && !target) {
+          return;
+        }
+
+        this.updateAbles();
+        var controlBoxElement = controlBox.getElement();
+        var hasTargetAble = this.targetAbles.length;
+        var hasControlAble = this.controlAbles.length;
+        var isTargetChanged = stateTarget !== target;
+
+        if (isTargetChanged) {
+          this.updateState({
+            target: target
+          });
+        }
+
+        if (!hasTargetAble || isTargetChanged) {
+          unset(this, "targetDragger");
+        }
+
+        if (!hasControlAble) {
+          unset(this, "controlDragger");
+        }
+
+        if (target && (!this.targetDragger && hasTargetAble || isTargetChanged)) {
+          this.targetDragger = getAbleDragger(this, target, "targetAbles", "");
+        }
+
+        if (!this.controlDragger && hasControlAble) {
+          this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
+        }
+
+        if (isTargetChanged && !parentMoveable) {
+          this.updateRect("End", false, isSetState);
+        }
+
+        return isTargetChanged;
+      };
+
+      __proto.triggerEvent = function (name, e) {
+        var callback = this.props[name];
+        return callback && callback(e);
+      };
+
+      __proto.updateAbles = function () {
+        var props = this.props;
+        var enabledAbles = props.ables.filter(function (able) {
+          return props[able.name];
+        });
+        var controlAbleOnly = false;
+        var targetAbles = enabledAbles.filter(function (able) {
+          return able.dragStart || able.pinchStart;
+        });
+        var controlAbles = enabledAbles.filter(function (_a) {
+          var dragControlStart = _a.dragControlStart,
+              dragControlOnly = _a.dragControlOnly;
+
+          if (!dragControlStart || dragControlOnly && controlAbleOnly) {
+            return false;
+          }
+
+          if (dragControlOnly) {
+            controlAbleOnly = true;
+          }
+
+          return true;
+        });
+        this.targetAbles = targetAbles;
+        this.controlAbles = controlAbles;
+      };
+
+      __proto.updateState = function (nextState, isSetState) {
+        if (isSetState) {
+          this.setState(nextState);
+        } else {
+          var state = this.state;
+
+          for (var name in nextState) {
+            state[name] = nextState[name];
+          }
+        }
+      };
+
+      __proto.renderAbles = function () {
+        var _this = this;
+
+        var ables = this.props.ables.concat([Origin]);
+        return ables.map(function (_a) {
+          var render = _a.render;
+          return render && render(_this);
+        });
+      };
+
+      MoveableManager.defaultProps = {
+        target: null,
+        container: null,
+        origin: true,
+        keepRatio: true,
+        edge: false,
+        parentMoveable: null,
+        parentPosition: null,
+        ables: []
+      };
+      return MoveableManager;
+    }(PureComponent);
+
+    var Groupable = {
+      name: "groupable",
+      render: function (moveable) {
+        var targets = moveable.props.targets || [];
+        moveable.moveables = [];
+        var _a = moveable.state,
+            left = _a.left,
+            top = _a.top;
+        var position = {
+          left: left,
+          top: top
+        };
+        return targets.map(function (target, i) {
+          return index.createElement(MoveableManager, {
+            key: i,
+            ref: refs(moveable, "moveables", i),
+            target: target,
+            origin: false,
+            parentMoveable: moveable,
+            parentPosition: position
+          });
+        }).concat([index.createElement("div", {
+          key: "groupTarget",
+          ref: ref(moveable, "groupTargetElement"),
+          className: prefix("group")
+        })]);
+      }
+    };
+
+    function getMaxPos(poses, index) {
+      return Math.max.apply(Math, poses.map(function (_a) {
+        var pos1 = _a[0],
+            pos2 = _a[1],
+            pos3 = _a[2],
+            pos4 = _a[3];
+        return Math.max(pos1[index], pos2[index], pos3[index], pos4[index]);
+      }));
+    }
+
+    function getMinPos(poses, index) {
+      return Math.min.apply(Math, poses.map(function (_a) {
+        var pos1 = _a[0],
+            pos2 = _a[1],
+            pos3 = _a[2],
+            pos4 = _a[3];
+        return Math.min(pos1[index], pos2[index], pos3[index], pos4[index]);
+      }));
+    }
+
+    function getGroupRect(moveables, rotation) {
+      if (!moveables.length) {
+        return [0, 0, 0, 0];
+      }
+
+      var moveablePoses = moveables.map(function (_a) {
+        var _b = _a.state,
+            left = _b.left,
+            top = _b.top,
+            pos1 = _b.pos1,
+            pos2 = _b.pos2,
+            pos3 = _b.pos3,
+            pos4 = _b.pos4;
+        var pos = [left, top];
+        return [sum(pos, pos1), sum(pos, pos2), sum(pos, pos3), sum(pos, pos4)];
+      });
+      var minX = MAX_NUM;
+      var minY = MAX_NUM;
+      var groupWidth = 0;
+      var groupHeight = 0;
+
+      if (rotation % 90) {
+        var rad = rotation / 180 * Math.PI;
+        var a1_1 = Math.tan(rad);
+        var a2_1 = -1 / a1_1;
+        var b1s_1 = [MIN_NUM, MAX_NUM];
+        var b2s_1 = [MIN_NUM, MAX_NUM];
+        moveablePoses.forEach(function (poses) {
+          poses.forEach(function (pos) {
+            // ax + b = y
+            // ㅠ = y - ax
+            var b1 = pos[1] - a1_1 * pos[0];
+            var b2 = pos[1] - a2_1 * pos[0];
+            b1s_1[0] = Math.max(b1s_1[0], b1);
+            b1s_1[1] = Math.min(b1s_1[1], b1);
+            b2s_1[0] = Math.max(b2s_1[0], b2);
+            b2s_1[1] = Math.min(b2s_1[1], b2);
+          });
+        });
+        b1s_1.forEach(function (b1) {
+          // a1x + b1 = a2x + b2
+          b2s_1.forEach(function (b2) {
+            // (a1 - a2)x = b2 - b1
+            var x = (b2 - b1) / (a1_1 - a2_1);
+            var y = a1_1 * x + b1;
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+          });
+        });
+        var rotatePoses = moveablePoses.map(function (_a) {
+          var pos1 = _a[0],
+              pos2 = _a[1],
+              pos3 = _a[2],
+              pos4 = _a[3];
+          return [rotate(pos1, -rotation), rotate(pos2, -rotation), rotate(pos3, -rotation), rotate(pos4, -rotation)];
+        });
+        groupWidth = getMaxPos(rotatePoses, 0) - getMinPos(rotatePoses, 0);
+        groupHeight = getMaxPos(rotatePoses, 1) - getMinPos(rotatePoses, 1);
+      } else {
+        minX = getMinPos(moveablePoses, 0);
+        minY = getMinPos(moveablePoses, 1);
+        groupWidth = getMaxPos(moveablePoses, 0) - minX;
+        groupHeight = getMaxPos(moveablePoses, 1) - minY;
+      }
+
+      return [minX, minY, groupWidth, groupHeight];
+    }
+
+    var MoveableGroup =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$4(MoveableGroup, _super);
+
+      function MoveableGroup() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+
+        _this.differ = new ChildrenDiffer();
+        _this.moveables = [];
+        _this.rotation = 0;
+        return _this;
+      }
+
+      var __proto = MoveableGroup.prototype;
+
+      __proto.componentDidMount = function () {
+        _super.prototype.componentDidMount.call(this);
+      };
+
+      __proto.componentDidUpdate = function () {
+        this.update(true);
+      };
+
+      __proto.update = function (isSetState) {
+        if (!isSetState) {
+          return;
+        }
+
+        var state = this.state;
+
+        if (!state.target) {
+          state.target = this.groupTargetElement;
+          this.controlBox.getElement().style.display = "block";
+          this.targetDragger = getAbleDragger(this, state.target, "targetAbles", "Group");
+          this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
+        }
+
+        this.updateAbles();
+        this.moveables.forEach(function (moveable) {
+          return moveable.update(false);
+        });
+
+        var _a = this.differ.update(this.props.targets),
+            added = _a.added,
+            changed = _a.changed;
+
+        if (added.length || changed.length) {
+          this.updateRect();
+        }
+
+        return true;
+      };
+
+      __proto.updateRect = function (type, isTarget, isSetState) {
+
+        if (!this.controlBox) {
+          return;
+        }
+
+        this.moveables.forEach(function (moveable) {
+          moveable.updateRect(type, false, false);
+        });
+        var state = this.state;
+        var target = state.target || this.props.target;
+
+        if (!isTarget || type !== "" && this.props.updateGroup) {
+          // reset rotataion
+          this.rotation = 0;
+        }
+
+        var rotation = this.rotation;
+
+        var _a = getGroupRect(this.moveables, rotation),
+            left = _a[0],
+            top = _a[1],
+            width = _a[2],
+            height = _a[3];
+
+        target.style.cssText += "width:" + width + "px; height:" + height + "px;transform:rotate(" + rotation + "deg)";
+        state.width = width;
+        state.height = height;
+        var info = getTargetInfo(target, this.controlBox.getElement(), state);
+        target.style.cssText += "transform: translate(" + -info.left + "px, " + -info.top + "px) rotate(" + rotation + "deg)";
+        this.updateState(__assign$3({}, info, {
+          left: left,
+          top: top
+        }), true);
+      };
+
+      __proto.triggerEvent = function (name, e) {
+        if (name.indexOf("Group") > -1) {
+          return _super.prototype.triggerEvent.call(this, name, e);
+        }
+      };
+
+      __proto.renderAbles = function () {
+        var _this = this;
+
+        var ables = this.props.ables.concat([Groupable, Origin]);
+        return ables.map(function (_a) {
+          var render = _a.render;
+          return render && render(_this);
+        });
+      };
+
+      MoveableGroup.defaultProps = __assign$3({}, MoveableManager.defaultProps, {
+        groupable: true,
+        ables: MOVEABLE_ABLES,
+        targets: []
+      });
+      return MoveableGroup;
+    }(MoveableManager);
+
+    var Moveable =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$4(Moveable, _super);
+
+      function Moveable() {
+        return _super !== null && _super.apply(this, arguments) || this;
+      }
+
+      var __proto = Moveable.prototype;
+
+      __proto.render = function () {
+        var target = this.props.target || this.props.targets;
+        var isArr = isArray(target);
+        var isGroup = isArr && target.length > 1;
+
+        if (isGroup) {
+          return index.createElement(MoveableGroup, __assign$3({
+            key: "group",
+            ref: ref(this, "moveable")
+          }, __assign$3({}, this.props, {
+            target: null,
+            targets: target
+          })));
+        } else {
+          var moveableTarget = isArr ? target[0] : target;
+          return index.createElement(MoveableManager, __assign$3({
+            key: "single",
+            ref: ref(this, "moveable")
+          }, __assign$3({}, this.props, {
+            target: moveableTarget
+          })));
+        }
+      };
+
+      __proto.isMoveableElement = function (target) {
+        return this.moveable.isMoveableElement(target);
+      };
+
+      __proto.dragStart = function (e) {
+        this.moveable.dragStart(e);
+      };
+
+      __proto.isInside = function (clientX, clientY) {
+        return this.moveable.isInside(clientX, clientY);
+      };
+
+      __proto.updateRect = function () {
+        this.moveable.updateRect();
+      };
+
+      __proto.updateTarget = function () {
+        this.moveable.updateTarget();
+      };
+
+      Moveable.defaultProps = __assign$3({}, MoveableManager.defaultProps, {
+        ables: MOVEABLE_ABLES
+      });
+      return Moveable;
+    }(index.PureComponent);
+
+    var InnerMoveable =
+    /*#__PURE__*/
+    function (_super) {
+      __extends(InnerMoveable, _super);
+
+      function InnerMoveable(props) {
+        var _this = _super.call(this, props) || this;
+
+        _this.state = {};
+        _this.state = _this.props;
+        return _this;
+      }
+
+      var __proto = InnerMoveable.prototype;
+
+      __proto.render = function () {
+        return h(Moveable, __assign({
+          ref: ref(this, "preactMoveable")
+        }, this.state));
+      };
+
+      return InnerMoveable;
+    }(Component$1);
+
+    var PROPERTIES = ["draggable", "resizable", "scalable", "rotatable", "warpable", "pinchable", "origin", "target", "edge", "throttleDrag", "throttleResize", "throttleScale", "throttleRotate", "keepRatio"];
+    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd"];
+
+    /**
+     * Moveable is Draggable! Resizable! Scalable! Rotatable!
+     * @sort 1
+     * @extends eg.Component
+     */
+
+    var Moveable$1 =
+    /*#__PURE__*/
+    function (_super) {
+      __extends(Moveable, _super);
+      /**
+       *
+       */
+
+
+      function Moveable(parentElement, options) {
+        if (options === void 0) {
+          options = {};
+        }
+
+        var _this = _super.call(this) || this;
+
+        var element = document.createElement("div");
+
+        var nextOptions = __assign({
+          container: parentElement
+        }, options);
+
+        var events = {};
+        EVENTS.forEach(function (name) {
+          events[camelize("on " + name)] = function (e) {
+            return _this.trigger(name, e);
+          };
+        });
+        render(h(InnerMoveable, __assign({
+          ref: ref(_this, "innerMoveable")
+        }, nextOptions, events)), element);
+        parentElement.appendChild(element.children[0]);
+        var target = nextOptions.target;
+
+        if (isArray(target) && target.length > 1) {
+          _this.updateRect();
+        }
+
+        return _this;
+      }
+      /**
+       * Check if the target is an element included in the moveable.
+       * @param - the target
+       * @example
+       * import Moveable from "moveable";
+       *
+       * const moveable = new Moveable(document.body);
+       *
+       * window.addEventListener("click", e => {
+       *     if (!moveable.isMoveableElement(e.target)) {
+       *         moveable.target = e.target;
+       *     }
+       * });
+       */
+
+
+      var __proto = Moveable.prototype;
+
+      __proto.isMoveableElement = function (target) {
+        return this.getMoveable().isMoveableElement(target);
+      };
+      /**
+       * If the width, height, left, and top of all elements change, update the shape of the moveable.
+       * @example
+       * import Moveable from "moveable";
+       *
+       * const moveable = new Moveable(document.body);
+       *
+       * window.addEventListener("resize", e => {
+       *     moveable.updateRect();
+       * });
+       */
+
+
+      __proto.updateRect = function () {
+        this.getMoveable().updateRect();
+      };
+      /**
+       * If the width, height, left, and top of the only target change, update the shape of the moveable.
+       * @param - the values of x and y to move moveable.
+       * @example
+       * import Moveable from "moveable";
+       *
+       * const moveable = new Moveable(document.body);
+       *
+       * moveable.updateTarget();
+       */
+
+
+      __proto.updateTarget = function () {
+        this.getMoveable().updateTarget();
+      };
+      /**
+       * Remove the Moveable object and the events.
+       * @example
+       * import Moveable from "moveable";
+       *
+       * const moveable = new Moveable(document.body);
+       *
+       * moveable.destroy();
+       */
+
+
+      __proto.destroy = function () {
+        var el = this.getMoveable().base;
+        el.remove ? el.remove() : el.parentElement.removeChild(el);
+        this.off();
+        this.getMoveable().componentWillUnmount();
+        this.innerMoveable = null;
+      };
+
+      __proto.getMoveable = function () {
+        return this.innerMoveable.preactMoveable;
+      };
+
+      Moveable = __decorate([Properties(PROPERTIES, function (prototype, property) {
+        Object.defineProperty(prototype, property, {
+          get: function () {
+            return this.getMoveable().props[property];
+          },
+          set: function (value) {
+            var _a;
+
+            this.innerMoveable.setState((_a = {}, _a[property] = value, _a));
+          },
+          enumerable: true,
+          configurable: true
+        });
+      })], Moveable);
+      return Moveable;
+    }(Component);
+
+    var codes = {
+      draggable: {
+        vanilla: "\nimport Moveable from \"moveable\";\n\n/* const translate = [0, 0]; */\nconst draggable = new Moveable(document.body, {\n    target: document.querySelector(\".draggable\"),\n    draggable: true,\n    throttleDrag: 0,\n}).on(\"drag\", ({ target, left, top, beforeDelta }) => {\n    target.style.left = left + \"px\";\n    target.style.top = top + \"px\";\n\n    /* translate[0] += beforeDelta[0]; */\n    /* translate[1] += beforeDelta[1]; */\n    /* target.style.transform\n        = \"translateX(\" + translate[0] + \"px) \"\n        + \"translateY(\" + translate[1] + \"px)\"; */\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\nthis.translate = [0, 0];\nreturn (\n    <Moveable\n        target={document.querySelector(\".draggable\")}\n        draggable={true}\n        throttleDrag={0}\n        onDrag={({ target, left, top, beforeDelta }) => {\n            target.style.left = left + \"px\";\n            target.style.top = top + \"px\";\n\n            /* const translate = this.translate */\n            /* translate[0] += beforeDelta[0]; */\n            /* translate[1] += beforeDelta[1]; */\n            /* target.style.transform\n                = \"translateX(\" + translate[0] + \"px) \"\n                + \"translateY(\" + translate[1] + \"px)\"; */\n        }}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target class=\"target\">target</div>\n<ngx-moveable\n    [target]=\"target\"\n    [draggable]=\"true\"\n    [throttleDrag]=\"0\"\n    (drag)=\"onDrag($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    translate = [0, 0];\n    onDrag({ target, left, top, beforeDelta }) {\n        target.style.left = left + \"px\";\n        target.style.top = top + \"px\";\n\n        /* const translate = this.translate */\n        /* translate[0] += beforeDelta[0]; */\n        /* translate[1] += beforeDelta[1]; */\n        /* target.style.transform\n            = \"translateX(\" + translate[0] + \"px) \"\n            + \"translateY(\" + translate[1] + \"px)\"; */\n    }\n}\n"
+      },
+      resizable: {
+        vanilla: "\nimport Moveable from \"moveable\";\n\nconst resizable = new Moveable(document.body, {\n    target: document.querySelector(\".resizable\"),\n    resizable: true,\n    throttleResize: 0,\n    keepRatio: true,\n}).on(\"resize\", ({ target, width, height, dist }) => {\n    console.log(width, height, dist);\n    target.style.width = width + \"px\";\n    target.style.height = height + \"px\";\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\n\nreturn (\n    <Moveable\n        target={document.querySelector(\".resizable\")}\n        resizable={true}\n        throttleResize={0}\n        keepRatio={true}\n        onResize={({ target, width, height, dist }) => {\n            console.log(width, height, dist);\n            target.style.width = width + \"px\";\n            target.style.height = height + \"px\";\n        }}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target class=\"target\">target</div>\n<ngx-moveable\n    [target]=\"target\"\n    [resizable]=\"true\"\n    [throttleResize]=\"0\"\n    [keepRatio]=\"true\"\n    (resize)=\"onResize($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    onResize({ target, width, height, dist }) {\n        console.log(width, height, dist);\n        target.style.width = width + \"px\";\n        target.style.height = height + \"px\";\n    }\n}\n        "
+      },
+      scalable: {
+        vanilla: "\nimport Moveable from \"moveable\";\n\nconst scale = [1, 1];\nconst scalable = new Moveable(document.body, {\n    target: document.querySelector(\".scalable\"),\n    scalable: true,\n    throttleScale: 0,\n    keepRatio: true,\n}).on(\"scale\", ({ target, dist }) => {\n    scale[0] *= dist[0];\n    scale[1] *= dist[1];\n    target.style.transform = \"scale(\" + scale[0] +  \",\" + scale[1] + \")\";\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\n\nthis.scale = [1, 1];\nreturn (\n    <Moveable\n        target={document.querySelector(\".scalable\")}\n        scalable={true}\n        throttleScale={0}\n        keepRatio={true}\n        onScale={({ target, dist }) => {\n            const scale = this.scale;\n            scale[0] *= dist[0];\n            scale[1] *= dist[1];\n            target.style.transform\n                = \"scale(\" + scale[0] +  \",\" + scale[1] + \")\";\n        }}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target class=\"target\">target</div>\n<ngx-moveable\n    [target]=\"target\"\n    [scalable]=\"true\"\n    [throttleScale]=\"0\"\n    [keepRatio]=\"true\"\n    (scale)=\"onScale($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    scale = [1, 1];\n    onScale({ target, dist }) {\n        const scale = this.scale;\n        scale[0] *= dist[0];\n        scale[1] *= dist[1];\n        target.style.transform\n            = \"scale(\" + scale[0] +  \",\" + scale[1] + \")\";\n    }\n}\n        "
+      },
+      rotatable: {
+        vanilla: "\nimport Moveable from \"moveable\";\n\nlet rotate = 0;\n\nconst rotatable = new Moveable(document.body, {\n    target: document.querySelector(\".rotatable\"),\n    rotatable: true,\n    throttleRotate: 0,\n}).on(\"rotate\", ({ target, beforeDelta, delta }) => {\n    rotate += delta;\n    target.style.transform\n        = \"rotate(\" + rotate +  \"deg)\";\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\n\nthis.rotate = 0;\n\nreturn (\n    <Moveable\n        target={document.querySelector(\".rotatable\")}\n        rotatable={true}\n        throttleRotate={0}\n        onRotate={({ target, beforeDelta, delta }) => {\n            this.rotate += delta;\n            target.style.transform\n                = \"rotate(\" + this.rotate +  \"deg)\";\n        }}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target class=\"target\">target</div>\n<ngx-moveable\n    [target]=\"target\"\n    [rotatable]=\"true\"\n    [throttleRotate]=\"0\"\n    [keepRatio]=\"true\"\n    (rotate)=\"onRotate($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    rotate = 0;\n    onRotate({ target, delta }) {\n        this.rotate += delta;\n        target.style.transform\n            = \"rotate(\" + this.rotate +  \"deg)\";\n    }\n}\n        "
+      },
+      warpable: {
+        vanilla: "\nimport Moveable from \"moveable\";\n\nlet matrix = [\n    1, 0, 0, 0,\n    0, 1, 0, 0,\n    0, 0, 1, 0,\n    0, 0, 0, 1,\n];\n\nconst warpable = new Moveable(document.body, {\n    target: document.querySelector(\".warpable\"),\n    warpable: true,\n    throttleRotate: 0,\n}).on(\"warp\", ({ target, multiply, delta }) => {\n    matrix = multiply(matrix, delta);\n    target.style.transform\n        = \"matrix3d(\" + matrix.join(\",\") +  \")\";\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\n\nthis.matrix = [\n    1, 0, 0, 0,\n    0, 1, 0, 0,\n    0, 0, 1, 0,\n    0, 0, 0, 1,\n];\n\nreturn (\n    <Moveable\n        target={document.querySelector(\".warpable\")}\n        warpable={true}\n        onWarp={({ target, multiply, delta }) => {\n            this.matrix = multiply(this.matrix, delta);\n            target.style.transform\n                = \"matrix3d(\" + matrix.join(\",\") +  \")\";\n        }}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target class=\"target\">target</div>\n<ngx-moveable\n    [target]=\"target\"\n    [warpable]=\"true\"\n    (warp)=\"onWarp($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    matrix = [\n        1, 0, 0, 0,\n        0, 1, 0, 0,\n        0, 0, 1, 0,\n        0, 0, 0, 1,\n    ];\n    onWarp({ target, dist }) {\n        this.matrix = multiply(this.matrix, delta);\n        target.style.transform\n            = \"matrix3d(\" + matrix.join(\",\") +  \")\";\n    }\n}\n        "
+      },
+      pinchable: {
+        vanilla: "\nimport Moveable from \"moveable\";\nconst scale = [1, 1];\nlet rotate = 0;\n\nconst pinchable = new Moveable(document.body, {\n    target: document.querySelector(\".pinchable\"),\n    pinchable: [\"rotatable\", \"scalable\"],\n}).on(\"rotate\", ({ target, beforeDelta }) => {\n    rotate += beforeDelta;\n    target.style.transform = \"scale(\" + scale.join(\", \") + \") rotate(\" + rotate + \"deg)\";\n}).on(\"scale\", ({ target, delta }) => {\n    scale[0] += delta[0];\n    scale[1] += delta[1];\n    target.style.transform = \"scale(\" + scale.join(\", \") + \") rotate(\" + rotate + \"deg)\";\n});",
+        react: "\nimport Moveable from \"react-moveable\";\nthis.scale = [1, 1];\nthis.rotate = 0;\n\nreturn (\n    <Moveable\n        target={document.querySelector(\".pinchable\")}\n        pinchable={[\"rotatable\", \"scalable\"]},\n        onRotate={({ target, beforeDelta }) => {\n            this.rotate += beforeDelta;\n            target.style.transform\n                = \"scale(\" + this.scale.join(\", \") + \") \"\n                + \"rotate(\" + this.rotate + \"deg)\";\n        }}\n        onScale={({ target, beforeDelta }) => {\n            this.scale[0] += delta[0];\n            this.scale[1] += delta[1];\n            target.style.transform\n                = \"scale(\" + this.scale.join(\", \") + \") \"\n                + \"rotate(\" + this.rotate + \"deg)\";\n        }}\n    />\n);",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n    <div #target class=\"target\">target</div>\n    <ngx-moveable\n        [target]=\"target\"\n        [pinchable]=\"['rotatable', 'scalable']\"\n        [rotate]=\"onRotate($event)\"\n        [scale]=\"onScale($event)\"\n/>\n" + "`" + ",\n})\nexport class AppComponent {\n    scale = [1, 1];\n    rotate = 0;\n    onRotate({ target, beforeDelta }) {\n        this.rotate += beforeDelta;\n        target.style.transform\n            = \"scale(\" + this.scale.join(\", \") + \") \"\n            + \"rotate(\" + this.rotate + \"deg)\";\n    }\n    onScale({ target, beforeDelta }) {\n        this.scale[0] += delta[0];\n        this.scale[1] += delta[1];\n        target.style.transform\n            = \"scale(\" + this.scale.join(\", \") + \") \"\n            + \"rotate(\" + this.rotate + \"deg)\";\n    }\n}\n"
+      },
+      origin: {
+        vanilla: "\nimport Moveable from \"moveable\";\n\nconst rotatable = new Moveable(document.body, {\n    target: document.querySelector(\".origin\"),\n    origin: true,\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\n\nreturn (\n    <Moveable\n        target={document.querySelector(\".origin\")}\n        origin={true}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target class=\"target\">target</div>\n<ngx-moveable\n    [target]=\"target\"\n    [origin]=\"true\"\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n}\n"
+      },
+      groupable: {
+        vanilla: "\nimport Moveable from \"moveable\";\nconst poses = [\n    [0, 0],\n    [0, 0],\n    [0, 0],\n];\nconst target = [].slice.call(\n    document.querySelectorAll(\".target\"),\n);\nconst groupable = new Moveable(document.body, {\n    target,\n    draggable: true,\n}).on(\"dragGroup\", ({ events }) => {\n    events.forEach(({ target, beforeDelta }, i) => {\n        poses[i][0] += beforeDelta[0];\n        poses[i][1] += beforeDelta[1];\n\n        target.style.transform\n            = \"translate(\"\n            + poses[i][0] + \"px, \"\n            + poses[i][1] + \"px)\";\n    });\n});\n        ",
+        react: "\nimport Moveable from \"react-moveable\";\n\nthis.poses = [\n    [0, 0],\n    [0, 0],\n    [0, 0],\n];\n\nconst target = [].slice.call(\n    document.querySelectorAll(\".target\"),\n);\nreturn (\n    <Moveable\n        target={target}\n        draggable={true}\n        onDragGroup={({ events }) => {\n            events.forEach(({ target, beforeDelta }, i) => {\n                this.poses[i][0] += beforeDelta[0];\n                this.poses[i][1] += beforeDelta[1];\n\n                target.style.transform\n                    = \"translate(\"\n                    + this.poses[i][0] + \"px, \"\n                    + this.poses[i][1] + \"px)\";\n            });\n        }}\n    />\n);\n        ",
+        angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target1 class=\"target\">target1</div>\n<div #target2 class=\"target\">target2</div>\n<div #target3 class=\"target\">target3</div>\n<ngx-moveable\n    [target]=\"[target1, target2, target3]\"\n    [draggable]=\"true\"\n    (dragGroup)=\"onDragGroup($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    poses = [\n        [0, 0],\n        [0, 0],\n        [0, 0],\n    ];\n    onDragGroup({ events }) {\n        events.forEach(({ target, beforeDelta }, i) => {\n            this.poses[i][0] += beforeDelta[0];\n            this.poses[i][1] += beforeDelta[1];\n\n            target.style.transform\n                = \"translate(\"\n                + this.poses[i][0] + \"px, \"\n                + this.poses[i][1] + \"px)\";\n        });\n    }\n}\n        "
+      }
+    };
+
+    /*
+    Copyright (c) 2016 Daybrush
+    name: scenejs
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/scenejs.git
+    version: 1.1.4
+    */
+
+    function cubic(y1, y2, t) {
+      var t2 = 1 - t; // Bezier Curve Formula
+
+      return t * t * t + 3 * t * t * t2 * y2 + 3 * t * t2 * t2 * y1;
+    }
+
+    function solveFromX(x1, x2, x) {
+      // x  0 ~ 1
+      // t 0 ~ 1
+      var t = x;
+      var solveX = x;
+      var dx = 1;
+
+      while (Math.abs(dx) > 1 / 1000) {
+        // 예상 t초에 의한 _x값
+        solveX = cubic(x1, x2, t);
+        dx = solveX - x; // 차이가 미세하면 그 값을 t로 지정
+
+        if (Math.abs(dx) < 1 / 1000) {
+          return t;
+        }
+
+        t -= dx / 2;
+      }
+
+      return t;
+    }
+    /**
+     * @namespace easing
+     */
+
+    /**
+    * Cubic Bezier curve.
+    * @memberof easing
+    * @func bezier
+    * @param {number} [x1] - point1's x
+    * @param {number} [y1] - point1's y
+    * @param {number} [x2] - point2's x
+    * @param {number} [y2] - point2's y
+    * @return {function} the curve function
+    * @example
+    import {bezier} from "scenejs";
+    Scene.bezier(0, 0, 1, 1) // LINEAR
+    Scene.bezier(0.25, 0.1, 0.25, 1) // EASE
+    */
+
+
+    function bezier(x1, y1, x2, y2) {
+      /*
+            x = f(t)
+            calculate inverse function by x
+            t = f-1(x)
+        */
+      var func = function (x) {
+        var t = solveFromX(x1, x2, Math.max(Math.min(1, x), 0));
+        return cubic(y1, y2, t);
+      };
+
+      func.easingName = "cubic-bezier(" + x1 + "," + y1 + "," + x2 + "," + y2 + ")";
+      return func;
+    }
+    /**
+    * Specifies a stepping function
+    * @see {@link https://www.w3schools.com/cssref/css3_pr_animation-timing-function.asp|CSS3 Timing Function}
+    * @memberof easing
+    * @func steps
+    * @param {number} count - point1's x
+    * @param {"start" | "end"} postion - point1's y
+    * @return {function} the curve function
+    * @example
+    import {steps} from "scenejs";
+    Scene.steps(1, "start") // Scene.STEP_START
+    Scene.steps(1, "end") // Scene.STEP_END
+    */
+
+    function steps(count, position) {
+      var func = function (time) {
+        var level = 1 / count;
+
+        if (time >= 1) {
+          return 1;
+        }
+
+        return (position === "start" ? level : 0) + Math.floor(time / level) * level;
+      };
+
+      func.easingName = "steps(" + count + ", " + position + ")";
+      return func;
+    }
+    /**
+    * Equivalent to steps(1, start)
+    * @memberof easing
+    * @name STEP_START
+    * @static
+    * @type {function}
+    * @example
+    import {STEP_START} from "scenejs";
+    Scene.STEP_START // steps(1, start)
+    */
+
+    var STEP_START =
+    /*#__PURE__#*/
+    steps(1, "start");
+    /**
+    * Equivalent to steps(1, end)
+    * @memberof easing
+    * @name STEP_END
+    * @static
+    * @type {function}
+    * @example
+    import {STEP_END} from "scenejs";
+    Scene.STEP_END // steps(1, end)
+    */
+
+    var STEP_END =
+    /*#__PURE__#*/
+    steps(1, "end");
+    /**
+    * Linear Speed (0, 0, 1, 1)
+    * @memberof easing
+    * @name LINEAR
+    * @static
+    * @type {function}
+    * @example
+    import {LINEAR} from "scenejs";
+    Scene.LINEAR
+    */
+
+    var LINEAR =
+    /*#__PURE__#*/
+    bezier(0, 0, 1, 1);
+    /**
+    * Ease Speed (0.25, 0.1, 0.25, 1)
+    * @memberof easing
+    * @name EASE
+    * @static
+    * @type {function}
+    * @example
+    import {EASE} from "scenejs";
+    Scene.EASE
+    */
+
+    var EASE =
+    /*#__PURE__#*/
+    bezier(0.25, 0.1, 0.25, 1);
+    /**
+    * Ease In Speed (0.42, 0, 1, 1)
+    * @memberof easing
+    * @name EASE_IN
+    * @static
+    * @type {function}
+    * @example
+    import {EASE_IN} from "scenejs";
+    Scene.EASE_IN
+    */
+
+    var EASE_IN =
+    /*#__PURE__#*/
+    bezier(0.42, 0, 1, 1);
+    /**
+    * Ease Out Speed (0, 0, 0.58, 1)
+    * @memberof easing
+    * @name EASE_OUT
+    * @static
+    * @type {function}
+    * @example
+    import {EASE_OUT} from "scenejs";
+    Scene.EASE_OUT
+    */
+
+    var EASE_OUT =
+    /*#__PURE__#*/
+    bezier(0, 0, 0.58, 1);
+    /**
+    * Ease In Out Speed (0.42, 0, 0.58, 1)
+    * @memberof easing
+    * @name EASE_IN_OUT
+    * @static
+    * @type {function}
+    * @example
+    import {EASE_IN_OUT} from "scenejs";
+    Scene.EASE_IN_OUT
+    */
+
+    var EASE_IN_OUT =
+    /*#__PURE__#*/
+    bezier(0.42, 0, 0.58, 1);
+
+    var _a;
+    var TIMING_FUNCTION = "animation-timing-function";
+    var ROLES = {
+      transform: {},
+      filter: {},
+      attribute: {},
+      html: true
+    };
+    var ALIAS = {
+      easing: [TIMING_FUNCTION]
+    };
+    var FIXED = (_a = {}, _a[TIMING_FUNCTION] = true, _a.contents = true, _a.html = true, _a);
+    var EASING_NAME = "easingName";
+    var TRANSFORM_NAME = "transform";
+    var EASINGS = {
+      "linear": LINEAR,
+      "ease": EASE,
+      "ease-in": EASE_IN,
+      "ease-out": EASE_OUT,
+      "ease-in-out": EASE_IN_OUT,
+      "step-start": STEP_START,
+      "step-end": STEP_END
+    };
+
+    /**
+    * Make string, array to PropertyObject for the dot product
+    */
+
+    var PropertyObject =
+    /*#__PURE__*/
+    function () {
+      /**
+        * @param - This value is in the array format.
+        * @param - options
+        * @example
+      var obj = new PropertyObject([100,100,100,0.5], {
+        "separator" : ",",
+        "prefix" : "rgba(",
+        "suffix" : ")"
+      });
+         */
+      function PropertyObject(value, options) {
+        this.prefix = "";
+        this.suffix = "";
+        this.model = "";
+        this.type = "";
+        this.separator = ",";
+        options && this.setOptions(options);
+        this.value = isString(value) ? value.split(this.separator) : value;
+      }
+
+      var __proto = PropertyObject.prototype;
+
+      __proto.setOptions = function (newOptions) {
+        for (var name in newOptions) {
+          this[name] = newOptions[name];
+        }
+
+        return this;
+      };
+      /**
+        * the number of values.
+        * @example
+      const obj1 = new PropertyObject("1,2,3", ",");
+      console.log(obj1.length);
+      // 3
+         */
+
+
+      __proto.size = function () {
+        return this.value.length;
+      };
+      /**
+        * retrieve one of values at the index
+        * @param {Number} index - index
+        * @return {Object} one of values at the index
+        * @example
+      const obj1 = new PropertyObject("1,2,3", ",");
+      console.log(obj1.get(0));
+      // 1
+         */
+
+
+      __proto.get = function (index) {
+        return this.value[index];
+      };
+      /**
+        * Set the value at that index
+        * @param {Number} index - index
+        * @param {Object} value - text, a number, object to set
+        * @return {PropertyObject} An instance itself
+        * @example
+      const obj1 = new PropertyObject("1,2,3", ",");
+      obj1.set(0, 2);
+      console.log(obj1.toValue());
+      // 2,2,3
+         */
+
+
+      __proto.set = function (index, value) {
+        this.value[index] = value;
+        return this;
+      };
+      /**
+        * create a copy of an instance itself.
+        * @return {PropertyObject} clone
+        * @example
+      const obj1 = new PropertyObject("1,2,3", ",");
+      const obj2 = obj1.clone();
+         */
+
+
+      __proto.clone = function () {
+        var _a = this,
+            separator = _a.separator,
+            prefix = _a.prefix,
+            suffix = _a.suffix,
+            model = _a.model,
+            type = _a.type;
+
+        var arr = this.value.map(function (v) {
+          return v instanceof PropertyObject ? v.clone() : v;
+        });
+        return new PropertyObject(arr, {
+          separator: separator,
+          prefix: prefix,
+          suffix: suffix,
+          model: model,
+          type: type
+        });
+      };
+      /**
+        * Make Property Object to String
+        * @return {String} Make Property Object to String
+        * @example
+      //rgba(100, 100, 100, 0.5)
+      const obj4 = new PropertyObject([100,100,100,0.5], {
+        "separator" : ",",
+        "prefix" : "rgba(",
+        "suffix" : ")",
+      });
+      console.log(obj4.toValue());
+      // "rgba(100,100,100,0.5)"
+        */
+
+
+      __proto.toValue = function () {
+        return this.prefix + this.join() + this.suffix;
+      };
+      /**
+        * Make Property Object's array to String
+        * @return {String} Join the elements of an array into a string
+        * @example
+        //rgba(100, 100, 100, 0.5)
+        var obj4 = new PropertyObject([100,100,100,0.5], {
+            "separator" : ",",
+            "prefix" : "rgba(",
+            "suffix" : ")"
+        });
+        obj4.join();  // =>   "100,100,100,0.5"
+         */
+
+
+      __proto.join = function () {
+        return this.value.map(function (v) {
+          return v instanceof PropertyObject ? v.toValue() : v;
+        }).join(this.separator);
+      };
+      /**
+        * executes a provided function once per array element.
+        * @param {Function} callback - Function to execute for each element, taking three arguments
+        * @param {All} [callback.currentValue] The current element being processed in the array.
+        * @param {Number} [callback.index] The index of the current element being processed in the array.
+        * @param {Array} [callback.array] the array.
+        * @return {PropertyObject} An instance itself
+        * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach|MDN Array.forEach()} reference to MDN document.
+        * @example
+      //rgba(100, 100, 100, 0.5)
+      var obj4 = new PropertyObject([100,100,100,0.5], {
+        "separator" : ",",
+        "prefix" : "rgba(",
+        "suffix" : ")"
+      });
+      obj4.forEach(t => {
+        console.log(t);
+      });  // =>   "100,100,100,0.5"
+        */
+
+
+      __proto.forEach = function (func) {
+        this.value.forEach(func);
+        return this;
+      };
+
+      return PropertyObject;
+    }();
+
+    /**
+    * @namespace
+    * @name Property
+    */
+    function splitStyle(str) {
+      var properties = str.split(";");
+      var obj = {};
+      var length = properties.length;
+
+      for (var i = 0; i < length; ++i) {
+        var matches = /([^:]*):([\S\s]*)/g.exec(properties[i]);
+
+        if (!matches || matches.length < 3 || !matches[1]) {
+          --length;
+          continue;
+        }
+
+        obj[matches[1].trim()] = toPropertyObject(matches[2].trim());
+      }
+
+      return {
+        styles: obj,
+        length: length
+      };
+    }
+    /**
+    * convert array to PropertyObject[type=color].
+    * default model "rgba"
+    * @memberof Property
+    * @function arrayToColorObject
+    * @param {Array|PropertyObject} value ex) [0, 0, 0, 1]
+    * @return {PropertyObject} PropertyObject[type=color]
+    * @example
+    arrayToColorObject([0, 0, 0])
+    // => PropertyObject(type="color", model="rgba", value=[0, 0, 0, 1], separator=",")
+    */
+
+    function arrayToColorObject(arr) {
+      var model = RGBA;
+
+      if (arr.length === 3) {
+        arr[3] = 1;
+      }
+
+      return new PropertyObject(arr, {
+        model: model,
+        separator: ",",
+        type: "color",
+        prefix: model + "(",
+        suffix: ")"
+      });
+    }
+    /**
+    * convert text with parentheses to object.
+    * @memberof Property
+    * @function stringToBracketObject
+    * @param {String} value ex) "rgba(0,0,0,1)"
+    * @return {PropertyObject} PropertyObject
+    * @example
+    stringToBracketObject("abcde(0, 0, 0,1)")
+    // => PropertyObject(model="abcde", value=[0, 0, 0,1], separator=",")
+    */
+
+    function stringToBracketObject(text) {
+      // [prefix, value, other]
+      var _a = splitBracket(text),
+          model = _a.prefix,
+          value = _a.value,
+          afterModel = _a.suffix;
+
+      if (typeof value === "undefined") {
+        return text;
+      }
+
+      if (COLOR_MODELS.indexOf(model) !== -1) {
+        return arrayToColorObject(stringToRGBA(text));
+      } // divide comma(,)
+
+
+      var obj = toPropertyObject(value);
+      var arr = [value];
+      var separator = ",";
+      var prefix = model + "(";
+      var suffix = ")" + afterModel;
+
+      if (obj instanceof PropertyObject) {
+        separator = obj.separator;
+        arr = obj.value;
+        prefix += obj.prefix;
+        suffix = obj.suffix + suffix;
+      }
+
+      return new PropertyObject(arr, {
+        separator: separator,
+        model: model,
+        prefix: prefix,
+        suffix: suffix
+      });
+    }
+    function arrayToPropertyObject(arr, separator) {
+      return new PropertyObject(arr, {
+        type: "array",
+        separator: separator
+      });
+    }
+    /**
+    * convert text with parentheses to PropertyObject[type=color].
+    * If the values are not RGBA model, change them RGBA mdoel.
+    * @memberof Property
+    * @function stringToColorObject
+    * @param {String|PropertyObject} value ex) "rgba(0,0,0,1)"
+    * @return {PropertyObject} PropertyObject[type=color]
+    * @example
+    stringToColorObject("rgba(0, 0, 0,1)")
+    // => PropertyObject(type="color", model="rgba", value=[0, 0, 0,1], separator=",")
+    */
+
+    function stringToColorObject(value) {
+      var result = stringToRGBA(value);
+      return result ? arrayToColorObject(result) : value;
+    }
+    function toPropertyObject(value) {
+      if (!isString(value)) {
+        if (isArray(value)) {
+          return arrayToPropertyObject(value, ",");
+        }
+
+        return value;
+      }
+
+      var values = splitComma(value);
+
+      if (values.length > 1) {
+        return arrayToPropertyObject(values.map(function (v) {
+          return toPropertyObject(v);
+        }), ",");
+      }
+
+      values = splitSpace(value);
+
+      if (values.length > 1) {
+        return arrayToPropertyObject(values.map(function (v) {
+          return toPropertyObject(v);
+        }), " ");
+      }
+
+      values = /^(['"])([^'"]*)(['"])$/g.exec(value);
+
+      if (values && values[1] === values[3]) {
+        // Quotes
+        return new PropertyObject([toPropertyObject(values[2])], {
+          prefix: values[1],
+          suffix: values[1]
+        });
+      } else if (value.indexOf("(") !== -1) {
+        // color
+        return stringToBracketObject(value);
+      } else if (value.charAt(0) === "#") {
+        return stringToColorObject(value);
+      }
+
+      return value;
+    }
+    function toObject(object, result) {
+      if (result === void 0) {
+        result = {};
+      }
+
+      var model = object.model;
+
+      if (model) {
+        object.setOptions({
+          model: "",
+          suffix: "",
+          prefix: ""
+        });
+        var value = object.size() > 1 ? object : object.get(0);
+        result[model] = value;
+      } else {
+        object.forEach(function (obj) {
+          toObject(obj, result);
+        });
+      }
+
+      return result;
+    }
+
+    function isPropertyObject(value) {
+      return value instanceof PropertyObject;
+    }
+    function getType(value) {
+      var type = typeof value;
+
+      if (type === OBJECT) {
+        if (isArray(value)) {
+          return ARRAY;
+        } else if (isPropertyObject(value)) {
+          return PROPERTY;
+        }
+      } else if (type === STRING || type === NUMBER) {
+        return "value";
+      }
+
+      return type;
+    }
+    function isPureObject(obj) {
+      return isObject(obj) && obj.constructor === Object;
+    }
+    function getNames(names, stack) {
+      var arr = [];
+
+      if (isPureObject(names)) {
+        for (var name in names) {
+          stack.push(name);
+          arr = arr.concat(getNames(names[name], stack));
+          stack.pop();
+        }
+      } else {
+        arr.push(stack.slice());
+      }
+
+      return arr;
+    }
+    function getValueByNames(names, properties, length) {
+      if (length === void 0) {
+        length = names.length;
+      }
+
+      var value = properties;
+
+      for (var i = 0; i < length; ++i) {
+        if (!isObject(value)) {
+          return undefined;
+        }
+
+        value = value[names[i]];
+      }
+
+      return value;
+    }
+    function isInProperties(roles, args, isCheckTrue) {
+      var length = args.length;
+      var role = roles;
+
+      if (length === 0) {
+        return false;
+      }
+
+      for (var i = 0; i < length; ++i) {
+        if (role === true) {
+          return false;
+        }
+
+        role = role[args[i]];
+
+        if (!role || !isCheckTrue && role === true) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+    function isRole(args, isCheckTrue) {
+      return isInProperties(ROLES, args, isCheckTrue);
+    }
+    function isFixed(args) {
+      return isInProperties(FIXED, args, true);
+    }
+    function getEasing(curveArray) {
+      var easing;
+
+      if (isString(curveArray)) {
+        if (curveArray in EASINGS) {
+          easing = EASINGS[curveArray];
+        } else {
+          var obj = toPropertyObject(curveArray);
+
+          if (isString(obj)) {
+            return 0;
+          } else {
+            if (obj.model === "cubic-bezier") {
+              curveArray = obj.value.map(function (v) {
+                return parseFloat(v);
+              });
+              easing = bezier(curveArray[0], curveArray[1], curveArray[2], curveArray[3]);
+            } else if (obj.model === "steps") {
+              easing = steps(parseFloat(obj.value[0]), obj.value[1]);
+            } else {
+              return 0;
+            }
+          }
+        }
+      } else if (isArray(curveArray)) {
+        easing = bezier(curveArray[0], curveArray[1], curveArray[2], curveArray[3]);
+      } else {
+        easing = curveArray;
+      }
+
+      return easing;
+    }
+
+    function toInnerProperties(obj) {
+      if (!obj) {
+        return "";
+      }
+
+      var arrObj = [];
+
+      for (var name in obj) {
+        arrObj.push(name.replace(/\d$/g, "") + "(" + obj[name] + ")");
+      }
+
+      return arrObj.join(" ");
+    }
+    /* eslint-disable */
+
+
+    function clone(target, toValue) {
+      if (toValue === void 0) {
+        toValue = false;
+      }
+
+      return merge({}, target, toValue);
+    }
+
+    function merge(to, from, toValue) {
+      if (toValue === void 0) {
+        toValue = false;
+      }
+
+      for (var name in from) {
+        var value = from[name];
+        var type = getType(value);
+
+        if (type === PROPERTY) {
+          to[name] = toValue ? value.toValue() : value.clone();
+        } else if (type === FUNCTION) {
+          to[name] = toValue ? getValue([name], value) : value;
+        } else if (type === ARRAY) {
+          to[name] = value.slice();
+        } else if (type === OBJECT) {
+          if (isObject(to[name]) && !isPropertyObject(to[name])) {
+            merge(to[name], value, toValue);
+          } else {
+            to[name] = clone(value, toValue);
+          }
+        } else {
+          to[name] = from[name];
+        }
+      }
+
+      return to;
+    }
+    /* eslint-enable */
+
+
+    function getPropertyName(args) {
+      return args[0] in ALIAS ? ALIAS[args[0]] : args;
+    }
+
+    function getValue(names, value) {
+      var type = getType(value);
+
+      if (type === PROPERTY) {
+        return value.toValue();
+      } else if (type === FUNCTION) {
+        if (names[0] !== TIMING_FUNCTION) {
+          return getValue(names, value());
+        }
+      } else if (type === OBJECT) {
+        return clone(value, true);
+      }
+
+      return value;
+    }
+    /**
+    * Animation's Frame
+    */
+
+
+    var Frame =
+    /*#__PURE__*/
+    function () {
+      /**
+       * @param - properties
+       * @example
+      const frame = new Scene.Frame({
+        display: "none"
+        transform: {
+            translate: "50px",
+            scale: "5, 5",
+        }
+      });
+       */
+      function Frame(properties) {
+        if (properties === void 0) {
+          properties = {};
+        }
+
+        this.properties = {};
+        this.set(properties);
+      }
+      /**
+        * get property value
+        * @param {...Number|String|PropertyObject} args - property name or value
+        * @example
+        frame.get("display") // => "none", "block", ....
+        frame.get("transform", "translate") // => "10px,10px"
+        */
+
+
+      var __proto = Frame.prototype;
+
+      __proto.get = function () {
+        var args = [];
+
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+
+        var value = this.raw.apply(this, args);
+        return getValue(getPropertyName(args), value);
+      };
+
+      __proto.raw = function () {
+        var args = [];
+
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+
+        return getValueByNames(getPropertyName(args), this.properties);
+      };
+      /**
+        * remove property value
+        * @param {...String} args - property name
+        * @return {Frame} An instance itself
+        * @example
+        frame.remove("display")
+        */
+
+
+      __proto.remove = function () {
+        var args = [];
+
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+
+        var params = getPropertyName(args);
+        var length = params.length;
+
+        if (!length) {
+          return this;
+        }
+
+        var value = getValueByNames(params, this.properties, length - 1);
+
+        if (isObject(value)) {
+          delete value[params[length - 1]];
+        }
+
+        return this;
+      };
+      /**
+        * set property
+        * @param {...Number|String|PropertyObject} args - property names or values
+        * @return {Frame} An instance itself
+        * @example
+      // one parameter
+      frame.set({
+        display: "none",
+        transform: {
+            translate: "10px, 10px",
+            scale: "1",
+        },
+        filter: {
+            brightness: "50%",
+            grayscale: "100%"
+        }
+      });
+      // two parameters
+      frame.set("transform", {
+        translate: "10px, 10px",
+        scale: "1",
+      });
+      // three parameters
+      frame.set("transform", "translate", "50px");
+      */
+
+
+      __proto.set = function () {
+        var args = [];
+
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+
+        var self = this;
+        var length = args.length;
+        var params = args.slice(0, -1);
+        var value = args[length - 1];
+        var firstParam = params[0];
+
+        if (length === 1 && value instanceof Frame) {
+          self.merge(value);
+        } else if (firstParam in ALIAS) {
+          self._set(ALIAS[firstParam], value);
+        } else if (length === 2 && isArray(firstParam)) {
+          self._set(firstParam, value);
+        } else if (isPropertyObject(value)) {
+          if (isRole(params)) {
+            self.set.apply(self, params.concat([toObject(value)]));
+          } else {
+            self._set(params, value);
+          }
+        } else if (isArray(value)) {
+          self._set(params, value);
+        } else if (isObject(value)) {
+          if (!self.has.apply(self, params) && isRole(params)) {
+            self._set(params, {});
+          }
+
+          for (var name in value) {
+            self.set.apply(self, params.concat([name, value[name]]));
+          }
+        } else if (isString(value)) {
+          if (isRole(params, true)) {
+            if (isFixed(params) || !isRole(params)) {
+              this._set(params, value);
+            } else {
+              var obj = toPropertyObject(value);
+
+              if (isObject(obj)) {
+                self.set.apply(self, params.concat([obj]));
+              }
+            }
+
+            return this;
+          } else {
+            var _a = splitStyle(value),
+                styles = _a.styles,
+                stylesLength = _a.length;
+
+            for (var name in styles) {
+              self.set.apply(self, params.concat([name, styles[name]]));
+            }
+
+            if (stylesLength) {
+              return this;
+            }
+          }
+
+          self._set(params, value);
+        } else {
+          self._set(params, value);
+        }
+
+        return self;
+      };
+      /**
+        * Gets the names of properties.
+        * @return the names of properties.
+        * @example
+      // one parameter
+      frame.set({
+        display: "none",
+        transform: {
+            translate: "10px, 10px",
+            scale: "1",
+        },
+      });
+      // [["display"], ["transform", "translate"], ["transform", "scale"]]
+      console.log(frame.getNames());
+      */
+
+
+      __proto.getNames = function () {
+        return getNames(this.properties, []);
+      };
+      /**
+        * check that has property.
+        * @param {...String} args - property name
+        * @example
+        frame.has("property", "display") // => true or false
+        */
+
+
+      __proto.has = function () {
+        var args = [];
+
+        for (var _i = 0; _i < arguments.length; _i++) {
+          args[_i] = arguments[_i];
+        }
+
+        var params = getPropertyName(args);
+        var length = params.length;
+
+        if (!length) {
+          return false;
+        }
+
+        return !isUndefined$1(getValueByNames(params, this.properties, length));
+      };
+      /**
+        * clone frame.
+        * @return {Frame} An instance of clone
+        * @example
+        frame.clone();
+        */
+
+
+      __proto.clone = function () {
+        var frame = new Frame();
+        return frame.merge(this);
+      };
+      /**
+        * merge one frame to other frame.
+        * @param - target frame.
+        * @return {Frame} An instance itself
+        * @example
+        frame.merge(frame2);
+        */
+
+
+      __proto.merge = function (frame) {
+        var properties = this.properties;
+        var frameProperties = frame.properties;
+
+        if (frameProperties) {
+          merge(properties, frameProperties);
+        }
+
+        return this;
+      };
+      /**
+        * Specifies an css object that coverted the frame.
+        * @return {object} cssObject
+        */
+
+
+      __proto.toCSSObject = function () {
+        var properties = this.get();
+        var cssObject = {};
+
+        for (var name in properties) {
+          if (isRole([name], true)) {
+            continue;
+          }
+
+          var value = properties[name];
+
+          if (name === TIMING_FUNCTION) {
+            cssObject[TIMING_FUNCTION.replace("animation", ANIMATION)] = (isString(value) ? value : value[EASING_NAME]) || "initial";
+          } else {
+            cssObject[name] = value;
+          }
+        }
+
+        var transform = toInnerProperties(properties[TRANSFORM_NAME]);
+        var filter = toInnerProperties(properties.filter);
+        TRANSFORM && transform && (cssObject[TRANSFORM] = transform);
+        FILTER && filter && (cssObject[FILTER] = filter);
+        return cssObject;
+      };
+      /**
+        * Specifies an css text that coverted the frame.
+        * @return {string} cssText
+        */
+
+
+      __proto.toCSS = function () {
+        var cssObject = this.toCSSObject();
+        var cssArray = [];
+
+        for (var name in cssObject) {
+          cssArray.push(name + ":" + cssObject[name] + ";");
+        }
+
+        return cssArray.join("");
+      };
+
+      __proto._set = function (args, value) {
+        var properties = this.properties;
+        var length = args.length;
+
+        for (var i = 0; i < length - 1; ++i) {
+          var name = args[i];
+          !(name in properties) && (properties[name] = {});
+          properties = properties[name];
+        }
+
+        if (!length) {
+          return;
+        }
+
+        if (args.length === 1 && args[0] === TIMING_FUNCTION) {
+          properties[TIMING_FUNCTION] = getEasing(value);
+        } else {
+          properties[args[length - 1]] = isString(value) ? toPropertyObject(value) : value;
+        }
+      };
+
+      return Frame;
+    }();
+
+    var moveableElement = document.querySelector(".moveable");
+    var labelElement = document.querySelector(".label");
+    var frame = new Frame({
+      width: "250px",
+      height: "200px",
+      left: "0px",
+      top: "0px",
+      transform: {
+        rotate: "0deg",
+        scaleX: 1,
+        scaleY: 1,
+        matrix3d: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+      }
+    });
+
+    function setTransform(target) {
+      target.style.cssText = frame.toCSS();
+    }
+
+    function setLabel(clientX, clientY, text) {
+      // tslint:disable-next-line: max-line-length
+      labelElement.style.cssText = "\n    display: block; transform: translate(" + clientX + "px, " + (clientY - 10) + "px) translate(-100%, -100%);";
+      labelElement.innerHTML = text;
+    }
+
+    var moveable = new Moveable$1(moveableElement.parentElement, {
+      target: moveableElement,
+      origin: false,
+      draggable: true,
+      rotatable: true,
+      scalable: true,
+      pinchable: true,
+      keepRatio: false,
+      throttleDrag: 1,
+      throttleScale: 0.01,
+      throttleRotate: 0.2,
+      throttleResize: 1
+    }).on("pinch", function (_a) {
+      var clientX = _a.clientX,
+          clientY = _a.clientY;
+      setTimeout(function () {
+        setLabel(clientX, clientY, "X: " + frame.get("left") + "\n        <br/>Y: " + frame.get("top") + "\n        <br/>W: " + frame.get("width") + "\n        <br/>H: " + frame.get("height") + "\n        <br/>S: " + frame.get("transform", "scaleX").toFixed(2) + ", " + frame.get("transform", "scaleY").toFixed(2) + "\n        <br/>R: " + parseFloat(frame.get("transform", "rotate")).toFixed(1) + "deg\n        ");
+      });
+    }).on("drag", function (_a) {
+      var target = _a.target,
+          left = _a.left,
+          top = _a.top,
+          clientX = _a.clientX,
+          clientY = _a.clientY,
+          isPinch = _a.isPinch;
+      frame.set("left", left + "px");
+      frame.set("top", top + "px");
+      setTransform(target);
+      !isPinch && setLabel(clientX, clientY, "X: " + left + "px<br/>Y: " + top + "px");
+    }).on("scale", function (_a) {
+      var target = _a.target,
+          dist = _a.dist,
+          clientX = _a.clientX,
+          clientY = _a.clientY,
+          isPinch = _a.isPinch;
+      var scaleX = frame.get("transform", "scaleX") * dist[0];
+      var scaleY = frame.get("transform", "scaleY") * dist[1];
+      frame.set("transform", "scaleX", scaleX);
+      frame.set("transform", "scaleY", scaleY);
+      setTransform(target);
+      !isPinch && setLabel(clientX, clientY, "S: " + scaleX.toFixed(2) + ", " + scaleY.toFixed(2));
+    }).on("rotate", function (_a) {
+      var target = _a.target,
+          beforeDelta = _a.beforeDelta,
+          clientX = _a.clientX,
+          clientY = _a.clientY,
+          isPinch = _a.isPinch;
+      var deg = parseFloat(frame.get("transform", "rotate")) + beforeDelta;
+      frame.set("transform", "rotate", deg + "deg");
+      setTransform(target);
+      !isPinch && setLabel(clientX, clientY, "R: " + deg.toFixed(1));
+    }).on("resize", function (_a) {
+      var target = _a.target,
+          width = _a.width,
+          height = _a.height,
+          clientX = _a.clientX,
+          clientY = _a.clientY,
+          isPinch = _a.isPinch;
+      frame.set("width", width + "px");
+      frame.set("height", height + "px");
+      setTransform(target);
+      !isPinch && setLabel(clientX, clientY, "W: " + width + "px<br/>H: " + height + "px");
+    }).on("warp", function (_a) {
+      var target = _a.target,
+          multiply = _a.multiply,
+          delta = _a.delta,
+          clientX = _a.clientX,
+          clientY = _a.clientY;
+      frame.set("transform", "matrix3d", multiply(frame.get("transform", "matrix3d"), delta));
+      setTransform(target);
+      setLabel(clientX, clientY, "X: " + clientX + "px<br/>Y: " + clientY + "px");
+    }).on("dragEnd", function () {
+      labelElement.style.display = "none";
+    }).on("scaleEnd", function () {
+      labelElement.style.display = "none";
+    }).on("rotateEnd", function () {
+      labelElement.style.display = "none";
+    }).on("resizeEnd", function () {
+      labelElement.style.display = "none";
+    }).on("warpEnd", function () {
+      labelElement.style.display = "none";
+    });
+    var draggableElement = document.querySelector(".draggable");
+    var draggable = new Moveable$1(draggableElement.parentElement, {
+      target: draggableElement,
+      origin: false,
+      draggable: true
+    }).on("drag", function (_a) {
+      var target = _a.target,
+          transform = _a.transform;
+      target.style.transform = transform;
+    });
+    var resizableElement = document.querySelector(".resizable");
+    var resizable = new Moveable$1(resizableElement.parentElement, {
+      target: resizableElement,
+      origin: false,
+      resizable: true
+    }).on("resize", function (_a) {
+      var target = _a.target,
+          width = _a.width,
+          height = _a.height;
+      target.style.width = width + "px";
+      target.style.height = height + "px";
+    });
+    var scalableElement = document.querySelector(".scalable");
+    var scalable = new Moveable$1(scalableElement.parentElement, {
+      target: scalableElement,
+      origin: false,
+      scalable: true
+    }).on("scale", function (_a) {
+      var target = _a.target,
+          transform = _a.transform;
+      target.style.transform = transform;
+    });
+    var rotatableElement = document.querySelector(".rotatable");
+    var rotatable = new Moveable$1(rotatableElement.parentElement, {
+      target: rotatableElement,
+      origin: false,
+      rotatable: true
+    }).on("rotate", function (_a) {
+      var target = _a.target,
+          transform = _a.transform;
+      target.style.transform = transform;
+    });
+    var warpableElement = document.querySelector(".warpable");
+    var warpable = new Moveable$1(warpableElement.parentElement, {
+      target: warpableElement,
+      warpable: true,
+      origin: false
+    }).on("warp", function (_a) {
+      var target = _a.target,
+          transform = _a.transform;
+      target.style.transform = transform;
+    });
+    var originElement = document.querySelector(".origin");
+    var origin = new Moveable$1(originElement.parentElement, {
+      target: originElement,
+      origin: true,
+      draggable: true,
+      rotatable: true
+    }).on("drag", function (_a) {
+      var target = _a.target,
+          left = _a.left,
+          top = _a.top;
+      target.style.left = left + "px";
+      target.style.top = top + "px";
+    }).on("rotate", function (_a) {
+      var target = _a.target,
+          transform = _a.transform;
+      target.style.transform = transform;
+    });
+    var pinchableElement = document.querySelector(".pinchable");
+    var scale = [1, 1];
+    var rotate$1 = 0;
+    var pinchable = new Moveable$1(pinchableElement.parentElement, {
+      target: pinchableElement,
+      pinchable: ["rotatable", "scalable"],
+      origin: false
+    }).on("rotate", function (_a) {
+      var beforeDelta = _a.beforeDelta;
+      rotate$1 += beforeDelta;
+      pinchableElement.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate$1 + "deg)";
+    }).on("scale", function (_a) {
+      var delta = _a.delta;
+      scale[0] += delta[0];
+      scale[1] += delta[1];
+      pinchableElement.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate$1 + "deg)";
+    });
+    var groupableElement = document.querySelector(".groupable");
+    var poses = [[0, 0], [0, 0], [0, 0]];
+    var groupable = new Moveable$1(groupableElement.parentElement, {
+      target: [].slice.call(groupableElement.querySelectorAll("span")),
+      origin: false,
+      draggable: true
+    }).on("dragGroup", function (_a) {
+      var events = _a.events;
+      events.forEach(function (_a, i) {
+        var target = _a.target,
+            beforeDelta = _a.beforeDelta;
+        poses[i][0] += beforeDelta[0];
+        poses[i][1] += beforeDelta[1];
+        target.style.transform = "translate(" + poses[i][0] + "px, " + poses[i][1] + "px)";
+      });
+    });
+    window.addEventListener("resize", function () {
+      moveable.updateRect();
+      draggable.updateRect();
+      resizable.updateRect();
+      scalable.updateRect();
+      rotatable.updateRect();
+      warpable.updateRect();
+      pinchable.updateRect();
+      groupable.updateRect();
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("pre").forEach(function (pre) {
+        var group = pre.getAttribute("data-group");
+        var panel = pre.getAttribute("data-panel");
+        var block = pre.querySelector("code");
+        var code = codes[group][panel === "preact" ? "react" : panel].trim();
+
+        if (panel === "preact") {
+          code = code.replace(/react/g, "preact");
+        }
+
+        block.innerText = code;
+        hljs.highlightBlock(block);
+      });
+    });
+    var ableElement = document.querySelector(".buttons.able");
+    var ableButtonElements = [].slice.call(ableElement.children);
+    ableElement.addEventListener("click", function (e) {
+      var target = e.target;
+      var able = target.getAttribute("data-able");
+
+      if (!able) {
+        return;
+      }
+
+      ableButtonElements.forEach(function (el) {
+        el.classList.remove("selected");
+      });
+      target.classList.add("selected");
+
+      if (able === "warpable") {
+        moveable.resizable = false;
+        moveable.scalable = false;
+        moveable.warpable = true;
+      } else if (able === "scalable") {
+        moveable.resizable = false;
+        moveable.scalable = true;
+        moveable.warpable = false;
+      } else if (able === "resizable") {
+        moveable.resizable = true;
+        moveable.scalable = false;
+        moveable.warpable = false;
+      }
+    });
+    var tabGroups = {};
+    [].slice.call(document.querySelectorAll("[data-tab]")).forEach(function (tabElement) {
+      var group = tabElement.getAttribute("data-group");
+      var tab = tabElement.getAttribute("data-tab");
+      var panelElement = document.querySelector("[data-group=\"" + group + "\"][data-panel=\"" + tab + "\"]");
+      !tabGroups[group] && (tabGroups[group] = []);
+      tabGroups[group].push([tabElement, panelElement]);
+      tabElement.addEventListener("click", function () {
+        tabGroups[group].forEach(function (_a) {
+          var otherTabElement = _a[0],
+              otherPanelElement = _a[1];
+
+          if (tabElement === otherTabElement) {
+            return;
+          }
+
+          otherTabElement.classList.remove("selected");
+          otherPanelElement.classList.remove("selected");
+        });
+        tabElement.classList.add("selected");
+        panelElement.classList.add("selected");
+      });
+    });
+
+}());
 //# sourceMappingURL=index.js.map

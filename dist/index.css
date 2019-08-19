@@ -169,9 +169,27 @@ a {
     font-weight: 600;
 }
 
-.draggable, .resizable, .scalable, .rotatable, .origin, .warpable, .pinchable {
+.left>div {
     position: absolute;
     left: 0;
+}
+
+
+.groupable span {
+    width: 80px;
+    height: 60px;
+    transform: scale(1);
+}
+.groupable span:nth-child(1) {
+    left: 30px;
+}
+.groupable span:nth-child(2) {
+    left: 120px;
+    top: 160px;
+}
+.groupable span:nth-child(3) {
+    left: 150px;
+    top: 20px;
 }
 .origin {
     transform-origin: 30% 50%;
@@ -227,6 +245,7 @@ code.hljs {
     content: "/";
 
 }
+
 
 
 @media screen and (max-width: 750px) {
