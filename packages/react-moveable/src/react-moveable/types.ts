@@ -475,18 +475,42 @@ export interface OnDragGroupStart {
     datas: IObject<any>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnDrag
+ * @property - targets to drag
+ * @property - Each drag event on the targets
+ */
 export interface OnDragGroup extends OnDrag {
     targets: Array<HTMLElement | SVGElement>;
     events: Array<OnDrag | undefined>;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The drag finished targets
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ * @property - Whether `dragGroup` called
+ */
 export interface OnDragGroupEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
-    isDrag: boolean;
     datas: IObject<any>;
+    isDrag: boolean;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - targets to rotate
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ */
 export interface OnRotateGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
@@ -494,18 +518,43 @@ export interface OnRotateGroupStart {
     datas: IObject<any>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnRotate
+ * @property - targets to rotate
+ * @property - Each rotate & drag event on the targets
+ */
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
     events: Array<OnRotate & { drag: OnDrag }>;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The rotate finished targets
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ * @property - Whether `rotateGroup` called
+ */
 export interface OnRotateGroupEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
-    isDrag: boolean;
     datas: IObject<any>;
+    isDrag: boolean;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - targets to resize
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ */
 export interface OnResizeGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
@@ -513,11 +562,27 @@ export interface OnResizeGroupStart {
     datas: IObject<any>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnResize
+ * @property - targets to resize
+ * @property - Each resize & drag event on the targets
+ */
 export interface OnResizeGroup extends OnResize {
     targets: Array<HTMLElement | SVGElement>;
     events: Array<OnResize & { drag: OnDrag }>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The resize finished targets
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ * @property - Whether `resizeGroup` called
+ */
 export interface OnResizeGroupEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
@@ -525,6 +590,15 @@ export interface OnResizeGroupEnd {
     isDrag: boolean;
     datas: IObject<any>;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - targets to scale
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ */
 export interface OnScaleGroupStart {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
@@ -532,12 +606,70 @@ export interface OnScaleGroupStart {
     datas: IObject<any>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnScale
+ * @property - targets to scale
+ * @property - Each scale & drag event on the targets
+ */
 export interface OnScaleGroup extends OnScale {
     targets: Array<HTMLElement | SVGElement>;
     events: Array<OnScale & { drag: OnDrag }>;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The scale finished targets
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ * @property - Whether `scaleGroup` called
+ */
 export interface OnScaleGroupEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+    isDrag: boolean;
+    datas: IObject<any>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - targets to pinch
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ */
+export interface OnPinchGroupStart {
+    targets: Array<HTMLElement | SVGElement>;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnPinch
+ * @property - targets to pinch
+ */
+export interface OnPinchGroup extends OnPinch {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The pinch finished targets
+ * @property - The horizontal coordinate within the application's client area at which the event occurred.
+ * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - Objects that can send information to the following events.
+ * @property - Whether `pinchGroup` called
+ */
+export interface OnPinchGroupEnd {
     targets: Array<HTMLElement | SVGElement>;
     clientX: number;
     clientY: number;
@@ -646,9 +778,9 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinch?: (e: OnPinch) => any;
     onPinchEnd?: (e: OnPinchEnd) => any;
 
-    onPinchGroupStart?: (e: OnPinchStart) => any;
-    onPinchGroup?: (e: OnPinch) => any;
-    onPinchGroupEnd?: (e: OnPinchEnd) => any;
+    onPinchGroupStart?: (e: OnPinchGroupStart) => any;
+    onPinchGroup?: (e: OnPinchGroup) => any;
+    onPinchGroupEnd?: (e: OnPinchGroupEnd) => any;
 }
 
 export interface GroupableProps extends PinchableProps, DraggableProps, RotatableProps, ResizableProps, ScalableProps {
