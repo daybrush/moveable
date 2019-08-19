@@ -11,7 +11,7 @@ export default builder([
         output: "./dist/moveable.esm.js",
         visualizer: true,
         format: "es",
-        exports: "named",
+        exports: "default",
     },
     {
         ...defaultOptions,
