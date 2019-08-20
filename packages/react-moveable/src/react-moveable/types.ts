@@ -1,11 +1,10 @@
 import { IObject } from "@daybrush/utils";
 import * as Dragger from "@daybrush/drag";
-import MoveableManager from "./MoveableManager";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
-    parentMoveable?: MoveableManager | null;
+    parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
     edge?: boolean;
