@@ -1,7 +1,7 @@
 {
   "name": "ngx-moveable",
-  "version": "0.2.0",
-  "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.",
+  "version": "0.3.0",
+  "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
   "sideEffects": false,
@@ -18,6 +18,7 @@
     "rotatable",
     "warpable",
     "pinchable",
+    "groupable",
     "movable",
     "throttle",
     "ratio",
@@ -49,7 +50,7 @@
     "e2e": "ng e2e"
   },
   "dependencies": {
-    "moveable": "^0.6.5"
+    "moveable": "^0.7.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.800.0",

@@ -13,7 +13,7 @@
     alt="Vue"
     src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
 </p>
-<p align="middle">An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.</p>
+<p align="middle">An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
 <p align="middle">
   <a href="https://github.com/daybrush/moveable" target="_blank"><strong>About Moveable</strong></a> /
   <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
@@ -50,25 +50,27 @@
 <tr>
 <td align="center"><strong>Warpable</strong></td>
 <td align="center"><strong>Pinchable</strong></td>
-<td align="center"><strong></strong></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/packages/ngx-moveable/groupable.md"><strong>Groupable</strong></a></td>
 <td align="center"><strong></strong></td>
 </tr>
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
-<td align="center"><strong></strong></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"></td>
 <td align="center"><strong></strong></td>
 </tr>
 </table>
 
-## 🔥 Able!
+## 🔥 Features
 * **Draggable** refers to the ability to drag and move targets.
 * **Resizable** indicates whether the target's width and height can be increased or decreased.
 * **Scalable** indicates whether the target's x and y can be scale of transform.
 * **Rotatable** indicates whether the target can be rotated.
 * **Warpable** indicates whether the target can be warped(distorted, bented).
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
-
+* **[Groupable](https://github.com/daybrush/moveable/blob/master/packages/ngx-moveable/groupable.md)** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
+* Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
+* Support 3d Transform
 
 ## ⚙️ Installation
 ```sh
@@ -105,6 +107,7 @@ export class AppModule { }
 <ngx-moveable
   [target]="target"
   [origin]="true"
+  [edge]="false"
 
   [draggable]="true"
   [throttleDrag]="0"
@@ -118,7 +121,7 @@ export class AppModule { }
   [resizable]="false"
   [throttleResize]="0"
   (resizeStart)="onResizeStart($event)"
-  (resize)="onDrag($event)"
+  (resize)="onResize($event)"
   (resizeEnd)="onResizeEnd($event)"
   
   [scalable]="false"
@@ -145,6 +148,7 @@ export class AppModule { }
   (pinchEnd)="onPinchEnd($event)"
 />
 ```
+## 🚀 [How to use Groupable](https://github.com/daybrush/moveable/blob/master/packages/ngx-moveable/groupable.md)
 
 
 ## ⚙️ Development
