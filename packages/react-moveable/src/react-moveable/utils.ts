@@ -1,7 +1,7 @@
 import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
-import { MoveableState, MoveableProps } from "./types";
+import { MoveableState } from "./types";
 import {
     multiply, invert,
     convertCSStoMatrix, convertMatrixtoCSS,
@@ -72,7 +72,9 @@ export function getBeforeTransformOrigin(el: SVGElement) {
     });
 }
 export function getTransformOrigin(style: CSSStyleDeclaration, ) {
-    return style.transformOrigin!.split(" ");
+    const transformOrigin = style.transformOrigin;
+
+    return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
 }
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,

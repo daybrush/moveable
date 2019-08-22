@@ -181,6 +181,11 @@ export function multiply(matrix: number[], matrix2: number[], n: number) {
     const m = matrix.length / n;
     const k = matrix2.length / m;
 
+    if (!m) {
+        return matrix2;
+    } else if (!k) {
+        return matrix;
+    }
     for (let i = 0; i < n; ++i) {
         for (let j = 0; j < k; ++j) {
             newMatrix[i * k + j] = 0;
