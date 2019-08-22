@@ -357,32 +357,11 @@ version: 0.7.2
     repository: git+https://github.com/daybrush/framework-utils.git
     version: 0.2.0
     */
-    function prefixNames(prefix) {
-      var classNames = [];
-
-      for (var _i = 1; _i < arguments.length; _i++) {
-        classNames[_i - 1] = arguments[_i];
-      }
-
-      return classNames.map(function (className) {
-        return className.split(" ").map(function (name) {
-          return "" + prefix + name;
-        }).join(" ");
-      }).join(" ");
-    }
-    function prefixCSS(prefix, css) {
-      return css.replace(/\.([^{,\s\d.]+)/g, "." + prefix + "$1");
-    }
     /* react */
 
     function ref(target, name) {
       return function (e) {
         e && (target[name] = e);
-      };
-    }
-    function refs(target, name, i) {
-      return function (e) {
-        e && (target[name][i] = e);
       };
     }
     /* Class Decorator */
@@ -1614,6 +1593,43 @@ version: 0.7.2
     PureComponent.prototype.shouldComponentUpdate = function (props, state) {
     	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
     };
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: framework-utils
+    license: MIT
+    author: Daybrush
+    repository: git+https://github.com/daybrush/framework-utils.git
+    version: 0.2.1
+    */
+    function prefixNames(prefix) {
+      var classNames = [];
+
+      for (var _i = 1; _i < arguments.length; _i++) {
+        classNames[_i - 1] = arguments[_i];
+      }
+
+      return classNames.map(function (className) {
+        return className.split(" ").map(function (name) {
+          return name ? "" + prefix + name : "";
+        }).join(" ");
+      }).join(" ");
+    }
+    function prefixCSS(prefix, css) {
+      return css.replace(/\.([^{,\s\d.]+)/g, "." + prefix + "$1");
+    }
+    /* react */
+
+    function ref$1(target, name) {
+      return function (e) {
+        e && (target[name] = e);
+      };
+    }
+    function refs(target, name, i) {
+      return function (e) {
+        e && (target[name][i] = e);
+      };
+    }
 
     /*
     Copyright (c) 2017 NAVER Corp.
@@ -3235,7 +3251,7 @@ version: 0.7.2
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.9.5
+    version: 0.9.6
     */
 
     /*
@@ -3244,7 +3260,7 @@ version: 0.7.2
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.10.5
+    version: 0.10.6
     */
 
     /*! *****************************************************************************
@@ -3483,6 +3499,12 @@ version: 0.7.2
       var m = matrix.length / n;
       var k = matrix2.length / m;
 
+      if (!m) {
+        return matrix2;
+      } else if (!k) {
+        return matrix;
+      }
+
       for (var i = 0; i < n; ++i) {
         for (var j = 0; j < k; ++j) {
           newMatrix[i * k + j] = 0;
@@ -3637,7 +3659,8 @@ version: 0.7.2
       });
     }
     function getTransformOrigin(style) {
-      return style.transformOrigin.split(" ");
+      var transformOrigin = style.transformOrigin;
+      return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
     }
     function caculateMatrixStack(target, container, prevMatrix, prevN) {
       var _a;
@@ -5814,7 +5837,7 @@ version: 0.7.2
             target = _c.target,
             direction = _c.direction;
         return createElement(ControlBoxElement, {
-          ref: ref(this, "controlBox"),
+          ref: ref$1(this, "controlBox"),
           className: prefix("control-box", direction === -1 ? "reverse" : ""),
           style: {
             position: "absolute",
@@ -6020,7 +6043,7 @@ version: 0.7.2
           });
         }).concat([createElement("div", {
           key: "groupTarget",
-          ref: ref(moveable, "groupTargetElement"),
+          ref: ref$1(moveable, "groupTargetElement"),
           className: prefix("group")
         })]);
       }
@@ -6247,7 +6270,7 @@ version: 0.7.2
         if (isGroup) {
           return createElement(MoveableGroup, __assign$3({
             key: "group",
-            ref: ref(this, "moveable")
+            ref: ref$1(this, "moveable")
           }, __assign$3({}, this.props, {
             target: null,
             targets: target
@@ -6256,7 +6279,7 @@ version: 0.7.2
           var moveableTarget = isArr ? target[0] : target;
           return createElement(MoveableManager, __assign$3({
             key: "single",
-            ref: ref(this, "moveable")
+            ref: ref$1(this, "moveable")
           }, __assign$3({}, this.props, {
             target: moveableTarget
           })));

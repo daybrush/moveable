@@ -1480,7 +1480,7 @@ name: preact-moveable
 license: MIT
 author: Daybrush
 repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-version: 0.9.5
+version: 0.9.6
 */
 
 /*
@@ -1489,7 +1489,7 @@ name: react-moveable
 license: MIT
 author: Daybrush
 repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-version: 0.10.5
+version: 0.10.6
 */
 
 /*! *****************************************************************************
@@ -1728,6 +1728,12 @@ function multiply(matrix, matrix2, n) {
   var m = matrix.length / n;
   var k = matrix2.length / m;
 
+  if (!m) {
+    return matrix2;
+  } else if (!k) {
+    return matrix;
+  }
+
   for (var i = 0; i < n; ++i) {
     for (var j = 0; j < k; ++j) {
       newMatrix[i * k + j] = 0;
@@ -1882,7 +1888,8 @@ function getBeforeTransformOrigin(el) {
   });
 }
 function getTransformOrigin(style) {
-  return style.transformOrigin.split(" ");
+  var transformOrigin = style.transformOrigin;
+  return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
 }
 function caculateMatrixStack(target, container, prevMatrix, prevN) {
   var _a;
