@@ -353,8 +353,8 @@ const pinchable = new Moveable(document.body, {
     rotate += beforeDelta;
     target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";
 }).on("scale", ({ target, delta }) => {
-    scale[0] += delta[0];
-    scale[1] += delta[1];
+    scale[0] *= delta[0];
+    scale[1] *= delta[1];
     target.style.transform = "scale(" + scale.join(", ") + ") rotate(" + rotate + "deg)";
 });`,
         react: `
@@ -373,8 +373,8 @@ return (
                 + "rotate(" + this.rotate + "deg)";
         }}
         onScale={({ target, beforeDelta }) => {
-            this.scale[0] += delta[0];
-            this.scale[1] += delta[1];
+            this.scale[0] *= delta[0];
+            this.scale[1] *= delta[1];
             target.style.transform
                 = "scale(" + this.scale.join(", ") + ") "
                 + "rotate(" + this.rotate + "deg)";
@@ -409,8 +409,8 @@ export class AppComponent {
             + "rotate(" + this.rotate + "deg)";
     }
     onScale({ target, beforeDelta }) {
-        this.scale[0] += delta[0];
-        this.scale[1] += delta[1];
+        this.scale[0] *= delta[0];
+        this.scale[1] *= delta[1];
         target.style.transform
             = "scale(" + this.scale.join(", ") + ") "
             + "rotate(" + this.rotate + "deg)";
