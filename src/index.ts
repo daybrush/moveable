@@ -66,9 +66,9 @@ const moveable = new Moveable(moveableElement.parentElement, {
     setTransform(target);
     !isPinch && setLabel(clientX, clientY, `X: ${left}px<br/>Y: ${top}px`);
 
-}).on("scale", ({ target, dist, clientX, clientY, isPinch }) => {
-    const scaleX = frame.get("transform", "scaleX") * dist[0];
-    const scaleY = frame.get("transform", "scaleY") * dist[1];
+}).on("scale", ({ target, delta, clientX, clientY, isPinch }) => {
+    const scaleX = frame.get("transform", "scaleX") * delta[0];
+    const scaleY = frame.get("transform", "scaleY") * delta[1];
     frame.set("transform", "scaleX", scaleX);
     frame.set("transform", "scaleY", scaleY);
     setTransform(target);

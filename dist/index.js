@@ -4,7 +4,7 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.7.0
+version: 0.7.2
 */
 (function () {
     'use strict';
@@ -462,10 +462,6 @@ version: 0.7.0
     }
 
     var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
-
-    function cloneElement(vnode, props) {
-      return h(vnode.nodeName, extend(extend({}, vnode.attributes), props), arguments.length > 2 ? [].slice.call(arguments, 2) : vnode.children);
-    }
 
     var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
@@ -1096,64 +1092,6 @@ version: 0.7.0
       return diff(merge, vnode, {}, false, parent, false);
     }
 
-    function createRef() {
-    	return {};
-    }
-
-    var PropTypes = {
-        checkPropTypes: function () {}
-    };
-
-    function createEmitter(initialValue, bitmaskFactory) {
-        var registeredUpdaters = [];
-        var value = initialValue;
-        var diff = function (newValue) { return bitmaskFactory(value, newValue) | 0; };
-        return {
-            register: function (updater) {
-                registeredUpdaters.push(updater);
-                updater(value, diff(value));
-            },
-            unregister: function (updater) {
-                registeredUpdaters = registeredUpdaters.filter(function (i) { return i !== updater; });
-            },
-            val: function (newValue) {
-                if (newValue === undefined || newValue == value) {
-                    return value;
-                }
-                var bitmask = diff(newValue);
-                value = newValue;
-                registeredUpdaters.forEach(function (up) { return up(newValue, bitmask); });
-                return value;
-            }
-        };
-    }
-    var noopEmitter = {
-        register: function (_) {
-            console.warn("Consumer used without a Provider");
-        },
-        unregister: function (_) {
-            // do nothing
-        },
-        val: function (_) {
-            //do nothing;
-        }
-    };
-
-    /*
-     * Extracts the children from the props and returns an object containing the
-     * only element of the given array (preact always passes children as an array)
-     * or null otherwise. The result contains always a reference to the original
-     * array of children
-     *
-     * @param {RenderableProps<*>} props - the component's properties
-     * @return {{ child: JSX.Element | null, children: JSX.Element[]}}
-     */
-    function getOnlyChildAndChildren(props) {
-        var children = props.children;
-        var child = children.length === 1 ? children[0] : null;
-        return { child: child, children: children };
-    }
-
     var __extends$1 = (undefined && undefined.__extends) || (function () {
         var extendStatics = function (d, b) {
             extendStatics = Object.setPrototypeOf ||
@@ -1167,102 +1105,6 @@ version: 0.7.0
             d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
         };
     })();
-    function getRenderer(props) {
-        var child = getOnlyChildAndChildren(props).child;
-        // TODO: "render" in props check is only done to make TS happy
-        return child || ("render" in props && props.render);
-    }
-    var MAX_SIGNED_31_BIT_INT = 1073741823;
-    var defaultBitmaskFactory = function () { return MAX_SIGNED_31_BIT_INT; };
-    var ids = 0;
-    function _createContext(value, bitmaskFactory) {
-        var key = "_preactContextProvider-" + ids++;
-        var Provider = /*#__PURE__*/ (function (_super) {
-            __extends$1(Provider, _super);
-            function Provider(props) {
-                var _this = _super.call(this, props) || this;
-                _this._emitter = createEmitter(props.value, bitmaskFactory || defaultBitmaskFactory);
-                return _this;
-            }
-            Provider.prototype.getChildContext = function () {
-                var _a;
-                return _a = {}, _a[key] = this._emitter, _a;
-            };
-            Provider.prototype.componentDidUpdate = function () {
-                this._emitter.val(this.props.value);
-            };
-            Provider.prototype.render = function () {
-                var _a = getOnlyChildAndChildren(this.props), child = _a.child, children = _a.children;
-                if (child) {
-                    return child;
-                }
-                // preact does not support fragments,
-                // therefore we wrap the children in a span
-                return h("span", null, children);
-            };
-            return Provider;
-        }(Component$1));
-        var Consumer = /*#__PURE__*/ (function (_super) {
-            __extends$1(Consumer, _super);
-            function Consumer(props, ctx) {
-                var _this = _super.call(this, props, ctx) || this;
-                _this._updateContext = function (value, bitmask) {
-                    var unstable_observedBits = _this.props.unstable_observedBits;
-                    var observed = unstable_observedBits === undefined || unstable_observedBits === null
-                        ? MAX_SIGNED_31_BIT_INT
-                        : unstable_observedBits;
-                    observed = observed | 0;
-                    if ((observed & bitmask) === 0) {
-                        return;
-                    }
-                    _this.setState({ value: value });
-                };
-                _this.state = { value: _this._getEmitter().val() || value };
-                return _this;
-            }
-            Consumer.prototype.componentDidMount = function () {
-                this._getEmitter().register(this._updateContext);
-            };
-            Consumer.prototype.shouldComponentUpdate = function (nextProps, nextState) {
-                return (this.state.value !== nextState.value ||
-                    getRenderer(this.props) !== getRenderer(nextProps));
-            };
-            Consumer.prototype.componentWillUnmount = function () {
-                this._getEmitter().unregister(this._updateContext);
-            };
-            Consumer.prototype.componentDidUpdate = function (_, __, prevCtx) {
-                var previousProvider = prevCtx[key];
-                if (previousProvider === this.context[key]) {
-                    return;
-                }
-                (previousProvider || noopEmitter).unregister(this._updateContext);
-                this.componentDidMount();
-            };
-            Consumer.prototype.render = function () {
-                // TODO: "render" in props check is only done to make TS happy
-                var render = "render" in this.props && this.props.render;
-                var r = getRenderer(this.props);
-                if (render && render !== r) {
-                    console.warn("Both children and a render function are defined. Children will be used");
-                }
-                if (typeof r === "function") {
-                    return r(this.state.value);
-                }
-                console.warn("Consumer is expecting a function as one and only child but didn't find any");
-            };
-            Consumer.prototype._getEmitter = function () {
-                return this.context[key] || noopEmitter;
-            };
-            return Consumer;
-        }(Component$1));
-        return {
-            Provider: Provider,
-            Consumer: Consumer
-        };
-    }
-    var createContext = _createContext;
-
-    var version = '15.1.0'; // trick libraries to think we are react
 
     var ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(
     	' '
@@ -1297,11 +1139,6 @@ version: 0.7.0
     	DEV = process.env.NODE_ENV !== 'production';
     }
     catch (e) { }
-
-    // a component that renders nothing. Used to replace components for unmountComponentAtNode.
-    function EmptyComponent() {
-    	return null;
-    }
 
     // make react think we're react.
     var VNode$1 = h('a', null).constructor;
@@ -1398,29 +1235,6 @@ version: 0.7.0
     	}
     }
 
-    // proxy render() since React returns a Component reference.
-    function render$1(vnode, parent, callback) {
-    	var prev = parent && parent._preactCompatRendered && parent._preactCompatRendered.base;
-
-    	// ignore impossible previous renders
-    	if (prev && prev.parentNode !== parent) { prev = null; }
-
-    	// default to first Element child
-    	if (!prev && parent) { prev = parent.firstElementChild; }
-
-    	// remove unaffected siblings
-    	for (var i = parent.childNodes.length; i--;) {
-    		if (parent.childNodes[i] !== prev) {
-    			parent.removeChild(parent.childNodes[i]);
-    		}
-    	}
-
-    	var out = render(vnode, parent, prev);
-    	if (parent) { parent._preactCompatRendered = out && (out._component || { base: out }); }
-    	if (typeof callback === 'function') { callback(); }
-    	return (out && out._component) || out;
-    }
-
     var ContextProvider = function () {};
 
     ContextProvider.prototype.getChildContext = function () {
@@ -1430,60 +1244,7 @@ version: 0.7.0
     	return props.children[0];
     };
 
-    function renderSubtreeIntoContainer(parentComponent, vnode, container, callback) {
-    	var wrap = h(ContextProvider, { context: parentComponent.context }, vnode);
-    	var renderContainer = render$1(wrap, container);
-    	var component = renderContainer._component || renderContainer.base;
-    	if (callback) { callback.call(component, renderContainer); }
-    	return component;
-    }
-
-    function Portal(props) {
-    	renderSubtreeIntoContainer(this, props.vnode, props.container);
-    }
-
-    function createPortal(vnode, container) {
-    	return h(Portal, { vnode: vnode, container: container });
-    }
-
-    function unmountComponentAtNode(container) {
-    	var existing = container._preactCompatRendered && container._preactCompatRendered.base;
-    	if (existing && existing.parentNode === container) {
-    		render(h(EmptyComponent), container, existing);
-    		return true;
-    	}
-    	return false;
-    }
-
     var ARR = [];
-
-    // This API is completely unnecessary for Preact, so it's basically passthrough.
-    var Children = {
-    	map: function(children, fn, ctx) {
-    		if (children == null) { return null; }
-    		children = Children.toArray(children);
-    		if (ctx && ctx !== children) { fn = fn.bind(ctx); }
-    		return children.map(fn);
-    	},
-    	forEach: function(children, fn, ctx) {
-    		if (children == null) { return null; }
-    		children = Children.toArray(children);
-    		if (ctx && ctx !== children) { fn = fn.bind(ctx); }
-    		children.forEach(fn);
-    	},
-    	count: function(children) {
-    		return (children && children.length) || 0;
-    	},
-    	only: function(children) {
-    		children = Children.toArray(children);
-    		if (children.length !== 1) { throw new Error('Children.only() expects only one child.'); }
-    		return children[0];
-    	},
-    	toArray: function(children) {
-    		if (children == null) { return []; }
-    		return ARR.concat(children);
-    	}
-    };
 
     /** Track current render() component for ref assignment */
     var currentComponent;
@@ -1570,29 +1331,6 @@ version: 0.7.0
     	applyEventNormalization(vnode);
 
     	return vnode;
-    }
-
-    function cloneElement$1(element, props) {
-    	var children = [], len = arguments.length - 2;
-    	while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
-
-    	if (!isValidElement(element)) { return element; }
-    	var elementProps = element.attributes || element.props;
-    	var node = h(
-    		element.nodeName || element.type,
-    		extend$1({}, elementProps),
-    		element.children || (elementProps && elementProps.children)
-    	);
-    	// Only provide the 3rd argument if needed.
-    	// Arguments 3+ overwrite element.children in preactCloneElement
-    	var cloneArgs = [node, props];
-    	if (children && children.length) {
-    		cloneArgs.push(children);
-    	}
-    	else if (props && props.children) {
-    		cloneArgs.push(props.children);
-    	}
-    	return normalizeVNode(cloneElement.apply(void 0, cloneArgs));
     }
 
     function isValidElement(element) {
@@ -1872,34 +1610,6 @@ version: 0.7.0
     PureComponent.prototype.isPureReactComponent = true;
     PureComponent.prototype.shouldComponentUpdate = function (props, state) {
     	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
-    };
-
-    function unstable_batchedUpdates(callback) {
-    	callback();
-    }
-
-    var index = {
-    	version: version,
-    	DOM: DOM,
-    	PropTypes: PropTypes,
-    	Children: Children,
-    	render: render$1,
-    	hydrate: render$1,
-    	createClass: createClass,
-    	createContext: createContext,
-    	createPortal: createPortal,
-    	createFactory: createFactory,
-    	createElement: createElement,
-    	cloneElement: cloneElement$1,
-    	createRef: createRef,
-    	isValidElement: isValidElement,
-    	findDOMNode: findDOMNode,
-    	unmountComponentAtNode: unmountComponentAtNode,
-    	Component: Component$1$1,
-    	PureComponent: PureComponent,
-    	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
-    	unstable_batchedUpdates: unstable_batchedUpdates,
-    	__spread: extend$1
     };
 
     /*
@@ -3945,7 +3655,7 @@ version: 0.7.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.9.3
+    version: 0.9.5
     */
 
     /*
@@ -3954,7 +3664,7 @@ version: 0.7.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.10.3
+    version: 0.10.5
     */
 
     /*! *****************************************************************************
@@ -5320,13 +5030,13 @@ version: 0.7.0
             pos1 = _a.pos1,
             pos2 = _a.pos2,
             rotationRad = _a.rotationRad;
-        return index.createElement("div", {
+        return createElement("div", {
           className: prefix("line rotation-line"),
           style: {
             // tslint:disable-next-line: max-line-length
             transform: "translate(" + (pos1[0] + pos2[0]) / 2 + "px, " + (pos1[1] + pos2[1]) / 2 + "px) translateY(-40px) rotate(" + rotationRad + "rad)"
           }
-        }, index.createElement("div", {
+        }, createElement("div", {
           className: prefix("control", "rotation")
         }));
       },
@@ -5577,22 +5287,22 @@ version: 0.7.0
           pos2 = _b.pos2,
           pos3 = _b.pos3,
           pos4 = _b.pos4;
-      return [index.createElement("div", {
+      return [createElement("div", {
         className: prefix("control", "direction", "nw"),
         "data-direction": "nw",
         key: "nw",
         style: getControlTransform(pos1)
-      }), index.createElement("div", {
+      }), createElement("div", {
         className: prefix("control", "direction", "ne"),
         "data-direction": "ne",
         key: "ne",
         style: getControlTransform(pos2)
-      }), index.createElement("div", {
+      }), createElement("div", {
         className: prefix("control", "direction", "sw"),
         "data-direction": "sw",
         key: "sw",
         style: getControlTransform(pos3)
-      }), index.createElement("div", {
+      }), createElement("div", {
         className: prefix("control", "direction", "se"),
         "data-direction": "se",
         key: "se",
@@ -5613,22 +5323,22 @@ version: 0.7.0
           pos2 = _b.pos2,
           pos3 = _b.pos3,
           pos4 = _b.pos4;
-      return [index.createElement("div", {
+      return [createElement("div", {
         className: prefix("control", "direction", "n"),
         "data-direction": "n",
         key: "n",
         style: getControlTransform(pos1, pos2)
-      }), index.createElement("div", {
+      }), createElement("div", {
         className: prefix("control", "direction", "w"),
         "data-direction": "w",
         key: "w",
         style: getControlTransform(pos1, pos3)
-      }), index.createElement("div", {
+      }), createElement("div", {
         className: prefix("control", "direction", "e"),
         "data-direction": "e",
         key: "e",
         style: getControlTransform(pos2, pos4)
-      }), index.createElement("div", {
+      }), createElement("div", {
         className: prefix("control", "direction", "s"),
         "data-direction": "s",
         key: "s",
@@ -6228,19 +5938,19 @@ version: 0.7.0
         var linePosTo2 = getMiddleLinePos(pos4, pos3);
         var linePosTo3 = getMiddleLinePos(pos2, pos4);
         var linePosTo4 = getMiddleLinePos(pos4, pos2);
-        return [index.createElement("div", {
+        return [createElement("div", {
           className: prefix("line"),
           key: "middeLine1",
           style: getLineStyle(linePosFrom1, linePosTo1)
-        }), index.createElement("div", {
+        }), createElement("div", {
           className: prefix("line"),
           key: "middeLine2",
           style: getLineStyle(linePosFrom2, linePosTo2)
-        }), index.createElement("div", {
+        }), createElement("div", {
           className: prefix("line"),
           key: "middeLine3",
           style: getLineStyle(linePosFrom3, linePosTo3)
-        }), index.createElement("div", {
+        }), createElement("div", {
           className: prefix("line"),
           key: "middeLine4",
           style: getLineStyle(linePosFrom4, linePosTo4)
@@ -6404,7 +6114,7 @@ version: 0.7.0
 
         var beforeOrigin = moveable.state.beforeOrigin;
         return [// <div className={prefix("control", "origin")} style={getControlTransform(origin)} key="origin"></div>,
-        index.createElement("div", {
+        createElement("div", {
           className: prefix("control", "origin"),
           style: getControlTransform(beforeOrigin),
           key: "beforeOrigin"
@@ -6720,7 +6430,7 @@ version: 0.7.0
           top: top
         };
         return targets.map(function (target, i) {
-          return index.createElement(MoveableManager, {
+          return createElement(MoveableManager, {
             key: i,
             ref: refs(moveable, "moveables", i),
             target: target,
@@ -6728,7 +6438,7 @@ version: 0.7.0
             parentMoveable: moveable,
             parentPosition: position
           });
-        }).concat([index.createElement("div", {
+        }).concat([createElement("div", {
           key: "groupTarget",
           ref: ref(moveable, "groupTargetElement"),
           className: prefix("group")
@@ -6955,7 +6665,7 @@ version: 0.7.0
         var isGroup = isArr && target.length > 1;
 
         if (isGroup) {
-          return index.createElement(MoveableGroup, __assign$3({
+          return createElement(MoveableGroup, __assign$3({
             key: "group",
             ref: ref(this, "moveable")
           }, __assign$3({}, this.props, {
@@ -6964,7 +6674,7 @@ version: 0.7.0
           })));
         } else {
           var moveableTarget = isArr ? target[0] : target;
-          return index.createElement(MoveableManager, __assign$3({
+          return createElement(MoveableManager, __assign$3({
             key: "single",
             ref: ref(this, "moveable")
           }, __assign$3({}, this.props, {
@@ -6997,7 +6707,7 @@ version: 0.7.0
         ables: MOVEABLE_ABLES
       });
       return Moveable;
-    }(index.PureComponent);
+    }(PureComponent);
 
     var InnerMoveable =
     /*#__PURE__*/
@@ -8363,12 +8073,12 @@ version: 0.7.0
       !isPinch && setLabel(clientX, clientY, "X: " + left + "px<br/>Y: " + top + "px");
     }).on("scale", function (_a) {
       var target = _a.target,
-          dist = _a.dist,
+          delta = _a.delta,
           clientX = _a.clientX,
           clientY = _a.clientY,
           isPinch = _a.isPinch;
-      var scaleX = frame.get("transform", "scaleX") * dist[0];
-      var scaleY = frame.get("transform", "scaleY") * dist[1];
+      var scaleX = frame.get("transform", "scaleX") * delta[0];
+      var scaleY = frame.get("transform", "scaleY") * delta[1];
       frame.set("transform", "scaleX", scaleX);
       frame.set("transform", "scaleY", scaleY);
       setTransform(target);
