@@ -171,8 +171,8 @@ const pinchable = new Moveable(pinchableElement.parentElement, {
 
     pinchableElement.style.transform = `scale(${scale.join(", ")}) rotate(${rotate}deg)`;
 }).on("scale", ({ delta }) => {
-    scale[0] += delta[0];
-    scale[1] += delta[1];
+    scale[0] *= delta[0];
+    scale[1] *= delta[1];
 
     pinchableElement.style.transform = `scale(${scale.join(", ")}) rotate(${rotate}deg)`;
 });
