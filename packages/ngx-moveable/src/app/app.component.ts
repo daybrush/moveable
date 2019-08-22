@@ -85,9 +85,9 @@ display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(
       this.setLabel(clientX, clientY, `X: ${left}px<br/>Y: ${top}px`);
     }
   }
-  onScale({ target, dist, clientX, clientY, isPinch }: OnScale) {
-    const scaleX = this.frame.get('transform', 'scaleX') * dist[0];
-    const scaleY = this.frame.get('transform', 'scaleY') * dist[1];
+  onScale({ target, delta, clientX, clientY, isPinch }: OnScale) {
+    const scaleX = this.frame.get('transform', 'scaleX') * delta[0];
+    const scaleY = this.frame.get('transform', 'scaleY') * delta[1];
     this.frame.set('transform', 'scaleX', scaleX);
     this.frame.set('transform', 'scaleY', scaleY);
     this.setTransform(target);

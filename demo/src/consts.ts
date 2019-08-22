@@ -145,9 +145,9 @@ const scalable = new Moveable(document.body, {
     scalable: true,
     throttleScale: 0,
     keepRatio: true,
-}).on("scale", ({ target, dist }) => {
-    scale[0] *= dist[0];
-    scale[1] *= dist[1];
+}).on("scale", ({ target, delta }) => {
+    scale[0] *= delta[0];
+    scale[1] *= delta[1];
     target.style.transform = "scale(" + scale[0] +  "," + scale[1] + ")";
 });
         `,
@@ -161,10 +161,10 @@ return (
         scalable={true}
         throttleScale={0}
         keepRatio={true}
-        onScale={({ target, dist }) => {
+        onScale={({ target, delta }) => {
             const scale = this.scale;
-            scale[0] *= dist[0];
-            scale[1] *= dist[1];
+            scale[0] *= delta[0];
+            scale[1] *= delta[1];
             target.style.transform
                 = "scale(" + scale[0] +  "," + scale[1] + ")";
         }}
@@ -192,10 +192,10 @@ ${"`"},
 })
 export class AppComponent {
     scale = [1, 1];
-    onScale({ target, dist }) {
+    onScale({ target, delta }) {
         const scale = this.scale;
-        scale[0] *= dist[0];
-        scale[1] *= dist[1];
+        scale[0] *= delta[0];
+        scale[1] *= delta[1];
         target.style.transform
             = "scale(" + scale[0] +  "," + scale[1] + ")";
     }
