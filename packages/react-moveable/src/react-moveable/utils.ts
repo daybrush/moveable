@@ -29,7 +29,7 @@ export function getTransform(target: SVGElement | HTMLElement): "none" | number[
 export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
     const transform = window.getComputedStyle(target).transform!;
 
-    if (!transform || transform === "none" && !isInit) {
+    if (!transform || (transform === "none" && !isInit)) {
         return "none";
     }
     return getTransformMatrix(transform);
@@ -113,9 +113,9 @@ export function caculateMatrixStack(
         let offsetLeft = (el as any).offsetLeft;
         let offsetTop = (el as any).offsetTop;
         // svg
-        let hasNotOffset = isUndefined(offsetLeft);
+        const isSVG = isUndefined(offsetLeft);
+        let hasNotOffset = isSVG;
         let origin: number[];
-
         // inner svg element
         if (hasNotOffset && tagName !== "svg") {
             origin = isNotSupportTransformOrigin
@@ -158,7 +158,19 @@ export function caculateMatrixStack(
         if (isContainer) {
             break;
         }
-        el = el.parentElement;
+
+        if (isSVG) {
+            el = el.parentElement;
+            continue;
+        }
+        const offsetParent: HTMLElement = (el as any).offsetParent;
+
+        if (!offsetParent) {
+            break;
+        }
+        while (el && el !== container && el !== offsetParent) {
+            el = el.parentElement;
+        }
     }
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
     let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
