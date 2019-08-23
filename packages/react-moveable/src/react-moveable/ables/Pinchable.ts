@@ -78,10 +78,6 @@ export default {
         const parentRotate = getRotatiion(touches);
         const parentDistance = distance * (1 - 1 / pinchScale);
         const target = moveable.state.target!;
-
-        inputEvent.preventDefault();
-        inputEvent.stopPropagation();
-
         const params: any = {
             [targets ? "targets" : "target"]: targets ? targets : target,
             clientX,

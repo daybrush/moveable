@@ -1,5 +1,5 @@
 import React from "react";
-import Moveable, { MoveableGroup } from "./react-moveable";
+import Moveable from "./react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";

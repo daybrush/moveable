@@ -1,54 +1,61 @@
 .App {
-  text-align: center;
-  transform-origin: 0% 0%;
-  /* transform: scaleX(1) translateY(30px); */
+    text-align: center;
+    transform-origin: 0% 0%;
+    /* transform: scaleX(1) translateY(30px); */
 }
+
 .App * {
-  position: relative;
-  transform-origin: 50% 50%;
-  transform-origin: 20% 20%;
+    position: relative;
+    transform-origin: 50% 50%;
+    transform-origin: 20% 20%;
 }
+
 .App-logo {
-  position: relative;
-  /* animation: App-logo-spin infinite 20s linear; */
-  /* transform: rotate(18deg); */
-  width: 300px;
-  height: 200px;
-  /* transform-origin: 0% 0%!important; */
+    position: relative;
+    /* animation: App-logo-spin infinite 20s linear; */
+    /* transform: rotate(18deg); */
+    width: 300px;
+    height: 200px;
+    /* transform-origin: 0% 0%!important; */
 }
+
 .App code {
-  display: inline-block;
+    display: inline-block;
 }
+
 img {
-  background: #f55;
-  transform-origin: 0px 0px;
+    background: #f55;
+    transform-origin: 0px 0px;
 }
+
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  /* transform: rotate(-9deg); */
-  color: white;
+    position: static!important;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    /* transform: rotate(-9deg); */
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
+
 .App svg * {
     transform-origin: 20% 50%;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .box {
@@ -56,6 +63,7 @@ img {
     width: 120px;
     height: 150px;
 }
+
 .box span {
     position: absolute;
     font-size: 60px;
@@ -66,14 +74,17 @@ img {
     padding: 5px 10px;
     /* display: inline-block; */
 }
+
 .box span:nth-child(2) {
     top: 40px;
     left: -10px;
 }
+
 .box span:nth-child(3) {
     top: 90px;
     left: 80px;
 }
+
 .rCSnba4d7 .moveable-control {
     width: 16px!important;
     height: 16px!important;

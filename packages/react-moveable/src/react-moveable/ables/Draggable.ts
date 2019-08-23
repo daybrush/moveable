@@ -52,8 +52,6 @@ const Draggable = {
         if (!isDrag) {
             return;
         }
-        inputEvent.preventDefault();
-        inputEvent.stopPropagation();
 
         const {
             throttleDrag = 0,
