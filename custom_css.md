@@ -14,8 +14,6 @@ If you want to custom CSS, use **`!important`**.
 ## Classes used in moveable
 ### moveable-line
 
-![](./demo/images/line.png)
-
 ```css
 .moveable-line {
     position: absolute;
@@ -25,6 +23,10 @@ If you want to custom CSS, use **`!important`**.
     transform-origin: 0px 0.5px;
 }
 ```
+
+![](./demo/images/line.png)
+
+
 ```css
 .moveable-line.moveable-rotation-line {
     height: 40px;
@@ -33,8 +35,6 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 ### moveable-control
-
-![](./demo/images/control.png)
 
 ```css
 .moveable-control {
@@ -50,6 +50,9 @@ If you want to custom CSS, use **`!important`**.
     z-index: 10;
 }
 ```
+
+![](./demo/images/control.png)
+
 #### moveable-rotataion
 
 ```css
