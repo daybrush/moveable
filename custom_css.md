@@ -93,7 +93,8 @@ If you want to custom CSS, use **`!important`**.
 
 
 ## Default CSS
-```
+
+```css
 .rCSckyn7i {
     position: fixed;
     width: 0;
