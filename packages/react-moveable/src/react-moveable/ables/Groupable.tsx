@@ -6,7 +6,7 @@ import { prefix } from "../utils";
 
 export default {
     name: "groupable",
-    render(moveable: MoveableGroup) {
+    render(moveable: MoveableGroup): any[] {
         const targets = moveable.props.targets || [];
 
         moveable.moveables = [];

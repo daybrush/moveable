@@ -4,7 +4,7 @@ import { prefix, getControlTransform } from "../utils";
 
 export default {
     name: "origin",
-    render(moveable: MoveableManager) {
+    render(moveable: MoveableManager): any {
         if (!moveable.props.origin) {
             return null;
         }

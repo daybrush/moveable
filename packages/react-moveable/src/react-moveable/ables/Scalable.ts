@@ -14,7 +14,7 @@ export default {
     dragControlOnly: true,
     canPinch: true,
 
-    render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>) {
+    render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>): any[] | undefined {
         const { resizable, scalable, edge } = moveable.props;
         if (!resizable && scalable) {
             if (edge) {

@@ -13,7 +13,7 @@ export default {
     updateRect: true,
     canPinch: true,
 
-    render(moveable: MoveableManager<Partial<ResizableProps>>) {
+    render(moveable: MoveableManager<Partial<ResizableProps>>): any[] | undefined {
         const { resizable, edge } = moveable.props;
         if (resizable) {
             if (edge) {

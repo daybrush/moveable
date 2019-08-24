@@ -68,7 +68,7 @@ export default {
     name: "rotatable",
     canPinch: true,
 
-    render(moveable: MoveableManager<RotatableProps>) {
+    render(moveable: MoveableManager<RotatableProps>): any {
         if (!moveable.props.rotatable) {
             return null;
         }
