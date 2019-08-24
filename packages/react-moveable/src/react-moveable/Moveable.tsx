@@ -41,4 +41,7 @@ export default class Moveable extends React.PureComponent<MoveableProps> {
     public updateTarget() {
         this.moveable.updateTarget();
     }
+    public destroy() {
+        this.moveable.componentWillUnmount();
+    }
 }

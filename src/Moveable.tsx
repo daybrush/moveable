@@ -126,7 +126,7 @@ class Moveable extends EgComponent {
 
         el.remove ? el.remove() : el.parentElement.removeChild(el);
         this.off();
-        this.getMoveable().componentWillUnmount();
+        this.getMoveable().destroy();
         this.innerMoveable = null;
     }
     private getMoveable() {

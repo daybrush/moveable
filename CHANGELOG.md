@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.4] - 2019-08-24
+### Fixed
+- Fix that pinch does not occur when pressed at the same time.
+- Fix that scrolls and drags occur simultaneously and racks occur. #27
+- Fix that mis-calculating when a static element is a parent.1 #28
+- Fix that destroy() error #30
+
 ## [0.7.3] - 2019-08-23
 ### Fixed
 - Fix infinite loop issue.

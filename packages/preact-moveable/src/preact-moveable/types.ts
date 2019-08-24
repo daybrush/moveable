@@ -5,4 +5,5 @@ export interface MoveableInterface extends Component<MoveableProps, MoveableStat
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(isNotSetState?: boolean): void;
     updateTarget(): void;
+    destroy(): void;
 }
