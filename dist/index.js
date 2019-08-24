@@ -345,6 +345,7 @@ version: 0.7.3
       Component.VERSION = "2.1.2";
       return Component;
     }();
+    //# sourceMappingURL=component.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -371,6 +372,7 @@ version: 0.7.3
         });
       };
     }
+    //# sourceMappingURL=utils.esm.js.map
 
     var VNode = function VNode() {};
 
@@ -1070,6 +1072,7 @@ version: 0.7.3
     function render(vnode, parent, merge) {
       return diff(merge, vnode, {}, false, parent, false);
     }
+    //# sourceMappingURL=preact.mjs.map
 
     var __extends$1 = (undefined && undefined.__extends) || (function () {
         var extendStatics = function (d, b) {
@@ -1590,6 +1593,7 @@ version: 0.7.3
     PureComponent.prototype.shouldComponentUpdate = function (props, state) {
     	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
     };
+    //# sourceMappingURL=preact-compat.es.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -1627,6 +1631,7 @@ version: 0.7.3
         e && (target[name][i] = e);
       };
     }
+    //# sourceMappingURL=utils.esm.js.map
 
     /*
     Copyright (c) 2017 NAVER Corp.
@@ -1966,6 +1971,7 @@ version: 0.7.3
      * @memberof eg.agent
      */
     agent.VERSION = "2.1.5";
+    //# sourceMappingURL=agent.esm.js.map
 
     /*
     Copyright (c) 2018 Daybrush
@@ -2629,6 +2635,7 @@ version: 0.7.3
     function removeEvent(el, type, listener) {
       el.removeEventListener(type, listener);
     }
+    //# sourceMappingURL=utils.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -2824,6 +2831,7 @@ version: 0.7.3
         }(Component$1$1)
       );
     }
+    //# sourceMappingURL=styler.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -3185,6 +3193,7 @@ version: 0.7.3
 
       return Dragger;
     }();
+    //# sourceMappingURL=drag.esm.js.map
 
     /*
     Copyright (c) 2019-present NAVER Corp.
@@ -3578,6 +3587,7 @@ version: 0.7.3
 
       return ListDiffer;
     }();
+    //# sourceMappingURL=list-differ.esm.js.map
 
     /*
     Copyright (c) 2019-present NAVER Corp.
@@ -3664,6 +3674,7 @@ version: 0.7.3
 
       return ChildrenDiffer;
     }(ListDiffer);
+    //# sourceMappingURL=children-differ.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -3671,7 +3682,7 @@ version: 0.7.3
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.9.6
+    version: 0.9.8
     */
 
     /*
@@ -3680,7 +3691,7 @@ version: 0.7.3
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.10.6
+    version: 0.10.8
     */
 
     /*! *****************************************************************************
@@ -4116,7 +4127,8 @@ version: 0.7.3
         var offsetLeft = el.offsetLeft;
         var offsetTop = el.offsetTop; // svg
 
-        var hasNotOffset = isUndefined$1(offsetLeft);
+        var isSVG = isUndefined$1(offsetLeft);
+        var hasNotOffset = isSVG;
         var origin = void 0; // inner svg element
 
         if (hasNotOffset && tagName !== "svg") {
@@ -4155,7 +4167,20 @@ version: 0.7.3
           break;
         }
 
-        el = el.parentElement;
+        if (isSVG) {
+          el = el.parentElement;
+          continue;
+        }
+
+        var offsetParent = el.offsetParent;
+
+        if (!offsetParent) {
+          break;
+        }
+
+        while (el && el !== container && el !== offsetParent) {
+          el = el.parentElement;
+        }
       }
 
       var mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
@@ -4662,8 +4687,6 @@ version: 0.7.3
         var parentRotate = getRotatiion(touches);
         var parentDistance = distance * (1 - 1 / pinchScale);
         var target = moveable.state.target;
-        inputEvent.preventDefault();
-        inputEvent.stopPropagation();
         var params = (_b = {}, _b[targets ? "targets" : "target"] = targets ? targets : target, _b.clientX = clientX, _b.clientY = clientY, _b.datas = datas.pinchableDatas, _b);
         var eventName = "onPinch" + (targets ? "Group" : "");
         triggerEvent(moveable, eventName, params);
@@ -4868,8 +4891,6 @@ version: 0.7.3
           return;
         }
 
-        inputEvent.preventDefault();
-        inputEvent.stopPropagation();
         var _b = moveable.props,
             _c = _b.throttleDrag,
             throttleDrag = _c === void 0 ? 0 : _c,
@@ -6726,11 +6747,16 @@ version: 0.7.3
         this.moveable.updateTarget();
       };
 
+      __proto.destroy = function () {
+        this.moveable.componentWillUnmount();
+      };
+
       Moveable.defaultProps = __assign$3({}, MoveableManager.defaultProps, {
         ables: MOVEABLE_ABLES
       });
       return Moveable;
     }(PureComponent);
+    //# sourceMappingURL=moveable.esm.js.map
 
     var InnerMoveable =
     /*#__PURE__*/
@@ -6755,9 +6781,10 @@ version: 0.7.3
 
       return InnerMoveable;
     }(Component$1);
+     //# sourceMappingURL=InnerMoveable.js.map
 
     var PROPERTIES = ["draggable", "resizable", "scalable", "rotatable", "warpable", "pinchable", "origin", "target", "edge", "throttleDrag", "throttleResize", "throttleScale", "throttleRotate", "keepRatio"];
-    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd"];
+    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd"]; //# sourceMappingURL=consts.js.map
 
     /**
      * Moveable is Draggable! Resizable! Scalable! Rotatable!
@@ -6872,7 +6899,7 @@ version: 0.7.3
         var el = this.getMoveable().base;
         el.remove ? el.remove() : el.parentElement.removeChild(el);
         this.off();
-        this.getMoveable().componentWillUnmount();
+        this.getMoveable().destroy();
         this.innerMoveable = null;
       };
 
@@ -6896,6 +6923,7 @@ version: 0.7.3
       })], Moveable);
       return Moveable;
     }(Component);
+     //# sourceMappingURL=Moveable.js.map
 
     var codes = {
       draggable: {
@@ -6938,7 +6966,7 @@ version: 0.7.3
         react: "\nimport Moveable from \"react-moveable\";\n\nthis.poses = [\n    [0, 0],\n    [0, 0],\n    [0, 0],\n];\n\nconst target = [].slice.call(\n    document.querySelectorAll(\".target\"),\n);\nreturn (\n    <Moveable\n        target={target}\n        draggable={true}\n        onDragGroup={({ events }) => {\n            events.forEach(({ target, beforeDelta }, i) => {\n                this.poses[i][0] += beforeDelta[0];\n                this.poses[i][1] += beforeDelta[1];\n\n                target.style.transform\n                    = \"translate(\"\n                    + this.poses[i][0] + \"px, \"\n                    + this.poses[i][1] + \"px)\";\n            });\n        }}\n    />\n);\n        ",
         angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target1 class=\"target\">target1</div>\n<div #target2 class=\"target\">target2</div>\n<div #target3 class=\"target\">target3</div>\n<ngx-moveable\n    [target]=\"[target1, target2, target3]\"\n    [draggable]=\"true\"\n    (dragGroup)=\"onDragGroup($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    poses = [\n        [0, 0],\n        [0, 0],\n        [0, 0],\n    ];\n    onDragGroup({ events }) {\n        events.forEach(({ target, beforeDelta }, i) => {\n            this.poses[i][0] += beforeDelta[0];\n            this.poses[i][1] += beforeDelta[1];\n\n            target.style.transform\n                = \"translate(\"\n                + this.poses[i][0] + \"px, \"\n                + this.poses[i][1] + \"px)\";\n        });\n    }\n}\n        "
       }
-    };
+    }; //# sourceMappingURL=consts.js.map
 
     /*
     Copyright (c) 2016 Daybrush
@@ -8039,6 +8067,7 @@ version: 0.7.3
 
       return Frame;
     }();
+    //# sourceMappingURL=scene.esm.js.map
 
     var moveableElement = document.querySelector(".moveable");
     var labelElement = document.querySelector(".label");
@@ -8067,7 +8096,7 @@ version: 0.7.3
 
     var moveable = new Moveable$1(moveableElement.parentElement, {
       target: moveableElement,
-      origin: false,
+      // origin: false,
       draggable: true,
       rotatable: true,
       scalable: true,
