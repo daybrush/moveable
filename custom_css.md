@@ -1,4 +1,4 @@
-# 🎉 How to use custom CSS
+# ✨ How to use custom CSS
 
 If you want to custom CSS, use **`!important`**.
 

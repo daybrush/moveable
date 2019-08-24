@@ -79,7 +79,7 @@ $ npm i react-moveable
 
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 * 🚀 [**How to use Groupable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/groupable.md)
-* 🎉 [**How to use custom CSS**](https://github.com/daybrush/moveable/blob/master/custom_css.md)
+* ✨ [**How to use custom CSS**](https://github.com/daybrush/moveable/blob/master/custom_css.md)
 
 ## 🚀 How to use
 
