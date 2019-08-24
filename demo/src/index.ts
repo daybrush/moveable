@@ -40,7 +40,7 @@ function setLabel(clientX: number, clientY: number, text: string) {
 
 const moveable = new Moveable(moveableElement.parentElement, {
     target: moveableElement,
-    origin: false,
+    // origin: false,
     draggable: true,
     rotatable: true,
     scalable: true,
