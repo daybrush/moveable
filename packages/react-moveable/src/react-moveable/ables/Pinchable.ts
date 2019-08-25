@@ -135,12 +135,12 @@ export default {
         return isPinch;
     },
     pinchGroupStart(moveable: MoveableGroup, e: any) {
-        return this.pinchStart(moveable, {...e, targets: moveable.props.targets });
+        return this.pinchStart(moveable, { ...e, targets: moveable.props.targets });
     },
     pinchGroup(moveable: MoveableGroup, e: any) {
-        return this.pinch(moveable, {...e, targets: moveable.props.targets });
+        return this.pinch(moveable, { ...e, targets: moveable.props.targets });
     },
     pinchGroupEnd(moveable: MoveableGroup, e: any) {
-        return this.pinchEnd(moveable, {...e, targets: moveable.props.targets });
+        return this.pinchEnd(moveable, { ...e, targets: moveable.props.targets });
     },
 };
