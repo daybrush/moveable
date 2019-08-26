@@ -135,12 +135,14 @@ export interface OnPinchEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - You can set the start translate value.
  */
 export interface OnDragStart {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    set: (translate: number[]) => void;
 }
 /**
  * @typedef
@@ -151,8 +153,10 @@ export interface OnDragStart {
  * @property - Objects that can send information to the following events.
  * @property - The delta of [left, top]
  * @property - The distance of [left, top]
+ * @property - The position of [left, top]
  * @property - The delta of [translateX, translateY]
  * @property - The distance of [translateX, translateY]
+ * @property - The position of [translateX, translateY]
  * @property - a target's transform
  * @property - a target's left
  * @property - a target's top
@@ -167,8 +171,10 @@ export interface OnDrag {
     datas: IObject<any>;
     beforeDelta: number[];
     beforeDist: number[];
+    beforeTranslate: number[];
     delta: number[];
     dist: number[];
+    translate: number[];
     transform: string;
     left: number;
     top: number;
@@ -199,12 +205,14 @@ export interface OnDragEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - You can set the start scale value.
  */
 export interface OnScaleStart {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    set: (scale: number[]) => void;
 }
 /**
  * @typedef
@@ -310,12 +318,14 @@ export interface OnResizeEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - You can set the start rotate value.
  */
 export interface OnRotateStart {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    set: (rotate: number) => void;
 }
 /**
  * @typedef
@@ -324,10 +334,12 @@ export interface OnRotateStart {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
- * @property - The distance of rotation rad
- * @property - The delta of rotation rad
  * @property - The distance of rotation rad before transform is applied
  * @property - The delta of rotation rad before transform is applied
+ * @property - The now rotation rad before transform is applied
+ * @property - The distance of rotation rad
+ * @property - The delta of rotation rad
+ * @property - The now rotation rad
  * @property - a target's transform
  */
 export interface OnRotate {
@@ -335,10 +347,15 @@ export interface OnRotate {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
-    dist: number;
-    delta: number;
+
     beforeDist: number;
     beforeDelta: number;
+    beforeRotate: number;
+
+    dist: number;
+    delta: number;
+    rotate: number;
+
     transform: string;
     isPinch: boolean;
 }

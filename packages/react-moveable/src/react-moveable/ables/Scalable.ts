@@ -49,12 +49,16 @@ export default {
         datas.direction = direction;
         datas.width = width;
         datas.height = height;
+        datas.startScale = [1, 1];
 
         const result = triggerEvent(moveable, "onScaleStart", {
             target,
             clientX,
             clientY,
             datas: datas.datas,
+            set: (scale: number[]) => {
+                datas.startScale = scale;
+            },
         });
         if (result !== false) {
             datas.isScale = true;
@@ -71,6 +75,7 @@ export default {
             height,
             transform,
             isScale,
+            startScale,
         } = datas;
 
         if (!isScale) {
@@ -113,8 +118,8 @@ export default {
             scaleX = nextWidth / width;
             scaleY = nextHeight / height;
         }
-        scaleX = throttle(scaleX, throttleScale!);
-        scaleY = throttle(scaleY, throttleScale!);
+        scaleX = throttle(scaleX * startScale[0], throttleScale!);
+        scaleY = throttle(scaleY * startScale[1], throttleScale!);
 
         if (scaleX === 0) {
             scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -122,6 +127,7 @@ export default {
         if (scaleY === 0) {
             scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
+        const nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
         const nowScale = [scaleX, scaleY];
         datas.prevDist = nowScale;
 
@@ -131,9 +137,9 @@ export default {
 
         const params = {
             target: target!,
-            scale: nowScale,
+            scale: [scaleX],
             direction,
-            dist: [scaleX - 1, scaleY - 1],
+            dist: nowDist,
             delta: [scaleX / prevDist[0], scaleY / prevDist[1]],
             transform: `${transform} scale(${scaleX}, ${scaleY})`,
             clientX,

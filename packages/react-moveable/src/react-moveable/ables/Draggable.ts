@@ -1,6 +1,6 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
-import { minus } from "../matrix";
+import { minus, sum } from "../matrix";
 import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup } from "../types";
 import MoveableGroup from "../MoveableGroup";
@@ -25,6 +25,7 @@ const Draggable = {
         datas.bottom = parseFloat(style.bottom || "") || 0;
         datas.right = parseFloat(style.right || "") || 0;
         datas.transform = targetTransform;
+        datas.startTranslate = [0, 0];
 
         setDragStart(moveable, { datas });
 
@@ -35,6 +36,9 @@ const Draggable = {
             target: target!,
             clientX,
             clientY,
+            set: (translate: number[]) => {
+                datas.startTranslate = translate;
+            },
         });
 
         if (result !== false) {
@@ -46,9 +50,9 @@ const Draggable = {
     },
     drag(
         moveable: MoveableManager<DraggableProps>,
-        { datas, distX, distY, clientX, clientY, inputEvent }: any,
+        { datas, distX, distY, clientX, clientY }: any,
     ): OnDrag | undefined {
-        const { isPinch, isDrag, prevDist, prevBeforeDist, transform } = datas;
+        const { isPinch, isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
         if (!isDrag) {
             return;
         }
@@ -58,12 +62,14 @@ const Draggable = {
             parentMoveable,
         } = moveable.props;
         const target = moveable.state.target;
-        const beforeDist = getDragDist({ datas, distX, distY }, true);
-        const dist = getDragDist({ datas, distX, distY }, false);
+        const beforeTranslate = sum(getDragDist({ datas, distX, distY }, true), startTranslate);
+        const translate = sum(getDragDist({ datas, distX, distY }, false), startTranslate);
 
-        throttleArray(dist, throttleDrag);
-        throttleArray(beforeDist, throttleDrag);
+        throttleArray(translate, throttleDrag);
+        throttleArray(beforeTranslate, throttleDrag);
 
+        const beforeDist = minus(beforeTranslate, startTranslate);
+        const dist = minus(translate, startTranslate);
         const delta = minus(dist, prevDist);
         const beforeDelta = minus(beforeDist, prevBeforeDist);
 
@@ -85,8 +91,10 @@ const Draggable = {
             transform: nextTransform,
             dist,
             delta,
+            translate,
             beforeDist,
             beforeDelta,
+            beforeTranslate,
             left,
             top,
             right,

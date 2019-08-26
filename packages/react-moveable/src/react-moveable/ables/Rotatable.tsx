@@ -6,7 +6,7 @@ import { RotatableProps, OnRotateGroup, OnRotateGroupEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import Draggable from "./Draggable";
-import { minus, rotate, sum } from "../matrix";
+import { minus, rotate as rotateMatrix, sum } from "../matrix";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
@@ -22,6 +22,7 @@ function getDeg(
     datas: IObject<any>,
     deg: number,
     direction: number,
+    startRotate: number,
     throttleRotate: number,
 ) {
     const {
@@ -29,7 +30,7 @@ function getDeg(
         startDeg,
         loop: prevLoop,
     } = datas;
-    deg = throttle(deg, throttleRotate);
+
     if (prevDeg > deg && prevDeg > 270 && deg < 90) {
         // 360 => 0
         ++datas.loop;
@@ -37,26 +38,29 @@ function getDeg(
         // 0 => 360
         --datas.loop;
     }
-    const absolutePrevDeg = prevLoop * 360 + prevDeg;
-    const absoluteDeg = datas.loop * 360 + deg;
+    const loop = datas.loop;
+    const absolutePrevDeg = prevLoop * 360 + prevDeg + startRotate;
+    const absoluteDeg = throttle(loop * 360 + deg + startRotate, throttleRotate);
 
     const delta = direction * (absoluteDeg - absolutePrevDeg);
-    const dist = direction * (absoluteDeg - startDeg);
+    const dist = direction * (absoluteDeg - startDeg - startRotate);
 
-    datas.prevDeg = deg;
+    datas.prevDeg = absoluteDeg - loop * 360 - startRotate;
 
-    return [delta, dist];
+    return [delta, dist, absoluteDeg];
 }
 function getRotateInfo(
     datas: IObject<any>,
     direction: number,
     clientX: number, clientY: number,
+    startRotate: number,
     throttleRotate: number,
 ) {
     return getDeg(
         datas,
         getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
         direction,
+        startRotate,
         throttleRotate,
     );
 }
@@ -113,6 +117,7 @@ export default {
 
         datas.direction = direction;
         datas.beforeDirection = beforeDirection;
+        datas.startRotate = 0;
         datas.datas = {};
 
         const result = triggerEvent(moveable, "onRotateStart", {
@@ -120,6 +125,9 @@ export default {
             target,
             clientX,
             clientY,
+            set: (rotatation: number) => {
+                datas.startRotate = rotatation;
+            },
         });
         datas.isRotate = result !== false;
         return datas.isRotate;
@@ -134,6 +142,7 @@ export default {
             beforeInfo,
             afterInfo,
             isRotate,
+            startRotate,
         } = datas;
 
         if (!isRotate) {
@@ -146,16 +155,20 @@ export default {
 
         let delta: number;
         let dist: number;
+        let rotate: number;
         let beforeDelta: number;
         let beforeDist: number;
+        let beforeRotate: number;
 
         if (pinchFlag || parentFlag) {
-            [delta, dist] = getDeg(afterInfo, parentRotate, direction, throttleRotate);
-            [beforeDelta, beforeDist] = getDeg(beforeInfo, parentRotate, direction, throttleRotate);
+            [delta, dist, rotate] = getDeg(afterInfo, parentRotate, direction, startRotate, throttleRotate);
+            [beforeDelta, beforeDist, beforeRotate]
+                = getDeg(beforeInfo, parentRotate, direction, startRotate, throttleRotate);
         } else {
-            [delta, dist] = getRotateInfo(afterInfo, direction, clientX, clientY, throttleRotate);
-            [beforeDelta, beforeDist] = getRotateInfo(
-                beforeInfo, beforeDirection, clientX, clientY, throttleRotate);
+            [delta, dist, rotate] = getRotateInfo(afterInfo, direction, clientX, clientY, startRotate, throttleRotate);
+            [beforeDelta, beforeDist, beforeRotate] = getRotateInfo(
+                beforeInfo, beforeDirection, clientX, clientY, startRotate, throttleRotate,
+            );
         }
 
         if (!delta && !beforeDelta && !parentMoveable) {
@@ -164,12 +177,14 @@ export default {
         const params = {
             target: moveable.props.target!,
             datas: datas.datas,
-            delta,
-            dist,
             clientX,
             clientY,
+            delta,
+            dist,
+            rotate,
             beforeDist,
             beforeDelta,
+            beforeRotate,
             transform: `${datas.transform} rotate(${dist}deg)`,
             isPinch: !!pinchFlag,
         };
@@ -257,7 +272,7 @@ export default {
             (child, childDatas, result, i) => {
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
                 const { prevX, prevY } = getCustomEvent(dragDatas);
-                const [clientX, clientY] = rotate([prevX, prevY], deg);
+                const [clientX, clientY] = rotateMatrix([prevX, prevY], deg);
 
                 const dragResult = Draggable.drag(
                     child,
