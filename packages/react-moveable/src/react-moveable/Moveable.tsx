@@ -1,16 +1,16 @@
 import * as React from "react";
-import { MoveableProps } from "./types";
+import { MoveableProps, Able } from "./types";
 import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./consts";
 import MoveableGroup from "./MoveableGroup";
 import { ref } from "framework-utils";
 import { isArray } from "@daybrush/utils";
 
-export default class Moveable extends React.PureComponent<MoveableProps> {
+export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & T> {
     public moveable!: MoveableManager<MoveableProps> | MoveableGroup;
     public render() {
         const props = this.props;
-        const ables = props.ables || [];
+        const ables: Able[] = props.ables as Able[] || [];
         const target = this.props.target || this.props.targets;
         const isArr = isArray(target);
         const isGroup = isArr && (target as any[]).length > 1;
