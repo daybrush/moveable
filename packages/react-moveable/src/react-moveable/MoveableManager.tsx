@@ -31,6 +31,7 @@ export default class MoveableManager<T = {}>
         parentMoveable: null,
         parentPosition: null,
         ables: [],
+        pinchThreshold: 20,
     };
     public state: MoveableManagerState<T> = {
         target: null,

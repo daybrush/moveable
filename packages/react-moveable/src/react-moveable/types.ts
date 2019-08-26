@@ -9,6 +9,7 @@ export type MoveableManagerProps<T = {}> = {
     origin?: boolean;
     edge?: boolean;
     keepRatio?: boolean;
+    pinchThreshold?: number;
     ables?: Array<Able<T>>;
 } & T;
 export interface MoveableManagerState<T = {}> {
@@ -47,6 +48,9 @@ export interface MoveableProps
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
     keepRatio?: boolean;
+    edge?: boolean;
+    pinchThreshold?: number;
+    ables?: Able[];
 }
 
 export interface MoveableState {

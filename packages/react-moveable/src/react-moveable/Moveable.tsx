@@ -7,23 +7,21 @@ import { ref } from "framework-utils";
 import { isArray } from "@daybrush/utils";
 
 export default class Moveable extends React.PureComponent<MoveableProps> {
-    public static defaultProps = {
-        ...MoveableManager.defaultProps,
-        ables: MOVEABLE_ABLES,
-    };
     public moveable!: MoveableManager<MoveableProps> | MoveableGroup;
     public render() {
+        const props = this.props;
+        const ables = props.ables || [];
         const target = this.props.target || this.props.targets;
         const isArr = isArray(target);
         const isGroup = isArr && (target as any[]).length > 1;
 
         if (isGroup) {
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
-                {...{ ...this.props, target: null, targets: target as any[] }} />;
+                {...{ ...this.props, target: null, targets: target as any[], ables: [...MOVEABLE_ABLES, ...ables] }} />;
         } else {
             const moveableTarget = isArr ? (target as any[])[0] : target;
             return <MoveableManager key="single" ref={ref(this, "moveable")}
-                {...{ ...this.props, target: moveableTarget }} />;
+                {...{ ...this.props, target: moveableTarget, ables: [...MOVEABLE_ABLES, ...ables] }} />;
         }
     }
     public isMoveableElement(target: HTMLElement) {
