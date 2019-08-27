@@ -134,25 +134,40 @@ class App extends React.Component {
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
-                    throttleRotate={0}
+                    throttleRotate={90}
                     rotatable={true}
                     pinchable={true}
-                    onRotate={({ target, beforeDelta }) => {
-                        item.set("rotate", `${parseFloat(item.get("rotate")) + beforeDelta}deg`);
+                    onRotateStart={({ set }) => {
+                        const rotate = parseFloat(item.get("rotate")) || 0;
+
+                        set(rotate);
+                    }}
+                    onRotate={({ target, beforeRotate }) => {
+                        item.set("rotate", `${beforeRotate}deg`);
                         target.style.cssText += item.toCSS();
                     }}
-                    onDrag={({ target, beforeDelta }) => {
+                    onDragStart={({ set}) => {
+                        const tx = parseFloat(item.get("tx")) || 0;
+                        const ty = parseFloat(item.get("ty")) || 0;
 
-                        item.set("tx", `${parseFloat(item.get("tx")) + beforeDelta[0]}px`);
-                        item.set("ty", `${parseFloat(item.get("ty")) + beforeDelta[1]}px`);
+                        set([tx, ty]);
+                    }}
+                    onDrag={({ target, beforeTranslate }) => {
+                        item.set("tx", `${beforeTranslate[0]}px`);
+                        item.set("ty", `${beforeTranslate[1]}px`);
                         // target!.style.left = `${left}px`;
                         // target!.style.top = `${top}px`;
                         target.style.cssText += item.toCSS();
                     }}
-                    onScale={({ target, delta }) => {
-                        // console.log(delta);
-                        item.set("sx", item.get("sx") * delta[0]);
-                        item.set("sy", item.get("sy") * delta[1]);
+                    onScaleStart={({ set}) => {
+                        const sx = parseFloat(item.get("sx")) || 0;
+                        const sy = parseFloat(item.get("sy")) || 0;
+
+                        set([sx, sy]);
+                    }}
+                    onScale={({ target, scale }) => {
+                        item.set("sx", scale[0]);
+                        item.set("sy", scale[1]);
 
                         target.style.cssText += item.toCSS();
                     }}

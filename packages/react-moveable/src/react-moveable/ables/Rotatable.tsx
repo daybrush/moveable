@@ -38,13 +38,12 @@ function getDeg(
         --datas.loop;
     }
     const loop = datas.loop;
-    const absolutePrevDeg = prevLoop * 360 + prevDeg + startRotate;
-    const absoluteDeg = throttle(loop * 360 + deg + startRotate, throttleRotate);
-
+    const absolutePrevDeg = prevLoop * 360 + prevDeg - startDeg + startRotate;
+    const absoluteDeg = throttle(loop * 360 + deg - startDeg + startRotate, throttleRotate);
     const delta = direction * (absoluteDeg - absolutePrevDeg);
     const dist = direction * (absoluteDeg - startDeg - startRotate);
 
-    datas.prevDeg = absoluteDeg - loop * 360 - startRotate;
+    datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
 
     return [delta, dist, absoluteDeg];
 }

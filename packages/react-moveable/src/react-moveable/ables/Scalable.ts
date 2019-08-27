@@ -137,7 +137,7 @@ export default {
 
         const params = {
             target: target!,
-            scale: [scaleX],
+            scale: [scaleX, scaleY],
             direction,
             dist: nowDist,
             delta: [scaleX / prevDist[0], scaleY / prevDist[1]],
