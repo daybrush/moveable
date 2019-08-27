@@ -3,7 +3,7 @@ import { MIN_SCALE } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
-import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd, Renderer } from "../types";
+import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd, Renderer, OnScaleGroupStart } from "../types";
 import { directionCondition, triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
@@ -50,8 +50,7 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startScale = [1, 1];
-
-        const result = triggerEvent(moveable, "onScaleStart", {
+        const params = {
             target,
             clientX,
             clientY,
@@ -59,11 +58,13 @@ export default {
             set: (scale: number[]) => {
                 datas.startScale = scale;
             },
-        });
+        };
+        const result = triggerEvent(moveable, "onScaleStart", params);
+
         if (result !== false) {
             datas.isScale = true;
         }
-        return datas.isScale;
+        return datas.isScale ? params : false;
     },
     dragControl(
         moveable: MoveableManager<ScalableProps>,
@@ -171,7 +172,13 @@ export default {
     },
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
-        const { clientX, clientY, datas, inputEvent } = e;
+        const { datas, inputEvent } = e;
+
+        const params = this.dragControlStart(moveable, e);
+
+        if (!params) {
+            return false;
+        }
         const {
             left: parentLeft,
             top: parentTop,
@@ -184,16 +191,16 @@ export default {
         ];
 
         datas.rotation = moveable.rotation;
-        const enabledEvents = triggerChildAble(
+        const events = triggerChildAble(
             moveable,
             this,
             "dragControlStart",
             e,
-            (child, childDatas) => {
+            (child, childDatas, eventParams) => {
                 const { left, top, origin } = child.state;
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
 
-                Draggable.dragStart(
+                eventParams.dragStart = Draggable.dragStart(
                     child,
                     setCustomEvent(
                         left + origin[0] - parentAbsoluteOrigin[0],
@@ -205,21 +212,15 @@ export default {
             },
         );
 
-        if (enabledEvents.every(ev => !ev)) {
-            return false;
-        }
-
-        this.dragControlStart(moveable, e);
-
-        const result = triggerEvent(moveable, "onScaleGroupStart", {
+        const nextParams: OnScaleGroupStart = {
+            ...params,
             targets: moveable.props.targets!,
-            clientX,
-            clientY,
-            datas: datas.datas,
-        });
+            events,
+        };
+        const result = triggerEvent(moveable, "onScaleGroupStart", nextParams);
 
         datas.isScale = result !== false;
-        return datas.isScale;
+        return datas.isScale ? nextParams : false;
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
         const { inputEvent, datas } = e;

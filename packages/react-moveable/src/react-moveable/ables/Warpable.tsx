@@ -28,6 +28,7 @@ function getTriangleRad(pos1: number[], pos2: number[], pos3: number[]) {
 
     return rad >= 0 ? rad : rad + 2 * Math.PI;
 }
+
 function isValidPos(poses1: number[][], poses2: number[][]) {
     const rad1 = getTriangleRad(poses1[0], poses1[1], poses1[2]);
     const rad2 = getTriangleRad(poses2[0], poses2[1], poses2[2]);

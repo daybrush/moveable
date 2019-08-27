@@ -2,7 +2,7 @@ import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
 import { minus, sum } from "../matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps, OnDrag, OnDragGroup } from "../types";
+import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
@@ -31,7 +31,8 @@ const Draggable = {
 
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
-        const result = triggerEvent(moveable, "onDragStart", {
+
+        const params = {
             datas: datas.datas,
             target: target!,
             clientX,
@@ -39,14 +40,15 @@ const Draggable = {
             set: (translate: number[]) => {
                 datas.startTranslate = translate;
             },
-        });
+        };
+        const result = triggerEvent(moveable, "onDragStart", params);
 
         if (result !== false) {
             datas.isDrag = true;
         } else {
             datas.isPinch = false;
         }
-        return datas.isDrag;
+        return datas.isDrag ? params : false;
     },
     drag(
         moveable: MoveableManager<DraggableProps>,
@@ -125,20 +127,23 @@ const Draggable = {
         return hasClass(target, prefix("group"));
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
-        const { clientX, clientY, datas } = e;
+        const datas = e.datas;
 
-        triggerChildAble(moveable, this, "dragStart", e);
+        const params = this.dragStart(moveable, e);
 
-        this.dragStart(moveable, e);
-        const result = triggerEvent(moveable, "onDragGroupStart", {
+        if (!params) {
+            return false;
+        }
+        const events = triggerChildAble(moveable, this, "dragStart", e);
+        const nextParams: OnDragGroupStart = {
+            ...params,
             targets: moveable.props.targets!,
-            clientX,
-            clientY,
-            datas: datas.datas,
-        });
+            events,
+        };
+        const result = triggerEvent(moveable, "onDragGroupStart", nextParams);
 
         datas.isDrag = result !== false;
-        return datas.isDrag;
+        return datas.isDrag ? params : false;
     },
     dragGroup(moveable: MoveableGroup, e: any) {
         if (!e.datas.isDrag) {

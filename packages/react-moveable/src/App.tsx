@@ -76,6 +76,7 @@ class App extends React.Component {
                                 groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
                                 groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
                             }
+                            console.log("A", parseFloat(groupItem.get("rotate")), ev.beforeDelta);
                             groupItem.set("rotate", `${parseFloat(groupItem.get("rotate")) + ev.beforeDelta}deg`);
 
                             ev.target.style.cssText += groupItem.toCSS();
@@ -137,7 +138,7 @@ class App extends React.Component {
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
-                    throttleRotate={90}
+                    throttleRotate={isResizable ? 30 : 90}
                     rotatable={true}
                     pinchable={true}
                     onRotateStart={({ set }) => {
@@ -145,7 +146,7 @@ class App extends React.Component {
 
                         set(rotate);
                     }}
-                    onRotate={({ target, beforeRotate }) => {
+                    onRotate={({ target, beforeDelta, beforeDist, beforeRotate }) => {
                         item.set("rotate", `${beforeRotate}deg`);
                         target.style.cssText += item.toCSS();
                     }}

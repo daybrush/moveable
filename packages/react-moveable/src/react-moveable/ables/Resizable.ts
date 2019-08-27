@@ -1,6 +1,6 @@
 import { getRad, throttle, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
-import { ResizableProps, OnResizeGroup, OnResizeGroupEnd, Renderer } from "../types";
+import { ResizableProps, OnResizeGroup, OnResizeGroupEnd, Renderer, OnResizeGroupStart } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
@@ -50,16 +50,17 @@ export default {
         datas.prevWidth = 0;
         datas.prevHeight = 0;
 
-        const result = triggerEvent(moveable, "onResizeStart", {
+        const params = {
             datas: datas.datas,
             target,
             clientX,
             clientY,
-        });
+        };
+        const result = triggerEvent(moveable, "onResizeStart", params);
         if (result !== false) {
             datas.isResize = true;
         }
-        return datas.isResize;
+        return datas.isResize ? params : false;
     },
     dragControl(
         moveable: MoveableManager<ResizableProps>,
@@ -162,42 +163,42 @@ export default {
     },
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
-        const { clientX, clientY, datas, inputEvent } = e;
+        const { datas, inputEvent } = e;
         const {
             left: parentLeft,
             top: parentTop,
         } = moveable.state;
 
-        const enabledEvents = triggerChildAble(
+        const params = this.dragControlStart(moveable, e);
+
+        if (!params) {
+            return false;
+        }
+        const events = triggerChildAble(
             moveable,
             this,
             "dragControlStart",
             { ...e, parentRotate: 0 },
-            (child, childDatas) => {
+            (child, childDatas, eventParams) => {
                 const { left, top } = child.state;
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
 
-                Draggable.dragStart(
+                eventParams.dragStart = Draggable.dragStart(
                     child,
                     setCustomEvent(left - parentLeft, top - parentTop, dragDatas, inputEvent),
                 );
             },
         );
 
-        if (enabledEvents.every(ev => !ev)) {
-            return false;
-        }
-        this.dragControlStart(moveable, e);
-
-        const result = triggerEvent(moveable, "onResizeGroupStart", {
+        const nextParams: OnResizeGroupStart = {
+            ...params,
             targets: moveable.props.targets!,
-            clientX,
-            clientY,
-            datas: datas.datas,
-        });
+            events,
+        };
+        const result = triggerEvent(moveable, "onResizeGroupStart", nextParams);
 
         datas.isResize = result !== false;
-        return datas.isResize;
+        return datas.isResize ? params : false;
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
         const { inputEvent, datas } = e;

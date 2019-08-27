@@ -435,28 +435,25 @@ export interface OnWarpEnd {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnDragStart
  * @property - targets to drag
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @property - Each `dragStart` event on the targets
  */
-export interface OnDragGroupStart {
+export interface OnDragGroupStart extends OnDragStart {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+    events: OnDragStart[];
 }
 
 /**
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnDrag
- * @property - targets to drag
- * @property - Each drag event on the targets
+ * @property - The dragging targets
+ * @property - Each `drag` event on the targets
  */
 export interface OnDragGroup extends OnDrag {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnDrag | undefined>;
+    events: OnDrag[];
 }
 /**
  * @typedef
@@ -478,28 +475,25 @@ export interface OnDragGroupEnd {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnRotateStart
  * @property - targets to rotate
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @property - Each `rotateStart` & `dragStart` event on the targets
  */
-export interface OnRotateGroupStart {
+export interface OnRotateGroupStart extends OnRotateStart {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+    events: Array<OnRotateStart & { dragStart: OnDragStart }>;
 }
 
 /**
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnRotate
- * @property - targets to rotate
- * @property - Each rotate & drag event on the targets
+ * @property - The rotating targets
+ * @property - Each `rotate` & `drag` event on the targets
  */
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotate & { drag: OnDrag }>;
+    events: Array<OnRotate & { drag: OnDrag | undefined } | undefined>;
 }
 
 /**
@@ -522,24 +516,21 @@ export interface OnRotateGroupEnd {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnResizeStart
  * @property - targets to resize
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @property - Each `resizeStart` & `dragStart` event on the targets
  */
-export interface OnResizeGroupStart {
+export interface OnResizeGroupStart extends OnResizeStart {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+    events: Array<OnResizeStart & { dragStart: OnDragStart }>;
 }
 
 /**
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnResize
- * @property - targets to resize
- * @property - Each resize & drag event on the targets
+ * @property - The resizing targets
+ * @property - Each `resize` & `drag `event on the targets
  */
 export interface OnResizeGroup extends OnResize {
     targets: Array<HTMLElement | SVGElement>;
@@ -566,24 +557,21 @@ export interface OnResizeGroupEnd {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnScaleStart
  * @property - targets to scale
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @property - Each `scaleStart` & `dragStart` event on the targets
  */
-export interface OnScaleGroupStart {
+export interface OnScaleGroupStart extends OnScaleStart {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+    events: Array<OnScaleStart & { drag: OnDragStart }>;
 }
 
 /**
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnScale
- * @property - targets to scale
- * @property - Each scale & drag event on the targets
+ * @property - The scaling targets
+ * @property - Each `scale` & `drag` event on the targets
  */
 export interface OnScaleGroup extends OnScale {
     targets: Array<HTMLElement | SVGElement>;

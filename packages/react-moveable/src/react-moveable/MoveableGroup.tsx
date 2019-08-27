@@ -3,8 +3,8 @@ import { GroupableProps } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
-import { MOVEABLE_ABLES, MIN_NUM, MAX_NUM } from "./consts";
-import { getTargetInfo } from "./utils";
+import { MOVEABLE_ABLES, MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
+import { getTargetInfo, throttle } from "./utils";
 import { sum, rotate } from "./matrix";
 
 function getMaxPos(poses: number[][][], index: number) {
@@ -35,8 +35,9 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
     let minY = MAX_NUM;
     let groupWidth = 0;
     let groupHeight = 0;
+    const fixedRotation = throttle(rotation, TINY_NUM);
 
-    if (rotation % 90) {
+    if (fixedRotation % 90) {
         const rad = rotation / 180 * Math.PI;
         const a1 = Math.tan(rad);
         const a2 = -1 / a1;
@@ -78,11 +79,19 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
         });
         groupWidth = getMaxPos(rotatePoses, 0) - getMinPos(rotatePoses, 0);
         groupHeight = getMaxPos(rotatePoses, 1) - getMinPos(rotatePoses, 1);
+
     } else {
         minX = getMinPos(moveablePoses, 0);
         minY = getMinPos(moveablePoses, 1);
         groupWidth = getMaxPos(moveablePoses, 0) - minX;
         groupHeight = getMaxPos(moveablePoses, 1) - minY;
+
+        if (fixedRotation % 180) {
+            const changedWidth = groupWidth;
+
+            groupWidth = groupHeight;
+            groupHeight = changedWidth;
+        }
     }
     return [minX, minY, groupWidth, groupHeight];
 }
@@ -121,9 +130,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         this.moveables.forEach(moveable => moveable.update(false));
 
-        const { added, changed } = this.differ.update(this.props.targets!);
+        const { added, changed, removed } = this.differ.update(this.props.targets!);
 
-        if (added.length || changed.length) {
+        if (added.length || changed.length || removed.length) {
             this.updateRect();
         }
         return true;
