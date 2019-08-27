@@ -120,6 +120,9 @@ class App extends React.Component {
                             ev.target.style.cssText += groupItem.toCSS();
                         });
                     }}
+                    onClickGroup={e => {
+                        console.log(e);
+                    }}
                     />
                 <Moveable
                     target={selectedTarget}

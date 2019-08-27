@@ -62,10 +62,15 @@ export default class MoveableManager<T = {}>
     protected controlDragger!: Dragger;
     protected controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
+    constructor(props: any) {
+        super(props);
+
+        this.updateAbles();
+    }
     public render() {
         this.update(false);
 
-        const { edge, parentPosition} = this.props;
+        const { edge, parentPosition } = this.props;
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
@@ -176,13 +181,23 @@ export default class MoveableManager<T = {}>
 
         return callback && callback(e);
     }
-    protected updateAbles() {
-        const props = this.props;
-        const enabledAbles = props.ables!.filter(able => props[able.name]);
+    protected updateAbles(
+        ables: Able[] = this.props.ables!,
+        eventAffix: string = "",
+    ) {
+        const props = this.props as any;
+        const enabledAbles = ables!.filter(able => props[able.name]);
         let controlAbleOnly: boolean = false;
-        const targetAbles = enabledAbles.filter(able => able.dragStart || able.pinchStart);
-        const controlAbles = enabledAbles.filter(({ dragControlStart, dragControlOnly }) => {
-            if (!dragControlStart || (dragControlOnly && controlAbleOnly)) {
+
+        const dragStart = `drag${eventAffix}Start` as "dragStart";
+        const pinchStart = `pinchStart${eventAffix}Start` as "pinchStart";
+        const dragControlStart = `drag${eventAffix}ControlStart` as "dragControlStart";
+
+        const targetAbles = enabledAbles.filter(able => able[dragStart] || able[pinchStart]);
+        const controlAbles = enabledAbles.filter(e => {
+            const dragControlOnly = e.dragControlOnly;
+
+            if (!e[dragControlStart] || (dragControlOnly && controlAbleOnly)) {
                 return false;
             }
             if (dragControlOnly) {
@@ -206,7 +221,7 @@ export default class MoveableManager<T = {}>
         }
     }
     protected renderAbles() {
-        const ables = [...this.props.ables!, Origin as Able<T>];
+        const ables = [...this.targetAbles, ...this.controlAbles, Origin as Able<T>];
 
         return ables.map(({ render }) => render && render(this, React));
     }

@@ -1,10 +1,8 @@
-import * as React from "react";
 import MoveableManager from "./MoveableManager";
 import { GroupableProps } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
-import Origin from "./ables/Origin";
 import { MOVEABLE_ABLES, MIN_NUM, MAX_NUM } from "./consts";
 import { getTargetInfo } from "./utils";
 import { sum, rotate } from "./matrix";
@@ -99,8 +97,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
     public rotation: number = 0;
-
-    private groupTargetElement!: HTMLElement;
+    public groupTargetElement!: HTMLElement;
 
     public componentDidMount() {
         super.componentDidMount();
@@ -171,10 +168,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             return super.triggerEvent(name as any, e);
         }
     }
-    protected renderAbles() {
-        const ables = [...this.props.ables!, Groupable, Origin];
-
-        return ables.map(({ render }) => render && render(this, React));
+    protected updateAbles() {
+        super.updateAbles([...this.props.ables!, Groupable], "Group");
     }
 }
 

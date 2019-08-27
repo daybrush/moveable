@@ -7,14 +7,14 @@ function triggerAble<T>(
     moveable: MoveableManager<T>,
     ableType: string,
     eventOperation: string,
-    prefix: string,
+    eventAffix: string,
     eventType: any,
     e: OnDragStart | OnDrag | OnDragEnd | OnPinchEnd,
 ) {
-    const eventName = `${eventOperation}${prefix}${eventType}`;
-    const conditionName = `${eventOperation}${prefix}Condition`;
+    const eventName = `${eventOperation}${eventAffix}${eventType}`;
+    const conditionName = `${eventOperation}${eventAffix}Condition`;
     const isStart = eventType === "Start";
-    const isGroup = prefix.indexOf("Group") > -1;
+    const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
     const results = ables.filter((able: any) => {
         const condition = isStart && able[conditionName];
@@ -36,7 +36,7 @@ export function getAbleDragger<T>(
     moveable: MoveableManager<T>,
     target: HTMLElement | SVGElement,
     ableType: string,
-    prefix: string,
+    eventAffix: string,
 
 ) {
     const options: IObject<any> = {
@@ -46,7 +46,7 @@ export function getAbleDragger<T>(
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
             options[`${eventOperation}${eventType.toLowerCase()}`]
-                = (e: any) => triggerAble(moveable, ableType, eventOperation, prefix, eventType, e);
+                = (e: any) => triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
         });
     });
 

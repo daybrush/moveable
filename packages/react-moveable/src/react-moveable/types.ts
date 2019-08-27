@@ -648,6 +648,22 @@ export interface OnPinchGroupEnd {
     isDrag: boolean;
     datas: IObject<any>;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - targets set to group.
+ * @property - Clicked target.
+ * @property - Whether the clicked target is on the targets set in the group.
+ * @property - Whether the clicked target is a child of the targets set in the group.
+ * @property - The corresponding index among the targets set as a group.
+ */
+export interface OnClickGroup {
+    targets: Array<HTMLElement | SVGElement>;
+    target: HTMLElement | SVGElement;
+    hasTarget: boolean;
+    containsTarget: boolean;
+    targetIndex: number;
+}
 
 export interface Able<T = any> {
     name: string & keyof MoveableManagerProps<T>;
@@ -759,4 +775,5 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
+    onClickGroup?: (e: OnClickGroup) => any;
 }
