@@ -1,5 +1,4 @@
-import * as React from "react";
-import { warp as warpMatrix, getRad, prefix, getLineStyle, getDirection } from "../utils";
+import { getRad, prefix, getLineStyle, getDirection } from "../utils";
 import {
     convertDimension, invert, multiply,
     convertMatrixtoCSS, caculate,
@@ -7,11 +6,12 @@ import {
     ignoreDimension,
     multiplyCSS,
     minus,
+    warp as warpMatrix
 } from "../matrix";
 import { NEARBY_POS } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
-import { WarpableProps, ScalableProps, ResizableProps } from "../types";
+import { WarpableProps, ScalableProps, ResizableProps, Renderer } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
 import { renderDiagonalDirection } from "../renderDirection";
 
@@ -42,7 +42,7 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
 export default {
     name: "warpable",
     dragControlOnly: true,
-    render(moveable: MoveableManager<ResizableProps & ScalableProps & WarpableProps>) {
+    render(moveable: MoveableManager<ResizableProps & ScalableProps & WarpableProps>, React: Renderer) {
         const { resizable, scalable, warpable } = moveable.props;
 
         if (resizable || scalable || !warpable) {
@@ -64,7 +64,7 @@ export default {
             <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2)}></div>,
             <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
             <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
-            ...renderDiagonalDirection(moveable),
+            ...renderDiagonalDirection(moveable, React),
         ];
     },
     dragControlCondition(target: HTMLElement | SVGElement) {

@@ -3,7 +3,7 @@ import { MIN_SCALE } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
-import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd } from "../types";
+import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd, Renderer } from "../types";
 import { directionCondition, triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
@@ -14,13 +14,13 @@ export default {
     dragControlOnly: true,
     canPinch: true,
 
-    render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>): any[] | undefined {
+    render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>, React: Renderer): any[] | undefined {
         const { resizable, scalable, edge } = moveable.props;
         if (!resizable && scalable) {
             if (edge) {
-                return renderDiagonalDirection(moveable);
+                return renderDiagonalDirection(moveable, React);
             }
-            return renderAllDirection(moveable);
+            return renderAllDirection(moveable, React);
         }
     },
     dragControlCondition: directionCondition,

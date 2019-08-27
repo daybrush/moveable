@@ -1,6 +1,6 @@
 import { getRad, throttle, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
-import { ResizableProps, OnResizeGroup, OnResizeGroupEnd } from "../types";
+import { ResizableProps, OnResizeGroup, OnResizeGroupEnd, Renderer } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
@@ -13,13 +13,13 @@ export default {
     updateRect: true,
     canPinch: true,
 
-    render(moveable: MoveableManager<Partial<ResizableProps>>): any[] | undefined {
+    render(moveable: MoveableManager<Partial<ResizableProps>>, React: Renderer): any[] | undefined {
         const { resizable, edge } = moveable.props;
         if (resizable) {
             if (edge) {
-                return renderDiagonalDirection(moveable);
+                return renderDiagonalDirection(moveable, React);
             }
-            return renderAllDirection(moveable);
+            return renderAllDirection(moveable, React);
         }
     },
     dragControlCondition: directionCondition,

@@ -1,18 +1,20 @@
-import * as React from "react";
 import MoveableManager from "./MoveableManager";
 import { prefix, getControlTransform } from "./utils";
-import { ResizableProps, ScalableProps, WarpableProps } from "./types";
+import { ResizableProps, ScalableProps, WarpableProps, Renderer } from "./types";
 
 export function renderAllDirection(
     moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>,
-) {
+    React: Renderer,
+): any[] {
     return [
-        ...renderDiagonalDirection(moveable),
-        ...renderDirection(moveable),
+        ...renderDiagonalDirection(moveable, React),
+        ...renderDirection(moveable, React),
     ];
 }
 export function renderDiagonalDirection(
-    moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>) {
+    moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    React: Renderer,
+): any[] {
     const { resizable, scalable, warpable } = moveable.props;
     if (!resizable && !scalable && !warpable) {
         return [];
@@ -29,7 +31,10 @@ export function renderDiagonalDirection(
             style={getControlTransform(pos4)}></div>,
     ];
 }
-export function renderDirection(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>) {
+export function renderDirection(
+    moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>,
+    React: Renderer,
+): any[] {
     const { resizable, scalable } = moveable.props;
     if (!resizable && !scalable) {
         return [];

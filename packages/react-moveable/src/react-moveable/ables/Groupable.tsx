@@ -1,12 +1,12 @@
-import * as React from "react";
 import { refs, ref } from "framework-utils";
 import MoveableGroup from "../MoveableGroup";
 import MoveableManager from "../MoveableManager";
 import { prefix } from "../utils";
+import { Renderer } from "../types";
 
 export default {
     name: "groupable",
-    render(moveable: MoveableGroup): any[] {
+    render(moveable: MoveableGroup, React: Renderer): any[] {
         const targets = moveable.props.targets || [];
 
         moveable.moveables = [];

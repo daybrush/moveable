@@ -35,6 +35,9 @@ export interface MoveableManagerState<T = {}> {
     pos3: number[];
     pos4: number[];
 }
+export interface Renderer {
+    createElement(type: any, props?: any, ...children: any[]): any;
+}
 
 export interface MoveableProps
     extends DraggableProps,
@@ -652,7 +655,7 @@ export interface Able<T = any> {
     updateRect?: boolean;
     canPinch?: boolean;
 
-    render?: (moveable: MoveableManagerProps<any>) => any;
+    render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
 
     dragStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
     drag?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;

@@ -1,3 +1,4 @@
+import * as React from "react";
 import MoveableManager from "./MoveableManager";
 import { GroupableProps } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
@@ -173,7 +174,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     protected renderAbles() {
         const ables = [...this.props.ables!, Groupable, Origin];
 
-        return ables.map(({ render }) => render && render(this));
+        return ables.map(({ render }) => render && render(this, React));
     }
 }
 

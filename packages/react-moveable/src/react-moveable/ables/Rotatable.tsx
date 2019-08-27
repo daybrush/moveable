@@ -1,8 +1,7 @@
-import * as React from "react";
 import { getRad, throttle, prefix, triggerEvent } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
-import { RotatableProps, OnRotateGroup, OnRotateGroupEnd } from "../types";
+import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -72,7 +71,7 @@ export default {
     name: "rotatable",
     canPinch: true,
 
-    render(moveable: MoveableManager<RotatableProps>): any {
+    render(moveable: MoveableManager<RotatableProps>, React: Renderer): any {
         if (!moveable.props.rotatable) {
             return null;
         }
