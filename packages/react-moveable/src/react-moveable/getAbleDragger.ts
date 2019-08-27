@@ -41,7 +41,7 @@ export function getAbleDragger<T>(
 ) {
     const options: IObject<any> = {
         container: window,
-        pinchThreshold: 50,
+        pinchThreshold: moveable.props.pinchThreshold,
     };
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
