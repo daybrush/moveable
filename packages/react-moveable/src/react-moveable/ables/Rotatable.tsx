@@ -132,7 +132,6 @@ export default {
         const result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
 
-
         return datas.isRotate ? params : false;
     },
     dragControl(
