@@ -9,7 +9,7 @@ import {
     OnResizeGroup, OnResizeGroupEnd, OnScaleGroupStart,
     OnScaleGroup, OnScaleGroupEnd, OnRotateGroupStart,
     OnRotateGroup, OnRotateGroupEnd, OnPinchGroupStart,
-    OnPinchGroup, OnPinchGroupEnd,
+    OnPinchGroup, OnPinchGroupEnd, OnClickGroup,
 } from "react-moveable/declaration/types";
 
 /**
@@ -29,6 +29,8 @@ import {
  * @property - throttle of scaleX, scaleY when scale.
  * @property - throttle of angle(degree) when rotate.
  * @property - When resize or scale, keeps a ratio of the width, height.
+ * @property - Whether to scale and resize through edge lines.
+ * @property - Minimum distance to pinch.
  */
 export interface MoveableOptions {
     draggable?: boolean;
@@ -45,6 +47,8 @@ export interface MoveableOptions {
     throttleScale?: number;
     throttleRotate?: number;
     keepRatio?: boolean;
+    edge?: boolean;
+    pinchThreshold?: number;
 }
 
 export interface MoveableGetterSetter extends Pick<MoveableOptions, Exclude<keyof MoveableOptions, "container">> {
@@ -94,4 +98,6 @@ export interface MoveableEvents {
     pinchGroupStart: OnPinchGroupStart;
     pinchGroup: OnPinchGroup;
     pinchGroupEnd: OnPinchGroupEnd;
+
+    clickGroup: OnClickGroup;
 }

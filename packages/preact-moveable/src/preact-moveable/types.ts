@@ -6,4 +6,6 @@ export interface MoveableInterface extends Component<MoveableProps, MoveableStat
     updateRect(isNotSetState?: boolean): void;
     updateTarget(): void;
     destroy(): void;
+    dragStart(e: MouseEvent | TouchEvent): void;
+    isInside(clientX: number, clientY: number): boolean;
 }

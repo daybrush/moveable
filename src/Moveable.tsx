@@ -12,7 +12,7 @@ import {
     OnDragGroupEnd, OnResizeGroup, OnResizeGroupStart,
     OnResizeGroupEnd, OnScaleGroup, OnScaleGroupEnd,
     OnRotateGroup, OnRotateGroupStart, OnRotateGroupEnd,
-    OnPinchGroup, OnPinchGroupStart, OnPinchGroupEnd, OnScaleGroupStart,
+    OnPinchGroup, OnPinchGroupStart, OnPinchGroupEnd, OnScaleGroupStart, OnClickGroup,
 } from "react-moveable/declaration/types";
 import { PROPERTIES, EVENTS } from "./consts";
 import { camelize, isArray } from "@daybrush/utils";
@@ -99,6 +99,44 @@ class Moveable extends EgComponent {
     public updateRect() {
         this.getMoveable().updateRect();
     }
+    /**
+     * You can move the Moveable through the external `MouseEvent`or `TouchEvent`.
+     * @param - external `MouseEvent`or `TouchEvent`
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *          moveable.dragStart(e);
+     *     }
+     * });
+     */
+    public dragStart(e: MouseEvent | TouchEvent): void {
+        this.getMoveable().dragStart(e);
+    }
+
+    /**
+     * Whether the coordinates are inside Moveable
+     * @param - x coordinate
+     * @param - y coordinate
+     * @return - True if the coordinate is in moveable or false
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.isInside(e.clientX, e.clientY)) {
+     *          console.log("inside");
+     *     }
+     * });
+     */
+    public isInside(clientX: number, clientY: number): boolean {
+        return this.getMoveable().isInside(clientX, clientY);
+    }
+
     /**
      * If the width, height, left, and top of the only target change, update the shape of the moveable.
      * @param - the values of x and y to move moveable.
@@ -833,6 +871,24 @@ class Moveable extends EgComponent {
  *     console.log("onPinchGroupEnd", targets, isDrag);
  * });
  */
+
+ /**
+ * When you click on the element inside the group, the `clickGroup` event is called.
+ * @memberof Moveable
+ * @event clickGroup
+ * @param {Moveable.OnClickGroup} - Parameters for the `clickGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("clickGroup", ({ target, hasTarget, containsTarget, targetIndex }) => {
+ *     // If you click on an element other than the target and not included in the target, index is -1.
+ *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
+ * });
+ */
+
 interface Moveable extends MoveableGetterSetter {
     on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
     on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
@@ -877,6 +933,8 @@ interface Moveable extends MoveableGetterSetter {
     on(eventName: "pinchGroup", handlerToAttach: (event: OnPinchGroup) => any): this;
     on(eventName: "pinchGroupStart", handlerToAttach: (event: OnPinchGroupStart) => any): this;
     on(eventName: "pinchGroupEnd", handlerToAttach: (event: OnPinchGroupEnd) => any): this;
+
+    on(eventName: "clickGroup", handlerToAttach: (event: OnClickGroup) => any): this;
 
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
