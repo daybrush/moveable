@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add `pinchThreshold` option that set minimum distance to pinch easily.
 - Add `events` parameter for all `groupStart` event. (such as `onDragGroupStart`, `onScaleGroupStart`, ...etc)
 - Add `clickGroup` event to find clicked target in the group
-- Add `set` event method for all `start` event for absolute value. (such as `onDragStart`, `onScaleStart`, ...etc)
+- Add `set` event method for all `start` event for absolute value. (such as `onDragStart`, `onScaleStart`, ...etc) #16
 - Add `dragStart` method for external mouse, touch event.
 - Add `isInside` method that the coordinates are inside Moveable
 
