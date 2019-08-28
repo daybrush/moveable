@@ -113,7 +113,7 @@ export class AppModule { }
 
   [draggable]="true"
   [throttleDrag]="0"
-  (drgStart)="onDragStart($event)"
+  (dragStart)="onDragStart($event)"
   (drag)="onDrag($event)"
   (dragEnd)="onDragEnd($event)"
 
@@ -130,7 +130,7 @@ export class AppModule { }
   [throttleScale]="0"
   (scaleStart)="onScaleStart($event)"
   (scale)="onScale($event)"
-  (sacleEnd)="onScaleEnd($event)"
+  (scaleEnd)="onScaleEnd($event)"
 
 
   [rotatable]="false"
