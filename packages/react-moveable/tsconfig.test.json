@@ -1,0 +1,23 @@
+{
+    "extends": "./tsconfig",
+    "compilerOptions": {
+      "module": "commonjs",
+      "noImplicitAny": false,
+      "jsx": "react",
+      "types": [
+        "karma-chai",
+        "mocha"
+      ],
+      "strict": false,
+      "strictNullChecks": false,
+      "forceConsistentCasingInFileNames": false,
+      "resolveJsonModule": false,
+      "isolatedModules": false,
+      "noEmit": false
+    },
+    "include": [
+      "./src/**/*.ts",
+      "./test/**/*.ts",
+      "./test/**/*.tsx"
+    ]
+  }

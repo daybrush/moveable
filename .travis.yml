@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- stable
+install:
+- cd packages/react-moveable && npm install
+script:
+- npm run coverage
+cache:
+  directories:
+    - node_modules
+after_success:
+- npm run coveralls
