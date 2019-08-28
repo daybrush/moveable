@@ -493,7 +493,7 @@ export interface OnRotateGroupStart extends OnRotateStart {
  */
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotate & { drag: OnDrag | undefined } | undefined>;
+    events: Array<OnRotate & { drag: OnDrag }>;
 }
 
 /**

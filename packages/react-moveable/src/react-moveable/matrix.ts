@@ -45,7 +45,7 @@ function divide(
 
 export function createIdentityMatrix(n: number) {
     const length = n * n;
-    const matrix = [];
+    const matrix: number[] = [];
 
     for (let i = 0; i < length; ++i) {
         matrix[i] = i % (n + 1) ? 0 : 1;
@@ -127,7 +127,7 @@ export function invert(
     return inverseMatrix;
 }
 export function transpose(matrix: number[], n: number = Math.sqrt(matrix.length)) {
-    const newMatrix = [];
+    const newMatrix: number[] = [];
 
     for (let i = 0; i < n; ++i) {
         for (let j = 0; j < n; ++j) {
@@ -176,7 +176,7 @@ export function multiplies(n: number, ...matrixes: number[][]) {
     return m;
 }
 export function multiply(matrix: number[], matrix2: number[], n: number) {
-    const newMatrix = [];
+    const newMatrix: number[] = [];
     // n * m X m * k
     const m = matrix.length / n;
     const k = matrix2.length / m;
@@ -198,7 +198,7 @@ export function multiply(matrix: number[], matrix2: number[], n: number) {
     return newMatrix;
 }
 export function multiplyCSS(matrix: number[], matrix2: number[], n: number = Math.sqrt(matrix.length)) {
-    const newMatrix = [];
+    const newMatrix: number[] = [];
     // n(y) * m(x) X m(y) * k(x)
     const m = matrix.length / n;
     const k = matrix2.length / m;
@@ -239,7 +239,7 @@ export function caculate(matrix: number[], matrix2: number[], n: number = matrix
 }
 
 export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
-    const originMatrix = [];
+    const originMatrix: number[] = [];
 
     for (let i = 0; i < n - 1; ++i) {
         originMatrix[i] = matrix[(i + 1) * n - 1];

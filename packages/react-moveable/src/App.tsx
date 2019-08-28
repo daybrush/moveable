@@ -16,7 +16,7 @@ setAlias("sy", ["transform", "scaleY"]);
 setAlias("matrix3d", ["transform", "matrix3d"]);
 
 class App extends React.Component {
-    public moveable: Moveable;
+    public moveable!: Moveable;
     public state = {
         target: null,
         targets: [],
@@ -31,7 +31,7 @@ class App extends React.Component {
     public render() {
         const selectedTarget = this.state.target;
         const isResizable = this.state.isResizable;
-        const item = this.itemMap.get(selectedTarget);
+        const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
         return (
@@ -58,7 +58,7 @@ class App extends React.Component {
                     }}
                     onDragGroup={e => {
                         e.events.forEach(ev => {
-                            const groupItem = this.itemMap.get(ev.target);
+                            const groupItem = this.itemMap.get(ev.target)!;
                             groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.beforeDelta[0]}px`);
                             groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.beforeDelta[1]}px`);
 
@@ -70,7 +70,7 @@ class App extends React.Component {
                     }}
                     onRotateGroup={e => {
                         e.events.forEach(ev => {
-                            const groupItem = this.itemMap.get(ev.target);
+                            const groupItem = this.itemMap.get(ev.target)!;
 
                             if (!e.isPinch) {
                                 groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
@@ -97,7 +97,8 @@ class App extends React.Component {
                                 direction[1] < 0 ? -ev.delta[1] : 0,
                             ];
 
-                            const groupItem = this.itemMap.get(ev.target);
+                            const groupItem = this.itemMap.get(ev.target)!;
+
                             groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + offset[0] + ev.drag.beforeDelta[0]}px`);
                             groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + offset[1] + ev.drag.beforeDelta[1]}px`);
                             groupItem.set("width", `${ev.width}px`);
@@ -112,7 +113,7 @@ class App extends React.Component {
                     onScaleGroup={e => {
                         e.events.forEach(ev => {
                             // console.log("sca", ev.drag.dist);
-                            const groupItem = this.itemMap.get(ev.target);
+                            const groupItem = this.itemMap.get(ev.target)!;
                             groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
                             groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
                             groupItem.set("sx", groupItem.get("sx") * ev.delta[0]);
@@ -204,13 +205,13 @@ class App extends React.Component {
                         >
                             Learn React
                         </a>
-                        <svg data-target="svg" viewBox="0 0 150 107.28203230275507" style={{width: "300px", border: "1px solid #fff"}}>
+                        <svg data-target="svg" viewBox="0 0 150 110" style={{width: "300px", border: "1px solid #fff"}}>
                             <path data-target="path1" d="M 74 53.64101615137753 L 14.000000000000027 88.28203230275507 L 14 19 L 74 53.64101615137753 Z" fill="#f55" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#5f5" origin="50% 50%" />
                             <path data-target="path2" d="M 84 68.64101615137753 L 24.00000000000003 103.28203230275507 L 24 34 L 84 68.64101615137753 Z" fill="#55f" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#333" origin="50% 50%" />
                             <g style={{transform: "translate(40px, 10px)"}}>
                                 <path data-target="pathline" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
                             c13,4.667,13.167,38.724,39.667,7.39" fill="transparent" stroke="#ff5"/>
-                            <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{fill: "yellow",stroke:"purple", "stroke-width":2}} />
+                            <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{fill: "yellow",stroke:"purple", strokeWidth:2}} />
                             </g>
                         </svg>
                     </header>
