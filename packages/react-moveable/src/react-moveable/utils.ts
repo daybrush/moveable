@@ -81,12 +81,11 @@ export function caculateMatrixStack(
     container: SVGElement | HTMLElement | null,
     prevMatrix?: number[],
     prevN?: number,
-
 ): [number[], number[], number[], number[], string, number[], boolean] {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
     const isContainer: boolean = !!prevMatrix || target === container;
-    const isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" || "ownerSVGElement" in el;
+    const isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in el;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
