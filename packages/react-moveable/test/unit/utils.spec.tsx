@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {
-    getTransformMatrix, getAbsoluteMatrix, getSize, getRad, caculateMatrixStack,
+    getTransformMatrix, getAbsoluteMatrix, getSize, getRad, caculateMatrixStack, throttle, throttleArray, getTransform, isInside,
 } from "../../src/react-moveable/utils";
 
 describe("test utils", () => {
@@ -102,7 +102,50 @@ describe("test utils", () => {
         expect(deg7).to.be.equals(270);
         expect(deg8).to.be.equals(315);
     });
-    it.only("test caculateMatrixStack(HTMLElement)", () => {
+    it("test getTransform", () => {
+        // Given
+        ReactDOM.render(
+        <div className="c1" style={{
+            position: "relative", width: "500px", height: "500px", border: "2px solid black", transform: "scale(2)",
+        }}>
+            <div className="c2"
+                style={{ position: "relative", width: "100px", height: "100px", left: "100px", top: "100px" }}></div>
+            <div className="c3"
+                style={{ position: "relative", width: "100px", height: "100px", left: "100px", top: "100px", transform: "translate(100px, 40px)" }}></div>
+            <div className="c4"
+                style={{ position: "relative", width: "100px", height: "100px", left: "100px", top: "150px", transform: "translateZ(100px)" }}></div>
+        </div>, document.querySelector(".container"));
+
+        const c1 = document.querySelector(".c1") as HTMLElement;
+        const c2 = document.querySelector(".c2") as HTMLElement;
+        const c3 = document.querySelector(".c3") as HTMLElement;
+        const c4 = document.querySelector(".c4") as HTMLElement;
+
+        // When
+        const t1 = getTransform(c1, true);
+        const t2 = getTransform(c1, false);
+        const t3 = getTransform(c2, true);
+        const t4 = getTransform(c2, false);
+        const t5 = getTransform(c3, true);
+        const t6 = getTransform(c3, false);
+        const t7 = getTransform(c4, true);
+        const t8 = getTransform(c4, false);
+
+        // Then
+        expect(t1).to.be.deep.equals([2, 0, 0, 2, 0, 0]);
+        expect(t2).to.be.deep.equals([2, 0, 0, 2, 0, 0]);
+
+        expect(t3).to.be.deep.equals([1, 0, 0, 1, 0, 0]);
+        expect(t4).to.be.deep.equals("none");
+
+        expect(t5).to.be.deep.equals([1, 0, 0, 1, 100, 40]);
+        expect(t6).to.be.deep.equals([1, 0, 0, 1, 100, 40]);
+
+        expect(t7).to.be.deep.equals([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 100, 1]);
+        expect(t8).to.be.deep.equals([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 100, 1]);
+
+    });
+    it("test caculateMatrixStack(HTMLElement)", () => {
         // Given
         ReactDOM.render(
         <div className="c1" style={{
@@ -169,4 +212,52 @@ describe("test utils", () => {
         expect(transformOrigin4).to.be.deep.equals([50, 50]);
         expect(is3d4).to.be.true;
     });
+
+    it("test throttle", () => {
+        // Given, When
+        const t0 = throttle(0.05, 0);
+        const t1 = throttle(0.05, 0.1);
+        const t2 = throttle(0.005, 0.1);
+        const t3 = throttle(1.05, 0.1);
+        const t4 = throttle(1.05, 1);
+        const t5 = throttle(1.5, 1);
+        const t6 = throttle(2.1, 2);
+        const t7 = throttle(1.9, 2);
+        const t8 = throttle(3, 2);
+
+        // Then
+        expect(t0).to.be.equals(0.05);
+        expect(t1).to.be.equals(0.1);
+        expect(t2).to.be.equals(0);
+        expect(t3).to.be.equals(1.1);
+        expect(t4).to.be.equals(1);
+        expect(t5).to.be.equals(2);
+        expect(t6).to.be.equals(2);
+        expect(t7).to.be.equals(2);
+        expect(t8).to.be.equals(4);
+    });
+    it("test throttleArray", () => {
+        // Given, When
+        const t0 = throttleArray([0.05, 0.06], 0);
+        const t1 = throttleArray([0.05, 0.005], 0.1);
+        const t2 = throttleArray([1.05, 1.04], 0.1);
+        const t3 = throttleArray([1.05, 1.5], 1);
+        const t4 = throttleArray([2.1, 1.9, 3], 2);
+
+        // Then
+        expect(t0).to.be.deep.equals([0.05, 0.06]);
+        expect(t1).to.be.deep.equals([0.1, 0]);
+        expect(t2).to.be.deep.equals([1.1, 1]);
+        expect(t3).to.be.deep.equals([1, 2]);
+        expect(t4).to.be.deep.equals([2, 2, 4]);
+    });
+
+    it("test isInside", () => {
+        const pos1 = [0, 0];
+        const pos2 = [302, 0];
+        const pos3 = [302, 222];
+        const pos4 = [0, 222];
+
+        expect(isInside([30, 30], pos1, pos2, pos3, pos4)).to.be.true;
+    })
 });

@@ -25,7 +25,7 @@ export function createIdentityMatrix3() {
 }
 
 export function getTransform(target: SVGElement | HTMLElement, isInit: true): number[];
-export function getTransform(target: SVGElement | HTMLElement): "none" | number[];
+export function getTransform(target: SVGElement | HTMLElement, isInit?: false): "none" | number[];
 export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
     const transform = window.getComputedStyle(target).transform!;
 
@@ -620,6 +620,7 @@ export function throttleArray(nums: number[], unit: number) {
     nums.forEach((_, i) => {
         nums[i] = throttle(nums[i], unit);
     });
+    return nums;
 }
 
 export function unset(self: any, name: string) {

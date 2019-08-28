@@ -116,11 +116,10 @@ export default class MoveableManager<T = {}>
         if (!target) {
             return false;
         }
-
         const { left, top } = target.getBoundingClientRect();
         const pos = [clientX - left, clientY - top];
 
-        return isInside(pos, pos1, pos2, pos3, pos4);
+        return isInside(pos, pos1, pos2, pos4, pos3);
     }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         const parentMoveable = this.props.parentMoveable;
@@ -186,7 +185,8 @@ export default class MoveableManager<T = {}>
         eventAffix: string = "",
     ) {
         const props = this.props as any;
-        const enabledAbles = ables!.filter(able => props[able.name]);
+
+        const enabledAbles = ables!.filter(able => able && props[able.name]);
         let controlAbleOnly: boolean = false;
 
         const dragStart = `drag${eventAffix}Start` as "dragStart";
