@@ -28,10 +28,13 @@ describe("test Moveable", () => {
 
         await wait(300);
 
-        // console.log(moveable.innerMoveable.moveable.state);
+        const state = moveable.innerMoveable.moveable.state;
+        expect(state.width).to.be.equals(302);
+        expect(state.height).to.be.equals(222);
         expect(moveable.innerMoveable.isInside(40, 40)).to.be.true;
         expect(moveable.innerMoveable.isInside(300, 40)).to.be.true;
         expect(moveable.innerMoveable.isInside(-40, 40)).to.be.false;
+        expect(moveable.innerMoveable.isInside(340, 40)).to.be.false;
         expect(moveable.innerMoveable.isInside(340, 40)).to.be.false;
     });
 });

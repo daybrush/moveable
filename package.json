@@ -65,6 +65,8 @@
     "@daybrush/demo": "0.0.2",
     "@daybrush/jsdoc": "^0.3.7",
     "@daybrush/release": "^0.2.4",
+    "@types/karma-chai": "^0.1.2",
+    "@types/mocha": "^5.2.7",
     "daybrush-jsdoc-template": "^1.6.0",
     "gh-pages": "^2.0.1",
     "preact": "^8.4.2",
