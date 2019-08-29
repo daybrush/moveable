@@ -5,6 +5,7 @@
 <p align="middle">
 <a href="https://www.npmjs.com/package/react-moveable" target="_blank"><img src="https://img.shields.io/npm/v/react-moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
+<a href="https://travis-ci.org/daybrush/moveable" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/daybrush/moveable.svg?style=flat-square&label=build" /></a>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
 <p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
