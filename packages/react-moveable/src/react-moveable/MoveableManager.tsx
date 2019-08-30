@@ -124,10 +124,10 @@ export default class MoveableManager<T = {}>
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         const parentMoveable = this.props.parentMoveable;
         const state = this.state;
-        const target = state.target || this.props.target;
+        const target = (state.target || this.props.target) as HTMLElement | SVGElement;
 
         this.updateState(
-            getTargetInfo(target as HTMLElement | SVGElement, this.getContainer(), isTarget ? state : undefined),
+            getTargetInfo(target, this.getContainer(), isTarget ? state : undefined),
             parentMoveable ? false : isSetState,
         );
     }
@@ -162,7 +162,7 @@ export default class MoveableManager<T = {}>
             unset(this, "controlDragger");
         }
 
-        if (target && ((!this.targetDragger && hasTargetAble) || isTargetChanged)) {
+        if (target && hasTargetAble && (!this.targetDragger || isTargetChanged)) {
             this.targetDragger = getAbleDragger(this, target!, "targetAbles", "");
         }
         if (!this.controlDragger && hasControlAble) {
