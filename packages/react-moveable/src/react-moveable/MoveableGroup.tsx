@@ -3,9 +3,10 @@ import { GroupableProps } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
-import { MOVEABLE_ABLES, MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
+import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getTargetInfo, throttle } from "./utils";
 import { sum, rotate } from "./matrix";
+import { MOVEABLE_ABLES } from "./ables/consts";
 
 function getMaxPos(poses: number[][][], index: number) {
     return Math.max(...poses.map(([pos1, pos2, pos3, pos4]) => {

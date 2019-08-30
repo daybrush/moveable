@@ -7,7 +7,7 @@ import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
 
-const Draggable = {
+export default {
     name: "draggable",
     dragStart(
         moveable: MoveableManager<DraggableProps>,
@@ -182,5 +182,3 @@ const Draggable = {
         return isDrag;
     },
 };
-
-export default Draggable;
