@@ -5,7 +5,7 @@ import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getTargetInfo, throttle } from "./utils";
-import { sum, rotate } from "./matrix";
+import { sum, rotate } from "@moveable/matrix";
 import { MOVEABLE_ABLES } from "./ables/consts";
 
 function getMaxPos(poses: number[][][], index: number) {
@@ -71,11 +71,12 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
             });
         });
         const rotatePoses = moveablePoses.map(([pos1, pos2, pos3, pos4]) => {
+
             return [
-                rotate(pos1, -rotation),
-                rotate(pos2, -rotation),
-                rotate(pos3, -rotation),
-                rotate(pos4, -rotation),
+                rotate(pos1, -rad),
+                rotate(pos2, -rad),
+                rotate(pos3, -rad),
+                rotate(pos4, -rad),
             ];
         });
         groupWidth = getMaxPos(rotatePoses, 0) - getMinPos(rotatePoses, 0);

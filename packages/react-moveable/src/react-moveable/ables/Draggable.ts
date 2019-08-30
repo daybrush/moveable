@@ -1,6 +1,6 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
-import { minus, sum } from "../matrix";
+import { minus, sum } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart } from "../types";
 import MoveableGroup from "../MoveableGroup";

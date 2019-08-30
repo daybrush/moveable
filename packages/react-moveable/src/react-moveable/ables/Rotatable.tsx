@@ -1,11 +1,11 @@
-import { getRad, throttle, prefix, triggerEvent } from "../utils";
+import { throttle, prefix, triggerEvent } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer, OnRotateGroupStart } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import Draggable from "./Draggable";
-import { minus, rotate as rotateMatrix, sum } from "../matrix";
+import { minus, sum, getRad, rotate as rotateMatrix } from "@moveable/matrix";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
@@ -268,6 +268,7 @@ export default {
         }
         const parentRotate = params.beforeDist;
         const deg = params.beforeDelta;
+        const rad = deg / 180 * Math.PI;
 
         const events = triggerChildAble(
             moveable,
@@ -277,7 +278,7 @@ export default {
             (child, childDatas, result, i) => {
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
                 const { prevX, prevY } = getCustomEvent(dragDatas);
-                const [clientX, clientY] = rotateMatrix([prevX, prevY], deg);
+                const [clientX, clientY] = rotateMatrix([prevX, prevY], rad);
 
                 const dragResult = Draggable.drag(
                     child,

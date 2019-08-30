@@ -1,4 +1,4 @@
-import { getRad, throttle, getDirection, triggerEvent } from "../utils";
+import { throttle, getDirection, triggerEvent } from "../utils";
 import { MIN_SCALE } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
@@ -7,7 +7,7 @@ import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd, Renderer,
 import { directionCondition, triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
-import { rotate } from "../matrix";
+import { getRad, rotate } from "@moveable/matrix";
 
 export default {
     name: "scalable",
@@ -244,11 +244,11 @@ export default {
                 const startPos = rotate([
                     startX,
                     startY,
-                ], -datas.rotation);
+                ], -datas.rotation / 180 * Math.PI);
                 const [clientX, clientY] = rotate([
                     startPos[0] * scale[0],
                     startPos[1] * scale[1],
-                ], moveable.rotation);
+                ], moveable.rotation / 180 * Math.PI);
 
                 const dragResult = Draggable.drag(
                     child,

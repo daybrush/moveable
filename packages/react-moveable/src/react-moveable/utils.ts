@@ -12,8 +12,10 @@ import {
     getOrigin,
     createScaleMatrix,
     sum,
-    getRotateMatrix,
-} from "./matrix";
+    getRad,
+    rotate,
+} from "@moveable/matrix";
+
 import MoveableManager from "./MoveableManager";
 
 export function prefix(...classNames: string[]) {
@@ -171,8 +173,8 @@ export function caculateMatrixStack(
             el = el.parentElement;
         }
     }
-    let mat = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
-    let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN, n) : createIdentityMatrix(n);
+    let mat = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
+    let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
 
@@ -405,13 +407,6 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
     ];
 }
 
-export function getRad(pos1: number[], pos2: number[]) {
-    const distX = pos2[0] - pos1[0];
-    const distY = pos2[1] - pos1[1];
-    const rad = Math.atan2(distY, distX);
-
-    return rad > 0 ? rad : rad + Math.PI * 2;
-}
 export function getLineStyle(pos1: number[], pos2: number[]) {
     const distX = pos2[0] - pos1[0];
     const distY = pos2[1] - pos1[1];
@@ -476,13 +471,14 @@ export function getSize(
     }
 }
 
+
 export function getRotationInfo(
     pos1: number[],
     pos2: number[],
     direction: number,
 ): [number, number[]] {
     const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-    const relativeRotationPos = multiply(getRotateMatrix(rotationRad), [0, -40, 1], 3);
+    const relativeRotationPos = rotate([0, -40, 1], rotationRad);
 
     const rotationPos = [
         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],

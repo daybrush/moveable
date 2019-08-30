@@ -1,4 +1,4 @@
-import { invert, caculate, minus, sum, convertPositionMatrix } from "./matrix";
+import { invert, caculate, minus, sum, convertPositionMatrix } from "@moveable/matrix";
 import MoveableManager from "./MoveableManager";
 
 export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {

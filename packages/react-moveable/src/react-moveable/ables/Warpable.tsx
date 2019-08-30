@@ -1,4 +1,4 @@
-import { getRad, prefix, getLineStyle, getDirection } from "../utils";
+import { prefix, getLineStyle, getDirection } from "../utils";
 import {
     convertDimension, invert, multiply,
     convertMatrixtoCSS, caculate,
@@ -6,8 +6,9 @@ import {
     ignoreDimension,
     multiplyCSS,
     minus,
-    warp as warpMatrix
-} from "../matrix";
+    createWarpMatrix,
+    getRad,
+} from "@moveable/matrix";
 import { NEARBY_POS } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
@@ -133,7 +134,7 @@ export default {
         )) {
             return false;
         }
-        const h = warpMatrix(
+        const h = createWarpMatrix(
             poses[0],
             poses[1],
             poses[2],

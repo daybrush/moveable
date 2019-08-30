@@ -1,8 +1,9 @@
 import { Client } from "@daybrush/drag";
-import { getRad, triggerEvent } from "../utils";
+import { triggerEvent } from "../utils";
 import MoveableManager from "../MoveableManager";
 import { PinchableProps, Able } from "../types";
 import MoveableGroup from "../MoveableGroup";
+import { getRad } from "@moveable/matrix";
 
 function getRotatiion(touches: Client[]) {
     return getRad([

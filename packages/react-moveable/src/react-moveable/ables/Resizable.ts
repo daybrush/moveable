@@ -1,4 +1,4 @@
-import { getRad, throttle, getDirection, triggerEvent } from "../utils";
+import { throttle, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import { ResizableProps, OnResizeGroup, OnResizeGroupEnd, Renderer, OnResizeGroupStart } from "../types";
 import MoveableManager from "../MoveableManager";
@@ -6,6 +6,7 @@ import { renderAllDirection, renderDiagonalDirection } from "../renderDirection"
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent, directionCondition } from "../groupUtils";
 import Draggable from "./Draggable";
+import { getRad } from "@moveable/matrix";
 
 export default {
     name: "resizable",
