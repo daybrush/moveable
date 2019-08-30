@@ -1,7 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {
-    getTransformMatrix, getAbsoluteMatrix, getSize, getRad, caculateMatrixStack, throttle, throttleArray, getTransform, isInside,
+    getTransformMatrix, getAbsoluteMatrix,
+    getSize, getRad, caculateMatrixStack,
+    throttle, throttleArray, getTransform, isInside,
 } from "../../src/react-moveable/utils";
 
 describe("test utils", () => {
@@ -259,5 +261,5 @@ describe("test utils", () => {
         const pos4 = [0, 222];
 
         expect(isInside([30, 30], pos1, pos2, pos3, pos4)).to.be.true;
-    })
+    });
 });
