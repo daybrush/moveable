@@ -1,9 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import MoveableExample from "./MoveableExample";
-import MoveableDraggableExample from "./MoveableDraggableExample";
-import { wait, mousedown, mouseup, mousemove } from "./TestHelper";
-import * as sinon from "sinon";
+import { wait } from "./TestHelper";
 
 describe("test Moveable", () => {
     beforeEach(() => {
@@ -15,7 +13,7 @@ describe("test Moveable", () => {
         const container = document.querySelector(".container");
 
         if (container) {
-            // ReactDOM.unmountComponentAtNode(container);
+            ReactDOM.unmountComponentAtNode(container);
         }
     });
     it("test Moveable isInside", async () => {
@@ -26,7 +24,7 @@ describe("test Moveable", () => {
             if (e) {
                 moveable = e as any;
             }
-        }}/>, document.querySelector(".container"));
+        }} />, document.querySelector(".container"));
 
         await wait(300);
 
@@ -48,7 +46,7 @@ describe("test Moveable", () => {
             if (e) {
                 moveable = e as any;
             }
-        }}/>, document.querySelector(".container"));
+        }} />, document.querySelector(".container"));
 
         await wait(300);
 
@@ -69,7 +67,7 @@ describe("test Moveable", () => {
             if (e) {
                 moveable = e as any;
             }
-        }}/>, document.querySelector(".container"));
+        }} />, document.querySelector(".container"));
 
         await wait(300);
         const left1 = moveable.innerMoveable.moveable.state.left;
@@ -83,7 +81,7 @@ describe("test Moveable", () => {
         const left2 = moveable.innerMoveable.moveable.state.left;
         const top2 = moveable.innerMoveable.moveable.state.top;
 
-        await wait(3000);
+        await wait(300);
 
         // Then
         expect(left2).to.be.equals(left1 + 100);
@@ -98,7 +96,7 @@ describe("test Moveable", () => {
             if (e) {
                 moveable = e as any;
             }
-        }}/>, document.querySelector(".container"));
+        }} />, document.querySelector(".container"));
 
         await wait(300);
         const left1 = moveable.innerMoveable.moveable.state.left;
@@ -119,55 +117,5 @@ describe("test Moveable", () => {
         // Then
         expect(left2).to.be.equals(left1 + 200);
         expect(top2).to.be.equals(top1 + 100);
-    });
-    it("test Moveable(draggable)", async () => {
-        let moveable!: MoveableDraggableExample;
-
-        // Given
-        const onDragStart = sinon.spy(e => {
-            e.set([50, 0]);
-        });
-        const onDrag = sinon.spy();
-        const onDragEnd = sinon.spy();
-        ReactDOM.render(<MoveableDraggableExample ref={e => {
-            if (e) {
-                moveable = e as any;
-            }
-        }}
-        onDragStart={onDragStart}
-        onDrag={onDrag}
-        onDragEnd={onDragEnd}
-        />, document.querySelector(".container"));
-
-        await wait(300);
-
-        // When
-        // no drag
-        mousedown(document.querySelector(".c2"), [0, 0]);
-        mouseup(document.querySelector(".c2"), [0, 0]);
-
-        // drag
-        mousedown(document.querySelector(".c2"), [0, 0]);
-        mousemove(document.querySelector(".c2"), [50, 0]);
-        mousemove(document.querySelector(".c2"), [100, 0]);
-        mouseup(document.querySelector(".c2"), [100, 0]);
-        await wait(300);
-
-        // Then
-        expect(onDragStart.callCount).to.be.equals(2);
-        expect(onDrag.callCount).to.be.equals(2);
-        expect(onDragEnd.callCount).to.be.equals(2);
-        expect(onDragStart.args[0][0].target).to.be.equals(document.querySelector(".c2"));
-        expect(onDrag.args[0][0].target).to.be.equals(document.querySelector(".c2"));
-        expect(onDragEnd.args[0][0].target).to.be.equals(document.querySelector(".c2"));
-
-        expect(onDrag.args[0][0].dist[0]).to.be.deep.equals(25);
-        expect(onDrag.args[1][0].dist[0]).to.be.deep.equals(50);
-
-        expect(onDrag.args[0][0].delta[0]).to.be.deep.equals(25);
-        expect(onDrag.args[1][0].delta[0]).to.be.deep.equals(25);
-
-        expect(onDrag.args[0][0].translate[0]).to.be.deep.equals(75);
-        expect(onDrag.args[1][0].translate[0]).to.be.deep.equals(100);
     });
 });

@@ -2,9 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {
     getTransformMatrix, getAbsoluteMatrix,
-    getSize, getRad, caculateMatrixStack,
+    getSize, caculateMatrixStack,
     throttle, throttleArray, getTransform, isInside,
 } from "../../src/react-moveable/utils";
+import { getRad } from "@moveable/matrix";
 
 describe("test utils", () => {
     beforeEach(() => {
