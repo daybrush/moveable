@@ -3,12 +3,9 @@
 <p align="middle">
 <a href="https://www.npmjs.com/package/@moveable/matrix" target="_blank"><img src="https://img.shields.io/npm/v/@moveable/matrix.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
-<a href="https://github.com/daybrush/@moveable/matrix/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/@moveable/matrix.svg?style=flat-square&label=license&color=08CE5D"/></a>
+<a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
 <p align="middle">Matrix for moveable</p>
-
-## 📄 API Documents
-* [API documentation](https://daybrush.com/@moveable/matrix/release/latest/doc/)
 
 ## ⚙️ Installation
 ### npm
