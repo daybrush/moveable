@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import MoveableDraggableExample from "../MoveableDraggableExample";
+import DraggableExample from "./DraggableExample";
 import { wait, mousedown, mouseup, mousemove } from "../TestHelper";
 import * as sinon from "sinon";
 
@@ -18,7 +18,7 @@ describe("test Moveable(draggable)", () => {
         }
     });
     it("test Drag", async () => {
-        let moveable!: MoveableDraggableExample;
+        let moveable!: DraggableExample;
 
         // Given
         const onDragStart = sinon.spy(e => {
@@ -26,7 +26,7 @@ describe("test Moveable(draggable)", () => {
         });
         const onDrag = sinon.spy();
         const onDragEnd = sinon.spy();
-        ReactDOM.render(<MoveableDraggableExample ref={e => {
+        ReactDOM.render(<DraggableExample ref={e => {
             if (e) {
                 moveable = e as any;
             }
@@ -40,14 +40,14 @@ describe("test Moveable(draggable)", () => {
 
         // When
         // no drag
-        mousedown(document.querySelector(".c2"), [0, 0]);
-        mouseup(document.querySelector(".c2"), [0, 0]);
+        mousedown(document.querySelector<HTMLElement>(".c2")!, [0, 0]);
+        mouseup(document.querySelector<HTMLElement>(".c2")!, [0, 0]);
 
         // drag
-        mousedown(document.querySelector(".c2"), [0, 0]);
-        mousemove(document.querySelector(".c2"), [50, 0]);
-        mousemove(document.querySelector(".c2"), [100, 0]);
-        mouseup(document.querySelector(".c2"), [100, 0]);
+        mousedown(document.querySelector<HTMLElement>(".c2")!, [0, 0]);
+        mousemove(document.querySelector<HTMLElement>(".c2")!, [50, 0]);
+        mousemove(document.querySelector<HTMLElement>(".c2")!, [100, 0]);
+        mouseup(document.querySelector<HTMLElement>(".c2")!, [100, 0]);
         await wait(300);
 
         // Then
@@ -68,7 +68,7 @@ describe("test Moveable(draggable)", () => {
         expect(onDrag.args[1][0].translate[0]).to.be.deep.equals(100);
     });
     it("test Cancel Drag", async () => {
-        let moveable!: MoveableDraggableExample;
+        let moveable!: DraggableExample;
 
         // Given
         const onDragStart = sinon.spy(e => {
@@ -76,7 +76,7 @@ describe("test Moveable(draggable)", () => {
         });
         const onDrag = sinon.spy();
         const onDragEnd = sinon.spy();
-        ReactDOM.render(<MoveableDraggableExample ref={e => {
+        ReactDOM.render(<DraggableExample ref={e => {
             if (e) {
                 moveable = e as any;
             }
@@ -90,14 +90,14 @@ describe("test Moveable(draggable)", () => {
 
         // When
         // no drag
-        mousedown(document.querySelector(".c2"), [0, 0]);
-        mouseup(document.querySelector(".c2"), [0, 0]);
+        mousedown(document.querySelector<HTMLElement>(".c2")!, [0, 0]);
+        mouseup(document.querySelector<HTMLElement>(".c2")!, [0, 0]);
 
         // drag
-        mousedown(document.querySelector(".c2"), [0, 0]);
-        mousemove(document.querySelector(".c2"), [50, 0]);
-        mousemove(document.querySelector(".c2"), [100, 0]);
-        mouseup(document.querySelector(".c2"), [100, 0]);
+        mousedown(document.querySelector<HTMLElement>(".c2")!, [0, 0]);
+        mousemove(document.querySelector<HTMLElement>(".c2")!, [50, 0]);
+        mousemove(document.querySelector<HTMLElement>(".c2")!, [100, 0]);
+        mouseup(document.querySelector<HTMLElement>(".c2")!, [100, 0]);
         await wait(300);
 
         // Then

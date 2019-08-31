@@ -58,9 +58,9 @@ export default class MoveableManager<T = {}>
     };
     public targetAbles: Array<Able<T>> = [];
     public controlAbles: Array<Able<T>> = [];
+    public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
     protected targetDragger!: Dragger;
     protected controlDragger!: Dragger;
-    protected controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
 
     constructor(props: any) {
         super(props);

@@ -1,19 +1,18 @@
 import * as React from "react";
-import Draggable from "../../src/react-moveable/ables/Draggable";
-import Moveable from "../../src/react-moveable";
+import Moveable from "../../../src/react-moveable";
 import { ref } from "framework-utils";
 
-export default class MoveableExample extends React.Component<{
-    onDragStart?: any,
-    onDrag?: any,
-    onDragEnd?: any,
+export default class RotatableExmaple extends React.Component<{
+    onRotateStart?: any,
+    onRotate?: any,
+    onRotateEnd?: any,
 }> {
     public innerMoveable!: Moveable;
     public state = {
         target: null,
     };
     public render() {
-        const { onDragStart, onDrag, onDragEnd } = this.props;
+        const { onRotateStart, onRotate, onRotateEnd } = this.props;
 
         return (
             <div className="c1" style={{
@@ -21,7 +20,7 @@ export default class MoveableExample extends React.Component<{
                 transform: "scale(2)",
             }}>
                 <Moveable target={this.state.target} ref={ref(this, "innerMoveable")}
-                    draggable={true} onDragStart={onDragStart} onDrag={onDrag} onDragEnd={onDragEnd} />
+                    rotatable={true} onRotateStart={onRotateStart} onRotate={onRotate} onRotateEnd={onRotateEnd} />
                 <div className="c2" style={{
                     position: "relative", left: "0px", top: "0px", width: "100px", height: "100px", border: "2px solid black",
                 }}></div></div>

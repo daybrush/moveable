@@ -51,9 +51,9 @@ describe("test Moveable", () => {
         await wait(300);
 
         const isMoveable1 =
-            moveable.innerMoveable.isMoveableElement(document.querySelector(".container"));
+            moveable.innerMoveable.isMoveableElement(document.querySelector<HTMLElement>(".container")!);
         const isMoveable2 =
-            moveable.innerMoveable.isMoveableElement(document.querySelector(".moveable-control-box"));
+            moveable.innerMoveable.isMoveableElement(document.querySelector<HTMLElement>(".moveable-control-box")!);
 
         expect(isMoveable1).to.be.false;
         expect(isMoveable2).to.be.true;
