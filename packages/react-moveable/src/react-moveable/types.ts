@@ -765,3 +765,11 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
     updateGroup?: boolean;
     onClickGroup?: (e: OnClickGroup) => any;
 }
+
+export interface SnappableProps {
+    snappable?: boolean;
+    snapCenter?: boolean;
+    horizontalGuideline?: number[];
+    verticalGuideline?: number[];
+    snapGuidelineElement?: Element[];
+}
