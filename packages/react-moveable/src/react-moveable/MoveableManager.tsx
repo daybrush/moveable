@@ -20,8 +20,8 @@ function renderLine(direction: string, pos1: number[], pos2: number[]) {
     return <div className={prefix("line", "direction", direction)}
         data-direction={direction} style={getLineStyle(pos1, pos2)}></div>;
 }
-export default class MoveableManager<T = {}>
-    extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState<T>> {
+export default class MoveableManager<T = {}, U = {}>
+    extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState<U>> {
     public static defaultProps: Required<MoveableManagerProps> = {
         target: null,
         container: null,
@@ -33,7 +33,7 @@ export default class MoveableManager<T = {}>
         ables: [],
         pinchThreshold: 20,
     };
-    public state: MoveableManagerState<T> = {
+    public state: MoveableManagerState<U> = {
         target: null,
         beforeMatrix: createIdentityMatrix3(),
         matrix: createIdentityMatrix3(),
@@ -55,10 +55,10 @@ export default class MoveableManager<T = {}>
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
-    };
+    } as any;
     public targetAbles: Array<Able<T>> = [];
     public controlAbles: Array<Able<T>> = [];
-    public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer U ? U : never;
+    public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer K ? K : never;
     protected targetDragger!: Dragger;
     protected controlDragger!: Dragger;
 
@@ -173,8 +173,8 @@ export default class MoveableManager<T = {}>
         }
         return isTargetChanged;
     }
-    public triggerEvent<U extends keyof T>(
-        name: U, e: T[U] extends ((e: infer P) => any) | undefined ? P : {}): any;
+    public triggerEvent<K extends keyof T>(
+        name: K, e: T[K] extends ((e: infer P) => any) | undefined ? P : {}): any;
     public triggerEvent(name: string, e: any): any {
         const callback = (this.props as any)[name];
 

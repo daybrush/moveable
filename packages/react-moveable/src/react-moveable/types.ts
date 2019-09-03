@@ -12,7 +12,7 @@ export type MoveableManagerProps<T = {}> = {
     pinchThreshold?: number;
     ables?: Array<Able<T>>;
 } & T;
-export interface MoveableManagerState<T = {}> {
+export type MoveableManagerState<T = {}> = {
     target: SVGElement | HTMLElement | null | undefined;
     left: number;
     top: number;
@@ -34,7 +34,7 @@ export interface MoveableManagerState<T = {}> {
     pos2: number[];
     pos3: number[];
     pos4: number[];
-}
+} & T;
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }
@@ -771,5 +771,8 @@ export interface SnappableProps {
     snapCenter?: boolean;
     horizontalGuideline?: number[];
     verticalGuideline?: number[];
-    snapGuidelineElement?: Element[];
+    elementGuildeline?: Element[];
+}
+export interface SnappableState {
+    guidelines: any[];
 }
