@@ -9,17 +9,57 @@ export default {
         return [];
     },
     dragStart(moveable: MoveableManager<SnappableProps>) {
-        const { horizontalGuideline, verticalGuideline, elementGuildeline, container } = moveable.props;
+        const {
+            horizontalGuideline = [],
+            verticalGuideline = [],
+            elementGuildeline = [],
+            container,
+            snapCenter,
+        } = moveable.props;
         const containerRect = (container || document.documentElement).getBoundingClientRect();
-        const { top: containerTop, left: containerLeft } = containerRect;
+        const {
+            top: containerTop,
+            left: containerLeft,
+            width: containerWidth,
+            height: containerHeight,
+        } = containerRect;
 
+        const guideliens: any[] = [];
+
+        horizontalGuideline!.forEach(pos => {
+            guideliens.push({ type: "horizontal", element: null,  pos: [0, pos], size: containerWidth });
+        });
+        verticalGuideline!.forEach(pos => {
+            guideliens.push({ type: "vertical", element: null,  pos: [pos, 0], size: containerHeight });
+        });
         elementGuildeline!.forEach(el => {
             const rect = el.getBoundingClientRect();
+            const { top, left, width, height } = rect;
 
-            const elementVertical1 = rect.top - containerTop;
-            const elementVertical2 = elementVertical1 + rect.height;
-            const elementHorizontal1 = rect.left - containerLeft;
-            const elementHorizontal2 = elementHorizontal1 + rect.width;
+            const elementHorizontal1 = top - containerTop;
+            const elementHorizontal2 = elementHorizontal1 + height;
+            const elementVertical1 = left - containerLeft;
+            const elementVertical2 = elementVertical1 + width;
+
+            guideliens.push({ type: "vertical", element: el, pos: [elementVertical1, top], size: height });
+            guideliens.push({ type: "vertical", element: el, pos: [elementVertical2, top], size: height });
+            guideliens.push({ type: "horizontal", element: el, pos: [left, elementHorizontal1], size: width });
+            guideliens.push({ type: "horizontal", element: el, pos: [left, elementHorizontal2], size: width });
+
+            if (snapCenter) {
+                guideliens.push({
+                    type: "vertical",
+                    element: el,
+                    pos: [(elementVertical1 + elementVertical2) / 2, top],
+                    size: height,
+                });
+                guideliens.push({
+                    type: "horizontal",
+                    element: el,
+                    pos: [left, (elementHorizontal1 + elementHorizontal2) / 2],
+                    size: width,
+                });
+            }
         });
     },
     drag() {
