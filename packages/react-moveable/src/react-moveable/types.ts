@@ -35,10 +35,17 @@ export type MoveableManagerState<T = {}> = {
     pos3: number[];
     pos4: number[];
 } & T;
+
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }
-
+export interface Guideline {
+    type: "horizontal" | "vertical";
+    element?: HTMLElement | SVGElement | null;
+    center?: boolean;
+    pos: number[];
+    size: number;
+}
 export interface MoveableProps
     extends DraggableProps,
     RotatableProps,
@@ -771,7 +778,7 @@ export interface SnappableProps {
     snapCenter?: boolean;
     horizontalGuideline?: number[];
     verticalGuideline?: number[];
-    elementGuildeline?: Element[];
+    elementGuildeline?: Array<HTMLElement | SVGElement>;
 }
 export interface SnappableState {
     guidelines: any[];
