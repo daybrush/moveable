@@ -1,9 +1,8 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, SnappableProps, SnappableState, Guideline, MoveableState, MoveableProps, SnapInfo } from "../types";
-import Moveable from "../index.umd";
+import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo } from "../types";
 import { OnDrag } from "@daybrush/drag";
 import { prefix } from "../utils";
-import { MIN_NUM, TINY_NUM } from "../consts";
+import { TINY_NUM } from "../consts";
 
 export default {
     name: "snappable",
@@ -176,7 +175,7 @@ export default {
             guidelines.forEach(guideline => {
                 const { type, pos, center } = guideline;
 
-                if (!isSnapCenter && center || type !== targetType) {
+                if ((!isSnapCenter && center) || type !== targetType) {
                     return;
                 }
                 const offset = targetPos - pos[posType];
