@@ -223,6 +223,6 @@ export default class MoveableManager<T = {}, U = {}>
     protected renderAbles() {
         const ables = [...this.targetAbles, ...this.controlAbles, Origin as Able<T>];
 
-        return ables.map(({ render }) => render && render(this, React));
+        return ables.map(able => able.render && able.render(this, React));
     }
 }

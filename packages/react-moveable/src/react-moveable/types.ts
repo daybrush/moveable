@@ -46,6 +46,11 @@ export interface Guideline {
     pos: number[];
     size: number;
 }
+export interface SnapInfo {
+    dist: number;
+    offset: number;
+    guidelines: Guideline[];
+}
 export interface MoveableProps
     extends DraggableProps,
     RotatableProps,
@@ -53,7 +58,8 @@ export interface MoveableProps
     ScalableProps,
     WarpableProps,
     PinchableProps,
-    GroupableProps {
+    GroupableProps,
+    SnappableProps {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
