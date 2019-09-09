@@ -782,9 +782,9 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
 export interface SnappableProps {
     snappable?: boolean;
     snapCenter?: boolean;
-    horizontalGuideline?: number[];
-    verticalGuideline?: number[];
-    elementGuildeline?: Array<HTMLElement | SVGElement>;
+    horizontalGuidelines?: number[];
+    verticalGuidelines?: number[];
+    elementGuildelines?: Array<HTMLElement | SVGElement>;
 }
 export interface SnappableState {
     guidelines: any[];

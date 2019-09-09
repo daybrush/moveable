@@ -134,7 +134,8 @@ class App extends React.Component {
                     origin={true}
                     draggable={true}
                     snappable={true}
-                    verticalGuideline={[100, 200, 400, 500]}
+                    verticalGuidelines={[100, 200, 400, 500]}
+                    horizontalGuidelines={[100, 200, 400, 500]}
                     snapCenter={true}
                     scalable={!isResizable}
                     resizable={isResizable}
