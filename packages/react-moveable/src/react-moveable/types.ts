@@ -47,6 +47,7 @@ export interface Guideline {
     size: number;
 }
 export interface SnapInfo {
+    isSnap: boolean;
     dist: number;
     offset: number;
     guidelines: Guideline[];
@@ -782,6 +783,7 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
 export interface SnappableProps {
     snappable?: boolean;
     snapCenter?: boolean;
+    snapThreshold?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
     elementGuildelines?: Array<HTMLElement | SVGElement>;
