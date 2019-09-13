@@ -41,7 +41,7 @@ export interface Renderer {
 }
 export interface Guideline {
     type: "horizontal" | "vertical";
-    element?: HTMLElement | SVGElement | null;
+    element?: Element | null;
     center?: boolean;
     pos: number[];
     size: number;
@@ -51,6 +51,7 @@ export interface SnapInfo {
     dist: number;
     offset: number;
     guidelines: Guideline[];
+    snapPoses: number[];
 }
 export interface MoveableProps
     extends DraggableProps,
@@ -786,7 +787,7 @@ export interface SnappableProps {
     snapThreshold?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
-    elementGuildelines?: Array<HTMLElement | SVGElement>;
+    elementGuildelines?: Element[];
 }
 export interface SnappableState {
     guidelines: any[];

@@ -136,6 +136,7 @@ class App extends React.Component {
                     snappable={true}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
+                    elementGuildelines={[document.querySelector(".box span")!]}
                     snapCenter={true}
                     scalable={!isResizable}
                     resizable={isResizable}

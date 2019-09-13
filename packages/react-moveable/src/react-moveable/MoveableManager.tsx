@@ -13,6 +13,7 @@ import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able } from "./types";
 import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
+import { IObject } from "@daybrush/utils";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -223,6 +224,15 @@ export default class MoveableManager<T = {}, U = {}>
     protected renderAbles() {
         const ables = [...this.targetAbles, ...this.controlAbles, Origin as Able<T>];
 
-        return ables.map(able => able.render && able.render(this, React));
+        const enabledAbles: IObject<any> = {};
+        return ables.map(able => {
+
+            if (enabledAbles[able.name] || !able.render) {
+                return;
+            }
+            enabledAbles[able.name] = true;
+
+            return able.render(this, React);
+        });
     }
 }
