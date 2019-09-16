@@ -228,7 +228,7 @@ export default class MoveableManager<T = {}, U = {}>
         return ables.map(able => {
 
             if (enabledAbles[able.name] || !able.render) {
-                return;
+                return undefined;
             }
             enabledAbles[able.name] = true;
 

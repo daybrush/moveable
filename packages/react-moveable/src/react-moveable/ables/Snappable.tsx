@@ -340,7 +340,7 @@ export default {
         snapStart(moveable, e);
     },
     drag(moveable: MoveableManager<SnappableProps, SnappableState>, e: OnDrag) {
-        const { clientX, clientY, datas, distX, distY } = e;
+        const { clientX, clientY, distX, distY } = e;
         const {
             guidelines,
             startLeft,
@@ -398,6 +398,21 @@ export default {
         snapStart(moveable, e);
     },
     dragControlEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
-        moveable.state.guidelines = [];
+        this.dragEnd(moveable);
+    },
+    dragGroupStart(moveable: any, e: any) {
+        snapStart(moveable, e);
+    },
+    dragGroup(moveable: any, e: any) {
+        this.drag(moveable, e);
+    },
+    dragGroupEnd(moveable: any) {
+        this.dragEnd(moveable);
+    },
+    dragGroupControlStart(moveable: any, e: any) {
+        snapStart(moveable, e);
+    },
+    dragGroupControlEnd(moveable: any) {
+        this.dragEnd(moveable);
     },
 };
