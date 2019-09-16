@@ -12,7 +12,7 @@ export type MoveableManagerProps<T = {}> = {
     pinchThreshold?: number;
     ables?: Array<Able<T>>;
 } & T;
-export interface MoveableManagerState<T = {}> {
+export type MoveableManagerState<T = {}> = {
     target: SVGElement | HTMLElement | null | undefined;
     left: number;
     top: number;
@@ -34,11 +34,25 @@ export interface MoveableManagerState<T = {}> {
     pos2: number[];
     pos3: number[];
     pos4: number[];
-}
+} & T;
+
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }
-
+export interface Guideline {
+    type: "horizontal" | "vertical";
+    element?: Element | null;
+    center?: boolean;
+    pos: number[];
+    size: number;
+}
+export interface SnapInfo {
+    isSnap: boolean;
+    dist: number;
+    offset: number;
+    guidelines: Guideline[];
+    snapPoses: number[];
+}
 export interface MoveableProps
     extends DraggableProps,
     RotatableProps,
@@ -46,7 +60,8 @@ export interface MoveableProps
     ScalableProps,
     WarpableProps,
     PinchableProps,
-    GroupableProps {
+    GroupableProps,
+    SnappableProps {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
@@ -764,4 +779,20 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
     onClickGroup?: (e: OnClickGroup) => any;
+}
+
+export interface SnappableProps {
+    snappable?: boolean;
+    snapCenter?: boolean;
+    snapThreshold?: number;
+    horizontalGuidelines?: number[];
+    verticalGuidelines?: number[];
+    elementGuildelines?: Element[];
+}
+export interface SnappableState {
+    guidelines: any[];
+    startLeft: number;
+    startTop: number;
+    startRight: number;
+    startBottom: number;
 }

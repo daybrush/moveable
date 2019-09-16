@@ -13,7 +13,10 @@ function triggerAble<T>(
 ) {
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
+
     const isStart = eventType === "Start";
+    const isEnd = eventType === "End";
+
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
     const results = ables.filter((able: any) => {
@@ -24,12 +27,16 @@ function triggerAble<T>(
         }
         return false;
     });
-    if (!isStart && results.length) {
+    const isUpdate = results.length;
+
+    if (!isStart && isUpdate) {
         if (results.some(able => able.updateRect) && !isGroup) {
             moveable.updateRect(eventType);
         } else {
             moveable.updateTarget(eventType);
         }
+    } else if (isEnd && !isUpdate) {
+        moveable.forceUpdate();
     }
 }
 export function getAbleDragger<T>(

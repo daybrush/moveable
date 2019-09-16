@@ -8,6 +8,7 @@ import { directionCondition, triggerChildAble, setCustomEvent, getCustomEvent } 
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
 import { getRad, rotate } from "@moveable/matrix";
+import { checkSnapSize } from "./Snappable";
 
 export default {
     name: "scalable",
@@ -68,7 +69,7 @@ export default {
     },
     dragControl(
         moveable: MoveableManager<ScalableProps>,
-        { datas, clientX, clientY, distX, distY, parentScale, parentDistance, pinchFlag }: any) {
+        e: any) {
         const {
             prevDist,
             direction,
@@ -77,11 +78,13 @@ export default {
             transform,
             isScale,
             startScale,
-        } = datas;
+        } = e.datas;
 
         if (!isScale) {
             return false;
         }
+        checkSnapSize(moveable as any, e, 0);
+        const { datas, clientX, clientY, distX, distY, parentScale, parentDistance, pinchFlag } = e;
         const { keepRatio, throttleScale, parentMoveable } = moveable.props;
         const target = moveable.state.target;
 

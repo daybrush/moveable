@@ -53,6 +53,9 @@ class App extends React.Component {
                     keepRatio={false}
                     target={this.state.targets}
                     origin={false}
+                    snappable={true}
+                    verticalGuidelines={[100, 200, 400, 500]}
+                    horizontalGuidelines={[100, 200, 400, 500]}
                     onDragGroupStart={e => {
                         console.log("start", e);
                     }}
@@ -133,6 +136,11 @@ class App extends React.Component {
                     keepRatio={false}
                     origin={true}
                     draggable={true}
+                    snappable={true}
+                    verticalGuidelines={[100, 200, 400, 500]}
+                    horizontalGuidelines={[100, 200, 400, 500]}
+                    elementGuildelines={[document.querySelector(".box span")!]}
+                    snapCenter={true}
                     scalable={!isResizable}
                     resizable={isResizable}
                     warpable={true}

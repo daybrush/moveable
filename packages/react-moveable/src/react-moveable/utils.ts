@@ -471,7 +471,6 @@ export function getSize(
     }
 }
 
-
 export function getRotationInfo(
     pos1: number[],
     pos2: number[],
