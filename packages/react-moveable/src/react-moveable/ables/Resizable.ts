@@ -7,6 +7,7 @@ import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent, directionCondition } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad } from "@moveable/matrix";
+import { checkSnapSize } from "./Snappable";
 
 export default {
     name: "resizable",
@@ -65,7 +66,7 @@ export default {
     },
     dragControl(
         moveable: MoveableManager<ResizableProps>,
-        { datas, clientX, clientY, distX, distY, pinchFlag, parentDistance, parentScale }: any,
+        e: any,
     ) {
         const {
             direction,
@@ -74,7 +75,7 @@ export default {
             prevWidth,
             prevHeight,
             isResize,
-        } = datas;
+        } = e.datas;
 
         if (!isResize) {
             return;
@@ -87,6 +88,9 @@ export default {
         const {
             target,
         } = moveable.state;
+
+        checkSnapSize(moveable as any, e, 1);
+        const { datas, clientX, clientY, distX, distY, pinchFlag, parentDistance, parentScale } = e;
 
         let distWidth: number = 0;
         let distHeight: number = 0;

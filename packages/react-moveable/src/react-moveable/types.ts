@@ -791,4 +791,8 @@ export interface SnappableProps {
 }
 export interface SnappableState {
     guidelines: any[];
+    startLeft: number;
+    startTop: number;
+    startRight: number;
+    startBottom: number;
 }
