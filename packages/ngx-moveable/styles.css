@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Roboto:100&display=swap");
-html, body {
+html,
+body {
   font-family: "Open Sans", sans-serif;
   position: relative;
   margin: 0;
@@ -95,7 +96,8 @@ a {
   transition: all ease 0.5s;
 }
 
-.buttons a:hover, .buttons a.selected {
+.buttons a:hover,
+.buttons a.selected {
   background: #333;
   color: #fff;
 }
@@ -121,13 +123,15 @@ a {
   z-index: 3001;
 }
 
-.page.feature, .page.footer {
+.page.feature,
+.page.footer {
   height: auto;
   text-align: left;
   padding: 60px 20px;
 }
 
-.page.feature .container, .page.footer .container {
+.page.feature .container,
+.page.footer .container {
   top: 0;
   left: 0;
   padding: 60px 0px;
@@ -177,7 +181,13 @@ a {
   font-weight: 600;
 }
 
-.draggable, .resizable, .scalable, .rotatable, .origin, .warpable, .pinchable {
+.draggable,
+.resizable,
+.scalable,
+.rotatable,
+.origin,
+.warpable,
+.pinchable {
   position: absolute;
   left: 0;
 }
@@ -248,7 +258,8 @@ code.hljs {
   .page.feature .container {
     text-align: center;
   }
-  .page.feature .left, .page.feature .right {
+  .page.feature .left,
+  .page.feature .right {
     display: block;
     margin: 0px auto 20px;
   }

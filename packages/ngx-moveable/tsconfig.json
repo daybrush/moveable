@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-moveable": [
+        "dist/ngx-moveable"
+      ],
+      "ngx-moveable/*": [
+        "dist/ngx-moveable/*"
+      ]
+    }
   }
 }

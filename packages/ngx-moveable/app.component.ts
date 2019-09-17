@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { OnPinch, OnScale, OnDrag, OnRotate, OnResize, OnWarp } from 'moveable';
 import { Frame } from 'scenejs';
-import { NgxMoveableComponent } from 'src/ngx-moveable';
+// import { NgxMoveableComponent } from 'src/ngx-moveable';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -12,7 +12,7 @@ import { NgxMoveableComponent } from 'src/ngx-moveable';
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('target', { static: false }) target: ElementRef;
   @ViewChild('label', { static: false }) label: ElementRef;
-  @ViewChild('moveable', { static: false }) moveable: NgxMoveableComponent;
+  @ViewChild('moveable', { static: false }) moveable;
   scalable = true;
   resizable = false;
   warpable = false;
