@@ -98,7 +98,7 @@ moveable.on("scaleGroupStart", ({ targets, clientX, clientY }) => {
         const target = ev.target;
         // ev.drag is a drag event that occurs when the group scale.
         const left = ev.drag.beforeDist[0];
-        const top = ev.drag.beforeDist[0];
+        const top = ev.drag.beforeDist[1];
         const scaleX = ev.scale[0];
         const scaleX = ev.scale[1];
     });
