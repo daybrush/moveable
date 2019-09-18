@@ -206,10 +206,11 @@ function checkSnapPosition(
             const isMove = prevPos - startPos !== 0;
             const offset = throttle(snapInfo.offset, throttleSnap);
             const scale = isMove ? (prevPos - offset - startPos) / (prevPos - startPos) : 0;
-            const dist2 = scale * prevDist;
-            const scale2 = dist2 ? dist / dist2 : dist;
+            const dist2 = throttle(scale * prevDist, throttleSnap);
+            // dist2 : prevPos - startPos = dist : nextPos - startPos
+            const nextPos = dist2 ? (prevPos - startPos) * dist / dist2 + startPos : prevPos + dist2 - dist;
 
-            if (Math.abs(isMove ? (prevPos - startPos) * (scale2 - scale) : dist - dist2) < snapThreshold) {
+            if (Math.abs(nextPos - prevPos) < snapThreshold) {
                 e[`dist${posName}`] = dist2;
                 return true;
             }
