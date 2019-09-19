@@ -297,6 +297,7 @@ export default {
                     "vertical",
                     "guideline",
                     "target",
+                    "bold",
                 )} key={`verticalTargetGuidline${i}`} style={{
                     top: `${0}px`,
                     left: `${-targetLeft + pos}px`,
@@ -309,6 +310,7 @@ export default {
                     "horizontal",
                     "guideline",
                     "target",
+                    "bold",
                 )} key={`horizontalTargetGuidline${i}`} style={{
                     top: `${-targetTop + pos}px`,
                     left: `${0}px`,
@@ -316,19 +318,27 @@ export default {
                 }} />;
             }),
             ...verticalGuildelines.map((guideline, i) => {
-                const { pos, size } = guideline;
+                const { pos, size, element } = guideline;
 
-                return <div className={prefix("line", "vertical", "guideline")} key={`verticalGuidline${i}`} style={{
+                return <div className={prefix(
+                    "line",
+                    "vertical",
+                    "guideline",
+                    element ? "bold" : "",
+                )} key={`verticalGuidline${i}`} style={{
                     top: `${-targetTop + pos[1]}px`,
                     left: `${-targetLeft + pos[0]}px`,
                     height: `${size}px`,
                 }} />;
             }),
             ...horizontalGuidelines.map((guideline, i) => {
-                const { pos, size } = guideline;
+                const { pos, size, element } = guideline;
 
                 return <div className={prefix(
-                    "line", "horizontal", "guideline",
+                    "line",
+                    "horizontal",
+                    "guideline",
+                    element ? "bold" : "",
                 )} key={`horizontalGuidline${i}`} style={{
                     top: `${-targetTop + pos[1]}px`,
                     left: `${-targetLeft + pos[0]}px`,
