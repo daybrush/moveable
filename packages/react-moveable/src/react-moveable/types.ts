@@ -28,8 +28,6 @@ export type MoveableManagerState<T = {}> = {
     origin: number[];
     beforeDirection: 1 | -1;
     direction: 1 | -1;
-    rotationRad: number;
-    rotationPos: number[];
     pos1: number[];
     pos2: number[];
     pos3: number[];
@@ -745,6 +743,7 @@ export interface ScalableProps {
 
 export interface RotatableProps {
     rotatable?: boolean;
+    rotationPosition?: "top" | "bottom" | "left" | "right";
     throttleRotate?: number;
 
     onRotateStart?: (e: OnRotateStart) => any;

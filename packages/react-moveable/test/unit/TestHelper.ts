@@ -1,5 +1,7 @@
 import MoveableManager from "../../src/react-moveable/MoveableManager";
-import { getRad, createRotateMatrix, caculate, minus, sum } from "@moveable/matrix";
+import {  createRotateMatrix, caculate, minus, sum } from "@moveable/matrix";
+import { getPositions, getRotationPosition, getRotationRad } from "../../src/react-moveable/ables/Rotatable";
+import { RotatableProps } from "../../src/react-moveable";
 
 export async function wait(time: number) {
     return new Promise(resolve => {
@@ -25,13 +27,18 @@ export function mouseup(target: HTMLElement | SVGElement, client: number[]) {
     dispatchEvent(target, "mouseup", client);
 }
 
-export function rotateStart(moveable: MoveableManager) {
+export function rotateStart(moveable: MoveableManager<RotatableProps>) {
     const rotationElement = moveable.controlBox.getElement().querySelector<HTMLElement>(".moveable-rotation")!;
 
     const { left, top, width, height } = rotationElement.getBoundingClientRect();
     const clientX = left + width / 2;
     const clientY = top + height / 2;
-    const { rotationPos, origin } = moveable.state;
+    const { origin, pos1, pos2, pos3, pos4, direction } = moveable.state;
+    const poses = getPositions(moveable.props.rotationPosition!, pos1, pos2, pos3, pos4);
+    const rotationPos = getRotationPosition(
+        poses,
+        getRotationRad(poses, direction),
+    );
     const absoluteOrigin = [
         clientX - rotationPos[0] + origin[0],
         clientY - rotationPos[1] + origin[1],

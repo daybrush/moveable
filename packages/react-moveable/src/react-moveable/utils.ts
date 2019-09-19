@@ -13,7 +13,6 @@ import {
     createScaleMatrix,
     sum,
     getRad,
-    rotate,
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
@@ -471,21 +470,6 @@ export function getSize(
     }
 }
 
-export function getRotationInfo(
-    pos1: number[],
-    pos2: number[],
-    direction: number,
-): [number, number[]] {
-    const rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-    const relativeRotationPos = rotate([0, -40, 1], rotationRad);
-
-    const rotationPos = [
-        (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
-        (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
-    ];
-
-    return [rotationRad, rotationPos];
-}
 export function getTargetInfo(
     target?: HTMLElement | SVGElement,
     container?: HTMLElement | SVGElement,
@@ -506,8 +490,6 @@ export function getTargetInfo(
     let transformOrigin = [0, 0];
     let direction: 1 | -1 = 1;
     let beforeDirection: 1 | -1 = 1;
-    let rotationPos = [0, 0];
-    let rotationRad = 0;
     let is3d = false;
     let targetTransform = "";
     let beforeOrigin = [0, 0];
@@ -557,16 +539,11 @@ export function getTargetInfo(
             beforeOrigin[0] + beforePos[0] - left,
             beforeOrigin[1] + beforePos[1] - top,
         ];
-        // 1 : clockwise
-        // -1 : counterclockwise
-        [rotationRad, rotationPos] = getRotationInfo(pos1, pos2, direction);
     }
 
     return {
         beforeDirection,
         direction,
-        rotationRad,
-        rotationPos,
         target,
         left,
         top,

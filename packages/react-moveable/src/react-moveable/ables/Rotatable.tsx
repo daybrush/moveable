@@ -64,6 +64,43 @@ function getRotateInfo(
         throttleRotate,
     );
 }
+
+export function getPositions(
+    rotationPosition: "top" | "bottom" | "left" | "right",
+    pos1: number[],
+    pos2: number[],
+    pos3: number[],
+    pos4: number[],
+) {
+    if (rotationPosition === "left") {
+        return [pos3, pos1];
+    } else if (rotationPosition === "right") {
+        return [pos2, pos4];
+    } else if (rotationPosition === "bottom") {
+        return [pos4, pos3];
+    }
+    return [pos1, pos2];
+}
+export function getRotationRad(
+    poses: number[][],
+    direction: number,
+) {
+    return getRad(direction > 0 ? poses[0] : poses[1], direction > 0 ? poses[1] : poses[0]);
+}
+export function getRotationPosition(
+    [pos1, pos2]: number[][],
+    rad: number,
+): number[] {
+    const relativeRotationPos = rotateMatrix([0, -40, 1], rad);
+
+    const rotationPos = [
+        (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
+        (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
+    ];
+
+    return rotationPos;
+}
+
 function dragControlCondition(target: HTMLElement | SVGElement) {
     return hasClass(target, prefix("rotation"));
 }
@@ -73,16 +110,21 @@ export default {
     canPinch: true,
 
     render(moveable: MoveableManager<RotatableProps>, React: Renderer): any {
-        if (!moveable.props.rotatable) {
+        const {
+            rotatable,
+            rotationPosition,
+        } = moveable.props;
+        if (!rotatable) {
             return null;
         }
-
-        const { pos1, pos2, rotationRad } = moveable.state;
+        const { pos1, pos2, pos3, pos4, direction } = moveable.state;
+        const poses = getPositions(rotationPosition!, pos1, pos2, pos3, pos4);
+        const rotationRad = getRotationRad(poses, direction);
 
         return (
             <div className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(${(pos1[0] + pos2[0]) / 2}px, ${(pos1[1] + pos2[1]) / 2}px) translateY(-40px) rotate(${rotationRad}rad)`,
+                transform: `translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) translateY(-40px) rotate(${rotationRad}rad)`,
             }}>
                 <div className={prefix("control", "rotation")}></div>
             </div>
@@ -94,7 +136,8 @@ export default {
         { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag }: any) {
         const {
             target, left, top, origin, beforeOrigin,
-            rotationPos, direction, beforeDirection, targetTransform,
+            direction, beforeDirection, targetTransform,
+            pos1, pos2, pos3, pos4,
         } = moveable.state;
 
         if (!target) {
@@ -104,6 +147,12 @@ export default {
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
+
+        const poses = getPositions(moveable.props.rotationPosition!, pos1, pos2, pos3, pos4);
+        const rotationPos = getRotationPosition(
+            poses,
+            getRotationRad(poses, direction),
+        );
 
         if (pinchFlag || parentFlag) {
             datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
