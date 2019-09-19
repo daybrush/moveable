@@ -1,14 +1,45 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
-import { minus, sum } from "@moveable/matrix";
+import { minus, sum, createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart } from "../types";
+import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, MoveableManagerProps, Renderer } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
+import { ref } from "framework-utils";
 
 export default {
     name: "draggable",
+    render(moveable: MoveableManager<DraggableProps>, React: Renderer): any[] {
+        const { dragArea, target } = moveable.props;
+
+        if (!target || !dragArea) {
+            return [];
+        }
+        const { width, height, pos1, pos2, pos3, pos4 } = moveable.state;
+
+        const h = createWarpMatrix(
+            [0, 0],
+            [width, 0],
+            [0, height],
+            [width, height],
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+        );
+
+        if (!h.length) {
+            return [];
+        }
+        return [
+            <div key="area" ref={ref(moveable, "areaElement")} className={prefix("area")} style={{
+                width: `${width}px`,
+                height: `${height}px`,
+                transform: `matrix3d(${convertMatrixtoCSS(h).join(",")})`,
+            }}/>,
+        ];
+    },
     dragStart(
         moveable: MoveableManager<DraggableProps>,
         { datas, clientX, clientY }: any,

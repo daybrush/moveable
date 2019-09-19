@@ -22,7 +22,7 @@ function triggerAble<T>(
     const results = ables.filter((able: any) => {
         const condition = isStart && able[conditionName];
 
-        if (able[eventName] && (!condition || condition(e.inputEvent.target))) {
+        if (able[eventName] && (!condition || condition(e.inputEvent.target, moveable))) {
             return able[eventName](moveable, e);
         }
         return false;

@@ -706,6 +706,7 @@ export interface OriginProps {
 }
 export interface DraggableProps {
     draggable?: boolean;
+    dragArea?: boolean;
     throttleDrag?: number;
 
     onDragStart?: (e: OnDragStart) => any;
