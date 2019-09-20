@@ -108,7 +108,7 @@ render() {
                     const left = ev.drag.beforeDist[0];
                     const top = ev.drag.beforeDist[1];
                     const scaleX = ev.scale[0];
-                    const scaleX = ev.scale[1];
+                    const scaleY = ev.scale[1];
                 });
             }}
             onScaleEnd={({ target, isDrag, clientX, clientY }) => {
