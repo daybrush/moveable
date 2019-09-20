@@ -33,6 +33,7 @@ export default class MoveableManager<T = {}, U = {}>
         parentPosition: null,
         ables: [],
         pinchThreshold: 20,
+        dragArea: false,
     };
     public state: MoveableManagerState<U> = {
         target: null,
@@ -62,6 +63,7 @@ export default class MoveableManager<T = {}, U = {}>
     public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer K ? K : never;
     protected targetDragger!: Dragger;
     protected controlDragger!: Dragger;
+    protected areaElement!: HTMLElement;
 
     constructor(props: any) {
         super(props);

@@ -4,6 +4,7 @@ import * as Dragger from "@daybrush/drag";
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
+    dragArea?: boolean;
     parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
@@ -706,7 +707,6 @@ export interface OriginProps {
 }
 export interface DraggableProps {
     draggable?: boolean;
-    dragArea?: boolean;
     throttleDrag?: number;
 
     onDragStart?: (e: OnDragStart) => any;
