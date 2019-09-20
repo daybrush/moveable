@@ -2,18 +2,23 @@ import MoveableManager from "../MoveableManager";
 import { createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
 import { ref } from "framework-utils";
 import { prefix } from "../utils";
-import { Renderer } from "../types";
+import { Renderer, GroupableProps } from "../types";
 
 export default {
     name: "dragArea",
-    render(moveable: MoveableManager, React: Renderer): any[] {
-        const { target } = moveable.props;
+    render(moveable: MoveableManager<GroupableProps>, React: Renderer): any[] {
+        const { target, dragArea, groupable } = moveable.props;
 
-        if (!target) {
-            return [];
-        }
         const { width, height, pos1, pos2, pos3, pos4 } = moveable.state;
 
+        if (groupable) {
+            return [
+                <div key="area" ref={ref(moveable, "areaElement")} className={prefix("area")} />,
+            ];
+        }
+        if (!target || !dragArea) {
+            return [];
+        }
         const h = createWarpMatrix(
             [0, 0],
             [width, 0],

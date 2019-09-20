@@ -14,6 +14,7 @@ import { MoveableManagerProps, MoveableManagerState, Able } from "./types";
 import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
 import { IObject } from "@daybrush/utils";
+import DragArea from "./ables/DragArea";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -61,17 +62,15 @@ export default class MoveableManager<T = {}, U = {}>
     public targetAbles: Array<Able<T>> = [];
     public controlAbles: Array<Able<T>> = [];
     public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer K ? K : never;
+    public areaElement!: HTMLElement;
     protected targetDragger!: Dragger;
     protected controlDragger!: Dragger;
-    protected areaElement!: HTMLElement;
 
     constructor(props: any) {
         super(props);
-
-        this.updateAbles();
     }
     public render() {
-        this.update(false);
+        this.checkUpdate();
 
         const { edge, parentPosition } = this.props;
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
@@ -95,7 +94,10 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public componentDidMount() {
         this.controlBox.getElement();
-        this.update(true);
+        this.updateEvent(this.props, this.state);
+    }
+    public componentDidUpdate(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
+        this.updateEvent(prevProps, prevState);
     }
     public componentWillUnmount() {
         unset(this, "targetDragger");
@@ -116,6 +118,7 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public isInside(clientX: number, clientY: number) {
         const { pos1, pos2, pos3, pos4, target } = this.state;
+
         if (!target) {
             return false;
         }
@@ -134,47 +137,60 @@ export default class MoveableManager<T = {}, U = {}>
             parentMoveable ? false : isSetState,
         );
     }
-    public updateTarget(type?: "Start" | "" | "End") {
-        this.updateRect(type, true);
-    }
-    public update(isSetState?: boolean) {
-        const props = this.props;
-        const { target, parentMoveable } = props;
-        const stateTarget = this.state.target;
-        const controlBox = this.controlBox;
-
-        if (!controlBox || (!stateTarget && !target)) {
-            return;
-        }
-        this.updateAbles();
-
-        const controlBoxElement = controlBox.getElement();
+    public updateEvent(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
+        const controlBoxElement = this.controlBox.getElement();
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
-        const isTargetChanged = stateTarget !== target;
+        const target = this.state.target;
+        const prevTarget = prevState.target;
+        const dragArea = this.props.dragArea;
+        const prevDragArea = prevProps.dragArea;
+        const isTargetChanged = !dragArea && prevTarget !== target;
 
-        if (isTargetChanged) {
-            this.updateState({
-                target,
-            });
-        }
-        if (!hasTargetAble || isTargetChanged) {
+        if (
+            !hasTargetAble
+            || isTargetChanged
+            || prevDragArea !== dragArea
+        ) {
             unset(this, "targetDragger");
         }
         if (!hasControlAble) {
             unset(this, "controlDragger");
         }
 
-        if (target && hasTargetAble && (!this.targetDragger || isTargetChanged)) {
-            this.targetDragger = getAbleDragger(this, target!, "targetAbles", "");
+        if (target && hasTargetAble && !this.targetDragger) {
+            if (dragArea) {
+                this.targetDragger = getAbleDragger(this, this.areaElement!, "targetAbles", "");
+            } else {
+                this.targetDragger = getAbleDragger(this, target!, "targetAbles", "");
+            }
         }
         if (!this.controlDragger && hasControlAble) {
             this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
         }
-        if (isTargetChanged && !parentMoveable) {
-            this.updateRect("End", false, isSetState);
+    }
+    public updateTarget(type?: "Start" | "" | "End") {
+        this.updateRect(type, true);
+    }
+    public checkUpdate() {
+        const props = this.props;
+        const { target, parentMoveable } = props;
+        const stateTarget = this.state.target;
+
+        if (!stateTarget && !target) {
+            return;
         }
-        return isTargetChanged;
+        this.updateAbles();
+
+        const isTargetChanged = stateTarget !== target;
+
+        if (!isTargetChanged) {
+            return;
+        }
+        this.updateState({ target });
+        if (!parentMoveable) {
+            this.updateRect("End", false, false);
+        }
     }
     public triggerEvent<K extends keyof T>(
         name: K, e: T[K] extends ((e: infer P) => any) | undefined ? P : {}): any;
@@ -224,7 +240,7 @@ export default class MoveableManager<T = {}, U = {}>
         }
     }
     protected renderAbles() {
-        const ables = [...this.targetAbles, ...this.controlAbles, Origin as Able<T>];
+        const ables: Able[] = [...this.targetAbles, ...this.controlAbles, Origin, DragArea];
 
         const enabledAbles: IObject<any> = {};
         return ables.map(able => {

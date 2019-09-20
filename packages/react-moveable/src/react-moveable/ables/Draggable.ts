@@ -1,12 +1,11 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
-import { minus, sum, createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
+import { minus, sum } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, MoveableManagerProps, Renderer } from "../types";
+import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
-import { ref } from "framework-utils";
 
 export default {
     name: "draggable",
@@ -125,7 +124,7 @@ export default {
         return isDrag;
     },
     dragGroupCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, prefix("group"));
+        return hasClass(target, prefix("area"));
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
         const datas = e.datas;

@@ -122,7 +122,7 @@ export default {
         const rotationRad = getRotationRad(poses, direction);
 
         return (
-            <div className={prefix("line rotation-line")} style={{
+            <div key="rotation" className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
                 transform: `translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) translateY(-40px) rotate(${rotationRad}rad)`,
             }}>

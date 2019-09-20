@@ -60,6 +60,8 @@ class App extends React.Component {
                         console.log("start", e);
                     }}
                     onDragGroup={e => {
+                        console.log(e.beforeDelta);
+
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
                             groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.beforeDelta[0]}px`);

@@ -1,7 +1,7 @@
-import { refs, ref } from "framework-utils";
+import { refs } from "framework-utils";
 import MoveableGroup from "../MoveableGroup";
 import MoveableManager from "../MoveableManager";
-import { prefix, triggerEvent } from "../utils";
+import { triggerEvent } from "../utils";
 import { Renderer } from "../types";
 import { OnDragEnd } from "@daybrush/drag";
 import { findIndex } from "@daybrush/utils";
@@ -25,17 +25,16 @@ export default {
                 parentPosition={position}
             />;
         }),
-        <div key="groupTarget" ref={ref(moveable, "groupTargetElement")} className={prefix("group")} />,
         ];
     },
     dragGroupStart(moveable: MoveableGroup) {
-        moveable.groupTargetElement.style.pointerEvents = "none";
+        moveable.areaElement.style.pointerEvents = "none";
     },
     dragGroup(moveable: MoveableGroup) {
-        moveable.groupTargetElement.style.pointerEvents = "auto";
+        moveable.areaElement.style.pointerEvents = "auto";
     },
     dragGroupEnd(moveable: MoveableGroup, { inputEvent, isDrag }: OnDragEnd) {
-        !isDrag && (moveable.groupTargetElement.style.pointerEvents = "auto");
+        !isDrag && (moveable.areaElement.style.pointerEvents = "auto");
 
         const target = inputEvent.target;
 

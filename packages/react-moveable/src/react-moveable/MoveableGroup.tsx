@@ -102,44 +102,35 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
         groupable: true,
+        dragArea: true,
         ables: MOVEABLE_ABLES,
         targets: [],
     };
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
     public rotation: number = 0;
-    public groupTargetElement!: HTMLElement;
 
-    public componentDidMount() {
-        super.componentDidMount();
-    }
-    public componentDidUpdate() {
-        this.update(true);
-    }
-    public update(isSetState?: boolean) {
-        if (!isSetState) {
-            return;
-        }
+    public updateEvent() {
         const state = this.state;
+
         if (!state.target) {
-            state.target = this.groupTargetElement;
+            state.target = this.areaElement;
 
             this.controlBox.getElement().style.display = "block";
             this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "Group");
             this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
         }
-        this.updateAbles();
-
-        this.moveables.forEach(moveable => moveable.update(false));
-
         const { added, changed, removed } = this.differ.update(this.props.targets!);
 
         if (added.length || changed.length || removed.length) {
             this.updateRect();
         }
-        return true;
     }
-    public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
+    public checkUpdate() {
+        this.updateAbles();
+    }
+
+    public updateRect(type?: "Start" | "" | "End", isTarget?: boolean) {
         if (!this.controlBox) {
             return;
         }
@@ -157,7 +148,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const rotation = this.rotation;
         const [left, top, width, height] = getGroupRect(this.moveables, rotation);
 
-        target.style.cssText += `width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`;
+        // tslint:disable-next-line: max-line-length
+        target.style.cssText += `left:0px;top:0px;width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`;
 
         state.width = width;
         state.height = height;
