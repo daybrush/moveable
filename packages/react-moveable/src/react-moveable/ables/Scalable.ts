@@ -83,7 +83,7 @@ export default {
         if (!isScale) {
             return false;
         }
-        checkSnapSize(moveable as any, e, 0);
+        // checkSnapSize(moveable as any, e, 0);
         const { datas, clientX, clientY, distX, distY, parentScale, parentDistance, pinchFlag } = e;
         const { keepRatio, throttleScale, parentMoveable } = moveable.props;
         const target = moveable.state.target;

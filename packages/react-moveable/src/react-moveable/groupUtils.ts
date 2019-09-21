@@ -28,6 +28,21 @@ export function getCustomEvent(datas: any) {
     return datas.custom;
 }
 
+export function setCustomEventDelta(
+    deltaX: number,
+    deltaY: number,
+    datas: any,
+    inputEvent: any,
+) {
+    const e = getCustomEvent(datas);
+
+    if (e) {
+        return setCustomEvent(e.prevX + deltaX, e.prevY + deltaY, datas, inputEvent);
+    }
+
+    return setCustomEvent(deltaX, deltaY, datas, inputEvent);
+}
+
 export function setCustomEvent(
     clientX: number,
     clientY: number,
@@ -59,6 +74,7 @@ export function setCustomEvent(
         isDrag: e.isDrag,
         datas,
         inputEvent,
+        parentEvent: true,
     };
 }
 

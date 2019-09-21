@@ -1,10 +1,13 @@
-import { throttle, getDirection, triggerEvent } from "../utils";
-import { setDragStart, getDragDist } from "../DraggerUtils";
-import { ResizableProps, OnResizeGroup, OnResizeGroupEnd, Renderer, OnResizeGroupStart } from "../types";
+import { throttle, getDirection, triggerEvent, caculateRect } from "../utils";
+import { setDragStart, getDragDist, setSizeInfo, getSizeDist } from "../DraggerUtils";
+import {
+    ResizableProps, OnResizeGroup, OnResizeGroupEnd,
+    Renderer, OnResizeGroupStart, DraggableProps, OnDragStart, OnDrag,
+} from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
-import { triggerChildAble, setCustomEvent, getCustomEvent, directionCondition } from "../groupUtils";
+import { triggerChildAble, setCustomEvent, getCustomEvent, directionCondition, setCustomEventDelta } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad } from "@moveable/matrix";
 import { checkSnapSize } from "./Snappable";
@@ -26,18 +29,19 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ResizableProps>,
+        moveable: MoveableManager<ResizableProps & DraggableProps>,
         e: any,
     ) {
         const {
-            inputEvent: {
-                target: inputTarget,
-            },
+            inputEvent,
             pinchFlag,
         } = e;
+        const {
+            target: inputTarget,
+        } = inputEvent;
 
         const direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
-        const { target, width, height } = moveable.state;
+        const { target, width, height, left, top } = moveable.state;
         const { clientX, clientY, datas } = e;
 
         if (!direction || !target) {
@@ -51,12 +55,16 @@ export default {
         datas.height = height;
         datas.prevWidth = 0;
         datas.prevHeight = 0;
+        datas.custom = {};
+
+        setSizeInfo(moveable, e);
 
         const params = {
             datas: datas.datas,
             target,
             clientX,
             clientY,
+            dragStart: Draggable.dragStart(moveable, setCustomEvent(0, 0, datas.custom, inputEvent)) as OnDragStart,
         };
         const result = triggerEvent(moveable, "onResizeStart", params);
         if (result !== false) {
@@ -89,8 +97,8 @@ export default {
             target,
         } = moveable.state;
 
-        checkSnapSize(moveable as any, e, 1);
-        const { datas, clientX, clientY, distX, distY, pinchFlag, parentDistance, parentScale } = e;
+        // checkSnapSize(moveable as any, e, 1);
+        const { datas, clientX, clientY, distX, distY, pinchFlag, parentDistance, parentScale, inputEvent } = e;
 
         let distWidth: number = 0;
         let distHeight: number = 0;
@@ -123,11 +131,21 @@ export default {
                 distHeight = distDiagonal * height / width;
             }
         }
-        distWidth = throttle(distWidth, throttleResize!);
-        distHeight = throttle(distHeight, throttleResize!);
+        const nextWidth = direction[0]
+            ? throttle(Math.max(width + distWidth, 0), throttleResize!)
+            : width;
+        const nextHeight = direction[1]
+            ? throttle(Math.max(height + distHeight, 0), throttleResize!)
+            : height;
+        let inverseDist = [0, 0];
 
-        const nextWidth = width + distWidth;
-        const nextHeight = height + distHeight;
+        distWidth = nextWidth - width;
+        distHeight = nextHeight - height;
+
+        if (!pinchFlag && !parentScale) {
+            inverseDist = getSizeDist(moveable, e, nextWidth, nextHeight, direction);
+        }
+
         const delta = [distWidth - prevWidth, distHeight - prevHeight];
 
         datas.prevWidth = distWidth;
@@ -147,6 +165,10 @@ export default {
             clientX,
             clientY,
             isPinch: !!pinchFlag,
+            drag: Draggable.drag(
+                moveable as any,
+                setCustomEventDelta(inverseDist[0], inverseDist[1], datas.custom, inputEvent),
+            ) as OnDrag,
         };
         triggerEvent(moveable, "onResize", params);
         return params;

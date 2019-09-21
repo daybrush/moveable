@@ -1,6 +1,6 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
-import { minus, sum } from "@moveable/matrix";
+import { minus, plus } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart } from "../types";
 import MoveableGroup from "../MoveableGroup";
@@ -11,7 +11,7 @@ export default {
     name: "draggable",
     dragStart(
         moveable: MoveableManager<DraggableProps>,
-        { datas, clientX, clientY }: any,
+        { datas, clientX, clientY, parentEvent }: any,
     ) {
         const {
             targetTransform,
@@ -41,7 +41,7 @@ export default {
                 datas.startTranslate = translate;
             },
         };
-        const result = triggerEvent(moveable, "onDragStart", params);
+        const result = parentEvent || triggerEvent(moveable, "onDragStart", params);
 
         if (result !== false) {
             datas.isDrag = true;
@@ -52,20 +52,19 @@ export default {
     },
     drag(
         moveable: MoveableManager<DraggableProps>,
-        { datas, distX, distY, clientX, clientY }: any,
+        { datas, distX, distY, clientX, clientY, parentEvent }: any,
     ): OnDrag | undefined {
         const { isPinch, isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
+
         if (!isDrag) {
             return;
         }
-
-        const {
-            throttleDrag = 0,
-            parentMoveable,
-        } = moveable.props;
+        const props = moveable.props;
+        const parentMoveable = props.parentMoveable;
+        const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
         const target = moveable.state.target;
-        const beforeTranslate = sum(getDragDist({ datas, distX, distY }, true), startTranslate);
-        const translate = sum(getDragDist({ datas, distX, distY }, false), startTranslate);
+        const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
+        const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
 
         throttleArray(translate, throttleDrag);
         throttleArray(beforeTranslate, throttleDrag);
@@ -84,7 +83,7 @@ export default {
         const bottom = datas.bottom - beforeDist[1];
         const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
-        if (!parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
+        if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }
         const params = {
@@ -106,15 +105,18 @@ export default {
             isPinch,
         };
 
-        triggerEvent(moveable, "onDrag", params);
+        !parentEvent && triggerEvent(moveable, "onDrag", params);
         return params;
     },
-    dragEnd(moveable: MoveableManager<DraggableProps>, { datas, isDrag, clientX, clientY }: any) {
+    dragEnd(
+        moveable: MoveableManager<DraggableProps>,
+        { parentEvent, datas, isDrag, clientX, clientY }: any,
+    ) {
         if (!datas.isDrag) {
             return;
         }
         datas.isDrag = false;
-        triggerEvent(moveable, "onDragEnd", {
+        !parentEvent && triggerEvent(moveable, "onDragEnd", {
             target: moveable.state.target!,
             isDrag,
             clientX,

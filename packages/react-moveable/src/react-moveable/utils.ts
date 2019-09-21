@@ -1,7 +1,6 @@
 import { PREFIX, isNotSupportTransformOrigin } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
-import { MoveableState } from "./types";
 import {
     multiply, invert,
     convertCSStoMatrix, convertMatrixtoCSS,
@@ -11,11 +10,12 @@ import {
     minus,
     getOrigin,
     createScaleMatrix,
-    sum,
+    plus,
     getRad,
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
+import { MoveableManagerState } from "./types";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -72,11 +72,12 @@ export function getBeforeTransformOrigin(el: SVGElement) {
         return value * measureSVGSize(el, unit, i === 0);
     });
 }
-export function getTransformOrigin(style: CSSStyleDeclaration, ) {
+export function getTransformOrigin(style: CSSStyleDeclaration) {
     const transformOrigin = style.transformOrigin;
 
     return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
 }
+
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
@@ -283,13 +284,33 @@ export function getSVGGraphicsOffset(
 export function caculatePosition(matrix: number[], pos: number[], n: number) {
     return caculate(matrix, convertPositionMatrix(pos, n), n);
 }
-export function caculateRect(matrix: number[], width: number, height: number, n: number) {
+export function caculatePoses(matrix: number[], width: number, height: number, n: number) {
     const pos1 = caculatePosition(matrix, [0, 0], n);
     const pos2 = caculatePosition(matrix, [width, 0], n);
     const pos3 = caculatePosition(matrix, [0, height], n);
     const pos4 = caculatePosition(matrix, [width, height], n);
 
     return [pos1, pos2, pos3, pos4];
+}
+
+export function caculateRect(matrix: number[], width: number, height: number, n: number) {
+    const poses = caculatePoses(matrix, width, height, n);
+
+    const posesX = poses.map(pos => pos[0]);
+    const posesY = poses.map(pos => pos[1]);
+    const left = Math.min(...posesX);
+    const top = Math.min(...posesY);
+    const right = Math.max(...posesX);
+    const bottom = Math.max(...posesY);
+    const rectWidth = right - left;
+    const rectHeight = bottom - top;
+
+    return {
+        left, top,
+        right, bottom,
+        width: rectWidth,
+        height: rectHeight,
+    };
 }
 export function getSVGOffset(
     el: SVGElement,
@@ -308,15 +329,14 @@ export function getSVGOffset(
         beforeMatrix,
         absoluteMatrix,
     );
-    const poses = caculateRect(mat, width, height, n);
-    const posesX = poses.map(pos => pos[0]);
-    const posesY = poses.map(pos => pos[1]);
+    const {
+        left: prevLeft,
+        top: prevTop,
+        width: prevWidth,
+        height: prevHeight,
+    } = caculateRect(mat, width, height, n);
     const posOrigin = caculatePosition(mat, origin, n);
-    const prevLeft = Math.min(...posesX);
-    const prevTop = Math.min(...posesY);
     const prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
-    const prevWidth = Math.max(...posesX) - prevLeft;
-    const prevHeight = Math.max(...posesY) - prevTop;
     const rectOrigin = [
         rectLeft + prevOrigin[0] * rectWidth / prevWidth,
         rectTop + prevOrigin[1] * rectHeight / prevHeight,
@@ -336,9 +356,10 @@ export function getSVGOffset(
             createOriginMatrix(offset, n),
             absoluteMatrix,
         );
-        const nextPoses = caculateRect(mat2, width, height, n);
-        const nextLeft = Math.min(...nextPoses.map(pos => pos[0]));
-        const nextTop = Math.min(...nextPoses.map(pos => pos[1]));
+        const {
+            left: nextLeft,
+            top: nextTop,
+        } = caculateRect(mat2, width, height, n);
         const distLeft = nextLeft - rectLeft;
         const distTop = nextTop - rectTop;
 
@@ -366,24 +387,26 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
         [x2, y2],
         [x3, y3],
         [x4, y4],
-    ] = caculateRect(matrix, width, height, n);
+    ] = caculatePoses(matrix, width, height, n);
     let [originX, originY] = caculatePosition(matrix, origin, n);
 
-    const minX = Math.min(x1, x2, x3, x4);
-    const minY = Math.min(y1, y2, y3, y4);
+    const left = Math.min(x1, x2, x3, x4);
+    const top = Math.min(y1, y2, y3, y4);
+    const right = Math.max(x1, x2, x3, x4);
+    const bottom = Math.max(y1, y2, y3, y4);
 
-    x1 = (x1 - minX) || 0;
-    x2 = (x2 - minX) || 0;
-    x3 = (x3 - minX) || 0;
-    x4 = (x4 - minX) || 0;
+    x1 = (x1 - left) || 0;
+    x2 = (x2 - left) || 0;
+    x3 = (x3 - left) || 0;
+    x4 = (x4 - left) || 0;
 
-    y1 = (y1 - minY) || 0;
-    y2 = (y2 - minY) || 0;
-    y3 = (y3 - minY) || 0;
-    y4 = (y4 - minY) || 0;
+    y1 = (y1 - top) || 0;
+    y2 = (y2 - top) || 0;
+    y3 = (y3 - top) || 0;
+    y4 = (y4 - top) || 0;
 
-    originX = (originX - minX) || 0;
-    originY = (originY - minY) || 0;
+    originX = (originX - left) || 0;
+    originY = (originY - top) || 0;
 
     const center = [
         (x1 + x2 + x3 + x4) / 4,
@@ -396,7 +419,7 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
             ? 1 : -1;
 
     return [
-        [minX, minY],
+        [left, top, right, bottom],
         [originX, originY],
         [x1, y1],
         [x2, y2],
@@ -469,19 +492,21 @@ export function getSize(
         ];
     }
 }
-
 export function getTargetInfo(
     target?: HTMLElement | SVGElement,
     container?: HTMLElement | SVGElement,
-    state?: Partial<MoveableState> | false | undefined,
-): Partial<MoveableState> {
+    state?: Partial<MoveableManagerState> | false | undefined,
+): Partial<MoveableManagerState> {
     let left = 0;
     let top = 0;
+    let right = 0;
+    let bottom = 0;
     let origin = [0, 0];
     let pos1 = [0, 0];
     let pos2 = [0, 0];
     let pos3 = [0, 0];
     let pos4 = [0, 0];
+    let offsetMatrix = createIdentityMatrix3();
     let beforeMatrix = createIdentityMatrix3();
     let matrix = createIdentityMatrix3();
     let targetMatrix = createIdentityMatrix3();
@@ -511,7 +536,6 @@ export function getTargetInfo(
                 [width, height] = getSize(target, style, true);
             }
         }
-        let offsetMatrix: number[];
         [
             beforeMatrix, offsetMatrix, matrix,
             targetMatrix,
@@ -519,7 +543,7 @@ export function getTargetInfo(
         ] = caculateMatrixStack(target, container!, prevMatrix, prevN);
 
         [
-            [left, top],
+            [left, top, right, bottom],
             origin,
             pos1,
             pos2,
@@ -533,7 +557,7 @@ export function getTargetInfo(
 
         [
             beforePos, beforeOrigin, , , , , beforeDirection,
-        ] = caculateMoveablePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height);
+        ] = caculateMoveablePosition(offsetMatrix, plus(transformOrigin, getOrigin(targetMatrix, n)), width, height);
 
         beforeOrigin = [
             beforeOrigin[0] + beforePos[0] - left,
@@ -547,6 +571,8 @@ export function getTargetInfo(
         target,
         left,
         top,
+        right,
+        bottom,
         pos1,
         pos2,
         pos3,
@@ -556,6 +582,7 @@ export function getTargetInfo(
         beforeMatrix,
         matrix,
         targetTransform,
+        offsetMatrix,
         targetMatrix,
         is3d,
         beforeOrigin,

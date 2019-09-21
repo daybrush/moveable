@@ -5,7 +5,7 @@ import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getTargetInfo, throttle } from "./utils";
-import { sum, rotate } from "@moveable/matrix";
+import { plus, rotate } from "@moveable/matrix";
 import { MOVEABLE_ABLES } from "./ables/consts";
 
 function getMaxPos(poses: number[][][], index: number) {
@@ -26,10 +26,10 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
     const moveablePoses = moveables.map(({ state: { left, top, pos1, pos2, pos3, pos4 } }) => {
         const pos = [left, top];
         return [
-            sum(pos, pos1),
-            sum(pos, pos2),
-            sum(pos, pos3),
-            sum(pos, pos4),
+            plus(pos, pos1),
+            plus(pos, pos2),
+            plus(pos, pos3),
+            plus(pos, pos4),
         ];
     });
     let minX = MAX_NUM;

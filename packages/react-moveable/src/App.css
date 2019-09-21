@@ -1,5 +1,5 @@
 .App {
-    text-align: center;
+    /* text-align: center; */
     transform-origin: 0% 0%;
     /* transform: scaleX(1) translateY(30px); */
 }
@@ -32,10 +32,10 @@ img {
     position: static!important;
     background-color: #282c34;
     min-height: 100vh;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
     font-size: calc(10px + 2vmin);
     /* transform: rotate(-9deg); */
     color: white;

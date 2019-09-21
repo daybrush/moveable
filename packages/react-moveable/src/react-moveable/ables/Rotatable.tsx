@@ -5,7 +5,7 @@ import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer, OnRotateGrou
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
 import Draggable from "./Draggable";
-import { minus, sum, getRad, rotate as rotateMatrix } from "@moveable/matrix";
+import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
@@ -281,7 +281,7 @@ export default {
             { ...e, parentRotate: 0 },
             (child, childDatas, eventParams) => {
                 const { left, top, beforeOrigin } = child.state;
-                const childClient = sum(
+                const childClient = plus(
                     minus([left, top], [parentLeft, parentTop]),
                     minus(beforeOrigin, parentBeforeOrigin),
                 );

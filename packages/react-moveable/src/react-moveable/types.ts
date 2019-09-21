@@ -8,6 +8,7 @@ export type MoveableManagerProps<T = {}> = {
     parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
+    transformOrigin?: string;
     edge?: boolean;
     keepRatio?: boolean;
     pinchThreshold?: number;
@@ -17,12 +18,15 @@ export type MoveableManagerState<T = {}> = {
     target: SVGElement | HTMLElement | null | undefined;
     left: number;
     top: number;
+    right: number;
+    bottom: number;
     width: number;
     height: number;
     beforeMatrix: number[];
     matrix: number[];
     targetTransform: string;
     targetMatrix: number[];
+    offsetMatrix: number[];
     is3d: boolean;
     transformOrigin: number[];
     beforeOrigin: number[];
@@ -69,37 +73,7 @@ export interface MoveableProps
     pinchThreshold?: number;
     ables?: Able[];
 }
-
-export interface MoveableState {
-    target: SVGElement | HTMLElement | null | undefined;
-    left: number;
-    top: number;
-    width: number;
-    height: number;
-    beforeMatrix: number[];
-    matrix: number[];
-    targetTransform: string;
-    targetMatrix: number[];
-    is3d: boolean;
-    transformOrigin: number[];
-    beforeOrigin: number[];
-    origin: number[];
-    beforeDirection: 1 | -1;
-    direction: 1 | -1;
-    rotationRad: number;
-    rotationPos: number[];
-    pos1: number[];
-    pos2: number[];
-    pos3: number[];
-    pos4: number[];
-    isDrag: boolean;
-    isRotate: boolean;
-    isResize: boolean;
-    isScale: boolean;
-    isPinch: boolean;
-    isWarp: boolean;
-}
-
+export type MoveableState = MoveableManagerState;
 /**
  * @typedef
  * @memberof Moveable
@@ -280,12 +254,14 @@ export interface OnScaleEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - resize causes a `dragStart` event.
  */
 export interface OnResizeStart {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    dragStart: OnDragStart;
 }
 /**
  * @typedef
@@ -299,6 +275,7 @@ export interface OnResizeStart {
  * @property - a target's height
  * @property - The distance of [width, height]
  * @property - The delta of [width, height]
+ * @property - resize causes a `drag` event.
  */
 export interface OnResize {
     target: HTMLElement | SVGElement;
@@ -311,6 +288,7 @@ export interface OnResize {
     dist: number[];
     delta: number[];
     isPinch: boolean;
+    drag: OnDrag;
 }
 /**
  * @typedef
@@ -532,11 +510,11 @@ export interface OnRotateGroupEnd {
  * @memberof Moveable
  * @extends Moveable.OnResizeStart
  * @property - targets to resize
- * @property - Each `resizeStart` & `dragStart` event on the targets
+ * @property - Each `resizeStart` event on the targets
  */
 export interface OnResizeGroupStart extends OnResizeStart {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnResizeStart & { dragStart: OnDragStart }>;
+    events: OnResizeStart[];
 }
 
 /**

@@ -139,6 +139,7 @@ class App extends React.Component {
                     origin={true}
                     draggable={true}
                     snappable={true}
+                    transformOrigin="% %"
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     elementGuildelines={[document.querySelector(".box span")!]}
@@ -148,8 +149,8 @@ class App extends React.Component {
                     warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
-                    throttleResize={0}
-                    throttleRotate={isResizable ? 30 : 90}
+                    throttleResize={1}
+                    throttleRotate={isResizable ? 45 : 90}
                     rotatable={true}
                     pinchable={true}
                     onRotateStart={({ set }) => {
@@ -161,7 +162,7 @@ class App extends React.Component {
                         item.set("rotate", `${beforeRotate}deg`);
                         target.style.cssText += item.toCSS();
                     }}
-                    onDragStart={({ set}) => {
+                    onDragStart={({ set }) => {
                         const tx = parseFloat(item.get("tx")) || 0;
                         const ty = parseFloat(item.get("ty")) || 0;
 
@@ -186,9 +187,20 @@ class App extends React.Component {
 
                         target.style.cssText += item.toCSS();
                     }}
-                    onResize={({ target, width, height, delta }) => {
+                    onResizeStart={({ dragStart }) => {
+                        const tx = parseFloat(item.get("tx")) || 0;
+                        const ty = parseFloat(item.get("ty")) || 0;
+
+                        dragStart.set([tx, ty]);
+                    }}
+                    onResize={({ target, width, height, drag, delta }) => {
                         delta[0] && (target!.style.width = `${width}px`);
                         delta[1] && (target!.style.height = `${height}px`);
+
+                        item.set("tx", `${drag.beforeTranslate[0]}px`);
+                        item.set("ty", `${drag.beforeTranslate[1]}px`);
+
+                        target.style.cssText += item.toCSS();
                     }}
                     onWarp={({ target, delta, multiply }) => {
                         const matrix3d = item.get("matrix3d");

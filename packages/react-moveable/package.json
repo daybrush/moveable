@@ -71,7 +71,7 @@
     "@daybrush/utils": "^0.10.0",
     "@egjs/agent": "^2.1.5",
     "@egjs/children-differ": "^1.0.0",
-    "@moveable/matrix": "^0.1.0",
+    "@moveable/matrix": "^0.3.0",
     "framework-utils": "^0.2.1",
     "react-css-styler": "^0.4.0",
     "react-pure-props": "^0.1.5"

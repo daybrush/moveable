@@ -1,5 +1,5 @@
 import MoveableManager from "../../src/react-moveable/MoveableManager";
-import {  createRotateMatrix, caculate, minus, sum } from "@moveable/matrix";
+import {  createRotateMatrix, caculate, minus, plus } from "@moveable/matrix";
 import { getPositions, getRotationPosition, getRotationRad } from "../../src/react-moveable/ables/Rotatable";
 import { RotatableProps } from "../../src/react-moveable";
 
@@ -56,7 +56,7 @@ export async function rotate(startInfo: any[], deg: number) {
     const m = createRotateMatrix(rad, 3);
     const dist = minus(startClient, absoluteOrigin);
     const [offsetX, offsetY] = caculate(m, [dist[0], dist[1], 1]);
-    const client = sum(absoluteOrigin, [offsetX, offsetY]);
+    const client = plus(absoluteOrigin, [offsetX, offsetY]);
 
     dispatchEvent(rotationElement, "mousemove", client);
 }

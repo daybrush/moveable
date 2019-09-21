@@ -35,6 +35,7 @@ export default class MoveableManager<T = {}, U = {}>
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
+        transformOrigin: "",
     };
     public state: MoveableManagerState<U> = {
         target: null,
@@ -50,8 +51,6 @@ export default class MoveableManager<T = {}, U = {}>
         transformOrigin: [0, 0],
         direction: 1,
         beforeDirection: 1,
-        rotationRad: 0,
-        rotationPos: [0, 0],
         beforeOrigin: [0, 0],
         origin: [0, 0],
         pos1: [0, 0],
@@ -66,9 +65,6 @@ export default class MoveableManager<T = {}, U = {}>
     protected targetDragger!: Dragger;
     protected controlDragger!: Dragger;
 
-    constructor(props: any) {
-        super(props);
-    }
     public render() {
         this.checkUpdate();
 
