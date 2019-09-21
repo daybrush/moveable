@@ -212,8 +212,16 @@ export function multiplyCSS(matrix: number[], matrix2: number[], n: number = Mat
     // n * k
     return newMatrix;
 }
+export function sum(...nums: number[]) {
+    const length = nums.length;
+    let total = 0;
 
-export function sum(pos1: number[], pos2: number[]) {
+    for (let i = length - 1; i >= 0; --i) {
+        total += nums[i];
+    }
+    return total;
+}
+export function plus(pos1: number[], pos2: number[]) {
     const length = Math.min(pos1.length, pos2.length);
     const nextPos = pos1.slice();
 
