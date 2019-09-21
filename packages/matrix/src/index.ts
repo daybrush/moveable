@@ -1,4 +1,3 @@
-
 function add(
     matrix: number[],
     inverseMatrix: number[],
@@ -220,6 +219,15 @@ export function sum(...nums: number[]) {
         total += nums[i];
     }
     return total;
+}
+export function average(...nums: number[]) {
+    const length = nums.length;
+    let total = 0;
+
+    for (let i = length - 1; i >= 0; --i) {
+        total += nums[i];
+    }
+    return length ? total / length : 0;
 }
 export function plus(pos1: number[], pos2: number[]) {
     const length = Math.min(pos1.length, pos2.length);

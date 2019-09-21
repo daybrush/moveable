@@ -1,6 +1,6 @@
 {
   "name": "@moveable/matrix",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Matrix for moveable",
   "main": "./dist/matrix.cjs.js",
   "module": "./dist/matrix.esm.js",
@@ -39,7 +39,7 @@
     "@daybrush/release": "^0.2.4",
     "daybrush-jsdoc-template": "^1.6.0",
     "print-sizes": "^0.1.0",
-    "tslint": "^5.19.0",
+    "tslint": "^5.20.0",
     "typescript": "^3.6.2"
   }
 }
