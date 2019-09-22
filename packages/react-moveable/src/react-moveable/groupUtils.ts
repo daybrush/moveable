@@ -55,8 +55,9 @@ export function setCustomEvent(
         prevX: clientX,
         prevY: clientY,
         isDrag: false,
+        datas: {},
     });
-    const { prevX, prevY, startX, startY } = e;
+    const { prevX, prevY, startX, startY, datas: customDatas } = e;
 
     e.prevX = clientX;
     e.prevY = clientY;
@@ -72,7 +73,7 @@ export function setCustomEvent(
         deltaX: clientX - prevX,
         deltaY: clientY - prevY,
         isDrag: e.isDrag,
-        datas,
+        datas: customDatas,
         inputEvent,
         parentEvent: true,
     };

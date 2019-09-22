@@ -1,10 +1,16 @@
 import { throttle, getDirection, triggerEvent } from "../utils";
 import { MIN_SCALE } from "../consts";
-import { setDragStart, getDragDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, setSizeInfo, getScaleDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
-import { ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd, Renderer, OnScaleGroupStart } from "../types";
-import { directionCondition, triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
+import {
+    ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
+    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart, OnDrag,
+} from "../types";
+import {
+    directionCondition, triggerChildAble, setCustomEvent,
+    getCustomEvent, setCustomEventDelta,
+} from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
 import { getRad, rotate } from "@moveable/matrix";
@@ -26,9 +32,11 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ScalableProps>,
-        { datas, clientX, clientY, pinchFlag, inputEvent: { target: inputTarget } }: any) {
+        moveable: MoveableManager<ScalableProps & DraggableProps>,
+        e: any) {
 
+        const { datas, clientX, clientY, pinchFlag, inputEvent } = e;
+        const { target: inputTarget } = inputEvent;
         const direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
         const {
             width,
@@ -51,6 +59,9 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startScale = [1, 1];
+
+        setSizeInfo(moveable, e);
+
         const params = {
             target,
             clientX,
@@ -59,6 +70,7 @@ export default {
             set: (scale: number[]) => {
                 datas.startScale = scale;
             },
+            dragStart: Draggable.dragStart(moveable, setCustomEvent(0, 0, datas, inputEvent)) as OnDragStart,
         };
         const result = triggerEvent(moveable, "onScaleStart", params);
 
@@ -68,7 +80,7 @@ export default {
         return datas.isScale ? params : false;
     },
     dragControl(
-        moveable: MoveableManager<ScalableProps>,
+        moveable: MoveableManager<ScalableProps & DraggableProps>,
         e: any) {
         const {
             prevDist,
@@ -84,12 +96,12 @@ export default {
             return false;
         }
         // checkSnapSize(moveable as any, e, 0);
-        const { datas, clientX, clientY, distX, distY, parentScale, parentDistance, pinchFlag } = e;
+        const { datas, clientX, clientY, distX, distY, parentScale, parentDistance, pinchFlag, inputEvent } = e;
         const { keepRatio, throttleScale, parentMoveable } = moveable.props;
         const target = moveable.state.target;
-
         let scaleX: number = 1;
         let scaleY: number = 1;
+
         if (parentScale) {
             scaleX = parentScale[0];
             scaleY = parentScale[1];
@@ -122,8 +134,12 @@ export default {
             scaleX = nextWidth / width;
             scaleY = nextHeight / height;
         }
-        scaleX = throttle(scaleX * startScale[0], throttleScale!);
-        scaleY = throttle(scaleY * startScale[1], throttleScale!);
+        scaleX = direction[0]
+            ? throttle(scaleX * startScale[0], throttleScale!)
+            : startScale[0];
+        scaleY = direction[1]
+            ? throttle(scaleY * startScale[1], throttleScale!)
+            : startScale[1];
 
         if (scaleX === 0) {
             scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -132,24 +148,34 @@ export default {
             scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
         const nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
-        const nowScale = [scaleX, scaleY];
-        datas.prevDist = nowScale;
+        const scale = [scaleX, scaleY];
+        datas.prevDist = nowDist;
 
         if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
             return false;
         }
+        let inverseDist = [0, 0];
 
+        const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
+
+        if (!pinchFlag && !parentScale) {
+            inverseDist = getScaleDist(moveable, e, delta, direction);
+        }
         const params = {
             target: target!,
-            scale: [scaleX, scaleY],
+            scale,
             direction,
             dist: nowDist,
-            delta: [scaleX / prevDist[0], scaleY / prevDist[1]],
+            delta,
             transform: `${transform} scale(${scaleX}, ${scaleY})`,
             clientX,
             clientY,
             datas: datas.datas,
             isPinch: !!pinchFlag,
+            drag: Draggable.drag(
+                moveable,
+                setCustomEventDelta(inverseDist[0], inverseDist[1], datas, inputEvent),
+            ) as OnDrag,
         };
         triggerEvent(moveable, "onScale", params);
 

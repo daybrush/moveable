@@ -196,6 +196,7 @@ export interface OnDragEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
  */
 export interface OnScaleStart {
@@ -203,6 +204,7 @@ export interface OnScaleStart {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    dragStart: OnDragStart;
     set: (scale: number[]) => void;
 }
 /**
@@ -217,6 +219,7 @@ export interface OnScaleStart {
  * @property - The distance of scale
  * @property - The delta of scale
  * @property - a target's transform
+ * @property - scale causes a `drag` event.
  */
 export interface OnScale {
     target: HTMLElement | SVGElement;
@@ -229,6 +232,7 @@ export interface OnScale {
     delta: number[];
     transform: string;
     isPinch: boolean;
+    drag: OnDrag;
 }
 /**
  * @typedef

@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = this.state.isResizable;
+        const isResizable = false; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -150,7 +150,7 @@ class App extends React.Component {
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={1}
-                    throttleRotate={isResizable ? 45 : 90}
+                    throttleRotate={45}
                     rotatable={true}
                     pinchable={true}
                     onRotateStart={({ set }) => {
@@ -163,6 +163,7 @@ class App extends React.Component {
                         target.style.cssText += item.toCSS();
                     }}
                     onDragStart={({ set }) => {
+                        console.log(item.get("tx"), item.get("ty"));
                         const tx = parseFloat(item.get("tx")) || 0;
                         const ty = parseFloat(item.get("ty")) || 0;
 
@@ -175,16 +176,23 @@ class App extends React.Component {
                         // target!.style.top = `${top}px`;
                         target.style.cssText += item.toCSS();
                     }}
-                    onScaleStart={({ set}) => {
+                    onScaleStart={({ set, dragStart }) => {
                         const sx = parseFloat(item.get("sx")) || 0;
                         const sy = parseFloat(item.get("sy")) || 0;
+                        const tx = parseFloat(item.get("tx")) || 0;
+                        const ty = parseFloat(item.get("ty")) || 0;
 
                         set([sx, sy]);
+
+                        dragStart.set([tx, ty]);
                     }}
-                    onScale={({ target, scale }) => {
+                    onScale={({ target, scale, delta, drag }) => {
                         item.set("sx", scale[0]);
                         item.set("sy", scale[1]);
+                        item.set("tx", `${drag.beforeTranslate[0]}px`);
+                        item.set("ty", `${drag.beforeTranslate[1]}px`);
 
+                        console.log(drag.beforeTranslate);
                         target.style.cssText += item.toCSS();
                     }}
                     onResizeStart={({ dragStart }) => {
@@ -283,7 +291,7 @@ class App extends React.Component {
                 this.setState({
                     target: e.target,
                 }, () => {
-                    this.moveable.dragStart(nativeEvent);
+                    // this.moveable.dragStart(nativeEvent);
                 });
             }
         }

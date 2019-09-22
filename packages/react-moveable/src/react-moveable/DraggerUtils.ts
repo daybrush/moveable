@@ -1,4 +1,8 @@
-import { invert, caculate, minus, plus, convertPositionMatrix, average } from "@moveable/matrix";
+import {
+    invert, caculate, minus, plus,
+    convertPositionMatrix, average,
+    createScaleMatrix, multiply,
+} from "@moveable/matrix";
 import MoveableManager from "./MoveableManager";
 import { caculatePoses, getAbsoluteMatrix } from "./utils";
 import { splitUnit } from "@daybrush/utils";
@@ -91,24 +95,14 @@ export function setSizeInfo(moveable: MoveableManager<any>, { datas }: any) {
     datas.startPos4 = pos4;
 }
 
-export function getSizeDist(
-    moveable: MoveableManager,
-    { datas }: any,
+function getDist(
+    datas: any,
+    matrix: number[],
     width: number,
     height: number,
+    n: number,
     direction: number[],
 ) {
-    const {
-        transformOrigin,
-    } = moveable.props;
-    const {
-        transformOrigin: prevOrigin,
-        targetMatrix,
-        offsetMatrix,
-        is3d,
-        width: prevWidth,
-        height: prevheight,
-    } = moveable.state;
     const {
         startLeft,
         startTop,
@@ -117,23 +111,6 @@ export function getSizeDist(
         startPos3,
         startPos4,
     } = datas;
-    const n = is3d ? 4 : 3;
-
-    const nextOrigin = caculateTransformOrigin(
-        transformOrigin!,
-        width,
-        height,
-        prevWidth,
-        prevheight,
-        prevOrigin,
-    );
-
-    const nextAbsiluteMatrix = getAbsoluteMatrix(targetMatrix, n, nextOrigin);
-    const matrix = caculate(
-        offsetMatrix,
-        nextAbsiluteMatrix,
-        n,
-    );
     const [
         pos1,
         pos2,
@@ -170,4 +147,73 @@ export function getSizeDist(
     const distY = startTop + average(...startPoses.map(pos => pos[1])) - average(...poses.map(pos => pos[1]));
 
     return [distX, distY];
+}
+export function getNextMatrix(
+    offsetMatrix: number[],
+    targetMatrix: number[],
+    origin: number[],
+    n: number,
+) {
+    return multiply(
+        offsetMatrix,
+        getAbsoluteMatrix(targetMatrix, n, origin),
+        n,
+    );
+}
+export function getScaleDist(
+    moveable: MoveableManager,
+    { datas }: any,
+    scale: number[],
+    direction: number[],
+) {
+    const {
+        transformOrigin,
+        offsetMatrix,
+        targetMatrix,
+        is3d,
+        width,
+        height,
+    } = moveable.state;
+
+    const n = is3d ? 4 : 3;
+    const nextMatrix = getNextMatrix(
+        offsetMatrix,
+        multiply(targetMatrix, createScaleMatrix(scale, n), n),
+        transformOrigin,
+        n,
+    );
+
+    return getDist(datas, nextMatrix, width, height, n, direction);
+}
+
+export function getResizeDist(
+    moveable: MoveableManager,
+    { datas }: any,
+    width: number,
+    height: number,
+    direction: number[],
+) {
+    const {
+        transformOrigin,
+    } = moveable.props;
+    const {
+        transformOrigin: prevOrigin,
+        targetMatrix,
+        offsetMatrix,
+        is3d,
+        width: prevWidth,
+        height: prevheight,
+    } = moveable.state;
+    const n = is3d ? 4 : 3;
+    const nextOrigin = caculateTransformOrigin(
+        transformOrigin!,
+        width,
+        height,
+        prevWidth,
+        prevheight,
+        prevOrigin,
+    );
+    const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
+
+    return getDist(datas, nextMatrix, width, height, n, direction);
 }
