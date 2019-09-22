@@ -1,24 +1,25 @@
 import MoveableGroup from "./MoveableGroup";
 import { Able } from "./types";
 import MoveableManager from "./MoveableManager";
-import { hasClass } from "@daybrush/utils";
+import { hasClass, IObject, isFunction } from "@daybrush/utils";
 import { prefix } from "./utils";
 
 export function triggerChildAble<T extends Able>(
     moveable: MoveableGroup,
     able: T,
     type: keyof T,
-    e: any,
-    callback?: (moveable: MoveableManager<any>, datas: any, result: any, index: number) => any,
+    datas: IObject<any>,
+    eachEvent: ((movebale: MoveableManager, datas: IObject<any>) => any) | IObject<any>,
+    callback?: (moveable: MoveableManager<any>, datas: IObject<any>, result: any, index: number) => any,
 ) {
     const name = able.name!;
-    const datas = e.datas;
     const ableDatas = datas[name] || (datas[name] = []);
 
     return moveable.moveables.map((child, i) => {
         const childDatas = ableDatas[i] || (ableDatas[i] = {});
 
-        const result = (able as any)[type]!(child, { ...e, datas: childDatas, parentFlag: true });
+        const childEvent = isFunction(eachEvent) ? eachEvent(child, childDatas) : eachEvent;
+        const result = (able as any)[type]!(child,  { ...childEvent, datas: childDatas, parentFlag: true });
 
         result && callback && callback(child, childDatas, result, i);
         return result;
@@ -28,21 +29,11 @@ export function getCustomEvent(datas: any) {
     return datas.custom;
 }
 
-export function setCustomEventDelta(
-    deltaX: number,
-    deltaY: number,
-    datas: any,
-    inputEvent: any,
-) {
+export function getCustomPrevClient(datas: any) {
     const e = getCustomEvent(datas);
 
-    if (e) {
-        return setCustomEvent(e.prevX + deltaX, e.prevY + deltaY, datas, inputEvent);
-    }
-
-    return setCustomEvent(deltaX, deltaY, datas, inputEvent);
+    return e ? [e.prevX, e.prevY] : [0, 0];
 }
-
 export function setCustomEvent(
     clientX: number,
     clientY: number,

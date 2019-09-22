@@ -163,7 +163,6 @@ class App extends React.Component {
                         target.style.cssText += item.toCSS();
                     }}
                     onDragStart={({ set }) => {
-                        console.log(item.get("tx"), item.get("ty"));
                         const tx = parseFloat(item.get("tx")) || 0;
                         const ty = parseFloat(item.get("ty")) || 0;
 
@@ -186,13 +185,12 @@ class App extends React.Component {
 
                         dragStart.set([tx, ty]);
                     }}
-                    onScale={({ target, scale, delta, drag }) => {
+                    onScale={({ target, scale, drag }) => {
                         item.set("sx", scale[0]);
                         item.set("sy", scale[1]);
                         item.set("tx", `${drag.beforeTranslate[0]}px`);
                         item.set("ty", `${drag.beforeTranslate[1]}px`);
 
-                        console.log(drag.beforeTranslate);
                         target.style.cssText += item.toCSS();
                     }}
                     onResizeStart={({ dragStart }) => {

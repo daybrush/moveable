@@ -8,10 +8,10 @@ import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
 import {
-    triggerChildAble, setCustomEvent, getCustomEvent, directionCondition, setCustomEventDelta,
+    triggerChildAble, setCustomEvent, getCustomEvent, directionCondition, getCustomPrevClient,
 } from "../groupUtils";
 import Draggable from "./Draggable";
-import { getRad, caculate, createScaleMatrix } from "@moveable/matrix";
+import { getRad } from "@moveable/matrix";
 import { checkSnapSize } from "./Snappable";
 
 export default {
@@ -37,7 +37,10 @@ export default {
         const {
             inputEvent,
             pinchFlag,
-            clientX, clientY, datas,
+            clientX,
+            clientY,
+            datas,
+            dragClient = [0, 0],
         } = e;
         const {
             target: inputTarget,
@@ -65,7 +68,10 @@ export default {
             target,
             clientX,
             clientY,
-            dragStart: Draggable.dragStart(moveable, setCustomEvent(0, 0, datas, inputEvent)) as OnDragStart,
+            dragStart: Draggable.dragStart(
+                moveable,
+                setCustomEvent(dragClient[0], dragClient[1], datas, inputEvent),
+            ) as OnDragStart,
         };
         const result = triggerEvent(moveable, "onResizeStart", params);
         if (result !== false) {
@@ -78,13 +84,21 @@ export default {
         e: any,
     ) {
         const {
+            datas,
+            clientX,
+            clientY,
+            distX, distY,
+            pinchFlag, parentDistance, parentScale, inputEvent,
+            dragClient = getCustomPrevClient(datas),
+        } = e;
+        const {
             direction,
             width,
             height,
             prevWidth,
             prevHeight,
             isResize,
-        } = e.datas;
+        } = datas;
 
         if (!isResize) {
             return;
@@ -99,8 +113,6 @@ export default {
         } = moveable.state;
 
         // checkSnapSize(moveable as any, e, 1);
-        const { datas, clientX, clientY, distX, distY, pinchFlag, parentDistance, parentScale, inputEvent } = e;
-
         let distWidth: number = 0;
         let distHeight: number = 0;
 
@@ -169,7 +181,7 @@ export default {
             isPinch: !!pinchFlag,
             drag: Draggable.drag(
                 moveable,
-                setCustomEventDelta(inverseDist[0], inverseDist[1], datas, inputEvent),
+                setCustomEvent(dragClient[0] + inverseDist[0], dragClient[1] + inverseDist[1], datas, inputEvent),
             ) as OnDrag,
         };
         triggerEvent(moveable, "onResize", params);
@@ -207,15 +219,11 @@ export default {
             moveable,
             this,
             "dragControlStart",
-            { ...e, parentRotate: 0 },
-            (child, childDatas, eventParams) => {
+            datas,
+            child => {
                 const { left, top } = child.state;
-                const dragDatas = childDatas.drag || (childDatas.drag = {});
 
-                eventParams.dragStart = Draggable.dragStart(
-                    child,
-                    setCustomEvent(left - parentLeft, top - parentTop, dragDatas, inputEvent),
-                );
+                return { ...e, parentRotate: 0, dragClient: [left - parentLeft, top - parentTop] };
             },
         );
 
@@ -249,19 +257,13 @@ export default {
             moveable,
             this,
             "dragControl",
-            { ...e, parentScale },
-            (child, childDatas, result) => {
-                const dragDatas = childDatas.drag || (childDatas.drag = {});
-                const { startX, startY } = getCustomEvent(dragDatas);
+            datas,
+            (child, childDatas) => {
+                const { startX, startY } = getCustomEvent(childDatas);
                 const clientX = parentScale[0] * startX;
                 const clientY = parentScale[1] * startY;
 
-                const dragResult = Draggable.drag(
-                    child,
-                    setCustomEvent(clientX, clientY, dragDatas, inputEvent),
-                );
-
-                result.drag = dragResult;
+                return { ...e, parentScale, dragClient: [clientX, clientY] };
             },
         );
         const nextParams: OnResizeGroup = {
@@ -281,7 +283,7 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
 
         const nextParams: OnResizeGroupEnd = {
             targets: moveable.props.targets!,

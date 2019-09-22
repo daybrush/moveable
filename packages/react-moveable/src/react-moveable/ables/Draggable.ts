@@ -136,7 +136,7 @@ export default {
         if (!params) {
             return false;
         }
-        const events = triggerChildAble(moveable, this, "dragStart", e);
+        const events = triggerChildAble(moveable, this, "dragStart", datas, e);
         const nextParams: OnDragGroupStart = {
             ...params,
             targets: moveable.props.targets!,
@@ -148,10 +148,12 @@ export default {
         return datas.isDrag ? params : false;
     },
     dragGroup(moveable: MoveableGroup, e: any) {
-        if (!e.datas.isDrag) {
+        const datas = e.datas;
+
+        if (!datas.isDrag) {
             return;
         }
-        const events = triggerChildAble(moveable, this, "drag", e);
+        const events = triggerChildAble(moveable, this, "drag", datas, e);
         const params = this.drag(moveable, e);
 
         if (!params) {
@@ -172,7 +174,7 @@ export default {
         if (!datas.isDrag) {
             return;
         }
-        triggerChildAble(moveable, this, "dragEnd", e);
+        triggerChildAble(moveable, this, "dragEnd", datas, e);
         triggerEvent(moveable, "onDragGroupEnd", {
             targets: moveable.props.targets!,
             isDrag,

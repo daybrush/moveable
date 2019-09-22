@@ -278,6 +278,7 @@ export default {
             moveable,
             this,
             "dragControlStart",
+            datas,
             { ...e, parentRotate: 0 },
             (child, childDatas, eventParams) => {
                 const { left, top, beforeOrigin } = child.state;
@@ -323,6 +324,7 @@ export default {
             moveable,
             this,
             "dragControl",
+            datas,
             { ...e, parentRotate },
             (child, childDatas, result, i) => {
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
@@ -355,7 +357,7 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
 
         const nextParams: OnRotateGroupEnd = {
             targets: moveable.props.targets!,
