@@ -259,6 +259,7 @@ export interface OnScaleEnd {
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
  * @property - resize causes a `dragStart` event.
+ * @property - You can set the css width, height value.
  */
 export interface OnResizeStart {
     target: HTMLElement | SVGElement;
@@ -266,6 +267,7 @@ export interface OnResizeStart {
     clientY: number;
     datas: IObject<any>;
     dragStart: OnDragStart;
+    set: (width: number, height: number) => any;
 }
 /**
  * @typedef

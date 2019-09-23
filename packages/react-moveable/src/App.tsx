@@ -47,8 +47,8 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    resizable={false}
-                    scalable={true}
+                    resizable={true}
+                    // scalable={true}
                     ref={ref(this, "ab")}
                     keepRatio={false}
                     target={this.state.targets}
@@ -60,7 +60,7 @@ class App extends React.Component {
                         console.log("start", e);
                     }}
                     onDragGroup={e => {
-                        console.log(e.beforeDelta);
+                        // console.log(e.beforeDelta);
 
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
@@ -89,23 +89,31 @@ class App extends React.Component {
                     }}
                     onResizeGroupStart={e => {
                         console.log("rgs", e);
-                    }}
-                    onResizeGroup={e => {
-                        const direction = e.direction;
 
                         e.events.forEach(ev => {
-                            if (!ev) {
-                                return;
-                            }
-                            const offset = [
-                                direction[0] < 0 ? -ev.delta[0] : 0,
-                                direction[1] < 0 ? -ev.delta[1] : 0,
-                            ];
-
                             const groupItem = this.itemMap.get(ev.target)!;
 
-                            groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + offset[0] + ev.drag.beforeDelta[0]}px`);
-                            groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + offset[1] + ev.drag.beforeDelta[1]}px`);
+                            const style = getComputedStyle(ev.target);
+
+                            ev.set(parseFloat(style.width!), parseFloat(style.height!));
+
+                            ev.dragStart.set([
+                                parseFloat(groupItem.get("tx")),
+                                parseFloat(groupItem.get("ty")),
+                            ]);
+                        });
+                    }}
+                    onResizeGroup={e => {
+                        e.events.forEach(ev => {
+                            const groupItem = this.itemMap.get(ev.target)!;
+
+                            // groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
+                            // groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
+
+                            groupItem.set("tx", `${ev.drag.beforeTranslate[0]}px`);
+                            groupItem.set("ty", `${ev.drag.beforeTranslate[1]}px`);
+
+
                             groupItem.set("width", `${ev.width}px`);
                             groupItem.set("height", `${ev.height}px`);
 

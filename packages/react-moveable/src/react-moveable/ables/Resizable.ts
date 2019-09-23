@@ -56,10 +56,12 @@ export default {
 
         datas.datas = {};
         datas.direction = direction;
-        datas.width = width;
-        datas.height = height;
+        datas.offsetWidth = width;
+        datas.offsetHeight = height;
         datas.prevWidth = 0;
         datas.prevHeight = 0;
+        datas.width = width;
+        datas.height = height;
 
         setSizeInfo(moveable, e);
 
@@ -68,6 +70,10 @@ export default {
             target,
             clientX,
             clientY,
+            set: (startWidth: number, startHeight: number) => {
+                datas.width = startWidth;
+                datas.height = startHeight;
+            },
             dragStart: Draggable.dragStart(
                 moveable,
                 setCustomEvent(dragClient[0], dragClient[1], datas, inputEvent),
@@ -95,6 +101,8 @@ export default {
             direction,
             width,
             height,
+            offsetWidth,
+            offsetHeight,
             prevWidth,
             prevHeight,
             isResize,
@@ -118,22 +126,24 @@ export default {
 
         // diagonal
         if (parentScale) {
-            distWidth = (parentScale - 1) * width;
-            distHeight = (parentScale - 1) * height;
+            distWidth = (parentScale[0] - 1) * offsetWidth;
+            distHeight = (parentScale[1] - 1) * offsetHeight;
+
         } else if (pinchFlag) {
             if (parentDistance) {
                 distWidth = parentDistance;
-                distHeight = parentDistance * height / width;
+                distHeight = parentDistance * offsetHeight / offsetWidth;
             }
         } else {
             const dist = getDragDist({ datas, distX, distY });
 
             distWidth = direction[0] * dist[0];
             distHeight = direction[1] * dist[1];
+
             if (
                 keepRatio
                 && direction[0] && direction[1]
-                && width && height
+                && offsetWidth && offsetHeight
             ) {
                 const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
                 const rad = getRad([0, 0], dist);
@@ -141,18 +151,18 @@ export default {
                 const distDiagonal = Math.cos(rad - standardRad) * size;
 
                 distWidth = distDiagonal;
-                distHeight = distDiagonal * height / width;
+                distHeight = distDiagonal * offsetHeight / offsetWidth;
             }
         }
         const nextWidth = direction[0]
-            ? throttle(Math.max(width + distWidth, 0), throttleResize!)
-            : width;
+            ? throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!)
+            : offsetWidth;
         const nextHeight = direction[1]
-            ? throttle(Math.max(height + distHeight, 0), throttleResize!)
-            : height;
+            ? throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!)
+            : offsetHeight;
 
-        distWidth = nextWidth - width;
-        distHeight = nextHeight - height;
+        distWidth = nextWidth - offsetWidth;
+        distHeight = nextHeight - offsetHeight;
 
         const delta = [distWidth - prevWidth, distHeight - prevHeight];
 
@@ -170,8 +180,10 @@ export default {
         }
         const params = {
             target: target!,
-            width: nextWidth,
-            height: nextHeight,
+            width: width + distWidth,
+            height: height + distHeight,
+            offsetWidth: nextWidth,
+            offsetHeight: nextHeight,
             direction,
             dist: [distWidth, distHeight],
             datas: datas.datas,
@@ -247,7 +259,13 @@ export default {
         if (!params) {
             return;
         }
-        const { width, height, dist } = params;
+        const {
+            width, height, dist,
+            drag: {
+                beforeTranslate,
+            },
+        } = params;
+
         const parentScale = [
             width / (width - dist[0]),
             height / (height - dist[1]),
@@ -263,7 +281,7 @@ export default {
                 const clientX = parentScale[0] * startX;
                 const clientY = parentScale[1] * startY;
 
-                return { ...e, parentScale, dragClient: [clientX, clientY] };
+                return { ...e, parentScale, dragClient: [clientX + beforeTranslate[0], clientY + beforeTranslate[1]] };
             },
         );
         const nextParams: OnResizeGroup = {
