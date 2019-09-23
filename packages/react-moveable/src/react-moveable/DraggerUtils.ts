@@ -161,7 +161,7 @@ export function getNextMatrix(
     );
 }
 export function getScaleDist(
-    moveable: MoveableManager,
+    moveable: MoveableManager<any>,
     { datas }: any,
     scale: number[],
     direction: number[],
@@ -173,6 +173,8 @@ export function getScaleDist(
         is3d,
         width,
         height,
+        left,
+        top,
     } = moveable.state;
 
     const n = is3d ? 4 : 3;
@@ -183,7 +185,13 @@ export function getScaleDist(
         n,
     );
 
-    return getDist(datas, nextMatrix, width, height, n, direction);
+    const groupable = moveable.props.groupable;
+    const groupLeft = groupable ? left : 0;
+    const groupTop = groupable ? top : 0;
+
+    const dist = getDist(datas, nextMatrix, width, height, n, direction);
+
+    return minus(dist, [groupLeft, groupTop]);
 }
 
 export function getResizeDist(

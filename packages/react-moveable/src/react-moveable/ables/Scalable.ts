@@ -256,7 +256,7 @@ export default {
         return datas.isScale ? nextParams : false;
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
-        const { inputEvent, datas } = e;
+        const { datas } = e;
         if (!datas.isScale) {
             return;
         }
@@ -264,7 +264,7 @@ export default {
         if (!params) {
             return;
         }
-        const { scale } = params;
+        const { scale, drag: { beforeDist } } = params;
 
         const events = triggerChildAble(
             moveable,
@@ -282,7 +282,7 @@ export default {
                     startPos[1] * scale[1],
                 ], moveable.rotation / 180 * Math.PI);
 
-                return { ...e, parentScale: scale, dragClient: [clientX, clientY] };
+                return { ...e, parentScale: scale, dragClient: [clientX + beforeDist[0], clientY + beforeDist[1]] };
             },
         );
         const nextParams: OnScaleGroup = {
