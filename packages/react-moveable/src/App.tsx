@@ -47,8 +47,8 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    // resizable={true}
-                    scalable={true}
+                    resizable={true}
+                    // scalable={true}
                     ref={ref(this, "ab")}
                     keepRatio={false}
                     target={this.state.targets}
@@ -113,8 +113,6 @@ class App extends React.Component {
 
                             groupItem.set("tx", `${ev.drag.beforeTranslate[0]}px`);
                             groupItem.set("ty", `${ev.drag.beforeTranslate[1]}px`);
-
-
                             groupItem.set("width", `${ev.width}px`);
                             groupItem.set("height", `${ev.height}px`);
 

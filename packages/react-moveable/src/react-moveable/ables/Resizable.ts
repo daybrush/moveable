@@ -11,7 +11,7 @@ import {
     triggerChildAble, setCustomEvent, getCustomEvent, directionCondition, getCustomPrevClient,
 } from "../groupUtils";
 import Draggable from "./Draggable";
-import { getRad } from "@moveable/matrix";
+import { getRad, caculate, createRotateMatrix } from "@moveable/matrix";
 import { checkSnapSize } from "./Snappable";
 
 export default {
@@ -220,7 +220,10 @@ export default {
         const {
             left: parentLeft,
             top: parentTop,
+            pos1, pos2, pos3, pos4,
         } = moveable.state;
+        const startLeft = parentLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
+        const startTop = parentTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
 
         const params = this.dragControlStart(moveable, e);
 
@@ -232,10 +235,19 @@ export default {
             this,
             "dragControlStart",
             datas,
-            child => {
+            (child, childDatas) => {
                 const { left, top } = child.state;
+                const startX = left - startLeft;
+                const startY = top - startTop;
 
-                return { ...e, parentRotate: 0, dragClient: [left - parentLeft, top - parentTop] };
+                const [originalX, originalY] = caculate(
+                    createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
+                    [startX, startY, 1],
+                    3,
+                );
+                childDatas.originalX = originalX;
+                childDatas.originalY = originalY;
+                return { ...e, parentRotate: 0, dragClient: [left - startLeft, top - startTop] };
             },
         );
 
@@ -250,7 +262,7 @@ export default {
         return datas.isResize ? params : false;
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
-        const { inputEvent, datas } = e;
+        const { datas } = e;
         if (!datas.isResize) {
             return;
         }
@@ -262,7 +274,7 @@ export default {
         const {
             width, height, dist,
             drag: {
-                beforeTranslate,
+                beforeDist,
             },
         } = params;
 
@@ -276,12 +288,18 @@ export default {
             this,
             "dragControl",
             datas,
-            (child, childDatas) => {
-                const { startX, startY } = getCustomEvent(childDatas);
-                const clientX = parentScale[0] * startX;
-                const clientY = parentScale[1] * startY;
+            (_, childDatas) => {
+                const [clientX, clientY] = caculate(
+                    createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
+                    [
+                        childDatas.originalX * parentScale[0],
+                        childDatas.originalY * parentScale[1],
+                        1,
+                    ],
+                    3,
+                );
 
-                return { ...e, parentScale, dragClient: [clientX + beforeTranslate[0], clientY + beforeTranslate[1]] };
+                return { ...e, parentScale, dragClient: [clientX + beforeDist[0], clientY + beforeDist[1]] };
             },
         );
         const nextParams: OnResizeGroup = {

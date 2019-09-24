@@ -180,7 +180,7 @@ export function getScaleDist(
     { datas }: any,
     scale: number[],
     direction: number[],
-    parentScale: number[],
+    parentScale?: number[],
 ) {
     const state = moveable.state;
     const {
@@ -219,6 +219,7 @@ export function getResizeDist(
 ) {
     const {
         transformOrigin,
+        groupable,
     } = moveable.props;
     const {
         transformOrigin: prevOrigin,
@@ -230,6 +231,7 @@ export function getResizeDist(
         left,
         top,
     } = moveable.state;
+
     const n = is3d ? 4 : 3;
     const nextOrigin = caculateTransformOrigin(
         transformOrigin!,
@@ -239,8 +241,6 @@ export function getResizeDist(
         prevheight,
         prevOrigin,
     );
-
-    const groupable = moveable.props.groupable;
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
