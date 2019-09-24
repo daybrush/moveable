@@ -47,15 +47,16 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    resizable={true}
-                    // scalable={true}
+                    // resizable={true}
+                    scalable={true}
                     ref={ref(this, "ab")}
                     keepRatio={false}
                     target={this.state.targets}
-                    origin={false}
+                    origin={true}
                     snappable={true}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
+                    throttleRotate={30}
                     onDragGroupStart={e => {
                         console.log("start", e);
                     }}

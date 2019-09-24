@@ -86,13 +86,12 @@ export function setSizeInfo(moveable: MoveableManager<any>, { datas }: any) {
         pos3,
         pos4,
     } = moveable.state;
+    const pos = [left, top];
 
-    datas.startLeft = left;
-    datas.startTop = top;
-    datas.startPos1 = pos1;
-    datas.startPos2 = pos2;
-    datas.startPos3 = pos3;
-    datas.startPos4 = pos4;
+    datas.startPos1 = plus(pos, pos1);
+    datas.startPos2 = plus(pos, pos2);
+    datas.startPos3 = plus(pos, pos3);
+    datas.startPos4 = plus(pos, pos4);
 }
 
 function getDist(
@@ -102,10 +101,9 @@ function getDist(
     height: number,
     n: number,
     direction: number[],
+    parentScale: number[] = [1, 1],
 ) {
     const {
-        startLeft,
-        startTop,
         startPos1,
         startPos2,
         startPos3,
@@ -125,26 +123,43 @@ function getDist(
     */
     const startPoses: number[][] = [];
     const poses: number[][] = [];
+    const moveDirection = [parentScale[0] * direction[0], parentScale[1] * direction[1]];
 
-    if (direction[0] >= 0 && direction[1] >= 0) {
-        startPoses.push(startPos1);
-        poses.push(pos1);
+    if (direction[1] >= 0) {
+        if (direction[0] >= 0) {
+            startPoses.push(startPos1);
+        }
+        if (direction[0] <= 0) {
+            startPoses.push(startPos2);
+        }
     }
-    if (direction[0] <= 0 && direction[1] >= 0) {
-        startPoses.push(startPos2);
-        poses.push(pos2);
+    if (direction[1] <= 0) {
+        if (direction[0] >= 0) {
+            startPoses.push(startPos3);
+        }
+        if (direction[0] <= 0) {
+            startPoses.push(startPos4);
+        }
     }
-    if (direction[0] >= 0 && direction[1] <= 0) {
-        startPoses.push(startPos3);
-        poses.push(pos3);
+    if (moveDirection[1] >= 0) {
+        if (moveDirection[0] >= 0) {
+            poses.push(pos1);
+        }
+        if (moveDirection[0] <= 0) {
+            poses.push(pos2);
+        }
     }
-    if (direction[0] <= 0 && direction[1] <= 0) {
-        startPoses.push(startPos4);
-        poses.push(pos4);
+    if (moveDirection[1] <= 0) {
+        if (moveDirection[0] >= 0) {
+            poses.push(pos3);
+        }
+        if (moveDirection[0] <= 0) {
+            poses.push(pos4);
+        }
     }
 
-    const distX = startLeft + average(...startPoses.map(pos => pos[0])) - average(...poses.map(pos => pos[0]));
-    const distY = startTop + average(...startPoses.map(pos => pos[1])) - average(...poses.map(pos => pos[1]));
+    const distX = average(...startPoses.map(pos => pos[0])) - average(...poses.map(pos => pos[0]));
+    const distY = average(...startPoses.map(pos => pos[1])) - average(...poses.map(pos => pos[1]));
 
     return [distX, distY];
 }
@@ -165,31 +180,32 @@ export function getScaleDist(
     { datas }: any,
     scale: number[],
     direction: number[],
+    parentScale: number[],
 ) {
+    const state = moveable.state;
     const {
         transformOrigin,
         offsetMatrix,
-        targetMatrix,
         is3d,
         width,
         height,
         left,
         top,
-    } = moveable.state;
+    } = state;
 
     const n = is3d ? 4 : 3;
+    const groupable = moveable.props.groupable;
+    const targetMatrix = state.targetMatrix;
+
     const nextMatrix = getNextMatrix(
         offsetMatrix,
         multiply(targetMatrix, createScaleMatrix(scale, n), n),
         transformOrigin,
         n,
     );
-
-    const groupable = moveable.props.groupable;
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
-
-    const dist = getDist(datas, nextMatrix, width, height, n, direction);
+    const dist = getDist(datas, nextMatrix, width, height, n, direction, parentScale);
 
     return minus(dist, [groupLeft, groupTop]);
 }

@@ -101,6 +101,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
 class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
+        transformOrigin: "50% 50%",
         groupable: true,
         dragArea: true,
         ables: MOVEABLE_ABLES,
@@ -155,13 +156,20 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         state.height = height;
 
         const info = getTargetInfo(target, this.controlBox.getElement(), state);
+        const pos = [info.left!, info.top!];
 
-        target.style.cssText += `transform: translate(${-info.left!}px, ${-info.top!}px) rotate(${rotation}deg)`;
+        info.pos1 = plus(pos, info.pos1!);
+        info.pos2 = plus(pos, info.pos2!);
+        info.pos3 = plus(pos, info.pos3!);
+        info.pos4 = plus(pos, info.pos4!);
+        info.origin = plus(pos, info.origin!);
+        info.beforeOrigin = plus(pos, info.beforeOrigin!);
+
         this.updateState(
             {
                 ...info,
-                left,
-                top,
+                left: left - info.left!,
+                top: top - info.top!,
             },
             true,
         );

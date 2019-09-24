@@ -167,7 +167,7 @@ export default {
         const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
 
         if (!pinchFlag && !parentScale) {
-            inverseDist = getScaleDist(moveable, e, delta, direction);
+            inverseDist = getScaleDist(moveable, e, delta, direction, scale);
         }
 
         const params = {
@@ -192,7 +192,7 @@ export default {
     },
     dragControlEnd(
         moveable: MoveableManager<ScalableProps>,
-        { datas, isDrag, clientX, clientY, pinchFlag }: any) {
+        { datas, isDrag, clientX, clientY }: any) {
         if (!datas.isScale) {
             return false;
         }
