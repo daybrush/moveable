@@ -118,4 +118,36 @@ describe("test Moveable", () => {
         expect(left2).to.be.equals(left1 + 200);
         expect(top2).to.be.equals(top1 + 100);
     });
+    it ("test Moveable changeTarget", async() => {
+        let moveable!: MoveableExample;
+
+        // Given
+        // 302 x 222
+        ReactDOM.render(<MoveableExample ref={e => {
+            if (e) {
+                moveable = e as any;
+            }
+        }} />, document.querySelector(".container"));
+
+        await wait(300);
+        const targetDragger = moveable.innerMoveable.moveable.targetDragger;
+        const controlDragger = moveable.innerMoveable.moveable.controlDragger;
+
+        // When
+        moveable.setState({
+            target: document.querySelector(".c2"),
+        });
+
+        await wait(300);
+
+        // Then
+        const nextTargetDragger = moveable.innerMoveable.moveable.targetDragger;
+        const nextControlDragger = moveable.innerMoveable.moveable.controlDragger;
+
+        expect(targetDragger).to.be.ok;
+        expect(nextTargetDragger).to.be.ok;
+        expect(nextTargetDragger).to.be.not.equals(targetDragger);
+        expect(controlDragger).to.be.not.ok;
+        expect(nextControlDragger).to.be.not.ok;
+    });
 });

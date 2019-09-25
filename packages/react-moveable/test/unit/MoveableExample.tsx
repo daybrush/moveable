@@ -10,7 +10,10 @@ export default class MoveableExample extends React.Component {
     public render() {
         return (
             <div className="c1" style={{ position: "relative", left: "0px", top: "0px", width: "500px", height: "500px", border: "2px solid black" }}>
-            <Moveable target={this.state.target} ref={ref(this, "innerMoveable")} />
+            <Moveable
+                target={this.state.target} ref={ref(this, "innerMoveable")}
+                draggable={true}
+            />
             <div className="c2" style={{ position: "relative", left: "0px", top: "0px", width: "500px", height: "500px", border: "2px solid black" }}>
             <svg data-target="svg" viewBox="0 0 150 110" style={{ position: "relative", left: "0px", width: "300px", border: "1px solid #f55"}}>
             <path data-target="path1" d="M 74 53.64101615137753 L 14.000000000000027 88.28203230275507 L 14 19 L 74 53.64101615137753 Z" fill="#f55" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#5f5" origin="50% 50%" />

@@ -62,8 +62,8 @@ export default class MoveableManager<T = {}, U = {}>
     public controlAbles: Array<Able<T>> = [];
     public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer K ? K : never;
     public areaElement!: HTMLElement;
-    protected targetDragger!: Dragger;
-    protected controlDragger!: Dragger;
+    public targetDragger!: Dragger;
+    public controlDragger!: Dragger;
 
     public render() {
         this.checkUpdate();
@@ -93,6 +93,7 @@ export default class MoveableManager<T = {}, U = {}>
         this.updateEvent(this.props, this.state);
     }
     public componentDidUpdate(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
+        console.log("PN", prevState.target, this.state.target);
         this.updateEvent(prevProps, prevState);
     }
     public componentWillUnmount() {
@@ -137,8 +138,8 @@ export default class MoveableManager<T = {}, U = {}>
         const controlBoxElement = this.controlBox.getElement();
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
-        const target = this.state.target;
-        const prevTarget = prevState.target;
+        const target = this.props.target;
+        const prevTarget = prevProps.target;
         const dragArea = this.props.dragArea;
         const prevDragArea = prevProps.dragArea;
         const isTargetChanged = !dragArea && prevTarget !== target;
@@ -183,6 +184,7 @@ export default class MoveableManager<T = {}, U = {}>
         if (!isTargetChanged) {
             return;
         }
+
         this.updateState({ target });
         if (!parentMoveable) {
             this.updateRect("End", false, false);
