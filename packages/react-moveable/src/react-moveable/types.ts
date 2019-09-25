@@ -8,7 +8,7 @@ export type MoveableManagerProps<T = {}> = {
     parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
-    transformOrigin?: string;
+    transformOrigin?: Array<string | number> | "";
     edge?: boolean;
     keepRatio?: boolean;
     pinchThreshold?: number;
@@ -258,6 +258,7 @@ export interface OnScaleEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - The direction of resize.
  * @property - resize causes a `dragStart` event.
  * @property - You can set the css width, height value.
  */
@@ -266,8 +267,10 @@ export interface OnResizeStart {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    direction: number[];
     dragStart: OnDragStart;
     set: (width: number, height: number) => any;
+    setOrigin: (origin: Array<string | number>) => any;
 }
 /**
  * @typedef
