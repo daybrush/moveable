@@ -210,7 +210,7 @@ export default {
     },
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
-        const { datas, inputEvent } = e;
+        const { datas } = e;
 
         const params = this.dragControlStart(moveable, e);
 

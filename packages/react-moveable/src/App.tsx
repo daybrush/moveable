@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = false; // this.state.isResizable;
+        const isResizable = true; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -94,10 +94,7 @@ class App extends React.Component {
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
 
-                            const style = getComputedStyle(ev.target);
-
-                            ev.set(parseFloat(style.width!), parseFloat(style.height!));
-
+                            ev.setOrigin(["%", "%"]);
                             ev.dragStart.set([
                                 parseFloat(groupItem.get("tx")),
                                 parseFloat(groupItem.get("ty")),
@@ -156,7 +153,7 @@ class App extends React.Component {
                     warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
-                    throttleResize={1}
+                    throttleResize={0}
                     throttleRotate={45}
                     rotatable={true}
                     pinchable={true}
@@ -200,10 +197,11 @@ class App extends React.Component {
 
                         target.style.cssText += item.toCSS();
                     }}
-                    onResizeStart={({ dragStart }) => {
+                    onResizeStart={({ dragStart, setOrigin }) => {
                         const tx = parseFloat(item.get("tx")) || 0;
                         const ty = parseFloat(item.get("ty")) || 0;
 
+                        setOrigin(["20%", "20%"]);
                         dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta }) => {

@@ -6,6 +6,7 @@ import {
 import MoveableManager from "./MoveableManager";
 import { caculatePoses, getAbsoluteMatrix } from "./utils";
 import { splitUnit } from "@daybrush/utils";
+import Moveable from ".";
 
 export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
     const {
@@ -48,7 +49,7 @@ export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
 }
 
 export function caculateTransformOrigin(
-    transformOrigin: string,
+    transformOrigin: string[],
     width: number,
     height: number,
     prevWidth: number = width,
@@ -59,7 +60,7 @@ export function caculateTransformOrigin(
     if (!transformOrigin) {
         return prevOrigin;
     }
-    return transformOrigin.split(" ").map((pos, i) => {
+    return transformOrigin.map((pos, i) => {
         const { value, unit } = splitUnit(pos);
 
         const prevSize = (i ? prevHeight : prevWidth);
@@ -76,8 +77,7 @@ export function caculateTransformOrigin(
         return size * value / 100;
     });
 }
-
-export function setSizeInfo(moveable: MoveableManager<any>, { datas }: any) {
+export function getSizeInfo(moveable: MoveableManager<any>) {
     const {
         left,
         top,
@@ -88,12 +88,54 @@ export function setSizeInfo(moveable: MoveableManager<any>, { datas }: any) {
     } = moveable.state;
     const pos = [left, top];
 
-    datas.startPos1 = plus(pos, pos1);
-    datas.startPos2 = plus(pos, pos2);
-    datas.startPos3 = plus(pos, pos3);
-    datas.startPos4 = plus(pos, pos4);
+    return[
+        plus(pos, pos1),
+        plus(pos, pos2),
+        plus(pos, pos3),
+        plus(pos, pos4),
+    ];
+}
+export function setSizeInfo(moveable: MoveableManager<any>, { datas }: any) {
+    [
+        datas.startPos1,
+        datas.startPos2,
+        datas.startPos3,
+        datas.startPos4,
+    ] = getSizeInfo(moveable);
 }
 
+export function getPosByDirection(
+    [pos1, pos2, pos3, pos4]: number[][],
+    direction: number[],
+) {
+    /*
+    [-1, -1](pos4)       [0, -1](pos3,pos4)       [1, -1](pos3)
+    [-1, 0](pos2, pos4)                           [1, 0](pos3, pos1)
+    [-1, 1](pos2)        [0, 1](pos1, pos2)       [1, 1](pos1)
+    */
+    const poses = [];
+
+    if (direction[1] >= 0) {
+        if (direction[0] >= 0) {
+            poses.push(pos1);
+        }
+        if (direction[0] <= 0) {
+            poses.push(pos2);
+        }
+    }
+    if (direction[1] <= 0) {
+        if (direction[0] >= 0) {
+            poses.push(pos3);
+        }
+        if (direction[0] <= 0) {
+            poses.push(pos4);
+        }
+    }
+    return [
+        average(...poses.map(pos => pos[0])),
+        average(...poses.map(pos => pos[1])),
+    ];
+}
 function getDist(
     datas: any,
     matrix: number[],
@@ -109,57 +151,13 @@ function getDist(
         startPos3,
         startPos4,
     } = datas;
-    const [
-        pos1,
-        pos2,
-        pos3,
-        pos4,
-    ] = caculatePoses(matrix, width, height, n);
+    const poses = caculatePoses(matrix, width, height, n);
 
-    /*
-    [-1, -1](pos4)       [0, -1](pos3,pos4)       [1, -1](pos3)
-    [-1, 0](pos2, pos4)                           [1, 0](pos3, pos1)
-    [-1, 1](pos2)        [0, 1](pos1, pos2)       [1, 1](pos1)
-    */
-    const startPoses: number[][] = [];
-    const poses: number[][] = [];
     const moveDirection = [parentScale[0] * direction[0], parentScale[1] * direction[1]];
-
-    if (direction[1] >= 0) {
-        if (direction[0] >= 0) {
-            startPoses.push(startPos1);
-        }
-        if (direction[0] <= 0) {
-            startPoses.push(startPos2);
-        }
-    }
-    if (direction[1] <= 0) {
-        if (direction[0] >= 0) {
-            startPoses.push(startPos3);
-        }
-        if (direction[0] <= 0) {
-            startPoses.push(startPos4);
-        }
-    }
-    if (moveDirection[1] >= 0) {
-        if (moveDirection[0] >= 0) {
-            poses.push(pos1);
-        }
-        if (moveDirection[0] <= 0) {
-            poses.push(pos2);
-        }
-    }
-    if (moveDirection[1] <= 0) {
-        if (moveDirection[0] >= 0) {
-            poses.push(pos3);
-        }
-        if (moveDirection[0] <= 0) {
-            poses.push(pos4);
-        }
-    }
-
-    const distX = average(...startPoses.map(pos => pos[0])) - average(...poses.map(pos => pos[0]));
-    const distY = average(...startPoses.map(pos => pos[1])) - average(...poses.map(pos => pos[1]));
+    const startPos = getPosByDirection([startPos1, startPos2, startPos3, startPos4], direction);
+    const pos = getPosByDirection(poses, moveDirection);
+    const distX = startPos[0] - pos[0];
+    const distY = startPos[1] - pos[1];
 
     return [distX, distY];
 }
@@ -216,9 +214,10 @@ export function getResizeDist(
     width: number,
     height: number,
     direction: number[],
+    dragClient: number[],
+    transformOrigin: string[],
 ) {
     const {
-        transformOrigin,
         groupable,
     } = moveable.props;
     const {
@@ -244,7 +243,10 @@ export function getResizeDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
+
+    setSizeInfo(moveable, datas);
+
     const dist = getDist(datas, nextMatrix, width, height, n, direction);
 
-    return minus(dist, [groupLeft, groupTop]);
+    return minus(plus(dist, dragClient), [groupLeft, groupTop]);
 }

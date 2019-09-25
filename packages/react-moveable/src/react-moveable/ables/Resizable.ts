@@ -1,5 +1,5 @@
 import { throttle, getDirection, triggerEvent } from "../utils";
-import { setDragStart, getDragDist, setSizeInfo, getResizeDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, setSizeInfo, getResizeDist, getPosByDirection, getSizeInfo } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDragStart, OnDrag,
@@ -8,7 +8,7 @@ import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
 import {
-    triggerChildAble, setCustomEvent, getCustomEvent, directionCondition, getCustomPrevClient,
+    triggerChildAble, setCustomEvent, directionCondition, setCustomEventByDelta,
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix } from "@moveable/matrix";
@@ -62,7 +62,7 @@ export default {
         datas.prevHeight = 0;
         datas.width = width;
         datas.height = height;
-
+        datas.transformOrigin = moveable.props.transformOrigin;
         setSizeInfo(moveable, e);
 
         const params = {
@@ -70,9 +70,13 @@ export default {
             target,
             clientX,
             clientY,
+            direction,
             set: (startWidth: number, startHeight: number) => {
                 datas.width = startWidth;
                 datas.height = startHeight;
+            },
+            setOrigin: (origin: Array<string | number>) => {
+                datas.transformOrigin = origin;
             },
             dragStart: Draggable.dragStart(
                 moveable,
@@ -95,7 +99,7 @@ export default {
             clientY,
             distX, distY,
             pinchFlag, parentDistance, parentScale, inputEvent,
-            dragClient = getCustomPrevClient(datas),
+            dragClient = [0, 0],
         } = e;
         const {
             direction,
@@ -106,6 +110,7 @@ export default {
             prevWidth,
             prevHeight,
             isResize,
+            transformOrigin,
         } = datas;
 
         if (!isResize) {
@@ -155,10 +160,10 @@ export default {
             }
         }
         const nextWidth = direction[0]
-            ? throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!)
+            ? Math.round(throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!))
             : offsetWidth;
         const nextHeight = direction[1]
-            ? throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!)
+            ? Math.round(throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!))
             : offsetHeight;
 
         distWidth = nextWidth - offsetWidth;
@@ -175,8 +180,8 @@ export default {
 
         let inverseDist = [0, 0];
 
-        if (!pinchFlag && !parentScale) {
-            inverseDist = getResizeDist(moveable, e, nextWidth, nextHeight, direction);
+        if (!pinchFlag) {
+            inverseDist = getResizeDist(moveable, e, nextWidth, nextHeight, direction, dragClient, transformOrigin);
         }
         const params = {
             target: target!,
@@ -193,7 +198,7 @@ export default {
             isPinch: !!pinchFlag,
             drag: Draggable.drag(
                 moveable,
-                setCustomEvent(dragClient[0] + inverseDist[0], dragClient[1] + inverseDist[1], datas, inputEvent),
+                setCustomEventByDelta(inverseDist[0], inverseDist[1], datas, inputEvent),
             ) as OnDrag,
         };
         triggerEvent(moveable, "onResize", params);
@@ -216,38 +221,31 @@ export default {
     },
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
-        const { datas, inputEvent } = e;
-        const {
-            left: parentLeft,
-            top: parentTop,
-            pos1, pos2, pos3, pos4,
-        } = moveable.state;
-        const startLeft = parentLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
-        const startTop = parentTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
-
+        const { datas } = e;
         const params = this.dragControlStart(moveable, e);
 
         if (!params) {
             return false;
         }
+        const direction = params.direction;
+        const startPos = getPosByDirection(getSizeInfo(moveable), direction);
+
         const events = triggerChildAble(
             moveable,
             this,
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const { left, top } = child.state;
-                const startX = left - startLeft;
-                const startY = top - startTop;
-
+                const pos = getPosByDirection(getSizeInfo(child), direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
-                    [startX, startY, 1],
+                    [pos[0] - startPos[0], pos[1] - startPos[1], 1],
                     3,
                 );
                 childDatas.originalX = originalX;
                 childDatas.originalY = originalY;
-                return { ...e, parentRotate: 0, dragClient: [left - startLeft, top - startTop] };
+
+                return { ...e, parentRotate: 0 };
             },
         );
 
@@ -273,16 +271,12 @@ export default {
         }
         const {
             width, height, dist,
-            drag: {
-                beforeDist,
-            },
         } = params;
 
         const parentScale = [
             width / (width - dist[0]),
             height / (height - dist[1]),
         ];
-
         const events = triggerChildAble(
             moveable,
             this,
@@ -292,14 +286,13 @@ export default {
                 const [clientX, clientY] = caculate(
                     createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
                     [
-                        childDatas.originalX * parentScale[0],
-                        childDatas.originalY * parentScale[1],
+                        childDatas.originalX * (parentScale[0] - 1),
+                        childDatas.originalY * (parentScale[1] - 1),
                         1,
                     ],
                     3,
                 );
-
-                return { ...e, parentScale, dragClient: [clientX + beforeDist[0], clientY + beforeDist[1]] };
+                return { ...e, parentScale, dragClient: [clientX, clientY] };
             },
         );
         const nextParams: OnResizeGroup = {

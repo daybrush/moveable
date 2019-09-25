@@ -8,6 +8,8 @@
     position: relative;
     transform-origin: 50% 50%;
     transform-origin: 20% 20%;
+    /* transform-origin: 0% 0%; */
+    box-sizing: border-box;
 }
 
 .App-logo {

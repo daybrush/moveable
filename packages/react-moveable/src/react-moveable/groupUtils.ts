@@ -34,6 +34,18 @@ export function getCustomPrevClient(datas: any) {
 
     return e ? [e.prevX, e.prevY] : [0, 0];
 }
+
+export function setCustomEventByDelta(
+    deltaX: number,
+    deltaY: number,
+    datas: any,
+    inputEvent: any,
+) {
+    const prevClient = getCustomPrevClient(datas);
+
+    return setCustomEvent(prevClient[0] + deltaX, prevClient[1] + deltaY, datas, inputEvent);
+}
+
 export function setCustomEvent(
     clientX: number,
     clientY: number,

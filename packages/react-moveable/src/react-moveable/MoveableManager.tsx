@@ -188,8 +188,6 @@ export default class MoveableManager<T = {}, U = {}>
             this.updateRect("End", false, false);
         }
     }
-    public triggerEvent<K extends keyof T>(
-        name: K, e: T[K] extends ((e: infer P) => any) | undefined ? P : {}): any;
     public triggerEvent(name: string, e: any): any {
         const callback = (this.props as any)[name];
 

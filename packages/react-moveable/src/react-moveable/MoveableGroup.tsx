@@ -101,7 +101,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
 class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
-        transformOrigin: "50% 50%",
+        transformOrigin: ["50%", "50%"],
         groupable: true,
         dragArea: true,
         ables: MOVEABLE_ABLES,
