@@ -94,9 +94,6 @@ export function caculateMatrixStack(
     let targetMatrix!: number[];
     let style: CSSStyleDeclaration = getComputedStyle(el);
 
-    let parentOffsetLeft = 0;
-    let parentOffsetTop = 0;
-
     while (el && (isContainer || el !== container)) {
         const tagName = el.tagName.toLowerCase();
         const position = style.position;
@@ -164,8 +161,6 @@ export function caculateMatrixStack(
                 offsetTop -= parentElement.offsetTop;
             }
         }
-        parentOffsetLeft = offsetLeft;
-        parentOffsetTop = offsetTop;
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
             createOriginMatrix([

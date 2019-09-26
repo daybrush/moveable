@@ -205,6 +205,7 @@ export default class MoveableManager<T = {}, U = {}>
                 able.unset(this);
                 return true;
             }
+            return false;
         }).length) {
             this.forceUpdate();
         }
