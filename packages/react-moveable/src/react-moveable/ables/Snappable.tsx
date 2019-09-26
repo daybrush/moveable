@@ -426,4 +426,7 @@ export default {
     dragGroupControlEnd(moveable: any) {
         this.dragEnd(moveable);
     },
+    unset(moveable: any) {
+        this.dragEnd(moveable);
+    },
 };

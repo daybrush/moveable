@@ -144,12 +144,11 @@ export default class MoveableManager<T = {}, U = {}>
         const dragArea = this.props.dragArea;
         const prevDragArea = prevProps.dragArea;
         const isTargetChanged = !dragArea && prevTarget !== target;
-
-        if (
-            (!hasTargetAble && this.targetDragger)
+        const isUnset = (!hasTargetAble && this.targetDragger)
             || isTargetChanged
-            || prevDragArea !== dragArea
-        ) {
+            || prevDragArea !== dragArea;
+
+        if (isUnset) {
             unset(this, "targetDragger");
             this.updateState({ dragger: null });
         }
@@ -166,6 +165,9 @@ export default class MoveableManager<T = {}, U = {}>
         }
         if (!this.controlDragger && hasControlAble) {
             this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
+        }
+        if (isUnset) {
+            this.unsetAbles();
         }
     }
     public updateTarget(type?: "Start" | "" | "End") {
@@ -196,6 +198,16 @@ export default class MoveableManager<T = {}, U = {}>
         const callback = (this.props as any)[name];
 
         return callback && callback(e);
+    }
+    protected unsetAbles() {
+        if (this.targetAbles.filter(able => {
+            if (able.unset) {
+                able.unset(this);
+                return true;
+            }
+        }).length) {
+            this.forceUpdate();
+        }
     }
     protected updateAbles(
         ables: Able[] = this.props.ables!,

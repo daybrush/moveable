@@ -15,7 +15,7 @@ import {
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState } from "./types";
+import { MoveableManagerState, Able } from "./types";
 
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
@@ -28,7 +28,7 @@ export function createIdentityMatrix3() {
 export function getTransform(target: SVGElement | HTMLElement, isInit: true): number[];
 export function getTransform(target: SVGElement | HTMLElement, isInit?: false): "none" | number[];
 export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
-    const transform = window.getComputedStyle(target).transform!;
+    const transform = getComputedStyle(target).transform!;
 
     if (!transform || (transform === "none" && !isInit)) {
         return "none";
@@ -64,7 +64,7 @@ export function measureSVGSize(el: SVGElement, unit: string, isHorizontal: boole
     return 1;
 }
 export function getBeforeTransformOrigin(el: SVGElement) {
-    const relativeOrigin = getTransformOrigin(window.getComputedStyle(el, ":before"));
+    const relativeOrigin = getTransformOrigin(getComputedStyle(el, ":before"));
 
     return relativeOrigin.map((o, i) => {
         const { value, unit } = splitUnit(o);
@@ -92,10 +92,11 @@ export function caculateMatrixStack(
     let n = 3;
     let transformOrigin!: number[];
     let targetMatrix!: number[];
+    let style: CSSStyleDeclaration = getComputedStyle(el);
 
     while (el && (isContainer || el !== container)) {
         const tagName = el.tagName.toLowerCase();
-        const style: CSSStyleDeclaration | null = window.getComputedStyle(el);
+        const isFixed = style.position === "fixed";
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style!.transform!));
 
         if (!is3d && matrix.length === 16) {
@@ -113,6 +114,13 @@ export function caculateMatrixStack(
 
         let offsetLeft = (el as any).offsetLeft;
         let offsetTop = (el as any).offsetTop;
+
+        if (isFixed) {
+            const containerRect = (container || document.documentElement).getBoundingClientRect();
+
+            offsetLeft -= containerRect.left;
+            offsetTop -= containerRect.top;
+        }
         // svg
         const isSVG = isUndefined(offsetLeft);
         let hasNotOffset = isSVG;
@@ -156,21 +164,34 @@ export function caculateMatrixStack(
         if (!transformOrigin) {
             transformOrigin = origin;
         }
-        if (isContainer) {
+
+        if (isContainer || isFixed) {
             break;
         }
+        el = el.parentElement;
 
         if (isSVG) {
-            el = el.parentElement;
             continue;
         }
-        const offsetParent: HTMLElement = (el as any).offsetParent;
+        while (el) {
+            style = getComputedStyle(el);
 
-        if (!offsetParent) {
-            break;
-        }
-        while (el && el !== container && el !== offsetParent) {
+            const {
+                position: nextPosition,
+                transform: nextTransform,
+            } = style;
+
+            if (
+                nextPosition !== "static"
+                || (nextTransform && nextTransform !== "none")
+            ) {
+                break;
+            }
+
             el = el.parentElement;
+        }
+        if (el) {
+            style = getComputedStyle(el);
         }
     }
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
@@ -210,7 +231,9 @@ export function caculateMatrixStack(
             ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
         })`;
 
-    return [beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d];
+    return [
+        beforeMatrix, offsetMatrix, mat, targetMatrix, transform, transformOrigin, is3d,
+    ];
 }
 export function getSVGMatrix(
     el: SVGSVGElement,
@@ -451,7 +474,7 @@ export function getControlTransform(...poses: number[][]) {
 }
 export function getSize(
     target: SVGElement | HTMLElement,
-    style: CSSStyleDeclaration = window.getComputedStyle(target),
+    style: CSSStyleDeclaration = getComputedStyle(target),
     isOffset?: boolean,
     isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
 ) {
@@ -527,7 +550,7 @@ export function getTargetInfo(
             width = state.width!;
             height = state.height!;
         } else {
-            const style = window.getComputedStyle(target);
+            const style = getComputedStyle(target);
 
             width = (target as HTMLElement).offsetWidth;
             height = (target as HTMLElement).offsetHeight;
@@ -660,4 +683,8 @@ export function triggerEvent<T extends IObject<any>, U extends keyof T & string>
     e: T[U] extends ((e: infer P) => any) | undefined ? P : {},
 ): any {
     return moveable.triggerEvent(name, e);
+}
+
+export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: string | null) {
+    return window.getComputedStyle(el, pseudoElt);
 }

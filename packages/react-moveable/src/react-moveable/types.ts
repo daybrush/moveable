@@ -664,6 +664,7 @@ export interface Able<T = any> {
     updateRect?: boolean;
     canPinch?: boolean;
 
+    unset?: (moveable: MoveableManagerProps<any>) => any;
     render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
 
     dragStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
