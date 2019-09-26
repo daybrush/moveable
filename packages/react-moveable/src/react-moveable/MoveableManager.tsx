@@ -15,6 +15,7 @@ import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
 import { IObject } from "@daybrush/utils";
 import DragArea from "./ables/DragArea";
+import CustomDragger from "./CustomDragger";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
@@ -64,6 +65,7 @@ export default class MoveableManager<T = {}, U = {}>
     public areaElement!: HTMLElement;
     public targetDragger!: Dragger;
     public controlDragger!: Dragger;
+    public customDragger!: CustomDragger;
 
     public render() {
         this.checkUpdate();
@@ -144,12 +146,12 @@ export default class MoveableManager<T = {}, U = {}>
         const isTargetChanged = !dragArea && prevTarget !== target;
 
         if (
-            !hasTargetAble
+            (!hasTargetAble && this.targetDragger)
             || isTargetChanged
             || prevDragArea !== dragArea
         ) {
             unset(this, "targetDragger");
-            this.state.dragEvent = false;
+            this.state.dragger = null;
         }
         if (!hasControlAble) {
             unset(this, "controlDragger");

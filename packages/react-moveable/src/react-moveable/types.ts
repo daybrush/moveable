@@ -1,5 +1,6 @@
 import { IObject } from "@daybrush/utils";
-import * as Dragger from "@daybrush/drag";
+import Dragger, * as DraggerTypes from "@daybrush/drag";
+import CustomDragger from "./CustomDragger";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
@@ -37,7 +38,7 @@ export type MoveableManagerState<T = {}> = {
     pos2: number[];
     pos3: number[];
     pos4: number[];
-    dragEvent: boolean;
+    dragger: Dragger | CustomDragger | null;
 } & T;
 
 export interface Renderer {
@@ -663,32 +664,32 @@ export interface Able<T = any> {
 
     render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
 
-    dragStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
-    drag?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;
-    dragEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+    dragStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    drag?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
+    dragEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 
-    pinchStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchStart) => any;
-    pinch?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinch) => any;
-    pinchEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchEnd) => any;
+    pinchStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
+    pinch?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
+    pinchEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
 
     dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragControlStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
-    dragControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;
-    dragControlEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+    dragControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
+    dragControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 
     dragGroupCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragGroupStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
-    dragGroup?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDrag) => any;
-    dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+    dragGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
+    dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 
-    pinchGroupStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchStart) => any;
-    pinchGroup?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinch) => any;
-    pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnPinchEnd) => any;
+    pinchGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
+    pinchGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
+    pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
 
     dragGroupControlCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
-    dragGroupControl?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragStart) => any;
-    dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: Dragger.OnDragEnd) => any;
+    dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 }
 export interface OriginProps {
     origin: boolean;

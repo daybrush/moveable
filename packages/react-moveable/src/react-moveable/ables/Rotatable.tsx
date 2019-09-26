@@ -3,9 +3,10 @@ import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer, OnRotateGroupStart } from "../types";
 import MoveableGroup from "../MoveableGroup";
-import { triggerChildAble, setCustomEvent, getCustomEvent } from "../groupUtils";
+import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
+import CustomDragger from "../CustomDragger";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
@@ -286,11 +287,11 @@ export default {
                     minus([left, top], [parentLeft, parentTop]),
                     minus(beforeOrigin, parentBeforeOrigin),
                 );
-                const dragDatas = childDatas.drag || (childDatas.drag = {});
 
+                childDatas.prevClient = childClient;
                 eventParams.dragStart = Draggable.dragStart(
                     child,
-                    setCustomEvent(childClient[0], childClient[1], dragDatas, inputEvent),
+                    new CustomDragger().dragStart(childClient, inputEvent),
                 );
             },
         );
@@ -327,16 +328,15 @@ export default {
             datas,
             { ...e, parentRotate },
             (child, childDatas, result, i) => {
-                const dragDatas = childDatas.drag || (childDatas.drag = {});
-                const { prevX, prevY } = getCustomEvent(dragDatas);
+                const [prevX, prevY] = childDatas.prevClient;
                 const [clientX, clientY] = rotateMatrix([prevX, prevY], rad);
                 const delta = [clientX - prevX, clientY - prevY];
 
+                childDatas.prevClient = [clientX, clientY];
+
                 const dragResult = Draggable.drag(
                     child,
-                    moveable.targetDragger && moveable.state.dragEvent
-                    ? moveable.targetDragger.move(delta)
-                    : setCustomEvent(clientX, clientY, dragDatas, inputEvent),
+                    child.state.dragger!.move(delta, inputEvent),
                 );
 
                 result.drag = dragResult;

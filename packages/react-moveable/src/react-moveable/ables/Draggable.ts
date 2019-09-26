@@ -11,21 +11,19 @@ export default {
     name: "draggable",
     dragStart(
         moveable: MoveableManager<DraggableProps>,
-        { datas, clientX, clientY, parentEvent }: any,
+        { datas, clientX, clientY, parentEvent, parentDragger }: any,
     ) {
         const state = moveable.state;
         const {
             targetTransform,
             target,
-            dragEvent,
+            dragger,
         } = state;
 
-        if (dragEvent) {
+        if (dragger) {
             return false;
         }
-        if (!parentEvent) {
-            state.dragEvent = true;
-        }
+        state.dragger = parentDragger || moveable.targetDragger;
         const style = window.getComputedStyle(target!);
 
         datas.datas = {};
@@ -55,6 +53,7 @@ export default {
         if (result !== false) {
             datas.isDrag = true;
         } else {
+            state.dragger = null;
             datas.isPinch = false;
         }
         return datas.isDrag ? params : false;
@@ -124,7 +123,7 @@ export default {
         if (!datas.isDrag) {
             return;
         }
-        moveable.state.dragEvent = false;
+        moveable.state.dragger = null;
         datas.isDrag = false;
         !parentEvent && triggerEvent(moveable, "onDragEnd", {
             target: moveable.state.target!,

@@ -2,17 +2,18 @@ import { throttle, getDirection, triggerEvent } from "../utils";
 import { setDragStart, getDragDist, getResizeDist, getPosByDirection, getSizeInfo, setSizeInfo } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
-    Renderer, OnResizeGroupStart, DraggableProps, OnDragStart, OnDrag, OnResizeStart,
+    Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart,
 } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
 import {
-    triggerChildAble, setCustomEvent, directionCondition, setCustomEventByDelta, setCustomDrag,
+    triggerChildAble, directionCondition,
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import { checkSnapSize } from "./Snappable";
+import CustomDragger from "../CustomDragger";
 
 export default {
     name: "resizable",
@@ -79,7 +80,7 @@ export default {
             },
             dragStart: Draggable.dragStart(
                 moveable,
-                setCustomEvent(0, 0, datas, inputEvent),
+                new CustomDragger().dragStart([0, 0], inputEvent),
             ),
         };
         const result = triggerEvent(moveable, "onResizeStart", params);
@@ -180,6 +181,7 @@ export default {
         const inverseDelta = getResizeDist(
                 moveable, datas, nextWidth, nextHeight, direction, transformOrigin, dragClient);
 
+        console.log("REDR", moveable, moveable.state.dragger);
         const params = {
             target: target!,
             width: width + distWidth,
@@ -195,13 +197,15 @@ export default {
             isPinch: !!pinchFlag,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable, inverseDelta, datas, inputEvent),
+                moveable.state.dragger!.move(inverseDelta, inputEvent),
             ) as OnDrag,
         };
         triggerEvent(moveable, "onResize", params);
         return params;
     },
-    dragControlEnd(moveable: MoveableManager<ResizableProps>, { datas, isDrag, clientX, clientY }: any) {
+    dragControlEnd(
+        moveable: MoveableManager<ResizableProps & DraggableProps>,
+        { datas, isDrag, clientX, clientY }: any) {
         if (!datas.isResize) {
             return false;
         }

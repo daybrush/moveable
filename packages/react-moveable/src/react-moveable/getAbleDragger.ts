@@ -14,8 +14,6 @@ function triggerAble<T>(
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
 
-    console.log(eventName);
-
     const isStart = eventType === "Start";
     const isEnd = eventType === "End";
 
@@ -31,6 +29,9 @@ function triggerAble<T>(
     });
     const isUpdate = results.length;
 
+    if (isEnd) {
+        moveable.state.dragger = null;
+    }
     if (!isStart && isUpdate) {
         if (results.some(able => able.updateRect) && !isGroup) {
             moveable.updateRect(eventType);
