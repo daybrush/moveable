@@ -2,7 +2,7 @@ import { prefixCSS } from "framework-utils";
 import getAgent from "@egjs/agent";
 
 export const agent = getAgent();
-export const isNotSupportTransformOrigin
+export const isWebkit
     = agent.os.name.indexOf("ios") > -1 || agent.browser.name.indexOf("safari") > -1;
 export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = prefixCSS(PREFIX, `
@@ -103,7 +103,7 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .area.avoid:after {
     transform: rotate(-120deg);
 }
-${isNotSupportTransformOrigin ? `:global svg *:before {
+${isWebkit ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;
 }` : ""}

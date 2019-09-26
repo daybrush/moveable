@@ -1,4 +1,4 @@
-import { PREFIX, isNotSupportTransformOrigin } from "./consts";
+import { PREFIX, isWebkit } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
 import {
@@ -94,10 +94,14 @@ export function caculateMatrixStack(
     let targetMatrix!: number[];
     let style: CSSStyleDeclaration = getComputedStyle(el);
 
+    let parentOffsetLeft = 0;
+    let parentOffsetTop = 0;
+
     while (el && (isContainer || el !== container)) {
         const tagName = el.tagName.toLowerCase();
-        const isFixed = style.position === "fixed";
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style!.transform!));
+        const position = style.position;
+        const isFixed = position === "fixed";
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style.transform!));
 
         if (!is3d && matrix.length === 16) {
             is3d = true;
@@ -127,7 +131,7 @@ export function caculateMatrixStack(
         let origin: number[];
         // inner svg element
         if (hasNotOffset && tagName !== "svg") {
-            origin = isNotSupportTransformOrigin
+            origin = isWebkit
                 ? getBeforeTransformOrigin(el as SVGElement)
                 : getTransformOrigin(style).map(pos => parseFloat(pos));
 
@@ -150,7 +154,18 @@ export function caculateMatrixStack(
                 createIdentityMatrix(n),
             );
         }
+        const parentElement: HTMLElement = el.parentElement!;
 
+        if (isWebkit && !hasNotOffset && !isSVG) {
+            const offsetParent = (el as HTMLElement).offsetParent as HTMLElement;
+
+            if (offsetParent && offsetParent !== parentElement) {
+                offsetLeft -= parentElement.offsetLeft;
+                offsetTop -= parentElement.offsetTop;
+            }
+        }
+        parentOffsetLeft = offsetLeft;
+        parentOffsetTop = offsetTop;
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
             createOriginMatrix([
@@ -168,7 +183,7 @@ export function caculateMatrixStack(
         if (isContainer || isFixed) {
             break;
         }
-        el = el.parentElement;
+        el = parentElement;
 
         if (isSVG) {
             continue;
