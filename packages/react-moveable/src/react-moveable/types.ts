@@ -37,6 +37,7 @@ export type MoveableManagerState<T = {}> = {
     pos2: number[];
     pos3: number[];
     pos4: number[];
+    dragEvent: boolean;
 } & T;
 
 export interface Renderer {
@@ -204,7 +205,7 @@ export interface OnScaleStart {
     clientX: number;
     clientY: number;
     datas: IObject<any>;
-    dragStart: OnDragStart;
+    dragStart: OnDragStart | false;
     set: (scale: number[]) => void;
 }
 /**
@@ -268,7 +269,7 @@ export interface OnResizeStart {
     clientY: number;
     datas: IObject<any>;
     direction: number[];
-    dragStart: OnDragStart;
+    dragStart: OnDragStart | false;
     set: (width: number, height: number) => any;
     setOrigin: (origin: Array<string | number>) => any;
 }
@@ -482,7 +483,7 @@ export interface OnDragGroupEnd {
  */
 export interface OnRotateGroupStart extends OnRotateStart {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotateStart & { dragStart: OnDragStart }>;
+    events: Array<OnRotateStart & { dragStart: OnDragStart | false }>;
 }
 
 /**
@@ -564,7 +565,7 @@ export interface OnResizeGroupEnd {
  */
 export interface OnScaleGroupStart extends OnScaleStart {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnScaleStart & { drag: OnDragStart }>;
+    events: OnScaleStart[];
 }
 
 /**

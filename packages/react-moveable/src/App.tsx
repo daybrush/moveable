@@ -95,19 +95,21 @@ class App extends React.Component {
                             const groupItem = this.itemMap.get(ev.target)!;
 
                             ev.setOrigin(["%", "%"]);
-                            ev.dragStart.set([
+                            ev.dragStart && ev.dragStart.set([
                                 parseFloat(groupItem.get("tx")),
                                 parseFloat(groupItem.get("ty")),
                             ]);
                         });
                     }}
                     onResizeGroup={e => {
+
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
 
                             // groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
                             // groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
 
+                            console.log(ev.drag.beforeTranslate[0]);
                             groupItem.set("tx", `${ev.drag.beforeTranslate[0]}px`);
                             groupItem.set("ty", `${ev.drag.beforeTranslate[1]}px`);
                             groupItem.set("width", `${ev.width}px`);
@@ -187,7 +189,7 @@ class App extends React.Component {
 
                         set([sx, sy]);
 
-                        dragStart.set([tx, ty]);
+                        dragStart && dragStart.set([tx, ty]);
                     }}
                     onScale={({ target, scale, drag }) => {
                         item.set("sx", scale[0]);
@@ -202,14 +204,14 @@ class App extends React.Component {
                         const ty = parseFloat(item.get("ty")) || 0;
 
                         setOrigin(["20%", "20%"]);
-                        dragStart.set([tx, ty]);
+                        dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta }) => {
                         delta[0] && (target!.style.width = `${width}px`);
                         delta[1] && (target!.style.height = `${height}px`);
 
-                        item.set("tx", `${drag.beforeTranslate[0]}px`);
-                        item.set("ty", `${drag.beforeTranslate[1]}px`);
+                        drag.beforeDelta[0] && item.set("tx", `${drag.beforeTranslate[0]}px`);
+                        drag.beforeDelta[1] && item.set("ty", `${drag.beforeTranslate[1]}px`);
 
                         target.style.cssText += item.toCSS();
                     }}

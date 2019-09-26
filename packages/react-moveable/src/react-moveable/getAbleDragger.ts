@@ -14,6 +14,8 @@ function triggerAble<T>(
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
 
+    console.log(eventName);
+
     const isStart = eventType === "Start";
     const isEnd = eventType === "End";
 

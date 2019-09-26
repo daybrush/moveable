@@ -1,5 +1,5 @@
 import MoveableGroup from "./MoveableGroup";
-import { Able } from "./types";
+import { Able, MoveableManagerProps } from "./types";
 import MoveableManager from "./MoveableManager";
 import { hasClass, IObject, isFunction } from "@daybrush/utils";
 import { prefix } from "./utils";
@@ -34,7 +34,16 @@ export function getCustomPrevClient(datas: any) {
 
     return e ? [e.prevX, e.prevY] : [0, 0];
 }
-
+export function setCustomDrag(
+    moveable: MoveableManagerProps<any>,
+    delta: number[],
+    datas: any,
+    inputEvent: any,
+) {
+    return moveable.targetDragger && moveable.state.dragEvent
+        ? { ...moveable.targetDragger.move(delta)!, parentEvent: true, inputEvent }
+        : setCustomEventByDelta(delta[0], delta[1], datas, inputEvent);
+}
 export function setCustomEventByDelta(
     deltaX: number,
     deltaY: number,

@@ -330,10 +330,13 @@ export default {
                 const dragDatas = childDatas.drag || (childDatas.drag = {});
                 const { prevX, prevY } = getCustomEvent(dragDatas);
                 const [clientX, clientY] = rotateMatrix([prevX, prevY], rad);
+                const delta = [clientX - prevX, clientY - prevY];
 
                 const dragResult = Draggable.drag(
                     child,
-                    setCustomEvent(clientX, clientY, dragDatas, inputEvent),
+                    moveable.targetDragger && moveable.state.dragEvent
+                    ? moveable.targetDragger.move(delta)
+                    : setCustomEvent(clientX, clientY, dragDatas, inputEvent),
                 );
 
                 result.drag = dragResult;

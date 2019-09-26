@@ -2,7 +2,7 @@ import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, prefix } from "../utils";
 import { minus, plus } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart } from "../types";
+import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, OnDragStart } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
@@ -13,10 +13,19 @@ export default {
         moveable: MoveableManager<DraggableProps>,
         { datas, clientX, clientY, parentEvent }: any,
     ) {
+        const state = moveable.state;
         const {
             targetTransform,
             target,
-        } = moveable.state;
+            dragEvent,
+        } = state;
+
+        if (dragEvent) {
+            return false;
+        }
+        if (!parentEvent) {
+            state.dragEvent = true;
+        }
         const style = window.getComputedStyle(target!);
 
         datas.datas = {};
@@ -32,7 +41,7 @@ export default {
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
 
-        const params = {
+        const params: OnDragStart = {
             datas: datas.datas,
             target: target!,
             clientX,
@@ -115,6 +124,7 @@ export default {
         if (!datas.isDrag) {
             return;
         }
+        moveable.state.dragEvent = false;
         datas.isDrag = false;
         !parentEvent && triggerEvent(moveable, "onDragEnd", {
             target: moveable.state.target!,
@@ -174,6 +184,7 @@ export default {
         if (!datas.isDrag) {
             return;
         }
+        this.dragEnd(moveable, e);
         triggerChildAble(moveable, this, "dragEnd", datas, e);
         triggerEvent(moveable, "onDragGroupEnd", {
             targets: moveable.props.targets!,

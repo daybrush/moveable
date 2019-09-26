@@ -61,7 +61,7 @@ export default {
         datas.height = height;
         datas.startScale = [1, 1];
 
-        setSizeInfo(moveable, e);
+        setSizeInfo(moveable, datas);
 
         const params = {
             target,

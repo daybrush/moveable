@@ -93,7 +93,6 @@ export default class MoveableManager<T = {}, U = {}>
         this.updateEvent(this.props, this.state);
     }
     public componentDidUpdate(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
-        console.log("PN", prevState.target, this.state.target);
         this.updateEvent(prevProps, prevState);
     }
     public componentWillUnmount() {
@@ -150,6 +149,7 @@ export default class MoveableManager<T = {}, U = {}>
             || prevDragArea !== dragArea
         ) {
             unset(this, "targetDragger");
+            this.state.dragEvent = false;
         }
         if (!hasControlAble) {
             unset(this, "controlDragger");
@@ -205,7 +205,7 @@ export default class MoveableManager<T = {}, U = {}>
         let controlAbleOnly: boolean = false;
 
         const dragStart = `drag${eventAffix}Start` as "dragStart";
-        const pinchStart = `pinchStart${eventAffix}Start` as "pinchStart";
+        const pinchStart = `pinch${eventAffix}Start` as "pinchStart";
         const dragControlStart = `drag${eventAffix}ControlStart` as "dragControlStart";
 
         const targetAbles = enabledAbles.filter(able => able[dragStart] || able[pinchStart]);
