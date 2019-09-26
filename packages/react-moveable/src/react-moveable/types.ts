@@ -197,6 +197,7 @@ export interface OnDragEnd {
  * @property - a target to scale
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @property - The direction of scale.
  * @property - Objects that can send information to the following events.
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
@@ -205,6 +206,7 @@ export interface OnScaleStart {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
+    direction: number[];
     datas: IObject<any>;
     dragStart: OnDragStart | false;
     set: (scale: number[]) => void;

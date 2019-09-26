@@ -20,6 +20,8 @@ export default {
             dragger,
         } = state;
 
+        console.log("DS", dragger, parentDragger, moveable.targetDragger);
+
         if (dragger) {
             return false;
         }
@@ -38,6 +40,7 @@ export default {
 
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
+        datas.isDrag = false;
 
         const params: OnDragStart = {
             datas: datas.datas,
@@ -123,6 +126,8 @@ export default {
         if (!datas.isDrag) {
             return;
         }
+
+        console.log("DE");
         moveable.state.dragger = null;
         datas.isDrag = false;
         !parentEvent && triggerEvent(moveable, "onDragEnd", {

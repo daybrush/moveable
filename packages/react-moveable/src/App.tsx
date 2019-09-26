@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = true; // this.state.isResizable;
+        const isResizable = false; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -47,8 +47,8 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    resizable={true}
-                    // scalable={true}
+                    // resizable={true}
+                    scalable={true}
                     ref={ref(this, "ab")}
                     keepRatio={false}
                     target={this.state.targets}

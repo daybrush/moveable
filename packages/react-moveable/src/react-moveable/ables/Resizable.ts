@@ -1,5 +1,5 @@
 import { throttle, getDirection, triggerEvent } from "../utils";
-import { setDragStart, getDragDist, getResizeDist, getPosByDirection, getSizeInfo, setSizeInfo } from "../DraggerUtils";
+import { setDragStart, getDragDist, getResizeDist, getPosByDirection, getSizeInfo } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart,
@@ -13,7 +13,7 @@ import {
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import { checkSnapSize } from "./Snappable";
-import CustomDragger from "../CustomDragger";
+import CustomDragger, { setCustomDrag } from "../CustomDragger";
 
 export default {
     name: "resizable",
@@ -63,7 +63,6 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.transformOrigin = moveable.props.transformOrigin;
-        setSizeInfo(moveable, datas);
 
         const params: OnResizeStart = {
             datas: datas.datas,
@@ -98,7 +97,8 @@ export default {
             clientX,
             clientY,
             distX, distY,
-            pinchFlag, parentDistance, parentScale, inputEvent,
+            parentFlag, pinchFlag,
+            parentDistance, parentScale, inputEvent,
             dragClient,
         } = e;
         const {
@@ -178,10 +178,10 @@ export default {
             return;
         }
 
-        const inverseDelta = getResizeDist(
-                moveable, datas, nextWidth, nextHeight, direction, transformOrigin, dragClient);
+        const inverseDelta = !parentFlag && pinchFlag
+            ? [0, 0]
+            : getResizeDist(moveable, nextWidth, nextHeight, direction, transformOrigin, dragClient);
 
-        console.log("REDR", moveable, moveable.state.dragger);
         const params = {
             target: target!,
             width: width + distWidth,
@@ -197,7 +197,7 @@ export default {
             isPinch: !!pinchFlag,
             drag: Draggable.drag(
                 moveable,
-                moveable.state.dragger!.move(inverseDelta, inputEvent),
+                setCustomDrag(moveable, inverseDelta, inputEvent),
             ) as OnDrag,
         };
         triggerEvent(moveable, "onResize", params);
@@ -246,7 +246,7 @@ export default {
                 childDatas.originalX = originalX;
                 childDatas.originalY = originalY;
 
-                return { ...e, parentRotate: 0 };
+                return e;
             },
         );
 

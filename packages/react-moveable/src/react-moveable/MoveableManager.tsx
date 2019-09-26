@@ -92,10 +92,10 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public componentDidMount() {
         this.controlBox.getElement();
-        this.updateEvent(this.props, this.state);
+        this.updateEvent(this.props);
     }
     public componentDidUpdate(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
-        this.updateEvent(prevProps, prevState);
+        this.updateEvent(prevProps);
     }
     public componentWillUnmount() {
         unset(this, "targetDragger");
@@ -135,7 +135,7 @@ export default class MoveableManager<T = {}, U = {}>
             parentMoveable ? false : isSetState,
         );
     }
-    public updateEvent(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
+    public updateEvent(prevProps: MoveableManagerProps<T>) {
         const controlBoxElement = this.controlBox.getElement();
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
@@ -151,7 +151,7 @@ export default class MoveableManager<T = {}, U = {}>
             || prevDragArea !== dragArea
         ) {
             unset(this, "targetDragger");
-            this.state.dragger = null;
+            this.updateState({ dragger: null });
         }
         if (!hasControlAble) {
             unset(this, "controlDragger");

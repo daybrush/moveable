@@ -6,7 +6,7 @@ import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
-import CustomDragger from "../CustomDragger";
+import CustomDragger, { setCustomDrag } from "../CustomDragger";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
@@ -336,7 +336,7 @@ export default {
 
                 const dragResult = Draggable.drag(
                     child,
-                    child.state.dragger!.move(delta, inputEvent),
+                    setCustomDrag(child, delta, inputEvent),
                 );
 
                 result.drag = dragResult;

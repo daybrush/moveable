@@ -82,6 +82,27 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .group {
     z-index: -1;
 }
+.area {
+    position: absolute;
+}
+.area.avoid, .area.avoid:before, .area.avoid:after {
+    transform-origin: 50% calc(100% + 20px);
+}
+.area.avoid:before, .area.avoid:after {
+    content: "";
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.area.avoid:before {
+    transform: rotate(120deg);
+}
+.area.avoid:after {
+    transform: rotate(-120deg);
+}
 ${isNotSupportTransformOrigin ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;

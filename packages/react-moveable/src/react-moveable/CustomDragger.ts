@@ -1,3 +1,11 @@
+import MoveableManager from "./MoveableManager";
+
+export function setCustomDrag(moveable: MoveableManager<any>, delta: number[], inputEvent: any) {
+    return {
+        ...moveable.state.dragger!.move(delta, inputEvent),
+        parentEvent: true,
+    };
+}
 
 export default class CustomDragger {
     private prevX = 0;

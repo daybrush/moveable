@@ -1,5 +1,5 @@
 import MoveableManager from "./MoveableManager";
-import { GroupableProps } from "./types";
+import { GroupableProps, MoveableManagerProps } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
@@ -111,7 +111,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public moveables: MoveableManager[] = [];
     public rotation: number = 0;
 
-    public updateEvent() {
+    public updateEvent(prevProps: MoveableManagerProps<GroupableProps>) {
         const state = this.state;
 
         if (!state.target) {

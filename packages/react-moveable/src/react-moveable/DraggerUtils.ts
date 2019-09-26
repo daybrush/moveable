@@ -94,14 +94,6 @@ export function getSizeInfo(moveable: MoveableManager<any>) {
         plus(pos, pos4),
     ];
 }
-export function setSizeInfo(moveable: MoveableManager<any>, datas: any) {
-    [
-        datas.startPos1,
-        datas.startPos2,
-        datas.startPos3,
-        datas.startPos4,
-    ] = getSizeInfo(moveable);
-}
 
 export function getPosByDirection(
     [pos1, pos2, pos3, pos4]: number[][],
@@ -151,11 +143,9 @@ function getDist(
     height: number,
     n: number,
     direction: number[],
-    parentScale: number[] = [1, 1],
 ) {
     const poses = caculatePoses(matrix, width, height, n);
-    const moveDirection = [parentScale[0] * direction[0], parentScale[1] * direction[1]];
-    const pos = getPosByDirection(poses, moveDirection);
+    const pos = getPosByDirection(poses, direction);
     const distX = startPos[0] - pos[0];
     const distY = startPos[1] - pos[1];
 
@@ -175,10 +165,9 @@ export function getNextMatrix(
 }
 export function getScaleDist(
     moveable: MoveableManager<any>,
-    { datas }: any,
     scale: number[],
     direction: number[],
-    parentScale?: number[],
+    dragClient?: number[],
 ) {
     const state = moveable.state;
     const {
@@ -204,14 +193,18 @@ export function getScaleDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
 
-    const dist = getDist(datas, nextMatrix, width, height, n, direction, parentScale);
+    const startPos = dragClient ? dragClient : getStartPos(getSizeInfo(moveable), direction);
+
+    const dist = getDist(
+        startPos, nextMatrix, width, height, n,
+        direction,
+    );
 
     return minus(dist, [groupLeft, groupTop]);
 }
 
 export function getResizeDist(
     moveable: MoveableManager<any>,
-    datas: any,
     width: number,
     height: number,
     direction: number[],
