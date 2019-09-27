@@ -13,7 +13,6 @@ import {
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
-import { checkSnapSize } from "./Snappable";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 
 export default {

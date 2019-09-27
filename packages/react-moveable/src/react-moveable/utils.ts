@@ -325,10 +325,7 @@ export function caculatePoses(matrix: number[], width: number, height: number, n
 
     return [pos1, pos2, pos3, pos4];
 }
-
-export function caculateRect(matrix: number[], width: number, height: number, n: number) {
-    const poses = caculatePoses(matrix, width, height, n);
-
+export function getRect(poses: number[][]) {
     const posesX = poses.map(pos => pos[0]);
     const posesY = poses.map(pos => pos[1]);
     const left = Math.min(...posesX);
@@ -344,6 +341,11 @@ export function caculateRect(matrix: number[], width: number, height: number, n:
         width: rectWidth,
         height: rectHeight,
     };
+}
+export function caculateRect(matrix: number[], width: number, height: number, n: number) {
+    const poses = caculatePoses(matrix, width, height, n);
+
+    return getRect(poses);
 }
 export function getSVGOffset(
     el: SVGElement,

@@ -1,5 +1,5 @@
 import { throttle, getDirection, triggerEvent } from "../utils";
-import { setDragStart, getDragDist, getResizeDist, getPosByDirection, getSizeInfo } from "../DraggerUtils";
+import { setDragStart, getDragDist, getResizeDist, getPosByDirection, getSizeInfo, predict } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart,
@@ -12,7 +12,6 @@ import {
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
-import { checkSnapSize } from "./Snappable";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 
 export default {
@@ -159,13 +158,14 @@ export default {
                 distHeight = distDiagonal * offsetHeight / offsetWidth;
             }
         }
-        const nextWidth = direction[0]
+        let nextWidth = direction[0]
             ? Math.round(throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!))
             : offsetWidth;
-        const nextHeight = direction[1]
+        let nextHeight = direction[1]
             ? Math.round(throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!))
             : offsetHeight;
 
+        [nextWidth, nextHeight] = predict(moveable, nextWidth, nextHeight, direction);
         distWidth = nextWidth - offsetWidth;
         distHeight = nextHeight - offsetHeight;
 

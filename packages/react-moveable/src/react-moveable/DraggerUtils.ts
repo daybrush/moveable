@@ -4,8 +4,9 @@ import {
     createScaleMatrix, multiply,
 } from "@moveable/matrix";
 import MoveableManager from "./MoveableManager";
-import { caculatePoses, getAbsoluteMatrix } from "./utils";
+import { caculatePoses, getAbsoluteMatrix, getRect } from "./utils";
 import { splitUnit } from "@daybrush/utils";
+import { checkSnaps } from "./ables/Snappable";
 
 export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
     const {
@@ -203,6 +204,10 @@ export function getScaleDist(
     return minus(dist, [groupLeft, groupTop]);
 }
 
+export function getSize(x: number, y: number) {
+    return Math.sqrt(x * x + y * y);
+}
+
 export function getResizeDist(
     moveable: MoveableManager<any>,
     width: number,
@@ -241,4 +246,90 @@ export function getResizeDist(
     const dist = getDist(startPos, nextMatrix, width, height, n, direction);
 
     return minus(dist, [groupLeft, groupTop]);
+}
+
+export function predict(
+    moveable: MoveableManager<any>,
+    width: number,
+    height: number,
+    direction: number[],
+) {
+    const {
+        is3d,
+        matrix,
+    } = moveable.state;
+    const poses = getSizeInfo(moveable);
+    const fixedPos = getPosByDirection(poses, direction);
+    const nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
+    const nextPos = getPosByDirection(nextPoses, direction);
+
+    const dist = minus(fixedPos, nextPos);
+    const pos1 = plus(nextPoses[0], dist);
+    const pos2 = plus(nextPoses[1], dist);
+    const pos3 = plus(nextPoses[2], dist);
+    const pos4 = plus(nextPoses[3], dist);
+    const rect = getRect([pos1, pos2, pos3, pos4]);
+    const next = [width, height];
+    // let widthDist = predictDist(pos1, pos2, 400, true);
+
+    const snapInfos = checkSnaps(moveable as any, rect, false);
+
+    if (snapInfos) {
+        const {
+            dist: horizontalDist,
+            offset: horizontalOffset,
+        } = snapInfos.horizontal;
+        const {
+            dist: verticalDist,
+            offset: verticalOffset,
+        } = snapInfos.vertical;
+    }
+    // console.log(widthDist);
+
+    // if (!isNaN(widthDist)) {
+    //     next[0] += widthDist;
+    // }
+
+    return next;
+}
+
+export function predictDist(
+    pos1: number[],
+    pos2: number[],
+    snapPos: number,
+    isVertical: boolean,
+) {
+        const sign = snapPos > pos2[isVertical ? 0 : 1] ? 1 : -1;
+        const dx = pos2[0] - pos1[0];
+        const dy = pos2[1] - pos1[1];
+
+        if (!dx) {
+            // only horizontal
+            if (!isVertical) {
+                return sign * getSize(0, snapPos - pos2[1]);
+            }
+            return NaN;
+        }
+        // y = ax + b
+        const a = dy / dx;
+        const b = pos1[1] - a * pos1[0];
+
+        if (!dy) {
+            // only vertical
+            if (isVertical) {
+                return sign * Math.abs(snapPos - pos2[0]);
+            }
+            return NaN;
+        }
+
+        if (isVertical) {
+            const y = a * snapPos + b;
+
+            return sign * getSize(snapPos - pos2[0], y - pos2[1]);
+        } else {
+            // x = (y - b) / a
+            const x = (snapPos - b) / a;
+
+            return sign * getSize(x - pos2[0], snapPos - pos2[1]);
+        }
 }

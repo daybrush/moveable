@@ -3,6 +3,7 @@ import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo } from ".
 import { OnDrag, OnDragStart } from "@daybrush/drag";
 import { prefix, throttle } from "../utils";
 import { directionCondition } from "../groupUtils";
+import { isUndefined } from "@daybrush/utils";
 
 function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { datas }: OnDragStart) {
     const state = moveable.state;
@@ -130,10 +131,9 @@ function checkSnap(
         snapPoses,
     };
 }
-function checkSnaps(
+export function checkSnaps(
     moveable: MoveableManager<SnappableProps, SnappableState>,
-    snapThreshold: number,
-    poses: {
+    rect: {
         left?: number,
         top?: number,
         bottom?: number,
@@ -141,20 +141,19 @@ function checkSnaps(
         center?: number,
         middle?: number,
     },
-    isCenter?: boolean,
+    isCenter: boolean,
+    customSnapThreshold?: number,
 ) {
-    const { snapCenter } = moveable.props;
+    const {
+        snapCenter,
+        snapThreshold = isUndefined(customSnapThreshold) ? 5 : customSnapThreshold,
+    } = moveable.props;
     const guidelines = moveable.state.guidelines;
     const isSnapCenter = snapCenter! && isCenter;
 
     if (!guidelines || !guidelines.length) {
         return false;
     }
-    const snapGuidelines: {
-        vertical?: SnapInfo,
-        horizontal?: SnapInfo,
-    } = {};
-
     let verticalNames: Array<"left" | "center" | "right"> = ["left", "right"];
     let horizontalNames: Array<"top" | "middle" | "bottom"> = ["top", "bottom"];
 
@@ -162,100 +161,15 @@ function checkSnaps(
         verticalNames.push("center");
         horizontalNames.push("middle");
     }
-    verticalNames = verticalNames.filter(name => name in poses);
-    horizontalNames = horizontalNames.filter(name => name in poses);
+    verticalNames = verticalNames.filter(name => name in rect);
+    horizontalNames = horizontalNames.filter(name => name in rect);
 
-    snapGuidelines.vertical
-        = checkSnap(guidelines, "vertical", verticalNames.map(name => poses[name]!), snapThreshold, isSnapCenter);
-    snapGuidelines.horizontal
-        = checkSnap(guidelines, "horizontal", horizontalNames.map(name => poses[name]!), snapThreshold, isSnapCenter);
-
-    return snapGuidelines;
-}
-function checkSnapPosition(
-    guidelines: Guideline[],
-    snapThreshold: number,
-    prevPos: number,
-    startPos: number,
-    e: any,
-    isHorizontal: boolean,
-    throttleSnap: number,
-) {
-    const posName = isHorizontal ? "Y" : "X";
-    const {
-        [`dist${posName}`] : dist,
-        [`delta${posName}`] : delta,
-        datas,
-    } = e;
-    const {
-        [`prevDist${posName}`]: prevDist = 0,
-    } = datas;
-
-    if (dist || delta) {
-        const snapInfo = checkSnap(
-            guidelines,
-            isHorizontal ? "horizontal" : "vertical",
-            [prevPos],
-            snapThreshold,
-            false,
-            throttleSnap,
-        );
-
-        if (snapInfo.isSnap) {
-            // has  guidelines
-            const isMove = prevPos - startPos !== 0;
-            const offset = throttle(snapInfo.offset, throttleSnap);
-            const scale = isMove ? (prevPos - offset - startPos) / (prevPos - startPos) : 0;
-            const dist2 = throttle(scale * prevDist, throttleSnap);
-            // dist2 : prevPos - startPos = dist : nextPos - startPos
-            const nextPos = dist2 ? (prevPos - startPos) * dist / dist2 + startPos : prevPos + dist2 - dist;
-
-            if (Math.abs(nextPos - prevPos) < snapThreshold) {
-                e[`dist${posName}`] = dist2;
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-export function checkSnapSize(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
-    e: OnDrag,
-    throttleSnap: number,
-) {
-    const { datas } = e;
-    const { snapThreshold = 10, snappable } = moveable.props;
-    const {
-        pos1, pos2, pos3, pos4, left: targetLeft, top: targetTop,
-        startLeft, startTop, startRight, startBottom, guidelines,
-    } = moveable.state;
-    const snap = [false, false];
-
-    if (!snappable || !guidelines || !guidelines.length) {
-        return snap;
-    }
-    const prevLeft = targetLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
-    const prevRight = targetLeft + Math.max(pos1[0], pos2[0], pos3[0], pos4[0]);
-    const prevTop = targetTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
-    const prevBottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
-
-    if (
-        checkSnapPosition(guidelines, snapThreshold, prevLeft, startLeft, e, false, throttleSnap)
-        || checkSnapPosition(guidelines, snapThreshold, prevRight, startRight, e, false, throttleSnap)
-    ) {
-        snap[0] = true;
-    }
-    if (
-        checkSnapPosition(guidelines, snapThreshold, prevTop, startTop, e, true, throttleSnap)
-        || checkSnapPosition(guidelines, snapThreshold, prevBottom, startBottom, e, true, throttleSnap)
-    ) {
-        snap[1] = true;
-    }
-    datas.prevDistX = e.distX;
-    datas.prevDistY = e.distY;
-
-    return snap;
+    return {
+        vertical:
+            checkSnap(guidelines, "vertical", verticalNames.map(name => rect[name]!), snapThreshold, isSnapCenter),
+        horizontal:
+            checkSnap(guidelines, "horizontal", horizontalNames.map(name => rect[name]!), snapThreshold, isSnapCenter),
+    };
 }
 
 export default {
@@ -269,14 +183,14 @@ export default {
         const bottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
         const center = (left + right) / 2;
         const middle = (top + bottom) / 2;
-        const snapInfos = checkSnaps(moveable, 1, {
+        const snapInfos = checkSnaps(moveable, {
             left,
             right,
             top,
             bottom,
             center,
             middle,
-        }, true);
+        }, true, 1);
 
         if (!snapInfos) {
             return [];
@@ -369,9 +283,8 @@ export default {
         const top = startTop + distY;
         const bottom = startBottom + distY;
         const middle = (top + bottom) / 2;
-        const { snapThreshold = 5 } = moveable.props;
 
-        const snapInfos = checkSnaps(moveable, snapThreshold, {
+        const snapInfos = checkSnaps(moveable, {
             left,
             right,
             top,

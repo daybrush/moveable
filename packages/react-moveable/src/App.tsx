@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = false; // this.state.isResizable;
+        const isResizable = true; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
