@@ -131,6 +131,44 @@ function checkSnap(
         snapPoses,
     };
 }
+export function hasGuidlines(
+    moveable: MoveableManager<any, any>,
+): moveable is MoveableManager<SnappableProps, SnappableState> {
+    const guidelines = moveable.state.guidelines;
+
+    if (!guidelines || !guidelines.length) {
+        return false;
+    }
+    return true;
+}
+export function checkSnapPos(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    targetType: "vertical" | "horizontal",
+    poses: number[],
+    isSnapCenter?: boolean,
+    customSnapThreshold?: number,
+) {
+    const guidelines = moveable.state.guidelines;
+    const snapThreshold = !isUndefined(customSnapThreshold)
+        ? customSnapThreshold
+        : !isUndefined(moveable.props.snapThreshold)
+        ? moveable.props.snapThreshold
+        : 5;
+
+    return checkSnap(guidelines, targetType, poses, snapThreshold, isSnapCenter);
+}
+export function checkSnapPoses(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    posesX: number[],
+    posesY: number[],
+    isSnapCenter?: boolean,
+    customSnapThreshold?: number,
+) {
+    return {
+        vertical: checkSnapPos(moveable, "vertical", posesX, isSnapCenter, customSnapThreshold),
+        horizontal: checkSnapPos(moveable, "horizontal", posesY, isSnapCenter, customSnapThreshold),
+    };
+}
 export function checkSnaps(
     moveable: MoveableManager<SnappableProps, SnappableState>,
     rect: {
@@ -144,12 +182,9 @@ export function checkSnaps(
     isCenter: boolean,
     customSnapThreshold?: number,
 ) {
-    const {
-        snapCenter,
-        snapThreshold = isUndefined(customSnapThreshold) ? 5 : customSnapThreshold,
-    } = moveable.props;
-    const guidelines = moveable.state.guidelines;
+    const snapCenter = moveable.props.snapCenter;
     const isSnapCenter = snapCenter! && isCenter;
+    const guidelines = moveable.state.guidelines;
 
     if (!guidelines || !guidelines.length) {
         return false;
@@ -164,12 +199,13 @@ export function checkSnaps(
     verticalNames = verticalNames.filter(name => name in rect);
     horizontalNames = horizontalNames.filter(name => name in rect);
 
-    return {
-        vertical:
-            checkSnap(guidelines, "vertical", verticalNames.map(name => rect[name]!), snapThreshold, isSnapCenter),
-        horizontal:
-            checkSnap(guidelines, "horizontal", horizontalNames.map(name => rect[name]!), snapThreshold, isSnapCenter),
-    };
+    return checkSnapPoses(
+        moveable,
+        verticalNames.map(name => rect[name]!),
+        horizontalNames.map(name => rect[name]!),
+        isSnapCenter,
+        customSnapThreshold,
+    );
 }
 
 export default {

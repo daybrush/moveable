@@ -1,6 +1,6 @@
 import { throttle, getDirection, triggerEvent } from "../utils";
 import { MIN_SCALE } from "../consts";
-import { setDragStart, getDragDist, getScaleDist, getPosByDirection, getSizeInfo } from "../DraggerUtils";
+import { setDragStart, getDragDist, getScaleDist, getPosByReverseDirection, getSizeInfo } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import {
@@ -214,7 +214,7 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getPosByDirection(getSizeInfo(moveable), direction);
+        const startPos = getPosByReverseDirection(getSizeInfo(moveable), direction);
 
         const events = triggerChildAble(
             moveable,
@@ -222,7 +222,7 @@ export default {
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const pos = getPosByDirection(getSizeInfo(child), direction);
+                const pos = getPosByReverseDirection(getSizeInfo(child), direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - startPos[0], pos[1] - startPos[1], 1],
@@ -255,7 +255,7 @@ export default {
             return;
         }
         const { scale, direction, dist } = params;
-        const prevPos = getPosByDirection(getSizeInfo(moveable), [
+        const prevPos = getPosByReverseDirection(getSizeInfo(moveable), [
             direction[0] * dist[0],
             direction[1] * dist[1],
         ]);

@@ -1,5 +1,12 @@
 import { throttle, getDirection, triggerEvent } from "../utils";
-import { setDragStart, getDragDist, getResizeDist, getPosByDirection, getSizeInfo, predict } from "../DraggerUtils";
+import {
+    setDragStart,
+    getDragDist,
+    getResizeDist,
+    getPosByReverseDirection,
+    getSizeInfo,
+    predict,
+} from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart,
@@ -139,6 +146,7 @@ export default {
                 distHeight = parentDistance * offsetHeight / offsetWidth;
             }
         } else {
+
             const dist = getDragDist({ datas, distX, distY });
 
             distWidth = direction[0] * dist[0];
@@ -165,7 +173,7 @@ export default {
             ? Math.round(throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!))
             : offsetHeight;
 
-        [nextWidth, nextHeight] = predict(moveable, nextWidth, nextHeight, direction);
+        [nextWidth, nextHeight] = predict(moveable, nextWidth, nextHeight, direction, datas);
         distWidth = nextWidth - offsetWidth;
         distHeight = nextHeight - offsetHeight;
 
@@ -229,7 +237,7 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getPosByDirection(getSizeInfo(moveable), direction);
+        const startPos = getPosByReverseDirection(getSizeInfo(moveable), direction);
 
         const events = triggerChildAble(
             moveable,
@@ -237,7 +245,7 @@ export default {
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const pos = getPosByDirection(getSizeInfo(child), direction);
+                const pos = getPosByReverseDirection(getSizeInfo(child), direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - startPos[0], pos[1] - startPos[1], 1],
@@ -279,7 +287,7 @@ export default {
             offsetWidth / (offsetWidth - dist[0]),
             offsetHeight / (offsetHeight - dist[1]),
         ];
-        const prevPos = getPosByDirection(getSizeInfo(moveable), direction);
+        const prevPos = getPosByReverseDirection(getSizeInfo(moveable), direction);
 
         const events = triggerChildAble(
             moveable,
