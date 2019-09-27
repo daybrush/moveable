@@ -2,7 +2,7 @@
 <p align="middle" ><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/logo.png"/></p>
 <h2 align="middle">Moveable</h2>
 <p align="middle">
-<a href="https://www.npmjs.com/package/moveable" target="_blank"><img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
+<a href="https://www.npmjs.com/package/moveable" target="_blank"><a href="https://opencollective.com/moveable" alt="Financial Contributors on Open Collective"><img src="https://opencollective.com/moveable/all/badge.svg?label=financial+contributors" /></a> <img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://travis-ci.org/daybrush/moveable" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/daybrush/moveable.svg?style=flat-square&label=build" /></a>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
@@ -226,6 +226,36 @@ If you have any questions or requests or want to contribute to `moveable` or oth
 
 If you find a bug, please report to us opening a new [Issue](https://github.com/daybrush/moveable/issues) on GitHub.
 
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/daybrush/moveable/graphs/contributors"><img src="https://opencollective.com/moveable/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/moveable/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/moveable"><img src="https://opencollective.com/moveable/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/moveable/contribute)]
+
+<a href="https://opencollective.com/moveable/organization/0/website"><img src="https://opencollective.com/moveable/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/1/website"><img src="https://opencollective.com/moveable/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/2/website"><img src="https://opencollective.com/moveable/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/3/website"><img src="https://opencollective.com/moveable/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/4/website"><img src="https://opencollective.com/moveable/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/5/website"><img src="https://opencollective.com/moveable/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/6/website"><img src="https://opencollective.com/moveable/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/7/website"><img src="https://opencollective.com/moveable/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/8/website"><img src="https://opencollective.com/moveable/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/9/website"><img src="https://opencollective.com/moveable/organization/9/avatar.svg"></a>
 
 ## 📝 License
 
