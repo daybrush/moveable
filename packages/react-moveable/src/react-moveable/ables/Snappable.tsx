@@ -1,9 +1,11 @@
 import MoveableManager from "../MoveableManager";
 import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo } from "../types";
 import { OnDrag, OnDragStart } from "@daybrush/drag";
-import { prefix, throttle } from "../utils";
+import { prefix, throttle, caculatePoses } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined } from "@daybrush/utils";
+import { getSizeInfo, getPosByReverseDirection, getPosesByDirection, getDragDist, scaleMatrix } from "../DraggerUtils";
+import { minus, plus } from "@moveable/matrix";
 
 function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { datas }: OnDragStart) {
     const state = moveable.state;
@@ -152,8 +154,8 @@ export function checkSnapPos(
     const snapThreshold = !isUndefined(customSnapThreshold)
         ? customSnapThreshold
         : !isUndefined(moveable.props.snapThreshold)
-        ? moveable.props.snapThreshold
-        : 5;
+            ? moveable.props.snapThreshold
+            : 5;
 
     return checkSnap(guidelines, targetType, poses, snapThreshold, isSnapCenter);
 }
@@ -206,6 +208,206 @@ export function checkSnaps(
         isSnapCenter,
         customSnapThreshold,
     );
+}
+export function getSize(x: number, y: number) {
+    return Math.sqrt(x * x + y * y);
+}
+
+export function checkSizeDist(
+    moveable: MoveableManager<any, any>,
+    matrix: number[],
+    direction: number[],
+    datas: any,
+) {
+    const {
+        is3d,
+        width,
+        height,
+    } = moveable.state;
+    const poses = getSizeInfo(moveable);
+    const fixedPos = getPosByReverseDirection(poses, direction);
+    const nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
+    const nextPos = getPosByReverseDirection(nextPoses, direction);
+
+    const dist = minus(fixedPos, nextPos);
+    const pos1 = plus(nextPoses[0], dist);
+    const pos2 = plus(nextPoses[1], dist);
+    const pos3 = plus(nextPoses[2], dist);
+    const pos4 = plus(nextPoses[3], dist);
+    const directionPoses = getPosesByDirection([pos1, pos2, pos3, pos4], direction);
+
+    if (direction[0] && direction[1]) {
+        const snapInfo = checkSnapPoses(
+            moveable,
+            directionPoses.map(pos => pos[0]),
+            directionPoses.map(pos => pos[1]),
+        );
+        const {
+            offset: horizontalOffset,
+        } = snapInfo.horizontal;
+        const {
+            offset: verticalOffset,
+        } = snapInfo.vertical;
+
+        // share drag event
+        const [widthDist, heightDist] = getDragDist({
+            datas,
+            distX: verticalOffset,
+            distY: horizontalOffset,
+        });
+
+        return[
+            -direction[0] * widthDist,
+            -direction[1] * heightDist,
+        ];
+    } else {
+        const isDirectionHorizontal = direction[0] !== 0;
+        const reverseDirectionPoses = getPosesByDirection([pos4, pos3, pos2, pos1], direction);
+        let posOffset = 0;
+
+        directionPoses.push([
+            (directionPoses[0][0] + directionPoses[1][0]) / 2,
+            (directionPoses[0][1] + directionPoses[1][1]) / 2,
+        ]);
+        reverseDirectionPoses.reverse();
+        reverseDirectionPoses.push([
+            (reverseDirectionPoses[0][0] + reverseDirectionPoses[1][0]) / 2,
+            (reverseDirectionPoses[0][1] + reverseDirectionPoses[1][1]) / 2,
+        ]);
+        directionPoses.some((directionPos, i) => {
+            const snapInfos = checkSnapPoses(
+                moveable,
+                [directionPos[0]],
+                [directionPos[1]],
+            );
+            const {
+                isSnap: isHorizontalSnap,
+                offset: horizontalOffset,
+                dist: horizontalDist,
+            } = snapInfos.horizontal;
+            const {
+                isSnap: isVerticalSnap,
+                offset: verticalOffset,
+                dist: verticalDist,
+            } = snapInfos.vertical;
+
+            if (!isHorizontalSnap && !isVerticalSnap) {
+                return false;
+            }
+            let isVertical!: boolean;
+
+            if (isHorizontalSnap && isVerticalSnap) {
+                if (horizontalDist === 0 && reverseDirectionPoses[i][1] === directionPos[1]) {
+                    isVertical = true;
+                } else if (verticalOffset === 0 && reverseDirectionPoses[i][0] === directionPos[0]) {
+                    isVertical = false;
+                } else {
+                    isVertical = horizontalDist > verticalDist ? true : false;
+                }
+            } else {
+                isVertical = isVerticalSnap;
+            }
+
+            const sizeOffset = predictOffset(
+                reverseDirectionPoses[i],
+                directionPos,
+                -(isVertical ? verticalOffset : horizontalOffset),
+                isVertical,
+            );
+
+            if (isNaN(sizeOffset)) {
+                return false;
+            }
+            posOffset = sizeOffset;
+            return true;
+        });
+
+        const offset = [0, 0];
+        offset[isDirectionHorizontal ? 0 : 1] = posOffset;
+
+        return offset;
+    }
+}
+export function checkSnapSize(
+    moveable: MoveableManager<any, any>,
+    width: number,
+    height: number,
+    direction: number[],
+    datas: any,
+) {
+    const nextSizes = [width, height];
+    if (!hasGuidlines(moveable)) {
+        return nextSizes;
+    }
+    return plus(nextSizes, checkSizeDist(moveable, moveable.state.matrix, direction, datas));
+}
+export function checkSnapScale(
+    moveable: MoveableManager<any, any>,
+    scale: number[],
+    direction: number[],
+    datas: any,
+) {
+    const {
+        width,
+        height,
+    } = moveable.state;
+    const nextScale = scale.slice();
+
+    if (!hasGuidlines(moveable)) {
+        return nextScale;
+    }
+
+    const sizeDist = checkSizeDist(moveable, scaleMatrix(datas, scale), direction, datas);
+
+    console.log("D_D_D", sizeDist[0]);
+    return [
+        scale[0] * (width + sizeDist[0]) / width,
+        scale[1] * (height + sizeDist[1]) / height,
+    ];
+}
+export function predictOffset(
+    pos1: number[],
+    pos2: number[],
+    snapOffset: number,
+    isVertical: boolean,
+) {
+    const dx = pos2[0] - pos1[0];
+    const dy = pos2[1] - pos1[1];
+
+    const sign = isVertical
+        ? ((dx > 0 && snapOffset > 0) || (dx < 0 && snapOffset < 0)) ? 1 : -1
+        : ((dy > 0 && snapOffset > 0) || (dy < 0 && snapOffset < 0)) ? 1 : -1;
+    if (!dx) {
+        // y = 0 * x + b
+        // only horizontal
+        if (!isVertical) {
+            return sign * Math.abs(snapOffset);
+        }
+        return NaN;
+    }
+    // y = ax + b
+    const a = dy / dx;
+    const b = pos1[1] - a * pos1[0];
+
+    if (!dy) {
+        // only vertical
+        if (isVertical) {
+            return sign * Math.abs(snapOffset);
+        }
+        return NaN;
+    }
+
+    if (isVertical) {
+        // y = a * x + b
+        const y = a * (pos2[0] + snapOffset) + b;
+
+        return sign * getSize(snapOffset, y - pos2[1]);
+    } else {
+        // x = (y - b) / a
+        const x = (pos2[1] + snapOffset - b) / a;
+
+        return sign * getSize(x - pos2[0], snapOffset);
+    }
 }
 
 export default {

@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = true; // this.state.isResizable;
+        const isResizable = false; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -150,6 +150,7 @@ class App extends React.Component {
                     horizontalGuidelines={[100, 200, 400, 500]}
                     elementGuildelines={[document.querySelector(".box span")!]}
                     snapCenter={false}
+                    snapThreshold={10}
                     scalable={!isResizable}
                     resizable={isResizable}
                     warpable={true}

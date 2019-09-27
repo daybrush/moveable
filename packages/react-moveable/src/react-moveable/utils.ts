@@ -15,8 +15,14 @@ import {
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState, Able } from "./types";
+import { MoveableManagerState } from "./types";
 
+export function multiply2(pos1: number[], pos2: number[]) {
+    return [
+        pos1[0] * pos2[0],
+        pos1[1] * pos2[1],
+    ];
+}
 export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
 }

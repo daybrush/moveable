@@ -1,4 +1,4 @@
-import { throttle, getDirection, triggerEvent } from "../utils";
+import { throttle, getDirection, triggerEvent, multiply2 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import { setDragStart, getDragDist, getScaleDist, getPosByReverseDirection, getSizeInfo } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
@@ -14,6 +14,7 @@ import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import { checkSnapScale } from "./Snappable";
 
 export default {
     name: "scalable",
@@ -101,9 +102,12 @@ export default {
         if (!isScale) {
             return false;
         }
-        // checkSnapSize(moveable as any, e, 0);
 
-        const { keepRatio, throttleScale, parentMoveable } = moveable.props;
+        const {
+            keepRatio,
+            throttleScale,
+            parentMoveable,
+        } = moveable.props;
         const target = moveable.state.target;
         let scaleX: number = 1;
         let scaleY: number = 1;
@@ -135,10 +139,8 @@ export default {
                 distWidth = distDiagonal;
                 distHeight = distDiagonal * height / width;
             }
-            const nextWidth = width + distWidth;
-            const nextHeight = height + distHeight;
-            scaleX = nextWidth / width;
-            scaleY = nextHeight / height;
+            scaleX = (width + distWidth) / width;
+            scaleY = (height + distHeight) / height;
         }
         scaleX = direction[0]
             ? throttle(scaleX * startScale[0], throttleScale!)
@@ -153,15 +155,20 @@ export default {
         if (scaleY === 0) {
             scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
-        const nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
-        const scale = [scaleX, scaleY];
+        let scale = [scaleX, scaleY];
+        let nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
+
+        nowDist = checkSnapScale(moveable, nowDist, direction, datas);
+
+        const  delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
+        // const prevScale = scale;
+        scale = multiply2(nowDist, startScale);
+
         datas.prevDist = nowDist;
 
         if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
             return false;
         }
-        const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
-
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
             : getScaleDist(moveable, delta, direction, dragClient);
@@ -255,10 +262,7 @@ export default {
             return;
         }
         const { scale, direction, dist } = params;
-        const prevPos = getPosByReverseDirection(getSizeInfo(moveable), [
-            direction[0] * dist[0],
-            direction[1] * dist[1],
-        ]);
+        const prevPos = getPosByReverseDirection(getSizeInfo(moveable), multiply2(direction, dist));
 
         const events = triggerChildAble(
             moveable,

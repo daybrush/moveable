@@ -5,7 +5,6 @@ import {
     getResizeDist,
     getPosByReverseDirection,
     getSizeInfo,
-    predict,
 } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -20,6 +19,7 @@ import {
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import { checkSnapSize } from "./Snappable";
 
 export default {
     name: "resizable",
@@ -173,7 +173,7 @@ export default {
             ? Math.round(throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!))
             : offsetHeight;
 
-        [nextWidth, nextHeight] = predict(moveable, nextWidth, nextHeight, direction, datas);
+        [nextWidth, nextHeight] = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
         distWidth = nextWidth - offsetWidth;
         distHeight = nextHeight - offsetHeight;
 
