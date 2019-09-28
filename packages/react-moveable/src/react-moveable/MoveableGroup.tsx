@@ -98,7 +98,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
     return [minX, minY, groupWidth, groupHeight];
 }
 
-class MoveableGroup extends MoveableManager<GroupableProps> {
+class MoveableGroup extends MoveableManager<GroupableProps, any> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
         transformOrigin: ["50%", "50%"],

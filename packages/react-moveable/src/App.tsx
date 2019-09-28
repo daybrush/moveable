@@ -151,6 +151,7 @@ class App extends React.Component {
                     elementGuildelines={[document.querySelector(".box span")!]}
                     snapCenter={false}
                     snapThreshold={10}
+                    bounds={{ left: 100 }}
                     scalable={!isResizable}
                     resizable={isResizable}
                     warpable={true}

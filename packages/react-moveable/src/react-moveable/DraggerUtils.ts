@@ -221,10 +221,10 @@ export function getScaleDist(
     const state = moveable.state;
     const {
         is3d,
-        width,
-        height,
         left,
         top,
+        width,
+        height,
     } = state;
 
     const n = is3d ? 4 : 3;

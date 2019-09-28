@@ -1,10 +1,10 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, MoveableManagerState } from "../types";
+import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo } from "../types";
 import { OnDrag, OnDragStart } from "@daybrush/drag";
-import { prefix, throttle, caculatePoses } from "../utils";
+import { prefix, caculatePoses, getRect } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined } from "@daybrush/utils";
-import { getSizeInfo, getPosByReverseDirection, getPosesByDirection, getDragDist, scaleMatrix } from "../DraggerUtils";
+import { getSizeInfo, getPosByReverseDirection, getPosesByDirection, getDragDist, scaleMatrix, getPosByDirection } from "../DraggerUtils";
 import { minus, plus } from "@moveable/matrix";
 
 function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { datas }: OnDragStart) {
@@ -33,13 +33,13 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { 
         height: containerHeight,
     } = containerRect;
 
-    const guideliens: Guideline[] = [];
+    const guidelines: Guideline[] = [];
 
     horizontalGuidelines!.forEach(pos => {
-        guideliens.push({ type: "horizontal", pos: [0, pos], size: containerWidth });
+        guidelines.push({ type: "horizontal", pos: [0, pos], size: containerWidth });
     });
     verticalGuidelines!.forEach(pos => {
-        guideliens.push({ type: "vertical", pos: [pos, 0], size: containerHeight });
+        guidelines.push({ type: "vertical", pos: [pos, 0], size: containerHeight });
     });
     elementGuildelines!.forEach(el => {
         const rect = el.getBoundingClientRect();
@@ -50,20 +50,20 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { 
         const elementLeft = left - containerLeft;
         const elementRight = elementLeft + width;
 
-        guideliens.push({ type: "vertical", element: el, pos: [elementLeft, elementTop], size: height });
-        guideliens.push({ type: "vertical", element: el, pos: [elementRight, elementTop], size: height });
-        guideliens.push({ type: "horizontal", element: el, pos: [elementLeft, elementTop], size: width });
-        guideliens.push({ type: "horizontal", element: el, pos: [elementLeft, elementBottom], size: width });
+        guidelines.push({ type: "vertical", element: el, pos: [elementLeft, elementTop], size: height });
+        guidelines.push({ type: "vertical", element: el, pos: [elementRight, elementTop], size: height });
+        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementTop], size: width });
+        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementBottom], size: width });
 
         if (snapCenter) {
-            guideliens.push({
+            guidelines.push({
                 type: "vertical",
                 element: el,
                 pos: [(elementLeft + elementRight) / 2, elementTop],
                 size: height,
                 center: true,
             });
-            guideliens.push({
+            guidelines.push({
                 type: "horizontal",
                 element: el,
                 pos: [elementLeft, (elementTop + elementBottom) / 2],
@@ -79,20 +79,66 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { 
     const startTop = targetTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
     const startBottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
 
-    state.guidelines = guideliens;
+    state.guidelines = guidelines;
     state.startLeft = startLeft;
     state.startRight = startRight;
     state.startTop = startTop;
     state.startBottom = startBottom;
 }
+function checkBounds(
+    moveable: MoveableManager<SnappableProps>,
+    verticalPoses: number[],
+    horizontalPoses: number[],
+) {
+    return {
+        vertical: checkBound(moveable, verticalPoses, true),
+        horizontal: checkBound(moveable, horizontalPoses, false),
+    };
+}
+function checkBound(
+    moveable: MoveableManager<SnappableProps>,
+    poses: number[],
+    isVertical: boolean,
+): BoundInfo {
+    const bounds = moveable.props.bounds;
 
+    if (!bounds) {
+        return {
+            isBound: false,
+            offset: 0,
+        };
+    }
+
+    const startPos = bounds[isVertical ? "left" : "top"];
+    const endPos = bounds[isVertical ? "right" : "bottom"];
+
+    const minPos = Math.min(...poses);
+    const maxPos = Math.max(...poses);
+
+    if (!isUndefined(startPos) && startPos > minPos) {
+        return {
+            isBound: true,
+            offset: minPos - startPos,
+        };
+    }
+    if (!isUndefined(endPos) && endPos < maxPos) {
+        return {
+            isBound: true,
+            offset: maxPos - endPos,
+        };
+    }
+
+    return {
+        isBound: false,
+        offset: 0,
+    };
+}
 function checkSnap(
     guidelines: Guideline[],
     targetType: "horizontal" | "vertical",
     targetPoses: number[],
     snapThreshold: number,
     isSnapCenter?: boolean,
-    throttleSnap: number = 0,
 ): SnapInfo {
     let snapGuidelines: Guideline[] = [];
     let snapDist = Infinity;
@@ -107,7 +153,7 @@ function checkSnap(
             if ((!isSnapCenter && center) || type !== targetType) {
                 return false;
             }
-            const offset = throttle(targetPos, throttleSnap) - throttle(pos[posType], throttleSnap);
+            const offset = targetPos - pos[posType];
             const dist = Math.abs(offset);
 
             if (dist > snapThreshold) {
@@ -186,11 +232,7 @@ export function checkSnaps(
 ) {
     const snapCenter = moveable.props.snapCenter;
     const isSnapCenter = snapCenter! && isCenter;
-    const guidelines = moveable.state.guidelines;
 
-    if (!guidelines || !guidelines.length) {
-        return false;
-    }
     let verticalNames: Array<"left" | "center" | "right"> = ["left", "right"];
     let horizontalNames: Array<"top" | "middle" | "bottom"> = ["top", "bottom"];
 
@@ -235,26 +277,41 @@ export function checkSizeDist(
     const directionPoses = getPosesByDirection([pos1, pos2, pos3, pos4], direction);
 
     if (direction[0] && direction[1]) {
-        const snapInfo = checkSnapPoses(
+        const {
+            horizontal: {
+                offset: horizontalOffset,
+            },
+            vertical: {
+                offset: verticalOffset,
+            },
+        } = checkSnapPoses(
             moveable,
-            directionPoses.map(pos => pos[0]),
-            directionPoses.map(pos => pos[1]),
+            [directionPoses[0][0]],
+            [directionPoses[0][1]],
         );
         const {
-            offset: horizontalOffset,
-        } = snapInfo.horizontal;
-        const {
-            offset: verticalOffset,
-        } = snapInfo.vertical;
+            horizontal: {
+                isBound: isHorizontalBound,
+                offset: horizontalBoundOffset,
+            },
+            vertical: {
+                isBound: isVerticalBound,
+                offset: verticalBoundOffset,
+            },
+        } = checkBounds(
+            moveable,
+            [directionPoses[0][0]],
+            [directionPoses[0][1]],
+        );
 
         // share drag event
         const [widthDist, heightDist] = getDragDist({
             datas,
-            distX: verticalOffset,
-            distY: horizontalOffset,
+            distX: isVerticalBound ? verticalBoundOffset : verticalOffset,
+            distY: isHorizontalBound ? horizontalBoundOffset : horizontalOffset,
         });
 
-        return[
+        return [
             -direction[0] * widthDist,
             -direction[1] * heightDist,
         ];
@@ -279,28 +336,61 @@ export function checkSizeDist(
                 [directionPos[1]],
             );
             const {
-                isSnap: isHorizontalSnap,
-                offset: horizontalOffset,
-                dist: horizontalDist,
-            } = snapInfos.horizontal;
+                horizontal: {
+                    isSnap: isHorizontalSnap,
+                    offset: horizontalSnapOffset,
+                    dist: horizontalDist,
+                },
+                vertical: {
+                    isSnap: isVerticalSnap,
+                    offset: verticalSnapOffset,
+                    dist: verticalDist,
+                },
+            } = snapInfos;
             const {
-                isSnap: isVerticalSnap,
-                offset: verticalOffset,
-                dist: verticalDist,
-            } = snapInfos.vertical;
+                horizontal: {
+                    isBound: isHorizontalBound,
+                    offset: horizontalBoundOffset,
+                },
+                vertical: {
+                    isBound: isVerticalBound,
+                    offset: verticalBoundOffset,
+                },
+            } = checkBounds(
+                moveable,
+                [directionPos[0]],
+                [directionPos[1]],
+            );
+            const fixedHorizontal = reverseDirectionPoses[i][1] === directionPos[1];
+            const fixedVertical = reverseDirectionPoses[i][0] === directionPos[0];
 
-            if (!isHorizontalSnap && !isVerticalSnap) {
-                return false;
-            }
             let isVertical!: boolean;
 
-            if (isHorizontalSnap && isVerticalSnap) {
-                if (horizontalDist === 0 && reverseDirectionPoses[i][1] === directionPos[1]) {
+            const horizontalOffset = isHorizontalBound || isVerticalBound
+                ? horizontalBoundOffset : horizontalSnapOffset;
+            const verticalOffset = isHorizontalBound || isVerticalBound
+                ? verticalBoundOffset : verticalSnapOffset;
+
+            if (isHorizontalBound && isVerticalBound) {
+                if (fixedHorizontal) {
                     isVertical = true;
-                } else if (verticalOffset === 0 && reverseDirectionPoses[i][0] === directionPos[0]) {
+                } else if (fixedVertical) {
                     isVertical = false;
                 } else {
-                    isVertical = horizontalDist > verticalDist ? true : false;
+                    isVertical = Math.abs(horizontalBoundOffset) < Math.abs(verticalBoundOffset);
+                }
+            } else if (isHorizontalBound || isVerticalBound) {
+                isVertical = isVerticalBound;
+            } else if (!isHorizontalSnap && !isVerticalSnap) {
+                // no snap
+                return false;
+            } else if (isHorizontalSnap && isVerticalSnap) {
+                if (horizontalDist === 0 && fixedHorizontal) {
+                    isVertical = true;
+                } else if (verticalOffset === 0 && fixedVertical) {
+                    isVertical = false;
+                } else {
+                    isVertical = horizontalDist > verticalDist;
                 }
             } else {
                 isVertical = isVerticalSnap;
@@ -359,7 +449,7 @@ export function checkSnapScale(
     const {
         width,
         height,
-    } = moveable.state;
+    } = datas;
     const nextScale = scale.slice();
 
     if (!hasGuidlines(moveable)) {
@@ -417,15 +507,33 @@ export function solveEquation(
 export default {
     name: "snappable",
     render(moveable: MoveableManager<SnappableProps, SnappableState>, React: Renderer): any[] {
-        const { pos1, pos2, pos3, pos4, left: targetLeft, top: targetTop } = moveable.state;
+        const { pos1, pos2, pos3, pos4, left: targetLeft, top: targetTop, snapDirection } = moveable.state;
 
+        if (!snapDirection || !hasGuidlines(moveable)) {
+            return [];
+        }
         const left = targetLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
         const right = targetLeft + Math.max(pos1[0], pos2[0], pos3[0], pos4[0]);
         const top = targetTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
         const bottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
         const center = (left + right) / 2;
         const middle = (top + bottom) / 2;
-        const snapInfos = checkSnaps(moveable, {
+
+        if (snapDirection === true) {
+
+        } else if (!snapDirection[0] && !snapDirection[1]) {
+            // pos1, pos2, pos3, pos4;
+        }
+        const {
+            vertical: {
+                guidelines: verticalGuildelines,
+                snapPoses: verticalSnapPoses,
+            },
+            horizontal: {
+                guidelines: horizontalGuidelines,
+                snapPoses: horizontalSnapPoses,
+            },
+        } = checkSnaps(moveable, {
             left,
             right,
             top,
@@ -433,18 +541,6 @@ export default {
             center,
             middle,
         }, true, 1);
-
-        if (!snapInfos) {
-            return [];
-        }
-        const {
-            guidelines: verticalGuildelines,
-            snapPoses: verticalSnapPoses,
-        } = snapInfos.vertical!;
-        const {
-            guidelines: horizontalGuidelines,
-            snapPoses: horizontalSnapPoses,
-        } = snapInfos.horizontal!;
 
         return [
             ...verticalSnapPoses.map((pos, i) => {
@@ -504,19 +600,19 @@ export default {
         ];
     },
     dragStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
+        moveable.state.snapDirection = true;
         snapStart(moveable, e);
     },
     drag(moveable: MoveableManager<SnappableProps, SnappableState>, e: OnDrag) {
         const { clientX, clientY, distX, distY } = e;
         const {
-            guidelines,
             startLeft,
             startTop,
             startBottom,
             startRight,
         } = moveable.state;
 
-        if (!guidelines || !guidelines.length) {
+        if (!hasGuidlines(moveable)) {
             return false;
         }
         const left = startLeft + distX;
@@ -534,39 +630,41 @@ export default {
             center,
             middle,
         }, true);
+        const boundInfos = checkBounds(moveable, [left, right], [top, bottom]);
+        let offsetX = 0;
+        let offsetY = 0;
 
-        if (!snapInfos) {
-            return;
-        }
-        const verticalSnapInfo = snapInfos.vertical!;
-        const horizontallSnapInfo = snapInfos.horizontal!;
-
-        if (verticalSnapInfo.isSnap) {
+        if (boundInfos.vertical.isBound) {
+            offsetX = boundInfos.vertical.offset;
+        } else if (snapInfos.vertical.isSnap) {
             // has vertical guidelines
-            const offsetX = verticalSnapInfo.offset;
-
-            e.clientX = clientX - offsetX;
-            e.distX = distX - offsetX;
+            offsetX = snapInfos.vertical.offset;
         }
-        if (horizontallSnapInfo.isSnap) {
+        if (boundInfos.horizontal.isBound) {
+            offsetY = boundInfos.horizontal.offset;
+        } else  if (snapInfos.horizontal.isSnap) {
             // has horizontal guidelines
-            const offsetY = horizontallSnapInfo.offset;
-
-            e.clientY = clientY - offsetY;
-            e.distY = distY - offsetY;
+            offsetY = snapInfos.horizontal.offset;
         }
+        e.clientX = clientX - offsetX;
+        e.clientY = clientY - offsetY;
+        e.distX = distX - offsetX;
+        e.distY = distY - offsetY;
     },
     dragEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
         moveable.state.guidelines = [];
+        moveable.state.snapDirection = null;
     },
     dragControlCondition: directionCondition,
     dragControlStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
+        moveable.state.snapDirection = null;
         snapStart(moveable, e);
     },
     dragControlEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
         this.dragEnd(moveable);
     },
     dragGroupStart(moveable: any, e: any) {
+        moveable.state.snapDirection = true;
         snapStart(moveable, e);
     },
     dragGroup(moveable: any, e: any) {
@@ -576,6 +674,7 @@ export default {
         this.dragEnd(moveable);
     },
     dragGroupControlStart(moveable: any, e: any) {
+        moveable.state.snapDirection = null;
         snapStart(moveable, e);
     },
     dragGroupControlEnd(moveable: any) {

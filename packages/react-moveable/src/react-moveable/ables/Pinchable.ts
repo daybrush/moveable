@@ -1,7 +1,7 @@
 import { Client } from "@daybrush/drag";
 import { triggerEvent } from "../utils";
 import MoveableManager from "../MoveableManager";
-import { PinchableProps, Able } from "../types";
+import { PinchableProps, Able, SnappableProps, SnappableState } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { getRad } from "@moveable/matrix";
 
@@ -19,7 +19,7 @@ export default {
     name: "pinchable",
     updateRect: true,
     pinchStart(
-        moveable: MoveableManager<PinchableProps>,
+        moveable: MoveableManager<PinchableProps, SnappableState>,
         { datas, clientX, clientY, touches, inputEvent, targets }: any,
     ) {
         const { pinchable, ables } = moveable.props;
@@ -67,6 +67,7 @@ export default {
             able[controlEventName]!(moveable, e);
         });
 
+        moveable.state.snapDirection = [0, 0];
         return isPinch;
     },
     pinch(

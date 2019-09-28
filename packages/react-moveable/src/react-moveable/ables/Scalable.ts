@@ -5,7 +5,7 @@ import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import {
     ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
-    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart, OnDrag,
+    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart, OnDrag, SnappableState,
 } from "../types";
 import {
     directionCondition, triggerChildAble,
@@ -32,7 +32,7 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ScalableProps & DraggableProps>,
+        moveable: MoveableManager<ScalableProps & DraggableProps, SnappableState>,
         e: any) {
 
         const { datas, clientX, clientY, pinchFlag, inputEvent } = e;
@@ -78,6 +78,8 @@ export default {
 
         if (result !== false) {
             datas.isScale = true;
+            moveable.state.snapDirection = direction;
+
         }
         return datas.isScale ? params : false;
     },

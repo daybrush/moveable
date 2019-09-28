@@ -8,7 +8,7 @@ import {
 } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
-    Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart,
+    Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
 } from "../types";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
@@ -38,7 +38,7 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ResizableProps & DraggableProps>,
+        moveable: MoveableManager<ResizableProps & DraggableProps, SnappableState>,
         e: any,
     ) {
         const {
@@ -91,6 +91,7 @@ export default {
         const result = triggerEvent(moveable, "onResizeStart", params);
         if (result !== false) {
             datas.isResize = true;
+            moveable.state.snapDirection = direction;
         }
         return datas.isResize ? params : false;
     },
