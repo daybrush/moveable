@@ -1,5 +1,5 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo } from "../types";
+import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, MoveableManagerState } from "../types";
 import { OnDrag, OnDragStart } from "@daybrush/drag";
 import { prefix, throttle, caculatePoses } from "../utils";
 import { directionCondition } from "../groupUtils";
@@ -216,14 +216,12 @@ export function getSize(x: number, y: number) {
 export function checkSizeDist(
     moveable: MoveableManager<any, any>,
     matrix: number[],
+    width: number,
+    height: number,
     direction: number[],
     datas: any,
+    is3d: boolean,
 ) {
-    const {
-        is3d,
-        width,
-        height,
-    } = moveable.state;
     const poses = getSizeInfo(moveable);
     const fixedPos = getPosByReverseDirection(poses, direction);
     const nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
@@ -261,7 +259,7 @@ export function checkSizeDist(
             -direction[1] * heightDist,
         ];
     } else {
-        const isDirectionHorizontal = direction[0] !== 0;
+        const directionIndex = direction[0] !== 0 ? 0 : 1;
         const reverseDirectionPoses = getPosesByDirection([pos4, pos3, pos2, pos1], direction);
         let posOffset = 0;
 
@@ -308,22 +306,29 @@ export function checkSizeDist(
                 isVertical = isVerticalSnap;
             }
 
-            const sizeOffset = predictOffset(
+            const sizeOffset = solveEquation(
                 reverseDirectionPoses[i],
                 directionPos,
                 -(isVertical ? verticalOffset : horizontalOffset),
                 isVertical,
             );
 
-            if (isNaN(sizeOffset)) {
+            if (!sizeOffset) {
                 return false;
             }
-            posOffset = sizeOffset;
+            const [widthDist, heightDist] = getDragDist({
+                datas,
+                distX: sizeOffset[0],
+                distY: sizeOffset[1],
+            });
+
+            posOffset = direction[directionIndex] * (directionIndex ? heightDist : widthDist);
             return true;
         });
 
         const offset = [0, 0];
-        offset[isDirectionHorizontal ? 0 : 1] = posOffset;
+
+        offset[directionIndex] = posOffset;
 
         return offset;
     }
@@ -339,7 +344,11 @@ export function checkSnapSize(
     if (!hasGuidlines(moveable)) {
         return nextSizes;
     }
-    return plus(nextSizes, checkSizeDist(moveable, moveable.state.matrix, direction, datas));
+    const {
+        matrix,
+        is3d,
+    } = moveable.state;
+    return plus(nextSizes, checkSizeDist(moveable, matrix, width, height, direction, datas, is3d));
 }
 export function checkSnapScale(
     moveable: MoveableManager<any, any>,
@@ -357,15 +366,14 @@ export function checkSnapScale(
         return nextScale;
     }
 
-    const sizeDist = checkSizeDist(moveable, scaleMatrix(datas, scale), direction, datas);
+    const sizeDist = checkSizeDist(moveable, scaleMatrix(datas, scale), width, height, direction, datas, datas.is3d);
 
-    console.log("D_D_D", sizeDist[0]);
     return [
-        scale[0] * (width + sizeDist[0]) / width,
-        scale[1] * (height + sizeDist[1]) / height,
+        scale[0] + sizeDist[0] / width,
+        scale[1] + sizeDist[1] / height,
     ];
 }
-export function predictOffset(
+export function solveEquation(
     pos1: number[],
     pos2: number[],
     snapOffset: number,
@@ -374,39 +382,35 @@ export function predictOffset(
     const dx = pos2[0] - pos1[0];
     const dy = pos2[1] - pos1[1];
 
-    const sign = isVertical
-        ? ((dx > 0 && snapOffset > 0) || (dx < 0 && snapOffset < 0)) ? 1 : -1
-        : ((dy > 0 && snapOffset > 0) || (dy < 0 && snapOffset < 0)) ? 1 : -1;
     if (!dx) {
         // y = 0 * x + b
         // only horizontal
         if (!isVertical) {
-            return sign * Math.abs(snapOffset);
+            return [0, snapOffset];
         }
-        return NaN;
+        return;
+    }
+    if (!dy) {
+        // only vertical
+        if (isVertical) {
+            return [snapOffset, 0];
+        }
+        return;
     }
     // y = ax + b
     const a = dy / dx;
     const b = pos1[1] - a * pos1[0];
 
-    if (!dy) {
-        // only vertical
-        if (isVertical) {
-            return sign * Math.abs(snapOffset);
-        }
-        return NaN;
-    }
-
     if (isVertical) {
         // y = a * x + b
         const y = a * (pos2[0] + snapOffset) + b;
 
-        return sign * getSize(snapOffset, y - pos2[1]);
+        return [snapOffset, y - pos2[1]];
     } else {
         // x = (y - b) / a
         const x = (pos2[1] + snapOffset - b) / a;
 
-        return sign * getSize(x - pos2[0], snapOffset);
+        return [x - pos2[0], snapOffset];
     }
 }
 
