@@ -182,9 +182,16 @@ function checkSnap(
 export function hasGuidlines(
     moveable: MoveableManager<any, any>,
 ): moveable is MoveableManager<SnappableProps, SnappableState> {
-    const guidelines = moveable.state.guidelines;
+    const {
+        props: {
+            snappable,
+        },
+        state: {
+            guidelines,
+        },
+    } = moveable;
 
-    if (!guidelines || !guidelines.length) {
+    if (!snappable || !guidelines || !guidelines.length) {
         return false;
     }
     return true;
