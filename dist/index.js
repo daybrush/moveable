@@ -4,7 +4,7 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.7.5
+version: 0.9.0
 */
 (function () {
     'use strict';
@@ -345,6 +345,7 @@ version: 0.7.5
       Component.VERSION = "2.1.2";
       return Component;
     }();
+    //# sourceMappingURL=component.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -371,6 +372,7 @@ version: 0.7.5
         });
       };
     }
+    //# sourceMappingURL=utils.esm.js.map
 
     var VNode = function VNode() {};
 
@@ -441,6 +443,10 @@ version: 0.7.5
     }
 
     var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
+
+    function cloneElement(vnode, props) {
+      return h(vnode.nodeName, extend(extend({}, vnode.attributes), props), arguments.length > 2 ? [].slice.call(arguments, 2) : vnode.children);
+    }
 
     var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
@@ -1071,6 +1077,65 @@ version: 0.7.5
       return diff(merge, vnode, {}, false, parent, false);
     }
 
+    function createRef() {
+    	return {};
+    }
+    //# sourceMappingURL=preact.mjs.map
+
+    var PropTypes = {
+        checkPropTypes: function () {}
+    };
+
+    function createEmitter(initialValue, bitmaskFactory) {
+        var registeredUpdaters = [];
+        var value = initialValue;
+        var diff = function (newValue) { return bitmaskFactory(value, newValue) | 0; };
+        return {
+            register: function (updater) {
+                registeredUpdaters.push(updater);
+                updater(value, diff(value));
+            },
+            unregister: function (updater) {
+                registeredUpdaters = registeredUpdaters.filter(function (i) { return i !== updater; });
+            },
+            val: function (newValue) {
+                if (newValue === undefined || newValue == value) {
+                    return value;
+                }
+                var bitmask = diff(newValue);
+                value = newValue;
+                registeredUpdaters.forEach(function (up) { return up(newValue, bitmask); });
+                return value;
+            }
+        };
+    }
+    var noopEmitter = {
+        register: function (_) {
+            console.warn("Consumer used without a Provider");
+        },
+        unregister: function (_) {
+            // do nothing
+        },
+        val: function (_) {
+            //do nothing;
+        }
+    };
+
+    /*
+     * Extracts the children from the props and returns an object containing the
+     * only element of the given array (preact always passes children as an array)
+     * or null otherwise. The result contains always a reference to the original
+     * array of children
+     *
+     * @param {RenderableProps<*>} props - the component's properties
+     * @return {{ child: JSX.Element | null, children: JSX.Element[]}}
+     */
+    function getOnlyChildAndChildren(props) {
+        var children = props.children;
+        var child = children.length === 1 ? children[0] : null;
+        return { child: child, children: children };
+    }
+
     var __extends$1 = (undefined && undefined.__extends) || (function () {
         var extendStatics = function (d, b) {
             extendStatics = Object.setPrototypeOf ||
@@ -1084,6 +1149,102 @@ version: 0.7.5
             d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
         };
     })();
+    function getRenderer(props) {
+        var child = getOnlyChildAndChildren(props).child;
+        // TODO: "render" in props check is only done to make TS happy
+        return child || ("render" in props && props.render);
+    }
+    var MAX_SIGNED_31_BIT_INT = 1073741823;
+    var defaultBitmaskFactory = function () { return MAX_SIGNED_31_BIT_INT; };
+    var ids = 0;
+    function _createContext(value, bitmaskFactory) {
+        var key = "_preactContextProvider-" + ids++;
+        var Provider = /*#__PURE__*/ (function (_super) {
+            __extends$1(Provider, _super);
+            function Provider(props) {
+                var _this = _super.call(this, props) || this;
+                _this._emitter = createEmitter(props.value, bitmaskFactory || defaultBitmaskFactory);
+                return _this;
+            }
+            Provider.prototype.getChildContext = function () {
+                var _a;
+                return _a = {}, _a[key] = this._emitter, _a;
+            };
+            Provider.prototype.componentDidUpdate = function () {
+                this._emitter.val(this.props.value);
+            };
+            Provider.prototype.render = function () {
+                var _a = getOnlyChildAndChildren(this.props), child = _a.child, children = _a.children;
+                if (child) {
+                    return child;
+                }
+                // preact does not support fragments,
+                // therefore we wrap the children in a span
+                return h("span", null, children);
+            };
+            return Provider;
+        }(Component$1));
+        var Consumer = /*#__PURE__*/ (function (_super) {
+            __extends$1(Consumer, _super);
+            function Consumer(props, ctx) {
+                var _this = _super.call(this, props, ctx) || this;
+                _this._updateContext = function (value, bitmask) {
+                    var unstable_observedBits = _this.props.unstable_observedBits;
+                    var observed = unstable_observedBits === undefined || unstable_observedBits === null
+                        ? MAX_SIGNED_31_BIT_INT
+                        : unstable_observedBits;
+                    observed = observed | 0;
+                    if ((observed & bitmask) === 0) {
+                        return;
+                    }
+                    _this.setState({ value: value });
+                };
+                _this.state = { value: _this._getEmitter().val() || value };
+                return _this;
+            }
+            Consumer.prototype.componentDidMount = function () {
+                this._getEmitter().register(this._updateContext);
+            };
+            Consumer.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+                return (this.state.value !== nextState.value ||
+                    getRenderer(this.props) !== getRenderer(nextProps));
+            };
+            Consumer.prototype.componentWillUnmount = function () {
+                this._getEmitter().unregister(this._updateContext);
+            };
+            Consumer.prototype.componentDidUpdate = function (_, __, prevCtx) {
+                var previousProvider = prevCtx[key];
+                if (previousProvider === this.context[key]) {
+                    return;
+                }
+                (previousProvider || noopEmitter).unregister(this._updateContext);
+                this.componentDidMount();
+            };
+            Consumer.prototype.render = function () {
+                // TODO: "render" in props check is only done to make TS happy
+                var render = "render" in this.props && this.props.render;
+                var r = getRenderer(this.props);
+                if (render && render !== r) {
+                    console.warn("Both children and a render function are defined. Children will be used");
+                }
+                if (typeof r === "function") {
+                    return r(this.state.value);
+                }
+                console.warn("Consumer is expecting a function as one and only child but didn't find any");
+            };
+            Consumer.prototype._getEmitter = function () {
+                return this.context[key] || noopEmitter;
+            };
+            return Consumer;
+        }(Component$1));
+        return {
+            Provider: Provider,
+            Consumer: Consumer
+        };
+    }
+    var createContext = _createContext;
+
+    var version = '15.1.0'; // trick libraries to think we are react
 
     var ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(
     	' '
@@ -1118,6 +1279,11 @@ version: 0.7.5
     	DEV = process.env.NODE_ENV !== 'production';
     }
     catch (e) { }
+
+    // a component that renders nothing. Used to replace components for unmountComponentAtNode.
+    function EmptyComponent() {
+    	return null;
+    }
 
     // make react think we're react.
     var VNode$1 = h('a', null).constructor;
@@ -1214,6 +1380,29 @@ version: 0.7.5
     	}
     }
 
+    // proxy render() since React returns a Component reference.
+    function render$1(vnode, parent, callback) {
+    	var prev = parent && parent._preactCompatRendered && parent._preactCompatRendered.base;
+
+    	// ignore impossible previous renders
+    	if (prev && prev.parentNode !== parent) { prev = null; }
+
+    	// default to first Element child
+    	if (!prev && parent) { prev = parent.firstElementChild; }
+
+    	// remove unaffected siblings
+    	for (var i = parent.childNodes.length; i--;) {
+    		if (parent.childNodes[i] !== prev) {
+    			parent.removeChild(parent.childNodes[i]);
+    		}
+    	}
+
+    	var out = render(vnode, parent, prev);
+    	if (parent) { parent._preactCompatRendered = out && (out._component || { base: out }); }
+    	if (typeof callback === 'function') { callback(); }
+    	return (out && out._component) || out;
+    }
+
     var ContextProvider = function () {};
 
     ContextProvider.prototype.getChildContext = function () {
@@ -1223,7 +1412,60 @@ version: 0.7.5
     	return props.children[0];
     };
 
+    function renderSubtreeIntoContainer(parentComponent, vnode, container, callback) {
+    	var wrap = h(ContextProvider, { context: parentComponent.context }, vnode);
+    	var renderContainer = render$1(wrap, container);
+    	var component = renderContainer._component || renderContainer.base;
+    	if (callback) { callback.call(component, renderContainer); }
+    	return component;
+    }
+
+    function Portal(props) {
+    	renderSubtreeIntoContainer(this, props.vnode, props.container);
+    }
+
+    function createPortal(vnode, container) {
+    	return h(Portal, { vnode: vnode, container: container });
+    }
+
+    function unmountComponentAtNode(container) {
+    	var existing = container._preactCompatRendered && container._preactCompatRendered.base;
+    	if (existing && existing.parentNode === container) {
+    		render(h(EmptyComponent), container, existing);
+    		return true;
+    	}
+    	return false;
+    }
+
     var ARR = [];
+
+    // This API is completely unnecessary for Preact, so it's basically passthrough.
+    var Children = {
+    	map: function(children, fn, ctx) {
+    		if (children == null) { return null; }
+    		children = Children.toArray(children);
+    		if (ctx && ctx !== children) { fn = fn.bind(ctx); }
+    		return children.map(fn);
+    	},
+    	forEach: function(children, fn, ctx) {
+    		if (children == null) { return null; }
+    		children = Children.toArray(children);
+    		if (ctx && ctx !== children) { fn = fn.bind(ctx); }
+    		children.forEach(fn);
+    	},
+    	count: function(children) {
+    		return (children && children.length) || 0;
+    	},
+    	only: function(children) {
+    		children = Children.toArray(children);
+    		if (children.length !== 1) { throw new Error('Children.only() expects only one child.'); }
+    		return children[0];
+    	},
+    	toArray: function(children) {
+    		if (children == null) { return []; }
+    		return ARR.concat(children);
+    	}
+    };
 
     /** Track current render() component for ref assignment */
     var currentComponent;
@@ -1310,6 +1552,29 @@ version: 0.7.5
     	applyEventNormalization(vnode);
 
     	return vnode;
+    }
+
+    function cloneElement$1(element, props) {
+    	var children = [], len = arguments.length - 2;
+    	while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
+
+    	if (!isValidElement(element)) { return element; }
+    	var elementProps = element.attributes || element.props;
+    	var node = h(
+    		element.nodeName || element.type,
+    		extend$1({}, elementProps),
+    		element.children || (elementProps && elementProps.children)
+    	);
+    	// Only provide the 3rd argument if needed.
+    	// Arguments 3+ overwrite element.children in preactCloneElement
+    	var cloneArgs = [node, props];
+    	if (children && children.length) {
+    		cloneArgs.push(children);
+    	}
+    	else if (props && props.children) {
+    		cloneArgs.push(props.children);
+    	}
+    	return normalizeVNode(cloneElement.apply(void 0, cloneArgs));
     }
 
     function isValidElement(element) {
@@ -1534,6 +1799,10 @@ version: 0.7.5
     		var ctor = typeof this === 'function' ? this : this.constructor,
     			propTypes = this.propTypes || ctor.propTypes;
     		var displayName = this.displayName || ctor.name;
+
+    		if (propTypes) {
+    			PropTypes.checkPropTypes(propTypes, props, 'prop', displayName);
+    		}
     	}
     }
 
@@ -1591,6 +1860,60 @@ version: 0.7.5
     	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
     };
 
+    function unstable_batchedUpdates(callback) {
+    	callback();
+    }
+
+    var index = {
+    	version: version,
+    	DOM: DOM,
+    	PropTypes: PropTypes,
+    	Children: Children,
+    	render: render$1,
+    	hydrate: render$1,
+    	createClass: createClass,
+    	createContext: createContext,
+    	createPortal: createPortal,
+    	createFactory: createFactory,
+    	createElement: createElement,
+    	cloneElement: cloneElement$1,
+    	createRef: createRef,
+    	isValidElement: isValidElement,
+    	findDOMNode: findDOMNode,
+    	unmountComponentAtNode: unmountComponentAtNode,
+    	Component: Component$1$1,
+    	PureComponent: PureComponent,
+    	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
+    	unstable_batchedUpdates: unstable_batchedUpdates,
+    	__spread: extend$1
+    };
+    //# sourceMappingURL=preact-compat.es.js.map
+
+    var React = ({
+        'default': index,
+        version: version,
+        DOM: DOM,
+        Children: Children,
+        render: render$1,
+        hydrate: render$1,
+        createClass: createClass,
+        createPortal: createPortal,
+        createFactory: createFactory,
+        createElement: createElement,
+        cloneElement: cloneElement$1,
+        isValidElement: isValidElement,
+        findDOMNode: findDOMNode,
+        unmountComponentAtNode: unmountComponentAtNode,
+        Component: Component$1$1,
+        PureComponent: PureComponent,
+        unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
+        unstable_batchedUpdates: unstable_batchedUpdates,
+        __spread: extend$1,
+        PropTypes: PropTypes,
+        createRef: createRef,
+        createContext: createContext
+    });
+
     /*
     Copyright (c) 2019 Daybrush
     name: framework-utils
@@ -1627,6 +1950,7 @@ version: 0.7.5
         e && (target[name][i] = e);
       };
     }
+    //# sourceMappingURL=utils.esm.js.map
 
     /*
     Copyright (c) 2017 NAVER Corp.
@@ -1966,6 +2290,7 @@ version: 0.7.5
      * @memberof eg.agent
      */
     agent.VERSION = "2.1.5";
+    //# sourceMappingURL=agent.esm.js.map
 
     /*
     Copyright (c) 2018 Daybrush
@@ -1973,7 +2298,7 @@ version: 0.7.5
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/utils
-    @version 0.10.0
+    @version 0.10.1
     */
     /**
     * @namespace
@@ -2282,6 +2607,24 @@ version: 0.7.5
       return typeof value === STRING;
     }
     /**
+    * Check the type that the value is function.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isFunction} from "@daybrush/utils";
+
+    console.log(isFunction(function a() {})); // true
+    console.log(isFunction(() => {})); // true
+    console.log(isFunction("1234")); // false
+    console.log(isFunction(1)); // false
+    console.log(isFunction(null)); // false
+    */
+
+    function isFunction(value) {
+      return typeof value === FUNCTION;
+    }
+    /**
     * divide text by space.
     * @memberof Utils
     * @param {string} text - text to divide
@@ -2402,6 +2745,34 @@ version: 0.7.5
       return str.replace(/[\s-_]([a-z])/g, function (all, letter) {
         return letter.toUpperCase();
       });
+    }
+    /**
+    * Returns the index of the first element in the array that satisfies the provided testing function.
+    * @function
+    * @memberof CrossBrowser
+    * @param - The array `findIndex` was called upon.
+    * @param - A function to execute on each value in the array until the function returns true, indicating that the satisfying element was found.
+    * @param - Returns defaultIndex if not found by the function.
+    * @example
+    import { findIndex } from "@daybrush/utils";
+
+    findIndex([{a: 1}, {a: 2}, {a: 3}, {a: 4}], ({ a }) => a === 2); // 1
+    */
+
+    function findIndex(arr, callback, defaultIndex) {
+      if (defaultIndex === void 0) {
+        defaultIndex = -1;
+      }
+
+      var length = arr.length;
+
+      for (var i = 0; i < length; ++i) {
+        if (callback(arr[i], i, arr)) {
+          return i;
+        }
+      }
+
+      return defaultIndex;
     }
 
     /**
@@ -2594,6 +2965,43 @@ version: 0.7.5
       return !!element.className.match(new RegExp("(\\s|^)" + className + "(\\s|$)"));
     }
     /**
+    * Add the specified class value. If these classe already exist in the element's class attribute they are ignored.
+    * @memberof DOM
+    * @param element - target
+    * @param className - the class name to add
+    * @example
+    import {addClass} from "@daybrush/utils";
+
+    addClass(element, "start");
+    */
+
+    function addClass(element, className) {
+      if (element.classList) {
+        element.classList.add(className);
+      } else {
+        element.className += " " + className;
+      }
+    }
+    /**
+    * Removes the specified class value.
+    * @memberof DOM
+    * @param element - target
+    * @param className - the class name to remove
+    * @example
+    import {removeClass} from "@daybrush/utils";
+
+    removeClass(element, "start");
+    */
+
+    function removeClass(element, className) {
+      if (element.classList) {
+        element.classList.remove(className);
+      } else {
+        var reg = new RegExp("(\\s|^)" + className + "(\\s|$)");
+        element.className = element.className.replace(reg, " ");
+      }
+    }
+    /**
     * Sets up a function that will be called whenever the specified event is delivered to the target
     * @memberof DOM
     * @param - event target
@@ -2629,6 +3037,7 @@ version: 0.7.5
     function removeEvent(el, type, listener) {
       el.removeEventListener(type, listener);
     }
+    //# sourceMappingURL=utils.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -2824,6 +3233,7 @@ version: 0.7.5
         }(Component$1$1)
       );
     }
+    //# sourceMappingURL=styler.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -2831,7 +3241,7 @@ version: 0.7.5
     license: MIT
     author: Daybrush
     repository: git+https://github.com/daybrush/drag.git
-    version: 0.8.1
+    version: 0.10.1
     */
 
     /*! *****************************************************************************
@@ -2862,12 +3272,12 @@ version: 0.7.5
       return __assign$2.apply(this, arguments);
     };
 
-    function getPinchDragPosition(clients, prevClients, startClients) {
+    function getPinchDragPosition(clients, prevClients, startClients, startPinchClients) {
       var nowCenter = getAverageClient(clients);
       var prevCenter = getAverageClient(prevClients);
-      var startCenter = getAverageClient(startClients);
-      var pinchClient = getAddClient(startClients[0], getMinusClient(nowCenter, startCenter));
-      var pinchPrevClient = getAddClient(startClients[0], getMinusClient(prevCenter, startCenter));
+      var startCenter = getAverageClient(startPinchClients);
+      var pinchClient = getAddClient(startPinchClients[0], getMinusClient(nowCenter, startCenter));
+      var pinchPrevClient = getAddClient(startPinchClients[0], getMinusClient(prevCenter, startCenter));
       return getPosition(pinchClient, pinchPrevClient, startClients[0]);
     }
     function isMultiTouch(e) {
@@ -2964,10 +3374,24 @@ version: 0.7.5
         this.isTouch = false;
         this.prevClients = [];
         this.startClients = [];
+        this.movement = 0;
+        this.startPinchClients = [];
+        this.startDistance = 0;
+        this.customDist = [0, 0];
 
         this.onDragStart = function (e) {
-          if (!_this.isDrag && isMultiTouch(e) && !_this.pinchFlag) {
-            _this.onPinchStart(e);
+          if (!_this.flag && e.cancelable === false) {
+            return;
+          }
+
+          if (isMultiTouch(e)) {
+            if (!_this.flag && e.touches.length !== e.changedTouches.length) {
+              return;
+            }
+
+            if (!_this.pinchFlag) {
+              _this.onPinchStart(e);
+            }
           }
 
           if (_this.flag) {
@@ -2975,11 +3399,13 @@ version: 0.7.5
           }
 
           var clients = _this.startClients[0] ? _this.startClients : getPositionEvent(e);
+          _this.customDist = [0, 0];
           _this.flag = true;
           _this.isDrag = false;
           _this.startClients = clients;
           _this.prevClients = clients;
           _this.datas = {};
+          _this.movement = 0;
           var position = getPosition(clients[0], _this.prevClients[0], _this.startClients[0]);
           var _a = _this.options,
               dragstart = _a.dragstart,
@@ -2989,6 +3415,8 @@ version: 0.7.5
             datas: _this.datas,
             inputEvent: e
           }, position))) === false) {
+            _this.startClients = [];
+            _this.prevClients = [];
             _this.flag = false;
           }
 
@@ -3006,22 +3434,16 @@ version: 0.7.5
             _this.onPinch(e, clients);
           }
 
-          var prevClients = _this.prevClients;
-          var startClients = _this.startClients;
-          var position = _this.pinchFlag ? getPinchDragPosition(clients, prevClients, startClients) : getPosition(clients[0], prevClients[0], startClients[0]);
+          var result = _this.move([0, 0], e, clients);
 
-          if (!position.deltaX && !position.deltaY) {
+          if (!result || !result.deltaX && !result.deltaY) {
             return;
           }
 
-          _this.isDrag = true;
           var drag = _this.options.drag;
-          drag && drag(__assign$2({
-            datas: _this.datas
-          }, position, {
+          drag && drag(__assign$2({}, result, {
             inputEvent: e
           }));
-          _this.prevClients = clients;
         };
 
         this.onDragEnd = function (e) {
@@ -3037,7 +3459,7 @@ version: 0.7.5
           var dragend = _this.options.dragend;
           var prevClients = _this.prevClients;
           var startClients = _this.startClients;
-          var position = _this.pinchFlag ? getPinchDragPosition(prevClients, prevClients, startClients) : getPosition(prevClients[0], prevClients[0], startClients[0]);
+          var position = _this.pinchFlag ? getPinchDragPosition(prevClients, prevClients, startClients, _this.startPinchClients) : getPosition(prevClients[0], prevClients[0], startClients[0]);
           _this.startClients = [];
           _this.prevClients = [];
           dragend && dragend(__assign$2({
@@ -3050,6 +3472,7 @@ version: 0.7.5
         this.options = __assign$2({
           container: el,
           preventRightClick: true,
+          pinchThreshold: 0,
           events: ["touch", "mouse"]
         }, options);
         var _a = this.options,
@@ -3057,6 +3480,7 @@ version: 0.7.5
             events = _a.events;
         this.isTouch = events.indexOf("touch") > -1;
         this.isMouse = events.indexOf("mouse") > -1;
+        this.customDist = [0, 0];
 
         if (this.isMouse) {
           addEvent(el, "mousedown", this.onDragStart);
@@ -3081,26 +3505,62 @@ version: 0.7.5
         return this.isPinch;
       };
 
+      __proto.move = function (_a, inputEvent, clients) {
+        var deltaX = _a[0],
+            deltaY = _a[1];
+
+        if (clients === void 0) {
+          clients = this.prevClients;
+        }
+
+        var customDist = this.customDist;
+        var prevClients = this.prevClients;
+        var startClients = this.startClients;
+        var position = this.pinchFlag ? getPinchDragPosition(clients, prevClients, startClients, this.startPinchClients) : getPosition(clients[0], prevClients[0], startClients[0]);
+        customDist[0] += deltaX;
+        customDist[1] += deltaY;
+        position.deltaX += deltaX;
+        position.deltaY += deltaY;
+        var positionDeltaX = position.deltaX,
+            positionDeltaY = position.deltaY;
+        position.distX += customDist[0];
+        position.distY += customDist[1];
+        this.movement += Math.sqrt(positionDeltaX * positionDeltaX + positionDeltaY * positionDeltaY);
+        this.prevClients = clients;
+        this.isDrag = true;
+        return __assign$2({
+          datas: this.datas
+        }, position, {
+          inputEvent: inputEvent
+        });
+      };
+
       __proto.onPinchStart = function (e) {
         var _a, _b;
 
-        if (!this.flag) {
+        var _c = this.options,
+            pinchstart = _c.pinchstart,
+            pinchThreshold = _c.pinchThreshold;
+
+        if (this.isDrag && this.movement > pinchThreshold) {
           return;
         }
 
-        this.pinchFlag = true;
-        var pinchstart = this.options.pinchstart;
         var pinchClients = getClients(e.changedTouches);
+        this.pinchFlag = true;
 
         (_a = this.startClients).push.apply(_a, pinchClients);
 
         (_b = this.prevClients).push.apply(_b, pinchClients);
 
+        this.startDistance = getDist(this.prevClients);
+        this.startPinchClients = this.prevClients.slice();
+
         if (!pinchstart) {
           return;
         }
 
-        var startClients = this.startClients;
+        var startClients = this.prevClients;
         var startAverageClient = getAverageClient(startClients);
         var centerPosition = getPosition(startAverageClient, startAverageClient, startAverageClient);
         pinchstart(__assign$2({
@@ -3127,11 +3587,10 @@ version: 0.7.5
         var startClients = this.startClients;
         var centerPosition = getPosition(getAverageClient(clients), getAverageClient(prevClients), getAverageClient(startClients));
         var distance = getDist(clients);
-        var startDistance = getDist(startClients);
         pinch(__assign$2({
           datas: this.datas,
           touches: getPositions(clients, prevClients, startClients),
-          scale: distance / startDistance,
+          scale: distance / this.startDistance,
           distance: distance
         }, centerPosition, {
           inputEvent: e
@@ -3185,6 +3644,7 @@ version: 0.7.5
 
       return Dragger;
     }();
+    //# sourceMappingURL=drag.esm.js.map
 
     /*
     Copyright (c) 2019-present NAVER Corp.
@@ -3578,6 +4038,7 @@ version: 0.7.5
 
       return ListDiffer;
     }();
+    //# sourceMappingURL=list-differ.esm.js.map
 
     /*
     Copyright (c) 2019-present NAVER Corp.
@@ -3664,6 +4125,7 @@ version: 0.7.5
 
       return ChildrenDiffer;
     }(ListDiffer);
+    //# sourceMappingURL=children-differ.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -3671,69 +4133,17 @@ version: 0.7.5
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.9.8
+    version: 0.11.1
     */
 
     /*
     Copyright (c) 2019 Daybrush
-    name: react-moveable
+    name: @moveable/matrix
     license: MIT
     author: Daybrush
-    repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.10.8
+    repository: git+https://github.com/daybrush/moveable.git
+    version: 0.3.0
     */
-
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
-
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
-
-    /* global Reflect, Promise */
-    var extendStatics$3 = function (d, b) {
-      extendStatics$3 = Object.setPrototypeOf || {
-        __proto__: []
-      } instanceof Array && function (d, b) {
-        d.__proto__ = b;
-      } || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-      };
-
-      return extendStatics$3(d, b);
-    };
-
-    function __extends$4(d, b) {
-      extendStatics$3(d, b);
-
-      function __() {
-        this.constructor = d;
-      }
-
-      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    }
-    var __assign$3 = function () {
-      __assign$3 = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-          s = arguments[i];
-
-          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-
-        return t;
-      };
-
-      return __assign$3.apply(this, arguments);
-    };
-
     function add(matrix, inverseMatrix, startIndex, endIndex, fromStart, k) {
       for (var i = startIndex; i < endIndex; ++i) {
         matrix[i] += matrix[fromStart + i - startIndex] * k;
@@ -3759,36 +4169,6 @@ version: 0.7.5
       }
     }
 
-    function createIdentityMatrix(n) {
-      var length = n * n;
-      var matrix = [];
-
-      for (var i = 0; i < length; ++i) {
-        matrix[i] = i % (n + 1) ? 0 : 1;
-      }
-
-      return matrix;
-    }
-    function createScaleMatrix(scale, n) {
-      var m = createIdentityMatrix(n);
-      var length = Math.min(scale.length, n - 1);
-
-      for (var i = 0; i < length; ++i) {
-        m[(n + 1) * i] = scale[i];
-      }
-
-      return m;
-    }
-    function createOriginMatrix(origin, n) {
-      var m = createIdentityMatrix(n);
-      var length = Math.min(origin.length, n - 1);
-
-      for (var i = 0; i < length; ++i) {
-        m[n * (i + 1) - 1] = origin[i];
-      }
-
-      return m;
-    }
     function ignoreDimension(matrix, m, n) {
       if (n === void 0) {
         n = Math.sqrt(matrix.length);
@@ -3864,6 +4244,26 @@ version: 0.7.5
 
       return newMatrix;
     }
+    function getRad(pos1, pos2) {
+      var distX = pos2[0] - pos1[0];
+      var distY = pos2[1] - pos1[1];
+      var rad = Math.atan2(distY, distX);
+      return rad > 0 ? rad : rad + Math.PI * 2;
+    }
+    function getOrigin(matrix, n) {
+      if (n === void 0) {
+        n = Math.sqrt(matrix.length);
+      }
+
+      var originMatrix = [];
+
+      for (var i = 0; i < n - 1; ++i) {
+        originMatrix[i] = matrix[(i + 1) * n - 1];
+      }
+
+      originMatrix[n - 1] = 0;
+      return originMatrix;
+    }
     function convertPositionMatrix(matrix, n) {
       var newMatrix = matrix.slice();
 
@@ -3899,7 +4299,6 @@ version: 0.7.5
       newMatrix[m * m - 1] = matrix[n * n - 1];
       return newMatrix;
     }
-    window.b = convertDimension;
     function multiplies(n) {
       var matrixes = [];
 
@@ -3961,7 +4360,23 @@ version: 0.7.5
 
       return newMatrix;
     }
-    function sum(pos1, pos2) {
+    function average() {
+      var nums = [];
+
+      for (var _i = 0; _i < arguments.length; _i++) {
+        nums[_i] = arguments[_i];
+      }
+
+      var length = nums.length;
+      var total = 0;
+
+      for (var i = length - 1; i >= 0; --i) {
+        total += nums[i];
+      }
+
+      return length ? total / length : 0;
+    }
+    function plus(pos1, pos2) {
       var length = Math.min(pos1.length, pos2.length);
       var nextPos = pos1.slice();
 
@@ -3992,19 +4407,8 @@ version: 0.7.5
         return v / k;
       });
     }
-    function getOrigin(matrix, n) {
-      if (n === void 0) {
-        n = Math.sqrt(matrix.length);
-      }
-
-      var originMatrix = [];
-
-      for (var i = 0; i < n - 1; ++i) {
-        originMatrix[i] = matrix[(i + 1) * n - 1];
-      }
-
-      originMatrix[n - 1] = 0;
-      return originMatrix;
+    function rotate(pos, rad) {
+      return caculate(createRotateMatrix(rad, 3), convertPositionMatrix(pos, 3));
     }
     function convertCSStoMatrix(a) {
       if (a.length === 6) {
@@ -4020,15 +4424,148 @@ version: 0.7.5
 
       return transpose(a);
     }
-    function getRotateMatrix(rad) {
+    function createRotateMatrix(rad, n) {
       var cos = Math.cos(rad);
       var sin = Math.sin(rad);
-      return [cos, -sin, 0, sin, cos, 0, 0, 0, 1];
+      var m = createIdentityMatrix(n);
+      m[0] = cos;
+      m[1] = -sin;
+      m[n] = sin;
+      m[n + 1] = cos;
+      return m;
     }
-    function rotate(pos, deg) {
-      return caculate(getRotateMatrix(deg * Math.PI / 180), convertPositionMatrix(pos, 3));
+    function createIdentityMatrix(n) {
+      var length = n * n;
+      var matrix = [];
+
+      for (var i = 0; i < length; ++i) {
+        matrix[i] = i % (n + 1) ? 0 : 1;
+      }
+
+      return matrix;
+    }
+    function createScaleMatrix(scale, n) {
+      var m = createIdentityMatrix(n);
+      var length = Math.min(scale.length, n - 1);
+
+      for (var i = 0; i < length; ++i) {
+        m[(n + 1) * i] = scale[i];
+      }
+
+      return m;
+    }
+    function createOriginMatrix(origin, n) {
+      var m = createIdentityMatrix(n);
+      var length = Math.min(origin.length, n - 1);
+
+      for (var i = 0; i < length; ++i) {
+        m[n * (i + 1) - 1] = origin[i];
+      }
+
+      return m;
+    }
+    function createWarpMatrix(pos0, pos1, pos2, pos3, nextPos0, nextPos1, nextPos2, nextPos3) {
+      var x0 = pos0[0],
+          y0 = pos0[1];
+      var x1 = pos1[0],
+          y1 = pos1[1];
+      var x2 = pos2[0],
+          y2 = pos2[1];
+      var x3 = pos3[0],
+          y3 = pos3[1];
+      var u0 = nextPos0[0],
+          v0 = nextPos0[1];
+      var u1 = nextPos1[0],
+          v1 = nextPos1[1];
+      var u2 = nextPos2[0],
+          v2 = nextPos2[1];
+      var u3 = nextPos3[0],
+          v3 = nextPos3[1];
+      var matrix = [x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0, 0, 0, 0, x0, y0, 1, -v0 * x0, -v0 * y0, x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1, 0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1, x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2, 0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2, x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3, 0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3];
+      var inverseMatrix = invert(matrix, 8);
+
+      if (!inverseMatrix.length) {
+        return [];
+      }
+
+      var h = multiply(inverseMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
+      h[8] = 1;
+      return convertDimension(h, 3, 4);
     }
 
+    /*
+    Copyright (c) 2019 Daybrush
+    name: react-moveable
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
+    version: 0.12.1
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    /* global Reflect, Promise */
+    var extendStatics$3 = function (d, b) {
+      extendStatics$3 = Object.setPrototypeOf || {
+        __proto__: []
+      } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+      } || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      };
+
+      return extendStatics$3(d, b);
+    };
+
+    function __extends$4(d, b) {
+      extendStatics$3(d, b);
+
+      function __() {
+        this.constructor = d;
+      }
+
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+    var __assign$3 = function () {
+      __assign$3 = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+
+        return t;
+      };
+
+      return __assign$3.apply(this, arguments);
+    };
+
+    var agent$1 = agent();
+    var isWebkit = agent$1.os.name.indexOf("ios") > -1 || agent$1.browser.name.indexOf("safari") > -1;
+    var PREFIX = "moveable-";
+    var MOVEABLE_CSS = prefixCSS(PREFIX, "\n{\n\tposition: fixed;\n\twidth: 0;\n\theight: 0;\n\tleft: 0;\n\ttop: 0;\n\tz-index: 3000;\n}\n.control-box {\n    z-index: 0;\n}\n.line, .control {\n\tleft: 0;\n\ttop: 0;\n}\n.control {\n\tposition: absolute;\n\twidth: 14px;\n\theight: 14px;\n\tborder-radius: 50%;\n\tborder: 2px solid #fff;\n\tbox-sizing: border-box;\n\tbackground: #4af;\n\tmargin-top: -7px;\n    margin-left: -7px;\n    z-index: 10;\n}\n.line {\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tbackground: #4af;\n\ttransform-origin: 0px 0.5px;\n}\n.line.rotation-line {\n\theight: 40px;\n\twidth: 1px;\n\ttransform-origin: 0.5px 39.5px;\n}\n.line.rotation-line .control {\n\tborder-color: #4af;\n\tbackground:#fff;\n\tcursor: alias;\n}\n.line.vertical.bold {\n    width: 2px;\n    margin-left: -1px;\n}\n.line.horizontal.bold {\n    height: 2px;\n    margin-top: -1px;\n}\n.control.origin {\n\tborder-color: #f55;\n\tbackground: #fff;\n\twidth: 12px;\n\theight: 12px;\n\tmargin-top: -6px;\n\tmargin-left: -6px;\n\tpointer-events: none;\n}\n.direction.e, .direction.w {\n\tcursor: ew-resize;\n}\n.direction.s, .direction.n {\n\tcursor: ns-resize;\n}\n.direction.nw, .direction.se, :host.reverse .direction.ne, :host.reverse .direction.sw {\n\tcursor: nwse-resize;\n}\n.direction.ne, .direction.sw, :host.reverse .direction.nw, :host.reverse .direction.se {\n\tcursor: nesw-resize;\n}\n.group {\n    z-index: -1;\n}\n.area {\n    position: absolute;\n}\n.area.avoid, .area.avoid:before, .area.avoid:after {\n    transform-origin: 50% calc(100% + 20px);\n}\n.area.avoid:before, .area.avoid:after {\n    content: \"\";\n    top: 0px;\n    left: 0px;\n    position: absolute;\n    width: 100%;\n    height: 100%;\n}\n\n.area.avoid:before {\n    transform: rotate(120deg);\n}\n.area.avoid:after {\n    transform: rotate(-120deg);\n}\n" + (isWebkit ? ":global svg *:before {\n\tcontent:\"\";\n\ttransform-origin: inherit;\n}" : "") + "\n");
+    var NEARBY_POS = [[0, 1, 2], [1, 0, 3], [2, 0, 3], [3, 1, 2]];
+    var TINY_NUM = 0.0000001;
+    var MIN_SCALE = 0.000000001;
+    var MAX_NUM = Math.pow(10, 10);
+    var MIN_NUM = -MAX_NUM;
+
+    function multiply2(pos1, pos2) {
+      return [pos1[0] * pos2[0], pos1[1] * pos2[1]];
+    }
     function prefix() {
       var classNames = [];
 
@@ -4069,7 +4606,7 @@ version: 0.7.5
       return 1;
     }
     function getBeforeTransformOrigin(el) {
-      var relativeOrigin = getTransformOrigin(window.getComputedStyle(el, ":before"));
+      var relativeOrigin = getTransformOrigin(getComputedStyle(el, ":before"));
       return relativeOrigin.map(function (o, i) {
         var _a = splitUnit(o),
             value = _a.value,
@@ -4088,15 +4625,17 @@ version: 0.7.5
       var el = target;
       var matrixes = [];
       var isContainer = !!prevMatrix || target === container;
-      var isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" || "ownerSVGElement" in el;
+      var isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in el;
       var is3d = false;
       var n = 3;
       var transformOrigin;
       var targetMatrix;
+      var style = getComputedStyle(el);
 
       while (el && (isContainer || el !== container)) {
         var tagName = el.tagName.toLowerCase();
-        var style = window.getComputedStyle(el);
+        var position = style.position;
+        var isFixed = position === "fixed";
         var matrix = convertCSStoMatrix(getTransformMatrix(style.transform));
 
         if (!is3d && matrix.length === 16) {
@@ -4114,14 +4653,21 @@ version: 0.7.5
         }
 
         var offsetLeft = el.offsetLeft;
-        var offsetTop = el.offsetTop; // svg
+        var offsetTop = el.offsetTop;
+
+        if (isFixed) {
+          var containerRect = (container || document.documentElement).getBoundingClientRect();
+          offsetLeft -= containerRect.left;
+          offsetTop -= containerRect.top;
+        } // svg
+
 
         var isSVG = isUndefined$1(offsetLeft);
         var hasNotOffset = isSVG;
         var origin = void 0; // inner svg element
 
         if (hasNotOffset && tagName !== "svg") {
-          origin = isNotSupportTransformOrigin ? getBeforeTransformOrigin(el) : getTransformOrigin(style).map(function (pos) {
+          origin = isWebkit ? getBeforeTransformOrigin(el) : getTransformOrigin(style).map(function (pos) {
             return parseFloat(pos);
           });
           hasNotOffset = false;
@@ -4142,6 +4688,17 @@ version: 0.7.5
           matrixes.push(getSVGMatrix(el, n), createIdentityMatrix(n));
         }
 
+        var parentElement = el.parentElement;
+
+        if (isWebkit && !hasNotOffset && !isSVG) {
+          var offsetParent = el.offsetParent;
+
+          if (offsetParent && offsetParent !== parentElement) {
+            offsetLeft -= parentElement.offsetLeft;
+            offsetTop -= parentElement.offsetTop;
+          }
+        }
+
         matrixes.push(getAbsoluteMatrix(matrix, n, origin), createOriginMatrix([hasNotOffset ? el : offsetLeft, hasNotOffset ? origin : offsetTop], n));
 
         if (!targetMatrix) {
@@ -4152,23 +4709,30 @@ version: 0.7.5
           transformOrigin = origin;
         }
 
-        if (isContainer) {
+        if (isContainer || isFixed) {
           break;
         }
 
+        el = parentElement;
+
         if (isSVG) {
-          el = el.parentElement;
           continue;
         }
 
-        var offsetParent = el.offsetParent;
+        while (el) {
+          style = getComputedStyle(el);
+          var nextPosition = style.position,
+              nextTransform = style.transform;
 
-        if (!offsetParent) {
-          break;
+          if (nextPosition !== "static" || nextTransform && nextTransform !== "none") {
+            break;
+          }
+
+          el = el.parentElement;
         }
 
-        while (el && el !== container && el !== offsetParent) {
-          el = el.parentElement;
+        if (el) {
+          style = getComputedStyle(el);
         }
       }
 
@@ -4246,12 +4810,38 @@ version: 0.7.5
     function caculatePosition(matrix, pos, n) {
       return caculate(matrix, convertPositionMatrix(pos, n), n);
     }
-    function caculateRect(matrix, width, height, n) {
+    function caculatePoses(matrix, width, height, n) {
       var pos1 = caculatePosition(matrix, [0, 0], n);
       var pos2 = caculatePosition(matrix, [width, 0], n);
       var pos3 = caculatePosition(matrix, [0, height], n);
       var pos4 = caculatePosition(matrix, [width, height], n);
       return [pos1, pos2, pos3, pos4];
+    }
+    function getRect(poses) {
+      var posesX = poses.map(function (pos) {
+        return pos[0];
+      });
+      var posesY = poses.map(function (pos) {
+        return pos[1];
+      });
+      var left = Math.min.apply(Math, posesX);
+      var top = Math.min.apply(Math, posesY);
+      var right = Math.max.apply(Math, posesX);
+      var bottom = Math.max.apply(Math, posesY);
+      var rectWidth = right - left;
+      var rectHeight = bottom - top;
+      return {
+        left: left,
+        top: top,
+        right: right,
+        bottom: bottom,
+        width: rectWidth,
+        height: rectHeight
+      };
+    }
+    function caculateRect(matrix, width, height, n) {
+      var poses = caculatePoses(matrix, width, height, n);
+      return getRect(poses);
     }
     function getSVGOffset(el, container, n, origin, beforeMatrix, absoluteMatrix) {
       var _a;
@@ -4267,19 +4857,15 @@ version: 0.7.5
       var rectWidth = rect.width;
       var rectHeight = rect.height;
       var mat = multiplies(n, beforeMatrix, absoluteMatrix);
-      var poses = caculateRect(mat, width, height, n);
-      var posesX = poses.map(function (pos) {
-        return pos[0];
-      });
-      var posesY = poses.map(function (pos) {
-        return pos[1];
-      });
+
+      var _c = caculateRect(mat, width, height, n),
+          prevLeft = _c.left,
+          prevTop = _c.top,
+          prevWidth = _c.width,
+          prevHeight = _c.height;
+
       var posOrigin = caculatePosition(mat, origin, n);
-      var prevLeft = Math.min.apply(Math, posesX);
-      var prevTop = Math.min.apply(Math, posesY);
       var prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
-      var prevWidth = Math.max.apply(Math, posesX) - prevLeft;
-      var prevHeight = Math.max.apply(Math, posesY) - prevTop;
       var rectOrigin = [rectLeft + prevOrigin[0] * rectWidth / prevWidth, rectTop + prevOrigin[1] * rectHeight / prevHeight];
       var offset = [0, 0];
       var count = 0;
@@ -4288,13 +4874,11 @@ version: 0.7.5
         var inverseBeforeMatrix = invert(beforeMatrix, n);
         _a = minus(caculatePosition(inverseBeforeMatrix, rectOrigin, n), caculatePosition(inverseBeforeMatrix, posOrigin, n)), offset[0] = _a[0], offset[1] = _a[1];
         var mat2 = multiplies(n, beforeMatrix, createOriginMatrix(offset, n), absoluteMatrix);
-        var nextPoses = caculateRect(mat2, width, height, n);
-        var nextLeft = Math.min.apply(Math, nextPoses.map(function (pos) {
-          return pos[0];
-        }));
-        var nextTop = Math.min.apply(Math, nextPoses.map(function (pos) {
-          return pos[1];
-        }));
+
+        var _d = caculateRect(mat2, width, height, n),
+            nextLeft = _d.left,
+            nextTop = _d.top;
+
         var distLeft = nextLeft - rectLeft;
         var distTop = nextTop - rectTop;
 
@@ -4314,7 +4898,7 @@ version: 0.7.5
       var is3d = matrix.length === 16;
       var n = is3d ? 4 : 3;
 
-      var _a = caculateRect(matrix, width, height, n),
+      var _a = caculatePoses(matrix, width, height, n),
           _b = _a[0],
           x1 = _b[0],
           y1 = _b[1],
@@ -4332,29 +4916,25 @@ version: 0.7.5
           originX = _f[0],
           originY = _f[1];
 
-      var minX = Math.min(x1, x2, x3, x4);
-      var minY = Math.min(y1, y2, y3, y4);
-      x1 = x1 - minX || 0;
-      x2 = x2 - minX || 0;
-      x3 = x3 - minX || 0;
-      x4 = x4 - minX || 0;
-      y1 = y1 - minY || 0;
-      y2 = y2 - minY || 0;
-      y3 = y3 - minY || 0;
-      y4 = y4 - minY || 0;
-      originX = originX - minX || 0;
-      originY = originY - minY || 0;
+      var left = Math.min(x1, x2, x3, x4);
+      var top = Math.min(y1, y2, y3, y4);
+      var right = Math.max(x1, x2, x3, x4);
+      var bottom = Math.max(y1, y2, y3, y4);
+      x1 = x1 - left || 0;
+      x2 = x2 - left || 0;
+      x3 = x3 - left || 0;
+      x4 = x4 - left || 0;
+      y1 = y1 - top || 0;
+      y2 = y2 - top || 0;
+      y3 = y3 - top || 0;
+      y4 = y4 - top || 0;
+      originX = originX - left || 0;
+      originY = originY - top || 0;
       var center = [(x1 + x2 + x3 + x4) / 4, (y1 + y2 + y3 + y4) / 4];
       var pos1Rad = getRad(center, [x1, y1]);
       var pos2Rad = getRad(center, [x2, y2]);
       var direction = pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI || pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI ? 1 : -1;
-      return [[minX, minY], [originX, originY], [x1, y1], [x2, y2], [x3, y3], [x4, y4], direction];
-    }
-    function getRad(pos1, pos2) {
-      var distX = pos2[0] - pos1[0];
-      var distY = pos2[1] - pos1[1];
-      var rad = Math.atan2(distY, distX);
-      return rad > 0 ? rad : rad + Math.PI * 2;
+      return [[left, top, right, bottom], [originX, originY], [x1, y1], [x2, y2], [x3, y3], [x4, y4], direction];
     }
     function getLineStyle(pos1, pos2) {
       var distX = pos2[0] - pos1[0];
@@ -4386,7 +4966,7 @@ version: 0.7.5
     }
     function getSize(target, style, isOffset, isBoxSizing) {
       if (style === void 0) {
-        style = window.getComputedStyle(target);
+        style = getComputedStyle(target);
       }
 
       if (isBoxSizing === void 0) {
@@ -4423,22 +5003,19 @@ version: 0.7.5
         return [width - paddingLeft - paddingRight, height - paddingTop - paddingBottom];
       }
     }
-    function getRotationInfo(pos1, pos2, direction) {
-      var rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-      var relativeRotationPos = multiply(getRotateMatrix(rotationRad), [0, -40, 1], 3);
-      var rotationPos = [(pos1[0] + pos2[0]) / 2 + relativeRotationPos[0], (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1]];
-      return [rotationRad, rotationPos];
-    }
     function getTargetInfo(target, container, state) {
-      var _a, _b, _c, _d, _e, _f;
+      var _a, _b, _c, _d, _e;
 
       var left = 0;
       var top = 0;
+      var right = 0;
+      var bottom = 0;
       var origin = [0, 0];
       var pos1 = [0, 0];
       var pos2 = [0, 0];
       var pos3 = [0, 0];
       var pos4 = [0, 0];
+      var offsetMatrix = createIdentityMatrix3();
       var beforeMatrix = createIdentityMatrix3();
       var matrix = createIdentityMatrix3();
       var targetMatrix = createIdentityMatrix3();
@@ -4447,8 +5024,6 @@ version: 0.7.5
       var transformOrigin = [0, 0];
       var direction = 1;
       var beforeDirection = 1;
-      var rotationPos = [0, 0];
-      var rotationRad = 0;
       var is3d = false;
       var targetTransform = "";
       var beforeOrigin = [0, 0];
@@ -4460,7 +5035,7 @@ version: 0.7.5
           width = state.width;
           height = state.height;
         } else {
-          var style = window.getComputedStyle(target);
+          var style = getComputedStyle(target);
           width = target.offsetWidth;
           height = target.offsetHeight;
 
@@ -4469,26 +5044,22 @@ version: 0.7.5
           }
         }
 
-        var offsetMatrix = void 0;
         _b = caculateMatrixStack(target, container, prevMatrix, prevN), beforeMatrix = _b[0], offsetMatrix = _b[1], matrix = _b[2], targetMatrix = _b[3], targetTransform = _b[4], transformOrigin = _b[5], is3d = _b[6];
-        _c = caculateMoveablePosition(matrix, transformOrigin, width, height), _d = _c[0], left = _d[0], top = _d[1], origin = _c[1], pos1 = _c[2], pos2 = _c[3], pos3 = _c[4], pos4 = _c[5], direction = _c[6];
+        _c = caculateMoveablePosition(matrix, transformOrigin, width, height), _d = _c[0], left = _d[0], top = _d[1], right = _d[2], bottom = _d[3], origin = _c[1], pos1 = _c[2], pos2 = _c[3], pos3 = _c[4], pos4 = _c[5], direction = _c[6];
         var n = is3d ? 4 : 3;
         var beforePos = [0, 0];
-        _e = caculateMoveablePosition(offsetMatrix, sum(transformOrigin, getOrigin(targetMatrix, n)), width, height), beforePos = _e[0], beforeOrigin = _e[1], beforeDirection = _e[6];
-        beforeOrigin = [beforeOrigin[0] + beforePos[0] - left, beforeOrigin[1] + beforePos[1] - top]; // 1 : clockwise
-        // -1 : counterclockwise
-
-        _f = getRotationInfo(pos1, pos2, direction), rotationRad = _f[0], rotationPos = _f[1];
+        _e = caculateMoveablePosition(offsetMatrix, plus(transformOrigin, getOrigin(targetMatrix, n)), width, height), beforePos = _e[0], beforeOrigin = _e[1], beforeDirection = _e[6];
+        beforeOrigin = [beforeOrigin[0] + beforePos[0] - left, beforeOrigin[1] + beforePos[1] - top];
       }
 
       return {
         beforeDirection: beforeDirection,
         direction: direction,
-        rotationRad: rotationRad,
-        rotationPos: rotationPos,
         target: target,
         left: left,
         top: top,
+        right: right,
+        bottom: bottom,
         pos1: pos1,
         pos2: pos2,
         pos3: pos3,
@@ -4498,6 +5069,7 @@ version: 0.7.5
         beforeMatrix: beforeMatrix,
         matrix: matrix,
         targetTransform: targetTransform,
+        offsetMatrix: offsetMatrix,
         targetMatrix: targetMatrix,
         is3d: is3d,
         beforeOrigin: beforeOrigin,
@@ -4523,6 +5095,18 @@ version: 0.7.5
       direciton.indexOf("s") > -1 && (dir[1] = 1);
       return dir;
     }
+    function getAbsolutePoses(poses, dist) {
+      return [plus(dist, poses[0]), plus(dist, poses[1]), plus(dist, poses[2]), plus(dist, poses[3])];
+    }
+    function getAbsolutePosesByState(_a) {
+      var left = _a.left,
+          top = _a.top,
+          pos1 = _a.pos1,
+          pos2 = _a.pos2,
+          pos3 = _a.pos3,
+          pos4 = _a.pos4;
+      return getAbsolutePoses([pos1, pos2, pos3, pos4], [left, top]);
+    }
     function throttle(num, unit) {
       if (!unit) {
         return num;
@@ -4534,34 +5118,7 @@ version: 0.7.5
       nums.forEach(function (_, i) {
         nums[i] = throttle(nums[i], unit);
       });
-    }
-    function warp(pos0, pos1, pos2, pos3, nextPos0, nextPos1, nextPos2, nextPos3) {
-      var x0 = pos0[0],
-          y0 = pos0[1];
-      var x1 = pos1[0],
-          y1 = pos1[1];
-      var x2 = pos2[0],
-          y2 = pos2[1];
-      var x3 = pos3[0],
-          y3 = pos3[1];
-      var u0 = nextPos0[0],
-          v0 = nextPos0[1];
-      var u1 = nextPos1[0],
-          v1 = nextPos1[1];
-      var u2 = nextPos2[0],
-          v2 = nextPos2[1];
-      var u3 = nextPos3[0],
-          v3 = nextPos3[1];
-      var matrix = [x0, y0, 1, 0, 0, 0, -u0 * x0, -u0 * y0, 0, 0, 0, x0, y0, 1, -v0 * x0, -v0 * y0, x1, y1, 1, 0, 0, 0, -u1 * x1, -u1 * y1, 0, 0, 0, x1, y1, 1, -v1 * x1, -v1 * y1, x2, y2, 1, 0, 0, 0, -u2 * x2, -u2 * y2, 0, 0, 0, x2, y2, 1, -v2 * x2, -v2 * y2, x3, y3, 1, 0, 0, 0, -u3 * x3, -u3 * y3, 0, 0, 0, x3, y3, 1, -v3 * x3, -v3 * y3];
-      var inverseMatrix = invert(matrix, 8);
-
-      if (!inverseMatrix.length) {
-        return [];
-      }
-
-      var h = multiply(inverseMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
-      h[8] = 1;
-      return convertDimension(h, 3, 4);
+      return nums;
     }
     function unset(self, name) {
       if (self[name]) {
@@ -4599,6 +5156,432 @@ version: 0.7.5
     function triggerEvent(moveable, name, e) {
       return moveable.triggerEvent(name, e);
     }
+    function getComputedStyle(el, pseudoElt) {
+      return window.getComputedStyle(el, pseudoElt);
+    }
+
+    var Origin = {
+      name: "origin",
+      render: function (moveable, React) {
+        if (!moveable.props.origin) {
+          return null;
+        }
+
+        var beforeOrigin = moveable.state.beforeOrigin;
+        return [// <div className={prefix("control", "origin")} style={getControlTransform(origin)} key="origin"></div>,
+        React.createElement("div", {
+          className: prefix("control", "origin"),
+          style: getControlTransform(beforeOrigin),
+          key: "beforeOrigin"
+        })];
+      }
+    };
+
+    function triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e) {
+      var eventName = "" + eventOperation + eventAffix + eventType;
+      var conditionName = "" + eventOperation + eventAffix + "Condition";
+      var isStart = eventType === "Start";
+      var isEnd = eventType === "End";
+      var isGroup = eventAffix.indexOf("Group") > -1;
+      var ables = moveable[ableType];
+      var results = ables.filter(function (able) {
+        var condition = isStart && able[conditionName];
+
+        if (able[eventName] && (!condition || condition(e.inputEvent.target, moveable))) {
+          return able[eventName](moveable, e);
+        }
+
+        return false;
+      });
+      var isUpdate = results.length;
+
+      if (isEnd) {
+        moveable.state.dragger = null;
+      }
+
+      if (!isStart && isUpdate) {
+        if (results.some(function (able) {
+          return able.updateRect;
+        }) && !isGroup) {
+          moveable.updateRect(eventType);
+        } else {
+          moveable.updateTarget(eventType);
+        }
+      } else if (isEnd && !isUpdate) {
+        moveable.forceUpdate();
+      }
+    }
+
+    function getAbleDragger(moveable, target, ableType, eventAffix) {
+      var options = {
+        container: window,
+        pinchThreshold: moveable.props.pinchThreshold
+      };
+      ["drag", "pinch"].forEach(function (eventOperation) {
+        ["Start", "", "End"].forEach(function (eventType) {
+          options["" + eventOperation + eventType.toLowerCase()] = function (e) {
+            return triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
+          };
+        });
+      });
+      return new Dragger(target, options);
+    }
+
+    var DragArea = {
+      name: "dragArea",
+      render: function (moveable, React) {
+        var _a = moveable.props,
+            target = _a.target,
+            dragArea = _a.dragArea,
+            groupable = _a.groupable;
+        var _b = moveable.state,
+            width = _b.width,
+            height = _b.height,
+            pos1 = _b.pos1,
+            pos2 = _b.pos2,
+            pos3 = _b.pos3,
+            pos4 = _b.pos4;
+
+        if (groupable) {
+          return [React.createElement("div", {
+            key: "area",
+            ref: ref$1(moveable, "areaElement"),
+            className: prefix("area")
+          })];
+        }
+
+        if (!target || !dragArea) {
+          return [];
+        }
+
+        var h = createWarpMatrix([0, 0], [width, 0], [0, height], [width, height], pos1, pos2, pos3, pos4);
+
+        if (!h.length) {
+          return [];
+        }
+
+        return [React.createElement("div", {
+          key: "area",
+          ref: ref$1(moveable, "areaElement"),
+          className: prefix("area"),
+          style: {
+            top: "0px",
+            left: "0px",
+            width: width + "px",
+            height: height + "px",
+            transform: "matrix3d(" + convertMatrixtoCSS(h).join(",") + ")"
+          }
+        })];
+      }
+    };
+
+    var ControlBoxElement = styled("div", MOVEABLE_CSS);
+
+    function renderLine(direction, pos1, pos2) {
+      return createElement("div", {
+        className: prefix("line", "direction", direction),
+        "data-direction": direction,
+        style: getLineStyle(pos1, pos2)
+      });
+    }
+
+    var MoveableManager =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$4(MoveableManager, _super);
+
+      function MoveableManager() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+
+        _this.state = {
+          target: null,
+          beforeMatrix: createIdentityMatrix3(),
+          matrix: createIdentityMatrix3(),
+          targetMatrix: createIdentityMatrix3(),
+          targetTransform: "",
+          is3d: false,
+          left: 0,
+          top: 0,
+          width: 0,
+          height: 0,
+          transformOrigin: [0, 0],
+          direction: 1,
+          beforeDirection: 1,
+          beforeOrigin: [0, 0],
+          origin: [0, 0],
+          pos1: [0, 0],
+          pos2: [0, 0],
+          pos3: [0, 0],
+          pos4: [0, 0]
+        };
+        _this.targetAbles = [];
+        _this.controlAbles = [];
+        return _this;
+      }
+
+      var __proto = MoveableManager.prototype;
+
+      __proto.render = function () {
+        this.checkUpdate();
+        var _a = this.props,
+            edge = _a.edge,
+            parentPosition = _a.parentPosition;
+
+        var _b = parentPosition || {
+          left: 0,
+          top: 0
+        },
+            parentLeft = _b.left,
+            parentTop = _b.top;
+
+        var _c = this.state,
+            left = _c.left,
+            top = _c.top,
+            pos1 = _c.pos1,
+            pos2 = _c.pos2,
+            pos3 = _c.pos3,
+            pos4 = _c.pos4,
+            target = _c.target,
+            direction = _c.direction;
+        return createElement(ControlBoxElement, {
+          ref: ref$1(this, "controlBox"),
+          className: prefix("control-box", direction === -1 ? "reverse" : ""),
+          style: {
+            position: "absolute",
+            display: target ? "block" : "none",
+            transform: "translate(" + (left - parentLeft) + "px, " + (top - parentTop) + "px) translateZ(50px)"
+          }
+        }, this.renderAbles(), renderLine(edge ? "n" : "", pos1, pos2), renderLine(edge ? "e" : "", pos2, pos4), renderLine(edge ? "w" : "", pos1, pos3), renderLine(edge ? "s" : "", pos3, pos4));
+      };
+
+      __proto.componentDidMount = function () {
+        this.controlBox.getElement();
+        this.updateEvent(this.props);
+      };
+
+      __proto.componentDidUpdate = function (prevProps, prevState) {
+        this.updateEvent(prevProps);
+      };
+
+      __proto.componentWillUnmount = function () {
+        unset(this, "targetDragger");
+        unset(this, "controlDragger");
+      };
+
+      __proto.getContainer = function () {
+        var _a = this.props,
+            parentMoveable = _a.parentMoveable,
+            container = _a.container;
+        return container || parentMoveable && parentMoveable.getContainer() || this.controlBox.getElement().offsetParent;
+      };
+
+      __proto.isMoveableElement = function (target) {
+        return target && (target.getAttribute("class") || "").indexOf(PREFIX) > -1;
+      };
+
+      __proto.dragStart = function (e) {
+        this.targetDragger.onDragStart(e);
+      };
+
+      __proto.isInside = function (clientX, clientY) {
+        var _a = this.state,
+            pos1 = _a.pos1,
+            pos2 = _a.pos2,
+            pos3 = _a.pos3,
+            pos4 = _a.pos4,
+            target = _a.target;
+
+        if (!target) {
+          return false;
+        }
+
+        var _b = target.getBoundingClientRect(),
+            left = _b.left,
+            top = _b.top;
+
+        var pos = [clientX - left, clientY - top];
+        return isInside(pos, pos1, pos2, pos4, pos3);
+      };
+
+      __proto.updateRect = function (type, isTarget, isSetState) {
+        if (isSetState === void 0) {
+          isSetState = true;
+        }
+
+        var parentMoveable = this.props.parentMoveable;
+        var state = this.state;
+        var target = state.target || this.props.target;
+        this.updateState(getTargetInfo(target, this.getContainer(), isTarget ? state : undefined), parentMoveable ? false : isSetState);
+      };
+
+      __proto.updateEvent = function (prevProps) {
+        var controlBoxElement = this.controlBox.getElement();
+        var hasTargetAble = this.targetAbles.length;
+        var hasControlAble = this.controlAbles.length;
+        var target = this.props.target;
+        var prevTarget = prevProps.target;
+        var dragArea = this.props.dragArea;
+        var prevDragArea = prevProps.dragArea;
+        var isTargetChanged = !dragArea && prevTarget !== target;
+        var isUnset = !hasTargetAble && this.targetDragger || isTargetChanged || prevDragArea !== dragArea;
+
+        if (isUnset) {
+          unset(this, "targetDragger");
+          this.updateState({
+            dragger: null
+          });
+        }
+
+        if (!hasControlAble) {
+          unset(this, "controlDragger");
+        }
+
+        if (target && hasTargetAble && !this.targetDragger) {
+          if (dragArea) {
+            this.targetDragger = getAbleDragger(this, this.areaElement, "targetAbles", "");
+          } else {
+            this.targetDragger = getAbleDragger(this, target, "targetAbles", "");
+          }
+        }
+
+        if (!this.controlDragger && hasControlAble) {
+          this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
+        }
+
+        if (isUnset) {
+          this.unsetAbles();
+        }
+      };
+
+      __proto.updateTarget = function (type) {
+        this.updateRect(type, true);
+      };
+
+      __proto.checkUpdate = function () {
+        var props = this.props;
+        var target = props.target,
+            parentMoveable = props.parentMoveable;
+        var stateTarget = this.state.target;
+
+        if (!stateTarget && !target) {
+          return;
+        }
+
+        this.updateAbles();
+        var isTargetChanged = stateTarget !== target;
+
+        if (!isTargetChanged) {
+          return;
+        }
+
+        this.updateState({
+          target: target
+        });
+
+        if (!parentMoveable) {
+          this.updateRect("End", false, false);
+        }
+      };
+
+      __proto.triggerEvent = function (name, e) {
+        var callback = this.props[name];
+        return callback && callback(e);
+      };
+
+      __proto.unsetAbles = function () {
+        var _this = this;
+
+        if (this.targetAbles.filter(function (able) {
+          if (able.unset) {
+            able.unset(_this);
+            return true;
+          }
+
+          return false;
+        }).length) {
+          this.forceUpdate();
+        }
+      };
+
+      __proto.updateAbles = function (ables, eventAffix) {
+        if (ables === void 0) {
+          ables = this.props.ables;
+        }
+
+        if (eventAffix === void 0) {
+          eventAffix = "";
+        }
+
+        var props = this.props;
+        var enabledAbles = ables.filter(function (able) {
+          return able && props[able.name];
+        });
+        var controlAbleOnly = false;
+        var dragStart = "drag" + eventAffix + "Start";
+        var pinchStart = "pinch" + eventAffix + "Start";
+        var dragControlStart = "drag" + eventAffix + "ControlStart";
+        var targetAbles = enabledAbles.filter(function (able) {
+          return able[dragStart] || able[pinchStart];
+        });
+        var controlAbles = enabledAbles.filter(function (e) {
+          var dragControlOnly = e.dragControlOnly;
+
+          if (!e[dragControlStart] || dragControlOnly && controlAbleOnly) {
+            return false;
+          }
+
+          if (dragControlOnly) {
+            controlAbleOnly = true;
+          }
+
+          return true;
+        });
+        this.targetAbles = targetAbles;
+        this.controlAbles = controlAbles;
+      };
+
+      __proto.updateState = function (nextState, isSetState) {
+        if (isSetState) {
+          this.setState(nextState);
+        } else {
+          var state = this.state;
+
+          for (var name in nextState) {
+            state[name] = nextState[name];
+          }
+        }
+      };
+
+      __proto.renderAbles = function () {
+        var _this = this;
+
+        var ables = this.targetAbles.concat(this.controlAbles, [Origin, DragArea]);
+        var enabledAbles = {};
+        return ables.map(function (able) {
+          if (enabledAbles[able.name] || !able.render) {
+            return undefined;
+          }
+
+          enabledAbles[able.name] = true;
+          return able.render(_this, React);
+        });
+      };
+
+      MoveableManager.defaultProps = {
+        target: null,
+        container: null,
+        origin: true,
+        keepRatio: true,
+        edge: false,
+        parentMoveable: null,
+        parentPosition: null,
+        ables: [],
+        pinchThreshold: 20,
+        dragArea: false,
+        transformOrigin: ""
+      };
+      return MoveableManager;
+    }(PureComponent);
 
     function getRotatiion(touches) {
       return getRad([touches[0].clientX, touches[0].clientY], [touches[1].clientX, touches[1].clientY]) / Math.PI * 180;
@@ -4655,6 +5638,7 @@ version: 0.7.5
           };
           able[controlEventName](moveable, e);
         });
+        moveable.state.snapDirection = [0, 0];
         return isPinch;
       },
       pinch: function (moveable, _a) {
@@ -4742,6 +5726,31 @@ version: 0.7.5
       }
     };
 
+    function triggerChildAble(moveable, able, type, datas, eachEvent, callback) {
+      var name = able.name;
+      var ableDatas = datas[name] || (datas[name] = []);
+      var isEnd = !!type.match(/End$/g);
+      var childs = moveable.moveables.map(function (child, i) {
+        var childDatas = ableDatas[i] || (ableDatas[i] = {});
+        var childEvent = isFunction(eachEvent) ? eachEvent(child, childDatas) : eachEvent;
+        var result = able[type](child, __assign$3({}, childEvent, {
+          datas: childDatas,
+          parentFlag: true
+        }));
+        result && callback && callback(child, childDatas, result, i);
+
+        if (isEnd) {
+          child.state.dragger = null;
+        }
+
+        return result;
+      });
+      return childs;
+    }
+    function directionCondition(target) {
+      return hasClass(target, prefix("direction"));
+    }
+
     function setDragStart(moveable, _a) {
       var datas = _a.datas;
       var _b = moveable.state,
@@ -4750,14 +5759,20 @@ version: 0.7.5
           is3d = _b.is3d,
           left = _b.left,
           top = _b.top,
-          origin = _b.origin;
+          origin = _b.origin,
+          offsetMatrix = _b.offsetMatrix,
+          targetMatrix = _b.targetMatrix,
+          transformOrigin = _b.transformOrigin;
       var n = is3d ? 4 : 3;
       datas.is3d = is3d;
       datas.matrix = matrix;
-      datas.inverseMatrix = invert(matrix, n);
+      datas.targetMatrix = targetMatrix;
       datas.beforeMatrix = beforeMatrix;
+      datas.offsetMatrix = offsetMatrix;
+      datas.transformOrigin = transformOrigin;
+      datas.inverseMatrix = invert(matrix, n);
       datas.inverseBeforeMatrix = invert(beforeMatrix, n);
-      datas.absoluteOrigin = convertPositionMatrix(sum([left, top], origin), n);
+      datas.absoluteOrigin = convertPositionMatrix(plus([left, top], origin), n);
       datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
       datas.startDragDist = caculate(datas.inverseMatrix, datas.absoluteOrigin, n);
     }
@@ -4772,59 +5787,167 @@ version: 0.7.5
           startDragDist = datas.startDragDist,
           absoluteOrigin = datas.absoluteOrigin;
       var n = is3d ? 4 : 3;
-      return minus(caculate(isBefore ? inverseBeforeMatrix : inverseMatrix, sum(absoluteOrigin, [distX, distY]), n), isBefore ? startDragBeforeDist : startDragDist);
+      return minus(caculate(isBefore ? inverseBeforeMatrix : inverseMatrix, plus(absoluteOrigin, [distX, distY]), n), isBefore ? startDragBeforeDist : startDragDist);
     }
-
-    function triggerChildAble(moveable, able, type, e, callback) {
-      var name = able.name;
-      var datas = e.datas;
-      var ableDatas = datas[name] || (datas[name] = []);
-      return moveable.moveables.map(function (child, i) {
-        var childDatas = ableDatas[i] || (ableDatas[i] = {});
-        var result = able[type](child, __assign$3({}, e, {
-          datas: childDatas,
-          parentFlag: true
-        }));
-        result && callback && callback(child, childDatas, result, i);
-        return result;
-      });
-    }
-    function getCustomEvent(datas) {
-      return datas.custom;
-    }
-    function setCustomEvent(clientX, clientY, datas, inputEvent) {
-      var e = datas.custom || (datas.custom = {
-        startX: clientX,
-        startY: clientY,
-        prevX: clientX,
-        prevY: clientY,
-        isDrag: false
-      });
-      var prevX = e.prevX,
-          prevY = e.prevY,
-          startX = e.startX,
-          startY = e.startY;
-      e.prevX = clientX;
-      e.prevY = clientY;
-
-      if (clientX !== prevX || clientY !== prevY) {
-        e.isDrag = true;
+    function caculateTransformOrigin(transformOrigin, width, height, prevWidth, prevHeight, prevOrigin) {
+      if (prevWidth === void 0) {
+        prevWidth = width;
       }
 
-      return {
-        clientX: clientX,
-        clientY: clientY,
-        distX: clientX - startX,
-        distY: clientY - startY,
-        deltaX: clientX - prevX,
-        deltaY: clientY - prevY,
-        isDrag: e.isDrag,
-        datas: datas,
-        inputEvent: inputEvent
-      };
+      if (prevHeight === void 0) {
+        prevHeight = height;
+      }
+
+      if (prevOrigin === void 0) {
+        prevOrigin = [0, 0];
+      }
+
+      if (!transformOrigin) {
+        return prevOrigin;
+      }
+
+      return transformOrigin.map(function (pos, i) {
+        var _a = splitUnit(pos),
+            value = _a.value,
+            unit = _a.unit;
+
+        var prevSize = i ? prevHeight : prevWidth;
+        var size = i ? height : width;
+
+        if (pos === "%" || isNaN(value)) {
+          // no value but %
+          var measureRatio = prevSize ? prevOrigin[i] / prevSize : 0;
+          return size * measureRatio;
+        } else if (unit !== "%") {
+          return value;
+        }
+
+        return size * value / 100;
+      });
     }
-    function directionCondition(target) {
-      return hasClass(target, prefix("direction"));
+    function getPosesByDirection(_a, direction) {
+      var pos1 = _a[0],
+          pos2 = _a[1],
+          pos3 = _a[2],
+          pos4 = _a[3];
+      /*
+      [-1, -1](pos1)       [0, -1](pos1,pos2)       [1, -1](pos2)
+      [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
+      [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
+      */
+
+      var poses = [];
+
+      if (direction[1] >= 0) {
+        if (direction[0] >= 0) {
+          poses.push(pos4);
+        }
+
+        if (direction[0] <= 0) {
+          poses.push(pos3);
+        }
+      }
+
+      if (direction[1] <= 0) {
+        if (direction[0] >= 0) {
+          poses.push(pos2);
+        }
+
+        if (direction[0] <= 0) {
+          poses.push(pos1);
+        }
+      }
+
+      return poses;
+    }
+    function getPosByDirection(poses, direction) {
+      /*
+      [-1, -1](pos1)       [0, -1](pos1,pos2)       [1, -1](pos2)
+      [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
+      [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
+      */
+      var nextPoses = getPosesByDirection(poses, direction);
+      return [average.apply(void 0, nextPoses.map(function (pos) {
+        return pos[0];
+      })), average.apply(void 0, nextPoses.map(function (pos) {
+        return pos[1];
+      }))];
+    }
+    function getPosByReverseDirection(_a, direction) {
+      /*
+      [-1, -1](pos4)       [0, -1](pos3,pos4)       [1, -1](pos3)
+      [-1, 0](pos2, pos4)                           [1, 0](pos3, pos1)
+      [-1, 1](pos2)        [0, 1](pos1, pos2)       [1, 1](pos1)
+      */
+      var pos1 = _a[0],
+          pos2 = _a[1],
+          pos3 = _a[2],
+          pos4 = _a[3];
+      return getPosByDirection([pos4, pos3, pos2, pos1], direction);
+    }
+
+    function getStartPos(poses, direction) {
+      var startPos1 = poses[0],
+          startPos2 = poses[1],
+          startPos3 = poses[2],
+          startPos4 = poses[3];
+      return getPosByReverseDirection([startPos1, startPos2, startPos3, startPos4], direction);
+    }
+
+    function getDist$1(startPos, matrix, width, height, n, direction) {
+      var poses = caculatePoses(matrix, width, height, n);
+      var pos = getPosByReverseDirection(poses, direction);
+      var distX = startPos[0] - pos[0];
+      var distY = startPos[1] - pos[1];
+      return [distX, distY];
+    }
+
+    function getNextMatrix(offsetMatrix, targetMatrix, origin, n) {
+      return multiply(offsetMatrix, getAbsoluteMatrix(targetMatrix, n, origin), n);
+    }
+    function scaleMatrix(state, scale) {
+      var transformOrigin = state.transformOrigin,
+          offsetMatrix = state.offsetMatrix,
+          is3d = state.is3d,
+          targetMatrix = state.targetMatrix;
+      var n = is3d ? 4 : 3;
+      return getNextMatrix(offsetMatrix, multiply(targetMatrix, createScaleMatrix(scale, n), n), transformOrigin, n);
+    }
+    function getScaleDist(moveable, scale, direction, dragClient) {
+      var state = moveable.state;
+      var is3d = state.is3d,
+          left = state.left,
+          top = state.top,
+          width = state.width,
+          height = state.height;
+      var n = is3d ? 4 : 3;
+      var groupable = moveable.props.groupable;
+      var nextMatrix = scaleMatrix(moveable.state, scale);
+      var groupLeft = groupable ? left : 0;
+      var groupTop = groupable ? top : 0;
+      var startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
+      var dist = getDist$1(startPos, nextMatrix, width, height, n, direction);
+      return minus(dist, [groupLeft, groupTop]);
+    }
+    function getResizeDist(moveable, width, height, direction, transformOrigin, dragClient) {
+      var groupable = moveable.props.groupable;
+      var _a = moveable.state,
+          prevOrigin = _a.transformOrigin,
+          targetMatrix = _a.targetMatrix,
+          offsetMatrix = _a.offsetMatrix,
+          is3d = _a.is3d,
+          prevWidth = _a.width,
+          prevheight = _a.height,
+          left = _a.left,
+          top = _a.top;
+      var n = is3d ? 4 : 3;
+      var nextOrigin = caculateTransformOrigin(transformOrigin, width, height, prevWidth, prevheight, prevOrigin);
+      var groupLeft = groupable ? left : 0;
+      var groupTop = groupable ? top : 0;
+      var nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
+      var startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
+      var dist = getDist$1(startPos, nextMatrix, width, height, n, direction);
+      return minus(dist, [groupLeft, groupTop]);
     }
 
     var Draggable = {
@@ -4832,10 +5955,19 @@ version: 0.7.5
       dragStart: function (moveable, _a) {
         var datas = _a.datas,
             clientX = _a.clientX,
-            clientY = _a.clientY;
-        var _b = moveable.state,
-            targetTransform = _b.targetTransform,
-            target = _b.target;
+            clientY = _a.clientY,
+            parentEvent = _a.parentEvent,
+            parentDragger = _a.parentDragger;
+        var state = moveable.state;
+        var targetTransform = state.targetTransform,
+            target = state.target,
+            dragger = state.dragger;
+
+        if (dragger) {
+          return false;
+        }
+
+        state.dragger = parentDragger || moveable.targetDragger;
         var style = window.getComputedStyle(target);
         datas.datas = {};
         datas.left = parseFloat(style.left || "") || 0;
@@ -4843,25 +5975,32 @@ version: 0.7.5
         datas.bottom = parseFloat(style.bottom || "") || 0;
         datas.right = parseFloat(style.right || "") || 0;
         datas.transform = targetTransform;
+        datas.startTranslate = [0, 0];
         setDragStart(moveable, {
           datas: datas
         });
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
-        var result = triggerEvent(moveable, "onDragStart", {
+        datas.isDrag = false;
+        var params = {
           datas: datas.datas,
           target: target,
           clientX: clientX,
-          clientY: clientY
-        });
+          clientY: clientY,
+          set: function (translate) {
+            datas.startTranslate = translate;
+          }
+        };
+        var result = parentEvent || triggerEvent(moveable, "onDragStart", params);
 
         if (result !== false) {
           datas.isDrag = true;
         } else {
+          state.dragger = null;
           datas.isPinch = false;
         }
 
-        return datas.isDrag;
+        return datas.isDrag ? params : false;
       },
       drag: function (moveable, _a) {
         var datas = _a.datas,
@@ -4869,34 +6008,36 @@ version: 0.7.5
             distY = _a.distY,
             clientX = _a.clientX,
             clientY = _a.clientY,
-            inputEvent = _a.inputEvent;
+            parentEvent = _a.parentEvent;
         var isPinch = datas.isPinch,
             isDrag = datas.isDrag,
             prevDist = datas.prevDist,
             prevBeforeDist = datas.prevBeforeDist,
-            transform = datas.transform;
+            transform = datas.transform,
+            startTranslate = datas.startTranslate;
 
         if (!isDrag) {
           return;
         }
 
-        var _b = moveable.props,
-            _c = _b.throttleDrag,
-            throttleDrag = _c === void 0 ? 0 : _c,
-            parentMoveable = _b.parentMoveable;
+        var props = moveable.props;
+        var parentMoveable = props.parentMoveable;
+        var throttleDrag = parentEvent ? 0 : props.throttleDrag || 0;
         var target = moveable.state.target;
-        var beforeDist = getDragDist({
+        var beforeTranslate = plus(getDragDist({
           datas: datas,
           distX: distX,
           distY: distY
-        }, true);
-        var dist = getDragDist({
+        }, true), startTranslate);
+        var translate = plus(getDragDist({
           datas: datas,
           distX: distX,
           distY: distY
-        }, false);
-        throttleArray(dist, throttleDrag);
-        throttleArray(beforeDist, throttleDrag);
+        }, false), startTranslate);
+        throttleArray(translate, throttleDrag);
+        throttleArray(beforeTranslate, throttleDrag);
+        var beforeDist = minus(beforeTranslate, startTranslate);
+        var dist = minus(translate, startTranslate);
         var delta = minus(dist, prevDist);
         var beforeDelta = minus(beforeDist, prevBeforeDist);
         datas.prevDist = dist;
@@ -4907,7 +6048,7 @@ version: 0.7.5
         var bottom = datas.bottom - beforeDist[1];
         var nextTransform = transform + " translate(" + dist[0] + "px, " + dist[1] + "px)";
 
-        if (!parentMoveable && delta.every(function (num) {
+        if (!parentEvent && !parentMoveable && delta.every(function (num) {
           return !num;
         }) && beforeDelta.some(function (num) {
           return !num;
@@ -4921,8 +6062,10 @@ version: 0.7.5
           transform: nextTransform,
           dist: dist,
           delta: delta,
+          translate: translate,
           beforeDist: beforeDist,
           beforeDelta: beforeDelta,
+          beforeTranslate: beforeTranslate,
           left: left,
           top: top,
           right: right,
@@ -4931,11 +6074,12 @@ version: 0.7.5
           clientY: clientY,
           isPinch: isPinch
         };
-        triggerEvent(moveable, "onDrag", params);
+        !parentEvent && triggerEvent(moveable, "onDrag", params);
         return params;
       },
       dragEnd: function (moveable, _a) {
-        var datas = _a.datas,
+        var parentEvent = _a.parentEvent,
+            datas = _a.datas,
             isDrag = _a.isDrag,
             clientX = _a.clientX,
             clientY = _a.clientY;
@@ -4944,8 +6088,9 @@ version: 0.7.5
           return;
         }
 
+        moveable.state.dragger = null;
         datas.isDrag = false;
-        triggerEvent(moveable, "onDragEnd", {
+        !parentEvent && triggerEvent(moveable, "onDragEnd", {
           target: moveable.state.target,
           isDrag: isDrag,
           clientX: clientX,
@@ -4955,29 +6100,35 @@ version: 0.7.5
         return isDrag;
       },
       dragGroupCondition: function (target) {
-        return hasClass(target, prefix("group"));
+        return hasClass(target, prefix("area"));
       },
       dragGroupStart: function (moveable, e) {
-        var clientX = e.clientX,
-            clientY = e.clientY,
-            datas = e.datas;
-        triggerChildAble(moveable, this, "dragStart", e);
-        this.dragStart(moveable, e);
-        var result = triggerEvent(moveable, "onDragGroupStart", {
+        var datas = e.datas;
+        var params = this.dragStart(moveable, e);
+
+        if (!params) {
+          return false;
+        }
+
+        var events = triggerChildAble(moveable, this, "dragStart", datas, e);
+
+        var nextParams = __assign$3({}, params, {
           targets: moveable.props.targets,
-          clientX: clientX,
-          clientY: clientY,
-          datas: datas.datas
+          events: events
         });
+
+        var result = triggerEvent(moveable, "onDragGroupStart", nextParams);
         datas.isDrag = result !== false;
-        return datas.isDrag;
+        return datas.isDrag ? params : false;
       },
       dragGroup: function (moveable, e) {
-        if (!e.datas.isDrag) {
+        var datas = e.datas;
+
+        if (!datas.isDrag) {
           return;
         }
 
-        var events = triggerChildAble(moveable, this, "drag", e);
+        var events = triggerChildAble(moveable, this, "drag", datas, e);
         var params = this.drag(moveable, e);
 
         if (!params) {
@@ -5002,7 +6153,8 @@ version: 0.7.5
           return;
         }
 
-        triggerChildAble(moveable, this, "dragEnd", e);
+        this.dragEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragEnd", datas, e);
         triggerEvent(moveable, "onDragGroupEnd", {
           targets: moveable.props.targets,
           isDrag: isDrag,
@@ -5014,6 +6166,76 @@ version: 0.7.5
       }
     };
 
+    function setCustomDrag(state, delta, inputEvent) {
+      return __assign$3({}, state.dragger.move(delta, inputEvent), {
+        parentEvent: true
+      });
+    }
+
+    var CustomDragger =
+    /*#__PURE__*/
+    function () {
+      function CustomDragger() {
+        this.prevX = 0;
+        this.prevY = 0;
+        this.startX = 0;
+        this.startY = 0;
+        this.isDrag = false;
+        this.isFlag = false;
+        this.datas = {};
+      }
+
+      var __proto = CustomDragger.prototype;
+
+      __proto.dragStart = function (client, inputEvent) {
+        this.isDrag = false;
+        this.isFlag = false;
+        this.datas = {};
+        return this.move(client, inputEvent);
+      };
+
+      __proto.drag = function (client, inputEvent) {
+        return this.move([client[0] - this.prevX, client[1] - this.prevY], inputEvent);
+      };
+
+      __proto.move = function (delta, inputEvent) {
+        var clientX;
+        var clientY;
+
+        if (!this.isFlag) {
+          this.prevX = delta[0];
+          this.prevY = delta[1];
+          this.startX = delta[0];
+          this.startY = delta[1];
+          clientX = delta[0];
+          clientY = delta[1];
+          this.isFlag = true;
+        } else {
+          clientX = this.prevX + delta[0];
+          clientY = this.prevY + delta[1];
+          this.isDrag = true;
+        }
+
+        this.prevX = clientX;
+        this.prevY = clientY;
+        return {
+          clientX: clientX,
+          clientY: clientY,
+          inputEvent: inputEvent,
+          isDrag: this.isDrag,
+          distX: clientX - this.startX,
+          distY: clientY - this.startY,
+          deltaX: delta[0],
+          deltaY: delta[1],
+          datas: this.datas,
+          parentEvent: true,
+          parentDragger: this
+        };
+      };
+
+      return CustomDragger;
+    }();
+
     function setRotateStartInfo(datas, clientX, clientY, origin, rotationPos) {
       datas.startAbsoluteOrigin = [clientX - rotationPos[0] + origin[0], clientY - rotationPos[1] + origin[1]];
       datas.prevDeg = getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
@@ -5021,11 +6243,10 @@ version: 0.7.5
       datas.loop = 0;
     }
 
-    function getDeg(datas, deg, direction, throttleRotate) {
+    function getDeg(datas, deg, direction, startRotate, throttleRotate) {
       var prevDeg = datas.prevDeg,
           startDeg = datas.startDeg,
           prevLoop = datas.loop;
-      deg = throttle(deg, throttleRotate);
 
       if (prevDeg > deg && prevDeg > 270 && deg < 90) {
         // 360 => 0
@@ -5035,16 +6256,40 @@ version: 0.7.5
         --datas.loop;
       }
 
-      var absolutePrevDeg = prevLoop * 360 + prevDeg;
-      var absoluteDeg = datas.loop * 360 + deg;
+      var loop = datas.loop;
+      var absolutePrevDeg = prevLoop * 360 + prevDeg - startDeg + startRotate;
+      var absoluteDeg = loop * 360 + deg - startDeg + startRotate;
+      absoluteDeg = throttle(absoluteDeg, throttleRotate);
       var delta = direction * (absoluteDeg - absolutePrevDeg);
-      var dist = direction * (absoluteDeg - startDeg);
-      datas.prevDeg = deg;
-      return [delta, dist];
+      var dist = direction * (absoluteDeg - startRotate);
+      datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
+      return [delta, dist, absoluteDeg];
     }
 
-    function getRotateInfo(datas, direction, clientX, clientY, throttleRotate) {
-      return getDeg(datas, getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180, direction, throttleRotate);
+    function getRotateInfo(datas, direction, clientX, clientY, startRotate, throttleRotate) {
+      return getDeg(datas, getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180, direction, startRotate, throttleRotate);
+    }
+
+    function getPositions$1(rotationPosition, pos1, pos2, pos3, pos4) {
+      if (rotationPosition === "left") {
+        return [pos3, pos1];
+      } else if (rotationPosition === "right") {
+        return [pos2, pos4];
+      } else if (rotationPosition === "bottom") {
+        return [pos4, pos3];
+      }
+
+      return [pos1, pos2];
+    }
+    function getRotationRad(poses, direction) {
+      return getRad(direction > 0 ? poses[0] : poses[1], direction > 0 ? poses[1] : poses[0]);
+    }
+    function getRotationPosition(_a, rad) {
+      var pos1 = _a[0],
+          pos2 = _a[1];
+      var relativeRotationPos = rotate([0, -40, 1], rad);
+      var rotationPos = [(pos1[0] + pos2[0]) / 2 + relativeRotationPos[0], (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1]];
+      return rotationPos;
     }
 
     function dragControlCondition(target) {
@@ -5054,22 +6299,31 @@ version: 0.7.5
     var Rotatable = {
       name: "rotatable",
       canPinch: true,
-      render: function (moveable) {
-        if (!moveable.props.rotatable) {
+      render: function (moveable, React) {
+        var _a = moveable.props,
+            rotatable = _a.rotatable,
+            rotationPosition = _a.rotationPosition;
+
+        if (!rotatable) {
           return null;
         }
 
-        var _a = moveable.state,
-            pos1 = _a.pos1,
-            pos2 = _a.pos2,
-            rotationRad = _a.rotationRad;
-        return createElement("div", {
+        var _b = moveable.state,
+            pos1 = _b.pos1,
+            pos2 = _b.pos2,
+            pos3 = _b.pos3,
+            pos4 = _b.pos4,
+            direction = _b.direction;
+        var poses = getPositions$1(rotationPosition, pos1, pos2, pos3, pos4);
+        var rotationRad = getRotationRad(poses, direction);
+        return React.createElement("div", {
+          key: "rotation",
           className: prefix("line rotation-line"),
           style: {
             // tslint:disable-next-line: max-line-length
-            transform: "translate(" + (pos1[0] + pos2[0]) / 2 + "px, " + (pos1[1] + pos2[1]) / 2 + "px) translateY(-40px) rotate(" + rotationRad + "rad)"
+            transform: "translate(" + (poses[0][0] + poses[1][0]) / 2 + "px, " + (poses[0][1] + poses[1][1]) / 2 + "px) translateY(-40px) rotate(" + rotationRad + "rad)"
           }
-        }, createElement("div", {
+        }, React.createElement("div", {
           className: prefix("control", "rotation")
         }));
       },
@@ -5087,10 +6341,13 @@ version: 0.7.5
             top = _b.top,
             origin = _b.origin,
             beforeOrigin = _b.beforeOrigin,
-            rotationPos = _b.rotationPos,
             direction = _b.direction,
             beforeDirection = _b.beforeDirection,
-            targetTransform = _b.targetTransform;
+            targetTransform = _b.targetTransform,
+            pos1 = _b.pos1,
+            pos2 = _b.pos2,
+            pos3 = _b.pos3,
+            pos4 = _b.pos4;
 
         if (!target) {
           return false;
@@ -5099,6 +6356,8 @@ version: 0.7.5
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
+        var poses = getPositions$1(moveable.props.rotationPosition, pos1, pos2, pos3, pos4);
+        var rotationPos = getRotationPosition(poses, getRotationRad(poses, direction));
 
         if (pinchFlag || parentFlag) {
           datas.beforeInfo = {
@@ -5120,15 +6379,20 @@ version: 0.7.5
 
         datas.direction = direction;
         datas.beforeDirection = beforeDirection;
+        datas.startRotate = 0;
         datas.datas = {};
-        var result = triggerEvent(moveable, "onRotateStart", {
+        var params = {
           datas: datas.datas,
           target: target,
           clientX: clientX,
-          clientY: clientY
-        });
+          clientY: clientY,
+          set: function (rotatation) {
+            datas.startRotate = rotatation;
+          }
+        };
+        var result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
-        return datas.isRotate;
+        return datas.isRotate ? params : false;
       },
       dragControl: function (moveable, _a) {
         var _b, _c, _d, _e;
@@ -5143,7 +6407,8 @@ version: 0.7.5
             beforeDirection = datas.beforeDirection,
             beforeInfo = datas.beforeInfo,
             afterInfo = datas.afterInfo,
-            isRotate = datas.isRotate;
+            isRotate = datas.isRotate,
+            startRotate = datas.startRotate;
 
         if (!isRotate) {
           return;
@@ -5155,15 +6420,17 @@ version: 0.7.5
             parentMoveable = _f.parentMoveable;
         var delta;
         var dist;
+        var rotate;
         var beforeDelta;
         var beforeDist;
+        var beforeRotate;
 
         if (pinchFlag || parentFlag) {
-          _b = getDeg(afterInfo, parentRotate, direction, throttleRotate), delta = _b[0], dist = _b[1];
-          _c = getDeg(beforeInfo, parentRotate, direction, throttleRotate), beforeDelta = _c[0], beforeDist = _c[1];
+          _b = getDeg(afterInfo, parentRotate, direction, startRotate, throttleRotate), delta = _b[0], dist = _b[1], rotate = _b[2];
+          _c = getDeg(beforeInfo, parentRotate, direction, startRotate, throttleRotate), beforeDelta = _c[0], beforeDist = _c[1], beforeRotate = _c[2];
         } else {
-          _d = getRotateInfo(afterInfo, direction, clientX, clientY, throttleRotate), delta = _d[0], dist = _d[1];
-          _e = getRotateInfo(beforeInfo, beforeDirection, clientX, clientY, throttleRotate), beforeDelta = _e[0], beforeDist = _e[1];
+          _d = getRotateInfo(afterInfo, direction, clientX, clientY, startRotate, throttleRotate), delta = _d[0], dist = _d[1], rotate = _d[2];
+          _e = getRotateInfo(beforeInfo, beforeDirection, clientX, clientY, startRotate, throttleRotate), beforeDelta = _e[0], beforeDist = _e[1], beforeRotate = _e[2];
         }
 
         if (!delta && !beforeDelta && !parentMoveable) {
@@ -5173,12 +6440,14 @@ version: 0.7.5
         var params = {
           target: moveable.props.target,
           datas: datas.datas,
-          delta: delta,
-          dist: dist,
           clientX: clientX,
           clientY: clientY,
+          delta: delta,
+          dist: dist,
+          rotate: rotate,
           beforeDist: beforeDist,
           beforeDelta: beforeDelta,
+          beforeRotate: beforeRotate,
           transform: datas.transform + " rotate(" + dist + "deg)",
           isPinch: !!pinchFlag
         };
@@ -5207,34 +6476,38 @@ version: 0.7.5
       },
       dragGroupControlCondition: dragControlCondition,
       dragGroupControlStart: function (moveable, e) {
-        var clientX = e.clientX,
-            clientY = e.clientY,
-            datas = e.datas,
+        var datas = e.datas,
             inputEvent = e.inputEvent;
         var _a = moveable.state,
             parentLeft = _a.left,
             parentTop = _a.top,
             parentBeforeOrigin = _a.beforeOrigin;
-        triggerChildAble(moveable, this, "dragControlStart", __assign$3({}, e, {
+        var params = this.dragControlStart(moveable, e);
+
+        if (!params) {
+          return false;
+        }
+
+        var events = triggerChildAble(moveable, this, "dragControlStart", datas, __assign$3({}, e, {
           parentRotate: 0
-        }), function (child, childDatas) {
+        }), function (child, childDatas, eventParams) {
           var _a = child.state,
               left = _a.left,
               top = _a.top,
               beforeOrigin = _a.beforeOrigin;
-          var childClient = sum(minus([left, top], [parentLeft, parentTop]), minus(beforeOrigin, parentBeforeOrigin));
-          var dragDatas = childDatas.drag || (childDatas.drag = {});
-          Draggable.dragStart(child, setCustomEvent(childClient[0], childClient[1], dragDatas, inputEvent));
+          var childClient = plus(minus([left, top], [parentLeft, parentTop]), minus(beforeOrigin, parentBeforeOrigin));
+          childDatas.prevClient = childClient;
+          eventParams.dragStart = Draggable.dragStart(child, new CustomDragger().dragStart(childClient, inputEvent));
         });
-        this.dragControlStart(moveable, e);
-        var result = triggerEvent(moveable, "onRotateGroupStart", {
+
+        var nextParams = __assign$3({}, params, {
           targets: moveable.props.targets,
-          clientX: clientX,
-          clientY: clientY,
-          datas: datas.datas
+          events: events
         });
+
+        var result = triggerEvent(moveable, "onRotateGroupStart", nextParams);
         datas.isRotate = result !== false;
-        return datas.isDrag;
+        return datas.isDrag ? params : false;
       },
       dragGroupControl: function (moveable, e) {
         var inputEvent = e.inputEvent,
@@ -5252,20 +6525,21 @@ version: 0.7.5
 
         var parentRotate = params.beforeDist;
         var deg = params.beforeDelta;
-        var events = triggerChildAble(moveable, this, "dragControl", __assign$3({}, e, {
+        var rad = deg / 180 * Math.PI;
+        var events = triggerChildAble(moveable, this, "dragControl", datas, __assign$3({}, e, {
           parentRotate: parentRotate
         }), function (child, childDatas, result, i) {
-          var dragDatas = childDatas.drag || (childDatas.drag = {});
+          var _a = childDatas.prevClient,
+              prevX = _a[0],
+              prevY = _a[1];
 
-          var _a = getCustomEvent(dragDatas),
-              prevX = _a.prevX,
-              prevY = _a.prevY;
-
-          var _b = rotate([prevX, prevY], deg),
+          var _b = rotate([prevX, prevY], rad),
               clientX = _b[0],
               clientY = _b[1];
 
-          var dragResult = Draggable.drag(child, setCustomEvent(clientX, clientY, dragDatas, inputEvent));
+          var delta = [clientX - prevX, clientY - prevY];
+          childDatas.prevClient = [clientX, clientY];
+          var dragResult = Draggable.drag(child, setCustomDrag(child.state, delta, inputEvent));
           result.drag = dragResult;
         });
 
@@ -5289,7 +6563,7 @@ version: 0.7.5
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
         var nextParams = {
           targets: moveable.props.targets,
           clientX: clientX,
@@ -5302,10 +6576,10 @@ version: 0.7.5
       }
     };
 
-    function renderAllDirection(moveable) {
-      return renderDiagonalDirection(moveable).concat(renderDirection(moveable));
+    function renderAllDirection(moveable, React) {
+      return renderDiagonalDirection(moveable, React).concat(renderDirection(moveable, React));
     }
-    function renderDiagonalDirection(moveable) {
+    function renderDiagonalDirection(moveable, React) {
       var _a = moveable.props,
           resizable = _a.resizable,
           scalable = _a.scalable,
@@ -5320,29 +6594,29 @@ version: 0.7.5
           pos2 = _b.pos2,
           pos3 = _b.pos3,
           pos4 = _b.pos4;
-      return [createElement("div", {
+      return [React.createElement("div", {
         className: prefix("control", "direction", "nw"),
         "data-direction": "nw",
         key: "nw",
         style: getControlTransform(pos1)
-      }), createElement("div", {
+      }), React.createElement("div", {
         className: prefix("control", "direction", "ne"),
         "data-direction": "ne",
         key: "ne",
         style: getControlTransform(pos2)
-      }), createElement("div", {
+      }), React.createElement("div", {
         className: prefix("control", "direction", "sw"),
         "data-direction": "sw",
         key: "sw",
         style: getControlTransform(pos3)
-      }), createElement("div", {
+      }), React.createElement("div", {
         className: prefix("control", "direction", "se"),
         "data-direction": "se",
         key: "se",
         style: getControlTransform(pos4)
       })];
     }
-    function renderDirection(moveable) {
+    function renderDirection(moveable, React) {
       var _a = moveable.props,
           resizable = _a.resizable,
           scalable = _a.scalable;
@@ -5356,22 +6630,22 @@ version: 0.7.5
           pos2 = _b.pos2,
           pos3 = _b.pos3,
           pos4 = _b.pos4;
-      return [createElement("div", {
+      return [React.createElement("div", {
         className: prefix("control", "direction", "n"),
         "data-direction": "n",
         key: "n",
         style: getControlTransform(pos1, pos2)
-      }), createElement("div", {
+      }), React.createElement("div", {
         className: prefix("control", "direction", "w"),
         "data-direction": "w",
         key: "w",
         style: getControlTransform(pos1, pos3)
-      }), createElement("div", {
+      }), React.createElement("div", {
         className: prefix("control", "direction", "e"),
         "data-direction": "e",
         key: "e",
         style: getControlTransform(pos2, pos4)
-      }), createElement("div", {
+      }), React.createElement("div", {
         className: prefix("control", "direction", "s"),
         "data-direction": "s",
         key: "s",
@@ -5379,36 +6653,697 @@ version: 0.7.5
       })];
     }
 
+    function snapStart(moveable, _a) {
+      var datas = _a.datas;
+      var state = moveable.state;
+
+      if (state.guidelines && state.guidelines.length) {
+        return;
+      }
+
+      var _b = moveable.props,
+          _c = _b.horizontalGuidelines,
+          horizontalGuidelines = _c === void 0 ? [] : _c,
+          _d = _b.verticalGuidelines,
+          verticalGuidelines = _d === void 0 ? [] : _d,
+          _e = _b.elementGuildelines,
+          elementGuildelines = _e === void 0 ? [] : _e,
+          bounds = _b.bounds,
+          container = _b.container,
+          snapCenter = _b.snapCenter;
+
+      if (!bounds && !horizontalGuidelines.length && !verticalGuidelines.length && !elementGuildelines.length) {
+        return;
+      }
+
+      var containerRect = (container || document.documentElement).getBoundingClientRect();
+      var containerTop = containerRect.top,
+          containerLeft = containerRect.left,
+          containerWidth = containerRect.width,
+          containerHeight = containerRect.height;
+      var guidelines = [];
+      horizontalGuidelines.forEach(function (pos) {
+        guidelines.push({
+          type: "horizontal",
+          pos: [0, pos],
+          size: containerWidth
+        });
+      });
+      verticalGuidelines.forEach(function (pos) {
+        guidelines.push({
+          type: "vertical",
+          pos: [pos, 0],
+          size: containerHeight
+        });
+      });
+      elementGuildelines.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        var top = rect.top,
+            left = rect.left,
+            width = rect.width,
+            height = rect.height;
+        var elementTop = top - containerTop;
+        var elementBottom = elementTop + height;
+        var elementLeft = left - containerLeft;
+        var elementRight = elementLeft + width;
+        guidelines.push({
+          type: "vertical",
+          element: el,
+          pos: [elementLeft, elementTop],
+          size: height
+        });
+        guidelines.push({
+          type: "vertical",
+          element: el,
+          pos: [elementRight, elementTop],
+          size: height
+        });
+        guidelines.push({
+          type: "horizontal",
+          element: el,
+          pos: [elementLeft, elementTop],
+          size: width
+        });
+        guidelines.push({
+          type: "horizontal",
+          element: el,
+          pos: [elementLeft, elementBottom],
+          size: width
+        });
+
+        if (snapCenter) {
+          guidelines.push({
+            type: "vertical",
+            element: el,
+            pos: [(elementLeft + elementRight) / 2, elementTop],
+            size: height,
+            center: true
+          });
+          guidelines.push({
+            type: "horizontal",
+            element: el,
+            pos: [elementLeft, (elementTop + elementBottom) / 2],
+            size: width,
+            center: true
+          });
+        }
+      });
+      var pos1 = state.pos1,
+          pos2 = state.pos2,
+          pos3 = state.pos3,
+          pos4 = state.pos4,
+          targetLeft = state.left,
+          targetTop = state.top;
+      var startLeft = targetLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
+      var startRight = targetLeft + Math.max(pos1[0], pos2[0], pos3[0], pos4[0]);
+      var startTop = targetTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
+      var startBottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
+      state.guidelines = guidelines;
+      state.startLeft = startLeft;
+      state.startRight = startRight;
+      state.startTop = startTop;
+      state.startBottom = startBottom;
+    }
+
+    function checkBounds(moveable, verticalPoses, horizontalPoses, snapThreshold) {
+      return {
+        vertical: checkBound(moveable, verticalPoses, true, snapThreshold),
+        horizontal: checkBound(moveable, horizontalPoses, false, snapThreshold)
+      };
+    }
+
+    function checkBound(moveable, poses, isVertical, snapThreshold) {
+      if (snapThreshold === void 0) {
+        snapThreshold = 0;
+      }
+
+      var bounds = moveable.props.bounds;
+
+      if (bounds) {
+        var startPos = bounds[isVertical ? "left" : "top"];
+        var endPos = bounds[isVertical ? "right" : "bottom"];
+        var minPos = Math.min.apply(Math, poses);
+        var maxPos = Math.max.apply(Math, poses);
+
+        if (!isUndefined$1(startPos) && startPos + snapThreshold > minPos) {
+          return {
+            isBound: true,
+            offset: minPos - startPos,
+            pos: startPos
+          };
+        }
+
+        if (!isUndefined$1(endPos) && endPos - snapThreshold < maxPos) {
+          return {
+            isBound: true,
+            offset: maxPos - endPos,
+            pos: endPos
+          };
+        }
+      }
+
+      return {
+        isBound: false,
+        offset: 0,
+        pos: 0
+      };
+    }
+
+    function checkSnap(guidelines, targetType, targetPoses, isSnapCenter, snapThreshold) {
+      if (!guidelines) {
+        return {
+          isSnap: false,
+          dist: -1,
+          offset: 0,
+          guidelines: [],
+          snapPoses: []
+        };
+      }
+
+      var snapGuidelines = [];
+      var snapDist = Infinity;
+      var snapOffset = 0;
+      var isVertical = targetType === "vertical";
+      var posType = isVertical ? 0 : 1;
+      var snapPoses = targetPoses.filter(function (targetPos) {
+        return guidelines.filter(function (guideline) {
+          var type = guideline.type,
+              pos = guideline.pos,
+              center = guideline.center;
+
+          if (!isSnapCenter && center || type !== targetType) {
+            return false;
+          }
+
+          var offset = targetPos - pos[posType];
+          var dist = Math.abs(offset);
+
+          if (dist > snapThreshold) {
+            return false;
+          }
+
+          if (snapDist > dist) {
+            snapDist = dist;
+            snapGuidelines = [];
+          }
+
+          if (snapDist === dist) {
+            snapOffset = offset;
+            snapGuidelines.push(guideline);
+          }
+
+          return true;
+        }).length;
+      });
+      return {
+        isSnap: !!snapGuidelines.length,
+        dist: isFinite(snapDist) ? snapDist : -1,
+        offset: snapOffset,
+        guidelines: snapGuidelines,
+        snapPoses: snapPoses
+      };
+    }
+
+    function hasGuidelines(moveable, ableName) {
+      var _a = moveable.props,
+          snappable = _a.snappable,
+          bounds = _a.bounds,
+          guidelines = moveable.state.guidelines;
+
+      if (!snappable || ableName && snappable !== true && snappable.indexOf(ableName) || !bounds && (!guidelines || !guidelines.length)) {
+        return false;
+      }
+
+      return true;
+    }
+    function checkSnapPoses(moveable, posesX, posesY, isSnapCenter, customSnapThreshold) {
+      var guidelines = moveable.state.guidelines;
+      var snapThreshold = !isUndefined$1(customSnapThreshold) ? customSnapThreshold : !isUndefined$1(moveable.props.snapThreshold) ? moveable.props.snapThreshold : 5;
+      return {
+        vertical: checkSnap(guidelines, "vertical", posesX, isSnapCenter, snapThreshold),
+        horizontal: checkSnap(guidelines, "horizontal", posesY, isSnapCenter, snapThreshold)
+      };
+    }
+    function checkSnaps(moveable, rect, isCenter, customSnapThreshold) {
+      var snapCenter = moveable.props.snapCenter;
+      var isSnapCenter = snapCenter && isCenter;
+      var verticalNames = ["left", "right"];
+      var horizontalNames = ["top", "bottom"];
+
+      if (isSnapCenter) {
+        verticalNames.push("center");
+        horizontalNames.push("middle");
+      }
+
+      verticalNames = verticalNames.filter(function (name) {
+        return name in rect;
+      });
+      horizontalNames = horizontalNames.filter(function (name) {
+        return name in rect;
+      });
+      return checkSnapPoses(moveable, verticalNames.map(function (name) {
+        return rect[name];
+      }), horizontalNames.map(function (name) {
+        return rect[name];
+      }), isSnapCenter, customSnapThreshold);
+    }
+    function checkSizeDist(moveable, matrix, width, height, direction, snapDirection, datas, is3d) {
+      var poses = getAbsolutePosesByState(moveable.state);
+      var fixedPos = getPosByReverseDirection(poses, snapDirection);
+      var nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
+      var nextPos = getPosByReverseDirection(nextPoses, direction);
+
+      var _a = getAbsolutePoses(nextPoses, minus(fixedPos, nextPos)),
+          pos1 = _a[0],
+          pos2 = _a[1],
+          pos3 = _a[2],
+          pos4 = _a[3];
+
+      var directionPoses = getPosesByDirection([pos1, pos2, pos3, pos4], direction);
+
+      if (direction[0] && direction[1]) {
+        var _b = checkSnapPoses(moveable, [directionPoses[0][0]], [directionPoses[0][1]]),
+            horizontalOffset = _b.horizontal.offset,
+            verticalOffset = _b.vertical.offset;
+
+        var _c = checkBounds(moveable, [directionPoses[0][0]], [directionPoses[0][1]]),
+            _d = _c.horizontal,
+            isHorizontalBound = _d.isBound,
+            horizontalBoundOffset = _d.offset,
+            _e = _c.vertical,
+            isVerticalBound = _e.isBound,
+            verticalBoundOffset = _e.offset; // share drag event
+
+
+        var _f = getDragDist({
+          datas: datas,
+          distX: isVerticalBound ? verticalBoundOffset : verticalOffset,
+          distY: isHorizontalBound ? horizontalBoundOffset : horizontalOffset
+        }),
+            widthDist = _f[0],
+            heightDist = _f[1];
+
+        return [-direction[0] * widthDist, -direction[1] * heightDist];
+      } else {
+        var directionIndex_1 = direction[0] !== 0 ? 0 : 1;
+        var reverseDirectionPoses_1 = getPosesByDirection([pos4, pos3, pos2, pos1], direction);
+        var posOffset_1 = 0;
+        directionPoses.push([(directionPoses[0][0] + directionPoses[1][0]) / 2, (directionPoses[0][1] + directionPoses[1][1]) / 2]);
+        reverseDirectionPoses_1.reverse();
+        reverseDirectionPoses_1.push([(reverseDirectionPoses_1[0][0] + reverseDirectionPoses_1[1][0]) / 2, (reverseDirectionPoses_1[0][1] + reverseDirectionPoses_1[1][1]) / 2]);
+        directionPoses.some(function (directionPos, i) {
+          var snapInfos = checkSnapPoses(moveable, [directionPos[0]], [directionPos[1]]);
+          var _a = snapInfos.horizontal,
+              isHorizontalSnap = _a.isSnap,
+              horizontalSnapOffset = _a.offset,
+              horizontalDist = _a.dist,
+              _b = snapInfos.vertical,
+              isVerticalSnap = _b.isSnap,
+              verticalSnapOffset = _b.offset,
+              verticalDist = _b.dist;
+
+          var _c = checkBounds(moveable, [directionPos[0]], [directionPos[1]]),
+              _d = _c.horizontal,
+              isHorizontalBound = _d.isBound,
+              horizontalBoundOffset = _d.offset,
+              _e = _c.vertical,
+              isVerticalBound = _e.isBound,
+              verticalBoundOffset = _e.offset;
+
+          var fixedHorizontal = reverseDirectionPoses_1[i][1] === directionPos[1];
+          var fixedVertical = reverseDirectionPoses_1[i][0] === directionPos[0];
+          var isVertical;
+          var horizontalOffset = isHorizontalBound || isVerticalBound ? horizontalBoundOffset : horizontalSnapOffset;
+          var verticalOffset = isHorizontalBound || isVerticalBound ? verticalBoundOffset : verticalSnapOffset;
+
+          if (isHorizontalBound && isVerticalBound) {
+            if (fixedHorizontal) {
+              isVertical = true;
+            } else if (fixedVertical) {
+              isVertical = false;
+            } else {
+              isVertical = Math.abs(horizontalBoundOffset) < Math.abs(verticalBoundOffset);
+            }
+          } else if (isHorizontalBound || isVerticalBound) {
+            isVertical = isVerticalBound;
+          } else if (!isHorizontalSnap && !isVerticalSnap) {
+            // no snap
+            return false;
+          } else if (isHorizontalSnap && isVerticalSnap) {
+            if (horizontalDist === 0 && fixedHorizontal) {
+              isVertical = true;
+            } else if (verticalOffset === 0 && fixedVertical) {
+              isVertical = false;
+            } else {
+              isVertical = horizontalDist > verticalDist;
+            }
+          } else {
+            isVertical = isVerticalSnap;
+          }
+
+          var sizeOffset = solveEquation(reverseDirectionPoses_1[i], directionPos, -(isVertical ? verticalOffset : horizontalOffset), isVertical);
+
+          if (!sizeOffset) {
+            return false;
+          }
+
+          var _f = getDragDist({
+            datas: datas,
+            distX: sizeOffset[0],
+            distY: sizeOffset[1]
+          }),
+              widthDist = _f[0],
+              heightDist = _f[1];
+
+          posOffset_1 = direction[directionIndex_1] * (directionIndex_1 ? heightDist : widthDist);
+          return true;
+        });
+        var offset = [0, 0];
+        offset[directionIndex_1] = posOffset_1;
+        return offset;
+      }
+    }
+    function checkSnapSize(moveable, width, height, direction, datas) {
+      var nextSizes = [width, height];
+
+      if (!hasGuidelines(moveable, "resizable")) {
+        return nextSizes;
+      }
+
+      var _a = moveable.state,
+          matrix = _a.matrix,
+          is3d = _a.is3d;
+      return plus(nextSizes, checkSizeDist(moveable, matrix, width, height, direction, direction, datas, is3d));
+    }
+    function checkSnapScale(moveable, scale, direction, snapDirection, datas) {
+      var width = datas.width,
+          height = datas.height;
+      var nextScale = scale.slice();
+
+      if (!hasGuidelines(moveable, "scalable")) {
+        return nextScale;
+      }
+
+      var sizeDist = checkSizeDist(moveable, scaleMatrix(datas, scale), width, height, direction, snapDirection, datas, datas.is3d);
+      return [scale[0] + sizeDist[0] / width, scale[1] + sizeDist[1] / height];
+    }
+    function solveEquation(pos1, pos2, snapOffset, isVertical) {
+      var dx = pos2[0] - pos1[0];
+      var dy = pos2[1] - pos1[1];
+
+      if (!dx) {
+        // y = 0 * x + b
+        // only horizontal
+        if (!isVertical) {
+          return [0, snapOffset];
+        }
+
+        return;
+      }
+
+      if (!dy) {
+        // only vertical
+        if (isVertical) {
+          return [snapOffset, 0];
+        }
+
+        return;
+      } // y = ax + b
+
+
+      var a = dy / dx;
+      var b = pos1[1] - a * pos1[0];
+
+      if (isVertical) {
+        // y = a * x + b
+        var y = a * (pos2[0] + snapOffset) + b;
+        return [snapOffset, y - pos2[1]];
+      } else {
+        // x = (y - b) / a
+        var x = (pos2[1] + snapOffset - b) / a;
+        return [x - pos2[0], snapOffset];
+      }
+    }
+    function getSnapInfosByDirection(moveable, poses, snapDirection) {
+      if (snapDirection === true) {
+        var rect = getRect(poses);
+        rect.middle = (rect.top + rect.bottom) / 2;
+        rect.center = (rect.left + rect.right) / 2;
+        return checkSnaps(moveable, rect, true, 1);
+      } else if (!snapDirection[0] && !snapDirection[1]) {
+        var alignPoses = [poses[0], poses[1], poses[3], poses[2], poses[0]];
+        var nextPoses = [];
+
+        for (var i = 0; i < 4; ++i) {
+          nextPoses.push(alignPoses[i]);
+          poses.push([(alignPoses[i][0] + alignPoses[i + 1][0]) / 2, (alignPoses[i][1] + alignPoses[i + 1][1]) / 2]);
+        }
+
+        return checkSnapPoses(moveable, nextPoses.map(function (pos) {
+          return pos[0];
+        }), nextPoses.map(function (pos) {
+          return pos[1];
+        }), true, 1);
+      } else {
+        var nextPoses = getPosesByDirection(poses, snapDirection);
+
+        if (nextPoses.length > 1) {
+          nextPoses.push([(nextPoses[0][0] + nextPoses[1][0]) / 2, (nextPoses[0][1] + nextPoses[1][1]) / 2]);
+        }
+
+        return checkSnapPoses(moveable, nextPoses.map(function (pos) {
+          return pos[0];
+        }), nextPoses.map(function (pos) {
+          return pos[1];
+        }), true, 1);
+      }
+    }
+    var Snappable = {
+      name: "snappable",
+      render: function (moveable, React) {
+        var _a = moveable.state,
+            targetLeft = _a.left,
+            targetTop = _a.top,
+            snapDirection = _a.snapDirection;
+
+        if (!snapDirection || !hasGuidelines(moveable, "")) {
+          return [];
+        }
+
+        var poses = getAbsolutePosesByState(moveable.state);
+
+        var _b = getRect(poses),
+            width = _b.width,
+            height = _b.height,
+            top = _b.top,
+            left = _b.left,
+            bottom = _b.bottom,
+            right = _b.right;
+
+        var _c = getSnapInfosByDirection(moveable, poses, snapDirection),
+            _d = _c.vertical,
+            verticalGuildelines = _d.guidelines,
+            verticalSnapPoses = _d.snapPoses,
+            _e = _c.horizontal,
+            horizontalGuidelines = _e.guidelines,
+            horizontalSnapPoses = _e.snapPoses;
+
+        var _f = checkBounds(moveable, [left, right], [top, bottom], 1),
+            _g = _f.vertical,
+            isVerticalBound = _g.isBound,
+            verticalBoundPos = _g.pos,
+            _h = _f.horizontal,
+            isHorizontalBound = _h.isBound,
+            horizontalBoundPos = _h.pos;
+
+        if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
+          verticalGuildelines.push({
+            type: "vertical",
+            pos: [verticalBoundPos, top],
+            size: height
+          });
+          verticalSnapPoses.push(verticalBoundPos);
+        }
+
+        if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
+          horizontalGuidelines.push({
+            type: "horizontal",
+            pos: [top, verticalBoundPos],
+            size: width
+          });
+          horizontalSnapPoses.push(horizontalBoundPos);
+        }
+
+        return verticalSnapPoses.map(function (pos, i) {
+          return React.createElement("div", {
+            className: prefix("line", "vertical", "guideline", "target", "bold"),
+            key: "verticalTargetGuidline" + i,
+            style: {
+              top: 0 + "px",
+              left: -targetLeft + pos + "px",
+              height: height + "px"
+            }
+          });
+        }).concat(horizontalSnapPoses.map(function (pos, i) {
+          return React.createElement("div", {
+            className: prefix("line", "horizontal", "guideline", "target", "bold"),
+            key: "horizontalTargetGuidline" + i,
+            style: {
+              top: -targetTop + pos + "px",
+              left: 0 + "px",
+              width: width + "px"
+            }
+          });
+        }), verticalGuildelines.map(function (guideline, i) {
+          var pos = guideline.pos,
+              size = guideline.size,
+              element = guideline.element;
+          return React.createElement("div", {
+            className: prefix("line", "vertical", "guideline", element ? "bold" : ""),
+            key: "verticalGuidline" + i,
+            style: {
+              top: -targetTop + pos[1] + "px",
+              left: -targetLeft + pos[0] + "px",
+              height: size + "px"
+            }
+          });
+        }), horizontalGuidelines.map(function (guideline, i) {
+          var pos = guideline.pos,
+              size = guideline.size,
+              element = guideline.element;
+          return React.createElement("div", {
+            className: prefix("line", "horizontal", "guideline", element ? "bold" : ""),
+            key: "horizontalGuidline" + i,
+            style: {
+              top: -targetTop + pos[1] + "px",
+              left: -targetLeft + pos[0] + "px",
+              width: size + "px"
+            }
+          });
+        }));
+      },
+      dragStart: function (moveable, e) {
+        moveable.state.snapDirection = true;
+        snapStart(moveable, e);
+      },
+      drag: function (moveable, e) {
+        var clientX = e.clientX,
+            clientY = e.clientY,
+            distX = e.distX,
+            distY = e.distY;
+        var _a = moveable.state,
+            startLeft = _a.startLeft,
+            startTop = _a.startTop,
+            startBottom = _a.startBottom,
+            startRight = _a.startRight;
+
+        if (!hasGuidelines(moveable, "draggable")) {
+          return false;
+        }
+
+        var left = startLeft + distX;
+        var right = startRight + distX;
+        var center = (left + right) / 2;
+        var top = startTop + distY;
+        var bottom = startBottom + distY;
+        var middle = (top + bottom) / 2;
+        var snapInfos = checkSnaps(moveable, {
+          left: left,
+          right: right,
+          top: top,
+          bottom: bottom,
+          center: center,
+          middle: middle
+        }, true);
+        var boundInfos = checkBounds(moveable, [left, right], [top, bottom]);
+        var offsetX = 0;
+        var offsetY = 0;
+        console.log(checkBounds(moveable, [left, right], [top, bottom]).vertical.isBound);
+
+        if (boundInfos.vertical.isBound) {
+          offsetX = boundInfos.vertical.offset;
+        } else if (snapInfos.vertical.isSnap) {
+          // has vertical guidelines
+          offsetX = snapInfos.vertical.offset;
+        }
+
+        if (boundInfos.horizontal.isBound) {
+          offsetY = boundInfos.horizontal.offset;
+        } else if (snapInfos.horizontal.isSnap) {
+          // has horizontal guidelines
+          offsetY = snapInfos.horizontal.offset;
+        }
+
+        e.clientX = clientX - offsetX;
+        e.clientY = clientY - offsetY;
+        e.distX = distX - offsetX;
+        e.distY = distY - offsetY;
+      },
+      dragEnd: function (moveable) {
+        moveable.state.guidelines = [];
+        moveable.state.snapDirection = null;
+      },
+      dragControlCondition: directionCondition,
+      dragControlStart: function (moveable, e) {
+        moveable.state.snapDirection = null;
+        snapStart(moveable, e);
+      },
+      dragControlEnd: function (moveable) {
+        this.dragEnd(moveable);
+      },
+      dragGroupStart: function (moveable, e) {
+        moveable.state.snapDirection = true;
+        snapStart(moveable, e);
+      },
+      dragGroup: function (moveable, e) {
+        this.drag(moveable, e);
+      },
+      dragGroupEnd: function (moveable) {
+        this.dragEnd(moveable);
+      },
+      dragGroupControlStart: function (moveable, e) {
+        moveable.state.snapDirection = null;
+        snapStart(moveable, e);
+      },
+      dragGroupControlEnd: function (moveable) {
+        this.dragEnd(moveable);
+      },
+      unset: function (moveable) {
+        this.dragEnd(moveable);
+      }
+    };
+
     var Resizable = {
       name: "resizable",
       dragControlOnly: true,
       updateRect: true,
       canPinch: true,
-      render: function (moveable) {
+      render: function (moveable, React) {
         var _a = moveable.props,
             resizable = _a.resizable,
             edge = _a.edge;
 
         if (resizable) {
           if (edge) {
-            return renderDiagonalDirection(moveable);
+            return renderDiagonalDirection(moveable, React);
           }
 
-          return renderAllDirection(moveable);
+          return renderAllDirection(moveable, React);
         }
       },
       dragControlCondition: directionCondition,
       dragControlStart: function (moveable, e) {
-        var inputTarget = e.inputEvent.target,
-            pinchFlag = e.pinchFlag;
+        var inputEvent = e.inputEvent,
+            pinchFlag = e.pinchFlag,
+            clientX = e.clientX,
+            clientY = e.clientY,
+            datas = e.datas;
+        var inputTarget = inputEvent.target;
         var direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
         var _a = moveable.state,
             target = _a.target,
             width = _a.width,
             height = _a.height;
-        var clientX = e.clientX,
-            clientY = e.clientY,
-            datas = e.datas;
 
         if (!direction || !target) {
           return false;
@@ -5419,38 +7354,62 @@ version: 0.7.5
         });
         datas.datas = {};
         datas.direction = direction;
-        datas.width = width;
-        datas.height = height;
+        datas.offsetWidth = width;
+        datas.offsetHeight = height;
         datas.prevWidth = 0;
         datas.prevHeight = 0;
-        var result = triggerEvent(moveable, "onResizeStart", {
+        datas.width = width;
+        datas.height = height;
+        datas.transformOrigin = moveable.props.transformOrigin;
+        var params = {
           datas: datas.datas,
           target: target,
           clientX: clientX,
-          clientY: clientY
-        });
+          clientY: clientY,
+          direction: direction,
+          set: function (_a) {
+            var startWidth = _a[0],
+                startHeight = _a[1];
+            datas.width = startWidth;
+            datas.height = startHeight;
+          },
+          setOrigin: function (origin) {
+            datas.transformOrigin = origin;
+          },
+          dragStart: Draggable.dragStart(moveable, new CustomDragger().dragStart([0, 0], inputEvent))
+        };
+        var result = triggerEvent(moveable, "onResizeStart", params);
 
         if (result !== false) {
           datas.isResize = true;
+          moveable.state.snapDirection = direction;
         }
 
-        return datas.isResize;
+        return datas.isResize ? params : false;
       },
-      dragControl: function (moveable, _a) {
-        var datas = _a.datas,
-            clientX = _a.clientX,
-            clientY = _a.clientY,
-            distX = _a.distX,
-            distY = _a.distY,
-            pinchFlag = _a.pinchFlag,
-            parentDistance = _a.parentDistance,
-            parentScale = _a.parentScale;
+      dragControl: function (moveable, e) {
+        var _a;
+
+        var datas = e.datas,
+            clientX = e.clientX,
+            clientY = e.clientY,
+            distX = e.distX,
+            distY = e.distY,
+            parentFlag = e.parentFlag,
+            pinchFlag = e.pinchFlag,
+            parentDistance = e.parentDistance,
+            parentScale = e.parentScale,
+            inputEvent = e.inputEvent,
+            dragClient = e.dragClient;
         var direction = datas.direction,
             width = datas.width,
             height = datas.height,
+            offsetWidth = datas.offsetWidth,
+            offsetHeight = datas.offsetHeight,
             prevWidth = datas.prevWidth,
             prevHeight = datas.prevHeight,
-            isResize = datas.isResize;
+            isResize = datas.isResize,
+            transformOrigin = datas.transformOrigin;
 
         if (!isResize) {
           return;
@@ -5461,17 +7420,18 @@ version: 0.7.5
             _c = _b.throttleResize,
             throttleResize = _c === void 0 ? 0 : _c,
             parentMoveable = _b.parentMoveable;
-        var target = moveable.state.target;
+        var target = moveable.state.target; // checkSnapSize(moveable as any, e, 1);
+
         var distWidth = 0;
         var distHeight = 0; // diagonal
 
         if (parentScale) {
-          distWidth = (parentScale - 1) * width;
-          distHeight = (parentScale - 1) * height;
+          distWidth = (parentScale[0] - 1) * offsetWidth;
+          distHeight = (parentScale[1] - 1) * offsetHeight;
         } else if (pinchFlag) {
           if (parentDistance) {
             distWidth = parentDistance;
-            distHeight = parentDistance * height / width;
+            distHeight = parentDistance * offsetHeight / offsetWidth;
           }
         } else {
           var dist = getDragDist({
@@ -5482,20 +7442,21 @@ version: 0.7.5
           distWidth = direction[0] * dist[0];
           distHeight = direction[1] * dist[1];
 
-          if (keepRatio && direction[0] && direction[1] && width && height) {
+          if (keepRatio && direction[0] && direction[1] && offsetWidth && offsetHeight) {
             var size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
             var rad = getRad([0, 0], dist);
             var standardRad = getRad([0, 0], direction);
             var distDiagonal = Math.cos(rad - standardRad) * size;
             distWidth = distDiagonal;
-            distHeight = distDiagonal * height / width;
+            distHeight = distDiagonal * offsetHeight / offsetWidth;
           }
         }
 
-        distWidth = throttle(distWidth, throttleResize);
-        distHeight = throttle(distHeight, throttleResize);
-        var nextWidth = width + distWidth;
-        var nextHeight = height + distHeight;
+        var nextWidth = direction[0] ? Math.round(throttle(Math.max(offsetWidth + distWidth, 0), throttleResize)) : offsetWidth;
+        var nextHeight = direction[1] ? Math.round(throttle(Math.max(offsetHeight + distHeight, 0), throttleResize)) : offsetHeight;
+        _a = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas), nextWidth = _a[0], nextHeight = _a[1];
+        distWidth = nextWidth - offsetWidth;
+        distHeight = nextHeight - offsetHeight;
         var delta = [distWidth - prevWidth, distHeight - prevHeight];
         datas.prevWidth = distWidth;
         datas.prevHeight = distHeight;
@@ -5506,17 +7467,21 @@ version: 0.7.5
           return;
         }
 
+        var inverseDelta = !parentFlag && pinchFlag ? [0, 0] : getResizeDist(moveable, nextWidth, nextHeight, direction, transformOrigin, dragClient);
         var params = {
           target: target,
-          width: nextWidth,
-          height: nextHeight,
+          width: width + distWidth,
+          height: height + distHeight,
+          offsetWidth: nextWidth,
+          offsetHeight: nextHeight,
           direction: direction,
           dist: [distWidth, distHeight],
           datas: datas.datas,
           delta: delta,
           clientX: clientX,
           clientY: clientY,
-          isPinch: !!pinchFlag
+          isPinch: !!pinchFlag,
+          drag: Draggable.drag(moveable, setCustomDrag(moveable.state, inverseDelta, inputEvent))
         };
         triggerEvent(moveable, "onResize", params);
         return params;
@@ -5543,42 +7508,38 @@ version: 0.7.5
       },
       dragGroupControlCondition: directionCondition,
       dragGroupControlStart: function (moveable, e) {
-        var clientX = e.clientX,
-            clientY = e.clientY,
-            datas = e.datas,
-            inputEvent = e.inputEvent;
-        var _a = moveable.state,
-            parentLeft = _a.left,
-            parentTop = _a.top;
-        var enabledEvents = triggerChildAble(moveable, this, "dragControlStart", __assign$3({}, e, {
-          parentRotate: 0
-        }), function (child, childDatas) {
-          var _a = child.state,
-              left = _a.left,
-              top = _a.top;
-          var dragDatas = childDatas.drag || (childDatas.drag = {});
-          Draggable.dragStart(child, setCustomEvent(left - parentLeft, top - parentTop, dragDatas, inputEvent));
-        });
+        var datas = e.datas;
+        var params = this.dragControlStart(moveable, e);
 
-        if (enabledEvents.every(function (ev) {
-          return !ev;
-        })) {
+        if (!params) {
           return false;
         }
 
-        this.dragControlStart(moveable, e);
-        var result = triggerEvent(moveable, "onResizeGroupStart", {
-          targets: moveable.props.targets,
-          clientX: clientX,
-          clientY: clientY,
-          datas: datas.datas
+        var direction = params.direction;
+        var startPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+        var events = triggerChildAble(moveable, this, "dragControlStart", datas, function (child, childDatas) {
+          var pos = getPosByReverseDirection(getAbsolutePosesByState(child.state), direction);
+
+          var _a = caculate(createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3), [pos[0] - startPos[0], pos[1] - startPos[1], 1], 3),
+              originalX = _a[0],
+              originalY = _a[1];
+
+          childDatas.originalX = originalX;
+          childDatas.originalY = originalY;
+          return e;
         });
+
+        var nextParams = __assign$3({}, params, {
+          targets: moveable.props.targets,
+          events: events
+        });
+
+        var result = triggerEvent(moveable, "onResizeGroupStart", nextParams);
         datas.isResize = result !== false;
-        return datas.isResize;
+        return datas.isResize ? params : false;
       },
       dragGroupControl: function (moveable, e) {
-        var inputEvent = e.inputEvent,
-            datas = e.datas;
+        var datas = e.datas;
 
         if (!datas.isResize) {
           return;
@@ -5590,23 +7551,21 @@ version: 0.7.5
           return;
         }
 
-        var width = params.width,
-            height = params.height,
-            dist = params.dist;
-        var parentScale = [width / (width - dist[0]), height / (height - dist[1])];
-        var events = triggerChildAble(moveable, this, "dragControl", __assign$3({}, e, {
-          parentScale: parentScale
-        }), function (child, childDatas, result) {
-          var dragDatas = childDatas.drag || (childDatas.drag = {});
+        var offsetWidth = params.offsetWidth,
+            offsetHeight = params.offsetHeight,
+            dist = params.dist,
+            direction = params.direction;
+        var parentScale = [offsetWidth / (offsetWidth - dist[0]), offsetHeight / (offsetHeight - dist[1])];
+        var prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+        var events = triggerChildAble(moveable, this, "dragControl", datas, function (_, childDatas) {
+          var _a = caculate(createRotateMatrix(moveable.rotation / 180 * Math.PI, 3), [childDatas.originalX * parentScale[0], childDatas.originalY * parentScale[1], 1], 3),
+              clientX = _a[0],
+              clientY = _a[1];
 
-          var _a = getCustomEvent(dragDatas),
-              startX = _a.startX,
-              startY = _a.startY;
-
-          var clientX = parentScale[0] * startX;
-          var clientY = parentScale[1] * startY;
-          var dragResult = Draggable.drag(child, setCustomEvent(clientX, clientY, dragDatas, inputEvent));
-          result.drag = dragResult;
+          return __assign$3({}, e, {
+            parentScale: parentScale,
+            dragClient: plus(prevPos, [clientX, clientY])
+          });
         });
 
         var nextParams = __assign$3({
@@ -5628,7 +7587,7 @@ version: 0.7.5
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
         var nextParams = {
           targets: moveable.props.targets,
           clientX: clientX,
@@ -5645,7 +7604,7 @@ version: 0.7.5
       name: "scalable",
       dragControlOnly: true,
       canPinch: true,
-      render: function (moveable) {
+      render: function (moveable, React) {
         var _a = moveable.props,
             resizable = _a.resizable,
             scalable = _a.scalable,
@@ -5653,25 +7612,26 @@ version: 0.7.5
 
         if (!resizable && scalable) {
           if (edge) {
-            return renderDiagonalDirection(moveable);
+            return renderDiagonalDirection(moveable, React);
           }
 
-          return renderAllDirection(moveable);
+          return renderAllDirection(moveable, React);
         }
       },
       dragControlCondition: directionCondition,
-      dragControlStart: function (moveable, _a) {
-        var datas = _a.datas,
-            clientX = _a.clientX,
-            clientY = _a.clientY,
-            pinchFlag = _a.pinchFlag,
-            inputTarget = _a.inputEvent.target;
+      dragControlStart: function (moveable, e) {
+        var datas = e.datas,
+            clientX = e.clientX,
+            clientY = e.clientY,
+            pinchFlag = e.pinchFlag,
+            inputEvent = e.inputEvent;
+        var inputTarget = inputEvent.target;
         var direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
-        var _b = moveable.state,
-            width = _b.width,
-            height = _b.height,
-            targetTransform = _b.targetTransform,
-            target = _b.target;
+        var _a = moveable.state,
+            width = _a.width,
+            height = _a.height,
+            targetTransform = _a.targetTransform,
+            target = _a.target;
 
         if (!direction || !target) {
           return false;
@@ -5689,44 +7649,57 @@ version: 0.7.5
         datas.direction = direction;
         datas.width = width;
         datas.height = height;
-        var result = triggerEvent(moveable, "onScaleStart", {
+        datas.startScale = [1, 1];
+        var params = {
           target: target,
           clientX: clientX,
           clientY: clientY,
-          datas: datas.datas
-        });
+          datas: datas.datas,
+          direction: direction,
+          set: function (scale) {
+            datas.startScale = scale;
+          },
+          dragStart: Draggable.dragStart(moveable, new CustomDragger().dragStart([0, 0], inputEvent))
+        };
+        var result = triggerEvent(moveable, "onScaleStart", params);
 
         if (result !== false) {
           datas.isScale = true;
+          moveable.state.snapDirection = direction;
         }
 
-        return datas.isScale;
+        return datas.isScale ? params : false;
       },
-      dragControl: function (moveable, _a) {
-        var datas = _a.datas,
-            clientX = _a.clientX,
-            clientY = _a.clientY,
-            distX = _a.distX,
-            distY = _a.distY,
-            parentScale = _a.parentScale,
-            parentDistance = _a.parentDistance,
-            pinchFlag = _a.pinchFlag;
+      dragControl: function (moveable, e) {
+        var datas = e.datas,
+            clientX = e.clientX,
+            clientY = e.clientY,
+            distX = e.distX,
+            distY = e.distY,
+            parentScale = e.parentScale,
+            parentDistance = e.parentDistance,
+            parentFlag = e.parentFlag,
+            pinchFlag = e.pinchFlag,
+            inputEvent = e.inputEvent,
+            dragClient = e.dragClient;
         var prevDist = datas.prevDist,
             direction = datas.direction,
             width = datas.width,
             height = datas.height,
             transform = datas.transform,
-            isScale = datas.isScale;
+            isScale = datas.isScale,
+            startScale = datas.startScale;
 
         if (!isScale) {
           return false;
         }
 
-        var _b = moveable.props,
-            keepRatio = _b.keepRatio,
-            throttleScale = _b.throttleScale,
-            parentMoveable = _b.parentMoveable;
-        var target = moveable.state.target;
+        var _a = moveable.props,
+            keepRatio = _a.keepRatio,
+            throttleScale = _a.throttleScale,
+            parentMoveable = _a.parentMoveable;
+        var state = moveable.state;
+        var target = state.target;
         var scaleX = 1;
         var scaleY = 1;
 
@@ -5756,14 +7729,12 @@ version: 0.7.5
             distHeight = distDiagonal * height / width;
           }
 
-          var nextWidth = width + distWidth;
-          var nextHeight = height + distHeight;
-          scaleX = nextWidth / width;
-          scaleY = nextHeight / height;
+          scaleX = (width + distWidth) / width;
+          scaleY = (height + distHeight) / height;
         }
 
-        scaleX = throttle(scaleX, throttleScale);
-        scaleY = throttle(scaleY, throttleScale);
+        scaleX = direction[0] ? throttle(scaleX * startScale[0], throttleScale) : startScale[0];
+        scaleY = direction[1] ? throttle(scaleY * startScale[1], throttleScale) : startScale[1];
 
         if (scaleX === 0) {
           scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -5773,24 +7744,42 @@ version: 0.7.5
           scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
 
-        var nowScale = [scaleX, scaleY];
-        datas.prevDist = nowScale;
+        var scale = [scaleX, scaleY];
+        var nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
+        var snapDirection = direction;
+
+        if (moveable.props.groupable) {
+          snapDirection = [(nowDist[0] >= 0 ? 1 : -1) * direction[0], (nowDist[1] >= 0 ? 1 : -1) * direction[1]];
+          var stateDirection = state.snapDirection;
+
+          if (isArray(stateDirection) && (stateDirection[0] || stateDirection[1])) {
+            state.snapDirection = snapDirection;
+          }
+        }
+
+        nowDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
+        var delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]]; // const prevScale = scale;
+
+        scale = multiply2(nowDist, startScale);
+        datas.prevDist = nowDist;
 
         if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
           return false;
         }
 
+        var inverseDelta = !parentFlag && pinchFlag ? [0, 0] : getScaleDist(moveable, delta, direction, dragClient);
         var params = {
           target: target,
-          scale: nowScale,
+          scale: scale,
           direction: direction,
-          dist: [scaleX - 1, scaleY - 1],
-          delta: [scaleX / prevDist[0], scaleY / prevDist[1]],
+          dist: nowDist,
+          delta: delta,
           transform: transform + " scale(" + scaleX + ", " + scaleY + ")",
           clientX: clientX,
           clientY: clientY,
           datas: datas.datas,
-          isPinch: !!pinchFlag
+          isPinch: !!pinchFlag,
+          drag: Draggable.drag(moveable, setCustomDrag(moveable.state, inverseDelta, inputEvent))
         };
         triggerEvent(moveable, "onScale", params);
         return params;
@@ -5799,8 +7788,7 @@ version: 0.7.5
         var datas = _a.datas,
             isDrag = _a.isDrag,
             clientX = _a.clientX,
-            clientY = _a.clientY,
-            pinchFlag = _a.pinchFlag;
+            clientY = _a.clientY;
 
         if (!datas.isScale) {
           return false;
@@ -5818,44 +7806,38 @@ version: 0.7.5
       },
       dragGroupControlCondition: directionCondition,
       dragGroupControlStart: function (moveable, e) {
-        var clientX = e.clientX,
-            clientY = e.clientY,
-            datas = e.datas,
-            inputEvent = e.inputEvent;
-        var _a = moveable.state,
-            parentLeft = _a.left,
-            parentTop = _a.top,
-            parentOrigin = _a.origin;
-        var parentAbsoluteOrigin = [parentLeft + parentOrigin[0], parentTop + parentOrigin[1]];
-        datas.rotation = moveable.rotation;
-        var enabledEvents = triggerChildAble(moveable, this, "dragControlStart", e, function (child, childDatas) {
-          var _a = child.state,
-              left = _a.left,
-              top = _a.top,
-              origin = _a.origin;
-          var dragDatas = childDatas.drag || (childDatas.drag = {});
-          Draggable.dragStart(child, setCustomEvent(left + origin[0] - parentAbsoluteOrigin[0], top + origin[1] - parentAbsoluteOrigin[1], dragDatas, inputEvent));
-        });
+        var datas = e.datas;
+        var params = this.dragControlStart(moveable, e);
 
-        if (enabledEvents.every(function (ev) {
-          return !ev;
-        })) {
+        if (!params) {
           return false;
         }
 
-        this.dragControlStart(moveable, e);
-        var result = triggerEvent(moveable, "onScaleGroupStart", {
-          targets: moveable.props.targets,
-          clientX: clientX,
-          clientY: clientY,
-          datas: datas.datas
+        var direction = params.direction;
+        var startPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+        var events = triggerChildAble(moveable, this, "dragControlStart", datas, function (child, childDatas) {
+          var pos = getPosByReverseDirection(getAbsolutePosesByState(child.state), direction);
+
+          var _a = caculate(createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3), [pos[0] - startPos[0], pos[1] - startPos[1], 1], 3),
+              originalX = _a[0],
+              originalY = _a[1];
+
+          childDatas.originalX = originalX;
+          childDatas.originalY = originalY;
+          return e;
         });
+
+        var nextParams = __assign$3({}, params, {
+          targets: moveable.props.targets,
+          events: events
+        });
+
+        var result = triggerEvent(moveable, "onScaleGroupStart", nextParams);
         datas.isScale = result !== false;
-        return datas.isScale;
+        return datas.isScale ? nextParams : false;
       },
       dragGroupControl: function (moveable, e) {
-        var inputEvent = e.inputEvent,
-            datas = e.datas;
+        var datas = e.datas;
 
         if (!datas.isScale) {
           return;
@@ -5867,24 +7849,19 @@ version: 0.7.5
           return;
         }
 
-        var scale = params.scale;
-        var events = triggerChildAble(moveable, this, "dragControl", __assign$3({}, e, {
-          parentScale: scale
-        }), function (child, childDatas, result) {
-          var dragDatas = childDatas.drag || (childDatas.drag = {});
+        var scale = params.scale,
+            direction = params.direction,
+            dist = params.dist;
+        var prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), multiply2(direction, dist));
+        var events = triggerChildAble(moveable, this, "dragControl", datas, function (_, childDatas) {
+          var _a = caculate(createRotateMatrix(moveable.rotation / 180 * Math.PI, 3), [childDatas.originalX * scale[0], childDatas.originalY * scale[1], 1], 3),
+              clientX = _a[0],
+              clientY = _a[1];
 
-          var _a = getCustomEvent(dragDatas),
-              startX = _a.startX,
-              startY = _a.startY;
-
-          var startPos = rotate([startX, startY], -datas.rotation);
-
-          var _b = rotate([startPos[0] * scale[0], startPos[1] * scale[1]], moveable.rotation),
-              clientX = _b[0],
-              clientY = _b[1];
-
-          var dragResult = Draggable.drag(child, setCustomEvent(clientX, clientY, dragDatas, inputEvent));
-          result.drag = dragResult;
+          return __assign$3({}, e, {
+            parentScale: scale,
+            dragClient: plus(prevPos, [clientX, clientY])
+          });
         });
 
         var nextParams = __assign$3({
@@ -5906,7 +7883,7 @@ version: 0.7.5
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
         var nextParams = {
           targets: moveable.props.targets,
           clientX: clientX,
@@ -5948,7 +7925,7 @@ version: 0.7.5
     var Warpable = {
       name: "warpable",
       dragControlOnly: true,
-      render: function (moveable) {
+      render: function (moveable, React) {
         var _a = moveable.props,
             resizable = _a.resizable,
             scalable = _a.scalable,
@@ -5971,23 +7948,23 @@ version: 0.7.5
         var linePosTo2 = getMiddleLinePos(pos4, pos3);
         var linePosTo3 = getMiddleLinePos(pos2, pos4);
         var linePosTo4 = getMiddleLinePos(pos4, pos2);
-        return [createElement("div", {
+        return [React.createElement("div", {
           className: prefix("line"),
           key: "middeLine1",
           style: getLineStyle(linePosFrom1, linePosTo1)
-        }), createElement("div", {
+        }), React.createElement("div", {
           className: prefix("line"),
           key: "middeLine2",
           style: getLineStyle(linePosFrom2, linePosTo2)
-        }), createElement("div", {
+        }), React.createElement("div", {
           className: prefix("line"),
           key: "middeLine3",
           style: getLineStyle(linePosFrom3, linePosTo3)
-        }), createElement("div", {
+        }), React.createElement("div", {
           className: prefix("line"),
           key: "middeLine4",
           style: getLineStyle(linePosFrom4, linePosTo4)
-        })].concat(renderDiagonalDirection(moveable));
+        })].concat(renderDiagonalDirection(moveable, React));
       },
       dragControlCondition: function (target) {
         return hasClass(target, prefix("direction"));
@@ -5997,27 +7974,29 @@ version: 0.7.5
             clientX = _a.clientX,
             clientY = _a.clientY,
             inputTarget = _a.inputEvent.target;
-        var _b = moveable.props,
-            target = _b.target,
-            onWarpStart = _b.onWarpStart;
+        var target = moveable.props.target;
         var direction = getDirection(inputTarget);
 
         if (!direction || !target) {
           return false;
         }
 
-        var _c = moveable.state,
-            transformOrigin = _c.transformOrigin,
-            is3d = _c.is3d,
-            targetTransform = _c.targetTransform,
-            targetMatrix = _c.targetMatrix,
-            width = _c.width,
-            height = _c.height;
+        var state = moveable.state;
+        var transformOrigin = state.transformOrigin,
+            is3d = state.is3d,
+            targetTransform = state.targetTransform,
+            targetMatrix = state.targetMatrix,
+            width = state.width,
+            height = state.height,
+            left = state.left,
+            top = state.top;
         datas.datas = {};
         datas.targetTransform = targetTransform;
-        datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
-        datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
+        datas.warpTargetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
+        datas.targetInverseMatrix = ignoreDimension(invert(datas.warpTargetMatrix, 4), 3, 4);
         datas.direction = direction;
+        datas.left = left;
+        datas.top = top;
         setDragStart(moveable, {
           datas: datas
         });
@@ -6027,15 +8006,21 @@ version: 0.7.5
         datas.nextPoses = datas.poses.map(function (_a) {
           var x = _a[0],
               y = _a[1];
-          return caculate(datas.targetMatrix, [x, y, 0, 1], 4);
+          return caculate(datas.warpTargetMatrix, [x, y, 0, 1], 4);
         });
         datas.posNum = (direction[0] === -1 ? 0 : 1) + (direction[1] === -1 ? 0 : 2);
+        datas.startMatrix = createIdentityMatrix(4);
         datas.prevMatrix = createIdentityMatrix(4);
-        var result = onWarpStart && onWarpStart({
+        datas.absolutePos = getAbsolutePosesByState(state)[datas.posNum];
+        state.snapDirection = direction;
+        var result = triggerEvent(moveable, "onWarpStart", {
           target: target,
           clientX: clientX,
           clientY: clientY,
-          datas: datas.datas
+          datas: datas.datas,
+          set: function (matrix) {
+            datas.startMatrix = matrix;
+          }
         });
 
         if (result !== false) {
@@ -6054,15 +8039,24 @@ version: 0.7.5
             poses = datas.poses,
             targetInverseMatrix = datas.targetInverseMatrix,
             prevMatrix = datas.prevMatrix,
-            isWarp = datas.isWarp;
+            isWarp = datas.isWarp,
+            absolutePos = datas.absolutePos,
+            startMatrix = datas.startMatrix;
 
         if (!isWarp) {
           return false;
         }
 
-        var _b = moveable.props,
-            target = _b.target,
-            onWarp = _b.onWarp;
+        var target = moveable.props.target;
+
+        if (hasGuidelines(moveable, "warpable")) {
+          var snapInfos = checkSnapPoses(moveable, [absolutePos[0] + distX], [absolutePos[1] + distY]);
+          var horizontalOffset = snapInfos.horizontal.offset,
+              verticalOffset = snapInfos.vertical.offset;
+          distY -= horizontalOffset;
+          distX -= verticalOffset;
+        }
+
         var dist = getDragDist({
           datas: datas,
           distX: distX,
@@ -6081,7 +8075,7 @@ version: 0.7.5
           return false;
         }
 
-        var h = warp(poses[0], poses[1], poses[2], poses[3], nextPoses[0], nextPoses[1], nextPoses[2], nextPoses[3]);
+        var h = createWarpMatrix(poses[0], poses[1], poses[2], poses[3], nextPoses[0], nextPoses[1], nextPoses[2], nextPoses[3]);
 
         if (!h.length) {
           return false;
@@ -6091,11 +8085,12 @@ version: 0.7.5
         var transform = datas.targetTransform + " matrix3d(" + matrix.join(",") + ")";
         var delta = multiply(invert(prevMatrix, 4), matrix, 4);
         datas.prevMatrix = matrix;
-        onWarp && onWarp({
+        triggerEvent(moveable, "onWarp", {
           target: target,
           clientX: clientX,
           clientY: clientY,
           delta: delta,
+          matrix: multiplyCSS(startMatrix, matrix, 4),
           multiply: multiplyCSS,
           dist: matrix,
           transform: transform,
@@ -6114,10 +8109,8 @@ version: 0.7.5
         }
 
         datas.isWarp = false;
-        var _b = moveable.props,
-            target = _b.target,
-            onWarpEnd = _b.onWarpEnd;
-        onWarpEnd && onWarpEnd({
+        var target = moveable.props.target;
+        triggerEvent(moveable, "onWarpEnd", {
           target: target,
           clientX: clientX,
           clientY: clientY,
@@ -6128,331 +8121,20 @@ version: 0.7.5
       }
     };
 
-    var agent$1 = agent();
-    var isNotSupportTransformOrigin = agent$1.os.name.indexOf("ios") > -1 || agent$1.browser.name.indexOf("safari") > -1;
-    var PREFIX = "moveable-";
-    var MOVEABLE_CSS = prefixCSS(PREFIX, "\n{\n\tposition: fixed;\n\twidth: 0;\n\theight: 0;\n\tleft: 0;\n\ttop: 0;\n\tz-index: 3000;\n}\n.control-box {\n    z-index: 0;\n}\n.line, .control {\n\tleft: 0;\n\ttop: 0;\n}\n.control {\n\tposition: absolute;\n\twidth: 14px;\n\theight: 14px;\n\tborder-radius: 50%;\n\tborder: 2px solid #fff;\n\tbox-sizing: border-box;\n\tbackground: #4af;\n\tmargin-top: -7px;\n    margin-left: -7px;\n    z-index: 10;\n}\n.line {\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tbackground: #4af;\n\ttransform-origin: 0px 0.5px;\n}\n.line.rotation-line {\n\theight: 40px;\n\twidth: 1px;\n\ttransform-origin: 0.5px 39.5px;\n}\n.line.rotation-line .control {\n\tborder-color: #4af;\n\tbackground:#fff;\n\tcursor: alias;\n}\n.control.origin {\n\tborder-color: #f55;\n\tbackground: #fff;\n\twidth: 12px;\n\theight: 12px;\n\tmargin-top: -6px;\n\tmargin-left: -6px;\n\tpointer-events: none;\n}\n.direction.e, .direction.w {\n\tcursor: ew-resize;\n}\n.direction.s, .direction.n {\n\tcursor: ns-resize;\n}\n.direction.nw, .direction.se, :host.reverse .direction.ne, :host.reverse .direction.sw {\n\tcursor: nwse-resize;\n}\n.direction.ne, .direction.sw, :host.reverse .direction.nw, :host.reverse .direction.se {\n\tcursor: nesw-resize;\n}\n.group {\n    z-index: -1;\n}\n" + (isNotSupportTransformOrigin ? ":global svg *:before {\n\tcontent:\"\";\n\ttransform-origin: inherit;\n}" : "") + "\n");
-    var NEARBY_POS = [[0, 1, 2], [1, 0, 3], [2, 0, 3], [3, 1, 2]];
-    var MIN_SCALE = 0.000000001;
-    var MOVEABLE_ABLES = [Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable];
-    var MAX_NUM = Math.pow(10, 10);
-    var MIN_NUM = -MAX_NUM;
+    var MOVEABLE_ABLES = [Snappable, Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable];
 
-    var Origin = {
-      name: "origin",
-      render: function (moveable) {
-        if (!moveable.props.origin) {
-          return null;
-        }
-
-        var beforeOrigin = moveable.state.beforeOrigin;
-        return [// <div className={prefix("control", "origin")} style={getControlTransform(origin)} key="origin"></div>,
-        createElement("div", {
-          className: prefix("control", "origin"),
-          style: getControlTransform(beforeOrigin),
-          key: "beforeOrigin"
-        })];
-      }
-    };
-
-    function triggerAble(moveable, ableType, eventOperation, prefix, eventType, e) {
-      var eventName = "" + eventOperation + prefix + eventType;
-      var conditionName = "" + eventOperation + prefix + "Condition";
-      var isStart = eventType === "Start";
-      var isGroup = prefix.indexOf("Group") > -1;
-      var ables = moveable[ableType];
-      var results = ables.filter(function (able) {
-        var condition = isStart && able[conditionName];
-
-        if (able[eventName] && (!condition || condition(e.inputEvent.target))) {
-          return able[eventName](moveable, e);
-        }
-
-        return false;
-      });
-
-      if (!isStart && results.length) {
-        if (results.some(function (able) {
-          return able.updateRect;
-        }) && !isGroup) {
-          moveable.updateRect(eventType);
-        } else {
-          moveable.updateTarget(eventType);
-        }
-      }
+    function restoreStyle(moveable) {
+      var el = moveable.areaElement;
+      var _a = moveable.state,
+          width = _a.width,
+          height = _a.height;
+      removeClass(el, prefix("avoid"));
+      el.style.cssText += "left: 0px; top: 0px; width: " + width + "px; height: " + height + "px";
     }
-
-    function getAbleDragger(moveable, target, ableType, prefix) {
-      var options = {
-        container: window
-      };
-      ["drag", "pinch"].forEach(function (eventOperation) {
-        ["Start", "", "End"].forEach(function (eventType) {
-          options["" + eventOperation + eventType.toLowerCase()] = function (e) {
-            return triggerAble(moveable, ableType, eventOperation, prefix, eventType, e);
-          };
-        });
-      });
-      return new Dragger(target, options);
-    }
-
-    var ControlBoxElement = styled("div", MOVEABLE_CSS);
-
-    function renderLine(direction, pos1, pos2) {
-      return createElement("div", {
-        className: prefix("line", "direction", direction),
-        "data-direction": direction,
-        style: getLineStyle(pos1, pos2)
-      });
-    }
-
-    var MoveableManager =
-    /*#__PURE__*/
-    function (_super) {
-      __extends$4(MoveableManager, _super);
-
-      function MoveableManager() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-
-        _this.state = {
-          target: null,
-          beforeMatrix: createIdentityMatrix3(),
-          matrix: createIdentityMatrix3(),
-          targetMatrix: createIdentityMatrix3(),
-          targetTransform: "",
-          is3d: false,
-          left: 0,
-          top: 0,
-          width: 0,
-          height: 0,
-          transformOrigin: [0, 0],
-          direction: 1,
-          beforeDirection: 1,
-          rotationRad: 0,
-          rotationPos: [0, 0],
-          beforeOrigin: [0, 0],
-          origin: [0, 0],
-          pos1: [0, 0],
-          pos2: [0, 0],
-          pos3: [0, 0],
-          pos4: [0, 0]
-        };
-        _this.targetAbles = [];
-        _this.controlAbles = [];
-        return _this;
-      }
-
-      var __proto = MoveableManager.prototype;
-
-      __proto.render = function () {
-        this.update(false);
-        var _a = this.props,
-            edge = _a.edge,
-            parentPosition = _a.parentPosition;
-
-        var _b = parentPosition || {
-          left: 0,
-          top: 0
-        },
-            parentLeft = _b.left,
-            parentTop = _b.top;
-
-        var _c = this.state,
-            left = _c.left,
-            top = _c.top,
-            pos1 = _c.pos1,
-            pos2 = _c.pos2,
-            pos3 = _c.pos3,
-            pos4 = _c.pos4,
-            target = _c.target,
-            direction = _c.direction;
-        return createElement(ControlBoxElement, {
-          ref: ref$1(this, "controlBox"),
-          className: prefix("control-box", direction === -1 ? "reverse" : ""),
-          style: {
-            position: "absolute",
-            display: target ? "block" : "none",
-            transform: "translate(" + (left - parentLeft) + "px, " + (top - parentTop) + "px) translateZ(50px)"
-          }
-        }, this.renderAbles(), renderLine(edge ? "n" : "", pos1, pos2), renderLine(edge ? "e" : "", pos2, pos4), renderLine(edge ? "w" : "", pos1, pos3), renderLine(edge ? "s" : "", pos3, pos4));
-      };
-
-      __proto.componentDidMount = function () {
-        this.controlBox.getElement();
-        this.update(true);
-      };
-
-      __proto.componentWillUnmount = function () {
-        unset(this, "targetDragger");
-        unset(this, "controlDragger");
-      };
-
-      __proto.getContainer = function () {
-        var _a = this.props,
-            parentMoveable = _a.parentMoveable,
-            container = _a.container;
-        return container || parentMoveable && parentMoveable.getContainer() || this.controlBox.getElement().offsetParent;
-      };
-
-      __proto.isMoveableElement = function (target) {
-        return target && (target.getAttribute("class") || "").indexOf(PREFIX) > -1;
-      };
-
-      __proto.dragStart = function (e) {
-        this.targetDragger.onDragStart(e);
-      };
-
-      __proto.isInside = function (clientX, clientY) {
-        var _a = this.state,
-            pos1 = _a.pos1,
-            pos2 = _a.pos2,
-            pos3 = _a.pos3,
-            pos4 = _a.pos4,
-            target = _a.target;
-
-        if (!target) {
-          return false;
-        }
-
-        var _b = target.getBoundingClientRect(),
-            left = _b.left,
-            top = _b.top;
-
-        var pos = [clientX - left, clientY - top];
-        return isInside(pos, pos1, pos2, pos3, pos4);
-      };
-
-      __proto.updateRect = function (type, isTarget, isSetState) {
-        if (isSetState === void 0) {
-          isSetState = true;
-        }
-
-        var parentMoveable = this.props.parentMoveable;
-        var state = this.state;
-        var target = state.target || this.props.target;
-        this.updateState(getTargetInfo(target, this.getContainer(), isTarget ? state : undefined), parentMoveable ? false : isSetState);
-      };
-
-      __proto.updateTarget = function (type) {
-        this.updateRect(type, true);
-      };
-
-      __proto.update = function (isSetState) {
-        var props = this.props;
-        var target = props.target,
-            parentMoveable = props.parentMoveable;
-        var stateTarget = this.state.target;
-        var controlBox = this.controlBox;
-
-        if (!controlBox || !stateTarget && !target) {
-          return;
-        }
-
-        this.updateAbles();
-        var controlBoxElement = controlBox.getElement();
-        var hasTargetAble = this.targetAbles.length;
-        var hasControlAble = this.controlAbles.length;
-        var isTargetChanged = stateTarget !== target;
-
-        if (isTargetChanged) {
-          this.updateState({
-            target: target
-          });
-        }
-
-        if (!hasTargetAble || isTargetChanged) {
-          unset(this, "targetDragger");
-        }
-
-        if (!hasControlAble) {
-          unset(this, "controlDragger");
-        }
-
-        if (target && (!this.targetDragger && hasTargetAble || isTargetChanged)) {
-          this.targetDragger = getAbleDragger(this, target, "targetAbles", "");
-        }
-
-        if (!this.controlDragger && hasControlAble) {
-          this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
-        }
-
-        if (isTargetChanged && !parentMoveable) {
-          this.updateRect("End", false, isSetState);
-        }
-
-        return isTargetChanged;
-      };
-
-      __proto.triggerEvent = function (name, e) {
-        var callback = this.props[name];
-        return callback && callback(e);
-      };
-
-      __proto.updateAbles = function () {
-        var props = this.props;
-        var enabledAbles = props.ables.filter(function (able) {
-          return props[able.name];
-        });
-        var controlAbleOnly = false;
-        var targetAbles = enabledAbles.filter(function (able) {
-          return able.dragStart || able.pinchStart;
-        });
-        var controlAbles = enabledAbles.filter(function (_a) {
-          var dragControlStart = _a.dragControlStart,
-              dragControlOnly = _a.dragControlOnly;
-
-          if (!dragControlStart || dragControlOnly && controlAbleOnly) {
-            return false;
-          }
-
-          if (dragControlOnly) {
-            controlAbleOnly = true;
-          }
-
-          return true;
-        });
-        this.targetAbles = targetAbles;
-        this.controlAbles = controlAbles;
-      };
-
-      __proto.updateState = function (nextState, isSetState) {
-        if (isSetState) {
-          this.setState(nextState);
-        } else {
-          var state = this.state;
-
-          for (var name in nextState) {
-            state[name] = nextState[name];
-          }
-        }
-      };
-
-      __proto.renderAbles = function () {
-        var _this = this;
-
-        var ables = this.props.ables.concat([Origin]);
-        return ables.map(function (_a) {
-          var render = _a.render;
-          return render && render(_this);
-        });
-      };
-
-      MoveableManager.defaultProps = {
-        target: null,
-        container: null,
-        origin: true,
-        keepRatio: true,
-        edge: false,
-        parentMoveable: null,
-        parentPosition: null,
-        ables: []
-      };
-      return MoveableManager;
-    }(PureComponent);
 
     var Groupable = {
       name: "groupable",
-      render: function (moveable) {
+      render: function (moveable, React) {
         var targets = moveable.props.targets || [];
         moveable.moveables = [];
         var _a = moveable.state,
@@ -6463,7 +8145,7 @@ version: 0.7.5
           top: top
         };
         return targets.map(function (target, i) {
-          return createElement(MoveableManager, {
+          return React.createElement(MoveableManager, {
             key: i,
             ref: refs(moveable, "moveables", i),
             target: target,
@@ -6471,11 +8153,71 @@ version: 0.7.5
             parentMoveable: moveable,
             parentPosition: position
           });
-        }).concat([createElement("div", {
-          key: "groupTarget",
-          ref: ref$1(moveable, "groupTargetElement"),
-          className: prefix("group")
-        })]);
+        }).slice();
+      },
+      dragGroupStart: function (moveable, _a) {
+        var datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+        datas.isDrag = false;
+        var areaElement = moveable.areaElement;
+        var moveableElement = moveable.controlBox.getElement();
+
+        var _b = moveableElement.getBoundingClientRect(),
+            left = _b.left,
+            top = _b.top;
+
+        var _c = moveable.state,
+            width = _c.width,
+            height = _c.height;
+        var size = Math.max(width, height) * 2;
+        var posX = clientX - left - size / 2;
+        var posY = clientY - top - size - 10;
+        areaElement.style.cssText += "width: " + size + "px; height: " + size + "px;left: " + posX + "px;top: " + posY + "px;";
+        addClass(areaElement, prefix("avoid"));
+      },
+      dragGroup: function (moveable, _a) {
+        var datas = _a.datas;
+
+        if (!datas.isDrag) {
+          datas.isDrag = true;
+          restoreStyle(moveable);
+        }
+      },
+      dragGroupEnd: function (moveable, _a) {
+        var inputEvent = _a.inputEvent,
+            isDrag = _a.isDrag,
+            datas = _a.datas;
+
+        if (!datas.isDrag) {
+          restoreStyle(moveable);
+        }
+
+        var target = inputEvent.target;
+
+        if (isDrag || moveable.isMoveableElement(target)) {
+          return;
+        }
+
+        var targets = moveable.props.targets;
+        var targetIndex = targets.indexOf(target);
+        var hasTarget = targetIndex > -1;
+        var containsTarget = false;
+
+        if (targetIndex === -1) {
+          targetIndex = findIndex(targets, function (parentTarget) {
+            return parentTarget.contains(target);
+          });
+          containsTarget = targetIndex > -1;
+        }
+
+        triggerEvent(moveable, "onClickGroup", {
+          targets: targets,
+          target: target,
+          targetIndex: targetIndex,
+          hasTarget: hasTarget,
+          containsTarget: containsTarget
+        });
       }
     };
 
@@ -6505,24 +8247,18 @@ version: 0.7.5
       }
 
       var moveablePoses = moveables.map(function (_a) {
-        var _b = _a.state,
-            left = _b.left,
-            top = _b.top,
-            pos1 = _b.pos1,
-            pos2 = _b.pos2,
-            pos3 = _b.pos3,
-            pos4 = _b.pos4;
-        var pos = [left, top];
-        return [sum(pos, pos1), sum(pos, pos2), sum(pos, pos3), sum(pos, pos4)];
+        var state = _a.state;
+        return getAbsolutePosesByState(state);
       });
       var minX = MAX_NUM;
       var minY = MAX_NUM;
       var groupWidth = 0;
       var groupHeight = 0;
+      var fixedRotation = throttle(rotation, TINY_NUM);
 
-      if (rotation % 90) {
-        var rad = rotation / 180 * Math.PI;
-        var a1_1 = Math.tan(rad);
+      if (fixedRotation % 90) {
+        var rad_1 = rotation / 180 * Math.PI;
+        var a1_1 = Math.tan(rad_1);
         var a2_1 = -1 / a1_1;
         var b1s_1 = [MIN_NUM, MAX_NUM];
         var b2s_1 = [MIN_NUM, MAX_NUM];
@@ -6553,7 +8289,7 @@ version: 0.7.5
               pos2 = _a[1],
               pos3 = _a[2],
               pos4 = _a[3];
-          return [rotate(pos1, -rotation), rotate(pos2, -rotation), rotate(pos3, -rotation), rotate(pos4, -rotation)];
+          return [rotate(pos1, -rad_1), rotate(pos2, -rad_1), rotate(pos3, -rad_1), rotate(pos4, -rad_1)];
         });
         groupWidth = getMaxPos(rotatePoses, 0) - getMinPos(rotatePoses, 0);
         groupHeight = getMaxPos(rotatePoses, 1) - getMinPos(rotatePoses, 1);
@@ -6562,6 +8298,12 @@ version: 0.7.5
         minY = getMinPos(moveablePoses, 1);
         groupWidth = getMaxPos(moveablePoses, 0) - minX;
         groupHeight = getMaxPos(moveablePoses, 1) - minY;
+
+        if (fixedRotation % 180) {
+          var changedWidth = groupWidth;
+          groupWidth = groupHeight;
+          groupHeight = changedWidth;
+        }
       }
 
       return [minX, minY, groupWidth, groupHeight];
@@ -6583,45 +8325,32 @@ version: 0.7.5
 
       var __proto = MoveableGroup.prototype;
 
-      __proto.componentDidMount = function () {
-        _super.prototype.componentDidMount.call(this);
-      };
-
-      __proto.componentDidUpdate = function () {
-        this.update(true);
-      };
-
-      __proto.update = function (isSetState) {
-        if (!isSetState) {
-          return;
-        }
-
+      __proto.updateEvent = function (prevProps) {
         var state = this.state;
 
         if (!state.target) {
-          state.target = this.groupTargetElement;
+          state.target = this.areaElement;
           this.controlBox.getElement().style.display = "block";
           this.targetDragger = getAbleDragger(this, state.target, "targetAbles", "Group");
           this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
         }
 
-        this.updateAbles();
-        this.moveables.forEach(function (moveable) {
-          return moveable.update(false);
-        });
-
         var _a = this.differ.update(this.props.targets),
             added = _a.added,
-            changed = _a.changed;
+            changed = _a.changed,
+            removed = _a.removed;
 
-        if (added.length || changed.length) {
+        if (added.length || changed.length || removed.length) {
           this.updateRect();
         }
-
-        return true;
       };
 
-      __proto.updateRect = function (type, isTarget, isSetState) {
+      __proto.checkUpdate = function () {
+        this.updateAbles();
+      };
+
+      __proto.updateRect = function (type, isTarget) {
+        var _a;
 
         if (!this.controlBox) {
           return;
@@ -6640,20 +8369,24 @@ version: 0.7.5
 
         var rotation = this.rotation;
 
-        var _a = getGroupRect(this.moveables, rotation),
-            left = _a[0],
-            top = _a[1],
-            width = _a[2],
-            height = _a[3];
+        var _b = getGroupRect(this.moveables, rotation),
+            left = _b[0],
+            top = _b[1],
+            width = _b[2],
+            height = _b[3]; // tslint:disable-next-line: max-line-length
 
-        target.style.cssText += "width:" + width + "px; height:" + height + "px;transform:rotate(" + rotation + "deg)";
+
+        target.style.cssText += "left:0px;top:0px;width:" + width + "px; height:" + height + "px;transform:rotate(" + rotation + "deg)";
         state.width = width;
         state.height = height;
         var info = getTargetInfo(target, this.controlBox.getElement(), state);
-        target.style.cssText += "transform: translate(" + -info.left + "px, " + -info.top + "px) rotate(" + rotation + "deg)";
+        var pos = [info.left, info.top];
+        _a = getAbsolutePosesByState(info), info.pos1 = _a[0], info.pos2 = _a[1], info.pos3 = _a[2], info.pos4 = _a[3];
+        info.origin = plus(pos, info.origin);
+        info.beforeOrigin = plus(pos, info.beforeOrigin);
         this.updateState(__assign$3({}, info, {
-          left: left,
-          top: top
+          left: left - info.left,
+          top: top - info.top
         }), true);
       };
 
@@ -6663,18 +8396,14 @@ version: 0.7.5
         }
       };
 
-      __proto.renderAbles = function () {
-        var _this = this;
-
-        var ables = this.props.ables.concat([Groupable, Origin]);
-        return ables.map(function (_a) {
-          var render = _a.render;
-          return render && render(_this);
-        });
+      __proto.updateAbles = function () {
+        _super.prototype.updateAbles.call(this, this.props.ables.concat([Groupable]), "Group");
       };
 
       MoveableGroup.defaultProps = __assign$3({}, MoveableManager.defaultProps, {
+        transformOrigin: ["50%", "50%"],
         groupable: true,
+        dragArea: true,
         ables: MOVEABLE_ABLES,
         targets: []
       });
@@ -6693,6 +8422,8 @@ version: 0.7.5
       var __proto = Moveable.prototype;
 
       __proto.render = function () {
+        var props = this.props;
+        var ables = props.ables || [];
         var target = this.props.target || this.props.targets;
         var isArr = isArray(target);
         var isGroup = isArr && target.length > 1;
@@ -6703,7 +8434,8 @@ version: 0.7.5
             ref: ref$1(this, "moveable")
           }, __assign$3({}, this.props, {
             target: null,
-            targets: target
+            targets: target,
+            ables: MOVEABLE_ABLES.concat(ables)
           })));
         } else {
           var moveableTarget = isArr ? target[0] : target;
@@ -6711,7 +8443,8 @@ version: 0.7.5
             key: "single",
             ref: ref$1(this, "moveable")
           }, __assign$3({}, this.props, {
-            target: moveableTarget
+            target: moveableTarget,
+            ables: MOVEABLE_ABLES.concat(ables)
           })));
         }
       };
@@ -6740,11 +8473,9 @@ version: 0.7.5
         this.moveable.componentWillUnmount();
       };
 
-      Moveable.defaultProps = __assign$3({}, MoveableManager.defaultProps, {
-        ables: MOVEABLE_ABLES
-      });
       return Moveable;
     }(PureComponent);
+    //# sourceMappingURL=moveable.esm.js.map
 
     var InnerMoveable =
     /*#__PURE__*/
@@ -6769,9 +8500,10 @@ version: 0.7.5
 
       return InnerMoveable;
     }(Component$1);
+     //# sourceMappingURL=InnerMoveable.js.map
 
-    var PROPERTIES = ["draggable", "resizable", "scalable", "rotatable", "warpable", "pinchable", "origin", "target", "edge", "throttleDrag", "throttleResize", "throttleScale", "throttleRotate", "keepRatio"];
-    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd"];
+    var PROPERTIES = ["draggable", "resizable", "scalable", "rotatable", "warpable", "pinchable", "snappable", "origin", "target", "edge", "throttleDrag", "throttleResize", "throttleScale", "throttleRotate", "keepRatio", "dragArea", "pinchThreshold", "snapCenter", "snapThreshold", "horizontalGuidelines", "verticalGuidelines", "elementGuidelines", "bounds"];
+    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd", "clickGroup"]; //# sourceMappingURL=consts.js.map
 
     /**
      * Moveable is Draggable! Resizable! Scalable! Rotatable!
@@ -6857,6 +8589,46 @@ version: 0.7.5
         this.getMoveable().updateRect();
       };
       /**
+       * You can move the Moveable through the external `MouseEvent`or `TouchEvent`.
+       * @param - external `MouseEvent`or `TouchEvent`
+       * @example
+       * import Moveable from "moveable";
+       *
+       * const moveable = new Moveable(document.body);
+       *
+       * document.body.addEventListener("mousedown", e => {
+       *     if (!moveable.isMoveableElement(e.target)) {
+       *          moveable.dragStart(e);
+       *     }
+       * });
+       */
+
+
+      __proto.dragStart = function (e) {
+        this.getMoveable().dragStart(e);
+      };
+      /**
+       * Whether the coordinates are inside Moveable
+       * @param - x coordinate
+       * @param - y coordinate
+       * @return - True if the coordinate is in moveable or false
+       * @example
+       * import Moveable from "moveable";
+       *
+       * const moveable = new Moveable(document.body);
+       *
+       * document.body.addEventListener("mousedown", e => {
+       *     if (moveable.isInside(e.clientX, e.clientY)) {
+       *          console.log("inside");
+       *     }
+       * });
+       */
+
+
+      __proto.isInside = function (clientX, clientY) {
+        return this.getMoveable().isInside(clientX, clientY);
+      };
+      /**
        * If the width, height, left, and top of the only target change, update the shape of the moveable.
        * @param - the values of x and y to move moveable.
        * @example
@@ -6910,6 +8682,7 @@ version: 0.7.5
       })], Moveable);
       return Moveable;
     }(Component);
+     //# sourceMappingURL=Moveable.js.map
 
     var codes = {
       draggable: {
@@ -6952,7 +8725,7 @@ version: 0.7.5
         react: "\nimport Moveable from \"react-moveable\";\n\nthis.poses = [\n    [0, 0],\n    [0, 0],\n    [0, 0],\n];\n\nconst target = [].slice.call(\n    document.querySelectorAll(\".target\"),\n);\nreturn (\n    <Moveable\n        target={target}\n        draggable={true}\n        onDragGroup={({ events }) => {\n            events.forEach(({ target, beforeDelta }, i) => {\n                this.poses[i][0] += beforeDelta[0];\n                this.poses[i][1] += beforeDelta[1];\n\n                target.style.transform\n                    = \"translate(\"\n                    + this.poses[i][0] + \"px, \"\n                    + this.poses[i][1] + \"px)\";\n            });\n        }}\n    />\n);\n        ",
         angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target1 class=\"target\">target1</div>\n<div #target2 class=\"target\">target2</div>\n<div #target3 class=\"target\">target3</div>\n<ngx-moveable\n    [target]=\"[target1, target2, target3]\"\n    [draggable]=\"true\"\n    (dragGroup)=\"onDragGroup($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    poses = [\n        [0, 0],\n        [0, 0],\n        [0, 0],\n    ];\n    onDragGroup({ events }) {\n        events.forEach(({ target, beforeDelta }, i) => {\n            this.poses[i][0] += beforeDelta[0];\n            this.poses[i][1] += beforeDelta[1];\n\n            target.style.transform\n                = \"translate(\"\n                + this.poses[i][0] + \"px, \"\n                + this.poses[i][1] + \"px)\";\n        });\n    }\n}\n        "
       }
-    };
+    }; //# sourceMappingURL=consts.js.map
 
     /*
     Copyright (c) 2016 Daybrush
@@ -8053,6 +9826,7 @@ version: 0.7.5
 
       return Frame;
     }();
+    //# sourceMappingURL=scene.esm.js.map
 
     var moveableElement = document.querySelector(".moveable");
     var labelElement = document.querySelector(".label");
@@ -8081,7 +9855,7 @@ version: 0.7.5
 
     var moveable = new Moveable$1(moveableElement.parentElement, {
       target: moveableElement,
-      // origin: false,
+      origin: false,
       draggable: true,
       rotatable: true,
       scalable: true,
