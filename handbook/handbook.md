@@ -67,6 +67,106 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 
 **Draggable** refers to the ability to drag and move targets.
 
+### Events
+* [onDragStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragStart): When the drag starts, the dragStart event is called.
+* [onDrag](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:drag): When dragging, the drag event is called.
+* [onDragEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragEnd): When the drag finishes, the dragEnd event is called.
+
+### Options
+* [throttleDrag](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleDrag): throttle of x, y when drag. (default: 0)
+* [dragArea](https://daybrush.com/moveable/release/latest/doc/Moveable.html#dragArea): Add an event to the moveable area instead of the target for stopPropagation. (default: false)
+
+### Vanilla Exmaple
+
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
+    target: targets,
+    draggable: true,
+    throttleDrag: 0,
+});
+
+const frame = {
+    translate: [0, 0],
+};
+moveable.on("dragStart", ({ set }) => {
+    ev.set(frame.translate);
+}).on("drag", ({ target, beforeTranslate }) => {
+    frame.translate = beforeTranslate;
+    target.style.transform
+        = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+}).on("dragEnd", ({ target, isDrag, clientX, clientY }) => {
+    console.log("onDragEnd", target, isDrag);
+});
+```
+
+### React & Preact Example
+
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.frame = {
+    translate: [0, 0],
+};
+<Moveable
+    target={document.querySelector(".target")}
+    draggable={true}
+    throttleDrag={0}
+    onDragStart={({ set }) => {
+        ev.set(frame.translate);
+    }}
+    onDrag={({ target, beforeTranslate }) => {
+        frame.translate = beforeTranslate;
+        target.style.transform
+            = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+    }}
+    onDragEnd={({ target, isDrag, clientX, clientY }) => {
+        console.log("onDragEnd", target, isDrag);
+    }} />;
+```
+
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [draggable]="true"
+    [throttleDrag]="0"
+    (dragStart)="onDragStart($event)
+    (drag)="onDrag($event)
+    (dragEnd)="onDragEnd($event)
+    />
+`,
+})
+export class AppComponent {
+    frame = {
+        translate: [0, 0],
+    };
+    onDragStart({ set }) {
+        ev.set(frame.translate);
+    }
+    onDrag({ target, beforeTranslate }) {
+        frame.translate = beforeTranslate;
+        target.style.transform
+            = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+    }
+    onDragEnd({ target, isDrag, clientX, clientY }) {
+        console.log("onDragEnd", target, isDrag);
+    }
+}
+```
 
 
 ## <a id="toc-resizable"></a>Resizable
@@ -75,8 +175,17 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 
 **Resizable** indicates whether the target's width and height can be increased or decreased.
 
-* **throttleResize**: throttle of width, height when resize. (default: 0)
-* **keepRatio**: When resize or scale, keeps a ratio of the width, height. (default: false)
+
+### Events
+* [onReiszeStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeStart): When the resize starts, the resizeStart event is called.
+* [onResize](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resize): When resizing, the resize event is called.
+* [onResizeEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeEnd): When the resize finishes, the resizeEnd event is called.
+
+
+### Options
+* [throttleResize](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleResize): throttle of width, height when resize. (default: 0)
+* [keepRatio](https://daybrush.com/moveable/release/latest/doc/Moveable.html#keepRatio): When resize or scale, keeps a ratio of the width, height. (default: false)
+
 
 ### Vanilla Example
 
@@ -86,6 +195,7 @@ import Moveable from "moveable";
 const moveable = new Moveable(document.body, {
     target: document.querySelector(".target"),
     resizable: true,
+    throttleResize: 0,
 });
 
 const frame = {
@@ -127,6 +237,7 @@ this.frame = {
 <Moveable
     target={document.querySelector(".target")}
     resizable={true}
+    throttleResize={0}
     onResizeStart={({ set, setOrigin, dragStart }) => {
         // Set origin if transform-orgin use %.
         setOrigin(["%", "%"]);
@@ -216,6 +327,11 @@ export class AppComponent {
 ## <a id="toc-rotatable"></a>Rotatable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif"></a>
 
+### Options
+### Events
+### Vanilla Example
+### React & Preact Example
+### Angular Example
 
 **Rotatable** indicates whether the target can be rotated.
 
@@ -223,9 +339,18 @@ export class AppComponent {
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></a>
 
+### Options
+### Events
+### Vanilla Example
+### React & Preact Example
+### Angular Example
 
 **Warpable** indicates whether the target can be warped(distorted, bented).
 
+### Events
+### Vanilla Example
+### React & Preact Example
+### Angular Example
 
 ## <a id="toc-pinchable"></a>Pinchable
 
@@ -233,28 +358,35 @@ export class AppComponent {
 
 **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 
+### Options
+### Events
+### Vanilla Example
+### React & Preact Example
+### Angular Example
+
 ## <a id="toc-snappable"></a>Snappable(Guidelines & Boundaries)
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"></a>
 
 **Snappable** indicates whether to snap to the guidelines.
 
-* **bounds**: You can set up boundaries.
-* **snapThreshold**: Distance value that can snap to guidelines.
-* **snapCenter**: When you drag, make the snap in the center of the target.
+### Options
+* [bounds](https://daybrush.com/moveable/release/latest/doc/Moveable.html#bounds): You can set up boundaries. (default: null)
+* [snapThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#snapThreshold): Distance value that can snap to guidelines. (default: 0)
+* [snapCenter](https://daybrush.com/moveable/release/latest/doc/Moveable.html#snapCenter): When you drag, make the snap in the center of the target. (default: false)
+* [horizontalGuidelines](https://daybrush.com/moveable/release/latest/doc/Moveable.html#horizontalGuidlines): Add guidelines in the horizontal direction. (default: [])
+* [verticalGuidelines](https://daybrush.com/moveable/release/latest/doc/Moveable.html#verticalGuidlines): Add guidelines in the vertical direction. (default: [])
 
-### verticalGuidelines & horizontalGuidelines
-Add guidelines in the horizontal or vertical direction.
 
 ![](../demo/images/guidelines.png)
 
-### elementGuidelines
+* [elementGuidelines](https://daybrush.com/moveable/release/latest/doc/Moveable.html#elementGuidelines)
 Add guidelines for the element.
 
 ![](../demo/images/element_guidelines.png)
 
 
-### Example
+### Vanilla Example
 
 ```ts
 const moveable = new Moveable(document.body, {
@@ -268,6 +400,8 @@ const moveable = new Moveable(document.body, {
 });
 ```
 
+### React & Preact Example
+### Angular Example
 
 
 
@@ -290,10 +424,14 @@ In a group, Pinchable and Snappable are the same as they used to be. But warpabl
 * [**rotatable**](#toc-group-rotatable)
 
 ## <a id="toc-group-draggable"></a>Group with Draggable
-* [onDragGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroupStart)
-* [onDragGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroup)
-* [onDragGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroupEnd)
 
+### Events
+* [onDragGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroupStart): When the group drag starts, the `dragGroupStart` event is called.
+* [onDragGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroup): When the group drag, the `dragGroup` event is called.
+* [onDragGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragGroupEnd): When the group drag finishes, the `dragGroupEnd` event is called.
+
+
+### Vanilla Example
 
 ```ts
 import Moveable from "moveable";
@@ -326,11 +464,15 @@ moveable.on("draGroupStart", ({ events }) => {
 });
 ```
 
+### React & Preact Example
+### Angular Example
 ## <a id="toc-group-resizable"></a>Group with Resizable
-* [onReiszeGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupStart)
-* [onResizeGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroup)
-* [onResizeGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupEnd)
+### Events
+* [onReiszeGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupStart): When the group resize starts, the `resizeGroupStart` event is called.
+* [onResizeGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroup): When the group resize, the `resizeGroup` event is called.
+* [onResizeGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupEnd): When the group resize finishes, the `resizeGroupEnd` event is called.
 
+### Vanilla Example
 ```ts
 import Moveable from "moveable";
 
@@ -377,16 +519,29 @@ moveable.on("resizeGroupStart", ({ events }) => {
 });
 ```
 
+### React & Preact Example
+### Angular Example
 ## <a id="toc-group-scalable"></a>Group with Scalable
+
+### Events
 * [onScaleGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scaleGroupStart)
 * [onScaleGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scaleGroup)
 * [onScaleGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scaleGroupEnd)
 
-## <a id="toc-group-rotatable"></a>Group with Rotatable
-* [onScaleGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupStart)
-* [onScaleGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroup)
-* [onScaleGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupEnd)
 
+### Vanilla Example
+### React & Preact Example
+### Angular Example
+
+## <a id="toc-group-rotatable"></a>Group with Rotatable
+### Events
+* [onRotateGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupStart)
+* [onRotateGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroup)
+* [onRotateGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupEnd)
+
+### Vanilla Example
+### React & Preact Example
+### Angular Example
 
 # <a id="toc-custom-css"></a>✨ How to use custom CSS
 
