@@ -1,4 +1,4 @@
-import { prefix, getLineStyle, getDirection, getAbsolutePosesByState } from "../utils";
+import { prefix, getLineStyle, getDirection, getAbsolutePosesByState, triggerEvent } from "../utils";
 import {
     convertDimension, invert, multiply,
     convertMatrixtoCSS, caculate,
@@ -77,7 +77,7 @@ export default {
         moveable: MoveableManager<WarpableProps, SnappableState>,
         { datas, clientX, clientY, inputEvent: { target: inputTarget } }: any,
     ) {
-        const { target, onWarpStart } = moveable.props;
+        const { target } = moveable.props;
         const direction = getDirection(inputTarget);
 
         if (!direction || !target) {
@@ -93,8 +93,8 @@ export default {
 
         datas.datas = {};
         datas.targetTransform = targetTransform;
-        datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
-        datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
+        datas.warpTargetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
+        datas.targetInverseMatrix = ignoreDimension(invert(datas.warpTargetMatrix, 4), 3, 4);
         datas.direction = direction;
         datas.left = left;
         datas.top = top;
@@ -107,18 +107,23 @@ export default {
             [width, height],
         ].map((p, i) => minus(p, transformOrigin));
 
-        datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.targetMatrix, [x, y, 0, 1], 4));
+        datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.warpTargetMatrix, [x, y, 0, 1], 4));
         datas.posNum =
             (direction[0] === -1 ? 0 : 1)
             + (direction[1] === -1 ? 0 : 2);
+
+        datas.startMatrix = createIdentityMatrix(4);
         datas.prevMatrix = createIdentityMatrix(4);
         datas.absolutePos = getAbsolutePosesByState(state)[datas.posNum];
         state.snapDirection = direction;
-        const result = onWarpStart && onWarpStart!({
+        const result = triggerEvent(moveable, "onWarpStart", {
             target,
             clientX,
             clientY,
             datas: datas.datas,
+            set: (matrix: number[]) => {
+                datas.startMatrix = matrix;
+            },
         });
         if (result !== false) {
             datas.isWarp = true;
@@ -129,12 +134,12 @@ export default {
         moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
         { datas, clientX, clientY, distX, distY }: any,
     ) {
-        const { posNum, poses, targetInverseMatrix, prevMatrix, isWarp, absolutePos } = datas;
+        const { posNum, poses, targetInverseMatrix, prevMatrix, isWarp, absolutePos, startMatrix } = datas;
 
         if (!isWarp) {
             return false;
         }
-        const { target, onWarp } = moveable.props!;
+        const { target } = moveable.props!;
 
         if (hasGuidelines(moveable, "warpable")) {
             const snapInfos = checkSnapPoses(moveable, [absolutePos[0] + distX], [absolutePos[1] + distY]);
@@ -147,7 +152,6 @@ export default {
                 },
             } = snapInfos;
 
-            console.log(verticalOffset, horizontalOffset);
             distY -= horizontalOffset;
             distX -= verticalOffset;
         }
@@ -183,11 +187,13 @@ export default {
         const delta = multiply(invert(prevMatrix, 4), matrix, 4);
 
         datas.prevMatrix = matrix;
-        onWarp && onWarp({
+
+        triggerEvent(moveable, "onWarp", {
             target: target!,
             clientX,
             clientY,
             delta,
+            matrix: multiplyCSS(startMatrix, matrix, 4),
             multiply: multiplyCSS,
             dist: matrix,
             transform,
@@ -201,8 +207,8 @@ export default {
         }
         datas.isWarp = false;
 
-        const { target, onWarpEnd } = moveable.props;
-        onWarpEnd && onWarpEnd!({
+        const { target } = moveable.props;
+        triggerEvent(moveable, "onWarpEnd", {
             target: target!,
             clientX,
             clientY,

@@ -137,11 +137,9 @@ export default {
         return isPinch;
     },
     pinchGroupStart(moveable: MoveableGroup, e: any) {
-        console.log("SSS");
         return this.pinchStart(moveable, { ...e, targets: moveable.props.targets });
     },
     pinchGroup(moveable: MoveableGroup, e: any) {
-        console.log("SSS2");
         return this.pinch(moveable, { ...e, targets: moveable.props.targets });
     },
     pinchGroupEnd(moveable: MoveableGroup, e: any) {

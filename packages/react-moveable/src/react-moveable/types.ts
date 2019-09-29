@@ -397,12 +397,14 @@ export interface OnRotateEnd {
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
+ * @property - You can set the start matrix value.
  */
 export interface OnWarpStart {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    set: (matrix: number[]) => any;
 }
 /**
  * @typedef
@@ -414,6 +416,7 @@ export interface OnWarpStart {
  * @property - a target's transform
  * @property - The delta of warp matrix
  * @property - The dist of warp matrix
+ * @property - The caculated warp matrix
  * @property - Multiply function that can multiply previous matrix by warp matrix
  */
 export interface OnWarp {
@@ -424,6 +427,7 @@ export interface OnWarp {
     transform: string;
     delta: number[];
     dist: number[];
+    matrix: number[];
     multiply: (matrix1: number[], matrix2: number[], n?: number) => number[];
 }
 /**
