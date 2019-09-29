@@ -1,7 +1,7 @@
 {
   "name": "ngx-moveable",
-  "version": "0.4.3",
-  "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
+  "version": "0.5.1",
+  "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "repository": {
     "type": "git",
     "url": "https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable"
@@ -16,6 +16,7 @@
     "pinchable",
     "groupable",
     "movable",
+    "snappable",
     "throttle",
     "ratio",
     "dom",
@@ -26,6 +27,7 @@
     "rotate",
     "warp",
     "pinch",
+    "snap",
     "angular",
     "ngx",
     "ng"
@@ -42,6 +44,6 @@
   },
   "dependencies": {
     "framework-utils": "^0.2.1",
-    "moveable": "~0.8.0"
+    "moveable": "~0.9.0"
   }
 }

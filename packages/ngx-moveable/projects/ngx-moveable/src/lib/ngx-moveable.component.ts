@@ -47,6 +47,14 @@ export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges {
   @Input() public keepRatio!: boolean;
   @Input() public edge!: boolean;
   @Input() public pinchThreshold!: number;
+  @Input() public snapCenter!: boolean;
+  @Input() public snapThreshold!: number;
+  @Input() public horizontalGuidelines!: number[];
+  @Input() public verticalGuidelines!: number[];
+  @Input() public elementGuildelines!: Element[];
+  @Input() public bounds!: { left?: number, top?: number, right?: number, bottom?: number };
+  @Input() public dragArea!: boolean;
+  @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
 
   @Output() public dragStart!: EventEmitter<OnDragStart>;
   @Output() public drag!: EventEmitter<OnDrag>;
@@ -93,6 +101,7 @@ export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges {
   @Output() public pinchGroupEnd!: EventEmitter<OnPinchGroupEnd>;
 
   @Output() public clickGroup!: EventEmitter<OnClickGroup>;
+
 
   private moveable!: Moveable;
   constructor() {
