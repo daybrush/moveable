@@ -19,7 +19,6 @@ This document explains how to use [moveable](https://github.com/daybrush/moveabl
     * [Group with Resizable](#toc-group-resizable)
     * [Group with Scalable](#toc-group-scalable)
     * [Group with Rotatable](#toc-group-rotatable)
-    * [Group with Pinchable](#toc-group-pinchable)
   * [How to use custom css](#toc-custom-css)
 
 
