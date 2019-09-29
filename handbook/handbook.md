@@ -73,8 +73,140 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif"></a>
 
-
 **Resizable** indicates whether the target's width and height can be increased or decreased.
+
+* **throttleResize**: throttle of width, height when resize. (default: 0)
+* **keepRatio**: When resize or scale, keeps a ratio of the width, height. (default: false)
+
+### Vanilla Example
+
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    resizable: true,
+});
+
+const frame = {
+    translate: [0, 0],
+};
+moveable.on("resizeStart", ({ set, setOrigin, dragStart }) => {
+    // Set origin if transform-orgin use %.
+    setOrigin(["%", "%"]);
+
+    // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
+    const style = window.getComputedStyle(ev.target);
+    const cssWidth = parseFloat(style.width);
+    const cssHeight = parseFloat(style.height);
+    set([cssWidth, cssHeight]);
+
+    // If a drag event has already occurred, there is no dragStart.
+    dragStart && dragStart.set(frame.translate);
+}).on("resize", ({ target, width, height, drag }) => {
+    target.style.width = `${width}px`;
+    target.style.height = `${height}px`;
+
+    // get drag event
+    frame.translate = drag.beforeTranslate;
+    target.style.transform
+        = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+}).on("resizeEnd", ({ target, isDrag, clientX, clientY }) => {
+    console.log("onResizeEnd", target, isDrag);
+});
+```
+
+### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.frame = {
+    translate: [0, 0],
+};
+<Moveable
+    target={document.querySelector(".target")}
+    resizable={true}
+    onResizeStart={({ set, setOrigin, dragStart }) => {
+        // Set origin if transform-orgin use %.
+        setOrigin(["%", "%"]);
+
+        // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
+        const style = window.getComputedStyle(ev.target);
+        const cssWidth = parseFloat(style.width);
+        const cssHeight = parseFloat(style.height);
+        set([cssWidth, cssHeight]);
+
+        // If a drag event has already occurred, there is no dragStart.
+        dragStart && dragStart.set(this.frame.translate);
+    }}
+    onResize={({ target, width, height, drag }) => {
+        target.style.width = `${width}px`;
+        target.style.height = `${height}px`;
+
+        // get drag event
+        this.frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+    }}
+    onResizeEnd={({ target, isDrag, clientX, clientY }) => {
+        console.log("onResizeEnd", target, isDrag);
+    }} />;
+```
+
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [resizable]="true"
+    [throttleResize]="0"
+    (resizeStart)="onResizeStart($event)
+    (resize)="onResize($event)
+    (resizeEnd)="onResizeEnd($event)
+    />
+`,
+})
+export class AppComponent {
+    frame = {
+        translate: [0, 0],
+    };
+    onResizeStart({ set, setOrigin, dragStart }) {
+        // Set origin if transform-orgin use %.
+        setOrigin(["%", "%"]);
+
+        // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
+        const style = window.getComputedStyle(ev.target);
+        const cssWidth = parseFloat(style.width);
+        const cssHeight = parseFloat(style.height);
+        set([cssWidth, cssHeight]);
+
+        // If a drag event has already occurred, there is no dragStart.
+        dragStart && dragStart.set(this.frame.translate);
+    }
+    onResize({ target, width, height, drag }) {
+        target.style.width = `${width}px`;
+        target.style.height = `${height}px`;
+
+        // get drag event
+        this.frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+    }
+    onResizeEnd({ target, isDrag, clientX, clientY }) {
+        console.log("onResizeEnd", target, isDrag);
+    }
+}
+```
 
 ## <a id="toc-scalable"></a>Scalable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif"></a>
