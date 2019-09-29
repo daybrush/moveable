@@ -136,7 +136,7 @@ export default {
         }
         const { target, onWarp } = moveable.props!;
 
-        if (hasGuidlines(moveable)) {
+        if (hasGuidlines(moveable, "warpable")) {
             const snapInfos = checkSnapPoses(moveable, [absolutePos[0] + distX], [absolutePos[1] + distY]);
             const {
                 horizontal: {

@@ -278,7 +278,7 @@ export interface OnResizeStart {
     datas: IObject<any>;
     direction: number[];
     dragStart: OnDragStart | false;
-    set: (width: number, height: number) => any;
+    set: (sizes: number[]) => any;
     setOrigin: (origin: Array<string | number>) => any;
 }
 /**
@@ -779,7 +779,7 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
 }
 
 export interface SnappableProps {
-    snappable?: boolean;
+    snappable?: boolean | string[];
     snapCenter?: boolean;
     snapThreshold?: number;
     horizontalGuidelines?: number[];

@@ -75,7 +75,7 @@ export default {
             clientX,
             clientY,
             direction,
-            set: (startWidth: number, startHeight: number) => {
+            set: ([startWidth, startHeight]: number[]) => {
                 datas.width = startWidth;
                 datas.height = startHeight;
             },

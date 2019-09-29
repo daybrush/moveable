@@ -181,6 +181,7 @@ function checkSnap(
 }
 export function hasGuidlines(
     moveable: MoveableManager<any, any>,
+    ableName: string,
 ): moveable is MoveableManager<SnappableProps, SnappableState> {
     const {
         props: {
@@ -191,7 +192,11 @@ export function hasGuidlines(
         },
     } = moveable;
 
-    if (!snappable || !guidelines || !guidelines.length) {
+    if (
+        !snappable
+        || (!ableName || snappable !== true && snappable.indexOf(ableName))
+        || !guidelines || !guidelines.length
+    ) {
         return false;
     }
     return true;
@@ -435,7 +440,7 @@ export function checkSnapSize(
     datas: any,
 ) {
     const nextSizes = [width, height];
-    if (!hasGuidlines(moveable)) {
+    if (!hasGuidlines(moveable, "resizable")) {
         return nextSizes;
     }
     const {
@@ -457,7 +462,7 @@ export function checkSnapScale(
     } = datas;
     const nextScale = scale.slice();
 
-    if (!hasGuidlines(moveable)) {
+    if (!hasGuidlines(moveable, "scalable")) {
         return nextScale;
     }
     const sizeDist = checkSizeDist(
@@ -560,7 +565,7 @@ export default {
             snapDirection,
          } = moveable.state;
 
-        if (!snapDirection || !hasGuidlines(moveable)) {
+        if (!snapDirection || !hasGuidlines(moveable, "")) {
             return [];
         }
         const poses = getAbsolutePosesByState(moveable.state);
@@ -646,7 +651,7 @@ export default {
             startRight,
         } = moveable.state;
 
-        if (!hasGuidlines(moveable)) {
+        if (!hasGuidlines(moveable, "draggable")) {
             return false;
         }
         const left = startLeft + distX;
