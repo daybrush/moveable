@@ -2,10 +2,14 @@ import { MoveableEvents } from "./types";
 
 export const PROPERTIES = [
     "draggable", "resizable", "scalable", "rotatable",
-    "warpable", "pinchable", "origin", "target", "edge",
+    "warpable", "pinchable", "snappable", "origin", "target", "edge",
     "throttleDrag", "throttleResize",
     "throttleScale", "throttleRotate", "keepRatio",
+    "dragArea",
     "pinchThreshold",
+    "snapCenter", "snapThreshold",
+    "horizontalGuidelines", "verticalGuidelines", "elementGuidelines",
+    "bounds",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",

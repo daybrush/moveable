@@ -300,7 +300,7 @@ class Moveable extends EgComponent {
  * moveable.throttleScale = 0.1;
  */
 /**
- * hrottle of angle(degree) when rotate.
+ * throttle of angle(degree) when rotate.
  * @name Moveable#throttleRotate
  * @example
  * import Moveable from "moveable";
@@ -309,6 +309,105 @@ class Moveable extends EgComponent {
  *
  * moveable.throttleRotate = 1;
  */
+
+ /**
+ * Whether or not target can be snapped to the guideline. (default: false)
+ * @name Moveable#snappable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snappable = true;
+ */
+/**
+ * When you drag, make the snap in the center of the target. (default: false)
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snapCenter = true;
+ */
+
+/**
+ * Distance value that can snap to guidelines. (default: 5)
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snapThreshold = 5;
+ */
+
+/**
+ * Add guidelines in the horizontal direction. (default: [])
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.horizontalGuidlines = [100, 200, 500];
+ */
+
+/**
+ * Add guidelines in the vertical direction. (default: [])
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.verticalGuidlines = [100, 200, 500];
+ */
+/**
+ * Add guidelines for the element. (default: [])
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.elementGuidelines = [
+ *   document.querySelector(".element"),
+ * ];
+ */
+/**
+ * You can set up boundaries. (default: [])
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.bounds = { left: 0, right: 1000, top: 0, bottom: 1000};
+ */
+/**
+ * Add an event to the moveable area instead of the target for stopPropagation. (default: false)
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  dragArea: false,
+ * });
+ */
+/**
+ * You can specify the position of the rotation. (default: "top")
+ * @name Moveable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   rotationPosition: "top",
+ * });
+ *
+ * moveable.rotationPosition = "bottom"
+ */
+
 /**
  * When the drag starts, the dragStart event is called.
  * @memberof Moveable

@@ -58,14 +58,14 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 * [Rotatable](#toc-rotatable)
 * [Warpable](#toc-warpable)
 * [Pinchable](#toc-pinchable)
-* [Snappable(Guidelines)](#toc-snappable)
+* [Snappable(Guidelines & Boundaries)](#toc-snappable)
 
 ## <a id="toc-draggable"></a>Draggable
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/draggable.gif"></a>
 
 
-* **Draggable** refers to the ability to drag and move targets.
+**Draggable** refers to the ability to drag and move targets.
 
 
 
@@ -74,48 +74,50 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif"></a>
 
 
-* **Resizable** indicates whether the target's width and height can be increased or decreased.
+**Resizable** indicates whether the target's width and height can be increased or decreased.
 
 ## <a id="toc-scalable"></a>Scalable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif"></a>
 
-* **Scalable** indicates whether the target's x and y can be scale of transform.
+**Scalable** indicates whether the target's x and y can be scale of transform.
 
 ## <a id="toc-rotatable"></a>Rotatable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif"></a>
 
 
-* **Rotatable** indicates whether the target can be rotated.
+**Rotatable** indicates whether the target can be rotated.
 
 ## <a id="toc-warpable"></a>Warpable
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></a>
 
 
-* **Warpable** indicates whether the target can be warped(distorted, bented).
+**Warpable** indicates whether the target can be warped(distorted, bented).
 
 
 ## <a id="toc-pinchable"></a>Pinchable
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></a>
 
-* **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
+**Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 
 ## <a id="toc-snappable"></a>Snappable(Guidelines & Boundaries)
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"></a>
 
-* **Snappable** indicates whether to snap to the guidelines.
+**Snappable** indicates whether to snap to the guidelines.
 
 * **bounds**: You can set up boundaries.
 * **snapThreshold**: Distance value that can snap to guidelines.
 * **snapCenter**: When you drag, make the snap in the center of the target.
 
-* verticalGuidelines & horizontalGuidelines
+### verticalGuidelines & horizontalGuidelines
+Add guidelines in the horizontal or vertical direction.
 
 ![](../demo/images/guidelines.png)
 
-* elementGuidelines
+### elementGuidelines
+Add guidelines for the element.
 
 ![](../demo/images/element_guidelines.png)
 

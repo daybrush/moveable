@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.0] - 2019-09-29
+### Added
+* Add Snappable (Drag, Resize, Scale, Warp) (#6)
+* Add `horizontalGuidelines` & `verticalGuidelines` & `elementGuidelines` (#6)
+* Add `bounds` option (boundaries) (#23, #24)
+* Add `rotationPositoin` option for rotation handle position (#40)
+* Add `dragArea` option (#38)
+* Add `dragStart` event on `resizeStart`, `scaleStart`. (#9)
+* Add `drag` event on `resize`, `scale`. (#9)
+* Add `set` parameter function on `warpStart`.
+
+
+### Fixed
+* north and west controls want to behave like photoshop (#9)
+* Fix offset caculation for Webkit
 
 
 ## [0.8.0] - 2019-08-28

@@ -8,7 +8,7 @@
 <a href="https://travis-ci.org/daybrush/moveable" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/daybrush/moveable.svg?style=flat-square&label=build" /></a>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
+<p align="middle">A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.</p>
 <p align="middle">
     <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
     <a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md" target="_blank"><strong>Handbook</strong></a> /

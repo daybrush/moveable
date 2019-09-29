@@ -144,7 +144,7 @@ class App extends React.Component {
                     keepRatio={false}
                     origin={false}
                     draggable={true}
-                    snappable={true}
+                    // snappable={true}
                     transformOrigin="% %"
                     // verticalGuidelines={[100, 200, 400, 500]}
                     // horizontalGuidelines={[100, 200, 400, 500]}
@@ -152,8 +152,8 @@ class App extends React.Component {
                     snapCenter={false}
                     snapThreshold={10}
                     bounds={{ left: 100 }}
-                    scalable={!isResizable}
-                    resizable={isResizable}
+                    // scalable={!isResizable}
+                    // resizable={isResizable}
                     warpable={true}
                     throttleDrag={0}
                     throttleScale={0}

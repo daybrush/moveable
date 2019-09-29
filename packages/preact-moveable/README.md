@@ -8,9 +8,10 @@
 <a href="https://travis-ci.org/daybrush/moveable" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/daybrush/moveable.svg?style=flat-square&label=build" /></a>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 </p>
-<p align="middle">A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
+<p align="middle">A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.</p>
 <p align="middle">
     <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
+    <a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md" target="_blank"><strong>Handbook</strong></a> /
     <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
     <a href="https://github.com/daybrush/scenejs-editor" target="_blank"><strong>Main Project</strong></a>
 </p>
@@ -23,10 +24,10 @@
 <th colspan="4">Moveable</th>
 </tr>
 <tr>
-<td align="center"><strong>Draggable</strong></td>
-<td align="center"><strong>Resizable</strong></td>
-<td align="center"><strong>Scalable</strong></td>
-<td align="center"><strong>Rotatable</strong></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-draggable"><strong>Draggable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-resizable"><strong>Resizable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-scalable"><strong>Scalable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-rotatable"><strong>Rotatable</strong></a></td>
 </tr>
 <tr>
 <td align="center">
@@ -43,16 +44,16 @@
 </td>
 </tr>
 <tr>
-<td align="center"><strong>Warpable</strong></td>
-<td align="center"><strong>Pinchable</strong></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/groupable.md"><strong>Groupable</strong></a></td>
-<td align="center"><strong></strong></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-warpable"><strong>Warpable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-pinchable"><strong>Pinchable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-group"><strong>Groupable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-snappable"><strong>Snappable</strong></a></td>
 </tr>
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"></td>
-<td align="center"><strong></strong></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"></td>
 </tr>
 </table>
 
@@ -63,9 +64,12 @@
 * **Rotatable** indicates whether the target can be rotated.
 * **Warpable** indicates whether the target can be warped(distorted, bented).
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
-* **[Groupable](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/groupable.md)** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
+* **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
+* **Snappable** indicates whether to snap to the guideline.
 * Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
+* Support Webkit Safari (Mac, iOS)
 * Support 3d Transform
+
 
 ## ⚙️ Installation
 ```sh
@@ -73,9 +77,11 @@ $ npm i preact-moveable
 ```
 
 ## 📄 Documents
+
+* [**Moveable Handbook**](https://github.com/daybrush/moveable/blob/master/handbook/handbook.md)
+* [**How to use Group**](https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-group)
+* [**How to use custom CSS**](https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-custom-css)
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
-* 🚀 [**How to use Groupable**](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/groupable.md)
-* ✨ [**How to use custom CSS**](https://github.com/daybrush/moveable/blob/master/custom_css.md)
 
 ## 🚀 How to use
 ```tsx

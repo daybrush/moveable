@@ -14,7 +14,7 @@
     alt="Vue"
     src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
 </p>
-<p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable</p>
+<p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable</p>
 <p align="middle">
     <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
     <a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md" target="_blank"><strong>Handbook</strong></a> /
