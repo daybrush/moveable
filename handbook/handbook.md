@@ -627,8 +627,49 @@ const moveable = new Moveable(document.body, {
 ```
 
 ### React & Preact Example
-### Angular Example
 
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+<Moveable
+    target={document.querySelector(".target")}
+    snappable={true}
+    snapThreshold={5}
+    bounds={{ left: 0, top: 0, bottom: 1000, right: 1000 }}
+    verticalGuidelines={[100, 200, 300]}
+    horizontalGuidelines={[0, 100, 200]}
+    elementGuidelines={[document.querySelector(".element")]}
+```
+
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [snappable]="true"
+    [bounds]="bounds"
+    [verticalGuidelines]="verticalGuidelines"
+    [horizontalGuidelines]="horizontalGuidelines"
+    [elementGuidelines]="elementGuidelines"
+    />
+`,
+})
+export class AppComponent {
+    bounds = { left: 0, top: 0, bottom: 1000, right: 1000 };
+    verticalGuidelines = [100, 200, 300];
+    horizontalGuidelines = [0, 100, 200];
+    elementGuidelines = [document.querySelector(".element")];
+}
+```
 
 
 # <a id="toc-group"></a> How to use Group
