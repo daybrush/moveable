@@ -55,6 +55,7 @@ export interface Guideline {
 export interface BoundInfo {
     isBound: boolean;
     offset: number;
+    pos: number;
 }
 export interface SnapInfo {
     isSnap: boolean;

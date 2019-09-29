@@ -17,11 +17,12 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { 
         horizontalGuidelines = [],
         verticalGuidelines = [],
         elementGuildelines = [],
+        bounds,
         container,
         snapCenter,
     } = moveable.props;
 
-    if (!horizontalGuidelines.length && !verticalGuidelines.length && !elementGuildelines.length) {
+    if (!bounds && !horizontalGuidelines.length && !verticalGuidelines.length && !elementGuildelines.length) {
         return;
     }
 
@@ -89,57 +90,66 @@ function checkBounds(
     moveable: MoveableManager<SnappableProps>,
     verticalPoses: number[],
     horizontalPoses: number[],
+    snapThreshold?: number,
 ) {
     return {
-        vertical: checkBound(moveable, verticalPoses, true),
-        horizontal: checkBound(moveable, horizontalPoses, false),
+        vertical: checkBound(moveable, verticalPoses, true, snapThreshold),
+        horizontal: checkBound(moveable, horizontalPoses, false, snapThreshold),
     };
 }
 function checkBound(
     moveable: MoveableManager<SnappableProps>,
     poses: number[],
     isVertical: boolean,
+    snapThreshold: number = 0,
 ): BoundInfo {
     const bounds = moveable.props.bounds;
 
-    if (!bounds) {
-        return {
-            isBound: false,
-            offset: 0,
-        };
-    }
+    if (bounds) {
+        const startPos = bounds[isVertical ? "left" : "top"];
+        const endPos = bounds[isVertical ? "right" : "bottom"];
 
-    const startPos = bounds[isVertical ? "left" : "top"];
-    const endPos = bounds[isVertical ? "right" : "bottom"];
+        const minPos = Math.min(...poses);
+        const maxPos = Math.max(...poses);
 
-    const minPos = Math.min(...poses);
-    const maxPos = Math.max(...poses);
-
-    if (!isUndefined(startPos) && startPos > minPos) {
-        return {
-            isBound: true,
-            offset: minPos - startPos,
-        };
-    }
-    if (!isUndefined(endPos) && endPos < maxPos) {
-        return {
-            isBound: true,
-            offset: maxPos - endPos,
-        };
+        if (!isUndefined(startPos) && startPos + snapThreshold > minPos) {
+            return {
+                isBound: true,
+                offset: minPos - startPos,
+                pos: startPos,
+            };
+        }
+        if (!isUndefined(endPos) && endPos - snapThreshold < maxPos) {
+            return {
+                isBound: true,
+                offset: maxPos - endPos,
+                pos: endPos,
+            };
+        }
     }
 
     return {
         isBound: false,
         offset: 0,
+        pos: 0,
     };
 }
 function checkSnap(
     guidelines: Guideline[],
     targetType: "horizontal" | "vertical",
     targetPoses: number[],
+    isSnapCenter: boolean | undefined,
     snapThreshold: number,
-    isSnapCenter?: boolean,
 ): SnapInfo {
+    if (!guidelines) {
+        return {
+            isSnap: false,
+            dist: -1,
+            offset: 0,
+            guidelines: [],
+            snapPoses: [],
+        };
+    }
     let snapGuidelines: Guideline[] = [];
     let snapDist = Infinity;
     let snapOffset = 0;
@@ -179,13 +189,14 @@ function checkSnap(
         snapPoses,
     };
 }
-export function hasGuidlines(
+export function hasGuidelines(
     moveable: MoveableManager<any, any>,
     ableName: string,
 ): moveable is MoveableManager<SnappableProps, SnappableState> {
     const {
         props: {
             snappable,
+            bounds,
         },
         state: {
             guidelines,
@@ -194,17 +205,17 @@ export function hasGuidlines(
 
     if (
         !snappable
-        || (!ableName || snappable !== true && snappable.indexOf(ableName))
-        || !guidelines || !guidelines.length
+        || (ableName && snappable !== true && snappable.indexOf(ableName))
+        || (!bounds && (!guidelines || !guidelines.length))
     ) {
         return false;
     }
     return true;
 }
-export function checkSnapPos(
+export function checkSnapPoses(
     moveable: MoveableManager<SnappableProps, SnappableState>,
-    targetType: "vertical" | "horizontal",
-    poses: number[],
+    posesX: number[],
+    posesY: number[],
     isSnapCenter?: boolean,
     customSnapThreshold?: number,
 ) {
@@ -215,18 +226,9 @@ export function checkSnapPos(
             ? moveable.props.snapThreshold
             : 5;
 
-    return checkSnap(guidelines, targetType, poses, snapThreshold, isSnapCenter);
-}
-export function checkSnapPoses(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
-    posesX: number[],
-    posesY: number[],
-    isSnapCenter?: boolean,
-    customSnapThreshold?: number,
-) {
     return {
-        vertical: checkSnapPos(moveable, "vertical", posesX, isSnapCenter, customSnapThreshold),
-        horizontal: checkSnapPos(moveable, "horizontal", posesY, isSnapCenter, customSnapThreshold),
+        vertical: checkSnap(guidelines, "vertical", posesX, isSnapCenter, snapThreshold),
+        horizontal: checkSnap(guidelines, "horizontal", posesY, isSnapCenter, snapThreshold),
     };
 }
 export function checkSnaps(
@@ -440,7 +442,7 @@ export function checkSnapSize(
     datas: any,
 ) {
     const nextSizes = [width, height];
-    if (!hasGuidlines(moveable, "resizable")) {
+    if (!hasGuidelines(moveable, "resizable")) {
         return nextSizes;
     }
     const {
@@ -462,7 +464,7 @@ export function checkSnapScale(
     } = datas;
     const nextScale = scale.slice();
 
-    if (!hasGuidlines(moveable, "scalable")) {
+    if (!hasGuidelines(moveable, "scalable")) {
         return nextScale;
     }
     const sizeDist = checkSizeDist(
@@ -563,13 +565,13 @@ export default {
             left: targetLeft,
             top: targetTop,
             snapDirection,
-         } = moveable.state;
+        } = moveable.state;
 
-        if (!snapDirection || !hasGuidlines(moveable, "")) {
+        if (!snapDirection || !hasGuidelines(moveable, "")) {
             return [];
         }
         const poses = getAbsolutePosesByState(moveable.state);
-        const { width, height } = getRect(poses);
+        const { width, height, top, left, bottom, right } = getRect(poses);
         const {
             vertical: {
                 guidelines: verticalGuildelines,
@@ -581,6 +583,33 @@ export default {
             },
         } = getSnapInfosByDirection(moveable, poses, snapDirection);
 
+        const {
+            vertical: {
+                isBound: isVerticalBound,
+                pos: verticalBoundPos,
+            },
+            horizontal: {
+                isBound: isHorizontalBound,
+                pos: horizontalBoundPos,
+            },
+        } = checkBounds(moveable, [left, right], [top, bottom], 1);
+
+        if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
+            verticalGuildelines.push({
+                type: "vertical",
+                pos: [verticalBoundPos, top],
+                size: height,
+            });
+            verticalSnapPoses.push(verticalBoundPos);
+        }
+        if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
+            horizontalGuidelines.push({
+                type: "horizontal",
+                pos: [top, verticalBoundPos],
+                size: width,
+            });
+            horizontalSnapPoses.push(horizontalBoundPos);
+        }
         return [
             ...verticalSnapPoses.map((pos, i) => {
                 return <div className={prefix(
@@ -651,7 +680,7 @@ export default {
             startRight,
         } = moveable.state;
 
-        if (!hasGuidlines(moveable, "draggable")) {
+        if (!hasGuidelines(moveable, "draggable")) {
             return false;
         }
         const left = startLeft + distX;
@@ -673,6 +702,8 @@ export default {
         let offsetX = 0;
         let offsetY = 0;
 
+        console.log(checkBounds(moveable, [left, right], [top, bottom]).vertical.isBound);
+
         if (boundInfos.vertical.isBound) {
             offsetX = boundInfos.vertical.offset;
         } else if (snapInfos.vertical.isSnap) {
@@ -681,7 +712,7 @@ export default {
         }
         if (boundInfos.horizontal.isBound) {
             offsetY = boundInfos.horizontal.offset;
-        } else  if (snapInfos.horizontal.isSnap) {
+        } else if (snapInfos.horizontal.isSnap) {
             // has horizontal guidelines
             offsetY = snapInfos.horizontal.offset;
         }

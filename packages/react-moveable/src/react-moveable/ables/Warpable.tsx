@@ -15,7 +15,7 @@ import MoveableManager from "../MoveableManager";
 import { WarpableProps, ScalableProps, ResizableProps, Renderer, SnappableProps, SnappableState } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
 import { renderDiagonalDirection } from "../renderDirection";
-import { checkSnapPoses, hasGuidlines } from "./Snappable";
+import { checkSnapPoses, hasGuidelines } from "./Snappable";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {
     return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
@@ -136,7 +136,7 @@ export default {
         }
         const { target, onWarp } = moveable.props!;
 
-        if (hasGuidlines(moveable, "warpable")) {
+        if (hasGuidelines(moveable, "warpable")) {
             const snapInfos = checkSnapPoses(moveable, [absolutePos[0] + distX], [absolutePos[1] + distY]);
             const {
                 horizontal: {
