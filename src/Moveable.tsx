@@ -333,7 +333,7 @@ class Moveable extends EgComponent {
 
 /**
  * Distance value that can snap to guidelines. (default: 5)
- * @name Moveable#snapCenter
+ * @name Moveable#snapThreshold
  * @example
  * import Moveable from "moveable";
  *
@@ -344,7 +344,7 @@ class Moveable extends EgComponent {
 
 /**
  * Add guidelines in the horizontal direction. (default: [])
- * @name Moveable#snapCenter
+ * @name Moveable#horizontalGuidlines
  * @example
  * import Moveable from "moveable";
  *
@@ -355,7 +355,8 @@ class Moveable extends EgComponent {
 
 /**
  * Add guidelines in the vertical direction. (default: [])
- * @name Moveable#snapCenter
+ * @name Moveable#
+ * moveable.verticalGuidlines
  * @example
  * import Moveable from "moveable";
  *
@@ -365,7 +366,7 @@ class Moveable extends EgComponent {
  */
 /**
  * Add guidelines for the element. (default: [])
- * @name Moveable#snapCenter
+ * @name Moveable#elementGuidelines
  * @example
  * import Moveable from "moveable";
  *
@@ -377,7 +378,7 @@ class Moveable extends EgComponent {
  */
 /**
  * You can set up boundaries. (default: [])
- * @name Moveable#snapCenter
+ * @name Moveable#bounds
  * @example
  * import Moveable from "moveable";
  *
@@ -387,7 +388,7 @@ class Moveable extends EgComponent {
  */
 /**
  * Add an event to the moveable area instead of the target for stopPropagation. (default: false)
- * @name Moveable#snapCenter
+ * @name Moveable#dragArea
  * @example
  * import Moveable from "moveable";
  *
@@ -397,7 +398,7 @@ class Moveable extends EgComponent {
  */
 /**
  * You can specify the position of the rotation. (default: "top")
- * @name Moveable#snapCenter
+ * @name Moveable#rotationPosition
  * @example
  * import Moveable from "moveable";
  *
