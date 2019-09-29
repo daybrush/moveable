@@ -1,8 +1,8 @@
-import MoveableManager from "./MoveableManager";
+import { MoveableManagerState, OnCustomDrag } from "./types";
 
-export function setCustomDrag(moveable: MoveableManager<any>, delta: number[], inputEvent: any) {
+export function setCustomDrag(state: Partial<MoveableManagerState<any>>, delta: number[], inputEvent: any) {
     return {
-        ...moveable.state.dragger!.move(delta, inputEvent),
+        ...state.dragger!.move(delta, inputEvent),
         parentEvent: true,
     };
 }
@@ -16,7 +16,7 @@ export default class CustomDragger {
     private isFlag = false;
     private datas = {};
 
-    public dragStart(client: number[], inputEvent: any) {
+    public dragStart(client: number[], inputEvent: any)  {
         this.isDrag = false;
         this.isFlag = false;
         this.datas = {};
@@ -29,7 +29,7 @@ export default class CustomDragger {
             client[1] - this.prevY,
         ], inputEvent);
     }
-    public move(delta: number[], inputEvent: any) {
+    public move(delta: number[], inputEvent: any): OnCustomDrag {
         let clientX!: number;
         let clientY!: number;
         if (!this.isFlag) {

@@ -142,13 +142,13 @@ class App extends React.Component {
                     container={document.body}
                     ref={ref(this, "moveable")}
                     keepRatio={false}
-                    origin={true}
+                    origin={false}
                     draggable={true}
                     snappable={true}
                     transformOrigin="% %"
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
-                    elementGuildelines={[document.querySelector(".box span")!]}
+                    elementGuildelines={[document.querySelector(".box1 span")!]}
                     snapCenter={false}
                     snapThreshold={10}
                     bounds={{ left: 100 }}
@@ -229,8 +229,10 @@ class App extends React.Component {
                     }}
                 />
                 <div className="App" onMouseDown={this.onClick} onTouchStart={this.onClick} data-target="app">
-                    <div className="box" data-target="box"><span>A</span><span>B</span><span>C</span></div>
+                    <div className="box box1" data-target="box"><span>A</span><span>B</span><span>C</span></div>
+
                     <header className="App-header" data-target="header">
+                        <div className="box box2" data-target="box2"><span>A</span></div>
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />
                         <p data-target="p">
                             Edit <code data-target="code">src/App.tsx</code> and save to reload.

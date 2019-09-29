@@ -205,7 +205,7 @@ export default {
             isPinch: !!pinchFlag,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable, inverseDelta, inputEvent),
+                setCustomDrag(moveable.state, inverseDelta, inputEvent),
             ) as OnDrag,
         };
         triggerEvent(moveable, "onResize", params);

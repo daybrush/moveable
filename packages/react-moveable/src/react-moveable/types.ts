@@ -1,6 +1,7 @@
 import { IObject } from "@daybrush/utils";
 import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
+import { Position } from "@daybrush/drag";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
@@ -793,4 +794,12 @@ export interface SnappableState {
     startTop: number;
     startRight: number;
     startBottom: number;
+}
+
+export interface OnCustomDrag extends Position {
+    inputEvent: any;
+    isDrag: boolean;
+    datas: IObject<any>;
+    parentEvent: boolean;
+    parentDragger: CustomDragger;
 }
