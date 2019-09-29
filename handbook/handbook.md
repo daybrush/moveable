@@ -194,8 +194,9 @@ import Moveable from "moveable";
 
 const moveable = new Moveable(document.body, {
     target: document.querySelector(".target"),
-    resizable: true,
-    throttleResize: 0,
+    scalable: true,
+    throttleScale: 0,
+    keepRatio: false,
 });
 
 const frame = {
@@ -238,6 +239,7 @@ this.frame = {
     target={document.querySelector(".target")}
     resizable={true}
     throttleResize={0}
+    keepRatio={false}
     onResizeStart={({ set, setOrigin, dragStart }) => {
         // Set origin if transform-orgin use %.
         setOrigin(["%", "%"]);
@@ -281,6 +283,7 @@ import {
     [target]="target"
     [resizable]="true"
     [throttleResize]="0"
+    [keepRatio]="false"
     (resizeStart)="onResizeStart($event)
     (resize)="onResize($event)
     (resizeEnd)="onResizeEnd($event)
@@ -323,6 +326,130 @@ export class AppComponent {
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif"></a>
 
 **Scalable** indicates whether the target's x and y can be scale of transform.
+
+### Events
+* [onScaleStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragStart): When the scale starts, the scaleStart event is called.
+* [onScale](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:drag): When scaling, the scale event is called.
+* [onScaleEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:dragEnd): When the scale finishes, the scaleEnd event is called.
+
+### Options
+* [throttleScale](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleScale): throttle of scaleX, scaleY when scale. (default: 0)
+* [keepRatio](https://daybrush.com/moveable/release/latest/doc/Moveable.html#keepRatio): When resize or scale, keeps a ratio of the width, height. (default: false)
+
+
+### Vanilla Example
+
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    scalable: true,
+    throttleScale: 0,
+    keepRatio: false,
+});
+
+const frame = {
+    translate: [0, 0],
+    scale: [1, 1],
+};
+moveable.on("scaleStart", ({ set, dragStart }) => {
+    set(frame.scale);
+
+    // If a drag event has already occurred, there is no dragStart.
+    dragStart && dragStart.set(frame.translate);
+}).on("scale", ({ target, scale, drag }) => {
+    frame.scale = scale;
+    // get drag event
+    frame.translate = drag.beforeTranslate;
+    target.style.transform
+        = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`
+        + `scale(${scale[0]}, ${scale[1]})`;
+}).on("scaleEnd", ({ target, isDrag, clientX, clientY }) => {
+    console.log("onScaleEnd", target, isDrag);
+});
+```
+
+### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.frame = {
+    translate: [0, 0],
+    scale: [1, 1],
+};
+<Moveable
+    target={document.querySelector(".target")}
+    scalable={true}
+    throttleScale={0}
+    keepRatio={false}
+    onScaleStart={({ set, dragStart }) => {
+        set(frame.scale);
+
+        // If a drag event has already occurred, there is no dragStart.
+        dragStart && dragStart.set(frame.translate);
+    }}
+    onScale={({ target, scale, drag }) => {
+        frame.scale = scale;
+        // get drag event
+        frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`
+            + `scale(${scale[0]}, ${scale[1]})`;
+    }}
+    onScaleEnd={({ target, isDrag, clientX, clientY }) => {
+        console.log("onScaleEnd", target, isDrag);
+    }} />;
+```
+
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [scalable]="true"
+    [throttleScale]="0"
+    [keepRatio]="false"
+    (scaleStart)="onScaleStart($event)
+    (scale)="onScale($event)
+    (scaleEnd)="onScaleEnd($event)
+    />
+`,
+})
+export class AppComponent {
+    frame = {
+        translate: [0, 0],
+        scale: [1, 1],
+    };
+    onScaleStart({ set, dragStart }) {
+        set(frame.scale);
+
+        // If a drag event has already occurred, there is no dragStart.
+        dragStart && dragStart.set(frame.translate);
+    }
+    onScale({ target, scale, drag }) {
+        frame.scale = scale;
+        // get drag event
+        frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`
+            + `scale(${scale[0]}, ${scale[1]})`;
+    }
+    onScaleEnd({ target, isDrag, clientX, clientY }) {
+        console.log("onScaleEnd", target, isDrag);
+    }
+}
+```
 
 ## <a id="toc-rotatable"></a>Rotatable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif"></a>
