@@ -20,8 +20,6 @@ export default {
             dragger,
         } = state;
 
-        console.log("DS", dragger, parentDragger, moveable.targetDragger);
-
         if (dragger) {
             return false;
         }
@@ -127,7 +125,6 @@ export default {
             return;
         }
 
-        console.log("DE");
         moveable.state.dragger = null;
         datas.isDrag = false;
         !parentEvent && triggerEvent(moveable, "onDragEnd", {

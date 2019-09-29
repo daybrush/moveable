@@ -1,6 +1,7 @@
 import { IObject } from "@daybrush/utils";
 import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
+import { Position } from "@daybrush/drag";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
@@ -50,6 +51,11 @@ export interface Guideline {
     center?: boolean;
     pos: number[];
     size: number;
+}
+export interface BoundInfo {
+    isBound: boolean;
+    offset: number;
+    pos: number;
 }
 export interface SnapInfo {
     isSnap: boolean;
@@ -273,7 +279,7 @@ export interface OnResizeStart {
     datas: IObject<any>;
     direction: number[];
     dragStart: OnDragStart | false;
-    set: (width: number, height: number) => any;
+    set: (sizes: number[]) => any;
     setOrigin: (origin: Array<string | number>) => any;
 }
 /**
@@ -774,17 +780,27 @@ export interface GroupableProps extends PinchableProps, DraggableProps, Rotatabl
 }
 
 export interface SnappableProps {
-    snappable?: boolean;
+    snappable?: boolean | string[];
     snapCenter?: boolean;
     snapThreshold?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
     elementGuildelines?: Element[];
+    bounds?: { left?: number, top?: number, right?: number, bottom?: number };
 }
 export interface SnappableState {
     guidelines: any[];
+    snapDirection: number[] | true | null;
     startLeft: number;
     startTop: number;
     startRight: number;
     startBottom: number;
+}
+
+export interface OnCustomDrag extends Position {
+    inputEvent: any;
+    isDrag: boolean;
+    datas: IObject<any>;
+    parentEvent: boolean;
+    parentDragger: CustomDragger;
 }

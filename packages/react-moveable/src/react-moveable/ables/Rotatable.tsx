@@ -336,7 +336,7 @@ export default {
 
                 const dragResult = Draggable.drag(
                     child,
-                    setCustomDrag(child, delta, inputEvent),
+                    setCustomDrag(child.state, delta, inputEvent),
                 );
 
                 result.drag = dragResult;

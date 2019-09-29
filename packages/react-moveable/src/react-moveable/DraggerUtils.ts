@@ -4,8 +4,9 @@ import {
     createScaleMatrix, multiply,
 } from "@moveable/matrix";
 import MoveableManager from "./MoveableManager";
-import { caculatePoses, getAbsoluteMatrix } from "./utils";
+import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
 import { splitUnit } from "@daybrush/utils";
+import { MoveableManagerState } from "./types";
 
 export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
     const {
@@ -15,14 +16,19 @@ export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
         left,
         top,
         origin,
+        offsetMatrix,
+        targetMatrix,
+        transformOrigin,
     } = moveable.state;
-
     const n = is3d ? 4 : 3;
 
     datas.is3d = is3d;
     datas.matrix = matrix;
-    datas.inverseMatrix = invert(matrix, n);
+    datas.targetMatrix = targetMatrix;
     datas.beforeMatrix = beforeMatrix;
+    datas.offsetMatrix = offsetMatrix;
+    datas.transformOrigin = transformOrigin;
+    datas.inverseMatrix = invert(matrix, n);
     datas.inverseBeforeMatrix = invert(beforeMatrix, n);
     datas.absoluteOrigin = convertPositionMatrix(plus([left, top], origin), n);
     datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
@@ -33,7 +39,8 @@ export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
         inverseBeforeMatrix,
         inverseMatrix, is3d,
         startDragBeforeDist,
-        startDragDist, absoluteOrigin,
+        startDragDist,
+        absoluteOrigin,
     } = datas;
     const n = is3d ? 4 : 3;
 
@@ -46,7 +53,6 @@ export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
         isBefore ? startDragBeforeDist : startDragDist,
     );
 }
-
 export function caculateTransformOrigin(
     transformOrigin: string[],
     width: number,
@@ -76,26 +82,52 @@ export function caculateTransformOrigin(
         return size * value / 100;
     });
 }
-export function getSizeInfo(moveable: MoveableManager<any>) {
-    const {
-        left,
-        top,
-        pos1,
-        pos2,
-        pos3,
-        pos4,
-    } = moveable.state;
-    const pos = [left, top];
+export function getPosesByDirection(
+    [pos1, pos2, pos3, pos4]: number[][],
+    direction: number[],
+) {
+    /*
+    [-1, -1](pos1)       [0, -1](pos1,pos2)       [1, -1](pos2)
+    [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
+    [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
+    */
+   const poses = [];
 
-    return[
-        plus(pos, pos1),
-        plus(pos, pos2),
-        plus(pos, pos3),
-        plus(pos, pos4),
-    ];
+   if (direction[1] >= 0) {
+       if (direction[0] >= 0) {
+           poses.push(pos4);
+       }
+       if (direction[0] <= 0) {
+           poses.push(pos3);
+       }
+   }
+   if (direction[1] <= 0) {
+       if (direction[0] >= 0) {
+           poses.push(pos2);
+       }
+       if (direction[0] <= 0) {
+           poses.push(pos1);
+       }
+   }
+   return poses;
 }
-
 export function getPosByDirection(
+    poses: number[][],
+    direction: number[],
+) {
+    /*
+    [-1, -1](pos1)       [0, -1](pos1,pos2)       [1, -1](pos2)
+    [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
+    [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
+    */
+   const nextPoses = getPosesByDirection(poses, direction);
+
+   return [
+       average(...nextPoses.map(pos => pos[0])),
+       average(...nextPoses.map(pos => pos[1])),
+   ];
+}
+export function getPosByReverseDirection(
     [pos1, pos2, pos3, pos4]: number[][],
     direction: number[],
 ) {
@@ -104,28 +136,8 @@ export function getPosByDirection(
     [-1, 0](pos2, pos4)                           [1, 0](pos3, pos1)
     [-1, 1](pos2)        [0, 1](pos1, pos2)       [1, 1](pos1)
     */
-    const poses = [];
 
-    if (direction[1] >= 0) {
-        if (direction[0] >= 0) {
-            poses.push(pos1);
-        }
-        if (direction[0] <= 0) {
-            poses.push(pos2);
-        }
-    }
-    if (direction[1] <= 0) {
-        if (direction[0] >= 0) {
-            poses.push(pos3);
-        }
-        if (direction[0] <= 0) {
-            poses.push(pos4);
-        }
-    }
-    return [
-        average(...poses.map(pos => pos[0])),
-        average(...poses.map(pos => pos[1])),
-    ];
+    return getPosByDirection([pos4, pos3, pos2, pos1], direction);
 }
 function getStartPos(poses: number[][], direction: number[]) {
     const [
@@ -134,7 +146,7 @@ function getStartPos(poses: number[][], direction: number[]) {
         startPos3,
         startPos4,
     ] = poses;
-    return getPosByDirection([startPos1, startPos2, startPos3, startPos4], direction);
+    return getPosByReverseDirection([startPos1, startPos2, startPos3, startPos4], direction);
 }
 function getDist(
     startPos: number[],
@@ -145,7 +157,7 @@ function getDist(
     direction: number[],
 ) {
     const poses = caculatePoses(matrix, width, height, n);
-    const pos = getPosByDirection(poses, direction);
+    const pos = getPosByReverseDirection(poses, direction);
     const distX = startPos[0] - pos[0];
     const distY = startPos[1] - pos[1];
 
@@ -163,6 +175,25 @@ export function getNextMatrix(
         n,
     );
 }
+export function scaleMatrix(
+    state: MoveableManagerState<any>,
+    scale: number[],
+) {
+    const {
+        transformOrigin,
+        offsetMatrix,
+        is3d,
+        targetMatrix,
+    } = state;
+    const n = is3d ? 4 : 3;
+
+    return getNextMatrix(
+        offsetMatrix,
+        multiply(targetMatrix, createScaleMatrix(scale, n), n),
+        transformOrigin,
+        n,
+    );
+}
 export function getScaleDist(
     moveable: MoveableManager<any>,
     scale: number[],
@@ -171,29 +202,20 @@ export function getScaleDist(
 ) {
     const state = moveable.state;
     const {
-        transformOrigin,
-        offsetMatrix,
         is3d,
-        width,
-        height,
         left,
         top,
+        width,
+        height,
     } = state;
 
     const n = is3d ? 4 : 3;
     const groupable = moveable.props.groupable;
-    const targetMatrix = state.targetMatrix;
-
-    const nextMatrix = getNextMatrix(
-        offsetMatrix,
-        multiply(targetMatrix, createScaleMatrix(scale, n), n),
-        transformOrigin,
-        n,
-    );
+    const nextMatrix = scaleMatrix(moveable.state, scale);
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
 
-    const startPos = dragClient ? dragClient : getStartPos(getSizeInfo(moveable), direction);
+    const startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
 
     const dist = getDist(
         startPos, nextMatrix, width, height, n,
@@ -237,7 +259,7 @@ export function getResizeDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
-    const startPos = dragClient ? dragClient : getStartPos(getSizeInfo(moveable), direction);
+    const startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
     const dist = getDist(startPos, nextMatrix, width, height, n, direction);
 
     return minus(dist, [groupLeft, groupTop]);

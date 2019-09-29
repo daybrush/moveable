@@ -1,11 +1,11 @@
-import { throttle, getDirection, triggerEvent } from "../utils";
+import { throttle, getDirection, triggerEvent, multiply2, getAbsolutePosesByState } from "../utils";
 import { MIN_SCALE } from "../consts";
-import { setDragStart, getDragDist, getScaleDist, getPosByDirection, getSizeInfo } from "../DraggerUtils";
+import { setDragStart, getDragDist, getScaleDist, getPosByReverseDirection } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirection, renderDiagonalDirection } from "../renderDirection";
 import {
     ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
-    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart, OnDrag,
+    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart, OnDrag, SnappableState, GroupableProps,
 } from "../types";
 import {
     directionCondition, triggerChildAble,
@@ -13,8 +13,9 @@ import {
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
-import { checkSnapSize } from "./Snappable";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import { checkSnapScale } from "./Snappable";
+import { isArray } from "@daybrush/utils";
 
 export default {
     name: "scalable",
@@ -32,7 +33,7 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ScalableProps & DraggableProps>,
+        moveable: MoveableManager<ScalableProps & DraggableProps, SnappableState>,
         e: any) {
 
         const { datas, clientX, clientY, pinchFlag, inputEvent } = e;
@@ -78,11 +79,13 @@ export default {
 
         if (result !== false) {
             datas.isScale = true;
+            moveable.state.snapDirection = direction;
+
         }
         return datas.isScale ? params : false;
     },
     dragControl(
-        moveable: MoveableManager<ScalableProps & DraggableProps>,
+        moveable: MoveableManager<ScalableProps & DraggableProps & GroupableProps, SnappableState>,
         e: any) {
         const {
             datas, clientX, clientY, distX, distY, parentScale, parentDistance,
@@ -102,10 +105,14 @@ export default {
         if (!isScale) {
             return false;
         }
-        // checkSnapSize(moveable as any, e, 0);
 
-        const { keepRatio, throttleScale, parentMoveable } = moveable.props;
-        const target = moveable.state.target;
+        const {
+            keepRatio,
+            throttleScale,
+            parentMoveable,
+        } = moveable.props;
+        const state = moveable.state;
+        const target = state.target;
         let scaleX: number = 1;
         let scaleY: number = 1;
 
@@ -136,10 +143,8 @@ export default {
                 distWidth = distDiagonal;
                 distHeight = distDiagonal * height / width;
             }
-            const nextWidth = width + distWidth;
-            const nextHeight = height + distHeight;
-            scaleX = nextWidth / width;
-            scaleY = nextHeight / height;
+            scaleX = (width + distWidth) / width;
+            scaleY = (height + distHeight) / height;
         }
         scaleX = direction[0]
             ? throttle(scaleX * startScale[0], throttleScale!)
@@ -154,15 +159,33 @@ export default {
         if (scaleY === 0) {
             scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
-        const nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
-        const scale = [scaleX, scaleY];
+        let scale = [scaleX, scaleY];
+        let nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
+
+        let snapDirection = direction;
+
+        if (moveable.props.groupable) {
+            snapDirection = [
+                (nowDist[0] >= 0 ? 1 : -1) * direction[0],
+                (nowDist[1] >= 0 ? 1 : -1) * direction[1],
+            ];
+            const stateDirection = state.snapDirection;
+
+            if (isArray(stateDirection) && (stateDirection[0] || stateDirection[1])) {
+                state.snapDirection = snapDirection;
+            }
+        }
+        nowDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
+
+        const  delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
+        // const prevScale = scale;
+        scale = multiply2(nowDist, startScale);
+
         datas.prevDist = nowDist;
 
         if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
             return false;
         }
-        const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
-
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
             : getScaleDist(moveable, delta, direction, dragClient);
@@ -180,7 +203,7 @@ export default {
             isPinch: !!pinchFlag,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable, inverseDelta, inputEvent),
+                setCustomDrag(moveable.state, inverseDelta, inputEvent),
             ) as OnDrag,
         };
         triggerEvent(moveable, "onScale", params);
@@ -215,7 +238,7 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getPosByDirection(getSizeInfo(moveable), direction);
+        const startPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
 
         const events = triggerChildAble(
             moveable,
@@ -223,7 +246,7 @@ export default {
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const pos = getPosByDirection(getSizeInfo(child), direction);
+                const pos = getPosByReverseDirection(getAbsolutePosesByState(child.state), direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - startPos[0], pos[1] - startPos[1], 1],
@@ -256,10 +279,7 @@ export default {
             return;
         }
         const { scale, direction, dist } = params;
-        const prevPos = getPosByDirection(getSizeInfo(moveable), [
-            direction[0] * dist[0],
-            direction[1] * dist[1],
-        ]);
+        const prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), multiply2(direction, dist));
 
         const events = triggerChildAble(
             moveable,

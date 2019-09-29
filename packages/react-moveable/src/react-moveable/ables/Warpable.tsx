@@ -1,4 +1,4 @@
-import { prefix, getLineStyle, getDirection } from "../utils";
+import { prefix, getLineStyle, getDirection, getAbsolutePosesByState } from "../utils";
 import {
     convertDimension, invert, multiply,
     convertMatrixtoCSS, caculate,
@@ -12,9 +12,10 @@ import {
 import { NEARBY_POS } from "../consts";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
-import { WarpableProps, ScalableProps, ResizableProps, Renderer } from "../types";
+import { WarpableProps, ScalableProps, ResizableProps, Renderer, SnappableProps, SnappableState } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
 import { renderDiagonalDirection } from "../renderDirection";
+import { checkSnapPoses, hasGuidelines } from "./Snappable";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {
     return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
@@ -73,7 +74,7 @@ export default {
         return hasClass(target, prefix("direction"));
     },
     dragControlStart(
-        moveable: MoveableManager<WarpableProps>,
+        moveable: MoveableManager<WarpableProps, SnappableState>,
         { datas, clientX, clientY, inputEvent: { target: inputTarget } }: any,
     ) {
         const { target, onWarpStart } = moveable.props;
@@ -82,16 +83,21 @@ export default {
         if (!direction || !target) {
             return false;
         }
+        const state = moveable.state;
         const {
             transformOrigin, is3d,
-            targetTransform, targetMatrix, width, height,
-        } = moveable.state;
+            targetTransform, targetMatrix,
+            width, height,
+            left, top,
+        } = state;
 
         datas.datas = {};
         datas.targetTransform = targetTransform;
         datas.targetMatrix = is3d ? targetMatrix : convertDimension(targetMatrix, 3, 4);
         datas.targetInverseMatrix = ignoreDimension(invert(datas.targetMatrix, 4), 3, 4);
         datas.direction = direction;
+        datas.left = left;
+        datas.top = top;
 
         setDragStart(moveable, { datas });
         datas.poses = [
@@ -106,6 +112,8 @@ export default {
             (direction[0] === -1 ? 0 : 1)
             + (direction[1] === -1 ? 0 : 2);
         datas.prevMatrix = createIdentityMatrix(4);
+        datas.absolutePos = getAbsolutePosesByState(state)[datas.posNum];
+        state.snapDirection = direction;
         const result = onWarpStart && onWarpStart!({
             target,
             clientX,
@@ -117,13 +125,33 @@ export default {
         }
         return result;
     },
-    dragControl(moveable: MoveableManager<WarpableProps>, { datas, clientX, clientY, distX, distY }: any) {
-        const { posNum, poses, targetInverseMatrix, prevMatrix, isWarp } = datas;
+    dragControl(
+        moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
+        { datas, clientX, clientY, distX, distY }: any,
+    ) {
+        const { posNum, poses, targetInverseMatrix, prevMatrix, isWarp, absolutePos } = datas;
 
         if (!isWarp) {
             return false;
         }
         const { target, onWarp } = moveable.props!;
+
+        if (hasGuidelines(moveable, "warpable")) {
+            const snapInfos = checkSnapPoses(moveable, [absolutePos[0] + distX], [absolutePos[1] + distY]);
+            const {
+                horizontal: {
+                    offset: horizontalOffset,
+                },
+                vertical: {
+                    offset: verticalOffset,
+                },
+            } = snapInfos;
+
+            console.log(verticalOffset, horizontalOffset);
+            distY -= horizontalOffset;
+            distX -= verticalOffset;
+        }
+
         const dist = getDragDist({ datas, distX, distY }, true);
         const nextPoses = datas.nextPoses.slice();
 

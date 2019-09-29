@@ -7,7 +7,7 @@
 .App * {
     position: relative;
     transform-origin: 50% 50%;
-    transform-origin: 20% 20%;
+    /* transform-origin: 20% 20%; */
     /* transform-origin: 0% 0%; */
     box-sizing: border-box;
 }
@@ -61,7 +61,17 @@ img {
         transform: rotate(360deg);
     }
 }
-
+.box.box2 {
+    width: 120px;
+    height: 120px;
+}
+.box2 span {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 .box {
     position: relative;
     width: 120px;
