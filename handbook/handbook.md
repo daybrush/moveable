@@ -564,6 +564,10 @@ export class AppComponent {
 **Warpable** indicates whether the target can be warped(distorted, bented).
 
 ### Events
+* [onWarpStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:warpStart): When the warp starts, the warpStart event is called.
+* [onWarp](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:warp): When warping, the warp event is called.
+* [onWarpEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:warpEnd): When the warp finishes, the warpEnd event is called.
+
 ### Vanilla Example
 ### React & Preact Example
 ### Angular Example
@@ -575,7 +579,13 @@ export class AppComponent {
 **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 
 ### Events
+* [onPinchStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:pinchStart): When the pinch starts, the pinchStart event is called with part of scaleStart, rotateStart, resizeStart
+* [onPinch](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:pinch): When pinching, the pinch event is called with part of scale, rotate, resize
+* [onPinchEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:pinchEnd): When the pinch finishes, the pinchEnd event is called.
+
 ### Options
+* [pinchThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#pinchThreshold): Minimum distance to pinch. (default: 20)
+
 ### Vanilla Example
 ### React & Preact Example
 ### Angular Example
