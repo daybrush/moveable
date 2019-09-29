@@ -1,7 +1,7 @@
 import { Client } from "@daybrush/drag";
 import { triggerEvent } from "../utils";
 import MoveableManager from "../MoveableManager";
-import { PinchableProps, Able, SnappableProps, SnappableState } from "../types";
+import { PinchableProps, Able, SnappableState } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { getRad } from "@moveable/matrix";
 

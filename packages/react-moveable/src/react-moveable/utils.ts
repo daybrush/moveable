@@ -649,7 +649,31 @@ export function getDirection(target: SVGElement | HTMLElement) {
 
     return dir;
 }
-
+export function getAbsolutePoses(poses: number[][], dist: number[]) {
+    return [
+        plus(dist, poses[0]),
+        plus(dist, poses[1]),
+        plus(dist, poses[2]),
+        plus(dist, poses[3]),
+    ];
+}
+export function getAbsolutePosesByState({
+    left,
+    top,
+    pos1,
+    pos2,
+    pos3,
+    pos4,
+}: {
+    left: number,
+    top: number,
+    pos1: number[],
+    pos2: number[],
+    pos3: number[],
+    pos4: number[],
+}) {
+    return getAbsolutePoses([pos1, pos2, pos3, pos4], [left, top]);
+}
 export function throttle(num: number, unit: number) {
     if (!unit) {
         return num;

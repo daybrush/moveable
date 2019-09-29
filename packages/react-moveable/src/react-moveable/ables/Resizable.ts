@@ -1,10 +1,9 @@
-import { throttle, getDirection, triggerEvent } from "../utils";
+import { throttle, getDirection, triggerEvent, getAbsolutePosesByState } from "../utils";
 import {
     setDragStart,
     getDragDist,
     getResizeDist,
     getPosByReverseDirection,
-    getSizeInfo,
 } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -238,7 +237,7 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getPosByReverseDirection(getSizeInfo(moveable), direction);
+        const startPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
 
         const events = triggerChildAble(
             moveable,
@@ -246,7 +245,7 @@ export default {
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const pos = getPosByReverseDirection(getSizeInfo(child), direction);
+                const pos = getPosByReverseDirection(getAbsolutePosesByState(child.state), direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - startPos[0], pos[1] - startPos[1], 1],
@@ -288,7 +287,7 @@ export default {
             offsetWidth / (offsetWidth - dist[0]),
             offsetHeight / (offsetHeight - dist[1]),
         ];
-        const prevPos = getPosByReverseDirection(getSizeInfo(moveable), direction);
+        const prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
 
         const events = triggerChildAble(
             moveable,

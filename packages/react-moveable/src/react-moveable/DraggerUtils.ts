@@ -4,7 +4,7 @@ import {
     createScaleMatrix, multiply,
 } from "@moveable/matrix";
 import MoveableManager from "./MoveableManager";
-import { caculatePoses, getAbsoluteMatrix } from "./utils";
+import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
 import { splitUnit } from "@daybrush/utils";
 import { MoveableManagerState } from "./types";
 
@@ -81,24 +81,6 @@ export function caculateTransformOrigin(
         }
         return size * value / 100;
     });
-}
-export function getSizeInfo(moveable: MoveableManager<any>) {
-    const {
-        left,
-        top,
-        pos1,
-        pos2,
-        pos3,
-        pos4,
-    } = moveable.state;
-    const pos = [left, top];
-
-    return[
-        plus(pos, pos1),
-        plus(pos, pos2),
-        plus(pos, pos3),
-        plus(pos, pos4),
-    ];
 }
 export function getPosesByDirection(
     [pos1, pos2, pos3, pos4]: number[][],
@@ -233,7 +215,7 @@ export function getScaleDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
 
-    const startPos = dragClient ? dragClient : getStartPos(getSizeInfo(moveable), direction);
+    const startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
 
     const dist = getDist(
         startPos, nextMatrix, width, height, n,
@@ -277,7 +259,7 @@ export function getResizeDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
-    const startPos = dragClient ? dragClient : getStartPos(getSizeInfo(moveable), direction);
+    const startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
     const dist = getDist(startPos, nextMatrix, width, height, n, direction);
 
     return minus(dist, [groupLeft, groupTop]);

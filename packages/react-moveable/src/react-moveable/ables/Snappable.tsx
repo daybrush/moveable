@@ -1,10 +1,10 @@
 import MoveableManager from "../MoveableManager";
 import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo } from "../types";
 import { OnDrag, OnDragStart } from "@daybrush/drag";
-import { prefix, caculatePoses, getRect } from "../utils";
+import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined } from "@daybrush/utils";
-import { getSizeInfo, getPosByReverseDirection, getPosesByDirection, getDragDist, scaleMatrix, getPosByDirection } from "../DraggerUtils";
+import { getPosByReverseDirection, getPosesByDirection, getDragDist, scaleMatrix } from "../DraggerUtils";
 import { minus, plus } from "@moveable/matrix";
 
 function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { datas }: OnDragStart) {
@@ -261,19 +261,16 @@ export function checkSizeDist(
     width: number,
     height: number,
     direction: number[],
+    snapDirection: number[],
     datas: any,
     is3d: boolean,
 ) {
-    const poses = getSizeInfo(moveable);
-    const fixedPos = getPosByReverseDirection(poses, direction);
+    const poses = getAbsolutePosesByState(moveable.state);
+    const fixedPos = getPosByReverseDirection(poses, snapDirection);
+
     const nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
     const nextPos = getPosByReverseDirection(nextPoses, direction);
-
-    const dist = minus(fixedPos, nextPos);
-    const pos1 = plus(nextPoses[0], dist);
-    const pos2 = plus(nextPoses[1], dist);
-    const pos3 = plus(nextPoses[2], dist);
-    const pos4 = plus(nextPoses[3], dist);
+    const [pos1, pos2, pos3, pos4] = getAbsolutePoses(nextPoses, minus(fixedPos, nextPos));
     const directionPoses = getPosesByDirection([pos1, pos2, pos3, pos4], direction);
 
     if (direction[0] && direction[1]) {
@@ -438,12 +435,13 @@ export function checkSnapSize(
         matrix,
         is3d,
     } = moveable.state;
-    return plus(nextSizes, checkSizeDist(moveable, matrix, width, height, direction, datas, is3d));
+    return plus(nextSizes, checkSizeDist(moveable, matrix, width, height, direction, direction, datas, is3d));
 }
 export function checkSnapScale(
     moveable: MoveableManager<any, any>,
     scale: number[],
     direction: number[],
+    snapDirection: number[],
     datas: any,
 ) {
     const {
@@ -455,8 +453,13 @@ export function checkSnapScale(
     if (!hasGuidlines(moveable)) {
         return nextScale;
     }
-
-    const sizeDist = checkSizeDist(moveable, scaleMatrix(datas, scale), width, height, direction, datas, datas.is3d);
+    const sizeDist = checkSizeDist(
+        moveable, scaleMatrix(datas, scale),
+        width, height,
+        direction,
+        snapDirection,
+        datas, datas.is3d,
+    );
 
     return [
         scale[0] + sizeDist[0] / width,
@@ -504,26 +507,57 @@ export function solveEquation(
     }
 }
 
+export function getSnapInfosByDirection(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    poses: number[][],
+    snapDirection: number[] | true,
+) {
+    if (snapDirection === true) {
+        const rect = getRect(poses);
+
+        (rect as any).middle = (rect.top + rect.bottom) / 2;
+        (rect as any).center = (rect.left + rect.right) / 2;
+
+        return checkSnaps(moveable, rect, true, 1);
+    } else if (!snapDirection[0] && !snapDirection[1]) {
+        const alignPoses = [poses[0], poses[1], poses[3], poses[2], poses[0]];
+        const nextPoses = [];
+
+        for (let i = 0; i < 4; ++i) {
+            nextPoses.push(alignPoses[i]);
+            poses.push([
+                (alignPoses[i][0] + alignPoses[i + 1][0]) / 2,
+                (alignPoses[i][1] + alignPoses[i + 1][1]) / 2,
+            ]);
+        }
+        return checkSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), true, 1);
+    } else {
+        const nextPoses = getPosesByDirection(poses, snapDirection);
+
+        if (nextPoses.length > 1) {
+            nextPoses.push([
+                (nextPoses[0][0] + nextPoses[1][0]) / 2,
+                (nextPoses[0][1] + nextPoses[1][1]) / 2,
+            ]);
+        }
+        return checkSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), true, 1);
+    }
+}
+
 export default {
     name: "snappable",
     render(moveable: MoveableManager<SnappableProps, SnappableState>, React: Renderer): any[] {
-        const { pos1, pos2, pos3, pos4, left: targetLeft, top: targetTop, snapDirection } = moveable.state;
+        const {
+            left: targetLeft,
+            top: targetTop,
+            snapDirection,
+         } = moveable.state;
 
         if (!snapDirection || !hasGuidlines(moveable)) {
             return [];
         }
-        const left = targetLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
-        const right = targetLeft + Math.max(pos1[0], pos2[0], pos3[0], pos4[0]);
-        const top = targetTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
-        const bottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
-        const center = (left + right) / 2;
-        const middle = (top + bottom) / 2;
-
-        if (snapDirection === true) {
-
-        } else if (!snapDirection[0] && !snapDirection[1]) {
-            // pos1, pos2, pos3, pos4;
-        }
+        const poses = getAbsolutePosesByState(moveable.state);
+        const { width, height } = getRect(poses);
         const {
             vertical: {
                 guidelines: verticalGuildelines,
@@ -533,14 +567,7 @@ export default {
                 guidelines: horizontalGuidelines,
                 snapPoses: horizontalSnapPoses,
             },
-        } = checkSnaps(moveable, {
-            left,
-            right,
-            top,
-            bottom,
-            center,
-            middle,
-        }, true, 1);
+        } = getSnapInfosByDirection(moveable, poses, snapDirection);
 
         return [
             ...verticalSnapPoses.map((pos, i) => {
@@ -553,7 +580,7 @@ export default {
                 )} key={`verticalTargetGuidline${i}`} style={{
                     top: `${0}px`,
                     left: `${-targetLeft + pos}px`,
-                    height: `${bottom - top}px`,
+                    height: `${height}px`,
                 }} />;
             }),
             ...horizontalSnapPoses.map((pos, i) => {
@@ -566,7 +593,7 @@ export default {
                 )} key={`horizontalTargetGuidline${i}`} style={{
                     top: `${-targetTop + pos}px`,
                     left: `${0}px`,
-                    width: `${right - left}px`,
+                    width: `${width}px`,
                 }} />;
             }),
             ...verticalGuildelines.map((guideline, i) => {

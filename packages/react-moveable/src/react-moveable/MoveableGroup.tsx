@@ -4,7 +4,7 @@ import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
-import { getTargetInfo, throttle } from "./utils";
+import { getTargetInfo, throttle, getAbsolutePosesByState } from "./utils";
 import { plus, rotate } from "@moveable/matrix";
 import { MOVEABLE_ABLES } from "./ables/consts";
 
@@ -23,15 +23,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
         return [0, 0, 0, 0];
     }
 
-    const moveablePoses = moveables.map(({ state: { left, top, pos1, pos2, pos3, pos4 } }) => {
-        const pos = [left, top];
-        return [
-            plus(pos, pos1),
-            plus(pos, pos2),
-            plus(pos, pos3),
-            plus(pos, pos4),
-        ];
-    });
+    const moveablePoses = moveables.map(({ state }) => getAbsolutePosesByState(state));
     let minX = MAX_NUM;
     let minY = MAX_NUM;
     let groupWidth = 0;
@@ -157,11 +149,12 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
 
         const info = getTargetInfo(target, this.controlBox.getElement(), state);
         const pos = [info.left!, info.top!];
-
-        info.pos1 = plus(pos, info.pos1!);
-        info.pos2 = plus(pos, info.pos2!);
-        info.pos3 = plus(pos, info.pos3!);
-        info.pos4 = plus(pos, info.pos4!);
+        [
+            info.pos1,
+            info.pos2,
+            info.pos3,
+            info.pos4,
+        ] = getAbsolutePosesByState(info as Required<typeof info>);
         info.origin = plus(pos, info.origin!);
         info.beforeOrigin = plus(pos, info.beforeOrigin!);
 
