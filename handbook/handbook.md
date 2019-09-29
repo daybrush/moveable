@@ -385,15 +385,15 @@ this.frame = {
     throttleScale={0}
     keepRatio={false}
     onScaleStart={({ set, dragStart }) => {
-        set(frame.scale);
+        set(this.frame.scale);
 
         // If a drag event has already occurred, there is no dragStart.
-        dragStart && dragStart.set(frame.translate);
+        dragStart && dragStart.set(this.frame.translate);
     }}
     onScale={({ target, scale, drag }) => {
-        frame.scale = scale;
+        this.frame.scale = scale;
         // get drag event
-        frame.translate = drag.beforeTranslate;
+        this.frame.translate = drag.beforeTranslate;
         target.style.transform
             = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`
             + `scale(${scale[0]}, ${scale[1]})`;
@@ -432,15 +432,15 @@ export class AppComponent {
         scale: [1, 1],
     };
     onScaleStart({ set, dragStart }) {
-        set(frame.scale);
+        set(this.frame.scale);
 
         // If a drag event has already occurred, there is no dragStart.
         dragStart && dragStart.set(frame.translate);
     }
     onScale({ target, scale, drag }) {
-        frame.scale = scale;
+        this.frame.scale = scale;
         // get drag event
-        frame.translate = drag.beforeTranslate;
+        this.frame.translate = drag.beforeTranslate;
         target.style.transform
             = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`
             + `scale(${scale[0]}, ${scale[1]})`;
@@ -454,23 +454,112 @@ export class AppComponent {
 ## <a id="toc-rotatable"></a>Rotatable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif"></a>
 
-### Options
-### Events
-### Vanilla Example
-### React & Preact Example
-### Angular Example
-
 **Rotatable** indicates whether the target can be rotated.
+
+### Events
+* [onRotateStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateStart): When the rotate starts, the rotateStart event is called.
+* [onRotate](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotate): When rotating, the rotate event is called.
+* [onRotateEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateEnd): When the rotate finishes, the rotateEnd event is called.
+
+### Options
+* [throttleRotate](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleRotate): throttle of angle(degree) when rotate. (default: 0)
+* [rotationPosition](https://daybrush.com/moveable/release/latest/doc/Moveable.html#rotationPosition): You can specify the position of the rotation. (default: "top")
+
+
+### Vanilla Example
+
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    rotatable: true,
+    throttleRotate: 0,
+    rotationPosition: "top",
+});
+
+const frame = {
+    rotate: 0,
+};
+moveable.on("rotateStart", ({ set }) => {
+    set(frame.rotate);
+}).on("rotate", ({ target, beforeRotate }) => {
+    frame.rotate = beforeRotate;
+    target.style.transform = `rotate(${beforeRotate}deg)`;
+}).on("rotateEnd", ({ target, isDrag, clientX, clientY }) => {
+    console.log("onRotateEnd", target, isDrag);
+});
+```
+
+### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.frame = {
+    rotate: 0,
+};
+<Moveable
+    target={document.querySelector(".target")}
+    rotatable={true}
+    throttleRotate={0}
+    rotationPosition="top"
+    onRotateStart={({ set }) => {
+        set(this.frame.rotate);
+    }}
+    onRotate={({ target, beforeRotate }) => {
+        this.frame.rotate = beforeRotate;
+        target.style.transform = `rotate(${beforeRotate}deg)`;
+    }}
+    onRotateEnd={({ target, isDrag, clientX, clientY }) => {
+        console.log("onRotateEnd", target, isDrag);
+    }} />;
+```
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [rotatable]="true"
+    [throttleRotate]="0"
+    rotationPosition="top"
+    (rotateStart)="onRotateStart($event)
+    (rotate)="onRotate($event)
+    (rotateEnd)="onRotateEnd($event)
+    />
+`,
+})
+export class AppComponent {
+    frame = {
+        rotate: 0,
+    };
+    onRotateStart({ set }) {
+        set(this.frame.rotate);
+    }
+    onRotate({ target, beforeRotate }) {
+        this.frame.rotate = beforeRotate;
+        target.style.transform = `rotate(${beforeRotate}deg)`;
+    }
+    onRotateEnd({ target, isDrag, clientX, clientY }) {
+        console.log("onRotateEnd", target, isDrag);
+    }
+}
+```
+
 
 ## <a id="toc-warpable"></a>Warpable
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></a>
 
-### Options
-### Events
-### Vanilla Example
-### React & Preact Example
-### Angular Example
 
 **Warpable** indicates whether the target can be warped(distorted, bented).
 
@@ -485,8 +574,8 @@ export class AppComponent {
 
 **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 
-### Options
 ### Events
+### Options
 ### Vanilla Example
 ### React & Preact Example
 ### Angular Example
