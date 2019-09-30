@@ -1690,7 +1690,7 @@ version: 0.1.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/css-styler/tree/master/preact-css-styler
-    version: 0.3.3
+    version: 0.3.2
     */
 
     /*
@@ -2008,7 +2008,7 @@ version: 0.1.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.3.1
+    version: 0.1.7
     */
 
     /*
@@ -2017,7 +2017,7 @@ version: 0.1.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.4.1
+    version: 0.2.3
     */
 
     /*! *****************************************************************************
@@ -2059,7 +2059,7 @@ version: 0.1.0
     }
 
     var PREFIX = "moveable-";
-    var MOVEABLE_CSS = prefixCSS(PREFIX, "\n{\n    position: fixed;\n    width: 0;\n    height: 0;\n    left: 0;\n    top: 0;\n    z-index: 3000;\n}\n.line, .control {\n    left: 0;\n    top: 0;\n}\n.control {\n    position: absolute;\n    width: 14px;\n    height: 14px;\n    border-radius: 50%;\n    border: 2px solid #fff;\n    box-sizing: border-box;\n    background: #4af;\n    margin-top: -7px;\n    margin-left: -7px;\n}\n.line {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    background: #4af;\n    transform-origin: 0px 0.5px;\n}\n.line.rotation {\n    height: 40px;\n    width: 1px;\n    transform-origin: 0.5px 39.5px;\n}\n.line.rotation .control {\n    border-color: #4af;\n    background:#fff;\n    cursor: alias;\n}\n.control.e, .control.w {\n    cursor: ew-resize;\n}\n.control.s, .control.n {\n    cursor: ns-resize;\n}\n.control.nw, .control.se, :host.reverse .control.ne, :host.reverse .control.sw {\n    cursor: nwse-resize;\n}\n.control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {\n    cursor: nesw-resize;\n}\n");
+    var MOVEABLE_CSS = prefixCSS(PREFIX, "\n{\n    position: fixed;\n    width: 0;\n    height: 0;\n    left: 0;\n    top: 0;\n    z-index: 3000;\n}\n.control {\n    position: absolute;\n    width: 14px;\n    height: 14px;\n    border-radius: 50%;\n    border: 2px solid #fff;\n    box-sizing: border-box;\n    background: #4af;\n    margin-top: -7px;\n    margin-left: -7px;\n}\n.line {\n    position: absolute;\n    width: 1px;\n    height: 1px;\n    background: #4af;\n    transform-origin: 0px 0.5px;\n}\n.line.rotation {\n    width: 40px;\n}\n.line.rotation .control {\n    left: 100%;\n    border-color: #4af;\n    background:#fff;\n    cursor: alias;\n}\n.control.e, .control.w {\n    cursor: ew-resize;\n}\n.control.s, .control.n {\n    cursor: ns-resize;\n}\n.control.nw, .control.se, :host.reverse .control.ne, :host.reverse .control.sw {\n    cursor: nwse-resize;\n}\n.control.ne, .control.sw, :host.reverse .control.nw, :host.reverse .control.se {\n    cursor: nesw-resize;\n}\n");
 
     function prefix() {
       var classNames = [];
@@ -2205,18 +2205,12 @@ version: 0.1.0
       originY = originY - minY || 0;
       return [[originX, originY], [x1, y1], [x2, y2], [x3, y3], [x4, y4]];
     }
-    function multipleRotationMatrix(matrix, rad) {
+    function caculateRotationMatrix(matrix, rad) {
       var mat = matrix.slice();
       var cos = Math.cos(rad);
       var sin = Math.sin(rad);
       var rotationMatrix = [cos, sin, -sin, cos, 0, 0];
       return multiple3x2(mat, rotationMatrix);
-    }
-    function caculateRotationMatrix(matrix, rad) {
-      var cos = Math.cos(rad);
-      var sin = Math.sin(rad);
-      var rotationMatrix = [cos, sin, -sin, cos, 0, 0];
-      return caculate3x2(rotationMatrix, matrix);
     }
     function getRad(pos1, pos2) {
       var distX = pos2[0] - pos1[0];
@@ -2283,7 +2277,7 @@ version: 0.1.0
         return [width - paddingLeft - paddingRight, height - paddingTop - paddingBottom];
       }
     }
-    function getTargetInfo(target, container) {
+    function getTargetInfo(target) {
       var _a, _b, _c;
 
       var left = 0;
@@ -2298,9 +2292,6 @@ version: 0.1.0
       var width = 0;
       var height = 0;
       var transformOrigin = [0, 0];
-      var direction = 1;
-      var rotationPos = [0, 0];
-      var rotationRad = 0;
 
       if (target) {
         var rect = target.getBoundingClientRect();
@@ -2319,28 +2310,9 @@ version: 0.1.0
           return parseFloat(pos);
         });
         _c = caculatePosition(matrix, transformOrigin, width, height), origin = _c[0], pos1 = _c[1], pos2 = _c[2], pos3 = _c[3], pos4 = _c[4];
-
-        if (container) {
-          var containerRect = container.getBoundingClientRect();
-          left -= containerRect.left;
-          top -= containerRect.top;
-        }
-
-        var pi = Math.PI;
-        var pos1Rad = getRad(origin, pos1);
-        var pos2Rad = getRad(origin, pos2); // 1 : clockwise
-        // -1 : counterclockwise
-
-        direction = pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi || pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi ? 1 : -1;
-        rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-        var relativeRotationPos = caculateRotationMatrix([0, -40, 0], rotationRad);
-        rotationPos = [(pos1[0] + pos2[0]) / 2 + relativeRotationPos[0], (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1]];
       }
 
       return {
-        direction: direction,
-        rotationRad: rotationRad,
-        rotationPos: rotationPos,
         transform: "",
         target: target,
         left: left,
@@ -2558,12 +2530,10 @@ version: 0.1.0
     }
 
     function getRotateInfo(moveable, datas, clientX, clientY) {
-      var startAbsoluteOrigin = datas.startAbsoluteOrigin,
-          startRad = datas.startRad,
-          prevRad = datas.prevRad,
-          prevLoop = datas.loop,
-          direction = datas.direction;
-      var rad = getRad(startAbsoluteOrigin, [clientX, clientY]);
+      var startRad = datas.startRad;
+      var prevRad = datas.prevRad;
+      var prevLoop = datas.loop;
+      var rad = moveable.getRadByPos([clientX, clientY]);
 
       if (prevRad > rad && prevRad > 270 && rad < 90) {
         // 360 => 0
@@ -2582,7 +2552,8 @@ version: 0.1.0
           prevOrigin = _a.origin,
           prevLeft = _a.left,
           prevTop = _a.top;
-      var matrix = multipleRotationMatrix(datas.matrix, direction * (rad - startRad));
+      var direction = datas.direction;
+      var matrix = caculateRotationMatrix(datas.matrix, direction * (rad - startRad));
       var prevAbsoluteOrigin = [prevLeft + prevOrigin[0], prevTop + prevOrigin[1]];
 
       var _b = caculatePosition(matrix, transformOrigin, width, height),
@@ -2622,19 +2593,15 @@ version: 0.1.0
       var _b = moveable.state,
           matrix = _b.matrix,
           left = _b.left,
-          top = _b.top,
-          origin = _b.origin,
-          rotationPos = _b.rotationPos,
-          direction = _b.direction;
+          top = _b.top;
       datas.transform = window.getComputedStyle(target).transform;
       datas.matrix = matrix;
       datas.left = left;
       datas.top = top;
-      datas.startAbsoluteOrigin = [clientX - rotationPos[0] + origin[0], clientY - rotationPos[1] + origin[1]];
-      datas.prevRad = getRad(datas.startAbsoluteOrigin, [clientX, clientY]);
+      datas.prevRad = moveable.getRadByPos([clientX, clientY]);
       datas.startRad = datas.prevRad;
       datas.loop = 0;
-      datas.direction = direction;
+      datas.direction = moveable.getDirection();
 
       if (datas.transform === "none") {
         datas.transform = "";
@@ -2691,7 +2658,8 @@ version: 0.1.0
     }
 
     function resizeStart(moveable, position, _a) {
-      var datas = _a.datas;
+      var datas = _a.datas,
+          inputEvent = _a.inputEvent;
       var target = moveable.props.target;
 
       if (!target || !position) {
@@ -2872,9 +2840,6 @@ version: 0.1.0
           height: 0,
           transform: "",
           transformOrigin: [0, 0],
-          direction: 1,
-          rotationRad: 0,
-          rotationPos: [0, 0],
           origin: [0, 0],
           pos1: [0, 0],
           pos2: [0, 0],
@@ -2896,6 +2861,7 @@ version: 0.1.0
         }
 
         var _a = this.state,
+            origin = _a.origin,
             left = _a.left,
             top = _a.top,
             pos1 = _a.pos1,
@@ -2903,13 +2869,14 @@ version: 0.1.0
             pos3 = _a.pos3,
             pos4 = _a.pos4,
             target = _a.target,
-            transform = _a.transform,
-            direction = _a.direction;
+            transform = _a.transform;
+        var direction = this.getDirection();
+        var rotationRad = getRad(pos1, pos2) - direction * Math.PI / 2;
         return createElement(ControlBoxElement, {
           ref: ref(this, "controlBox"),
           className: prefix("control-box", direction === -1 ? "reverse" : ""),
           style: {
-            position: this.props.container ? "absolute" : "fixed",
+            position: "fixed",
             display: target ? "block" : "none",
             transform: "translate(" + left + "px, " + top + "px) " + transform
           }
@@ -2933,93 +2900,51 @@ version: 0.1.0
           style: {
             transform: getLineTransform(pos3, pos4)
           }
-        }), this.renderRotation(direction), this.renderPosition(), this.renderOrigin());
-      };
-
-      __proto.renderRotation = function (direction) {
-        if (!this.props.rotatable) {
-          return null;
-        }
-
-        var _a = this.state,
-            pos1 = _a.pos1,
-            pos2 = _a.pos2;
-        var rotationRad = getRad(direction > 0 ? pos1 : pos2, direction > 0 ? pos2 : pos1);
-        return createElement("div", {
+        }), createElement("div", {
           className: prefix("line rotation"),
           style: {
             // tslint:disable-next-line: max-line-length
-            transform: "translate(" + (pos1[0] + pos2[0]) / 2 + "px, " + (pos1[1] + pos2[1]) / 2 + "px) translateY(-40px) rotate(" + rotationRad + "rad)"
+            transform: "translate(" + (pos1[0] + pos2[0]) / 2 + "px, " + (pos1[1] + pos2[1]) / 2 + "px) rotate(" + rotationRad + "rad)"
           }
         }, createElement("div", {
           className: prefix("control", "rotation"),
           ref: ref(this, "rotationElement")
-        }));
-      };
-
-      __proto.renderOrigin = function () {
-        if (!this.props.origin) {
-          return null;
-        }
-
-        var origin = this.state.origin;
-        return createElement("div", {
+        })), createElement("div", {
           className: prefix("control", "origin"),
           style: getControlTransform(origin)
-        });
-      };
-
-      __proto.renderPosition = function () {
-        if (!this.props.resizable && !this.props.scalable) {
-          return null;
-        }
-
-        var _a = this.state,
-            pos1 = _a.pos1,
-            pos2 = _a.pos2,
-            pos3 = _a.pos3,
-            pos4 = _a.pos4;
-        return [createElement("div", {
+        }), createElement("div", {
           className: prefix("control", "nw"),
           "data-position": "nw",
-          key: "nw",
           style: getControlTransform(pos1)
         }), createElement("div", {
           className: prefix("control", "n"),
           "data-position": "n",
-          key: "n",
           style: getControlTransform(pos1, pos2)
         }), createElement("div", {
           className: prefix("control", "ne"),
           "data-position": "ne",
-          key: "ne",
           style: getControlTransform(pos2)
         }), createElement("div", {
           className: prefix("control", "w"),
           "data-position": "w",
-          key: "w",
           style: getControlTransform(pos1, pos3)
         }), createElement("div", {
           className: prefix("control", "e"),
           "data-position": "e",
-          key: "e",
           style: getControlTransform(pos2, pos4)
         }), createElement("div", {
           className: prefix("control", "sw"),
           "data-position": "sw",
-          key: "sw",
           style: getControlTransform(pos3)
         }), createElement("div", {
           className: prefix("control", "s"),
           "data-position": "s",
-          key: "s",
           style: getControlTransform(pos3, pos4)
         }), createElement("div", {
           className: prefix("control", "se"),
           "data-position": "se",
-          key: "se",
           style: getControlTransform(pos4)
-        })];
+        }));
       };
 
       __proto.componentDidMount = function () {
@@ -3043,18 +2968,26 @@ version: 0.1.0
         }
       };
 
-      __proto.move = function (pos) {
-        if (!pos[0] && !pos[1]) {
-          return;
-        }
-
+      __proto.getRadByPos = function (pos) {
         var _a = this.state,
             left = _a.left,
-            top = _a.top;
-        this.setState({
-          left: left + pos[0],
-          top: top + pos[1]
-        });
+            top = _a.top,
+            origin = _a.origin;
+        var center = [left + origin[0], top + origin[1]];
+        return getRad(center, pos);
+      };
+
+      __proto.getDirection = function () {
+        var _a = this.state,
+            pos1 = _a.pos1,
+            pos2 = _a.pos2,
+            origin = _a.origin;
+        var pi = Math.PI;
+        var pos1Rad = getRad(origin, pos1);
+        var pos2Rad = getRad(origin, pos2); // 1 : clockwise
+        // -1 : counterclockwise
+
+        return pos1Rad < pos2Rad && pos2Rad - pos1Rad < pi || pos1Rad > pos2Rad && pos2Rad - pos1Rad < -pi ? 1 : -1;
       };
 
       __proto.updateRect = function (isNotSetState) {
@@ -3072,8 +3005,7 @@ version: 0.1.0
           }
         }
 
-        var container = this.props.container;
-        this.updateState(getTargetInfo(target, container), isNotSetState);
+        this.updateState(getTargetInfo(target), isNotSetState);
       };
 
       __proto.updateState = function (nextState, isNotSetState) {
@@ -3089,12 +3021,10 @@ version: 0.1.0
       };
 
       Moveable.defaultProps = {
-        container: null,
-        rotatable: false,
-        draggable: false,
-        scalable: false,
+        rotatable: true,
+        draggable: true,
+        scalable: true,
         resizable: false,
-        origin: true,
         onRotateStart: function () {},
         onRotate: function () {},
         onRotateEnd: function () {},
@@ -3127,28 +3057,16 @@ version: 0.1.0
       var __proto = InnerMoveable.prototype;
 
       __proto.render = function () {
-        return h(Moveable, __assign({
-          ref: ref(this, "preactMoveable")
-        }, this.state));
+        return h(Moveable, __assign({}, this.state));
       };
 
       return InnerMoveable;
     }(Component$1);
 
-    /**
-     * Moveable is Draggable! Resizable! Scalable! Rotatable!
-     * @sort 1
-     * @extends eg.Component
-     */
-
     var Moveable$1 =
     /*#__PURE__*/
     function (_super) {
       __extends(Moveable, _super);
-      /**
-       *
-       */
-
 
       function Moveable(parentElement, options) {
         if (options === void 0) {
@@ -3207,7 +3125,7 @@ version: 0.1.0
 
         var element = document.createElement("div");
         render(h(InnerMoveable, __assign({
-          ref: ref(_this, "innerMoveable")
+          ref: ref(_this, "preactMoveable")
         }, options, {
           onDragStart: _this.onDragStart,
           onDrag: _this.onDrag,
@@ -3227,87 +3145,36 @@ version: 0.1.0
       }
 
       var __proto = Moveable.prototype;
-      Object.defineProperty(__proto, "origin", {
-        /**
-         * target is target
-         * @example
-         * import Moveable from "moveable";
-         *
-         * const moveable = new Moveable(document.body);
-         *
-         * moveable.origin = true;
-         */
-        get: function () {
-          return this.getMoveableProps().origin;
-        },
-        set: function (origin) {
-          this.innerMoveable.setState({
-            origin: origin
-          });
-        },
-        enumerable: true,
-        configurable: true
-      });
-      Object.defineProperty(__proto, "target", {
-        /**
-         * target is target
-         * @example
-         * import Moveable from "moveable";
-         *
-         * const moveable = new Moveable(document.body);
-         * moveable.target = document.querySelector(".target");
-         */
-        get: function () {
-          return this.getMoveableProps().target;
-        },
-        set: function (target) {
-          if (target !== this.target) {
-            this.innerMoveable.setState({
-              target: target
-            });
-          } else {
-            this.updateRect();
-          }
-        },
-        enumerable: true,
-        configurable: true
-      });
       Object.defineProperty(__proto, "draggable", {
-        /**
-         * Whether or not target can be dragged.
-         * @example
-         * import Moveable from "moveable";
-         *
-         * const moveable = new Moveable(document.body);
-         *
-         * moveable.draggable = true;
-         */
         get: function () {
-          return this.getMoveableProps().draggable || false;
+          return this.preactMoveable.state.draggable || false;
         },
         set: function (draggable) {
-          this.innerMoveable.setState({
+          this.preactMoveable.setState({
             draggable: draggable
           });
         },
         enumerable: true,
         configurable: true
       });
-      Object.defineProperty(__proto, "resizable", {
-        /**
-         * Whether or not target can be resized.
-         * @example
-         * import Moveable from "moveable";
-         *
-         * const moveable = new Moveable(document.body);
-         *
-         * moveable.resizable = true;
-         */
+      Object.defineProperty(__proto, "target", {
         get: function () {
-          return this.getMoveableProps().resizable;
+          return this.preactMoveable.state.draggable || false;
+        },
+        set: function (target) {
+          this.preactMoveable.setState({
+            target: target
+          });
+        },
+        enumerable: true,
+        configurable: true
+      });
+      Object.defineProperty(__proto, "resizable", {
+        get: function () {
+          return this.preactMoveable.state.resizable || false;
         },
         set: function (resizable) {
-          this.innerMoveable.setState({
+          this.preactMoveable.setState({
             resizable: resizable
           });
         },
@@ -3315,20 +3182,11 @@ version: 0.1.0
         configurable: true
       });
       Object.defineProperty(__proto, "scalable", {
-        /**
-         * Whether or not target can scaled.
-         * @example
-         * import Moveable from "moveable";
-         *
-         * const moveable = new Moveable(document.body);
-         *
-         * moveable.scalable = true;
-         */
         get: function () {
-          return this.getMoveableProps().scalable;
+          return this.preactMoveable.state.scalable || false;
         },
         set: function (scalable) {
-          this.innerMoveable.setState({
+          this.preactMoveable.setState({
             scalable: scalable
           });
         },
@@ -3336,84 +3194,17 @@ version: 0.1.0
         configurable: true
       });
       Object.defineProperty(__proto, "rotatable", {
-        /**
-         * Whether or not target can be rotated.
-         * @example
-         * import Moveable from "moveable";
-         *
-         * const moveable = new Moveable(document.body);
-         *
-         * moveable.rotatable = true;
-         */
         get: function () {
-          return this.getMoveableProps().rotatable;
+          return this.preactMoveable.state.rotatable || false;
         },
         set: function (rotatable) {
-          this.innerMoveable.setState({
+          this.preactMoveable.setState({
             rotatable: rotatable
           });
         },
         enumerable: true,
         configurable: true
       });
-      /**
-       * Move the moveable as much as the `pos`.
-       * @param - the values of x and y to move moveable.
-       * @example
-       * import Moveable from "moveable";
-       *
-       * const moveable = new Moveable(document.body);
-       *
-       * moveable.move([0, -10]);
-       */
-
-      __proto.move = function (pos) {
-        this.getMoveable().move(pos);
-      };
-      /**
-       * Check if the target is an element included in the moveable.
-       * @param - the target
-       * @example
-       * import Moveable from "moveable";
-       *
-       * const moveable = new Moveable(document.body);
-       *
-       * window.addEventListener("click", e => {
-       *     if (!moveable.isMoveableElement(e.target)) {
-       *         moveable.target = e.target;
-       *     }
-       * });
-       */
-
-
-      __proto.isMoveableElement = function (target) {
-        return this.getMoveable().isMoveableElement(target);
-      };
-      /**
-       * If the width, height, left, and top of the target change, update the shape of the moveable.
-       * @example
-       * import Moveable from "moveable";
-       *
-       * const moveable = new Moveable(document.body);
-       *
-       * window.addEventListener("resize", e => {
-       *     moveable.updateRect();
-       * });
-       */
-
-
-      __proto.updateRect = function () {
-        this.getMoveable().updateRect();
-      };
-
-      __proto.getMoveable = function () {
-        return this.innerMoveable.preactMoveable;
-      };
-
-      __proto.getMoveableProps = function () {
-        return this.getMoveable().props;
-      };
-
       return Moveable;
     }(Component);
 
