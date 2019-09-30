@@ -71,6 +71,7 @@
     "@types/mocha": "^5.2.7",
     "daybrush-jsdoc-template": "^1.6.0",
     "gh-pages": "^2.0.1",
+    "keycon": "^0.5.0",
     "preact": "^8.4.2",
     "preact-compat2": "^0.1.0",
     "print-sizes": "0.0.4",

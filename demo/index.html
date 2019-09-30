@@ -24,10 +24,18 @@
 
 <body>
     <div class="label"></div>
-    <div class="page main">
+    <div class="page main editor">
+    <div class="rulers">
+            <div class="horizontal ruler">
+                <div class="divisions"></div>
+            </div>
+            <div class="vertical ruler">
+                <div class="divisions"></div>
+            </div>
+        </div>
+        <div class="guidelines"></div>
+        <div class="target moveable"><span>Moveable</span></div>
         <div class="container">
-
-            <div class="moveable"><span>Moveable</span></div>
             <div class="buttons able">
                 <a href="#" data-able="scalable" class="selected">Scalable</a>
                 <a href="#" data-able="resizable">Resizable</a>
@@ -179,7 +187,8 @@
                 <div class="moveable groupable"><span>G1</span><span>G2</span><span>G3</span></div>
             </div>
             <div class="right">
-                <p class="description"><strong>Groupable</strong> indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
+                <p class="description"><strong>Groupable</strong> indicates Whether the targets can be moved in group
+                    with draggable, resizable, scalable, rotatable.
                 </p>
                 <button class="tab selected" data-tab="vanilla" data-group="groupable">Vanilla</button>
                 <button class="tab" data-tab="react" data-group="groupable">React</button>

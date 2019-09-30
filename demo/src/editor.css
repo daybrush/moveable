@@ -1,0 +1,130 @@
+.editor {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.rulers {
+    width: 30px;
+    height: 30px;
+    background: #444;
+}
+.ruler {
+    position: absolute;
+    background: #333;
+    overflow: hidden;
+}
+.ruler.horizontal {
+    width: calc(100% - 30px);
+    height: 30px;
+    left: 30px;
+    top: 0px;
+}
+.ruler.vertical {
+    top: 30px;
+    left: 0px;
+    width: 30px;
+    height: calc(100% - 30px);
+}
+.divisions {
+    position: absolute;
+    font-size: 0;
+    pointer-events: none;
+    white-space: nowrap;
+}
+.division {
+    position: relative;
+    background: #999;
+}
+.division:nth-child(10n + 10):before {
+    position: absolute;
+    content: attr(data-px);
+    color: #fff;
+    font-size: 10px;
+}
+
+
+.ruler.horizontal .divisions {
+    bottom: 0;
+}
+.ruler.horizontal .division {
+    display: inline-block;
+    width: 1px;
+    height: 3px;
+    margin-left: 4px;
+}
+.ruler.horizontal .division:nth-child(2n + 2) {
+    height: 5px;
+}
+.ruler.horizontal .division:nth-child(10n + 10) {
+    height: 10px;
+}
+.ruler.horizontal .division:nth-child(10n + 10):before {
+    bottom: 100%;
+    transform: translate(-50%, 0);
+}
+
+.ruler.vertical .divisions {
+    right: 0;
+}
+.ruler.vertical .division {
+    display: block;
+    width: 3px;
+    height: 1px;
+    margin-top: 4px;
+    float: right;
+    clear: both;
+}
+.ruler.vertical .division:nth-child(2n + 2) {
+    width: 5px;
+}
+
+.ruler.vertical .division:nth-child(10n + 10) {
+    width: 10px;
+}
+
+.ruler.vertical .division:nth-child(10n + 10):before {
+    right: 100%;
+    transform: translate(0, -50%) rotate(-90deg);
+}
+
+.guideline {
+    position: absolute;
+    background: #f55;
+}
+
+.guideline.dragging:before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.guideline.horizontal {
+    width: 100%;
+    height: 1px;
+    cursor: row-resize;
+}
+
+.guideline.vertical {
+    width: 1px;
+    height: 100%;
+    cursor: col-resize;
+}
+
+.guideline.horizontal:before {
+    height: 20px;
+}
+
+.guideline.vertical:before {
+    width: 20px;
+}
+.target {
+    position: absolute;
+    margin: 0;
+    left: calc(50% - 125px);
+    top: calc(50% - 250px);
+}
