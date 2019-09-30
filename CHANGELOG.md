@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.2] - 2019-10-01
+### Fixed
+* fix that bounds don't apply when snap
+
 ## [0.9.1] - 2019-09-30
 ### Fixed
 * remove console.log
