@@ -702,8 +702,6 @@ export default {
         let offsetX = 0;
         let offsetY = 0;
 
-        console.log(checkBounds(moveable, [left, right], [top, bottom]).vertical.isBound);
-
         if (boundInfos.vertical.isBound) {
             offsetX = boundInfos.vertical.offset;
         } else if (snapInfos.vertical.isSnap) {
