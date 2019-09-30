@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = false; // this.state.isResizable;
+        const isResizable = true; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -144,17 +144,17 @@ class App extends React.Component {
                     keepRatio={false}
                     origin={false}
                     draggable={true}
-                    // snappable={true}
+                    snappable={true}
                     transformOrigin="% %"
-                    // verticalGuidelines={[100, 200, 400, 500]}
-                    // horizontalGuidelines={[100, 200, 400, 500]}
+                    bounds={{ left: 120 }}
+                    verticalGuidelines={[100, 200, 400, 500]}
+                    horizontalGuidelines={[100, 200, 400, 500]}
                     // elementGuildelines={[document.querySelector(".box1 span")!]}
                     snapCenter={false}
                     snapThreshold={10}
-                    bounds={{ left: 100 }}
                     // scalable={!isResizable}
-                    // resizable={isResizable}
-                    warpable={true}
+                    resizable={isResizable}
+                    // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
@@ -205,7 +205,7 @@ class App extends React.Component {
                         const tx = parseFloat(item.get("tx")) || 0;
                         const ty = parseFloat(item.get("ty")) || 0;
 
-                        setOrigin(["20%", "20%"]);
+                        setOrigin(["%", "%"]);
                         dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta }) => {
