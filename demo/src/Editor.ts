@@ -3,212 +3,231 @@ import Moveable from "../../src/Moveable";
 import Dragger from "@daybrush/drag";
 import KeyContoller from "keycon";
 
-const editor = document.querySelector(".editor");
-const rulers = document.querySelector(".rulers");
-const guidelines = document.querySelector(".guidelines");
-const horizontalRuler = rulers.querySelector(".ruler.horizontal");
-const verticalRuler = rulers.querySelector(".ruler.vertical");
-const horizontalDivisions = horizontalRuler.querySelector(".divisions");
-const verticalDivisions = document.querySelector(".ruler.vertical .divisions");
+const labelElement: HTMLElement = document.querySelector(".label");
+const rulersElement = document.querySelector(".rulers");
+const guidelinesElement = document.querySelector(".guidelines");
+const horizontalRulerElement = rulersElement.querySelector(".ruler.horizontal");
+const verticalRulerElement = rulersElement.querySelector(".ruler.vertical");
+const horizontalDivisionsElement = horizontalRulerElement.querySelector(".divisions");
+const verticalDivisionsElement = document.querySelector(".ruler.vertical .divisions");
 
 const divisions = [];
-for (let i = 0; i < 1000; ++i) {
-  divisions.push(`<div class="division" data-px="${(i + 1) * 5}"></div>`);
+for (let i = 0; i <= 1000; ++i) {
+    divisions.push(`<div class="division" data-px="${i * 5}"></div>`);
 }
-horizontalDivisions.innerHTML = divisions.join("");
-verticalDivisions.innerHTML = divisions.join("");
+horizontalDivisionsElement.innerHTML = divisions.join("");
+verticalDivisionsElement.innerHTML = divisions.join("");
 
 const frame = new Frame({
-  left: "calc(50% - 125px)",
-  top: "calc(50% - 250px)",
-  width: "250px",
-  height: "200px",
-  transform: {
-    translateX: "0px",
-    translateY: "0px",
-    rotate: "0deg",
-    scaleX: 1,
-    scaleY: 1,
-  },
+    left: "calc(50% - 125px)",
+    top: "calc(50% - 250px)",
+    width: "250px",
+    height: "200px",
+    transform: {
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "0deg",
+        scaleX: 1,
+        scaleY: 1,
+    },
 });
 const moveableTarget: HTMLElement = document.querySelector(".moveable.target");
 const moveable = new Moveable(document.body, {
-  target: moveableTarget,
-  draggable: true,
-  resizable: true,
-  rotatable: true,
-  snappable: true,
-  snapCenter: true,
-  snapThreshold: 10,
-  throttleResize: 1,
-  keepRatio: false,
-  origin: false,
-  bounds: {
-    left: 30,
-    top: 30,
-  },
+    target: moveableTarget,
+    draggable: true,
+    resizable: true,
+    rotatable: true,
+    snappable: true,
+    snapCenter: true,
+    snapThreshold: 10,
+    throttleResize: 1,
+    throttleRotate: 1,
+    keepRatio: false,
+    origin: false,
+    bounds: {
+        left: 30,
+        top: 30,
+    },
 }).on("dragStart", ({ set }) => {
-  set([
-    parseFloat(frame.get("transform", "translateX")),
-    parseFloat(frame.get("transform", "translateY")),
-  ]);
+    set([
+        parseFloat(frame.get("transform", "translateX")),
+        parseFloat(frame.get("transform", "translateY")),
+    ]);
 }).on("drag", ({ target, beforeTranslate }) => {
-  frame.set("transform", "translateX", `${beforeTranslate[0]}px`);
-  frame.set("transform", "translateY", `${beforeTranslate[1]}px`);
+    frame.set("transform", "translateX", `${beforeTranslate[0]}px`);
+    frame.set("transform", "translateY", `${beforeTranslate[1]}px`);
 
-  target.style.cssText += frame.toCSS();
+    target.style.cssText += frame.toCSS();
 }).on("rotateStart", ({ set }) => {
-  set(parseFloat(frame.get("transform", "rotate")));
-}).on("rotate", ({ target, beforeRotate }) => {
-  frame.set("transform", "rotate", `${beforeRotate}deg`);
-  target.style.cssText += frame.toCSS();
-}).on("resizeStart", ({ target, setOrigin, dragStart }) => {
-  setOrigin(["%", "%"]);
-  dragStart && dragStart.set([
-    parseFloat(frame.get("transform", "translateX")),
-    parseFloat(frame.get("transform", "translateY")),
-  ]);
-}).on("resize", ({ target, width, height, drag }) => {
-  frame.set("width", `${width}px`);
-  frame.set("height", `${height}px`);
-  frame.set("transform", "translateX", `${drag.beforeTranslate[0]}px`);
-  frame.set("transform", "translateY", `${drag.beforeTranslate[1]}px`);
-  target.style.cssText += frame.toCSS();
+    set(parseFloat(frame.get("transform", "rotate")));
+}).on("rotate", ({ target, beforeRotate, clientX, clientY }) => {
+    frame.set("transform", "rotate", `${beforeRotate}deg`);
+    target.style.cssText += frame.toCSS();
+    setLabel(clientX, clientY, `${beforeRotate}°`);
+}).on("resizeStart", ({ setOrigin, dragStart }) => {
+    setOrigin(["%", "%"]);
+    dragStart && dragStart.set([
+        parseFloat(frame.get("transform", "translateX")),
+        parseFloat(frame.get("transform", "translateY")),
+    ]);
+
+}).on("resize", ({ target, width, height, drag, clientX, clientY }) => {
+    frame.set("width", `${width}px`);
+    frame.set("height", `${height}px`);
+    frame.set("transform", "translateX", `${drag.beforeTranslate[0]}px`);
+    frame.set("transform", "translateY", `${drag.beforeTranslate[1]}px`);
+    target.style.cssText += frame.toCSS();
+
+    setLabel(clientX, clientY, `${width} X ${height}`);
+}).on("rotateEnd", () => {
+    hideLabel();
+}).on("resizeEnd", () => {
+    hideLabel();
 });
+function setLabel(clientX: number, clientY: number, text: string) {
+    // tslint:disable-next-line: max-line-length
 
+    labelElement.style.cssText = `
+    display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
+
+    labelElement.innerHTML = text;
+}
+function hideLabel() {
+    labelElement.style.display = "none";
+}
 function snap(poses, targetPos) {
-  let nextPos = targetPos;
-  let snapDist = Infinity;
+    let nextPos = targetPos;
+    let snapDist = Infinity;
 
-  poses.forEach(pos => {
-    const dist = Math.abs(pos - targetPos);
-    if (dist > 10) {
-      return;
-    }
-    if (snapDist > dist) {
-      snapDist = dist;
-      nextPos = pos;
-    }
-  });
+    poses.forEach(pos => {
+        const dist = Math.abs(pos - targetPos);
+        if (dist > 10) {
+            return;
+        }
+        if (snapDist > dist) {
+            snapDist = dist;
+            nextPos = pos;
+        }
+    });
 
-  return nextPos;
+    return nextPos;
 }
 function dragStartGuideline({ datas, clientX, clientY }) {
-  const rect = moveableTarget.getBoundingClientRect();
-  const type = datas.type;
-  const guideline = datas.guideline;
+    const rect = moveableTarget.getBoundingClientRect();
+    const type = datas.type;
+    const guideline = datas.guideline;
 
-  datas.verticalPoses = [rect.left, rect.left + rect.width];
-  datas.horizontalPoses = [rect.top, rect.top + rect.height];
-  datas.isHorizontal = type === "horizontal";
+    datas.verticalPoses = [rect.left, rect.left + rect.width];
+    datas.horizontalPoses = [rect.top, rect.top + rect.height];
+    datas.isHorizontal = type === "horizontal";
 
-  guideline.classList.add("dragging");
+    guideline.classList.add("dragging");
 
-  dragGuideline({ datas, clientX, clientY });
+    dragGuideline({ datas, clientX, clientY });
 }
 
 function dragGuideline({ clientX, clientY, datas }) {
-  const { guideline, isHorizontal } = datas;
-  const style = guideline.style;
+    const { guideline, isHorizontal } = datas;
+    const style = guideline.style;
 
-  if (isHorizontal) {
-    const nextPos = snap(datas.horizontalPoses, clientY);
+    if (isHorizontal) {
+        const nextPos = snap(datas.horizontalPoses, clientY);
 
-    style.top = `${nextPos}px`;
+        style.top = `${nextPos}px`;
 
-    return nextPos;
-  } else {
-    const nextPos = snap(datas.verticalPoses, clientX);
+        return nextPos;
+    } else {
+        const nextPos = snap(datas.verticalPoses, clientX);
 
-    style.left = `${nextPos}px`;
+        style.left = `${nextPos}px`;
 
-    return nextPos;
-  }
+        return nextPos;
+    }
 }
 
 function dragEndGuideline({ datas, clientX, clientY }) {
-  const el = datas.guideline;
-  const clientPos = dragGuideline({ datas, clientX, clientY });
+    const el = datas.guideline;
+    const clientPos = dragGuideline({ datas, clientX, clientY });
 
-  if (clientPos < 30) {
-    guidelines.removeChild(el);
-    return;
-  }
-  el.setAttribute("data-position", clientPos);
-
-  const horizontalGuidelines = [];
-  const verticalGuidelines = [];
-  [].slice.call(guidelines.children).forEach(guideline => {
-    const type = guideline.getAttribute("data-type");
-    const pos = parseFloat(guideline.getAttribute("data-position"));
-    (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
-  });
-  el.classList.remove("dragging");
-  moveable.verticalGuidelines = verticalGuidelines;
-  moveable.horizontalGuidelines = horizontalGuidelines;
-}
-new Dragger(guidelines, {
-  container: document.body,
-  dragstart: ({ inputEvent, datas, clientX, clientY }) => {
-    const guideline = inputEvent.target;
-
-    if (guideline.classList.contains("horizontal")) {
-      datas.type = "horizontal";
-    } else if (guideline.classList.contains("vertical")) {
-      datas.type = "vertical";
-    } else {
-      return false;
+    if (clientPos < 30) {
+        guidelinesElement.removeChild(el);
+        return;
     }
-    datas.guideline = guideline;
+    el.setAttribute("data-position", clientPos);
 
-    dragStartGuideline({ datas, clientX, clientY });
-  },
-  drag: dragGuideline,
-  dragend: dragEndGuideline,
+    const horizontalGuidelines = [];
+    const verticalGuidelines = [];
+    [].slice.call(guidelinesElement.children).forEach(guideline => {
+        const type = guideline.getAttribute("data-type");
+        const pos = parseFloat(guideline.getAttribute("data-position"));
+        (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
+    });
+    el.classList.remove("dragging");
+    moveable.verticalGuidelines = verticalGuidelines;
+    moveable.horizontalGuidelines = horizontalGuidelines;
+}
+new Dragger(guidelinesElement, {
+    container: document.body,
+    dragstart: ({ inputEvent, datas, clientX, clientY }) => {
+        const guideline = inputEvent.target;
+
+        if (guideline.classList.contains("horizontal")) {
+            datas.type = "horizontal";
+        } else if (guideline.classList.contains("vertical")) {
+            datas.type = "vertical";
+        } else {
+            return false;
+        }
+        datas.guideline = guideline;
+
+        dragStartGuideline({ datas, clientX, clientY });
+    },
+    drag: dragGuideline,
+    dragend: dragEndGuideline,
 });
 
-new Dragger(rulers, {
-  container: document.body,
-  dragstart: ({ inputEvent, datas, clientX, clientY }) => {
-    const ruler = inputEvent.target;
+new Dragger(rulersElement, {
+    container: document.body,
+    dragstart: ({ inputEvent, datas, clientX, clientY }) => {
+        const ruler = inputEvent.target;
 
-    if (ruler === horizontalRuler) {
-      datas.type = "horizontal";
-    } else if (ruler === verticalRuler) {
-      datas.type = "vertical";
-    } else {
-      return false;
-    }
-    const el = document.createElement("div");
-    const type = datas.type;
+        if (ruler === horizontalRulerElement) {
+            datas.type = "horizontal";
+        } else if (ruler === verticalRulerElement) {
+            datas.type = "vertical";
+        } else {
+            return false;
+        }
+        const el = document.createElement("div");
+        const type = datas.type;
 
-    el.className = `guideline ${type}`;
-    el.setAttribute("data-type", type);
+        el.className = `guideline ${type}`;
+        el.setAttribute("data-type", type);
 
-    datas.guideline = el;
+        datas.guideline = el;
 
-    dragStartGuideline({ datas, clientX, clientY });
-    guidelines.appendChild(el);
-  },
-  drag: dragGuideline,
-  dragend: dragEndGuideline,
+        dragStartGuideline({ datas, clientX, clientY });
+        guidelinesElement.appendChild(el);
+    },
+    drag: dragGuideline,
+    dragend: dragEndGuideline,
 });
 
 function toggleShift(shiftKey) {
-  if (shiftKey) {
-    moveable.throttleRotate = 30;
-    moveable.keepRatio = true;
-  } else {
-    moveable.throttleRotate = 0;
-    moveable.keepRatio = false;
-  }
+    if (shiftKey) {
+        moveable.throttleRotate = 30;
+        moveable.keepRatio = true;
+    } else {
+        moveable.throttleRotate = 1;
+        moveable.keepRatio = false;
+    }
 }
 KeyContoller.global.on("keydown", ({ shiftKey }) => {
-  toggleShift(shiftKey);
+    toggleShift(shiftKey);
 }).on("keyup", ({ shiftKey }) => {
-  toggleShift(shiftKey);
+    toggleShift(shiftKey);
 });
 
 window.addEventListener("resize", () => {
-  moveable.updateRect();
+    moveable.updateRect();
 });

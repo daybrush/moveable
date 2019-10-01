@@ -105,20 +105,7 @@ a {
 .page.main .container {
     padding-top: 200px;
 }
-.label {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 5px;
-    border-radius: 5px;
-    background: #333;
-    z-index: 10;
-    color: #fff;
-    font-weight: bold;
-    font-size: 12px;
-    display: none;
-    transform: translate(-100%, -100%);
-}
+
 
 .page.feature, .page.footer {
     height: auto;
