@@ -225,7 +225,7 @@ function dragEndGuideline({ datas, clientX, clientY }) {
     refreshGuidelines();
 }
 function refreshGuidelines() {
-    const centerX = window.innerWidth / 2 + 30;
+    const centerX = window.innerWidth / 2 + 15;
     const centerY = window.innerHeight / 2;
 
     const horizontalGuidelines = [centerY];
