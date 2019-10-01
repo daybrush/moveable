@@ -4,7 +4,7 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.9.4
+version: 0.9.5
 */
 (function () {
     'use strict';
@@ -10692,7 +10692,7 @@ version: 0.9.4
     }
 
     function refreshGuidelines() {
-      var centerX = window.innerWidth / 2 + 30;
+      var centerX = window.innerWidth / 2 + 15;
       var centerY = window.innerHeight / 2;
       var horizontalGuidelines = [centerY];
       var verticalGuidelines = [centerX];

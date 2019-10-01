@@ -262,6 +262,9 @@ code.hljs {
     z-index: 1;
 }
 .view {
+    width: calc(100% - 30px);
+}
+.view {
     left: 30px;
     top: 30px;
 }
