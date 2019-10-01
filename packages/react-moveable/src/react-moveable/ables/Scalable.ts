@@ -130,17 +130,15 @@ export default {
             let distHeight = direction[1] * dist[1];
 
             // diagonal
-            if (
-                keepRatio
-                && width && height
-            ) {
+            if (keepRatio && width && height) {
                 const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
                 const distDiagonal = Math.cos(rad - standardRad) * size;
+                const isWidth = direction[0] || !direction[1];
 
-                distWidth = distDiagonal;
-                distHeight = distDiagonal * height / width;
+                distWidth = isWidth ? distDiagonal : distDiagonal * width / height;
+                distHeight = isWidth ? distDiagonal * height / width : distDiagonal;
             }
             scaleX = (width + distWidth) / width;
             scaleY = (height + distHeight) / height;

@@ -54,7 +54,7 @@ class App extends React.Component {
                     target={this.state.targets}
                     origin={true}
                     snappable={true}
-                    verticalGuidelines={[100, 200, 400, 500]}
+                    verticalGuidelines={[100.5, 200.5, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     throttleRotate={30}
                     onDragGroupStart={e => {
@@ -141,7 +141,7 @@ class App extends React.Component {
                     target={selectedTarget}
                     container={document.body}
                     ref={ref(this, "moveable")}
-                    keepRatio={false}
+                    keepRatio={true}
                     origin={false}
                     draggable={true}
                     snappable={true}

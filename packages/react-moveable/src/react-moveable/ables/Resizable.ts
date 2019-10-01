@@ -131,7 +131,6 @@ export default {
             target,
         } = moveable.state;
 
-        // checkSnapSize(moveable as any, e, 1);
         let distWidth: number = 0;
         let distHeight: number = 0;
 
@@ -157,27 +156,31 @@ export default {
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
                 const distDiagonal = Math.cos(rad - standardRad) * size;
+                const isWidth = direction[0] || !direction[1];
 
-                distWidth = distDiagonal;
-                distHeight = distDiagonal * offsetHeight / offsetWidth;
+                distWidth = isWidth ? distDiagonal : distDiagonal * offsetWidth / offsetHeight;
+                distHeight = isWidth ? distDiagonal * offsetHeight / offsetWidth : distDiagonal;
             }
         }
         let nextWidth = direction[0]
-            ? Math.round(throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!))
+            ? throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!)
             : offsetWidth;
         let nextHeight = direction[1]
-            ? Math.round(throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!))
+            ? throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!)
             : offsetHeight;
 
         [nextWidth, nextHeight] = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
 
         if (keepRatio && (!direction[0] || !direction[1])) {
             if (direction[0]) {
-                nextHeight = Math.round(throttle(nextWidth * offsetHeight / offsetWidth, throttleResize!));
+                nextHeight = throttle(nextWidth * offsetHeight / offsetWidth, throttleResize!);
             } else {
-                nextWidth = Math.round(throttle(nextHeight * offsetWidth / offsetHeight, throttleResize!));
+                nextWidth = throttle(nextHeight * offsetWidth / offsetHeight, throttleResize!);
             }
         }
+        nextWidth = Math.round(nextWidth);
+        nextHeight = Math.round(nextHeight);
+
         distWidth = nextWidth - offsetWidth;
         distHeight = nextHeight - offsetHeight;
 
