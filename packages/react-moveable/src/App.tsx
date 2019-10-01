@@ -146,7 +146,7 @@ class App extends React.Component {
                     draggable={true}
                     snappable={true}
                     transformOrigin="% %"
-                    bounds={{ left: 30, right: 800, top: 120, bottom: 800 }}
+                    bounds={{ left: 30, top: 20 }}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     // elementGuildelines={[document.querySelector(".box1 span")!]}

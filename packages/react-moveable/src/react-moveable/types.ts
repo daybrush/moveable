@@ -795,10 +795,7 @@ export interface SnappableProps {
 export interface SnappableState {
     guidelines: any[];
     snapDirection: number[] | true | null;
-    startLeft: number;
-    startTop: number;
-    startRight: number;
-    startBottom: number;
+    enableSnap: boolean;
 }
 
 export interface OnCustomDrag extends Position {

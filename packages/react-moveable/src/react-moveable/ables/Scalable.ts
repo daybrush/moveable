@@ -21,7 +21,6 @@ export default {
     name: "scalable",
     dragControlOnly: true,
     canPinch: true,
-
     render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>, React: Renderer): any[] | undefined {
         const { resizable, scalable, edge } = moveable.props;
         if (!resizable && scalable) {
@@ -172,7 +171,9 @@ export default {
                 state.snapDirection = snapDirection;
             }
         }
-        nowDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
+        if (!pinchFlag) {
+            nowDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
+        }
 
         if (keepRatio && !parentScale && !pinchFlag && (!direction[0] || !direction[1])) {
             const distWidth = width * nowDist[0] - width;

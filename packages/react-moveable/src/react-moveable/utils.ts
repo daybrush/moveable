@@ -98,9 +98,9 @@ export function caculateMatrixStack(
     let n = 3;
     let transformOrigin!: number[];
     let targetMatrix!: number[];
-    let style: CSSStyleDeclaration = getComputedStyle(el);
 
     while (el && (isContainer || el !== container)) {
+        const style: CSSStyleDeclaration = getComputedStyle(el);
         const tagName = el.tagName.toLowerCase();
         const position = style.position;
         const isFixed = position === "fixed";
@@ -157,14 +157,28 @@ export function caculateMatrixStack(
                 createIdentityMatrix(n),
             );
         }
-        const parentElement: HTMLElement = el.parentElement!;
+        let parentElement: HTMLElement = el.parentElement!;
 
         if (isWebkit && !hasNotOffset && !isSVG) {
             const offsetParent = (el as HTMLElement).offsetParent as HTMLElement;
 
             if (offsetParent && offsetParent !== parentElement) {
-                offsetLeft -= parentElement.offsetLeft;
-                offsetTop -= parentElement.offsetTop;
+                while (parentElement && parentElement !== container) {
+                    const parentStyle = getComputedStyle(parentElement);
+                    const {
+                        position: nextPosition,
+                        transform: nextTransform,
+                    } = parentStyle;
+                    if (
+                        nextPosition !== "static"
+                        || (nextTransform && nextTransform !== "none")
+                    ) {
+                        break;
+                    }
+                    parentElement = parentElement.parentElement as HTMLElement;
+                }
+                offsetLeft -= (parentElement || container).offsetLeft;
+                offsetTop -= (parentElement || container).offsetTop;
             }
         }
         matrixes.push(
@@ -184,30 +198,12 @@ export function caculateMatrixStack(
         if (isContainer || isFixed) {
             break;
         }
-        el = parentElement;
-
         if (isSVG) {
-            continue;
-        }
-        while (el) {
-            style = getComputedStyle(el);
-
-            const {
-                position: nextPosition,
-                transform: nextTransform,
-            } = style;
-
-            if (
-                nextPosition !== "static"
-                || (nextTransform && nextTransform !== "none")
-            ) {
-                break;
-            }
-
             el = el.parentElement;
-        }
-        if (el) {
-            style = getComputedStyle(el);
+        } else if (isWebkit) {
+            el = parentElement;
+        } else {
+            el = (el as HTMLElement).offsetParent as HTMLElement;
         }
     }
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);

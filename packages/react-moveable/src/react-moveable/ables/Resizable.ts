@@ -169,7 +169,9 @@ export default {
             ? throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!)
             : offsetHeight;
 
-        [nextWidth, nextHeight] = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
+        if (!pinchFlag) {
+            [nextWidth, nextHeight] = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
+        }
 
         if (keepRatio && (!direction[0] || !direction[1])) {
             if (direction[0]) {
