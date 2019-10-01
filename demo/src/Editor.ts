@@ -40,20 +40,22 @@ const moveable = new Moveable(document.body, {
     snappable: true,
     snapCenter: true,
     snapThreshold: 10,
-    throttleResize: 1,
+    throttleResize: 0,
     throttleRotate: 1,
     keepRatio: false,
     origin: false,
     bounds: {
-        left: 30,
+        left: 300,
         top: 30,
     },
 }).on("dragStart", ({ set }) => {
+    console.log("dragStart");
     set([
         parseFloat(frame.get("transform", "translateX")),
         parseFloat(frame.get("transform", "translateY")),
     ]);
 }).on("drag", ({ target, beforeTranslate }) => {
+    console.log("drag");
     frame.set("transform", "translateX", `${beforeTranslate[0]}px`);
     frame.set("transform", "translateY", `${beforeTranslate[1]}px`);
 
@@ -65,13 +67,16 @@ const moveable = new Moveable(document.body, {
     target.style.cssText += frame.toCSS();
     setLabel(clientX, clientY, `${beforeRotate}°`);
 }).on("resizeStart", ({ setOrigin, dragStart }) => {
-    setOrigin(["%", "%"]);
+    console.log("resizeStart");
+    setOrigin(["50%", "50%"]);
+
     dragStart && dragStart.set([
         parseFloat(frame.get("transform", "translateX")),
         parseFloat(frame.get("transform", "translateY")),
     ]);
 
 }).on("resize", ({ target, width, height, drag, clientX, clientY }) => {
+    console.log("resize");
     frame.set("width", `${width}px`);
     frame.set("height", `${height}px`);
     frame.set("transform", "translateX", `${drag.beforeTranslate[0]}px`);

@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = false; // this.state.isResizable;
+        const isResizable = true; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -141,12 +141,12 @@ class App extends React.Component {
                     target={selectedTarget}
                     container={document.body}
                     ref={ref(this, "moveable")}
-                    keepRatio={true}
+                    keepRatio={false}
                     origin={false}
                     draggable={true}
                     snappable={true}
                     transformOrigin="% %"
-                    bounds={{ left: 120, right: 800, top: 120, bottom: 800 }}
+                    bounds={{ left: 30, right: 800, top: 120, bottom: 800 }}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     // elementGuildelines={[document.querySelector(".box1 span")!]}
@@ -158,7 +158,7 @@ class App extends React.Component {
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
-                    throttleRotate={45}
+                    throttleRotate={1}
                     rotatable={true}
                     pinchable={true}
                     onRotateStart={({ set }) => {
@@ -209,8 +209,9 @@ class App extends React.Component {
                         dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta }) => {
-                        target!.style.width = `${width}px`;
-                        target!.style.height = `${height}px`;
+                        console.log(width, height);
+                        item.set("width", `${width}px`);
+                        item.set("height", `${height}px`);
                         item.set("tx", `${drag.beforeTranslate[0]}px`);
                         item.set("ty", `${drag.beforeTranslate[1]}px`);
 
