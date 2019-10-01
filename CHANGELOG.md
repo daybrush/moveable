@@ -3,7 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.9.4] - 2019-10-01
+
+## [0.9.4] - 2019-10-02
+### Fixed
+* fix that parent drag event occur snap.
+
+## [0.9.4] - 2019-10-02
 ### Fixed
 * fix that resizing north, west direction occur decimal point issue.
 * Disable pinchable with snappable.

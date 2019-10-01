@@ -63,7 +63,7 @@ export default {
     },
     drag(
         moveable: MoveableManager<DraggableProps>,
-        { datas, distX, distY, clientX, clientY, parentEvent }: any,
+        { datas, distX, distY, clientX, clientY, parentEvent, parentFlag }: any,
     ): OnDrag | undefined {
         const { isPinch, isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
 
@@ -74,15 +74,20 @@ export default {
         const parentMoveable = props.parentMoveable;
         const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
         const target = moveable.state.target;
-        const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
 
-        distX -= verticalInfo.offset;
-        distY -= horizontalInfo.offset;
+        let isSnap = false;
 
+        if (!isPinch && !parentEvent && !parentFlag) {
+            const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
+
+            isSnap = verticalInfo.isSnap || horizontalInfo.isSnap;
+            distX -= verticalInfo.offset;
+            distY -= horizontalInfo.offset;
+        }
         const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
         const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
 
-        if (!verticalInfo.isSnap && !horizontalInfo.isSnap) {
+        if (!isSnap) {
             throttleArray(translate, throttleDrag);
             throttleArray(beforeTranslate, throttleDrag);
         }
