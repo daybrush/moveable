@@ -37,6 +37,9 @@ export default class MoveableManager<T = {}, U = {}>
         pinchThreshold: 20,
         dragArea: false,
         transformOrigin: "",
+        onRenderStart: () => {},
+        onRender: () => {},
+        onRenderEnd: () => {},
     };
     public state: MoveableManagerState<U> = {
         target: null,

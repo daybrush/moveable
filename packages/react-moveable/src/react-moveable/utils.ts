@@ -177,8 +177,8 @@ export function caculateMatrixStack(
                     }
                     parentElement = parentElement.parentElement as HTMLElement;
                 }
-                offsetLeft -= (parentElement || container).offsetLeft;
-                offsetTop -= (parentElement || container).offsetTop;
+                offsetLeft -= (parentElement || container as HTMLElement).offsetLeft;
+                offsetTop -= (parentElement || container as HTMLElement).offsetTop;
             }
         }
         matrixes.push(
