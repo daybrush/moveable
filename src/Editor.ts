@@ -221,14 +221,20 @@ function dragEndGuideline({ datas, clientX, clientY }) {
     }
     el.setAttribute("data-position", clientPos);
 
-    const horizontalGuidelines = [];
-    const verticalGuidelines = [];
+    removeClass(el, "dragging");
+    refreshGuidelines();
+}
+function refreshGuidelines() {
+    const centerX = window.innerWidth / 2 + 30;
+    const centerY = window.innerHeight / 2;
+
+    const horizontalGuidelines = [centerY];
+    const verticalGuidelines = [centerX];
     [].slice.call(guidelinesElement.children).forEach(guideline => {
         const type = guideline.getAttribute("data-type");
         const pos = parseFloat(guideline.getAttribute("data-position"));
         (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
     });
-    removeClass(el, "dragging");
     moveable.verticalGuidelines = verticalGuidelines;
     moveable.horizontalGuidelines = horizontalGuidelines;
 }
@@ -300,9 +306,11 @@ KeyContoller.global.on("keydown", ({ shiftKey }) => {
 });
 
 window.addEventListener("resize", () => {
+    refreshGuidelines();
     moveable.updateRect();
 });
 
 document.body.addEventListener("gesturestart", e => {
     e.preventDefault();
 });
+refreshGuidelines();

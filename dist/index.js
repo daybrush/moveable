@@ -345,7 +345,6 @@ version: 0.9.4
       Component.VERSION = "2.1.2";
       return Component;
     }();
-    //# sourceMappingURL=component.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -393,7 +392,6 @@ version: 0.9.4
         });
       };
     }
-    //# sourceMappingURL=utils.esm.js.map
 
     var VNode = function VNode() {};
 
@@ -1101,7 +1099,6 @@ version: 0.9.4
     function createRef() {
     	return {};
     }
-    //# sourceMappingURL=preact.mjs.map
 
     var PropTypes = {
         checkPropTypes: function () {}
@@ -1908,7 +1905,6 @@ version: 0.9.4
     	unstable_batchedUpdates: unstable_batchedUpdates,
     	__spread: extend$1
     };
-    //# sourceMappingURL=preact-compat.es.js.map
 
     var React = ({
         'default': index,
@@ -2273,7 +2269,6 @@ version: 0.9.4
      * @memberof eg.agent
      */
     agent.VERSION = "2.1.5";
-    //# sourceMappingURL=agent.esm.js.map
 
     /*
     Copyright (c) 2018 Daybrush
@@ -3020,7 +3015,6 @@ version: 0.9.4
     function removeEvent(el, type, listener) {
       el.removeEventListener(type, listener);
     }
-    //# sourceMappingURL=utils.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -3216,7 +3210,6 @@ version: 0.9.4
         }(Component$1$1)
       );
     }
-    //# sourceMappingURL=styler.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -3627,7 +3620,6 @@ version: 0.9.4
 
       return Dragger;
     }();
-    //# sourceMappingURL=drag.esm.js.map
 
     /*
     Copyright (c) 2019-present NAVER Corp.
@@ -4021,7 +4013,6 @@ version: 0.9.4
 
       return ListDiffer;
     }();
-    //# sourceMappingURL=list-differ.esm.js.map
 
     /*
     Copyright (c) 2019-present NAVER Corp.
@@ -4108,7 +4099,6 @@ version: 0.9.4
 
       return ChildrenDiffer;
     }(ListDiffer);
-    //# sourceMappingURL=children-differ.esm.js.map
 
     /*
     Copyright (c) 2019 Daybrush
@@ -8596,7 +8586,6 @@ version: 0.9.4
 
       return Moveable;
     }(PureComponent);
-    //# sourceMappingURL=moveable.esm.js.map
 
     var InnerMoveable =
     /*#__PURE__*/
@@ -8621,10 +8610,9 @@ version: 0.9.4
 
       return InnerMoveable;
     }(Component$1);
-     //# sourceMappingURL=InnerMoveable.js.map
 
     var PROPERTIES = ["draggable", "resizable", "scalable", "rotatable", "warpable", "pinchable", "snappable", "origin", "target", "edge", "throttleDrag", "throttleResize", "throttleScale", "throttleRotate", "keepRatio", "dragArea", "pinchThreshold", "snapCenter", "snapThreshold", "horizontalGuidelines", "verticalGuidelines", "elementGuidelines", "bounds"];
-    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd", "clickGroup", "renderStart", "render", "renderEnd"]; //# sourceMappingURL=consts.js.map
+    var EVENTS = ["dragStart", "drag", "dragEnd", "resizeStart", "resize", "resizeEnd", "scaleStart", "scale", "scaleEnd", "rotateStart", "rotate", "rotateEnd", "warpStart", "warp", "warpEnd", "pinchStart", "pinch", "pinchEnd", "dragGroupStart", "dragGroup", "dragGroupEnd", "resizeGroupStart", "resizeGroup", "resizeGroupEnd", "scaleGroupStart", "scaleGroup", "scaleGroupEnd", "rotateGroupStart", "rotateGroup", "rotateGroupEnd", "pinchGroupStart", "pinchGroup", "pinchGroupEnd", "clickGroup", "renderStart", "render", "renderEnd"];
 
     /**
      * Moveable is Draggable! Resizable! Scalable! Rotatable!
@@ -8803,7 +8791,6 @@ version: 0.9.4
       })], Moveable);
       return Moveable;
     }(Component);
-     //# sourceMappingURL=Moveable.js.map
 
     var codes = {
       draggable: {
@@ -8846,7 +8833,7 @@ version: 0.9.4
         react: "\nimport Moveable from \"react-moveable\";\n\nthis.poses = [\n    [0, 0],\n    [0, 0],\n    [0, 0],\n];\n\nconst target = [].slice.call(\n    document.querySelectorAll(\".target\"),\n);\nreturn (\n    <Moveable\n        target={target}\n        draggable={true}\n        onDragGroup={({ events }) => {\n            events.forEach(({ target, beforeDelta }, i) => {\n                this.poses[i][0] += beforeDelta[0];\n                this.poses[i][1] += beforeDelta[1];\n\n                target.style.transform\n                    = \"translate(\"\n                    + this.poses[i][0] + \"px, \"\n                    + this.poses[i][1] + \"px)\";\n            });\n        }}\n    />\n);\n        ",
         angular: "\nimport {\n    NgxMoveableModule,\n    NgxMoveableComponent,\n} from \"ngx-moveable\";\n\n@Component({\n    selector: 'AppComponent',\n    template: " + "`" + "\n<div #target1 class=\"target\">target1</div>\n<div #target2 class=\"target\">target2</div>\n<div #target3 class=\"target\">target3</div>\n<ngx-moveable\n    [target]=\"[target1, target2, target3]\"\n    [draggable]=\"true\"\n    (dragGroup)=\"onDragGroup($event)\n    />\n" + "`" + ",\n})\nexport class AppComponent {\n    poses = [\n        [0, 0],\n        [0, 0],\n        [0, 0],\n    ];\n    onDragGroup({ events }) {\n        events.forEach(({ target, beforeDelta }, i) => {\n            this.poses[i][0] += beforeDelta[0];\n            this.poses[i][1] += beforeDelta[1];\n\n            target.style.transform\n                = \"translate(\"\n                + this.poses[i][0] + \"px, \"\n                + this.poses[i][1] + \"px)\";\n        });\n    }\n}\n        "
       }
-    }; //# sourceMappingURL=consts.js.map
+    };
 
     /*
     Copyright (c) 2016 Daybrush
@@ -9947,7 +9934,6 @@ version: 0.9.4
 
       return Frame;
     }();
-    //# sourceMappingURL=scene.esm.js.map
 
     /*
     Copyright (c) Daybrush
@@ -10456,7 +10442,6 @@ version: 0.9.4
 
       return KeyController;
     }(Component);
-    //# sourceMappingURL=keycon.esm.js.map
 
     var uaInfo = agent();
     var isMobile = uaInfo.isMobile || uaInfo.os.name.indexOf("ios") > -1 || uaInfo.browser.name.indexOf("safari") > -1;
@@ -10696,14 +10681,20 @@ version: 0.9.4
       }
 
       el.setAttribute("data-position", clientPos);
-      var horizontalGuidelines = [];
-      var verticalGuidelines = [];
+      removeClass(el, "dragging");
+      refreshGuidelines();
+    }
+
+    function refreshGuidelines() {
+      var centerX = window.innerWidth / 2 + 30;
+      var centerY = window.innerHeight / 2;
+      var horizontalGuidelines = [centerY];
+      var verticalGuidelines = [centerX];
       [].slice.call(guidelinesElement.children).forEach(function (guideline) {
         var type = guideline.getAttribute("data-type");
         var pos = parseFloat(guideline.getAttribute("data-position"));
         (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
       });
-      removeClass(el, "dragging");
       moveable.verticalGuidelines = verticalGuidelines;
       moveable.horizontalGuidelines = horizontalGuidelines;
     }
@@ -10790,11 +10781,13 @@ version: 0.9.4
       toggleShift(shiftKey);
     });
     window.addEventListener("resize", function () {
+      refreshGuidelines();
       moveable.updateRect();
     });
     document.body.addEventListener("gesturestart", function (e) {
       e.preventDefault();
-    }); //# sourceMappingURL=Editor.js.map
+    });
+    refreshGuidelines();
 
     var draggableElement = document.querySelector(".draggable");
     var draggable = new Moveable$1(draggableElement.parentElement, {
@@ -10944,7 +10937,7 @@ version: 0.9.4
         tabElement.classList.add("selected");
         panelElement.classList.add("selected");
       });
-    }); //# sourceMappingURL=index.js.map
+    });
 
 }());
 //# sourceMappingURL=index.js.map
