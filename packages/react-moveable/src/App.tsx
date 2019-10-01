@@ -30,7 +30,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = true; // this.state.isResizable;
+        const isResizable = false; // this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -141,7 +141,7 @@ class App extends React.Component {
                     target={selectedTarget}
                     container={document.body}
                     ref={ref(this, "moveable")}
-                    keepRatio={false}
+                    keepRatio={true}
                     origin={false}
                     draggable={true}
                     snappable={true}
@@ -152,7 +152,7 @@ class App extends React.Component {
                     // elementGuildelines={[document.querySelector(".box1 span")!]}
                     snapCenter={false}
                     snapThreshold={10}
-                    // scalable={!isResizable}
+                    scalable={!isResizable}
                     resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
@@ -209,11 +209,10 @@ class App extends React.Component {
                         dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta }) => {
-                        delta[0] && (target!.style.width = `${width}px`);
-                        delta[1] && (target!.style.height = `${height}px`);
-
-                        drag.beforeDelta[0] && item.set("tx", `${drag.beforeTranslate[0]}px`);
-                        drag.beforeDelta[1] && item.set("ty", `${drag.beforeTranslate[1]}px`);
+                        target!.style.width = `${width}px`;
+                        target!.style.height = `${height}px`;
+                        item.set("tx", `${drag.beforeTranslate[0]}px`);
+                        item.set("ty", `${drag.beforeTranslate[1]}px`);
 
                         target.style.cssText += item.toCSS();
                     }}

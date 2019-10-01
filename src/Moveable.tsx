@@ -172,7 +172,7 @@ class Moveable extends EgComponent {
     }
 }
 /**
- * Whether or not the origin controlbox will be visible or not
+ * Whether or not the origin controlbox will be visible or not (default: true)
  * @name Moveable#origin
  * @example
  * import Moveable from "moveable";
@@ -191,7 +191,7 @@ class Moveable extends EgComponent {
  * moveable.target = document.querySelector(".target");
  */
 /**
- * Whether or not target can be dragged.
+ * Whether or not target can be dragged. (default: false)
  * @name Moveable#draggable
  * @example
  * import Moveable from "moveable";
@@ -201,7 +201,7 @@ class Moveable extends EgComponent {
  * moveable.draggable = true;
  */
 /**
- * Whether or not target can be resized.
+ * Whether or not target can be resized. (default: false)
  * @name Moveable#resizable
  * @example
  * import Moveable from "moveable";
@@ -211,7 +211,7 @@ class Moveable extends EgComponent {
  * moveable.resizable = true;
  */
 /**
- * Whether or not target can scaled.
+ * Whether or not target can scaled. (default: false)
  * @name Moveable#scalable
  * @example
  * import Moveable from "moveable";
@@ -221,7 +221,7 @@ class Moveable extends EgComponent {
  * moveable.scalable = true;
  */
 /**
- * Whether or not target can be rotated.
+ * Whether or not target can be rotated. (default: false)
  * @name Moveable#rotatable
  * @example
  * import Moveable from "moveable";
@@ -231,7 +231,7 @@ class Moveable extends EgComponent {
  * moveable.rotatable = true;
  */
 /**
- * Whether or not target can be warped.
+ * Whether or not target can be warped. (default: false)
  * @name Moveable#warpable
  * @example
  * import Moveable from "moveable";
@@ -241,7 +241,7 @@ class Moveable extends EgComponent {
  * moveable.warpable = true;
  */
 /**
- * Whether or not target can be pinched with draggable, resizable, scalable, rotatable
+ * Whether or not target can be pinched with draggable, resizable, scalable, rotatable (default: false)
  * @name Moveable#pinchable
  * @example
  * import Moveable from "moveable";
@@ -251,7 +251,7 @@ class Moveable extends EgComponent {
  * moveable.pinchable = true;
  */
 /**
- * When resize or scale, keeps a ratio of the width, height.
+ * When resize or scale, keeps a ratio of the width, height. (default: false)
  * @name Moveable#keepRatio
  * @example
  * import Moveable from "moveable";

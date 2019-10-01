@@ -152,11 +152,7 @@ export default {
             distWidth = direction[0] * dist[0];
             distHeight = direction[1] * dist[1];
 
-            if (
-                keepRatio
-                && direction[0] && direction[1]
-                && offsetWidth && offsetHeight
-            ) {
+            if (keepRatio && offsetWidth && offsetHeight) {
                 const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
@@ -174,6 +170,14 @@ export default {
             : offsetHeight;
 
         [nextWidth, nextHeight] = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
+
+        if (keepRatio && (!direction[0] || !direction[1])) {
+            if (direction[0]) {
+                nextHeight = Math.round(throttle(nextWidth * offsetHeight / offsetWidth, throttleResize!));
+            } else {
+                nextWidth = Math.round(throttle(nextHeight * offsetWidth / offsetHeight, throttleResize!));
+            }
+        }
         distWidth = nextWidth - offsetWidth;
         distHeight = nextHeight - offsetHeight;
 
