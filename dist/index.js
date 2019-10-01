@@ -4,7 +4,7 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.9.0
+version: 0.9.2
 */
 (function () {
     'use strict';
@@ -4133,7 +4133,7 @@ version: 0.9.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.11.1
+    version: 0.11.4
     */
 
     /*
@@ -4499,7 +4499,7 @@ version: 0.9.0
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.12.1
+    version: 0.12.3
     */
 
     /*! *****************************************************************************
@@ -6907,120 +6907,216 @@ version: 0.9.0
         return rect[name];
       }), isSnapCenter, customSnapThreshold);
     }
+
+    function checkBoundOneWayDist(moveable, pos) {
+      var _a = checkBounds(moveable, [pos[0]], [pos[1]]),
+          _b = _a.horizontal,
+          isHorizontalBound = _b.isBound,
+          horizontalBoundOffset = _b.offset,
+          _c = _a.vertical,
+          isVerticalBound = _c.isBound,
+          verticalBoundOffset = _c.offset;
+
+      if (isHorizontalBound || isVerticalBound) {
+        var isVertical = void 0;
+
+        if (isHorizontalBound && isVerticalBound) {
+          isVertical = Math.abs(horizontalBoundOffset) < Math.abs(verticalBoundOffset);
+        } else {
+          isVertical = isVerticalBound;
+        }
+
+        var offset = isVertical ? verticalBoundOffset : horizontalBoundOffset;
+        return {
+          isVertical: isVertical,
+          offset: offset,
+          dist: Math.abs(offset)
+        };
+      }
+
+      return;
+    }
+
+    function solveNextDist(pos1, pos2, offset, isVertical, isDirectionVertical, datas) {
+      var sizeOffset = solveEquation(pos1, pos2, -offset, isVertical);
+
+      if (!sizeOffset) {
+        return NaN;
+      }
+
+      var _a = getDragDist({
+        datas: datas,
+        distX: sizeOffset[0],
+        distY: sizeOffset[1]
+      }),
+          widthDist = _a[0],
+          heightDist = _a[1];
+
+      return isDirectionVertical ? heightDist : widthDist;
+    }
+
+    function getFixedPoses(matrix, width, height, fixedPos, direction, is3d) {
+      var nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
+      var nextPos = getPosByReverseDirection(nextPoses, direction);
+      return getAbsolutePoses(nextPoses, minus(fixedPos, nextPos));
+    }
+
+    function checkBoundOneWayPos(moveable, pos, reversePos, isDirectionVertical, datas) {
+      var _a = checkSnapPoses(moveable, [pos[0]], [pos[1]]),
+          _b = _a.horizontal,
+          isHorizontalSnap = _b.isSnap,
+          horizontalOffset = _b.offset,
+          horizontalDist = _b.dist,
+          _c = _a.vertical,
+          isVerticalSnap = _c.isSnap,
+          verticalOffset = _c.offset,
+          verticalDist = _c.dist;
+
+      var fixedHorizontal = reversePos[1] === pos[1];
+      var fixedVertical = reversePos[0] === pos[0];
+      var isVertical;
+
+      if (!isHorizontalSnap && !isVerticalSnap) {
+        // no snap
+        return NaN;
+      } else if (isHorizontalSnap && isVerticalSnap) {
+        if (horizontalDist === 0 && fixedHorizontal) {
+          isVertical = true;
+        } else if (verticalOffset === 0 && fixedVertical) {
+          isVertical = false;
+        } else {
+          isVertical = horizontalDist > verticalDist;
+        }
+      } else {
+        isVertical = isVerticalSnap;
+      }
+
+      return solveNextDist(reversePos, pos, isVertical ? verticalOffset : horizontalOffset, isVertical, isDirectionVertical, datas);
+    }
+
+    function checkOneWayPos(moveable, poses, reversePoses, isDirectionVertical, datas) {
+      var posOffset = 0;
+      var boundInfo;
+      var boundIndex = -1;
+      var boundInfos = poses.map(function (pos) {
+        return checkBoundOneWayDist(moveable, pos);
+      });
+      boundInfos.forEach(function (info, i) {
+        if (!info) {
+          return;
+        }
+
+        if (!boundInfo || boundInfo.dist < info.dist) {
+          boundInfo = info;
+          boundIndex = i;
+        }
+      });
+
+      if (boundInfo) {
+        var nextDist = solveNextDist(reversePoses[boundIndex], poses[boundIndex], boundInfo.offset, boundInfo.isVertical, isDirectionVertical, datas);
+
+        if (!isNaN(nextDist)) {
+          posOffset = nextDist;
+        }
+      } else {
+        poses.some(function (pos, i) {
+          var nextDist = checkBoundOneWayPos(moveable, pos, reversePoses[i], isDirectionVertical, datas);
+
+          if (isNaN(nextDist)) {
+            return false;
+          }
+
+          posOffset = nextDist;
+          return true;
+        });
+      }
+
+      return posOffset;
+    }
+    function checkOneWayDist(moveable, poses, direction, datas) {
+      var directionPoses = getPosesByDirection(poses, direction);
+      var reversePoses = poses.slice().reverse();
+      var directionIndex = direction[0] !== 0 ? 0 : 1;
+      var isDirectionVertical = directionIndex > 0;
+      var reverseDirectionPoses = getPosesByDirection(reversePoses, direction);
+      directionPoses.push([(directionPoses[0][0] + directionPoses[1][0]) / 2, (directionPoses[0][1] + directionPoses[1][1]) / 2]);
+      reverseDirectionPoses.reverse();
+      reverseDirectionPoses.push([(reverseDirectionPoses[0][0] + reverseDirectionPoses[1][0]) / 2, (reverseDirectionPoses[0][1] + reverseDirectionPoses[1][1]) / 2]);
+      var posOffset = checkOneWayPos(moveable, directionPoses, reverseDirectionPoses, isDirectionVertical, datas);
+      var offset = [0, 0];
+      offset[directionIndex] = direction[directionIndex] * posOffset;
+      return offset;
+    }
+    function checkTwoWayDist(moveable, poses, direction, datas, matrix, width, height, fixedPos, is3d) {
+      var _a;
+
+      var directionPoses = getPosesByDirection(poses, direction);
+      var verticalDirection = [direction[0], direction[1] * -1];
+      var horizontalDirection = [direction[0] * -1, direction[1]];
+      var verticalPos = getPosByDirection(poses, verticalDirection);
+      var horizontalPos = getPosByDirection(poses, horizontalDirection);
+
+      var _b = checkBounds(moveable, [directionPoses[0][0]], [directionPoses[0][1]]),
+          _c = _b.horizontal,
+          isHorizontalBound = _c.isBound,
+          horizontalBoundOffset = _c.offset,
+          _d = _b.vertical,
+          isVerticalBound = _d.isBound,
+          verticalBoundOffset = _d.offset; // share drag event
+
+
+      var widthDist = 0;
+      var heightDist = 0;
+      var verticalBoundInfo = checkBoundOneWayDist(moveable, verticalPos);
+      var horizontalBoundInfo = checkBoundOneWayDist(moveable, horizontalPos);
+      var isVeritcalDirectionBound = verticalBoundInfo && verticalBoundInfo.dist > Math.abs(verticalBoundOffset);
+      var isHorizontalDirectionBound = horizontalBoundInfo && horizontalBoundInfo.dist > Math.abs(horizontalBoundOffset);
+
+      if (!isVeritcalDirectionBound && !isHorizontalDirectionBound) {
+        var _e = checkSnapPoses(moveable, [directionPoses[0][0]], [directionPoses[0][1]]),
+            horizontalOffset = _e.horizontal.offset,
+            verticalOffset = _e.vertical.offset;
+
+        _a = getDragDist({
+          datas: datas,
+          distX: -(isVerticalBound ? verticalBoundOffset : verticalOffset),
+          distY: -(isHorizontalBound ? horizontalBoundOffset : horizontalOffset)
+        }), widthDist = _a[0], heightDist = _a[1];
+      } else if (isVeritcalDirectionBound) {
+        // left to right, right to left
+        var reversePos = getPosByDirection(poses, [verticalDirection[0] * -1, verticalDirection[1]]);
+        var nextDist = solveNextDist(reversePos, verticalPos, verticalBoundInfo.offset, verticalBoundInfo.isVertical, false, datas);
+
+        if (!isNaN(nextDist)) {
+          widthDist = nextDist;
+        }
+
+        var nextPoses = getFixedPoses(matrix, width + direction[0] * widthDist, height + direction[1] * heightDist, fixedPos, direction, is3d);
+        heightDist = checkOneWayPos(moveable, [getPosByDirection(nextPoses, direction)], [getPosByDirection(nextPoses, verticalDirection)], true, datas);
+      } else {
+        // top to bottom, bottom to top
+        var reversePos = getPosByDirection(poses, [horizontalDirection[0] * -1, horizontalDirection[1]]);
+        var nextDist = solveNextDist(reversePos, verticalPos, horizontalBoundInfo.offset, horizontalBoundInfo.isVertical, true, datas);
+
+        if (!isNaN(nextDist)) {
+          heightDist = nextDist;
+        }
+
+        var nextPoses = getFixedPoses(matrix, width + direction[0] * widthDist, height + direction[1] * heightDist, fixedPos, direction, is3d);
+        widthDist = checkOneWayPos(moveable, [getPosByDirection(nextPoses, direction)], [getPosByDirection(nextPoses, horizontalDirection)], false, datas);
+      }
+
+      return [direction[0] * widthDist, direction[1] * heightDist];
+    }
     function checkSizeDist(moveable, matrix, width, height, direction, snapDirection, datas, is3d) {
       var poses = getAbsolutePosesByState(moveable.state);
       var fixedPos = getPosByReverseDirection(poses, snapDirection);
-      var nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
-      var nextPos = getPosByReverseDirection(nextPoses, direction);
-
-      var _a = getAbsolutePoses(nextPoses, minus(fixedPos, nextPos)),
-          pos1 = _a[0],
-          pos2 = _a[1],
-          pos3 = _a[2],
-          pos4 = _a[3];
-
-      var directionPoses = getPosesByDirection([pos1, pos2, pos3, pos4], direction);
+      var nextPoses = getFixedPoses(matrix, width, height, fixedPos, direction, is3d);
 
       if (direction[0] && direction[1]) {
-        var _b = checkSnapPoses(moveable, [directionPoses[0][0]], [directionPoses[0][1]]),
-            horizontalOffset = _b.horizontal.offset,
-            verticalOffset = _b.vertical.offset;
-
-        var _c = checkBounds(moveable, [directionPoses[0][0]], [directionPoses[0][1]]),
-            _d = _c.horizontal,
-            isHorizontalBound = _d.isBound,
-            horizontalBoundOffset = _d.offset,
-            _e = _c.vertical,
-            isVerticalBound = _e.isBound,
-            verticalBoundOffset = _e.offset; // share drag event
-
-
-        var _f = getDragDist({
-          datas: datas,
-          distX: isVerticalBound ? verticalBoundOffset : verticalOffset,
-          distY: isHorizontalBound ? horizontalBoundOffset : horizontalOffset
-        }),
-            widthDist = _f[0],
-            heightDist = _f[1];
-
-        return [-direction[0] * widthDist, -direction[1] * heightDist];
+        return checkTwoWayDist(moveable, nextPoses, direction, datas, matrix, width, height, fixedPos, is3d);
       } else {
-        var directionIndex_1 = direction[0] !== 0 ? 0 : 1;
-        var reverseDirectionPoses_1 = getPosesByDirection([pos4, pos3, pos2, pos1], direction);
-        var posOffset_1 = 0;
-        directionPoses.push([(directionPoses[0][0] + directionPoses[1][0]) / 2, (directionPoses[0][1] + directionPoses[1][1]) / 2]);
-        reverseDirectionPoses_1.reverse();
-        reverseDirectionPoses_1.push([(reverseDirectionPoses_1[0][0] + reverseDirectionPoses_1[1][0]) / 2, (reverseDirectionPoses_1[0][1] + reverseDirectionPoses_1[1][1]) / 2]);
-        directionPoses.some(function (directionPos, i) {
-          var snapInfos = checkSnapPoses(moveable, [directionPos[0]], [directionPos[1]]);
-          var _a = snapInfos.horizontal,
-              isHorizontalSnap = _a.isSnap,
-              horizontalSnapOffset = _a.offset,
-              horizontalDist = _a.dist,
-              _b = snapInfos.vertical,
-              isVerticalSnap = _b.isSnap,
-              verticalSnapOffset = _b.offset,
-              verticalDist = _b.dist;
-
-          var _c = checkBounds(moveable, [directionPos[0]], [directionPos[1]]),
-              _d = _c.horizontal,
-              isHorizontalBound = _d.isBound,
-              horizontalBoundOffset = _d.offset,
-              _e = _c.vertical,
-              isVerticalBound = _e.isBound,
-              verticalBoundOffset = _e.offset;
-
-          var fixedHorizontal = reverseDirectionPoses_1[i][1] === directionPos[1];
-          var fixedVertical = reverseDirectionPoses_1[i][0] === directionPos[0];
-          var isVertical;
-          var horizontalOffset = isHorizontalBound || isVerticalBound ? horizontalBoundOffset : horizontalSnapOffset;
-          var verticalOffset = isHorizontalBound || isVerticalBound ? verticalBoundOffset : verticalSnapOffset;
-
-          if (isHorizontalBound && isVerticalBound) {
-            if (fixedHorizontal) {
-              isVertical = true;
-            } else if (fixedVertical) {
-              isVertical = false;
-            } else {
-              isVertical = Math.abs(horizontalBoundOffset) < Math.abs(verticalBoundOffset);
-            }
-          } else if (isHorizontalBound || isVerticalBound) {
-            isVertical = isVerticalBound;
-          } else if (!isHorizontalSnap && !isVerticalSnap) {
-            // no snap
-            return false;
-          } else if (isHorizontalSnap && isVerticalSnap) {
-            if (horizontalDist === 0 && fixedHorizontal) {
-              isVertical = true;
-            } else if (verticalOffset === 0 && fixedVertical) {
-              isVertical = false;
-            } else {
-              isVertical = horizontalDist > verticalDist;
-            }
-          } else {
-            isVertical = isVerticalSnap;
-          }
-
-          var sizeOffset = solveEquation(reverseDirectionPoses_1[i], directionPos, -(isVertical ? verticalOffset : horizontalOffset), isVertical);
-
-          if (!sizeOffset) {
-            return false;
-          }
-
-          var _f = getDragDist({
-            datas: datas,
-            distX: sizeOffset[0],
-            distY: sizeOffset[1]
-          }),
-              widthDist = _f[0],
-              heightDist = _f[1];
-
-          posOffset_1 = direction[directionIndex_1] * (directionIndex_1 ? heightDist : widthDist);
-          return true;
-        });
-        var offset = [0, 0];
-        offset[directionIndex_1] = posOffset_1;
-        return offset;
+        return checkOneWayDist(moveable, nextPoses, direction, datas);
       }
     }
     function checkSnapSize(moveable, width, height, direction, datas) {
@@ -7168,7 +7264,7 @@ version: 0.9.0
         if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
           horizontalGuidelines.push({
             type: "horizontal",
-            pos: [top, verticalBoundPos],
+            pos: [left, horizontalBoundPos],
             size: width
           });
           horizontalSnapPoses.push(horizontalBoundPos);
@@ -7258,7 +7354,6 @@ version: 0.9.0
         var boundInfos = checkBounds(moveable, [left, right], [top, bottom]);
         var offsetX = 0;
         var offsetY = 0;
-        console.log(checkBounds(moveable, [left, right], [top, bottom]).vertical.isBound);
 
         if (boundInfos.vertical.isBound) {
           offsetX = boundInfos.vertical.offset;
@@ -9828,24 +9923,603 @@ version: 0.9.0
     }();
     //# sourceMappingURL=scene.esm.js.map
 
-    var moveableElement = document.querySelector(".moveable");
+    /*
+    Copyright (c) Daybrush
+    name: keycon
+    license: MIT
+    author: Daybrush
+    repository: git+https://github.com/daybrush/keycon.git
+    version: 0.5.0
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    /* global Reflect, Promise */
+    var extendStatics$4 = function (d, b) {
+      extendStatics$4 = Object.setPrototypeOf || {
+        __proto__: []
+      } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+      } || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      };
+
+      return extendStatics$4(d, b);
+    };
+
+    function __extends$5(d, b) {
+      extendStatics$4(d, b);
+
+      function __() {
+        this.constructor = d;
+      }
+
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    function createCommonjsModule(fn, module) {
+      return module = {
+        exports: {}
+      }, fn(module, module.exports), module.exports;
+    }
+
+    var keycode = createCommonjsModule(function (module, exports) {
+    // Source: http://jsfiddle.net/vWx8V/
+    // http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
+
+    /**
+     * Conenience method returns corresponding value for given keyName or keyCode.
+     *
+     * @param {Mixed} keyCode {Number} or keyName {String}
+     * @return {Mixed}
+     * @api public
+     */
+
+    function keyCode(searchInput) {
+      // Keyboard Events
+      if (searchInput && 'object' === typeof searchInput) {
+        var hasKeyCode = searchInput.which || searchInput.keyCode || searchInput.charCode;
+        if (hasKeyCode) searchInput = hasKeyCode;
+      }
+
+      // Numbers
+      if ('number' === typeof searchInput) return names[searchInput]
+
+      // Everything else (cast to string)
+      var search = String(searchInput);
+
+      // check codes
+      var foundNamedKey = codes[search.toLowerCase()];
+      if (foundNamedKey) return foundNamedKey
+
+      // check aliases
+      var foundNamedKey = aliases[search.toLowerCase()];
+      if (foundNamedKey) return foundNamedKey
+
+      // weird character?
+      if (search.length === 1) return search.charCodeAt(0)
+
+      return undefined
+    }
+
+    /**
+     * Compares a keyboard event with a given keyCode or keyName.
+     *
+     * @param {Event} event Keyboard event that should be tested
+     * @param {Mixed} keyCode {Number} or keyName {String}
+     * @return {Boolean}
+     * @api public
+     */
+    keyCode.isEventKey = function isEventKey(event, nameOrCode) {
+      if (event && 'object' === typeof event) {
+        var keyCode = event.which || event.keyCode || event.charCode;
+        if (keyCode === null || keyCode === undefined) { return false; }
+        if (typeof nameOrCode === 'string') {
+          // check codes
+          var foundNamedKey = codes[nameOrCode.toLowerCase()];
+          if (foundNamedKey) { return foundNamedKey === keyCode; }
+
+          // check aliases
+          var foundNamedKey = aliases[nameOrCode.toLowerCase()];
+          if (foundNamedKey) { return foundNamedKey === keyCode; }
+        } else if (typeof nameOrCode === 'number') {
+          return nameOrCode === keyCode;
+        }
+        return false;
+      }
+    };
+
+    exports = module.exports = keyCode;
+
+    /**
+     * Get by name
+     *
+     *   exports.code['enter'] // => 13
+     */
+
+    var codes = exports.code = exports.codes = {
+      'backspace': 8,
+      'tab': 9,
+      'enter': 13,
+      'shift': 16,
+      'ctrl': 17,
+      'alt': 18,
+      'pause/break': 19,
+      'caps lock': 20,
+      'esc': 27,
+      'space': 32,
+      'page up': 33,
+      'page down': 34,
+      'end': 35,
+      'home': 36,
+      'left': 37,
+      'up': 38,
+      'right': 39,
+      'down': 40,
+      'insert': 45,
+      'delete': 46,
+      'command': 91,
+      'left command': 91,
+      'right command': 93,
+      'numpad *': 106,
+      'numpad +': 107,
+      'numpad -': 109,
+      'numpad .': 110,
+      'numpad /': 111,
+      'num lock': 144,
+      'scroll lock': 145,
+      'my computer': 182,
+      'my calculator': 183,
+      ';': 186,
+      '=': 187,
+      ',': 188,
+      '-': 189,
+      '.': 190,
+      '/': 191,
+      '`': 192,
+      '[': 219,
+      '\\': 220,
+      ']': 221,
+      "'": 222
+    };
+
+    // Helper aliases
+
+    var aliases = exports.aliases = {
+      'windows': 91,
+      '⇧': 16,
+      '⌥': 18,
+      '⌃': 17,
+      '⌘': 91,
+      'ctl': 17,
+      'control': 17,
+      'option': 18,
+      'pause': 19,
+      'break': 19,
+      'caps': 20,
+      'return': 13,
+      'escape': 27,
+      'spc': 32,
+      'spacebar': 32,
+      'pgup': 33,
+      'pgdn': 34,
+      'ins': 45,
+      'del': 46,
+      'cmd': 91
+    };
+
+    /*!
+     * Programatically add the following
+     */
+
+    // lower case chars
+    for (i = 97; i < 123; i++) codes[String.fromCharCode(i)] = i - 32;
+
+    // numbers
+    for (var i = 48; i < 58; i++) codes[i - 48] = i;
+
+    // function keys
+    for (i = 1; i < 13; i++) codes['f'+i] = i + 111;
+
+    // numpad keys
+    for (i = 0; i < 10; i++) codes['numpad '+i] = i + 96;
+
+    /**
+     * Get by code
+     *
+     *   exports.name[13] // => 'Enter'
+     */
+
+    var names = exports.names = exports.title = {}; // title for backward compat
+
+    // Create reverse mapping
+    for (i in codes) names[codes[i]] = i;
+
+    // Add aliases
+    for (var alias in aliases) {
+      codes[alias] = aliases[alias];
+    }
+    });
+    var keycode_1 = keycode.code;
+    var keycode_2 = keycode.codes;
+    var keycode_3 = keycode.aliases;
+    var keycode_4 = keycode.names;
+    var keycode_5 = keycode.title;
+
+    /*
+    Copyright (c) 2018 Daybrush
+    @name: @daybrush/utils
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/utils
+    @version 0.10.0
+    */
+    /**
+    * get string "string"
+    * @memberof Consts
+    * @example
+    import {STRING} from "@daybrush/utils";
+
+    console.log(STRING); // "string"
+    */
+
+    var STRING$1 = "string";
+    /**
+    * Check the type that the value is isArray.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isArray} from "@daybrush/utils";
+
+    console.log(isArray([])); // true
+    console.log(isArray({})); // false
+    console.log(isArray(undefined)); // false
+    console.log(isArray(null)); // false
+    */
+
+    function isArray$1(value) {
+      return Array.isArray(value);
+    }
+    /**
+    * Check the type that the value is string.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isString} from "@daybrush/utils";
+
+    console.log(isString("1234")); // true
+    console.log(isString(undefined)); // false
+    console.log(isString(1)); // false
+    console.log(isString(null)); // false
+    */
+
+    function isString$1(value) {
+      return typeof value === STRING$1;
+    }
+    /**
+    * Sets up a function that will be called whenever the specified event is delivered to the target
+    * @memberof DOM
+    * @param - event target
+    * @param - A case-sensitive string representing the event type to listen for.
+    * @param - The object which receives a notification (an object that implements the Event interface) when an event of the specified type occurs
+    * @param - An options object that specifies characteristics about the event listener. The available options are:
+    * @example
+    import {addEvent} from "@daybrush/utils";
+
+    addEvent(el, "click", e => {
+      console.log(e);
+    });
+    */
+
+    function addEvent$1(el, type, listener, options) {
+      el.addEventListener(type, listener, options);
+    }
+
+    var codeData = {
+      "+": "plus",
+      "left command": "meta",
+      "right command": "meta"
+    };
+    var keysSort = {
+      shift: 1,
+      ctrl: 2,
+      alt: 3,
+      meta: 4
+    };
+    /**
+     * @memberof KeyController
+     */
+
+    function getKey(keyCode) {
+      var key = keycode_4[keyCode] || "";
+
+      for (var name in codeData) {
+        key = key.replace(name, codeData[name]);
+      }
+
+      return key.replace(/\s/g, "");
+    }
+    /**
+     * @memberof KeyController
+     */
+
+    function getCombi(e, key) {
+      if (key === void 0) {
+        key = getKey(e.keyCode);
+      }
+
+      var keys = [e.shiftKey && "shift", e.ctrlKey && "ctrl", e.altKey && "alt", e.metaKey && "meta"];
+      keys.indexOf(key) === -1 && keys.push(key);
+      return keys.filter(Boolean);
+    }
+
+    function getArrangeCombi(keys) {
+      var arrangeKeys = keys.slice();
+      arrangeKeys.sort(function (prev, next) {
+        var prevScore = keysSort[prev] || 5;
+        var nextScore = keysSort[next] || 5;
+        return prevScore - nextScore;
+      });
+      return arrangeKeys;
+    }
+
+    var globalKeyController;
+    /**
+     */
+
+    var KeyController =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$5(KeyController, _super);
+      /**
+       *
+       */
+
+
+      function KeyController(container) {
+        if (container === void 0) {
+          container = window;
+        }
+
+        var _this = _super.call(this) || this;
+        /**
+         */
+
+
+        _this.ctrlKey = false;
+        /**
+         */
+
+        _this.altKey = false;
+        /**
+         *
+         */
+
+        _this.shiftKey = false;
+        /**
+         *
+         */
+
+        _this.metaKey = false;
+
+        _this.clear = function () {
+          _this.ctrlKey = false;
+          _this.altKey = false;
+          _this.shiftKey = false;
+          _this.metaKey = false;
+          return _this;
+        };
+
+        _this.keydownEvent = function (e) {
+          _this.triggerEvent("keydown", e);
+        };
+
+        _this.keyupEvent = function (e) {
+          _this.triggerEvent("keyup", e);
+        };
+
+        addEvent$1(container, "blur", _this.clear);
+        addEvent$1(container, "keydown", _this.keydownEvent);
+        addEvent$1(container, "keyup", _this.keyupEvent);
+        return _this;
+      }
+
+      var __proto = KeyController.prototype;
+      Object.defineProperty(KeyController, "global", {
+        /**
+         */
+        get: function () {
+          return globalKeyController || (globalKeyController = new KeyController());
+        },
+        enumerable: true,
+        configurable: true
+      });
+      /**
+       *
+       */
+
+      __proto.keydown = function (comb, callback) {
+        return this.addEvent("keydown", comb, callback);
+      };
+      /**
+       *
+       */
+
+
+      __proto.offKeydown = function (comb, callback) {
+        return this.removeEvent("keydown", comb, callback);
+      };
+      /**
+       *
+       */
+
+
+      __proto.offKeyup = function (comb, callback) {
+        return this.removeEvent("keyup", comb, callback);
+      };
+      /**
+       *
+       */
+
+
+      __proto.keyup = function (comb, callback) {
+        return this.addEvent("keyup", comb, callback);
+      };
+
+      __proto.addEvent = function (type, comb, callback) {
+        if (isArray$1(comb)) {
+          this.on(type + "." + getArrangeCombi(comb).join("."), callback);
+        } else if (isString$1(comb)) {
+          this.on(type + "." + comb, callback);
+        } else {
+          this.on(type, comb);
+        }
+
+        return this;
+      };
+
+      __proto.removeEvent = function (type, comb, callback) {
+        if (isArray$1(comb)) {
+          this.off(type + "." + getArrangeCombi(comb).join("."), callback);
+        } else if (isString$1(comb)) {
+          this.off(type + "." + comb, callback);
+        } else {
+          this.off(type, comb);
+        }
+
+        return this;
+      };
+
+      __proto.triggerEvent = function (type, e) {
+        this.ctrlKey = e.ctrlKey;
+        this.shiftKey = e.shiftKey;
+        this.altKey = e.altKey;
+        this.metaKey = e.metaKey;
+        var key = getKey(e.keyCode);
+        var isToggle = key === "ctrl" || key === "shift" || key === "meta" || key === "alt";
+        var param = {
+          key: key,
+          isToggle: isToggle,
+          inputEvent: e,
+          keyCode: e.keyCode,
+          ctrlKey: e.ctrlKey,
+          altKey: e.altKey,
+          shiftKey: e.shiftKey,
+          metaKey: e.metaKey
+        };
+        this.trigger(type, param);
+        this.trigger(type + "." + key, param);
+        var combi = getCombi(e, key);
+        combi.length > 1 && this.trigger(type + "." + combi.join("."), param);
+      };
+
+      return KeyController;
+    }(Component);
+    //# sourceMappingURL=keycon.esm.js.map
+
     var labelElement = document.querySelector(".label");
+    var rulersElement = document.querySelector(".rulers");
+    var guidelinesElement = document.querySelector(".guidelines");
+    var horizontalRulerElement = rulersElement.querySelector(".ruler.horizontal");
+    var verticalRulerElement = rulersElement.querySelector(".ruler.vertical");
+    var horizontalDivisionsElement = horizontalRulerElement.querySelector(".divisions");
+    var verticalDivisionsElement = document.querySelector(".ruler.vertical .divisions");
+    var divisions = [];
+
+    for (var i$1 = 0; i$1 <= 1000; ++i$1) {
+      divisions.push("<div class=\"division\" data-px=\"" + i$1 * 5 + "\"></div>");
+    }
+
+    horizontalDivisionsElement.innerHTML = divisions.join("");
+    verticalDivisionsElement.innerHTML = divisions.join("");
     var frame = new Frame({
+      left: "calc(50% - 125px)",
+      top: "calc(50% - 250px)",
       width: "250px",
       height: "200px",
-      left: "0px",
-      top: "0px",
       transform: {
+        translateX: "0px",
+        translateY: "0px",
         rotate: "0deg",
         scaleX: 1,
-        scaleY: 1,
-        matrix3d: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+        scaleY: 1
       }
     });
-
-    function setTransform(target) {
-      target.style.cssText = frame.toCSS();
-    }
+    var moveableTarget = document.querySelector(".moveable.target");
+    var moveable = new Moveable$1(document.body, {
+      target: moveableTarget,
+      draggable: true,
+      resizable: true,
+      rotatable: true,
+      snappable: true,
+      snapCenter: true,
+      snapThreshold: 10,
+      throttleResize: 1,
+      throttleRotate: 1,
+      keepRatio: false,
+      origin: false,
+      bounds: {
+        left: 30,
+        top: 30
+      }
+    }).on("dragStart", function (_a) {
+      var set = _a.set;
+      set([parseFloat(frame.get("transform", "translateX")), parseFloat(frame.get("transform", "translateY"))]);
+    }).on("drag", function (_a) {
+      var target = _a.target,
+          beforeTranslate = _a.beforeTranslate;
+      frame.set("transform", "translateX", beforeTranslate[0] + "px");
+      frame.set("transform", "translateY", beforeTranslate[1] + "px");
+      target.style.cssText += frame.toCSS();
+    }).on("rotateStart", function (_a) {
+      var set = _a.set;
+      set(parseFloat(frame.get("transform", "rotate")));
+    }).on("rotate", function (_a) {
+      var target = _a.target,
+          beforeRotate = _a.beforeRotate,
+          clientX = _a.clientX,
+          clientY = _a.clientY;
+      frame.set("transform", "rotate", beforeRotate + "deg");
+      target.style.cssText += frame.toCSS();
+      setLabel(clientX, clientY, beforeRotate + "\u00B0");
+    }).on("resizeStart", function (_a) {
+      var setOrigin = _a.setOrigin,
+          dragStart = _a.dragStart;
+      setOrigin(["%", "%"]);
+      dragStart && dragStart.set([parseFloat(frame.get("transform", "translateX")), parseFloat(frame.get("transform", "translateY"))]);
+    }).on("resize", function (_a) {
+      var target = _a.target,
+          width = _a.width,
+          height = _a.height,
+          drag = _a.drag,
+          clientX = _a.clientX,
+          clientY = _a.clientY;
+      frame.set("width", width + "px");
+      frame.set("height", height + "px");
+      frame.set("transform", "translateX", drag.beforeTranslate[0] + "px");
+      frame.set("transform", "translateY", drag.beforeTranslate[1] + "px");
+      target.style.cssText += frame.toCSS();
+      setLabel(clientX, clientY, width + " X " + height);
+    }).on("rotateEnd", function () {
+      hideLabel();
+    }).on("resizeEnd", function () {
+      hideLabel();
+    });
 
     function setLabel(clientX, clientY, text) {
       // tslint:disable-next-line: max-line-length
@@ -9853,88 +10527,175 @@ version: 0.9.0
       labelElement.innerHTML = text;
     }
 
-    var moveable = new Moveable$1(moveableElement.parentElement, {
-      target: moveableElement,
-      origin: false,
-      draggable: true,
-      rotatable: true,
-      scalable: true,
-      pinchable: true,
-      keepRatio: false,
-      throttleDrag: 1,
-      throttleScale: 0.01,
-      throttleRotate: 0.2,
-      throttleResize: 1
-    }).on("pinch", function (_a) {
-      var clientX = _a.clientX,
-          clientY = _a.clientY;
-      setTimeout(function () {
-        setLabel(clientX, clientY, "X: " + frame.get("left") + "\n        <br/>Y: " + frame.get("top") + "\n        <br/>W: " + frame.get("width") + "\n        <br/>H: " + frame.get("height") + "\n        <br/>S: " + frame.get("transform", "scaleX").toFixed(2) + ", " + frame.get("transform", "scaleY").toFixed(2) + "\n        <br/>R: " + parseFloat(frame.get("transform", "rotate")).toFixed(1) + "deg\n        ");
+    function hideLabel() {
+      labelElement.style.display = "none";
+    }
+
+    function snap(poses, targetPos) {
+      var nextPos = targetPos;
+      var snapDist = Infinity;
+      poses.forEach(function (pos) {
+        var dist = Math.abs(pos - targetPos);
+
+        if (dist > 10) {
+          return;
+        }
+
+        if (snapDist > dist) {
+          snapDist = dist;
+          nextPos = pos;
+        }
       });
-    }).on("drag", function (_a) {
-      var target = _a.target,
-          left = _a.left,
-          top = _a.top,
-          clientX = _a.clientX,
-          clientY = _a.clientY,
-          isPinch = _a.isPinch;
-      frame.set("left", left + "px");
-      frame.set("top", top + "px");
-      setTransform(target);
-      !isPinch && setLabel(clientX, clientY, "X: " + left + "px<br/>Y: " + top + "px");
-    }).on("scale", function (_a) {
-      var target = _a.target,
-          delta = _a.delta,
-          clientX = _a.clientX,
-          clientY = _a.clientY,
-          isPinch = _a.isPinch;
-      var scaleX = frame.get("transform", "scaleX") * delta[0];
-      var scaleY = frame.get("transform", "scaleY") * delta[1];
-      frame.set("transform", "scaleX", scaleX);
-      frame.set("transform", "scaleY", scaleY);
-      setTransform(target);
-      !isPinch && setLabel(clientX, clientY, "S: " + scaleX.toFixed(2) + ", " + scaleY.toFixed(2));
-    }).on("rotate", function (_a) {
-      var target = _a.target,
-          beforeDelta = _a.beforeDelta,
-          clientX = _a.clientX,
-          clientY = _a.clientY,
-          isPinch = _a.isPinch;
-      var deg = parseFloat(frame.get("transform", "rotate")) + beforeDelta;
-      frame.set("transform", "rotate", deg + "deg");
-      setTransform(target);
-      !isPinch && setLabel(clientX, clientY, "R: " + deg.toFixed(1));
-    }).on("resize", function (_a) {
-      var target = _a.target,
-          width = _a.width,
-          height = _a.height,
-          clientX = _a.clientX,
-          clientY = _a.clientY,
-          isPinch = _a.isPinch;
-      frame.set("width", width + "px");
-      frame.set("height", height + "px");
-      setTransform(target);
-      !isPinch && setLabel(clientX, clientY, "W: " + width + "px<br/>H: " + height + "px");
-    }).on("warp", function (_a) {
-      var target = _a.target,
-          multiply = _a.multiply,
-          delta = _a.delta,
+      return nextPos;
+    }
+
+    function dragStartGuideline(_a) {
+      var datas = _a.datas,
           clientX = _a.clientX,
           clientY = _a.clientY;
-      frame.set("transform", "matrix3d", multiply(frame.get("transform", "matrix3d"), delta));
-      setTransform(target);
-      setLabel(clientX, clientY, "X: " + clientX + "px<br/>Y: " + clientY + "px");
-    }).on("dragEnd", function () {
-      labelElement.style.display = "none";
-    }).on("scaleEnd", function () {
-      labelElement.style.display = "none";
-    }).on("rotateEnd", function () {
-      labelElement.style.display = "none";
-    }).on("resizeEnd", function () {
-      labelElement.style.display = "none";
-    }).on("warpEnd", function () {
-      labelElement.style.display = "none";
+      var rect = moveableTarget.getBoundingClientRect();
+      var type = datas.type;
+      var guideline = datas.guideline;
+      datas.verticalPoses = [rect.left, rect.left + rect.width];
+      datas.horizontalPoses = [rect.top, rect.top + rect.height];
+      datas.isHorizontal = type === "horizontal";
+      guideline.classList.add("dragging");
+      dragGuideline({
+        datas: datas,
+        clientX: clientX,
+        clientY: clientY
+      });
+    }
+
+    function dragGuideline(_a) {
+      var clientX = _a.clientX,
+          clientY = _a.clientY,
+          datas = _a.datas;
+      var guideline = datas.guideline,
+          isHorizontal = datas.isHorizontal;
+      var style = guideline.style;
+
+      if (isHorizontal) {
+        var nextPos = snap(datas.horizontalPoses, clientY);
+        style.top = nextPos + "px";
+        return nextPos;
+      } else {
+        var nextPos = snap(datas.verticalPoses, clientX);
+        style.left = nextPos + "px";
+        return nextPos;
+      }
+    }
+
+    function dragEndGuideline(_a) {
+      var datas = _a.datas,
+          clientX = _a.clientX,
+          clientY = _a.clientY;
+      var el = datas.guideline;
+      var clientPos = dragGuideline({
+        datas: datas,
+        clientX: clientX,
+        clientY: clientY
+      });
+
+      if (clientPos < 30) {
+        guidelinesElement.removeChild(el);
+        return;
+      }
+
+      el.setAttribute("data-position", clientPos);
+      var horizontalGuidelines = [];
+      var verticalGuidelines = [];
+      [].slice.call(guidelinesElement.children).forEach(function (guideline) {
+        var type = guideline.getAttribute("data-type");
+        var pos = parseFloat(guideline.getAttribute("data-position"));
+        (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
+      });
+      el.classList.remove("dragging");
+      moveable.verticalGuidelines = verticalGuidelines;
+      moveable.horizontalGuidelines = horizontalGuidelines;
+    }
+
+    new Dragger(guidelinesElement, {
+      container: document.body,
+      dragstart: function (_a) {
+        var inputEvent = _a.inputEvent,
+            datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+        var guideline = inputEvent.target;
+
+        if (guideline.classList.contains("horizontal")) {
+          datas.type = "horizontal";
+        } else if (guideline.classList.contains("vertical")) {
+          datas.type = "vertical";
+        } else {
+          return false;
+        }
+
+        datas.guideline = guideline;
+        dragStartGuideline({
+          datas: datas,
+          clientX: clientX,
+          clientY: clientY
+        });
+      },
+      drag: dragGuideline,
+      dragend: dragEndGuideline
     });
+    new Dragger(rulersElement, {
+      container: document.body,
+      dragstart: function (_a) {
+        var inputEvent = _a.inputEvent,
+            datas = _a.datas,
+            clientX = _a.clientX,
+            clientY = _a.clientY;
+        var ruler = inputEvent.target;
+
+        if (ruler === horizontalRulerElement) {
+          datas.type = "horizontal";
+        } else if (ruler === verticalRulerElement) {
+          datas.type = "vertical";
+        } else {
+          return false;
+        }
+
+        var el = document.createElement("div");
+        var type = datas.type;
+        el.className = "guideline " + type;
+        el.setAttribute("data-type", type);
+        datas.guideline = el;
+        dragStartGuideline({
+          datas: datas,
+          clientX: clientX,
+          clientY: clientY
+        });
+        guidelinesElement.appendChild(el);
+      },
+      drag: dragGuideline,
+      dragend: dragEndGuideline
+    });
+
+    function toggleShift(shiftKey) {
+      if (shiftKey) {
+        moveable.throttleRotate = 30;
+        moveable.keepRatio = true;
+      } else {
+        moveable.throttleRotate = 1;
+        moveable.keepRatio = false;
+      }
+    }
+
+    KeyController.global.on("keydown", function (_a) {
+      var shiftKey = _a.shiftKey;
+      toggleShift(shiftKey);
+    }).on("keyup", function (_a) {
+      var shiftKey = _a.shiftKey;
+      toggleShift(shiftKey);
+    });
+    window.addEventListener("resize", function () {
+      moveable.updateRect();
+    });
+
     var draggableElement = document.querySelector(".draggable");
     var draggable = new Moveable$1(draggableElement.parentElement, {
       target: draggableElement,
@@ -10038,7 +10799,7 @@ version: 0.9.0
       });
     });
     window.addEventListener("resize", function () {
-      moveable.updateRect();
+      // moveable.updateRect();
       draggable.updateRect();
       resizable.updateRect();
       scalable.updateRect();
@@ -10075,21 +10836,19 @@ version: 0.9.0
       ableButtonElements.forEach(function (el) {
         el.classList.remove("selected");
       });
-      target.classList.add("selected");
-
-      if (able === "warpable") {
-        moveable.resizable = false;
-        moveable.scalable = false;
-        moveable.warpable = true;
-      } else if (able === "scalable") {
-        moveable.resizable = false;
-        moveable.scalable = true;
-        moveable.warpable = false;
-      } else if (able === "resizable") {
-        moveable.resizable = true;
-        moveable.scalable = false;
-        moveable.warpable = false;
-      }
+      target.classList.add("selected"); // if (able === "warpable") {
+      //     moveable.resizable = false;
+      //     moveable.scalable = false;
+      //     moveable.warpable = true;
+      // } else if (able === "scalable") {
+      //     moveable.resizable = false;
+      //     moveable.scalable = true;
+      //     moveable.warpable = false;
+      // } else if (able === "resizable") {
+      //     moveable.resizable = true;
+      //     moveable.scalable = false;
+      //     moveable.warpable = false;
+      // }
     });
     var tabGroups = {};
     [].slice.call(document.querySelectorAll("[data-tab]")).forEach(function (tabElement) {
@@ -10113,7 +10872,7 @@ version: 0.9.0
         tabElement.classList.add("selected");
         panelElement.classList.add("selected");
       });
-    });
+    }); //# sourceMappingURL=index.js.map
 
 }());
 //# sourceMappingURL=index.js.map
