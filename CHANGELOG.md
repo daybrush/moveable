@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 * fix that resizing north, west direction occur decimal point issue.
 * Disable pinchable with snappable.
+* Fix offset caculation for Webkit
 
 ## [0.9.3] - 2019-10-01
 ### Fixed
