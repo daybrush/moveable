@@ -1143,8 +1143,149 @@ export class AppComponent implements OnInit {
 
 
 ### Vanilla Example
+```ts
+import Moveable from "moveable";
+
+const targets = [].slice.call(document.querySelectorAll(".target"));
+const moveable = new Moveable(document.body, {
+    // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
+    target: targets,
+    scalable: true,
+});
+
+const frames = targets.map(() => ({
+    translate: [0, 0],
+    scale: [1, 1],
+}));
+moveable.on("scaleGroupStart", ({ events }) => {
+    events.forEach((ev, i) => {
+        const frame = frames[i];
+
+        ev.set(frame.scale);
+        // If a drag event has already occurred, there is no dragStart.
+        ev.dragStart && ev.dragStart.set(frame.translate);
+    });
+}).on("scaleGroup", ({ events }) => {
+    events.forEach(({ target, scale, drag }, i) => {
+        const frame = frames[i];
+
+        frame.scale = scale;
+
+        // get drag event
+        frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+            + `scale(${scale[0]}, ${scale[1]})`;
+    });
+}).on("scaleGroupEnd", ({ targets, isDrag, clientX, clientY }) => {
+    console.log("onScaleGroupEnd", targets, isDrag);
+});
+```
+
 ### React & Preact Example
+
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.targets = [].slice.call(document.querySelectorAll(".target"));
+this.frames = targets.map(() => ({
+    translate: [0, 0],
+    scale: [1, 1],
+}));
+
+<Moveable
+    target={this.targets}
+    scalable={true}
+    onScaleGroupStart={({ events }) => {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+
+            ev.set(frame.scale);
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }}
+    onScaleGroup={({ events }) => {
+        events.forEach(({ target, scale, drag }, i) => {
+            const frame = this.frames[i];
+
+            frame.scale = scale;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+                + `scale(${scale[0]}, ${scale[1]})`;
+        });
+    }}
+    onScaleGroupEnd={({ targets, isDrag, clientX, clientY }) => {
+        console.log("onScaleGroupEnd", targets, isDrag);
+    }} />
+```
+
+
 ### Angular Example
+```ts
+import { OnInit } from "@angular/core";
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div class="target target1">target1</div>
+<div class="target target2">target2</div>
+<div class="target target3">target3</div>
+<ngx-moveable
+    [target]="targets"
+    [scalable]="true"
+    (onScaleGroupStart)="onScaleGroupStart($event)"
+    (onScaleGroup)="onScaleGroup($event)"
+    (onScaleGroupEnd)="onScaleGroupEnd($event)"
+    />
+`,
+})
+export class AppComponent implements OnInit {
+    targets = [];
+    frames = [];
+    ngOnInit() {
+        this.targets = [].slice.call(document.querySelectorAll(".target"));
+        this.frames = targets.map(() => ({
+            translate: [0, 0],
+            scale: [1, 1],
+        }));
+    }
+    onScaleGroupStart({ events }) {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+
+            ev.set(frame.scale);
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }
+    onScaleGroup({ events }) {
+        events.forEach(({ target, scale, drag }, i) => {
+            const frame = this.frames[i];
+
+            frame.scale = scale;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+                + `scale(${scale[0]}, ${scale[1]})`;
+        });
+    }
+    onScaleGroupEnd({ targets, isDrag, clientX, clientY }) {
+        console.log("onScaleGroupEnd", targets, isDrag);
+    }
+}
+```
+
 
 ## <a id="toc-group-rotatable"></a>Group with Rotatable
 ### Events
@@ -1152,9 +1293,150 @@ export class AppComponent implements OnInit {
 * [onRotateGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroup)
 * [onRotateGroupEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:rotateGroupEnd)
 
+
 ### Vanilla Example
+```ts
+import Moveable from "moveable";
+
+const targets = [].slice.call(document.querySelectorAll(".target"));
+const moveable = new Moveable(document.body, {
+    // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
+    target: targets,
+    rotatable: true,
+});
+
+const frames = targets.map(() => ({
+    translate: [0, 0],
+    rotate: 0,
+}));
+moveable.on("rotateGroupStart", ({ events }) => {
+    events.forEach((ev, i) => {
+        const frame = frames[i];
+
+        ev.set(frame.rotate);
+        // If a drag event has already occurred, there is no dragStart.
+        ev.dragStart && ev.dragStart.set(frame.translate);
+    });
+}).on("rotateGroup", ({ events }) => {
+    events.forEach(({ target, beforeRotate, drag }, i) => {
+        const frame = frames[i];
+
+        frame.rotate = beforeRotate;
+
+        // get drag event
+        frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+            + `rotate(${beforeRotate}deg)`;
+    });
+}).on("rotateGroupEnd", ({ targets, isDrag, clientX, clientY }) => {
+    console.log("onRotateGroupEnd", targets, isDrag);
+});
+```
+
 ### React & Preact Example
+
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.targets = [].slice.call(document.querySelectorAll(".target"));
+this.frames = targets.map(() => ({
+    translate: [0, 0],
+    rotate: 0,
+}));
+
+<Moveable
+    target={this.targets}
+    rotatable={true}
+    onRotateGroupStart={({ events }) => {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+
+            ev.set(frame.rotate);
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }}
+    onRotateGroup={({ events }) => {
+        events.forEach(({ target, beforeRotate, drag }, i) => {
+            const frame = this.frames[i];
+
+            frame.rotate = beforeRotate;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+                + `rotate(${beforeRotate}deg)`;
+        });
+    }}
+    onRotateGroupEnd={({ targets, isDrag, clientX, clientY }) => {
+        console.log("onRotateGroupEnd", targets, isDrag);
+    }} />
+```
+
+
 ### Angular Example
+```ts
+import { OnInit } from "@angular/core";
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div class="target target1">target1</div>
+<div class="target target2">target2</div>
+<div class="target target3">target3</div>
+<ngx-moveable
+    [target]="targets"
+    [rotatable]="true"
+    (onRotateGroupStart)="onRotateGroupStart($event)"
+    (onRotateGroup)="onRotateGroup($event)"
+    (onRotateroupEnd)="onRotateGroupEnd($event)"
+    />
+`,
+})
+export class AppComponent implements OnInit {
+    targets = [];
+    frames = [];
+    ngOnInit() {
+        this.targets = [].slice.call(document.querySelectorAll(".target"));
+        this.frames = targets.map(() => ({
+            translate: [0, 0],
+            rotate: 0,
+        }));
+    }
+    onRotateGroupStart({ events }) => {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+
+            ev.set(frame.rotate);
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }
+    onRotateGroup({ events }) {
+        events.forEach(({ target, beforeRotate, drag }, i) => {
+            const frame = this.frames[i];
+
+            frame.rotate = beforeRotate;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+                + `rotate(${beforeRotate}deg)`;
+        });
+    }
+    onRotateGroupEnd({ targets, isDrag, clientX, clientY }) {
+        console.log("onRotateGroupEnd", targets, isDrag);
+    }
+}
+```
 
 # <a id="toc-custom-css"></a>✨ How to use custom CSS
 
