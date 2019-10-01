@@ -4106,7 +4106,7 @@ version: 0.9.4
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/preact-moveable
-    version: 0.11.9
+    version: 0.11.10
     */
 
     /*
@@ -4472,7 +4472,7 @@ version: 0.9.4
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.12.8
+    version: 0.12.9
     */
 
     /*! *****************************************************************************
@@ -6745,7 +6745,8 @@ version: 0.9.4
             prevDist = datas.prevDist,
             prevBeforeDist = datas.prevBeforeDist,
             transform = datas.transform,
-            startTranslate = datas.startTranslate;
+            startTranslate = datas.startTranslate,
+            parentFlag = datas.parentFlag;
 
         if (!isDrag) {
           return;
@@ -6755,13 +6756,18 @@ version: 0.9.4
         var parentMoveable = props.parentMoveable;
         var throttleDrag = parentEvent ? 0 : props.throttleDrag || 0;
         var target = moveable.state.target;
+        var isSnap = false;
 
-        var _b = checkSnapDrag(moveable, distX, distY, datas),
-            verticalInfo = _b[0],
-            horizontalInfo = _b[1];
+        if (!parentEvent && !isPinch && !parentFlag) {
+          var _b = checkSnapDrag(moveable, distX, distY, datas),
+              verticalInfo = _b[0],
+              horizontalInfo = _b[1];
 
-        distX -= verticalInfo.offset;
-        distY -= horizontalInfo.offset;
+          isSnap = verticalInfo.isSnap || horizontalInfo.isSnap;
+          distX -= verticalInfo.offset;
+          distY -= horizontalInfo.offset;
+        }
+
         var beforeTranslate = plus(getDragDist({
           datas: datas,
           distX: distX,
@@ -6773,7 +6779,7 @@ version: 0.9.4
           distY: distY
         }, false), startTranslate);
 
-        if (!verticalInfo.isSnap && !horizontalInfo.isSnap) {
+        if (!isSnap) {
           throttleArray(translate, throttleDrag);
           throttleArray(beforeTranslate, throttleDrag);
         }
