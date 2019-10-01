@@ -1,6 +1,5 @@
 import MoveableManager from "../MoveableManager";
 import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo } from "../types";
-import { OnDrag, OnDragStart } from "@daybrush/drag";
 import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
@@ -10,7 +9,7 @@ import {
 } from "../DraggerUtils";
 import { minus, plus } from "@moveable/matrix";
 
-function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { datas }: OnDragStart) {
+function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
     if (state.guidelines && state.guidelines.length) {
         return;
@@ -77,17 +76,8 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>, { 
         }
     });
 
-    const { pos1, pos2, pos3, pos4, left: targetLeft, top: targetTop } = state;
-    const startLeft = targetLeft + Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
-    const startRight = targetLeft + Math.max(pos1[0], pos2[0], pos3[0], pos4[0]);
-    const startTop = targetTop + Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
-    const startBottom = targetTop + Math.max(pos1[1], pos2[1], pos3[1], pos4[1]);
-
     state.guidelines = guidelines;
-    state.startLeft = startLeft;
-    state.startRight = startRight;
-    state.startTop = startTop;
-    state.startBottom = startBottom;
+    state.enableSnap = true;
 }
 function checkBounds(
     moveable: MoveableManager<SnappableProps>,
@@ -203,11 +193,13 @@ export function hasGuidelines(
         },
         state: {
             guidelines,
+            enableSnap,
         },
     } = moveable;
 
     if (
         !snappable
+        || !enableSnap
         || (ableName && snappable !== true && snappable.indexOf(ableName))
         || (!bounds && (!guidelines || !guidelines.length))
     ) {
@@ -747,6 +739,68 @@ export function getSnapInfosByDirection(
         return checkSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), true, 1);
     }
 }
+export function startCheckSnapDrag(
+    moveable: MoveableManager<any, any>,
+    datas: any,
+) {
+    datas.absolutePoses = getAbsolutePosesByState(moveable.state);
+}
+export function checkSnapDrag(
+    moveable: MoveableManager<any, any>,
+    distX: number,
+    distY: number,
+    datas: any,
+) {
+    const snapVerticalInfo = {
+        isSnap: false,
+        offset: 0,
+    };
+    const snapHorizontalInfo = {
+        isSnap: false,
+        offset: 0,
+    };
+
+    if (!hasGuidelines(moveable, "draggable")) {
+        return [snapVerticalInfo, snapHorizontalInfo];
+    }
+    const poses = getAbsolutePoses(
+        datas.absolutePoses,
+        [distX, distY],
+    );
+    const { left, right, top, bottom } = getRect(poses);
+
+    const snapInfos = checkSnaps(moveable, {
+        left,
+        right,
+        top,
+        bottom,
+        center: (left + right) / 2,
+        middle: (top + bottom) / 2,
+    }, true);
+    const boundInfos = checkBounds(moveable, [left, right], [top, bottom]);
+
+    if (boundInfos.vertical.isBound) {
+        snapVerticalInfo.offset = boundInfos.vertical.offset;
+        snapVerticalInfo.isSnap = true;
+    } else if (snapInfos.vertical.isSnap) {
+        // has vertical guidelines
+        snapVerticalInfo.offset = snapInfos.vertical.offset;
+        snapVerticalInfo.isSnap = true;
+    }
+    if (boundInfos.horizontal.isBound) {
+        snapHorizontalInfo.offset = boundInfos.horizontal.offset;
+        snapHorizontalInfo.isSnap = true;
+    } else if (snapInfos.horizontal.isSnap) {
+        // has horizontal guidelines
+        snapHorizontalInfo.offset = snapInfos.horizontal.offset;
+        snapHorizontalInfo.isSnap = true;
+    }
+
+    return [
+        snapVerticalInfo,
+        snapHorizontalInfo,
+    ];
+}
 
 export default {
     name: "snappable",
@@ -859,86 +913,41 @@ export default {
     },
     dragStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
         moveable.state.snapDirection = true;
-        snapStart(moveable, e);
+        snapStart(moveable);
     },
-    drag(moveable: MoveableManager<SnappableProps, SnappableState>, e: OnDrag) {
-        const { clientX, clientY, distX, distY } = e;
-        const {
-            startLeft,
-            startTop,
-            startBottom,
-            startRight,
-        } = moveable.state;
-
-        if (!hasGuidelines(moveable, "draggable")) {
-            return false;
-        }
-        const left = startLeft + distX;
-        const right = startRight + distX;
-        const center = (left + right) / 2;
-        const top = startTop + distY;
-        const bottom = startBottom + distY;
-        const middle = (top + bottom) / 2;
-
-        const snapInfos = checkSnaps(moveable, {
-            left,
-            right,
-            top,
-            bottom,
-            center,
-            middle,
-        }, true);
-        const boundInfos = checkBounds(moveable, [left, right], [top, bottom]);
-        let offsetX = 0;
-        let offsetY = 0;
-
-        if (boundInfos.vertical.isBound) {
-            offsetX = boundInfos.vertical.offset;
-        } else if (snapInfos.vertical.isSnap) {
-            // has vertical guidelines
-            offsetX = snapInfos.vertical.offset;
-        }
-        if (boundInfos.horizontal.isBound) {
-            offsetY = boundInfos.horizontal.offset;
-        } else if (snapInfos.horizontal.isSnap) {
-            // has horizontal guidelines
-            offsetY = snapInfos.horizontal.offset;
-        }
-        e.clientX = clientX - offsetX;
-        e.clientY = clientY - offsetY;
-        e.distX = distX - offsetX;
-        e.distY = distY - offsetY;
+    pinchStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
+        this.unset(moveable);
     },
     dragEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
-        moveable.state.guidelines = [];
-        moveable.state.snapDirection = null;
+        this.unset(moveable);
     },
     dragControlCondition: directionCondition,
     dragControlStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
         moveable.state.snapDirection = null;
-        snapStart(moveable, e);
+        snapStart(moveable);
     },
     dragControlEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
-        this.dragEnd(moveable);
+        this.unset(moveable);
     },
     dragGroupStart(moveable: any, e: any) {
         moveable.state.snapDirection = true;
-        snapStart(moveable, e);
-    },
-    dragGroup(moveable: any, e: any) {
-        this.drag(moveable, e);
+        snapStart(moveable);
     },
     dragGroupEnd(moveable: any) {
-        this.dragEnd(moveable);
+        this.unset(moveable);
     },
     dragGroupControlStart(moveable: any, e: any) {
         moveable.state.snapDirection = null;
-        snapStart(moveable, e);
+        snapStart(moveable);
     },
     dragGroupControlEnd(moveable: any) {
-        this.dragEnd(moveable);
+        this.unset(moveable);
     },
     unset(moveable: any) {
-        this.dragEnd(moveable);
+        const state = moveable.state;
+
+        state.enableSnap = false;
+        state.guidelines = [];
+        state.snapDirection = null;
     },
 };

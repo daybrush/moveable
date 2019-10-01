@@ -6,6 +6,7 @@ import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, OnDragStart } fr
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
+import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 
 export default {
     name: "draggable",
@@ -40,6 +41,7 @@ export default {
         datas.prevBeforeDist = [0, 0];
         datas.isDrag = false;
 
+        startCheckSnapDrag(moveable, datas);
         const params: OnDragStart = {
             datas: datas.datas,
             target: target!,
@@ -72,11 +74,18 @@ export default {
         const parentMoveable = props.parentMoveable;
         const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
         const target = moveable.state.target;
+        const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
+
+        distX -= verticalInfo.offset;
+        distY -= horizontalInfo.offset;
+
         const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
         const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
 
-        throttleArray(translate, throttleDrag);
-        throttleArray(beforeTranslate, throttleDrag);
+        if (!verticalInfo.isSnap && !horizontalInfo.isSnap) {
+            throttleArray(translate, throttleDrag);
+            throttleArray(beforeTranslate, throttleDrag);
+        }
 
         const beforeDist = minus(beforeTranslate, startTranslate);
         const dist = minus(translate, startTranslate);

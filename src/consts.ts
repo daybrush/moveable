@@ -30,7 +30,6 @@ export const EVENTS: Array<keyof MoveableEvents> = [
     "pinchStart",
     "pinch",
     "pinchEnd",
-
     "dragGroupStart",
     "dragGroup",
     "dragGroupEnd",
@@ -47,4 +46,7 @@ export const EVENTS: Array<keyof MoveableEvents> = [
     "pinchGroup",
     "pinchGroupEnd",
     "clickGroup",
+    "renderStart",
+    "render",
+    "renderEnd",
 ];

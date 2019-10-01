@@ -15,6 +15,10 @@ export type MoveableManagerProps<T = {}> = {
     keepRatio?: boolean;
     pinchThreshold?: number;
     ables?: Array<Able<T>>;
+
+    onRenderStart: (e: any) => any,
+    onRender: (e: any) => any,
+    onRenderEnd: (e: any) => any,
 } & T;
 export type MoveableManagerState<T = {}> = {
     target: SVGElement | HTMLElement | null | undefined;
@@ -64,8 +68,9 @@ export interface SnapInfo {
     guidelines: Guideline[];
     snapPoses: number[];
 }
-export interface MoveableProps
-    extends DraggableProps,
+export interface MoveableProps extends
+    MoveableManagerProps<any>,
+    DraggableProps,
     RotatableProps,
     ResizableProps,
     ScalableProps,
@@ -795,10 +800,7 @@ export interface SnappableProps {
 export interface SnappableState {
     guidelines: any[];
     snapDirection: number[] | true | null;
-    startLeft: number;
-    startTop: number;
-    startRight: number;
-    startBottom: number;
+    enableSnap: boolean;
 }
 
 export interface OnCustomDrag extends Position {

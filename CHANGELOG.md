@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.4] - 2019-10-01
+### Fixed
+* fix that resizing north, west direction occur decimal point issue.
+* Disable pinchable with snappable.
+
 ## [0.9.3] - 2019-10-01
 ### Fixed
 * fix that keepRatio want to behave like sketches and illustrators. #47

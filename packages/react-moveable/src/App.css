@@ -16,8 +16,8 @@
     position: relative;
     /* animation: App-logo-spin infinite 20s linear; */
     /* transform: rotate(18deg); */
-    left: 20px;
-    top: 20px;
+    left: calc(50% - 150px);
+    top: calc(50% - 100px);
     width: 300px;
     height: 200px;
     /* transform-origin: 0% 0%!important; */

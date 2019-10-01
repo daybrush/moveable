@@ -2,8 +2,9 @@ import MoveableManager from "./MoveableManager";
 import Dragger, { OnDragStart, OnDrag, OnDragEnd, OnPinchEnd } from "@daybrush/drag";
 import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
+import { triggerEvent } from "./utils";
 
-function triggerAble<T>(
+function triggerAble<T extends IObject<any>>(
     moveable: MoveableManager<T>,
     ableType: string,
     eventOperation: string,
@@ -31,6 +32,13 @@ function triggerAble<T>(
 
     if (isEnd) {
         moveable.state.dragger = null;
+    }
+    if (isStart) {
+        triggerEvent(moveable, "onRenderStart", {} as any);
+    } else if (eventType === "") {
+        triggerEvent(moveable, "onRender", {} as any);
+    } else if (isEnd) {
+        triggerEvent(moveable, "onRenderEnd", {} as any);
     }
     if (!isStart && isUpdate) {
         if (results.some(able => able.updateRect) && !isGroup) {

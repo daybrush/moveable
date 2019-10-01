@@ -120,4 +120,8 @@ export interface MoveableEvents {
     pinchGroupEnd: OnPinchGroupEnd;
 
     clickGroup: OnClickGroup;
+
+    renderStart: {};
+    render: {};
+    renderEnd: {};
 }
