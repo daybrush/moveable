@@ -132,7 +132,6 @@ export default {
             // diagonal
             if (
                 keepRatio
-                && direction[0] && direction[1]
                 && width && height
             ) {
                 const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
@@ -177,6 +176,16 @@ export default {
         }
         nowDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
 
+        if (keepRatio && !parentScale && !pinchFlag && (!direction[0] || !direction[1])) {
+            const distWidth = width * nowDist[0] - width;
+            const distHeight = height * nowDist[1] - height;
+
+            if (direction[0]) {
+                nowDist[1] = throttle((height + distWidth * height / width) / height, throttleScale!);
+            } else {
+                nowDist[0] = throttle((width + distHeight * width / height) / width, throttleScale!);
+            }
+        }
         const  delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
         // const prevScale = scale;
         scale = multiply2(nowDist, startScale);
