@@ -4,6 +4,7 @@ import Dragger from "@daybrush/drag";
 import KeyContoller from "keycon";
 
 const labelElement: HTMLElement = document.querySelector(".label");
+const controlsElement: HTMLElement = document.querySelector(".controls");
 const rulersElement = document.querySelector(".rulers");
 const guidelinesElement = document.querySelector(".guidelines");
 const horizontalRulerElement = rulersElement.querySelector(".ruler.horizontal");
@@ -45,17 +46,15 @@ const moveable = new Moveable(document.body, {
     keepRatio: false,
     origin: false,
     bounds: {
-        left: 300,
+        left: 30,
         top: 30,
     },
 }).on("dragStart", ({ set }) => {
-    console.log("dragStart");
     set([
         parseFloat(frame.get("transform", "translateX")),
         parseFloat(frame.get("transform", "translateY")),
     ]);
 }).on("drag", ({ target, beforeTranslate }) => {
-    console.log("drag");
     frame.set("transform", "translateX", `${beforeTranslate[0]}px`);
     frame.set("transform", "translateY", `${beforeTranslate[1]}px`);
 
@@ -67,8 +66,7 @@ const moveable = new Moveable(document.body, {
     target.style.cssText += frame.toCSS();
     setLabel(clientX, clientY, `${beforeRotate}°`);
 }).on("resizeStart", ({ setOrigin, dragStart }) => {
-    console.log("resizeStart");
-    setOrigin(["50%", "50%"]);
+    setOrigin(["%", "%"]);
 
     dragStart && dragStart.set([
         parseFloat(frame.get("transform", "translateX")),
@@ -76,7 +74,6 @@ const moveable = new Moveable(document.body, {
     ]);
 
 }).on("resize", ({ target, width, height, drag, clientX, clientY }) => {
-    console.log("resize");
     frame.set("width", `${width}px`);
     frame.set("height", `${height}px`);
     frame.set("transform", "translateX", `${drag.beforeTranslate[0]}px`);
@@ -152,9 +149,10 @@ function dragGuideline({ clientX, clientY, datas }) {
 
 function dragEndGuideline({ datas, clientX, clientY }) {
     const el = datas.guideline;
+    const isHorizontal = datas.isHorizontal;
     const clientPos = dragGuideline({ datas, clientX, clientY });
 
-    if (clientPos < 30) {
+    if (clientPos < (isHorizontal ? 30 + controlsElement.offsetHeight : 30)) {
         guidelinesElement.removeChild(el);
         return;
     }
