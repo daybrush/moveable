@@ -874,7 +874,94 @@ moveable.on("draGroupStart", ({ events }) => {
 ```
 
 ### React & Preact Example
+
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.targets = [].slice.call(document.querySelectorAll(".target"));
+this.frames = targets.map(() => ({
+    translate: [0, 0],
+}));
+
+<Moveable
+    target={this.targets}
+    draggable={true}
+    onDragGoupStart={({ events }) => {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+            ev.set(frame.translate);
+        });
+    }}
+    onDragGroup={({ targets, events }) => {
+        events.forEach(({ target, beforeTranslate }, i) => {
+            const frame = this.frames[i];
+
+            frame.translate = beforeTranslate;
+            target.style.transform
+                = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        });
+    }}
+    onDragGroupEnd={({ targets, isDrag, clientX, clientY }) => {
+        console.log("onDragGroupEnd", targets, isDrag);
+    }} />
+```
+
+
 ### Angular Example
+```ts
+import { OnInit } from "@angular/core";
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div class="target target1">target1</div>
+<div class="target target2">target2</div>
+<div class="target target3">target3</div>
+<ngx-moveable
+    [target]="targets"
+    [draggable]="true"
+    (onDragGroupStart)="onDragGroupStart($event)"
+    (onDragGroup)="onDragGroup($event)"
+    (onDragGroupEnd)="onDragGroupEnd($event)"
+    />
+`,
+})
+export class AppComponent implements OnInit {
+    targets = [];
+    frames = [];
+    ngOnInit() {
+        this.targets = [].slice.call(document.querySelectorAll(".target"));
+        this.frames = targets.map(() => ({
+            translate: [0, 0],
+        }));
+    }
+    onDragGoupStart({ events }) {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+            ev.set(frame.translate);
+        });
+    }
+    onDragGroup({ targets, events }) {
+        events.forEach(({ target, beforeTranslate }, i) => {
+            const frame = this.frames[i];
+
+            frame.translate = beforeTranslate;
+            target.style.transform
+                = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        });
+    }
+    onDragGroupEnd({ targets, isDrag, clientX, clientY }) {
+        console.log("onDragGroupEnd", targets, isDrag);
+    }
+}
+```
+
+
 ## <a id="toc-group-resizable"></a>Group with Resizable
 ### Events
 * [onReiszeGroupStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeGroupStart): When the group resize starts, the `resizeGroupStart` event is called.
