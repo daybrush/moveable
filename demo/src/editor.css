@@ -1,49 +1,57 @@
-.editor {
-    position: relative;
+.editor, .view {
+    position: absolute;
     width: 100%;
     height: 100%;
     overflow: hidden;
+    z-index: 1;
+}
+.view {
+    left: 30px;
+    top: 30px;
 }
 .controls {
     position: relative;
     background: #444;
     width: 100%;
-    height: 40px;
+    min-height: 35px;
     padding-left: 35px;
     box-sizing: border-box;
+    border-bottom: 1px solid #333;
 }
 .control {
     display: inline-block;
-    height: 40px;
-    line-height: 40px;
+    height: 35px;
+    line-height: 35px;
     margin-right: 10px;
 }
 .control span {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 10px;
     color: #fff;
-    padding-right: 5px;
+    padding-right: 8px;
 }
 .control input {
     color: #fff;
     background: #333;
     border: 0;
     border-radius: 3px;
-    width: 70px;
+    width: 60px;
     height: 20px;
+    box-sizing: border-box;
+    padding-left: 8px;
 }
 .rulers {
     position: relative;
     width: 30px;
     height: 30px;
-    background: #555;
+    background: #444;
     box-sizing: border-box;
-    border-bottom: 1px solid #777;
-    border-right: 1px solid #777;
+    /* border-bottom: 1px solid #777;
+    border-right: 1px solid #777; */
 }
 .ruler {
     position: absolute;
-    background: #333;
+    background: #444;
     overflow: hidden;
 }
 .ruler.horizontal {
@@ -57,6 +65,7 @@
     left: 0px;
     width: 30px;
     height: calc(100vh - 30px);
+    min-height: 700px;
 }
 .divisions {
     position: absolute;
@@ -85,7 +94,7 @@
     margin-left: 4px;
 }
 .ruler.horizontal .division:first-child {
-    margin-left: -1px;
+    margin-left: 0px;
 }
 .ruler.horizontal .division:nth-child(2n + 2) {
     height: 7px;
@@ -110,7 +119,7 @@
     clear: both;
 }
 .ruler.vertical .division:first-child {
-    margin-top: -1px;
+    margin-top: 0px;
 }
 .ruler.vertical .division:nth-child(2n + 2) {
     width: 7px;
@@ -125,6 +134,11 @@
     left: 15px;
     bottom: 0px;
     transform: rotate(-90deg) translate(50%, 0%) ;
+}
+.guidelines {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .guideline {
     position: absolute;
@@ -141,19 +155,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 .guideline.horizontal {
-    width: 100%;
+    width: 100vw;
     height: 1px;
     cursor: row-resize;
 }
 
 .guideline.vertical {
     width: 1px;
-    height: 100%;
+    height: 100vh;
     cursor: col-resize;
 }
-
+.mobile .guideline.horizontal {
+    transform: scale(1, 2);
+}
+.mobile .guideline.vertical {
+    transform: scale(2, 1);
+}
 .guideline.horizontal:before {
     height: 20px;
 }
@@ -183,6 +201,7 @@
 .target {
     position: absolute;
     margin: 0;
-    left: calc(50% - 125px);
-    top: calc(50% - 250px);
+    z-index: 1;
+    /* left: calc(50% - 125px);
+    top: calc(50% - 250px); */
 }

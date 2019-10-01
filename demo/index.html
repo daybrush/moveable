@@ -24,60 +24,60 @@
 
 <body>
     <div class="label"></div>
-    <div class="page main editor">
-        <div class="guidelines"></div>
+    <div class="page main">
         <div class="controls">
-            <div class="control"><span>X:</span><input type="text" value=""/></div>
-            <div class="control"><span>Y:</span><input type="text" value=""/></div>
-            <div class="control"><span>W:</span><input type="text" value=""/></div>
-            <div class="control"><span>H:</span><input type="text" value=""/></div>
-            <div class="control"><span>R:</span><input type="text" value=""/></div>
+            <div class="control"><span>X:</span><input type="text" value="0" name="x" /></div>
+            <div class="control"><span>Y:</span><input type="text" value="0" name="y" /></div>
+            <div class="control"><span>W:</span><input type="text" value="250" name="w" /></div>
+            <div class="control"><span>H:</span><input type="text" value="200" name="h" /></div>
+            <div class="control"><span>R:</span><input type="text" value="0°" name="r" /></div>
         </div>
-        <div class="rulers">
-            <div class="horizontal ruler">
-                <div class="divisions"></div>
+        <div class="editor">
+            <div class="guidelines"></div>
+            <div class="rulers">
+                <div class="horizontal ruler">
+                    <div class="divisions"></div>
+                </div>
+                <div class="vertical ruler">
+                    <div class="divisions"></div>
+                </div>
             </div>
-            <div class="vertical ruler">
-                <div class="divisions"></div>
-            </div>
-        </div>
-        <div class="target moveable"><span>Moveable</span></div>
-        <div class="container">
-            <div class="buttons able">
-                <a href="#" data-able="scalable" class="selected">Scalable</a>
-                <a href="#" data-able="resizable">Resizable</a>
-                <a href="#" data-able="warpable">Warpable</a>
-            </div>
-            <p class="badges">
-                <a href="https://www.npmjs.com/package/moveable" target="_blank">
-                    <img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version"
-                        alt="npm version" /></a>
-                <a href="https://github.com/daybrush/moveable" target="_blank">
-                    <img
-                        src="https://img.shields.io/github/stars/daybrush/moveable.svg?color=42b883&style=flat-square" /></a>
-                <a href="https://github.com/daybrush/moveable" target="_blank">
-                    <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square" />
-                </a>
-                <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank">
-                    <img
-                        src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D" />
-                </a>
-                <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img
-                        alt="React"
-                        src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
-                <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img
-                        alt="React"
-                        src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
-                <a href="https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable" target="_blank"><img
-                        alt="React"
-                        src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&color=C82B38"></a>
-                <a href="https://github.com/probil/vue-moveable" target="_blank"><img alt="Vue"
-                        src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
-            </p>
-            <p class="description">Moveable is Draggable! Resizable! Scalable! Rotatable! Warpable! Pinchable!</p>
-            <div class="buttons">
-                <a href="https://github.com/daybrush/moveable" target="_blank">Download</a>
-                <a href="./release/latest/doc" target="_blank">API</a>
+            <div class="view">
+                <div class="target moveable"><span>Moveable</span></div>
+                <div class="container">
+                    <p class="badges">
+                        <a href="https://www.npmjs.com/package/moveable" target="_blank">
+                            <img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version"
+                                alt="npm version" /></a>
+                        <a href="https://github.com/daybrush/moveable" target="_blank">
+                            <img
+                                src="https://img.shields.io/github/stars/daybrush/moveable.svg?color=42b883&style=flat-square" /></a>
+                        <a href="https://github.com/daybrush/moveable" target="_blank">
+                            <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square" />
+                        </a>
+                        <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank">
+                            <img
+                                src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D" />
+                        </a>
+                        <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable"
+                            target="_blank"><img alt="React"
+                                src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
+                        <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable"
+                            target="_blank"><img alt="React"
+                                src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
+                        <a href="https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable"
+                            target="_blank"><img alt="React"
+                                src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&color=C82B38"></a>
+                        <a href="https://github.com/probil/vue-moveable" target="_blank"><img alt="Vue"
+                                src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
+                    </p>
+                    <p class="description">Moveable is Draggable! Resizable! Scalable! Rotatable! Warpable! Pinchable!
+                    </p>
+                    <div class="buttons">
+                        <a href="https://github.com/daybrush/moveable" target="_blank">Download</a>
+                        <a href="./release/latest/doc" target="_blank">API</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -210,20 +210,19 @@
         </div>
         <div class="container">
             <div class="left">
-                <div class="moveable origin"><span>30%, 50%</span></div>
+                <div class="moveable snappable"><span>Snappable</span></div>
             </div>
             <div class="right">
-                <p class="description"><strong>origin</strong> indicates whether or not the origin controlbox will be
-                    visible or not. (transform-origin:30% 50%)</p>
-                <button class="tab selected" data-tab="vanilla" data-group="origin">Vanilla</button>
-                <button class="tab" data-tab="react" data-group="origin">React</button>
-                <button class="tab" data-tab="preact" data-group="origin">Preact</button>
-                <button class="tab" data-tab="angular" data-group="origin">Angular</button>
+                <p class="description"><strong>Snappable</strong> indicates whether to snap to the guideline.</p>
+                <button class="tab selected" data-tab="vanilla" data-group="snappable">Vanilla</button>
+                <button class="tab" data-tab="react" data-group="snappable">React</button>
+                <button class="tab" data-tab="preact" data-group="snappable">Preact</button>
+                <button class="tab" data-tab="angular" data-group="snappable">Angular</button>
                 <pre class="panel selected" data-panel="vanilla"
-                    data-group="origin"><code class="javascript"></code></pre>
-                <pre class="panel" data-panel="react" data-group="origin"><code class="javascript"></code></pre>
-                <pre class="panel" data-panel="preact" data-group="origin"><code class="javascript"></code></pre>
-                <pre class="panel" data-panel="angular" data-group="origin"><code class="javascript"></code></pre>
+                    data-group="snappable"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="react" data-group="snappable"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="preact" data-group="snappable"><code class="javascript"></code></pre>
+                <pre class="panel" data-panel="angular" data-group="snappable"><code class="javascript"></code></pre>
             </div>
         </div>
         <div class="buttons"><a href="./release/latest/doc" class="button">More Features</a></div>

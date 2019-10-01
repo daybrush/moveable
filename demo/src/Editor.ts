@@ -1,8 +1,15 @@
 import { Frame } from "scenejs";
 import Moveable from "../../src/Moveable";
 import Dragger from "@daybrush/drag";
+import agent from "@egjs/agent";
 import KeyContoller from "keycon";
+import { addClass, removeClass, hasClass } from "@daybrush/utils";
 
+const uaInfo = agent();
+const isMobile = uaInfo.isMobile || uaInfo.os.name.indexOf("ios") > -1 || uaInfo.browser.name.indexOf("safari") > -1;
+
+isMobile && addClass(document.body, "mobile");
+const editorElement: HTMLElement = document.querySelector(".editor");
 const labelElement: HTMLElement = document.querySelector(".label");
 const controlsElement: HTMLElement = document.querySelector(".controls");
 const rulersElement = document.querySelector(".rulers");
@@ -11,34 +18,83 @@ const horizontalRulerElement = rulersElement.querySelector(".ruler.horizontal");
 const verticalRulerElement = rulersElement.querySelector(".ruler.vertical");
 const horizontalDivisionsElement = horizontalRulerElement.querySelector(".divisions");
 const verticalDivisionsElement = document.querySelector(".ruler.vertical .divisions");
+const controlXElement: HTMLInputElement = document.querySelector(`.control input[name="x"]`);
+const controlYElement: HTMLInputElement = document.querySelector(`.control input[name="y"]`);
+const controlWElement: HTMLInputElement = document.querySelector(`.control input[name="w"]`);
+const controlHElement: HTMLInputElement = document.querySelector(`.control input[name="h"]`);
+const controlRElement: HTMLInputElement = document.querySelector(`.control input[name="r"]`);
 
 const divisions = [];
-for (let i = 0; i <= 1000; ++i) {
+for (let i = 0; i <= 500; ++i) {
     divisions.push(`<div class="division" data-px="${i * 5}"></div>`);
 }
 horizontalDivisionsElement.innerHTML = divisions.join("");
 verticalDivisionsElement.innerHTML = divisions.join("");
 
+const moveableTarget: HTMLElement = document.querySelector(".moveable.target");
 const frame = new Frame({
-    left: "calc(50% - 125px)",
-    top: "calc(50% - 250px)",
+    left: "0px",
+    top: "0px",
     width: "250px",
     height: "200px",
     transform: {
-        translateX: "0px",
-        translateY: "0px",
+        translateX: `${window.innerWidth / 2 - 125}px`,
+        translateY: `${Math.max(700, window.innerHeight) / 2 - 250}px`,
         rotate: "0deg",
         scaleX: 1,
         scaleY: 1,
     },
 });
-const moveableTarget: HTMLElement = document.querySelector(".moveable.target");
-const moveable = new Moveable(document.body, {
+
+function addControlEvent(el: HTMLInputElement, callback: (value: any) => void) {
+    function eventCallback() {
+        callback(el.value);
+        applyCSS();
+        moveable.updateRect();
+    }
+    new KeyContoller(el).keyup("enter", eventCallback);
+    el.addEventListener("blur", eventCallback);
+}
+
+function move(translate: number[]) {
+    frame.set("transform", "translateX", `${translate[0]}px`);
+    frame.set("transform", "translateY", `${translate[1]}px`);
+    controlXElement.value = `${translate[0]}`;
+    controlYElement.value = `${translate[1]}`;
+}
+function applyCSS() {
+    moveableTarget.style.cssText += frame.toCSS();
+}
+
+addControlEvent(controlXElement, value => {
+    frame.set("transform", "translateX", `${parseFloat(value)}px`);
+});
+addControlEvent(controlYElement, value => {
+    frame.set("transform", "translateY", `${parseFloat(value)}px`);
+});
+addControlEvent(controlWElement, value => {
+    frame.set("width", `${parseFloat(value)}px`);
+});
+addControlEvent(controlHElement, value => {
+    frame.set("height", `${parseFloat(value)}px`);
+});
+addControlEvent(controlRElement, value => {
+    frame.set("transform", "rotate", `${parseFloat(value)}deg`);
+});
+
+controlXElement.value = `${parseFloat(frame.get("transform", "translateX"))}`;
+controlYElement.value = `${parseFloat(frame.get("transform", "translateY"))}`;
+applyCSS();
+
+let isPinchStart = false;
+
+const moveable = new Moveable(editorElement, {
     target: moveableTarget,
     draggable: true,
     resizable: true,
     rotatable: true,
     snappable: true,
+    pinchable: true,
     snapCenter: true,
     snapThreshold: 10,
     throttleResize: 0,
@@ -54,44 +110,52 @@ const moveable = new Moveable(document.body, {
         parseFloat(frame.get("transform", "translateX")),
         parseFloat(frame.get("transform", "translateY")),
     ]);
-}).on("drag", ({ target, beforeTranslate }) => {
-    frame.set("transform", "translateX", `${beforeTranslate[0]}px`);
-    frame.set("transform", "translateY", `${beforeTranslate[1]}px`);
-
-    target.style.cssText += frame.toCSS();
+}).on("drag", ({ beforeTranslate }) => {
+    move(beforeTranslate);
 }).on("rotateStart", ({ set }) => {
     set(parseFloat(frame.get("transform", "rotate")));
-}).on("rotate", ({ target, beforeRotate, clientX, clientY }) => {
+}).on("rotate", ({ beforeRotate, clientX, clientY, isPinch }) => {
     frame.set("transform", "rotate", `${beforeRotate}deg`);
-    target.style.cssText += frame.toCSS();
-    setLabel(clientX, clientY, `${beforeRotate}°`);
+    controlRElement.value = `${beforeRotate}°`;
+    !isPinch && setLabel(clientX, clientY, `${beforeRotate}°`);
 }).on("resizeStart", ({ setOrigin, dragStart }) => {
     setOrigin(["%", "%"]);
-
     dragStart && dragStart.set([
         parseFloat(frame.get("transform", "translateX")),
         parseFloat(frame.get("transform", "translateY")),
     ]);
 
-}).on("resize", ({ target, width, height, drag, clientX, clientY }) => {
+}).on("resize", ({ width, height, drag, clientX, clientY , isPinch }) => {
     frame.set("width", `${width}px`);
     frame.set("height", `${height}px`);
-    frame.set("transform", "translateX", `${drag.beforeTranslate[0]}px`);
-    frame.set("transform", "translateY", `${drag.beforeTranslate[1]}px`);
-    target.style.cssText += frame.toCSS();
 
-    setLabel(clientX, clientY, `${width} X ${height}`);
-}).on("rotateEnd", () => {
-    hideLabel();
-}).on("resizeEnd", () => {
+    move(drag.beforeTranslate);
+    controlWElement.value = `${width}`;
+    controlHElement.value = `${height}`;
+    !isPinch && setLabel(clientX, clientY, `${width} X ${height}`);
+}).on("pinchStart", () => {
+    isPinchStart = true;
+}).on("pinch", ({ clientX, clientY }) => {
+    setLabelCSS(clientX, clientY);
+}).on("render", () => {
+    if (isPinchStart) {
+        labelElement.innerHTML
+            = `W: ${parseFloat(frame.get("width"))}<br/>`
+            + `H: ${parseFloat(frame.get("height"))}<br/>`
+            + `R: ${parseFloat(frame.get("transform", "rotate"))}°`;
+    }
+    // no isPinch
+    applyCSS();
+}).on("renderEnd", () => {
+    isPinchStart = false;
     hideLabel();
 });
+function setLabelCSS(clientX: number, clientY: number) {
+    labelElement.style.cssText
+        = `display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
+}
 function setLabel(clientX: number, clientY: number, text: string) {
-    // tslint:disable-next-line: max-line-length
-
-    labelElement.style.cssText = `
-    display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
-
+    setLabelCSS(clientX, clientY);
     labelElement.innerHTML = text;
 }
 function hideLabel() {
@@ -122,37 +186,36 @@ function dragStartGuideline({ datas, clientX, clientY }) {
     datas.verticalPoses = [rect.left, rect.left + rect.width];
     datas.horizontalPoses = [rect.top, rect.top + rect.height];
     datas.isHorizontal = type === "horizontal";
-
-    guideline.classList.add("dragging");
+    datas.offset = datas.isHorizontal ? controlsElement.offsetHeight - document.documentElement.scrollTop : 0;
+    addClass(guideline, "dragging");
 
     dragGuideline({ datas, clientX, clientY });
 }
 
 function dragGuideline({ clientX, clientY, datas }) {
-    const { guideline, isHorizontal } = datas;
+    const { guideline, isHorizontal, offset} = datas;
     const style = guideline.style;
 
     if (isHorizontal) {
-        const nextPos = snap(datas.horizontalPoses, clientY);
+        const nextPos = snap(datas.horizontalPoses, clientY) - offset;
 
         style.top = `${nextPos}px`;
 
         return nextPos;
     } else {
-        const nextPos = snap(datas.verticalPoses, clientX);
+        const nextPos = snap(datas.verticalPoses, clientX) - offset;
 
         style.left = `${nextPos}px`;
 
-        return nextPos;
+        return nextPos - offset;
     }
 }
 
 function dragEndGuideline({ datas, clientX, clientY }) {
     const el = datas.guideline;
-    const isHorizontal = datas.isHorizontal;
     const clientPos = dragGuideline({ datas, clientX, clientY });
 
-    if (clientPos < (isHorizontal ? 30 + controlsElement.offsetHeight : 30)) {
+    if (clientPos < 30) {
         guidelinesElement.removeChild(el);
         return;
     }
@@ -165,7 +228,7 @@ function dragEndGuideline({ datas, clientX, clientY }) {
         const pos = parseFloat(guideline.getAttribute("data-position"));
         (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
     });
-    el.classList.remove("dragging");
+    removeClass(el, "dragging");
     moveable.verticalGuidelines = verticalGuidelines;
     moveable.horizontalGuidelines = horizontalGuidelines;
 }
@@ -174,9 +237,9 @@ new Dragger(guidelinesElement, {
     dragstart: ({ inputEvent, datas, clientX, clientY }) => {
         const guideline = inputEvent.target;
 
-        if (guideline.classList.contains("horizontal")) {
+        if (hasClass(guideline, "horizontal")) {
             datas.type = "horizontal";
-        } else if (guideline.classList.contains("vertical")) {
+        } else if (hasClass(guideline, "vertical")) {
             datas.type = "vertical";
         } else {
             return false;
@@ -184,6 +247,8 @@ new Dragger(guidelinesElement, {
         datas.guideline = guideline;
 
         dragStartGuideline({ datas, clientX, clientY });
+        inputEvent.stopPropagation();
+        inputEvent.preventDefault();
     },
     drag: dragGuideline,
     dragend: dragEndGuideline,
@@ -211,6 +276,9 @@ new Dragger(rulersElement, {
 
         dragStartGuideline({ datas, clientX, clientY });
         guidelinesElement.appendChild(el);
+
+        inputEvent.stopPropagation();
+        inputEvent.preventDefault();
     },
     drag: dragGuideline,
     dragend: dragEndGuideline,
@@ -233,4 +301,8 @@ KeyContoller.global.on("keydown", ({ shiftKey }) => {
 
 window.addEventListener("resize", () => {
     moveable.updateRect();
+});
+
+document.body.addEventListener("gesturestart", e => {
+    e.preventDefault();
 });

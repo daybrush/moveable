@@ -51,17 +51,18 @@ const warpable = new Moveable(warpableElement.parentElement, {
     target.style.transform = transform;
 });
 
-const originElement: HTMLElement = document.querySelector(".origin");
-const origin = new Moveable(originElement.parentElement, {
-    target: originElement,
-    origin: true,
+const snappableElement: HTMLElement = document.querySelector(".snappable");
+const snappable = new Moveable(snappableElement.parentElement, {
+    target: snappableElement,
     draggable: true,
-    rotatable: true,
+    snappable: true,
+    snapCenter: true,
+    origin: false,
+    verticalGuidelines: [0, 150, 200],
+    horizontalGuidelines: [0, 150, 200],
 }).on("drag", ({ target, left, top }) => {
     target.style.left = `${left}px`;
     target.style.top = `${top}px`;
-}).on("rotate", ({ target, transform }) => {
-    target.style.transform = transform;
 });
 
 const pinchableElement: HTMLElement = document.querySelector(".pinchable");
@@ -127,36 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         block.innerText = code;
         hljs.highlightBlock(block);
     });
-});
-
-const ableElement = document.querySelector(".buttons.able");
-const ableButtonElements = [].slice.call(ableElement.children);
-
-ableElement.addEventListener("click", e => {
-    const target = (e.target as HTMLElement);
-    const able = target.getAttribute("data-able");
-
-    if (!able) {
-        return;
-    }
-    ableButtonElements.forEach((el: HTMLElement) => {
-        el.classList.remove("selected");
-    });
-    target.classList.add("selected");
-
-    // if (able === "warpable") {
-    //     moveable.resizable = false;
-    //     moveable.scalable = false;
-    //     moveable.warpable = true;
-    // } else if (able === "scalable") {
-    //     moveable.resizable = false;
-    //     moveable.scalable = true;
-    //     moveable.warpable = false;
-    // } else if (able === "resizable") {
-    //     moveable.resizable = true;
-    //     moveable.scalable = false;
-    //     moveable.warpable = false;
-    // }
 });
 
 const tabGroups = {};
