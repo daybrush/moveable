@@ -568,7 +568,106 @@ export class AppComponent {
 * [onWarpEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:warpEnd): When the warp finishes, the warpEnd event is called.
 
 ### Vanilla Example
+
+
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    warpable: true,
+});
+
+let warpMatrix = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+];
+
+moveable.on("warpStart", ({ set }) => {
+    set(warpMatrix);
+}).on("warp", ({ target, matrix, transform }) => {
+    warpMatrix = matrix;
+
+    // target.style.transform = transform;
+    target.style.transform = `matrix3d(${matrix.join(",")})`;
+}).on("warpEnd", ({ target, isDrag, clientX, clientY }) => {
+    console.log("onWarpEnd", target, isDrag);
+});
+```
+
 ### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.warpMatrix = [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+];
+<Moveable
+    target={document.querySelector(".target")}
+    warpable={true}
+    onWarpStart={({ set }) => {
+        set(this.matrix);
+    }}
+    onWarp={({ target, matrix, transform }) => {
+        warpMatrix = matrix;
+
+        // target.style.transform = transform;
+        target.style.transform = `matrix3d(${matrix.join(",")})`;
+    }}
+    onWarpEnd={({ target, isDrag, clientX, clientY }) => {
+        console.log("onWarpEnd", target, isDrag);
+    }} />;
+```
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [warpable]="true"
+    (warpStart)="onWarpStart($event)
+    (warp)="onWarp($event)
+    (warpEnd)="onWarpEnd($event)
+    />
+`,
+})
+export class AppComponent {
+    warpMatrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+    onWarpStart({ set }) {
+        set(this.matrix);
+    }
+    onWarp({ target, matrix, transform }) {
+        warpMatrix = matrix;
+
+        // target.style.transform = transform;
+        target.style.transform = `matrix3d(${matrix.join(",")})`;
+    }
+    onWarpEnd({ target, isDrag, clientX, clientY }) {
+        console.log("onWarpEnd", target, isDrag);
+    }
+}
+```
+
+
 ### Angular Example
 
 ## <a id="toc-pinchable"></a>Pinchable
