@@ -667,9 +667,6 @@ export class AppComponent {
 }
 ```
 
-
-### Angular Example
-
 ## <a id="toc-pinchable"></a>Pinchable
 
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></a>
@@ -683,10 +680,57 @@ export class AppComponent {
 
 ### Options
 * [pinchThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#pinchThreshold): Minimum distance to pinch. (default: 20)
-
 ### Vanilla Example
+
+```ts
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    pinchable: true,
+    draggable: true,
+    resizable: true,
+    pinchThreshold: 20,
+});
+```
+
 ### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+<Moveable
+    target={document.querySelector(".target")}
+    pinchable={true}
+    draggable={true}
+    resizable={true
+    pinchThreshold={20} />
+```
+
+
 ### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [pinchable]="true"
+    [draggable]="true"
+    [resizable]="true"
+    [pinchThreshold]="20"
+
+    />
+`,
+})
+export class AppComponent {
+
+}
+```
 
 ## <a id="toc-snappable"></a>Snappable(Guidelines & Boundaries)
 
@@ -736,7 +780,7 @@ import Moveable from "react-moveable"; // preact-moveable
     bounds={{ left: 0, top: 0, bottom: 1000, right: 1000 }}
     verticalGuidelines={[100, 200, 300]}
     horizontalGuidelines={[0, 100, 200]}
-    elementGuidelines={[document.querySelector(".element")]}
+    elementGuidelines={[document.querySelector(".element")]} />
 ```
 
 
