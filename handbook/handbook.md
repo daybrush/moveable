@@ -887,7 +887,7 @@ this.frames = targets.map(() => ({
 <Moveable
     target={this.targets}
     draggable={true}
-    onDragGoupStart={({ events }) => {
+    onDragGroupStart={({ events }) => {
         events.forEach((ev, i) => {
             const frame = this.frames[i];
             ev.set(frame.translate);
@@ -940,7 +940,7 @@ export class AppComponent implements OnInit {
             translate: [0, 0],
         }));
     }
-    onDragGoupStart({ events }) {
+    onDragGroupStart({ events }) {
         events.forEach((ev, i) => {
             const frame = this.frames[i];
             ev.set(frame.translate);
@@ -1016,7 +1016,124 @@ moveable.on("resizeGroupStart", ({ events }) => {
 ```
 
 ### React & Preact Example
+
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+this.targets = [].slice.call(document.querySelectorAll(".target"));
+this.frames = targets.map(() => ({
+    translate: [0, 0],
+}));
+
+<Moveable
+    target={this.targets}
+    resizable={true}
+    onResizeGroupStart={({ events }) => {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+
+            // Set origin if transform-orgin use %.
+            ev.setOrigin(["%", "%"]);
+
+            // If cssSize and offsetSize are different, set cssSize.
+            const style = window.getComputedStyle(ev.target);
+            const cssWidth = parseFloat(style.width);
+            const cssHeight = parseFloat(style.height);
+            ev.set([cssWidth, cssHeight]);
+
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }}
+    onResizeGroup={({ events }) => {
+        events.forEach(({ target, width, height, drag }, i) => {
+            const frame = this.frames[i];
+
+            target.style.width = `${width}px`;
+            target.style.height = `${height}px`;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+        });
+    }}
+    onResizeGroupEnd={({ targets, isDrag, clientX, clientY }) => {
+        console.log("onResizeGroupEnd", targets, isDrag);
+    }} />
+```
+
+
 ### Angular Example
+```ts
+import { OnInit } from "@angular/core";
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div class="target target1">target1</div>
+<div class="target target2">target2</div>
+<div class="target target3">target3</div>
+<ngx-moveable
+    [target]="targets"
+    [resizable]="true"
+    (onResizeGroupStart)="onResizeGroupStart($event)"
+    (onResizeGroup)="onResizeGroup($event)"
+    (onResizeGroupEnd)="onResizeGroupEnd($event)"
+    />
+`,
+})
+export class AppComponent implements OnInit {
+    targets = [];
+    frames = [];
+    ngOnInit() {
+        this.targets = [].slice.call(document.querySelectorAll(".target"));
+        this.frames = targets.map(() => ({
+            translate: [0, 0],
+        }));
+    }
+    onResizeGroupStart({ events }) {
+        events.forEach((ev, i) => {
+            const frame = this.frames[i];
+
+            // Set origin if transform-orgin use %.
+            ev.setOrigin(["%", "%"]);
+
+            // If cssSize and offsetSize are different, set cssSize.
+            const style = window.getComputedStyle(ev.target);
+            const cssWidth = parseFloat(style.width);
+            const cssHeight = parseFloat(style.height);
+            ev.set([cssWidth, cssHeight]);
+
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }
+    onResizeGroup({ events }) {
+        events.forEach(({ target, width, height, drag }, i) => {
+            const frame = this.frames[i];
+
+            target.style.width = `${width}px`;
+            target.style.height = `${height}px`;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+        });
+    }
+    onResizeGroupEnd({ targets, isDrag, clientX, clientY }) {
+        console.log("onResizeGroupEnd", targets, isDrag);
+    }
+}
+```
+
+
 ## <a id="toc-group-scalable"></a>Group with Scalable
 
 ### Events
