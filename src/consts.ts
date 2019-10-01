@@ -418,13 +418,18 @@ export class AppComponent {
 }
 `,
     },
-    origin: {
+    snappable: {
         vanilla: `
 import Moveable from "moveable";
 
-const rotatable = new Moveable(document.body, {
-    target: document.querySelector(".origin"),
-    origin: true,
+const snappable = new Moveable(document.body, {
+    target: document.querySelector(".snappable"),
+    snappble: true,
+    verticalGuidelines: [0, 150, 200],
+    horizontalGuidelines: [0, 150, 200],
+}).on("drag", ({ target, left, top }) => {
+    target.style.left = left + "px";
+    target.style.top = top + "px";
 });
         `,
         react: `
@@ -434,6 +439,13 @@ return (
     <Moveable
         target={document.querySelector(".origin")}
         origin={true}
+        snappble={true}
+        verticalGuidelines={[0, 150, 200]}
+        horizontalGuidelines={[0, 150, 200]}
+        onDrag={({ target, left, top }) => {
+            target.style.left = left + "px";
+            target.style.top = top + "px";
+        }}
     />
 );
         `,
@@ -449,11 +461,17 @@ import {
 <div #target class="target">target</div>
 <ngx-moveable
     [target]="target"
-    [origin]="true"
+    [snappable]="true"
+    [verticalGuidelines]="[0, 150, 200]"
+    [horizontalGuidelines]="[0, 150, 200]"
     />
 ${"`"},
 })
 export class AppComponent {
+    onDrag({ target, left, top }) {
+        target.style.left = left + "px";
+        target.style.top = top + "px";
+    }
 }
 `,
     },

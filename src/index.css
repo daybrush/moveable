@@ -10,6 +10,7 @@ html, body {
     letter-spacing: 1px;
     background: #f5f5f5;
     font-weight: 300;
+    touch-action: manipulation;
 }
 
 a {
@@ -100,21 +101,13 @@ a {
 .page.main {
     z-index: 1;
     min-height: 700px;
+    overflow: hidden;
 }
-.label {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 5px;
-    border-radius: 5px;
-    background: #333;
-    z-index: 10;
-    color: #fff;
-    font-weight: bold;
-    font-size: 12px;
-    display: none;
-    transform: translate(-100%, -100%);
+.page.main .container {
+    padding-top: 200px;
+    z-index: 0;
 }
+
 
 .page.feature, .page.footer {
     height: auto;
@@ -190,9 +183,6 @@ a {
 .groupable span:nth-child(3) {
     left: 150px;
     top: 20px;
-}
-.origin {
-    transform-origin: 30% 50%;
 }
 
 pre {
