@@ -139,7 +139,7 @@ render() {
                 console.log("onRotateGroupEnd", targets, isDrag);
             }}
 
-            // Enabling pincable lets you use events that
+            // Enabling pinchable lets you use events that
             // can be used in draggable, resizable, scalable, and rotateable.
             pinchable={true}
             onPinchGroupStart={({ targets, clientX, clientY, datas }) => {

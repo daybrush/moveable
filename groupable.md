@@ -36,7 +36,7 @@ const moveable = new Moveable(document.body, {
     scalable: true,
     rotatable: true,
     warpable: true,
-    // Enabling pincable lets you use events that
+    // Enabling pinchable lets you use events that
     // can be used in draggable, resizable, scalable, and rotateable.
     pinchable: true, // ["resizable", "scalable", "rotatable"]
     origin: true,
@@ -126,7 +126,7 @@ moveable.on("rotateGroupStart", ({ targets, clientX, clientY }) => {
 });
 
 /* pinchable */
-// Enabling pincable lets you use events that
+// Enabling pinchable lets you use events that
 // can be used in draggable, resizable, scalable, and rotateable.
 moveable.on("pinchGroupStart", ({ targets, clientX, clientY }) => {
     // pinchGroupStart event occur before dragGroupStart, rotateGroupStart, scaleGroupStart, resizeGroupStart
