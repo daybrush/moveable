@@ -15,10 +15,6 @@ export type MoveableManagerProps<T = {}> = {
     keepRatio?: boolean;
     pinchThreshold?: number;
     ables?: Array<Able<T>>;
-
-    onRenderStart: (e: any) => any,
-    onRender: (e: any) => any,
-    onRenderEnd: (e: any) => any,
 } & T;
 export type MoveableManagerState<T = {}> = {
     target: SVGElement | HTMLElement | null | undefined;
@@ -77,7 +73,8 @@ export interface MoveableProps extends
     WarpableProps,
     PinchableProps,
     GroupableProps,
-    SnappableProps {
+    SnappableProps,
+    RenderProps {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
     container?: SVGElement | HTMLElement | null;
     origin?: boolean;
@@ -781,7 +778,14 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinchGroupEnd?: (e: OnPinchGroupEnd) => any;
 }
 
-export interface GroupableProps extends PinchableProps, DraggableProps, RotatableProps, ResizableProps, ScalableProps {
+export interface GroupableProps extends
+    PinchableProps,
+    DraggableProps,
+    RotatableProps,
+    ResizableProps,
+    ScalableProps,
+    SnappableProps,
+    RenderProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
@@ -809,4 +813,45 @@ export interface OnCustomDrag extends Position {
     datas: IObject<any>;
     parentEvent: boolean;
     parentDragger: CustomDragger;
+}
+
+export interface OnRenderStart {
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+    isPinch: boolean;
+}
+export interface OnRender {
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+    isPinch: boolean;
+}
+export interface OnRenderEnd {
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+    isPinch: boolean;
+    isDrag: boolean;
+}
+export interface OnRenderGroupStart extends OnRenderStart {
+    targets: Array<HTMLElement | SVGElement>;
+}
+export interface OnRenderGroup extends OnRender {
+    targets: Array<HTMLElement | SVGElement>;
+}
+export interface OnRenderGroupEnd extends OnRenderEnd {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+export interface RenderProps {
+    onRenderStart?: (e: OnRenderStart) => any;
+    onRender?: (e: OnRender) => any;
+    onRenderEnd?: (e: OnRenderEnd) => any;
+    onRenderGroupStart?: (e: OnRenderGroupStart) => any;
+    onRenderGroup?: (e: OnRenderGroup) => any;
+    onRenderGroupEnd?: (e: OnRenderGroupEnd) => any;
 }

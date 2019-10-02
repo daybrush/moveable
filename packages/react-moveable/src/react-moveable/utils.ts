@@ -715,9 +715,9 @@ export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: nu
     return false;
 }
 
-export function triggerEvent<T extends IObject<any>, U extends keyof T & string>(
+export function triggerEvent<T extends IObject<any>, U extends keyof T>(
     moveable: MoveableManager<T>,
-    name: U,
+    name: U & string,
     e: T[U] extends ((e: infer P) => any) | undefined ? P : {},
 ): any {
     return moveable.triggerEvent(name, e);
