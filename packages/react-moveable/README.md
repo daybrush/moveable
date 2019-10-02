@@ -218,7 +218,7 @@ render() {
                 console.log("onWarpEnd", target, isDrag);
             }}
 
-            // Enabling pincable lets you use events that
+            // Enabling pinchable lets you use events that
             // can be used in draggable, resizable, scalable, and rotateable.
             pinchable={true}
             onPinchStart={({ target, clientX, clientY, datas }) => {
