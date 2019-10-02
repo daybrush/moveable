@@ -1,6 +1,6 @@
 import MoveableManager from "./MoveableManager";
 import Dragger, { OnDragStart, OnDrag, OnDragEnd, OnPinchEnd } from "@daybrush/drag";
-import { Able, RenderProps } from "./types";
+import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
 import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
 
