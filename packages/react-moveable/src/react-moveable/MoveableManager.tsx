@@ -6,11 +6,13 @@ import {
     unset,
     createIdentityMatrix3,
     isInside,
+    getAbsolutePosesByState,
+    getRect,
 } from "./utils";
 import styler from "react-css-styler";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able } from "./types";
+import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
 import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
 import { IObject } from "@daybrush/utils";
@@ -172,6 +174,27 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public updateTarget(type?: "Start" | "" | "End") {
         this.updateRect(type, true);
+    }
+    public getRect(): RectInfo {
+        const poses = getAbsolutePosesByState(this.state);
+        const [pos1, pos2, pos3, pos4] = poses;
+        const rect = getRect(poses);
+        const {
+            width,
+            height,
+            left,
+            top,
+        } = rect;
+        return {
+            width,
+            height,
+            left,
+            top,
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+        };
     }
     public checkUpdate() {
         const props = this.props;

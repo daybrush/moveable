@@ -855,3 +855,23 @@ export interface RenderProps {
     onRenderGroup?: (e: OnRenderGroup) => any;
     onRenderGroupEnd?: (e: OnRenderGroupEnd) => any;
 }
+
+export interface RectInfo {
+    pos1: number[];
+    pos2: number[];
+    pos3: number[];
+    pos4: number[];
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+}
+export interface MoveableInterface {
+    getRect(): RectInfo;
+    isMoveableElement(target: HTMLElement | SVGElement): boolean;
+    updateRect(isNotSetState?: boolean): void;
+    updateTarget(): void;
+    destroy(): void;
+    dragStart(e: MouseEvent | TouchEvent): void;
+    isInside(clientX: number, clientY: number): boolean;
+}

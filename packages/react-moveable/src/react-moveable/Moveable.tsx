@@ -1,12 +1,12 @@
 import * as React from "react";
-import { MoveableProps, Able } from "./types";
+import { MoveableProps, Able, MoveableInterface, RectInfo } from "./types";
 import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./ables/consts";
 import MoveableGroup from "./MoveableGroup";
 import { ref } from "framework-utils";
 import { isArray } from "@daybrush/utils";
 
-export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & T> {
+export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & T> implements MoveableInterface {
     public moveable!: MoveableManager<MoveableProps> | MoveableGroup;
     public render() {
         const props = this.props;
@@ -39,6 +39,9 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
     }
     public updateTarget() {
         this.moveable.updateTarget();
+    }
+    public getRect(): RectInfo {
+        return this.moveable.getRect();
     }
     public destroy() {
         this.moveable.componentWillUnmount();
