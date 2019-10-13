@@ -5,7 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "start:aot": "ng serve --aot",
+    "start:prod": "ng serve --aot --prod",
     "build": "ng build ngx-moveable",
+    "build:app": "ng build --aot --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
