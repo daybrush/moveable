@@ -91,7 +91,7 @@ const frame = {
     translate: [0, 0],
 };
 moveable.on("dragStart", ({ set }) => {
-    ev.set(frame.translate);
+    set(frame.translate);
 }).on("drag", ({ target, beforeTranslate }) => {
     frame.translate = beforeTranslate;
     target.style.transform
@@ -115,7 +115,7 @@ this.frame = {
     draggable={true}
     throttleDrag={0}
     onDragStart={({ set }) => {
-        ev.set(frame.translate);
+        set(frame.translate);
     }}
     onDrag={({ target, beforeTranslate }) => {
         frame.translate = beforeTranslate;
