@@ -3,8 +3,8 @@ import builder from "@daybrush/builder";
 import preact from "rollup-plugin-preact";
 
 const preactPlugin = preact({
-    // usePreactCompat2: true,
     noPropTypes: true,
+    usePreactX: true,
     resolvePreactCompat: true,
 });
 

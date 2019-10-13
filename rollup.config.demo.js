@@ -5,6 +5,7 @@ import preact from "rollup-plugin-preact";
 const preactPlugin = preact({
     noPropTypes: true,
     resolvePreactCompat: true,
+    usePreactX: true,
 });
 
 
