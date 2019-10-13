@@ -20,6 +20,7 @@ const defaultOptions = {
             noPropTypes: true,
             noEnv: true,
             noReactIs: true,
+            usePreactX: true,
             aliasModules: {
                 "react-css-styler": "preact-css-styler",
             },

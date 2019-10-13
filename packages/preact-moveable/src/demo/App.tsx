@@ -22,6 +22,7 @@ class App extends Component {
                     target={selectedTarget}
                     container={document.body}
                     ref={ref(this, "moveable")}
+                    draggable={true}
                     scalable={!isResizable}
                     resizable={isResizable}
                     onRotate={({ target, transform }) => {
