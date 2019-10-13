@@ -9,6 +9,7 @@ const defaultOptions = {
         "@daybrush/drag": "utils",
         "preact": "Preact",
         "preact-compat": "preact-compat",
+        // "preact/compat": "preact/compat",
         "framework-utils": "framework-utils",
         "preact-css-styler": "preact-css-styler",
         "@egjs/agent": "eg.Agent",
@@ -17,10 +18,10 @@ const defaultOptions = {
     exports: "named",
     plugins: [
         preact({
-            noPropTypes: true,
-            noEnv: true,
-            noReactIs: true,
-            usePreactX: true,
+            noPropTypes: false,
+            noEnv: false,
+            noReactIs: false,
+            usePreactX: false,
             aliasModules: {
                 "react-css-styler": "preact-css-styler",
             },

@@ -20,6 +20,7 @@ export default builder({
             noEnv: true,
             noReactIs: true,
             resolvePreactCompat: true,
+            // usePreactX: true,
         }),
     ],
 });
