@@ -740,7 +740,7 @@ export class AppComponent {
 
 ### Options
 * [bounds](https://daybrush.com/moveable/release/latest/doc/Moveable.html#bounds): You can set up boundaries. (default: null)
-* [snapThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#snapThreshold): Distance value that can snap to guidelines. (default: 0)
+* [snapThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#snapThreshold): Distance value that can snap to guidelines. (default: 5)
 * [snapCenter](https://daybrush.com/moveable/release/latest/doc/Moveable.html#snapCenter): When you drag, make the snap in the center of the target. (default: false)
 * [horizontalGuidelines](https://daybrush.com/moveable/release/latest/doc/Moveable.html#horizontalGuidlines): Add guidelines in the horizontal direction. (default: [])
 * [verticalGuidelines](https://daybrush.com/moveable/release/latest/doc/Moveable.html#verticalGuidlines): Add guidelines in the vertical direction. (default: [])
