@@ -30,13 +30,14 @@ import { IObject } from '@daybrush/utils';
   selector: 'ngx-moveable',
   template: '',
 })
-export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges {
+export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions> {
   @Input() public draggable!: boolean;
   @Input() public resizable!: boolean;
   @Input() public scalable!: boolean;
   @Input() public rotatable!: boolean;
   @Input() public warpable!: boolean;
   @Input() public pinchable!: boolean | Array<'rotatable' | 'resizable' | 'scalable'>;
+  @Input() public snappable!: boolean | string[];
   @Input() public origin!: boolean;
   @Input() public target!: SVGElement | HTMLElement | Array<SVGElement | HTMLElement>;
   @Input() public container!: SVGElement | HTMLElement | null;
