@@ -19,7 +19,7 @@ import { isArray } from "@daybrush/utils";
 
 export default {
     name: "scalable",
-    dragControlOnly: true,
+    ableGroup: "size",
     canPinch: true,
     render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>, React: Renderer): any[] | undefined {
         const { resizable, scalable, edge } = moveable.props;

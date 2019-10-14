@@ -22,7 +22,7 @@ import { checkSnapSize } from "./Snappable";
 
 export default {
     name: "resizable",
-    dragControlOnly: true,
+    ableGroup: "size",
     updateRect: true,
     canPinch: true,
 

@@ -15,7 +15,7 @@ import {
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState } from "./types";
+import { MoveableManagerState, Able } from "./types";
 
 export function multiply2(pos1: number[], pos2: number[]) {
     return [
@@ -725,4 +725,26 @@ export function triggerEvent<T extends IObject<any>, U extends keyof T>(
 
 export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: string | null) {
     return window.getComputedStyle(el, pseudoElt);
+}
+
+
+export function filterAbles(ables: Able[], methods: Array<keyof Able>) {
+    const enabledAbles: IObject<boolean> = {};
+    const ableGroups: IObject<boolean> = {};
+
+    return ables.filter(able => {
+        const name = able.name;
+
+        if (enabledAbles[name] || !methods.some(method => able[method])) {
+            return false;
+        }
+        if (able.ableGroup) {
+            if (ableGroups[name]) {
+                return false;
+            }
+            ableGroups[name] = true;
+        }
+        enabledAbles[name] = true;
+        return true;
+    });
 }

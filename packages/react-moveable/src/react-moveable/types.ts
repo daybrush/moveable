@@ -672,7 +672,7 @@ export interface OnClickGroup {
 
 export interface Able<T = any> {
     name: string & keyof MoveableManagerProps<T>;
-    dragControlOnly?: boolean;
+    ableGroup?: string;
     updateRect?: boolean;
     canPinch?: boolean;
 

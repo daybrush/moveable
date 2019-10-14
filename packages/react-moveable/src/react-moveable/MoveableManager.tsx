@@ -8,6 +8,7 @@ import {
     isInside,
     getAbsolutePosesByState,
     getRect,
+    filterAbles,
 } from "./utils";
 import styler from "react-css-styler";
 import Dragger from "@daybrush/drag";
@@ -15,7 +16,6 @@ import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
 import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
-import { IObject } from "@daybrush/utils";
 import DragArea from "./ables/DragArea";
 import CustomDragger from "./CustomDragger";
 
@@ -240,24 +240,13 @@ export default class MoveableManager<T = {}, U = {}>
         const props = this.props as any;
 
         const enabledAbles = ables!.filter(able => able && props[able.name]);
-        let controlAbleOnly: boolean = false;
 
         const dragStart = `drag${eventAffix}Start` as "dragStart";
         const pinchStart = `pinch${eventAffix}Start` as "pinchStart";
         const dragControlStart = `drag${eventAffix}ControlStart` as "dragControlStart";
 
-        const targetAbles = enabledAbles.filter(able => able[dragStart] || able[pinchStart]);
-        const controlAbles = enabledAbles.filter(e => {
-            const dragControlOnly = e.dragControlOnly;
-
-            if (!e[dragControlStart] || (dragControlOnly && controlAbleOnly)) {
-                return false;
-            }
-            if (dragControlOnly) {
-                controlAbleOnly = true;
-            }
-            return true;
-        });
+        const targetAbles = filterAbles(enabledAbles, [dragStart, pinchStart]);
+        const controlAbles = filterAbles(enabledAbles, [dragControlStart]);
 
         this.targetAbles = targetAbles;
         this.controlAbles = controlAbles;
@@ -276,15 +265,6 @@ export default class MoveableManager<T = {}, U = {}>
     protected renderAbles() {
         const ables: Able[] = [...this.targetAbles, ...this.controlAbles, Origin, DragArea];
 
-        const enabledAbles: IObject<any> = {};
-        return ables.map(able => {
-
-            if (enabledAbles[able.name] || !able.render) {
-                return undefined;
-            }
-            enabledAbles[able.name] = true;
-
-            return able.render(this, React);
-        });
+        return filterAbles(ables, ["render"]).map(({ render }) => render!(this, React));
     }
 }

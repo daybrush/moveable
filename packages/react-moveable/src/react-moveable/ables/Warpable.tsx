@@ -8,13 +8,14 @@ import {
     minus,
     createWarpMatrix,
     getRad,
+    plus,
 } from "@moveable/matrix";
 import { NEARBY_POS } from "../consts";
-import { setDragStart, getDragDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, getPosIndexesByDirection } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { WarpableProps, ScalableProps, ResizableProps, Renderer, SnappableProps, SnappableState } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
-import { renderDiagonalDirection } from "../renderDirection";
+import { renderAllDirection } from "../renderDirection";
 import { checkSnapPoses, hasGuidelines } from "./Snappable";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {
@@ -44,7 +45,7 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
 
 export default {
     name: "warpable",
-    dragControlOnly: true,
+    ableGroup: "size",
     render(moveable: MoveableManager<ResizableProps & ScalableProps & WarpableProps>, React: Renderer) {
         const { resizable, scalable, warpable } = moveable.props;
 
@@ -67,7 +68,7 @@ export default {
             <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2)}></div>,
             <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
             <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
-            ...renderDiagonalDirection(moveable, React),
+            ...renderAllDirection(moveable, React),
         ];
     },
     dragControlCondition(target: HTMLElement | SVGElement) {
@@ -108,13 +109,12 @@ export default {
         ].map((p, i) => minus(p, transformOrigin));
 
         datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.warpTargetMatrix, [x, y, 0, 1], 4));
-        datas.posNum =
-            (direction[0] === -1 ? 0 : 1)
-            + (direction[1] === -1 ? 0 : 2);
+
 
         datas.startMatrix = createIdentityMatrix(4);
         datas.prevMatrix = createIdentityMatrix(4);
-        datas.absolutePos = getAbsolutePosesByState(state)[datas.posNum];
+        datas.absolutePoses = getAbsolutePosesByState(state);
+        datas.posIndexes = getPosIndexesByDirection(direction);
         state.snapDirection = direction;
         const result = triggerEvent(moveable, "onWarpStart", {
             target,
@@ -134,7 +134,12 @@ export default {
         moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
         { datas, clientX, clientY, distX, distY }: any,
     ) {
-        const { posNum, poses, targetInverseMatrix, prevMatrix, isWarp, absolutePos, startMatrix } = datas;
+        const {
+            targetInverseMatrix, prevMatrix, isWarp, startMatrix,
+            poses,
+            posIndexes,
+            absolutePoses,
+        } = datas;
 
         if (!isWarp) {
             return false;
@@ -142,7 +147,19 @@ export default {
         const { target } = moveable.props!;
 
         if (hasGuidelines(moveable, "warpable")) {
-            const snapInfos = checkSnapPoses(moveable, [absolutePos[0] + distX], [absolutePos[1] + distY]);
+            const selectedPoses: number[][] = posIndexes.map((index: number) => absolutePoses[index]);
+
+            if (selectedPoses.length > 1) {
+                selectedPoses.push([
+                    (selectedPoses[0][0] + selectedPoses[1][0]) / 2,
+                    (selectedPoses[0][1] + selectedPoses[1][1]) / 2,
+                ]);
+            }
+            const snapInfos = checkSnapPoses(
+                moveable,
+                selectedPoses.map(pos => pos[0] + distX),
+                selectedPoses.map(pos => pos[1] + distY),
+            );
             const {
                 horizontal: {
                     offset: horizontalOffset,
@@ -159,7 +176,9 @@ export default {
         const dist = getDragDist({ datas, distX, distY }, true);
         const nextPoses = datas.nextPoses.slice();
 
-        nextPoses[posNum] = [nextPoses[posNum][0] + dist[0], nextPoses[posNum][1] + dist[1]];
+        posIndexes.forEach((index: number) => {
+            nextPoses[index] = plus(nextPoses[index], dist);
+        });
 
         if (!NEARBY_POS.every(
             nearByPoses => isValidPos(nearByPoses.map(i => poses[i]), nearByPoses.map(i => nextPoses[i])),
@@ -184,7 +203,7 @@ export default {
         const matrix = convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4));
         const transform = `${datas.targetTransform} matrix3d(${matrix.join(",")})`;
 
-        const delta = multiply(invert(prevMatrix, 4), matrix, 4);
+        const delta = multiplyCSS(invert(prevMatrix, 4), matrix, 4);
 
         datas.prevMatrix = matrix;
 

@@ -6,6 +6,7 @@ import { ref } from "framework-utils";
 import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
+import { thisExpression } from "@babel/types";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
@@ -21,8 +22,10 @@ class App extends React.Component {
         target: null,
         targets: [],
         isResizable: true,
+        emo: null,
     } as {
         target: any,
+        emo: any,
         targets: Array<HTMLElement | SVGElement>,
         isResizable: boolean,
     };
@@ -152,9 +155,9 @@ class App extends React.Component {
                     // elementGuildelines={[document.querySelector(".box1 span")!]}
                     snapCenter={false}
                     snapThreshold={10}
-                    scalable={!isResizable}
-                    resizable={isResizable}
-                    // warpable={true}
+                    // scalable={!isResizable}
+                    // resizable={isResizable}
+                    warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
@@ -217,7 +220,7 @@ class App extends React.Component {
 
                         target.style.cssText += item.toCSS();
                     }}
-                    onWarp={({ target, delta, multiply }) => {
+                    onWarp={({ target, delta, matrix, multiply }) => {
                         const matrix3d = item.get("matrix3d");
 
                         if (!matrix3d) {
@@ -225,9 +228,21 @@ class App extends React.Component {
                         } else {
                             item.set("matrix3d", multiply(item.get("matrix3d"), delta, 4));
                         }
+                        // item.set("matrix3d", matrix);
                         target.style.cssText += item.toCSS();
                     }}
                 />
+                <div className="emo">
+                    <img src="./emo.png" />
+                </div>
+                <Moveable
+                ref={ref(window, "er")}
+                warpable={true}
+                target={this.state.emo}
+                onWarp={e => {
+                    e.target.style.transform = e.transform;
+                }}
+                ></Moveable>
                 <div className="App" onMouseDown={this.onClick} onTouchStart={this.onClick} data-target="app">
                     <div className="box box1" data-target="box"><span>A</span><span>B</span><span>C</span></div>
 
@@ -322,6 +337,12 @@ class App extends React.Component {
         this.setState({
             targets,
         });
+
+        setTimeout(() => {
+            this.setState({
+                emo: document.querySelector(".emo") as HTMLElement,
+            });
+        }, 100);
     }
 }
 

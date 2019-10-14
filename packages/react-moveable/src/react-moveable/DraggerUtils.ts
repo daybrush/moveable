@@ -82,8 +82,29 @@ export function caculateTransformOrigin(
         return size * value / 100;
     });
 }
+export function getPosIndexesByDirection(direction: number[]) {
+    const indexes: number[] = [];
+
+    if (direction[1] >= 0) {
+        if (direction[0] >= 0) {
+            indexes.push(3);
+        }
+        if (direction[0] <= 0) {
+            indexes.push(2);
+        }
+    }
+    if (direction[1] <= 0) {
+        if (direction[0] >= 0) {
+            indexes.push(1);
+        }
+        if (direction[0] <= 0) {
+            indexes.push(0);
+        }
+    }
+    return indexes;
+}
 export function getPosesByDirection(
-    [pos1, pos2, pos3, pos4]: number[][],
+    poses: number[][],
     direction: number[],
 ) {
     /*
@@ -91,25 +112,7 @@ export function getPosesByDirection(
     [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
     [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
     */
-   const poses = [];
-
-   if (direction[1] >= 0) {
-       if (direction[0] >= 0) {
-           poses.push(pos4);
-       }
-       if (direction[0] <= 0) {
-           poses.push(pos3);
-       }
-   }
-   if (direction[1] <= 0) {
-       if (direction[0] >= 0) {
-           poses.push(pos2);
-       }
-       if (direction[0] <= 0) {
-           poses.push(pos1);
-       }
-   }
-   return poses;
+   return getPosIndexesByDirection(direction).map(index => poses[index]);
 }
 export function getPosByDirection(
     poses: number[][],

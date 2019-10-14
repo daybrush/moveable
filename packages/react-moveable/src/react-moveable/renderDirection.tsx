@@ -15,10 +15,6 @@ export function renderDiagonalDirection(
     moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
     React: Renderer,
 ): any[] {
-    const { resizable, scalable, warpable } = moveable.props;
-    if (!resizable && !scalable && !warpable) {
-        return [];
-    }
     const { pos1, pos2, pos3, pos4 } = moveable.state;
     return [
         <div className={prefix("control", "direction", "nw")} data-direction="nw" key="nw"
@@ -35,10 +31,6 @@ export function renderDirection(
     moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>,
     React: Renderer,
 ): any[] {
-    const { resizable, scalable } = moveable.props;
-    if (!resizable && !scalable) {
-        return [];
-    }
     const { pos1, pos2, pos3, pos4 } = moveable.state;
     return [
         <div className={prefix("control", "direction", "n")} data-direction="n" key="n"
