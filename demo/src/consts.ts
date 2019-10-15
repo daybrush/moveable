@@ -424,7 +424,7 @@ import Moveable from "moveable";
 
 const snappable = new Moveable(document.body, {
     target: document.querySelector(".snappable"),
-    snappble: true,
+    snappable: true,
     verticalGuidelines: [0, 150, 200],
     horizontalGuidelines: [0, 150, 200],
 }).on("drag", ({ target, left, top }) => {
@@ -439,7 +439,7 @@ return (
     <Moveable
         target={document.querySelector(".origin")}
         origin={true}
-        snappble={true}
+        snappable={true}
         verticalGuidelines={[0, 150, 200]}
         horizontalGuidelines={[0, 150, 200]}
         onDrag={({ target, left, top }) => {
