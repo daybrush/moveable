@@ -154,7 +154,7 @@ export class AppComponent {
         translate: [0, 0],
     };
     onDragStart({ set }) {
-        ev.set(frame.translate);
+        set(frame.translate);
     }
     onDrag({ target, beforeTranslate }) {
         frame.translate = beforeTranslate;
@@ -201,12 +201,12 @@ const moveable = new Moveable(document.body, {
 const frame = {
     translate: [0, 0],
 };
-moveable.on("resizeStart", ({ set, setOrigin, dragStart }) => {
+moveable.on("resizeStart", ({ target, set, setOrigin, dragStart }) => {
     // Set origin if transform-orgin use %.
     setOrigin(["%", "%"]);
 
     // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
-    const style = window.getComputedStyle(ev.target);
+    const style = window.getComputedStyle(target);
     const cssWidth = parseFloat(style.width);
     const cssHeight = parseFloat(style.height);
     set([cssWidth, cssHeight]);
@@ -239,12 +239,12 @@ this.frame = {
     resizable={true}
     throttleResize={0}
     keepRatio={false}
-    onResizeStart={({ set, setOrigin, dragStart }) => {
+    onResizeStart={({ target, set, setOrigin, dragStart }) => {
         // Set origin if transform-orgin use %.
         setOrigin(["%", "%"]);
 
         // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
-        const style = window.getComputedStyle(ev.target);
+        const style = window.getComputedStyle(target);
         const cssWidth = parseFloat(style.width);
         const cssHeight = parseFloat(style.height);
         set([cssWidth, cssHeight]);
@@ -293,12 +293,12 @@ export class AppComponent {
     frame = {
         translate: [0, 0],
     };
-    onResizeStart({ set, setOrigin, dragStart }) {
+    onResizeStart({ target, set, setOrigin, dragStart }) {
         // Set origin if transform-orgin use %.
         setOrigin(["%", "%"]);
 
         // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
-        const style = window.getComputedStyle(ev.target);
+        const style = window.getComputedStyle(target);
         const cssWidth = parseFloat(style.width);
         const cssHeight = parseFloat(style.height);
         set([cssWidth, cssHeight]);
