@@ -18,13 +18,13 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const {
         horizontalGuidelines = [],
         verticalGuidelines = [],
-        elementGuildelines = [],
+        elementGuidelines = [],
         bounds,
         container,
         snapCenter,
     } = moveable.props;
 
-    if (!bounds && !horizontalGuidelines.length && !verticalGuidelines.length && !elementGuildelines.length) {
+    if (!bounds && !horizontalGuidelines.length && !verticalGuidelines.length && !elementGuidelines.length) {
         return;
     }
 
@@ -44,7 +44,7 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     verticalGuidelines!.forEach(pos => {
         guidelines.push({ type: "vertical", pos: [pos, 0], size: containerHeight });
     });
-    elementGuildelines!.forEach(el => {
+    elementGuidelines!.forEach(el => {
         const rect = el.getBoundingClientRect();
         const { top, left, width, height } = rect;
 

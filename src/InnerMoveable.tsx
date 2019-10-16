@@ -1,10 +1,10 @@
 import { Component, h } from "preact";
-import Moveable, { MoveableProps, MoveableInterface } from "preact-moveable";
+import Moveable, { MoveableProps, PreactMoveableInterface } from "preact-moveable";
 import { ref } from "framework-utils";
 
 export default class InnerMoveable extends Component<MoveableProps> {
     public state: MoveableProps = {};
-    public preactMoveable: MoveableInterface;
+    public preactMoveable: PreactMoveableInterface;
     constructor(props: MoveableProps) {
         super(props);
         this.state = this.props;

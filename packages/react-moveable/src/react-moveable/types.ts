@@ -798,7 +798,7 @@ export interface SnappableProps {
     snapThreshold?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
-    elementGuildelines?: Element[];
+    elementGuidelines?: Element[];
     bounds?: { left?: number, top?: number, right?: number, bottom?: number };
 }
 export interface SnappableState {

@@ -13,6 +13,8 @@ import {
     OnResizeGroupEnd, OnScaleGroup, OnScaleGroupEnd,
     OnRotateGroup, OnRotateGroupStart, OnRotateGroupEnd,
     OnPinchGroup, OnPinchGroupStart, OnPinchGroupEnd, OnScaleGroupStart, OnClickGroup,
+    MoveableInterface,
+    RectInfo,
 } from "react-moveable/declaration/types";
 import { PROPERTIES, EVENTS } from "./consts";
 import { camelize, isArray } from "@daybrush/utils";
@@ -36,7 +38,7 @@ import { camelize, isArray } from "@daybrush/utils";
         configurable: true,
     });
 })
-class Moveable extends EgComponent {
+class Moveable extends EgComponent implements MoveableInterface {
     private innerMoveable!: InnerMoveable;
 
     /**
@@ -136,7 +138,9 @@ class Moveable extends EgComponent {
     public isInside(clientX: number, clientY: number): boolean {
         return this.getMoveable().isInside(clientX, clientY);
     }
-
+    public getRect(): RectInfo {
+        return this.getMoveable().getRect();
+    }
     /**
      * If the width, height, left, and top of the only target change, update the shape of the moveable.
      * @param - the values of x and y to move moveable.

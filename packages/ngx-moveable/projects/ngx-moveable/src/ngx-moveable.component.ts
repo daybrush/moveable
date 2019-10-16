@@ -3,7 +3,7 @@ import {
   OnInit, OnChanges, SimpleChanges, EventEmitter, Output
 } from '@angular/core';
 import Moveable, {
-  PROPERTIES, EVENTS, MoveableOptions, MoveableGetterSetter, MoveableEvents,
+  PROPERTIES, EVENTS, MoveableOptions,
   OnDrag, OnDragStart, OnDragEnd,
   OnResize, OnResizeStart, OnResizeEnd,
   OnScaleStart, OnScale, OnScaleEnd,
@@ -16,6 +16,7 @@ import Moveable, {
   OnPinchStart, OnPinchGroupStart, OnPinchGroup, OnPinchGroupEnd, OnClickGroup,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
+import { NgxMoveableInterface } from './types';
 
 
 // type NgxMoveableEmitter = {
@@ -30,7 +31,8 @@ import { IObject } from '@daybrush/utils';
   selector: 'ngx-moveable',
   template: '',
 })
-export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions> {
+export class NgxMoveableComponent
+  implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableInterface {
   @Input() public draggable!: boolean;
   @Input() public resizable!: boolean;
   @Input() public scalable!: boolean;
@@ -52,7 +54,7 @@ export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges, Requi
   @Input() public snapThreshold!: number;
   @Input() public horizontalGuidelines!: number[];
   @Input() public verticalGuidelines!: number[];
-  @Input() public elementGuildelines!: Element[];
+  @Input() public elementGuidelines!: Element[];
   @Input() public bounds!: { left?: number, top?: number, right?: number, bottom?: number };
   @Input() public dragArea!: boolean;
   @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
@@ -141,18 +143,26 @@ export class NgxMoveableComponent implements OnDestroy, OnInit, OnChanges, Requi
       moveable[name] = currentValue;
     }
   }
+  ngOnDestroy() {
+    this.moveable.destroy();
+  }
   isMoveableElement(target: HTMLElement | SVGElement) {
     return this.moveable.isMoveableElement(target);
   }
-
   updateRect() {
     this.moveable.updateRect();
   }
-
-  updateTarget(): void {
+  updateTarget() {
     this.moveable.updateTarget();
   }
-  ngOnDestroy(): void {
+  getRect() {
+    return this.moveable.getRect();
+  }
+  isInside(clientX: number, clientY: number) {
+    return this.moveable.isInside(clientX, clientY);
+  }
+  destroy() {
     this.moveable.destroy();
   }
+
 }

@@ -1,7 +1,7 @@
-import { MoveableProps, MoveableState } from "react-moveable/declaration/types";
+import { MoveableProps, MoveableState, MoveableInterface } from "react-moveable/declaration/types";
 import { Component } from "preact";
 
-export interface MoveableInterface extends Component<MoveableProps, MoveableState> {
+export interface PreactMoveableInterface extends Component<MoveableProps, MoveableState>, MoveableInterface {
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(isNotSetState?: boolean): void;
     updateTarget(): void;
