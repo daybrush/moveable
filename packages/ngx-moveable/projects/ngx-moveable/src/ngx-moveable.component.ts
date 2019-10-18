@@ -125,7 +125,7 @@ export class NgxMoveableComponent
       };
     });
 
-    this.moveable = new Moveable(this.container === undefined ? document.body : this.container, options);
+    this.moveable = new Moveable(this.container || document.body, options);
     this.moveable.on(events);
   }
   ngOnChanges(changes: SimpleChanges): void {
