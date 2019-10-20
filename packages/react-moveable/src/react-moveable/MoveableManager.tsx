@@ -21,8 +21,8 @@ import CustomDragger from "./CustomDragger";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
 
-function renderLine(direction: string, pos1: number[], pos2: number[]) {
-    return <div className={prefix("line", "direction", direction)}
+function renderLine(direction: string, pos1: number[], pos2: number[], index: number) {
+    return <div key={`line${index}`} className={prefix("line", "direction", direction)}
         data-direction={direction} style={getLineStyle(pos1, pos2)}></div>;
 }
 export default class MoveableManager<T = {}, U = {}>
@@ -85,10 +85,10 @@ export default class MoveableManager<T = {}, U = {}>
                     transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
                 }}>
                 {this.renderAbles()}
-                {renderLine(edge ? "n" : "", pos1, pos2)}
-                {renderLine(edge ? "e" : "", pos2, pos4)}
-                {renderLine(edge ? "w" : "", pos1, pos3)}
-                {renderLine(edge ? "s" : "", pos3, pos4)}
+                {renderLine(edge ? "n" : "", pos1, pos2, 0)}
+                {renderLine(edge ? "e" : "", pos2, pos4, 1)}
+                {renderLine(edge ? "w" : "", pos1, pos3, 2)}
+                {renderLine(edge ? "s" : "", pos3, pos4, 3)}
             </ControlBoxElement>
         );
     }

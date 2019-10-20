@@ -11,7 +11,6 @@ export default {
         const { beforeOrigin } = moveable.state;
 
         return [
-            // <div className={prefix("control", "origin")} style={getControlTransform(origin)} key="origin"></div>,
             <div className={prefix("control", "origin")}
                 style={getControlTransform(beforeOrigin)} key="beforeOrigin"></div>,
         ];
