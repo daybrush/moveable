@@ -300,10 +300,10 @@ export function getSVGGraphicsOffset(
     el: SVGGraphicsElement,
     origin: number[],
 ) {
-    if (!(el as SVGGraphicsElement).getBBox) {
+    if (!el.getBBox) {
         return [0, 0];
     }
-    const bbox = (el as SVGGraphicsElement).getBBox();
+    const bbox = el.getBBox();
     const svgElement = el.ownerSVGElement!;
     const viewBox = svgElement.viewBox.baseVal;
     const left = bbox.x - viewBox.x;
