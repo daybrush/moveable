@@ -152,6 +152,7 @@ class App extends React.Component {
                     bounds={{ left: 30, top: 20 }}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
+                    renderDirections={["n", "ne", "nw"]}
                     // elementGuidelines={[document.querySelector(".box1 span")!]}
                     snapCenter={false}
                     snapThreshold={10}

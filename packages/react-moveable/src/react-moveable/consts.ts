@@ -1,5 +1,6 @@
 import { prefixCSS } from "framework-utils";
 import getAgent from "@egjs/agent";
+import { IObject } from "@daybrush/utils";
 
 export const agent = getAgent();
 export const isWebkit
@@ -121,3 +122,14 @@ export const TINY_NUM = 0.0000001;
 export const MIN_SCALE = 0.000000001;
 export const MAX_NUM = Math.pow(10, 10);
 export const MIN_NUM = -MAX_NUM;
+
+export const DIRECTION_INDEXES: IObject<number[]> = {
+    n: [0, 1],
+    s: [2, 3],
+    w: [2, 0],
+    e: [1, 3],
+    nw: [0],
+    ne: [1],
+    sw: [2],
+    se: [3],
+};

@@ -724,6 +724,7 @@ export interface DraggableProps {
 export interface ResizableProps {
     resizable?: boolean;
     throttleResize?: number;
+    renderDirections?: string[];
 
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
@@ -736,6 +737,7 @@ export interface ResizableProps {
 export interface ScalableProps {
     scalable?: boolean;
     throttleScale?: number;
+    renderDirections?: string[];
 
     onScaleStart?: (e: OnScaleStart) => any;
     onScale?: (e: OnScale) => any;
@@ -762,6 +764,8 @@ export interface RotatableProps {
 
 export interface WarpableProps {
     warpable?: boolean;
+    renderDirections?: string[];
+
     onWarpStart?: (e: OnWarpStart) => any;
     onWarp?: (e: OnWarp) => any;
     onWarpEnd?: (e: OnWarpEnd) => any;

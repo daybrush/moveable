@@ -96,7 +96,7 @@ export default class MoveableManager<T = {}, U = {}>
         this.controlBox.getElement();
         this.updateEvent(this.props);
     }
-    public componentDidUpdate(prevProps: MoveableManagerProps<T>, prevState: MoveableManagerState<U>) {
+    public componentDidUpdate(prevProps: MoveableManagerProps<T>) {
         this.updateEvent(prevProps);
     }
     public componentWillUnmount() {
