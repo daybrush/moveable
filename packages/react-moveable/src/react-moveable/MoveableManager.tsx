@@ -39,6 +39,7 @@ export default class MoveableManager<T = {}, U = {}>
         pinchThreshold: 20,
         dragArea: false,
         transformOrigin: "",
+        className: "",
     };
     public state: MoveableManagerState<U> = {
         target: null,
@@ -72,14 +73,14 @@ export default class MoveableManager<T = {}, U = {}>
     public render() {
         this.checkUpdate();
 
-        const { edge, parentPosition } = this.props;
+        const { edge, parentPosition, className } = this.props;
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
-                className={prefix("control-box", direction === -1 ? "reverse" : "")} style={{
+                className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`} style={{
                     position: "absolute",
                     display: target ? "block" : "none",
                     transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,

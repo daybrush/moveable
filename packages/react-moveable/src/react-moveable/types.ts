@@ -15,6 +15,7 @@ export type MoveableManagerProps<T = {}> = {
     keepRatio?: boolean;
     pinchThreshold?: number;
     ables?: Array<Able<T>>;
+    className?: string;
 } & T;
 export type MoveableManagerState<T = {}> = {
     target: SVGElement | HTMLElement | null | undefined;
