@@ -1,4 +1,4 @@
-import { PREFIX, isWebkit, MOVEABLE_CSS } from "./consts";
+import { PREFIX, isWebkit } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
 import {
@@ -16,7 +16,6 @@ import {
 
 import MoveableManager from "./MoveableManager";
 import { MoveableManagerState, Able } from "./types";
-import styler from "react-css-styler";
 
 export function multiply2(pos1: number[], pos2: number[]) {
     return [
@@ -178,8 +177,8 @@ export function caculateMatrixStack(
                     }
                     parentElement = parentElement.parentElement as HTMLElement;
                 }
-                offsetLeft -= (parentElement || container as HTMLElement).offsetLeft;
-                offsetTop -= (parentElement || container as HTMLElement).offsetTop;
+                offsetLeft -= (parentElement || container as HTMLElement || document.body).offsetLeft;
+                offsetTop -= (parentElement || container as HTMLElement || document.body).offsetTop;
             }
         }
         matrixes.push(
