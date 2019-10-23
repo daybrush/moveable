@@ -67,7 +67,7 @@
 * **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 * **Snappable** indicates whether to snap to the guideline.
 * Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
-* Support Webkit Safari (Mac, iOS)
+* Support Major Browsers
 * Support 3d Transform
 
 

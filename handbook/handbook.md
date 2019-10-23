@@ -39,7 +39,7 @@ If the transform overlaps from the root element to the parent element, the dista
 
 # <a id="toc-support"></a>Basic Support
 
-* Support Webkit Safari(Mac, iOS)
+* Support Major Browsers
 * Support SVG Elements (Not Support Resizable, Use scaldable instead of resizable.)
 * Support 3d Transform
 * [Support Group](#toc-group)
