@@ -86,10 +86,12 @@ export function getTransformOrigin(style: CSSStyleDeclaration) {
 export function getOffsetInfo(
     el: SVGElement | HTMLElement,
     lastParent: SVGElement | HTMLElement | null,
+    isParent?: boolean,
 ) {
     const body = document.body;
-    let target = el.parentElement;
+    let target = isParent ? el : el.parentElement;
     let isEnd = false;
+
     while (target !== null && target !== body) {
         if (lastParent === target) {
             isEnd = true;
@@ -103,7 +105,7 @@ export function getOffsetInfo(
     }
     return {
         isEnd: isEnd || !target || target === body,
-        offsetParent: target || body,
+        offsetParent: target as HTMLElement || body,
     }
 
 }
@@ -116,6 +118,7 @@ export function caculateMatrixStack(
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
     const isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in el;
+    const originalContainer = container || document.body;
     let isEnd = false;
     let is3d = false;
     let n = 3;
@@ -227,6 +230,7 @@ export function caculateMatrixStack(
     let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
+    const endContainer = getOffsetInfo(originalContainer, originalContainer, true).offsetParent;
 
     matrixes.reverse();
     matrixes.forEach((matrix, i) => {
@@ -241,7 +245,7 @@ export function caculateMatrixStack(
             [matrix[n - 1], matrix[2 * n - 1]] =
                 getSVGOffset(
                     matrix[n - 1] as any,
-                    container,
+                    endContainer,
                     n,
                     matrix[2 * n - 1] as any,
                     mat,

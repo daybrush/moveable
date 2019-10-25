@@ -6,7 +6,6 @@ import { ref } from "framework-utils";
 import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
-import { thisExpression } from "@babel/types";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);

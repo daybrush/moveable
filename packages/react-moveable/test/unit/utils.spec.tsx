@@ -160,18 +160,29 @@ describe("test utils", () => {
                 style={{ position: "relative", width: "100px", height: "100px", left: "100px", top: "100px", transform: "translate(100px, 40px)" }}></div>
             <div className="c4"
                 style={{ position: "relative", width: "100px", height: "100px", left: "100px", top: "150px", transform: "translateZ(100px)" }}></div>
+
+            <div className="c5"
+                style={{ position: "static", width: "100px", height: "100px" }}>
+                <div className="c6"
+                    style={{ position: "static", width: "100px", height: "100px" }}></div>
+            </div>
         </div>, document.querySelector(".container"));
 
         const c1 = document.querySelector(".c1") as HTMLElement;
         const c2 = document.querySelector(".c2") as HTMLElement;
         const c3 = document.querySelector(".c3") as HTMLElement;
         const c4 = document.querySelector(".c4") as HTMLElement;
+        const c5 = document.querySelector(".c5") as HTMLElement;
+        const c6 = document.querySelector(".c6") as HTMLElement;
 
         // When
         const stack1 = caculateMatrixStack(c2, document.body);
         const stack2 = caculateMatrixStack(c3, document.body);
         const stack3 = caculateMatrixStack(c4, document.body);
         const stack4 = caculateMatrixStack(c4, c4);
+        const stack5 = caculateMatrixStack(c6, c5);
+        const stack6 = caculateMatrixStack(c6, c4);
+        const stack7 = caculateMatrixStack(c6, null);
 
         // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -52, 0, 2, -52, 0, 0, 1], [2, 0, -52, 0, 2, -52, 0, 0, 1], [1, 0, 0, 0, 1, 0, 0, 0, 1], 'matrix(1,0,0,1,0,0)', [50, 50], false
         const [beforeMatrix1, offsetMatrix1, matrix1, targetMatrix1, transform1, transformOrigin1, is3d1] = stack1;
@@ -179,7 +190,7 @@ describe("test utils", () => {
         const [beforeMatrix2, offsetMatrix2, matrix2, targetMatrix2, transform2, transformOrigin2, is3d2] = stack2;
         // [[2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -52, 0, 2, 0, 448, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -52, 0, 2, 0, 448, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
         const [beforeMatrix3, offsetMatrix3, matrix3, targetMatrix3, transform3, transformOrigin3, is3d3] = stack3;
-        // [[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], [1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 0, 0, 0, 0, 1], [1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
+        // [[2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1], [1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 0, 0, 0, 0, 1], [1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
         const [beforeMatrix4, offsetMatrix4, matrix4, targetMatrix4, transform4, transformOrigin4, is3d4] = stack4;
 
         // Then
@@ -207,9 +218,9 @@ describe("test utils", () => {
         expect(transformOrigin3).to.be.deep.equals([50, 50]);
         expect(is3d3).to.be.true;
 
-        expect(beforeMatrix4).to.be.deep.equals([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-        expect(offsetMatrix4).to.be.deep.equals([1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 0, 0, 0, 0, 1]);
-        expect(matrix4).to.be.deep.equals([1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 100, 0, 0, 0, 1]);
+        expect(beforeMatrix4).to.be.deep.equals([2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1]);
+        expect(offsetMatrix4).to.be.deep.equals([2, 0, 0, -52, 0, 2, 0, 448, 0, 0, 1, 0, 0, 0, 0, 1]);
+        expect(matrix4).to.be.deep.equals([2, 0, 0, -52, 0, 2, 0, 448, 0, 0, 1, 100, 0, 0, 0, 1]);
         expect(targetMatrix4).to.be.deep.equals([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1]);
         expect(transform4).to.be.equals("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)");
         expect(transformOrigin4).to.be.deep.equals([50, 50]);
