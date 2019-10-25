@@ -10,6 +10,7 @@
     /* transform-origin: 20% 20%; */
     /* transform-origin: 0% 0%; */
     box-sizing: border-box;
+    top: 100px;
 }
 
 .App-logo {

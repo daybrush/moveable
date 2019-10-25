@@ -39,6 +39,7 @@ export default {
                 left: "0px",
                 width: `${width}px`,
                 height: `${height}px`,
+                transformOrigin: "0 0",
                 transform: `matrix3d(${convertMatrixtoCSS(h).join(",")})`,
             }}/>,
         ];
