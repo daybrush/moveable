@@ -105,6 +105,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
 
     public updateEvent(prevProps: MoveableManagerProps<GroupableProps>) {
         const state = this.state;
+        const props = this.props;
 
         if (!state.target) {
             state.target = this.areaElement;
@@ -113,9 +114,14 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
             this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "Group");
             this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
         }
-        const { added, changed, removed } = this.differ.update(this.props.targets!);
+        const isContainerChanged = prevProps.container !== props.container;
 
-        if (added.length || changed.length || removed.length) {
+        if (isContainerChanged) {
+            state.container = props.container;
+        }
+        const { added, changed, removed } = this.differ.update(props.targets!);
+
+        if (isContainerChanged || added.length || changed.length || removed.length) {
             this.updateRect();
         }
     }

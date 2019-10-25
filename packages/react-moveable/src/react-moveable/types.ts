@@ -18,6 +18,7 @@ export type MoveableManagerProps<T = {}> = {
     className?: string;
 } & T;
 export type MoveableManagerState<T = {}> = {
+    container: SVGElement | HTMLElement | null | undefined;
     target: SVGElement | HTMLElement | null | undefined;
     left: number;
     top: number;

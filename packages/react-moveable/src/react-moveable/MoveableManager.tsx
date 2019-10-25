@@ -42,6 +42,7 @@ export default class MoveableManager<T = {}, U = {}>
         className: "",
     };
     public state: MoveableManagerState<U> = {
+        conatainer: null,
         target: null,
         beforeMatrix: createIdentityMatrix3(),
         matrix: createIdentityMatrix3(),
@@ -198,22 +199,24 @@ export default class MoveableManager<T = {}, U = {}>
         };
     }
     public checkUpdate() {
-        const props = this.props;
-        const { target, parentMoveable } = props;
-        const stateTarget = this.state.target;
+        const { target, container, parentMoveable } = this.props;
+        const {
+            target: stateTarget,
+            container: stateContainer,
+        } = this.state;
 
         if (!stateTarget && !target) {
             return;
         }
         this.updateAbles();
 
-        const isTargetChanged = stateTarget !== target;
+        const isChanged = stateTarget !== target || stateContainer !== container;
 
-        if (!isTargetChanged) {
+        if (!isChanged) {
             return;
         }
 
-        this.updateState({ target });
+        this.updateState({ target, container });
         if (!parentMoveable) {
             this.updateRect("End", false, false);
         }

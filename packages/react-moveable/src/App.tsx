@@ -20,10 +20,12 @@ class App extends React.Component {
     public moveable!: Moveable;
     public state = {
         target: null,
+        container: null,
         targets: [],
         isResizable: true,
         emo: null,
     } as {
+        container: any,
         target: any,
         emo: any,
         targets: Array<HTMLElement | SVGElement>,
@@ -38,7 +40,7 @@ class App extends React.Component {
 
         (window as any).a = this;
         return (
-            <div>
+            <div id="con">
                 <div id="test" style={{
                     position: "fixed",
                     height: "69.28203582763672px",
@@ -233,21 +235,25 @@ class App extends React.Component {
                         target.style.cssText += item.toCSS();
                     }}
                 />
-                <div className="emo">
-                    <img src="./emo.png" />
-                </div>
-                <Moveable
-                ref={ref(window, "er")}
-                warpable={true}
-                target={this.state.emo}
-                onWarp={e => {
-                    e.target.style.transform = e.transform;
-                }}
-                ></Moveable>
+
                 <div className="App" onMouseDown={this.onClick} onTouchStart={this.onClick} data-target="app">
                     <div className="box box1" data-target="box"><span>A</span><span>B</span><span>C</span></div>
 
                     <header className="App-header" data-target="header">
+
+                <Moveable
+                ref={ref(window, "er")}
+                warpable={true}
+                target={this.state.emo}
+                container={this.state.container}
+                onWarp={e => {
+                    e.target.style.transform = e.transform;
+                }}
+                ></Moveable>
+                        <div className="emo">
+                            <img src="./emo.png" />
+                        </div>
+
                         <div className="box box2" data-target="box2"><span>A</span></div>
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />
                         <p data-target="p">
@@ -342,6 +348,10 @@ class App extends React.Component {
         setTimeout(() => {
             this.setState({
                 emo: document.querySelector(".emo") as HTMLElement,
+            }, () => {
+                this.setState({
+                    container: document.querySelector(".App-header"),
+                });
             });
         }, 100);
     }

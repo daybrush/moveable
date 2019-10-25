@@ -33,7 +33,8 @@ img {
 }
 
 .App-header {
-    position: static!important;
+    /* position: static!important; */
+    position: relative;
     background-color: #282c34;
     min-height: 100vh;
     /* display: flex;
