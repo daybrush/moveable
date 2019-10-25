@@ -72,9 +72,10 @@ export default class MoveableManager<T = {}, U = {}>
     public customDragger!: CustomDragger;
 
     public render() {
+        const { edge, parentPosition, className } = this.props;
+
         this.checkUpdate();
 
-        const { edge, parentPosition, className } = this.props;
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
 
@@ -96,7 +97,13 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public componentDidMount() {
         this.controlBox.getElement();
-        this.updateEvent(this.props);
+        const props = this.props;
+        const { parentMoveable, container } = props;
+
+        this.updateEvent(props);
+        if (!container && !parentMoveable) {
+            this.updateRect("End", false, true);
+        }
     }
     public componentDidUpdate(prevProps: MoveableManagerProps<T>) {
         this.updateEvent(prevProps);
@@ -105,7 +112,7 @@ export default class MoveableManager<T = {}, U = {}>
         unset(this, "targetDragger");
         unset(this, "controlDragger");
     }
-    public getContainer(): HTMLElement | SVGElement {
+    public getContainer(): HTMLElement | SVGElement | null {
         const { parentMoveable, container } = this.props;
 
         return container!
@@ -217,7 +224,8 @@ export default class MoveableManager<T = {}, U = {}>
         }
 
         this.updateState({ target, container });
-        if (!parentMoveable) {
+
+        if (!parentMoveable && (container || this.controlBox)) {
             this.updateRect("End", false, false);
         }
     }

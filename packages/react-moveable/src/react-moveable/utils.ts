@@ -83,7 +83,30 @@ export function getTransformOrigin(style: CSSStyleDeclaration) {
 
     return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
 }
+export function getOffsetInfo(
+    el: SVGElement | HTMLElement,
+    lastParent: SVGElement | HTMLElement | null,
+) {
+    const body = document.body;
+    let target = el.parentElement;
+    let isEnd = false;
+    while (target !== null && target !== body) {
+        if (lastParent === target) {
+            isEnd = true;
+        }
+        const { position, transform } = getComputedStyle(target);
 
+        if (position !== "static" || (transform && transform !== "none")) {
+            break;
+        }
+        target = target.parentElement;
+    }
+    return {
+        isEnd: isEnd || !target || target === body,
+        offsetParent: target || body,
+    }
+
+}
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
@@ -92,19 +115,23 @@ export function caculateMatrixStack(
 ): [number[], number[], number[], number[], string, number[], boolean] {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
-    const isContainer: boolean = !!prevMatrix || target === container;
     const isSVGGraphicElement = el.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in el;
+    let isEnd = false;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
     let targetMatrix!: number[];
 
-    while (el && (isContainer || el !== container)) {
+    if (prevMatrix) {
+        container = target.parentElement;
+    }
+    while (el && !isEnd) {
         const style: CSSStyleDeclaration = getComputedStyle(el);
         const tagName = el.tagName.toLowerCase();
         const position = style.position;
         const isFixed = position === "fixed";
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style.transform!));
+        const transform = style.transform!;
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
 
         if (!is3d && matrix.length === 16) {
             is3d = true;
@@ -157,29 +184,19 @@ export function caculateMatrixStack(
                 createIdentityMatrix(n),
             );
         }
-        let parentElement: HTMLElement = el.parentElement!;
+        let parentElement: HTMLElement | null = el.parentElement;
 
         if (isWebkit && !hasNotOffset && !isSVG) {
-            const offsetParent = (el as HTMLElement).offsetParent as HTMLElement;
+            const {
+                isEnd: isWebkitEnd,
+                offsetParent,
+            } = getOffsetInfo(el, container);
 
-            if (offsetParent && offsetParent !== parentElement) {
-                while (parentElement && parentElement !== container) {
-                    const parentStyle = getComputedStyle(parentElement);
-                    const {
-                        position: nextPosition,
-                        transform: nextTransform,
-                    } = parentStyle;
-                    if (
-                        nextPosition !== "static"
-                        || (nextTransform && nextTransform !== "none")
-                    ) {
-                        break;
-                    }
-                    parentElement = parentElement.parentElement as HTMLElement;
-                }
-                offsetLeft -= (parentElement || container as HTMLElement || document.body).offsetLeft;
-                offsetTop -= (parentElement || container as HTMLElement || document.body).offsetTop;
-            }
+            parentElement = offsetParent;
+            offsetLeft -= (parentElement || container as HTMLElement || document.body).offsetLeft;
+            offsetTop -= (parentElement || container as HTMLElement || document.body).offsetTop;
+
+            isEnd = isEnd || isWebkitEnd;
         }
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
@@ -194,17 +211,17 @@ export function caculateMatrixStack(
         if (!transformOrigin) {
             transformOrigin = origin;
         }
-
-        if (isContainer || isFixed) {
+        if (isEnd || isFixed) {
             break;
-        }
-        if (isSVG) {
-            el = el.parentElement;
         } else if (isWebkit) {
             el = parentElement;
         } else {
-            el = (el as HTMLElement).offsetParent as HTMLElement;
+            const { offsetParent, isEnd: isOffsetEnd } = getOffsetInfo(el, container);
+
+            el = offsetParent;
+            isEnd = isOffsetEnd;
         }
+
     }
     let mat = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
@@ -531,7 +548,7 @@ export function getSize(
 }
 export function getTargetInfo(
     target?: HTMLElement | SVGElement,
-    container?: HTMLElement | SVGElement,
+    container?: HTMLElement | SVGElement | null,
     state?: Partial<MoveableManagerState> | false | undefined,
 ): Partial<MoveableManagerState> {
     let left = 0;

@@ -242,15 +242,14 @@ class App extends React.Component {
 
                     <header className="App-header" data-target="header">
 
-                <Moveable
+                {this.state.container && <Moveable
                 ref={ref(window, "er")}
                 warpable={true}
                 target={this.state.emo}
                 container={this.state.container}
                 onWarp={e => {
                     e.target.style.transform = e.transform;
-                }}
-                ></Moveable>
+                }} />}
                         <div className="emo">
                             <img src="./emo.png" />
                         </div>
