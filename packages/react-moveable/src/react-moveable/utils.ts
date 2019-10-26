@@ -84,15 +84,15 @@ export function getTransformOrigin(style: CSSStyleDeclaration) {
     return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
 }
 export function getOffsetInfo(
-    el: SVGElement | HTMLElement,
-    lastParent: SVGElement | HTMLElement | null,
+    el: SVGElement | HTMLElement | null | undefined,
+    lastParent: SVGElement | HTMLElement | null | undefined,
     isParent?: boolean,
 ) {
     const body = document.body;
-    let target = isParent ? el : el.parentElement;
+    let target = !el || isParent ? el : el.parentElement;
     let isEnd = false;
 
-    while (target !== null && target !== body) {
+    while (target && target !== body) {
         if (lastParent === target) {
             isEnd = true;
         }

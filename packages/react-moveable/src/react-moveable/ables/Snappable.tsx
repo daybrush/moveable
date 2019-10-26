@@ -1,6 +1,6 @@
 import MoveableManager from "../MoveableManager";
 import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo } from "../types";
-import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses } from "../utils";
+import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, getOffsetInfo } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
 import {
@@ -28,7 +28,7 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         return;
     }
 
-    const containerRect = (container || document.documentElement).getBoundingClientRect();
+    const containerRect = getOffsetInfo(container, container, true).offsetParent.getBoundingClientRect();
     const {
         top: containerTop,
         left: containerLeft,
