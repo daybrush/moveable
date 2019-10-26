@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.8] - 2019-10-26
+### Fixed
+* Fix that miscaculate static parent's offset position
+* Fix dragArea's transformOrigin
+
 ## [0.9.7] - 2019-10-16
 ### Fixed
 * Fix typo that `elemenGuildelines` to `elementGuidelines` #62
