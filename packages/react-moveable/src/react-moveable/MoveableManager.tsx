@@ -14,7 +14,6 @@ import styler from "react-css-styler";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
-import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
 

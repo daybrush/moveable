@@ -143,7 +143,7 @@ class App extends React.Component {
                     />
                 <Moveable
                     target={selectedTarget}
-                    container={document.body}
+                    container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
                     keepRatio={true}
                     origin={false}
