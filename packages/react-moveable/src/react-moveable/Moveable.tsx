@@ -5,6 +5,7 @@ import { MOVEABLE_ABLES } from "./ables/consts";
 import MoveableGroup from "./MoveableGroup";
 import { ref } from "framework-utils";
 import { isArray } from "@daybrush/utils";
+import Groupable from "./ables/Groupable";
 
 export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & T> implements MoveableInterface {
     public moveable!: MoveableManager<MoveableProps> | MoveableGroup;
@@ -17,7 +18,7 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
 
         if (isGroup) {
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
-                {...{ ...this.props, target: null, targets: target as any[], ables: [...MOVEABLE_ABLES, ...ables] }} />;
+                {...{ ...this.props, target: null, targets: target as any[], ables: [...MOVEABLE_ABLES, Groupable, ...ables] }} />;
         } else {
             const moveableTarget = isArr ? (target as any[])[0] : target;
 

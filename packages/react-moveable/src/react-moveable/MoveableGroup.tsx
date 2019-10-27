@@ -96,7 +96,6 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         transformOrigin: ["50%", "50%"],
         groupable: true,
         dragArea: true,
-        ables: MOVEABLE_ABLES,
         targets: [],
     };
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();

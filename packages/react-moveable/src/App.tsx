@@ -234,6 +234,9 @@ class App extends React.Component {
                         // item.set("matrix3d", matrix);
                         target.style.cssText += item.toCSS();
                     }}
+                    onClick={e => {
+                        console.log(e);
+                    }}
                 />
 
                 <div className="App" onMouseDown={this.onClick} onTouchStart={this.onClick} data-target="app">

@@ -6,7 +6,9 @@ import Scalable from "./Scalable";
 import Warpable from "./Warpable";
 import Snappable from "./Snappable";
 import { Able } from "../types";
+import DragArea from "./DragArea";
+import Origin from "./Origin";
 
 export const MOVEABLE_ABLES: Able[] = [
-    Snappable, Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable,
+    Snappable, Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable, DragArea, Origin,
 ];

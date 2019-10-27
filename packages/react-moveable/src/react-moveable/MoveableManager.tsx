@@ -16,7 +16,6 @@ import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
 import Origin from "./ables/Origin";
 import { getAbleDragger } from "./getAbleDragger";
-import DragArea from "./ables/DragArea";
 import CustomDragger from "./CustomDragger";
 
 const ControlBoxElement = styler("div", MOVEABLE_CSS);
@@ -119,7 +118,7 @@ export default class MoveableManager<T = {}, U = {}>
             || (parentMoveable && parentMoveable.getContainer())
             || this.controlBox.getElement().offsetParent as HTMLElement;
     }
-    public isMoveableElement(target: HTMLElement) {
+    public isMoveableElement(target: HTMLElement | SVGElement) {
         return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
     }
     public dragStart(e: MouseEvent | TouchEvent) {
@@ -275,8 +274,9 @@ export default class MoveableManager<T = {}, U = {}>
         }
     }
     protected renderAbles() {
-        const ables: Able[] = [...this.targetAbles, ...this.controlAbles, Origin, DragArea];
-
-        return filterAbles(ables, ["render"]).map(({ render }) => render!(this, React));
+        const props = this.props as any;
+        const ables: Able[] = props.ables!;
+        const enabledAbles = ables.filter(able => able && props[able.name]);
+        return filterAbles(enabledAbles, ["render"]).map(({ render }) => render!(this, React));
     }
 }

@@ -642,23 +642,17 @@ export interface OnPinchGroup extends OnPinch {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnPinchEnd
  * @property - The pinch finished targets
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- * @property - Whether `pinchGroup` called
  */
-export interface OnPinchGroupEnd {
+export interface OnPinchGroupEnd extends OnPinchEnd {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    isDrag: boolean;
-    datas: IObject<any>;
 }
 /**
  * @typedef
  * @memberof Moveable
  * @property - targets set to group.
+ * @property - Moveble target
  * @property - Clicked target.
  * @property - Whether the clicked target is on the targets set in the group.
  * @property - Whether the clicked target is a child of the targets set in the group.
@@ -667,9 +661,26 @@ export interface OnPinchGroupEnd {
 export interface OnClickGroup {
     targets: Array<HTMLElement | SVGElement>;
     target: HTMLElement | SVGElement;
-    hasTarget: boolean;
+    inputTarget: HTMLElement | SVGElement;
+    isTarget: boolean;
     containsTarget: boolean;
     targetIndex: number;
+}
+
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Moveble target
+ * @property - Clicked target.
+ * @property - Whether the clicked target is moveable target.
+ * @property - Whether the clicked target is a child of moveable target.
+ */
+export interface OnClick {
+    target: HTMLElement | SVGElement;
+    inputTarget: HTMLElement | SVGElement;
+    isTarget: boolean;
+    containsTarget: boolean;
 }
 
 export interface Able<T = any> {
@@ -791,11 +802,11 @@ export interface GroupableProps extends
     ResizableProps,
     ScalableProps,
     SnappableProps,
-    RenderProps {
+    RenderProps,
+    DragAreaProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
-    onClickGroup?: (e: OnClickGroup) => any;
 }
 
 export interface SnappableProps {
@@ -853,6 +864,12 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
     targets: Array<HTMLElement | SVGElement>;
 }
 
+
+export interface DragAreaProps {
+    dragArea?: boolean;
+    onClick?: (e: OnClick) => any;
+    onClickGroup?: (e: OnClickGroup) => any;
+}
 export interface RenderProps {
     onRenderStart?: (e: OnRenderStart) => any;
     onRender?: (e: OnRender) => any;
