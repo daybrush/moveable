@@ -80,7 +80,6 @@ export default {
         const target = moveable.state.target!;
         const inputTarget = inputEvent.target;
 
-        console.log("?");
         if (isDrag || moveable.isMoveableElement(inputTarget)) {
             return;
         }

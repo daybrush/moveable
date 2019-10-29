@@ -854,6 +854,13 @@ export interface OnRenderEnd {
     isPinch: boolean;
     isDrag: boolean;
 }
+
+export interface OnScroll {
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+}
 export interface OnRenderGroupStart extends OnRenderStart {
     targets: Array<HTMLElement | SVGElement>;
 }
@@ -865,6 +872,11 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
 }
 
 
+export interface ScrollableProps {
+    scrollable?: boolean;
+    scrollContainer?: HTMLElement;
+    onScroll: (e?: OnScroll) => any;
+}
 export interface DragAreaProps {
     dragArea?: boolean;
     onClick?: (e: OnClick) => any;

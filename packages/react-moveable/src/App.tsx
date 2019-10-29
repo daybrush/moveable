@@ -150,6 +150,7 @@ class App extends React.Component {
                     dragArea={true}
                     draggable={true}
                     snappable={true}
+                    scrollable={true}
                     transformOrigin="% %"
                     bounds={{ left: 30, top: 20 }}
                     verticalGuidelines={[100, 200, 400, 500]}
