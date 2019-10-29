@@ -40,10 +40,8 @@ export default {
             pos3,
             pos4,
         );
+        const transform = h.length ? `matrix3d(${convertMatrixtoCSS(h).join(",")})` : "none";
 
-        if (!h.length) {
-            return [];
-        }
         return [
             <div key="area" ref={ref(moveable, "areaElement")} className={prefix("area")} style={{
                 top: "0px",
@@ -51,7 +49,7 @@ export default {
                 width: `${width}px`,
                 height: `${height}px`,
                 transformOrigin: "0 0",
-                transform: `matrix3d(${convertMatrixtoCSS(h).join(",")})`,
+                transform,
             }}/>,
         ];
     },
