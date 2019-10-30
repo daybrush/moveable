@@ -45,11 +45,18 @@ export default {
         } = datas;
 
 
-        let offset = 0;
+        let offsetX = 0;
+        let offsetY = 0;
+
         if (scrollRect.top > clientY) {
-            offset = -10;
+            offsetY = -10;
         } else if (scrollRect.top + scrollRect.height < clientY) {
-            offset = 10;
+            offsetY = 10;
+        }
+        if (scrollRect.left > clientX) {
+            offsetX = -10;
+        } else if (scrollRect.left + scrollRect.width < clientX) {
+            offsetX = 10;
         }
         if (e.isScroll) {
             if (prevClientX !== clientX || prevClientY !== clientY) {
@@ -59,15 +66,21 @@ export default {
             datas.prevClientX = clientX;
             datas.prevClientY = clientY;
         }
-        if (offset) {
+        if (offsetY || offsetY) {
             requestAnimationFrame(() => {
                 const scrollTop = scrollContainer.scrollTop;
+                const scrollLeft = scrollContainer.scrollLeft;
 
-                if (offset < 0) {
-                    offset = scrollTop + offset < 0 ? -scrollTop : offset;
+                if (offsetY < 0) {
+                    offsetY = scrollTop + offsetY < 0 ? -scrollTop : offsetY;
                 }
-                scrollContainer.scrollTop += offset;
-                moveable.targetDragger.scrollBy(0, offset, inputEvent);
+                if (offsetX < 0) {
+                    offsetX = scrollLeft + offsetX < 0 ? -scrollLeft : offsetX;
+                }
+                if (offsetX || offsetY) {
+                    scrollContainer.scrollTop += offsetY;
+                    moveable.targetDragger.scrollBy(0, offsetY, inputEvent);
+                }
             });
         }
     },
