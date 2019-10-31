@@ -134,7 +134,7 @@ export default {
     dragControlCondition,
     dragControlStart(
         moveable: MoveableManager<RotatableProps>,
-        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag }: any) {
+        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag, inputEvent }: any) {
         const {
             target, left, top, origin, beforeOrigin,
             direction, beforeDirection, targetTransform,
@@ -175,6 +175,7 @@ export default {
             target,
             clientX,
             clientY,
+            inputEvent,
             set: (rotatation: number) => {
                 datas.startRotate = rotatation;
             },
@@ -186,7 +187,7 @@ export default {
     },
     dragControl(
         moveable: MoveableManager<RotatableProps>,
-        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag }: any,
+        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag, inputEvent }: any,
     ) {
         const {
             direction,
@@ -229,6 +230,7 @@ export default {
         const params = {
             target: moveable.props.target!,
             datas: datas.datas,
+            inputEvent,
             clientX,
             clientY,
             delta,
@@ -245,7 +247,7 @@ export default {
         return params;
     },
     dragControlEnd(
-        moveable: MoveableManager<RotatableProps>, { datas, isDrag, clientX, clientY }: any) {
+        moveable: MoveableManager<RotatableProps>, { datas, isDrag, clientX, clientY, inputEvent }: any) {
 
         if (!datas.isRotate) {
             return false;
@@ -254,6 +256,7 @@ export default {
 
         triggerEvent(moveable, "onRotateEnd", {
             datas: datas.datas,
+            inputEvent,
             clientX,
             clientY,
             target: moveable.state.target!,

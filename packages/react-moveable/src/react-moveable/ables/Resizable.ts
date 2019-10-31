@@ -75,6 +75,7 @@ export default {
             clientX,
             clientY,
             direction,
+            inputEvent,
             set: ([startWidth, startHeight]: number[]) => {
                 datas.width = startWidth;
                 datas.height = startHeight;
@@ -212,6 +213,7 @@ export default {
             clientX,
             clientY,
             isPinch: !!pinchFlag,
+            inputEvent,
             drag: Draggable.drag(
                 moveable,
                 setCustomDrag(moveable.state, inverseDelta, inputEvent),
@@ -222,13 +224,14 @@ export default {
     },
     dragControlEnd(
         moveable: MoveableManager<ResizableProps & DraggableProps>,
-        { datas, isDrag, clientX, clientY }: any) {
+        { datas, isDrag, clientX, clientY, inputEvent }: any) {
         if (!datas.isResize) {
             return false;
         }
         datas.isResize = false;
 
         triggerEvent(moveable, "onResizeEnd", {
+            inputEvent,
             target: moveable.state.target!,
             datas: datas.datas,
             clientX,

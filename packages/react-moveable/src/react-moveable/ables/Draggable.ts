@@ -12,7 +12,7 @@ export default {
     name: "draggable",
     dragStart(
         moveable: MoveableManager<DraggableProps>,
-        { datas, clientX, clientY, parentEvent, parentDragger }: any,
+        { datas, clientX, clientY, parentEvent, parentDragger, inputEvent }: any,
     ) {
         const state = moveable.state;
         const {
@@ -47,6 +47,7 @@ export default {
             target: target!,
             clientX,
             clientY,
+            inputEvent,
             set: (translate: number[]) => {
                 datas.startTranslate = translate;
             },
@@ -63,7 +64,7 @@ export default {
     },
     drag(
         moveable: MoveableManager<DraggableProps>,
-        { datas, distX, distY, clientX, clientY, parentEvent, parentFlag }: any,
+        { datas, distX, distY, clientX, clientY, parentEvent, parentFlag, inputEvent }: any,
     ): OnDrag | undefined {
         const { isPinch, isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
 
@@ -113,6 +114,7 @@ export default {
             datas: datas.datas,
             target: target!,
             transform: nextTransform,
+            inputEvent,
             dist,
             delta,
             translate,
@@ -133,7 +135,7 @@ export default {
     },
     dragEnd(
         moveable: MoveableManager<DraggableProps>,
-        { parentEvent, datas, isDrag, clientX, clientY }: any,
+        { parentEvent, datas, isDrag, clientX, clientY, inputEvent }: any,
     ) {
         if (!datas.isDrag) {
             return;
@@ -146,6 +148,7 @@ export default {
             isDrag,
             clientX,
             clientY,
+            inputEvent,
             datas: datas.datas,
         });
         return isDrag;

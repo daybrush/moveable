@@ -130,30 +130,35 @@ export interface OnPinchEnd {
     clientY: number;
     datas: IObject<any>;
 }
-
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target to drag
+ * @property - The Moveable target
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
  * @property - Objects that can send information to the following events.
- * @property - You can set the start translate value.
+ * @property - The mouse or touch input event that is invoking the moveable event
  */
-export interface OnDragStart {
+export interface OnEvent {
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
     datas: IObject<any>;
+    inputEvent: any;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - You can set the start translate value.
+ */
+export interface OnDragStart extends OnEvent {
     set: (translate: number[]) => void;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - a dragging target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - The delta of [left, top]
  * @property - The distance of [left, top]
  * @property - The position of [left, top]
@@ -167,11 +172,7 @@ export interface OnDragStart {
  * @property - a target's right
  * @property - Whether or not it is being pinched.
  */
-export interface OnDrag {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnDrag extends OnEvent {
     beforeDelta: number[];
     beforeDist: number[];
     beforeTranslate: number[];
@@ -188,46 +189,29 @@ export interface OnDrag {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a drag finished target
+ * @extends Moveable.OnEvent
  * @property - Whether drag called
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  */
-export interface OnDragEnd {
-    target: HTMLElement | SVGElement;
+export interface OnDragEnd extends OnEvent {
     isDrag: boolean;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target to scale
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @extends Moveable.OnEvent
  * @property - The direction of scale.
- * @property - Objects that can send information to the following events.
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
  */
-export interface OnScaleStart {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
+export interface OnScaleStart extends OnEvent {
     direction: number[];
-    datas: IObject<any>;
     dragStart: OnDragStart | false;
     set: (scale: number[]) => void;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - a scaling target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - The direction of scale.
  * @property - a target's scale
  * @property - The distance of scale
@@ -235,11 +219,7 @@ export interface OnScaleStart {
  * @property - a target's transform
  * @property - scale causes a `drag` event.
  */
-export interface OnScale {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnScale extends OnEvent {
     direction: number[];
     scale: number[];
     dist: number[];
@@ -251,36 +231,22 @@ export interface OnScale {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a scale finished target
+ * @extends Moveable.OnEvent
  * @property - Whether scale called
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  */
-export interface OnScaleEnd {
-    target: HTMLElement | SVGElement;
+export interface OnScaleEnd extends OnEvent {
     isDrag: boolean;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
 }
 
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target to resize
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - The direction of resize.
  * @property - resize causes a `dragStart` event.
  * @property - You can set the css width, height value.
  */
-export interface OnResizeStart {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnResizeStart extends OnEvent {
     direction: number[];
     dragStart: OnDragStart | false;
     set: (sizes: number[]) => any;
@@ -289,10 +255,7 @@ export interface OnResizeStart {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a resizng target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - The direction of resize.
  * @property - a target's width
  * @property - a target's height
@@ -300,11 +263,7 @@ export interface OnResizeStart {
  * @property - The delta of [width, height]
  * @property - resize causes a `drag` event.
  */
-export interface OnResize {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnResize extends OnEvent {
     direction: number[];
     width: number;
     height: number;
@@ -316,42 +275,25 @@ export interface OnResize {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a resize finished target
+ * @extends Moveable.OnEvent
  * @property - Whether resize called
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  */
-export interface OnResizeEnd {
-    target: HTMLElement | SVGElement;
+export interface OnResizeEnd extends OnEvent {
     isDrag: boolean;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target to rotate
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - You can set the start rotate value.
  */
-export interface OnRotateStart {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnRotateStart extends OnEvent {
     set: (rotate: number) => void;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - a rotating target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - The distance of rotation rad before transform is applied
  * @property - The delta of rotation rad before transform is applied
  * @property - The now rotation rad before transform is applied
@@ -360,11 +302,7 @@ export interface OnRotateStart {
  * @property - The now rotation rad
  * @property - a target's transform
  */
-export interface OnRotate {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnRotate extends OnEvent {
 
     beforeDist: number;
     beforeDelta: number;
@@ -380,54 +318,33 @@ export interface OnRotate {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a rotate finished target
+ * @extends Moveable.OnEvent
  * @property - Whether rotate called
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  */
-export interface OnRotateEnd {
-    target: HTMLElement | SVGElement;
+export interface OnRotateEnd extends OnEvent {
     isDrag: boolean;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
 }
 
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target to warp
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - You can set the start matrix value.
  */
-export interface OnWarpStart {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnWarpStart extends OnEvent {
     set: (matrix: number[]) => any;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - a warping target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
+ * @extends Moveable.OnEvent
  * @property - a target's transform
  * @property - The delta of warp matrix
  * @property - The dist of warp matrix
  * @property - The caculated warp matrix
  * @property - Multiply function that can multiply previous matrix by warp matrix
  */
-export interface OnWarp {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnWarp extends OnEvent {
     transform: string;
     delta: number[];
     dist: number[];
@@ -437,18 +354,11 @@ export interface OnWarp {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a warp finished target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
+ * @extends Moveable.OnEvent
  * @property - Whether rotate called
- * @property - Objects that can send information to the following events.
  */
-export interface OnWarpEnd {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
+export interface OnWarpEnd extends OnEvent {
     isDrag: boolean;
-    datas: IObject<any>;
 }
 
 /**

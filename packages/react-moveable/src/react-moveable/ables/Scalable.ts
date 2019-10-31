@@ -65,6 +65,7 @@ export default {
             clientX,
             clientY,
             datas: datas.datas,
+            inputEvent,
             direction,
             set: (scale: number[]) => {
                 datas.startScale = scale;
@@ -200,6 +201,7 @@ export default {
 
         const params = {
             target: target!,
+            inputEvent,
             scale,
             direction,
             dist: nowDist,
@@ -220,7 +222,7 @@ export default {
     },
     dragControlEnd(
         moveable: MoveableManager<ScalableProps>,
-        { datas, isDrag, clientX, clientY }: any) {
+        { datas, isDrag, clientX, clientY, inputEvent }: any) {
         if (!datas.isScale) {
             return false;
         }
@@ -232,6 +234,7 @@ export default {
             isDrag,
             clientX,
             clientY,
+            inputEvent,
             datas: datas.datas,
         });
         return isDrag;

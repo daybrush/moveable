@@ -76,9 +76,10 @@ export default {
     },
     dragControlStart(
         moveable: MoveableManager<WarpableProps, SnappableState>,
-        { datas, clientX, clientY, inputEvent: { target: inputTarget } }: any,
+        { datas, clientX, clientY, inputEvent }: any,
     ) {
         const { target } = moveable.props;
+        const { target: inputTarget } = inputEvent;
         const direction = getDirection(inputTarget);
 
         if (!direction || !target) {
@@ -120,6 +121,7 @@ export default {
             target,
             clientX,
             clientY,
+            inputEvent,
             datas: datas.datas,
             set: (matrix: number[]) => {
                 datas.startMatrix = matrix;
@@ -132,7 +134,7 @@ export default {
     },
     dragControl(
         moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
-        { datas, clientX, clientY, distX, distY }: any,
+        { datas, clientX, clientY, distX, distY, inputEvent }: any,
     ) {
         const {
             targetInverseMatrix, prevMatrix, isWarp, startMatrix,
@@ -212,6 +214,7 @@ export default {
             clientX,
             clientY,
             delta,
+            inputEvent,
             matrix: multiplyCSS(startMatrix, matrix, 4),
             multiply: multiplyCSS,
             dist: matrix,
@@ -220,7 +223,10 @@ export default {
         });
         return true;
     },
-    dragControlEnd(moveable: MoveableManager<WarpableProps>, { datas, isDrag, clientX, clientY }: any) {
+    dragControlEnd(
+        moveable: MoveableManager<WarpableProps>,
+        { datas, isDrag, clientX, clientY, inputEvent }: any,
+    ) {
         if (!datas.isWarp) {
             return false;
         }
@@ -232,6 +238,7 @@ export default {
             clientX,
             clientY,
             isDrag,
+            inputEvent,
             datas: datas.datas,
         });
         return isDrag;
