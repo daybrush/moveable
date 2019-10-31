@@ -204,8 +204,8 @@ export function caculateMatrixStack(
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
             createOriginMatrix([
-                hasNotOffset ? el : offsetLeft,
-                hasNotOffset ? origin : offsetTop,
+                hasNotOffset ? el : offsetLeft + el.scrollLeft,
+                hasNotOffset ? origin : offsetTop + el.scrollTop,
             ], n),
         );
         if (!targetMatrix) {
@@ -372,14 +372,14 @@ export function caculateRect(matrix: number[], width: number, height: number, n:
 }
 export function getSVGOffset(
     el: SVGElement,
-    container: HTMLElement | SVGElement | null,
+    container: HTMLElement | SVGElement,
     n: number, origin: number[], beforeMatrix: number[], absoluteMatrix: number[]) {
-    const [width, height] = getSize(el);
 
-    const containerRect = (container || document.documentElement).getBoundingClientRect();
+    const [width, height] = getSize(el);
+    const containerRect = container.getBoundingClientRect();
     const rect = el.getBoundingClientRect();
-    const rectLeft = rect.left - containerRect.left;
-    const rectTop = rect.top - containerRect.top;
+    const rectLeft = rect.left - containerRect.left + container.scrollLeft;
+    const rectTop = rect.top - containerRect.top + container.scrollTop;
     const rectWidth = rect.width;
     const rectHeight = rect.height;
     const mat = multiplies(
