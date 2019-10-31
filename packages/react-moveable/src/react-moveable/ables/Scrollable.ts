@@ -1,7 +1,5 @@
 import MoveableManager from "../MoveableManager";
 import { ScrollableProps } from "../types";
-import { getOffsetInfo } from "../utils";
-
 
 export default {
     name: "scrollable",
@@ -16,34 +14,41 @@ export default {
 
         const scrollClientRect = scrollContainer.getBoundingClientRect();
 
-        e.datas.scrollContainer = scrollContainer;
-        e.datas.scrollRect = {
+
+        const datas = e.datas;
+        datas.scrollContainer = scrollContainer;
+        datas.scrollRect = {
             left: scrollClientRect.left,
             top: scrollClientRect.top,
             width: scrollClientRect.width,
             height: scrollClientRect.height,
         };
 
+        datas.isScroll = true;
         // this.checkScroll(moveable, e);
     },
     drag(moveable: MoveableManager<ScrollableProps>, e: any) {
         this.checkScroll(moveable, e);
     },
     dragEnd(moveable: MoveableManager<ScrollableProps>, e: any) {
-
+        e.datas.isScroll = false;
     },
     checkScroll(moveable: MoveableManager<ScrollableProps>, e: any) {
         const datas = e.datas;
+
+        if (!datas.isScroll) {
+            return;
+        }
         const inputEvent = e.inputEvent;
         const clientX = e.clientX;
         const clientY = e.clientY;
+        const isScroll = e.isScroll;
         const {
             scrollContainer,
             scrollRect,
             prevClientX,
             prevClientY,
         } = datas;
-
 
         let offsetX = 0;
         let offsetY = 0;
@@ -58,11 +63,10 @@ export default {
         } else if (scrollRect.left + scrollRect.width < clientX) {
             offsetX = 10;
         }
-        if (e.isScroll) {
-            if (prevClientX !== clientX || prevClientY !== clientY) {
-                return;
-            }
-        } else {
+        if (isScroll && (prevClientX !== clientX || prevClientY !== clientY)) {
+            return;
+        }
+        if (!isScroll) {
             datas.prevClientX = clientX;
             datas.prevClientY = clientY;
         }
@@ -79,7 +83,8 @@ export default {
                 }
                 if (offsetX || offsetY) {
                     scrollContainer.scrollTop += offsetY;
-                    moveable.targetDragger.scrollBy(0, offsetY, inputEvent);
+                    scrollContainer.scrollLeft += offsetX;
+                    moveable.targetDragger.scrollBy(offsetX, offsetY, inputEvent);
                 }
             });
         }
