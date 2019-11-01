@@ -1,11 +1,10 @@
 <script lang="ts">
-  import VanillaMoveable, { PROPERTIES, EVENTS } from "moveable";
+  import VanillaMoveable, { PROPERTIES, EVENTS, MoveableOptions } from "moveable";
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
 
-
-
-  let options;
-  let container;
+  declare var $$props: any;
+  let options: Partial<MoveableOptions> = {};
+  let container: SVGElement | HTMLElement;
   let moveable: VanillaMoveable;
 
   $: {
@@ -19,6 +18,7 @@
     });
     container = options.container;
     if (moveable) {
+      moveable.target = options.target;
       // moveable.setState(options);
     }
   }
@@ -27,8 +27,11 @@
     moveable = new VanillaMoveable(container || document.body, options);
     const dispatch = createEventDispatcher();
 
+
+    console.log(options, moveable);
     EVENTS.forEach(name => {
       moveable.on(name, e => {
+        console.log(name, e);
         dispatch(name, e);
       });
     });
@@ -43,10 +46,10 @@
   export function updateTarget() {
     return moveable.updateTarget();
   }
-  export function isInside(clientX, clientY) {
+  export function isInside(clientX: number, clientY: number) {
     return moveable.isInside(clientX, clientY);
   }
-  export function isMoveableElement(target) {
+  export function isMoveableElement(target: SVGElement | HTMLElement) {
     return moveable.isMoveableElement(target);
   }
   export function getRect() {
@@ -55,7 +58,7 @@
   export function destroy() {
     moveable.destroy();
   }
-  export function dragStart(e) {
+  export function dragStart(e: MouseEvent | TouchEvent) {
     moveable.dragStart(e);
   }
 </script>
