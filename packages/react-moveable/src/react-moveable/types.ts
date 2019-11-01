@@ -819,4 +819,5 @@ export interface MoveableInterface {
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
+    setState(state: IObject<any>, callback: () => any): void;
 }
