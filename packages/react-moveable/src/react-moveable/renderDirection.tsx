@@ -4,22 +4,22 @@ import { ResizableProps, ScalableProps, WarpableProps, Renderer } from "./types"
 import { DIRECTION_INDEXES } from "./consts";
 import { IObject } from "@daybrush/utils";
 
-export function renderDirections(
+export function renderControls(
     moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
-    directions: string[],
+    defaultDirections: string[],
     React: Renderer,
 ): any[] {
     const { pos1, pos2, pos3, pos4 } = moveable.state;
     const {
-        renderDirections = directions,
+        renderDirections: directions = defaultDirections,
     } = moveable.props;
     const poses = [pos1, pos2, pos3, pos4];
 
     const directionMap: IObject<boolean> = {};
     directions.forEach(direction => {
         directionMap[direction] = true;
-    })
-    return renderDirections.map(direction => {
+    });
+    return directions.map(direction => {
         const indexes = DIRECTION_INDEXES[direction];
 
         if (!indexes || !directionMap[direction]) {
@@ -31,21 +31,15 @@ export function renderDirections(
         );
     });
 }
-export function renderAllDirection(
+export function renderAllDirections(
     moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
     React: Renderer,
 ) {
-    return renderDirections(moveable, ["nw", "ne", "sw", "se", "n", "w", "s", "e"], React);
+    return renderControls(moveable, ["nw", "ne", "sw", "se", "n", "w", "s", "e"], React);
 }
-export function renderDiagonalDirection(
+export function renderDiagonalDirections(
     moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
     React: Renderer,
 ): any[] {
-    return renderDirections(moveable, ["nw", "ne", "sw", "se"], React);
-}
-export function renderDirection(
-    moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>,
-    React: Renderer,
-): any[] {
-    return renderDirections(moveable, ["n", "w", "s", "e"], React);
+    return renderControls(moveable, ["nw", "ne", "sw", "se"], React);
 }

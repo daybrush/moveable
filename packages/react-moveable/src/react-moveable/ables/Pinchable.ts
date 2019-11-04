@@ -1,7 +1,7 @@
 import { Client } from "@daybrush/drag";
-import { triggerEvent } from "../utils";
+import { triggerEvent, fillParams } from "../utils";
 import MoveableManager from "../MoveableManager";
-import { PinchableProps, Able, SnappableState } from "../types";
+import { PinchableProps, Able, SnappableState, OnPinchStart, OnPinch, OnPinchEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { getRad } from "@moveable/matrix";
 
@@ -20,14 +20,14 @@ export default {
     updateRect: true,
     pinchStart(
         moveable: MoveableManager<PinchableProps, SnappableState>,
-        { datas, clientX, clientY, touches, inputEvent, targets }: any,
+        e: any,
     ) {
+        const { datas, clientX, clientY, touches, inputEvent, targets } = e;
         const { pinchable, ables } = moveable.props;
 
         if (!pinchable) {
             return false;
         }
-        const state = moveable.state;
         const eventName = `onPinch${targets ? "Group" : ""}Start` as "onPinchStart";
         const controlEventName = `drag${targets ? "Group" : ""}ControlStart` as "dragControlStart";
 
@@ -35,14 +35,12 @@ export default {
             return pinchable.indexOf(able.name as any) > -1;
         })).filter(able => able.canPinch && able[controlEventName]);
 
-        datas.pinchableDatas = {};
+        const params = fillParams<OnPinchStart>(moveable, e, {}) as any;
 
-        const result = triggerEvent(moveable, eventName, {
-            [targets ? "targets" : "target"]: targets ? targets : state.target!,
-            clientX,
-            clientY,
-            datas: datas.pinchableDatas,
-        } as any);
+        if (targets) {
+            params.targets = targets;
+        }
+        const result = triggerEvent(moveable, eventName, params);
 
         datas.isPinch = result !== false;
         datas.ables = pinchAbles;
@@ -72,20 +70,19 @@ export default {
     },
     pinch(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent, targets }: any,
+        e: any,
     ) {
+        const { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent, targets } = e;
         if (!datas.isPinch) {
             return;
         }
         const parentRotate = getRotatiion(touches);
         const parentDistance = distance * (1 - 1 / pinchScale);
-        const target = moveable.state.target!;
-        const params: any = {
-            [targets ? "targets" : "target"]: targets ? targets : target,
-            clientX,
-            clientY,
-            datas: datas.pinchableDatas,
-        };
+        const params = fillParams<OnPinch>(moveable, e, {}) as any;
+
+        if (targets) {
+            params.targets = targets;
+        }
         const eventName = `onPinch${targets ? "Group" : ""}` as "onPinch";
         triggerEvent(moveable, eventName, params);
 
@@ -107,20 +104,20 @@ export default {
     },
     pinchEnd(
         moveable: MoveableManager<PinchableProps>,
-        { datas, clientX, clientY, isPinch, inputEvent, targets }: any,
+        e: any,
     ) {
+        const { datas, clientX, clientY, isPinch, inputEvent, targets } = e;
         if (!datas.isPinch) {
             return;
         }
-        const target = moveable.state.target!;
         const eventName = `onPinch${targets ? "Group" : ""}End` as "onPinchEnd";
-        triggerEvent(moveable, eventName, {
-            [targets ? "targets" : "target"]: targets ? targets : target,
-            isDrag: isPinch,
-            clientX,
-            clientY,
-            datas: datas.pinchableDatas,
-        } as any);
+
+        const params = fillParams<OnPinchEnd>(moveable, e, { isDrag: isPinch }) as any;
+
+        if (targets) {
+            params.targets = targets;
+        }
+        triggerEvent(moveable, eventName, params);
         const ables: Able[] = datas.ables;
         const controlEventName = `drag${targets ? "Group" : ""}ControlEnd` as "dragControlEnd";
 

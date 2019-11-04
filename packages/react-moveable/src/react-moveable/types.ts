@@ -2,6 +2,7 @@ import { IObject } from "@daybrush/utils";
 import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
+import MoveableManager from "./MoveableManager";
 
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
@@ -42,6 +43,7 @@ export type MoveableManagerState<T = {}> = {
     pos3: number[];
     pos4: number[];
     dragger: Dragger | CustomDragger | null;
+    clientRect: { left: number, right: number, top: number, bottom: number, width: number, height: number};
 } & T;
 
 export interface Renderer {
@@ -76,6 +78,7 @@ export interface MoveableProps extends
     PinchableProps,
     GroupableProps,
     SnappableProps,
+    ScrollableProps,
     RenderProps {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
     container?: SVGElement | HTMLElement | null;
@@ -133,6 +136,7 @@ export interface OnPinchEnd {
 /**
  * @typedef
  * @memberof Moveable
+ * @property - The Moveable instance
  * @property - The Moveable target
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
@@ -140,6 +144,7 @@ export interface OnPinchEnd {
  * @property - The mouse or touch input event that is invoking the moveable event
  */
 export interface OnEvent {
+    currentTarget: MoveableManager,
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
@@ -257,8 +262,10 @@ export interface OnResizeStart extends OnEvent {
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - The direction of resize.
- * @property - a target's width
- * @property - a target's height
+ * @property - a target's cssWidth
+ * @property - a target's cssHeight
+ * @property - a target's offsetWidth
+ * @property - a target's offsetHeight
  * @property - The distance of [width, height]
  * @property - The delta of [width, height]
  * @property - resize causes a `drag` event.
@@ -267,6 +274,8 @@ export interface OnResize extends OnEvent {
     direction: number[];
     width: number;
     height: number;
+    offsetWidth: number;
+    offsetHeight: number;
     dist: number[];
     delta: number[];
     isPinch: boolean;
@@ -387,17 +396,12 @@ export interface OnDragGroup extends OnDrag {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnDragEnd
  * @property - The drag finished targets
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  * @property - Whether `dragGroup` called
  */
-export interface OnDragGroupEnd {
+export interface OnDragGroupEnd extends OnDragEnd {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
     isDrag: boolean;
 }
 
@@ -428,17 +432,12 @@ export interface OnRotateGroup extends OnRotate {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnRotateEnd
  * @property - The rotate finished targets
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  * @property - Whether `rotateGroup` called
  */
-export interface OnRotateGroupEnd {
+export interface OnRotateGroupEnd extends OnRotateEnd {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
     isDrag: boolean;
 }
 
@@ -469,18 +468,13 @@ export interface OnResizeGroup extends OnResize {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnResizeEnd
  * @property - The resize finished targets
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  * @property - Whether `resizeGroup` called
  */
-export interface OnResizeGroupEnd {
+export interface OnResizeGroupEnd extends OnResizeEnd {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
     isDrag: boolean;
-    datas: IObject<any>;
 }
 
 /**
@@ -510,33 +504,23 @@ export interface OnScaleGroup extends OnScale {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnScaleEnd
  * @property - The scale finished targets
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  * @property - Whether `scaleGroup` called
  */
-export interface OnScaleGroupEnd {
+export interface OnScaleGroupEnd extends OnScaleEnd {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
     isDrag: boolean;
-    datas: IObject<any>;
 }
 
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnPinchStart
  * @property - targets to pinch
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
  */
-export interface OnPinchGroupStart {
+export interface OnPinchGroupStart extends OnPinchStart {
     targets: Array<HTMLElement | SVGElement>;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
 }
 
 /**
@@ -558,39 +542,37 @@ export interface OnPinchGroup extends OnPinch {
 export interface OnPinchGroupEnd extends OnPinchEnd {
     targets: Array<HTMLElement | SVGElement>;
 }
+
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Clicked target.
+ * @property - Whether the clicked target is moveable target.
+ * @property - Whether the clicked target is a child of moveable target.
+ */
+export interface OnClick extends OnEvent {
+    inputTarget: HTMLElement | SVGElement;
+    isTarget: boolean;
+    containsTarget: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
  * @property - targets set to group.
- * @property - Moveble target
  * @property - Clicked target.
  * @property - Whether the clicked target is on the targets set in the group.
  * @property - Whether the clicked target is a child of the targets set in the group.
  * @property - The corresponding index among the targets set as a group.
  */
-export interface OnClickGroup {
+export interface OnClickGroup extends OnEvent {
     targets: Array<HTMLElement | SVGElement>;
-    target: HTMLElement | SVGElement;
     inputTarget: HTMLElement | SVGElement;
     isTarget: boolean;
     containsTarget: boolean;
     targetIndex: number;
-}
-
-
-/**
- * @typedef
- * @memberof Moveable
- * @property - Moveble target
- * @property - Clicked target.
- * @property - Whether the clicked target is moveable target.
- * @property - Whether the clicked target is a child of moveable target.
- */
-export interface OnClick {
-    target: HTMLElement | SVGElement;
-    inputTarget: HTMLElement | SVGElement;
-    isTarget: boolean;
-    containsTarget: boolean;
 }
 
 export interface Able<T = any> {
@@ -734,43 +716,30 @@ export interface SnappableState {
     enableSnap: boolean;
 }
 
-export interface OnCustomDrag extends Position {
-    inputEvent: any;
-    isDrag: boolean;
-    datas: IObject<any>;
-    parentEvent: boolean;
-    parentDragger: CustomDragger;
-}
-
-export interface OnRenderStart {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnRenderStart extends OnEvent {
     isPinch: boolean;
 }
-export interface OnRender {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnRender extends OnEvent {
     isPinch: boolean;
 }
-export interface OnRenderEnd {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+export interface OnRenderEnd extends OnEvent {
     isPinch: boolean;
     isDrag: boolean;
 }
-
-export interface OnScroll {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+/**
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnScroll extends OnEvent {
+    scrollContainer: HTMLElement;
+    direction: number[];
+    isOverflowX: boolean;
+    isOverflowY: boolean;
 }
+export interface OnScrollGroup extends OnScroll {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
 export interface OnRenderGroupStart extends OnRenderStart {
     targets: Array<HTMLElement | SVGElement>;
 }
@@ -781,11 +750,11 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
     targets: Array<HTMLElement | SVGElement>;
 }
 
-
 export interface ScrollableProps {
     scrollable?: boolean;
     scrollContainer?: HTMLElement;
-    onScroll: (e?: OnScroll) => any;
+    scrollThreshold?: number;
+    onScroll?: (e: OnScroll) => any;
 }
 export interface DragAreaProps {
     dragArea?: boolean;
@@ -799,6 +768,14 @@ export interface RenderProps {
     onRenderGroupStart?: (e: OnRenderGroupStart) => any;
     onRenderGroup?: (e: OnRenderGroup) => any;
     onRenderGroupEnd?: (e: OnRenderGroupEnd) => any;
+}
+
+export interface OnCustomDrag extends Position {
+    inputEvent: any;
+    isDrag: boolean;
+    datas: IObject<any>;
+    parentEvent: boolean;
+    parentDragger: CustomDragger;
 }
 
 export interface RectInfo {

@@ -7,7 +7,7 @@
   "sideEffects": false,
   "types": "declaration/index.d.ts",
   "scripts": {
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "lint": "tslint -c tslint.json 'src/react-moveable/**/*.ts' 'src/react-moveable/**/*.tsx'",
     "start": "react-scripts start",
     "build": "rollup -c && npm run declaration && print-sizes ./dist ",
     "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",

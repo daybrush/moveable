@@ -1,7 +1,7 @@
-import { throttle, prefix, triggerEvent } from "../utils";
+import { throttle, prefix, triggerEvent, fillParams } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
-import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer, OnRotateGroupStart } from "../types";
+import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer, OnRotateGroupStart, OnRotateStart, OnRotate, OnRotateEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -134,7 +134,8 @@ export default {
     dragControlCondition,
     dragControlStart(
         moveable: MoveableManager<RotatableProps>,
-        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag, inputEvent }: any) {
+        e: any) {
+        const { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag } = e;
         const {
             target, left, top, origin, beforeOrigin,
             direction, beforeDirection, targetTransform,
@@ -170,16 +171,11 @@ export default {
         datas.startRotate = 0;
         datas.datas = {};
 
-        const params = {
-            datas: datas.datas,
-            target,
-            clientX,
-            clientY,
-            inputEvent,
+        const params = fillParams<OnRotateStart>(moveable, e, {
             set: (rotatation: number) => {
                 datas.startRotate = rotatation;
             },
-        };
+        });
         const result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
 
@@ -187,8 +183,9 @@ export default {
     },
     dragControl(
         moveable: MoveableManager<RotatableProps>,
-        { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag, inputEvent }: any,
+        e: any,
     ) {
+        const { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag } = e;
         const {
             direction,
             beforeDirection,
@@ -227,12 +224,7 @@ export default {
         if (!delta && !beforeDelta && !parentMoveable) {
             return;
         }
-        const params = {
-            target: moveable.props.target!,
-            datas: datas.datas,
-            inputEvent,
-            clientX,
-            clientY,
+        const params = fillParams<OnRotate>(moveable, e, {
             delta,
             dist,
             rotate,
@@ -241,27 +233,22 @@ export default {
             beforeRotate,
             transform: `${datas.transform} rotate(${dist}deg)`,
             isPinch: !!pinchFlag,
-        };
+        });
         triggerEvent(moveable, "onRotate", params);
 
         return params;
     },
-    dragControlEnd(
-        moveable: MoveableManager<RotatableProps>, { datas, isDrag, clientX, clientY, inputEvent }: any) {
+    dragControlEnd(moveable: MoveableManager<RotatableProps>, e: any) {
+        const { datas, isDrag } = e;
 
         if (!datas.isRotate) {
             return false;
         }
         datas.isRotate = false;
 
-        triggerEvent(moveable, "onRotateEnd", {
-            datas: datas.datas,
-            inputEvent,
-            clientX,
-            clientY,
-            target: moveable.state.target!,
+        triggerEvent(moveable, "onRotateEnd", fillParams<OnRotateEnd>(moveable, e, {
             isDrag,
-        });
+        }));
         return isDrag;
     },
     dragGroupControlCondition: dragControlCondition,
@@ -356,7 +343,7 @@ export default {
         return nextParams;
     },
     dragGroupControlEnd(moveable: MoveableGroup, e: any) {
-        const { clientX, clientY, isDrag, datas } = e;
+        const { isDrag, datas } = e;
 
         if (!datas.isRotate) {
             return;
@@ -365,13 +352,10 @@ export default {
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", datas, e);
 
-        const nextParams: OnRotateGroupEnd = {
+        const nextParams: OnRotateGroupEnd = fillParams(moveable, e, {
             targets: moveable.props.targets!,
-            clientX,
-            clientY,
             isDrag,
-            datas: datas.datas,
-        };
+        });
 
         triggerEvent(moveable, "onRotateGroupEnd", nextParams);
         return isDrag;

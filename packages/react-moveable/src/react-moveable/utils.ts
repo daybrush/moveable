@@ -106,7 +106,7 @@ export function getOffsetInfo(
     return {
         isEnd: isEnd || !target || target === body,
         offsetParent: target as HTMLElement || body,
-    }
+    };
 
 }
 export function caculateMatrixStack(
@@ -133,8 +133,8 @@ export function caculateMatrixStack(
         const tagName = el.tagName.toLowerCase();
         const position = style.position;
         const isFixed = position === "fixed";
-        const transform = style.transform!;
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
+        const styleTransform = style.transform!;
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(styleTransform));
 
         if (!is3d && matrix.length === 16) {
             is3d = true;
@@ -576,6 +576,7 @@ export function getTargetInfo(
     let is3d = false;
     let targetTransform = "";
     let beforeOrigin = [0, 0];
+    let clientRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
     const prevN = state ? (state.is3d ? 4 : 3) : undefined;
@@ -621,6 +622,16 @@ export function getTargetInfo(
             beforeOrigin[0] + beforePos[0] - left,
             beforeOrigin[1] + beforePos[1] - top,
         ];
+
+        const targetRect = target.getBoundingClientRect();
+        clientRect = {
+            left: targetRect.left,
+            top: targetRect.top,
+            right: targetRect.right,
+            bottom: targetRect.bottom,
+            width: targetRect.width,
+            height: targetRect.height,
+        };
     }
 
     return {
@@ -646,6 +657,7 @@ export function getTargetInfo(
         beforeOrigin,
         origin,
         transformOrigin,
+        clientRect,
     };
 }
 export function getDirection(target: SVGElement | HTMLElement) {
@@ -736,18 +748,39 @@ export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: nu
     return false;
 }
 
+export function fillParams<T extends IObject<any>>(
+    moveable: MoveableManager,
+    e: any,
+    params: Pick<T, Exclude<keyof T, "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">>,
+): T {
+    const datas = e.datas;
+
+    if (!datas.datas) {
+        datas.datas = {};
+    }
+    return {
+        ...params,
+        target: moveable.state.target,
+        clientX: e.clientX,
+        clientY: e.clientY,
+        inputEvent: e.inputEvent,
+        currentTarget: moveable,
+        datas: datas.datas,
+    } as any;
+}
+
 export function triggerEvent<T extends IObject<any>, U extends keyof T>(
     moveable: MoveableManager<T>,
     name: U & string,
-    e: T[U] extends ((e: infer P) => any) | undefined ? P : {},
+    params: T[U] extends ((e: infer P) => any) | undefined ? P : {},
 ): any {
-    return moveable.triggerEvent(name, e);
+    return moveable.triggerEvent(name,  params);
+
 }
 
 export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: string | null) {
     return window.getComputedStyle(el, pseudoElt);
 }
-
 
 export function filterAbles(ables: Able[], methods: Array<keyof Able>) {
     const enabledAbles: IObject<boolean> = {};

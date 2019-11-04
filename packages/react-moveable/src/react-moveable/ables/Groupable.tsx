@@ -3,7 +3,6 @@ import MoveableGroup from "../MoveableGroup";
 import MoveableManager from "../MoveableManager";
 import { Renderer } from "../types";
 
-
 export default {
     name: "groupable",
     render(moveable: MoveableGroup, React: Renderer): any[] {

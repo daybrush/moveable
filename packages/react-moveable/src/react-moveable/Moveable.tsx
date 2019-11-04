@@ -17,8 +17,14 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
         const isGroup = isArr && (target as any[]).length > 1;
 
         if (isGroup) {
+            const nextProps = {
+                ...this.props,
+                target: null,
+                targets: target as any[],
+                ables: [...MOVEABLE_ABLES, Groupable, ...ables],
+            };
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
-                {...{ ...this.props, target: null, targets: target as any[], ables: [...MOVEABLE_ABLES, Groupable, ...ables] }} />;
+                {...nextProps} />;
         } else {
             const moveableTarget = isArr ? (target as any[])[0] : target;
 

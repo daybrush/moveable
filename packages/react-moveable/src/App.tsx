@@ -168,6 +168,9 @@ class App extends React.Component {
                     throttleRotate={1}
                     rotatable={true}
                     pinchable={true}
+                    onScroll={({ scrollContainer, direction }) => {
+                        scrollContainer.scrollBy(direction[0] * 10, direction[1] * 10);
+                    }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;
 

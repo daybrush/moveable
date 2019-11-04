@@ -1,8 +1,8 @@
 import MoveableManager from "../MoveableManager";
 import { createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
 import { ref } from "framework-utils";
-import { prefix, triggerEvent } from "../utils";
-import { Renderer, GroupableProps, DragAreaProps } from "../types";
+import { prefix, triggerEvent, fillParams } from "../utils";
+import { Renderer, GroupableProps, DragAreaProps, OnClick } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { addClass, findIndex, removeClass } from "@daybrush/utils";
 
@@ -72,7 +72,8 @@ export default {
             restoreStyle(moveable);
         }
     },
-    dragEnd(moveable: MoveableManager<DragAreaProps>, { inputEvent, isDrag, datas }: any) {
+    dragEnd(moveable: MoveableManager<DragAreaProps>, e: any) {
+        const { inputEvent, isDrag, datas } = e;
         if (!datas.isDrag) {
             restoreStyle(moveable);
         }
@@ -85,12 +86,11 @@ export default {
         }
         const containsTarget = target.contains(inputTarget);
 
-        triggerEvent(moveable, "onClick", {
-            target,
+        triggerEvent(moveable, "onClick", fillParams<OnClick>(moveable, e, {
             inputTarget,
             isTarget: target === inputTarget,
             containsTarget,
-        });
+        }));
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
         this.dragStart(moveable, e);
@@ -98,7 +98,11 @@ export default {
     dragGroup(moveable: MoveableGroup, e: any) {
        this.drag(moveable, e);
     },
-    dragGroupEnd(moveable: MoveableGroup, { inputEvent, isDrag, datas }: any) {
+    dragGroupEnd(
+        moveable: MoveableGroup,
+        e: any,
+    ) {
+        const { inputEvent, isDrag, datas } = e;
         if (!datas.isDrag) {
             restoreStyle(moveable);
         }
@@ -118,13 +122,12 @@ export default {
             containsTarget = targetIndex > -1;
         }
 
-        triggerEvent(moveable, "onClickGroup", {
+        triggerEvent(moveable, "onClickGroup", fillParams(moveable, e, {
             targets,
-            target: moveable.state.target,
             inputTarget,
             targetIndex,
             isTarget,
             containsTarget,
-        });
+        }));
     },
 };
