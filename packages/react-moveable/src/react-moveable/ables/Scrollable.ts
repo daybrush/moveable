@@ -1,5 +1,6 @@
 import MoveableManager from "../MoveableManager";
-import { ScrollableProps } from "../types";
+import { ScrollableProps, OnScroll } from "../types";
+import { triggerEvent, fillParams } from "../utils";
 
 export default {
     name: "scrollable",
@@ -13,8 +14,6 @@ export default {
         } = props;
 
         const scrollClientRect = scrollContainer.getBoundingClientRect();
-
-
         const datas = e.datas;
         datas.scrollContainer = scrollContainer;
         datas.scrollRect = {
@@ -39,6 +38,9 @@ export default {
         if (!datas.isScroll) {
             return;
         }
+        const {
+            scrollThreshold = 0,
+        } = moveable.props;
         const inputEvent = e.inputEvent;
         const clientX = e.clientX;
         const clientY = e.clientY;
@@ -50,18 +52,17 @@ export default {
             prevClientY,
         } = datas;
 
-        let offsetX = 0;
-        let offsetY = 0;
+        const direction = [0, 0];
 
-        if (scrollRect.top > clientY) {
-            offsetY = -10;
-        } else if (scrollRect.top + scrollRect.height < clientY) {
-            offsetY = 10;
+        if (scrollRect.top > clientY - scrollThreshold) {
+            direction[1] = -1;
+        } else if (scrollRect.top + scrollRect.height < clientY + scrollThreshold) {
+            direction[1] = 1;
         }
-        if (scrollRect.left > clientX) {
-            offsetX = -10;
-        } else if (scrollRect.left + scrollRect.width < clientX) {
-            offsetX = 10;
+        if (scrollRect.left > clientX - scrollThreshold) {
+            direction[0] = -1;
+        } else if (scrollRect.left + scrollRect.width < clientX + scrollThreshold) {
+            direction[0] = 1;
         }
         if (isScroll && (prevClientX !== clientX || prevClientY !== clientY)) {
             return;
@@ -70,23 +71,39 @@ export default {
             datas.prevClientX = clientX;
             datas.prevClientY = clientY;
         }
-        if (offsetY || offsetY) {
-            requestAnimationFrame(() => {
-                const scrollTop = scrollContainer.scrollTop;
-                const scrollLeft = scrollContainer.scrollLeft;
 
-                if (offsetY < 0) {
-                    offsetY = scrollTop + offsetY < 0 ? -scrollTop : offsetY;
-                }
-                if (offsetX < 0) {
-                    offsetX = scrollLeft + offsetX < 0 ? -scrollLeft : offsetX;
-                }
-                if (offsetX || offsetY) {
-                    scrollContainer.scrollTop += offsetY;
-                    scrollContainer.scrollLeft += offsetX;
-                    moveable.targetDragger.scrollBy(offsetX, offsetY, inputEvent);
-                }
-            });
+        const prevRect = moveable.state.clientRect!;
+        const prevLeft = prevRect.left + moveable.state.beforeOrigin[0];
+        const prevTop = prevRect.top + moveable.state.beforeOrigin[1];
+
+        if () {
+
+        }
+
+        datas.pos = {
+            left: prevLeft,
+            top: prevTop,
+        };
+
+        if (direction[0] || direction[1]) {
+            triggerEvent(moveable, "onScroll", fillParams<OnScroll>(moveable, e, {
+                scrollContainer,
+                direction,
+                isOverflowX: false,
+                isOverflowY: false,
+            }));
+            // requestAnimationFrame(() => {
+            //     const rect = moveable.state.clientRect!;
+            //     const left = rect.left + moveable.state.beforeOrigin[0];
+            //     const top = rect.top + moveable.state.beforeOrigin[1];
+
+            //     const offsetX = left - prevLeft;
+            //     const offsetY = top - prevTop;
+
+            //     if ((direction[0] && offsetX) || (direction[1] && offsetY)) {
+            //         moveable.targetDragger.scrollBy(-offsetX, -offsetY, inputEvent);
+            //     }
+            // });
         }
     },
 };
