@@ -122,7 +122,9 @@ export default class MoveableManager<T = {}, U = {}>
         return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
     }
     public dragStart(e: MouseEvent | TouchEvent) {
-        this.targetDragger.onDragStart(e);
+        if (this.targetDragger) {
+            this.targetDragger.onDragStart(e);
+        }
     }
     public isInside(clientX: number, clientY: number) {
         const { pos1, pos2, pos3, pos4, target } = this.state;

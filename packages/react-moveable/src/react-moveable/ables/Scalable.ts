@@ -150,6 +150,7 @@ export default {
         if (scaleY === 0) {
             scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
+
         let scale = [scaleX, scaleY];
         let nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
 

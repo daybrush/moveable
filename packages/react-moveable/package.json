@@ -69,7 +69,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@daybrush/drag": "^0.11.0-rc2",
+    "@daybrush/drag": "^0.11.0",
     "@daybrush/utils": "^0.10.0",
     "@egjs/agent": "^2.1.5",
     "@egjs/children-differ": "^1.0.0",

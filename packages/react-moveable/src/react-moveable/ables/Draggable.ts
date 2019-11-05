@@ -1,5 +1,5 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray, triggerEvent, prefix, fillParams } from "../utils";
+import { throttleArray, triggerEvent, fillParams } from "../utils";
 import { minus, plus } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, OnDragStart, OnDragEnd } from "../types";
@@ -7,6 +7,7 @@ import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { hasClass } from "@daybrush/utils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
+import { AREA } from "../classNames";
 
 export default {
     name: "draggable",
@@ -142,7 +143,7 @@ export default {
         return isDrag;
     },
     dragGroupCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, prefix("area"));
+        return hasClass(target, AREA);
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
         const datas = e.datas;

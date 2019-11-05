@@ -89,50 +89,46 @@ export interface MoveableProps extends
     ables?: Able[];
 }
 export type MoveableState = MoveableManagerState;
-/**
- * @typedef
- * @memberof Moveable
- * @property - a target to pinch
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- */
-export interface OnPinchStart {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
+
+
+export interface Able<T = any> {
+    name: string & keyof MoveableManagerProps<T>;
+    ableGroup?: string;
+    updateRect?: boolean;
+    canPinch?: boolean;
+
+    unset?: (moveable: MoveableManagerProps<any>) => any;
+    render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
+
+    dragStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    drag?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
+    dragEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+
+    pinchStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
+    pinch?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
+    pinchEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
+
+    dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
+    dragControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+
+    dragGroupCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
+    dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+
+    pinchGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
+    pinchGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
+    pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
+
+    dragGroupControlCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
+    dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 }
-/**
- * @typedef
- * @memberof Moveable
- * @property - a pinching target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- */
-export interface OnPinch {
-    target: HTMLElement | SVGElement;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
-}
-/**
- * @typedef
- * @memberof Moveable
- * @property - a pinch finished target
- * @property - Whether pinch called
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- */
-export interface OnPinchEnd {
-    target: HTMLElement | SVGElement;
-    isDrag: boolean;
-    clientX: number;
-    clientY: number;
-    datas: IObject<any>;
-}
+
+
 /**
  * @typedef
  * @memberof Moveable
@@ -150,6 +146,29 @@ export interface OnEvent {
     clientY: number;
     datas: IObject<any>;
     inputEvent: any;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnPinchStart extends OnEvent {
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnPinch extends OnEvent {
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnPinchEnd extends OnEvent {
+    isDrag: boolean;
 }
 /**
  * @typedef
@@ -575,42 +594,92 @@ export interface OnClickGroup extends OnEvent {
     targetIndex: number;
 }
 
-export interface Able<T = any> {
-    name: string & keyof MoveableManagerProps<T>;
-    ableGroup?: string;
-    updateRect?: boolean;
-    canPinch?: boolean;
-
-    unset?: (moveable: MoveableManagerProps<any>) => any;
-    render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
-
-    dragStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    drag?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
-    dragEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
-
-    pinchStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
-    pinch?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
-    pinchEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
-
-    dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
-    dragControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
-
-    dragGroupCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
-    dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
-
-    pinchGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
-    pinchGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
-    pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
-
-    dragGroupControlCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+// `renderStart` event occurs at the first start of all events.
+/**
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Whether or not it is being pinched.
+ */
+export interface OnRenderStart extends OnEvent {
+    isPinch: boolean;
 }
+
+// `render` event occurs before the target is drawn on the screen.
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Whether or not it is being pinched.
+ */
+export interface OnRender extends OnEvent {
+    isPinch: boolean;
+}
+
+// `renderEnd` event occurs at the end of all events.
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Whether or not it is being dragged.
+ * @property - Whether or not it is being pinched.
+ */
+export interface OnRenderEnd extends OnEvent {
+    isPinch: boolean;
+    isDrag: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - The container corresponding to scrolling area
+ * @property - The direction of scrolling [left, top]
+ */
+export interface OnScroll extends OnEvent {
+    scrollContainer: HTMLElement;
+    direction: number[];
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnScroll
+ * @property - targets set to group.
+ */
+export interface OnScrollGroup extends OnScroll {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnRenderStart
+ * @property - targets set to group.
+ */
+export interface OnRenderGroupStart extends OnRenderStart {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnRender
+ * @property - targets set to group.
+ */
+export interface OnRenderGroup extends OnRender {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnRenderEnd
+ * @property - targets set to group.
+ */
+export interface OnRenderGroupEnd extends OnRenderEnd {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
 export interface OriginProps {
     origin: boolean;
 }
@@ -695,7 +764,8 @@ export interface GroupableProps extends
     ScalableProps,
     SnappableProps,
     RenderProps,
-    DragAreaProps {
+    DragAreaProps,
+    ScrollableProps {
     groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
@@ -716,45 +786,13 @@ export interface SnappableState {
     enableSnap: boolean;
 }
 
-export interface OnRenderStart extends OnEvent {
-    isPinch: boolean;
-}
-export interface OnRender extends OnEvent {
-    isPinch: boolean;
-}
-export interface OnRenderEnd extends OnEvent {
-    isPinch: boolean;
-    isDrag: boolean;
-}
-/**
- * @memberof Moveable
- * @extends Moveable.OnEvent
- */
-export interface OnScroll extends OnEvent {
-    scrollContainer: HTMLElement;
-    direction: number[];
-    isOverflowX: boolean;
-    isOverflowY: boolean;
-}
-export interface OnScrollGroup extends OnScroll {
-    targets: Array<HTMLElement | SVGElement>;
-}
-
-export interface OnRenderGroupStart extends OnRenderStart {
-    targets: Array<HTMLElement | SVGElement>;
-}
-export interface OnRenderGroup extends OnRender {
-    targets: Array<HTMLElement | SVGElement>;
-}
-export interface OnRenderGroupEnd extends OnRenderEnd {
-    targets: Array<HTMLElement | SVGElement>;
-}
-
 export interface ScrollableProps {
     scrollable?: boolean;
     scrollContainer?: HTMLElement;
     scrollThreshold?: number;
+    getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
     onScroll?: (e: OnScroll) => any;
+    onScrollGroup?: (e: OnScrollGroup) => any;
 }
 export interface DragAreaProps {
     dragArea?: boolean;

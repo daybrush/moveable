@@ -176,7 +176,7 @@ class App extends React.Component {
 
                         set(rotate);
                     }}
-                    onRotate={({ target, beforeDelta, beforeDist, beforeRotate }) => {
+                    onRotate={({ target, beforeRotate }) => {
                         item.set("rotate", `${beforeRotate}deg`);
                         target.style.cssText += item.toCSS();
                     }}
@@ -219,7 +219,7 @@ class App extends React.Component {
                         dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta }) => {
-                        console.log(width, height);
+                        // console.log(width, height);
                         item.set("width", `${width}px`);
                         item.set("height", `${height}px`);
                         item.set("tx", `${drag.beforeTranslate[0]}px`);
@@ -328,8 +328,9 @@ class App extends React.Component {
                 this.setState({
                     target: e.target,
                 }, () => {
-                    // this.moveable.dragStart(nativeEvent);
+
                 });
+                this.moveable.dragStart(nativeEvent);
             }
         }
     }

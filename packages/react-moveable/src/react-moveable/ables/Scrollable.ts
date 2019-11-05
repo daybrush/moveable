@@ -1,14 +1,22 @@
 import MoveableManager from "../MoveableManager";
 import { ScrollableProps, OnScroll } from "../types";
 import { triggerEvent, fillParams } from "../utils";
+import MoveableGroup from "../MoveableGroup";
+
+function getDefaultScrollPosition(e: { scrollContainer: HTMLElement, direction: number[] }) {
+    const scrollContainer = e.scrollContainer;
+
+    return [
+        scrollContainer.scrollLeft,
+        scrollContainer.scrollTop,
+    ];
+}
 
 export default {
     name: "scrollable",
     canPinch: true,
     dragStart(moveable: MoveableManager<ScrollableProps>, e: any) {
         const props = moveable.props;
-        // const offsetContainer = getOffsetInfo(container, container, true).offsetParent;
-
         const {
             scrollContainer = props.container || document.body,
         } = props;
@@ -24,7 +32,6 @@ export default {
         };
 
         datas.isScroll = true;
-        // this.checkScroll(moveable, e);
     },
     drag(moveable: MoveableManager<ScrollableProps>, e: any) {
         this.checkScroll(moveable, e);
@@ -32,24 +39,40 @@ export default {
     dragEnd(moveable: MoveableManager<ScrollableProps>, e: any) {
         e.datas.isScroll = false;
     },
+    dragGroupStart(moveable: MoveableGroup, e: any) {
+        this.dragStart(moveable, e);
+    },
+    dragGroup(moveable: MoveableGroup, e: any) {
+        this.drag(moveable, {...e, targets: moveable.props.targets });
+    },
+    dragGroupEnd(moveable: MoveableGroup, e: any) {
+        this.dragEnd(moveable, e);
+    },
     checkScroll(moveable: MoveableManager<ScrollableProps>, e: any) {
-        const datas = e.datas;
+        const {
+            datas,
+            inputEvent,
+            clientX,
+            clientY,
+            isScroll,
+            targets,
+        } = e;
 
         if (!datas.isScroll) {
             return;
         }
+        if (!isScroll) {
+            datas.prevClientX = clientX;
+            datas.prevClientY = clientY;
+        }
+
         const {
             scrollThreshold = 0,
+            getScrollPosition = getDefaultScrollPosition,
         } = moveable.props;
-        const inputEvent = e.inputEvent;
-        const clientX = e.clientX;
-        const clientY = e.clientY;
-        const isScroll = e.isScroll;
         const {
             scrollContainer,
             scrollRect,
-            prevClientX,
-            prevClientY,
         } = datas;
 
         const direction = [0, 0];
@@ -64,46 +87,43 @@ export default {
         } else if (scrollRect.left + scrollRect.width < clientX + scrollThreshold) {
             direction[0] = 1;
         }
-        if (isScroll && (prevClientX !== clientX || prevClientY !== clientY)) {
+        if (!direction[0] && !direction[1]) {
             return;
         }
-        if (!isScroll) {
-            datas.prevClientX = clientX;
-            datas.prevClientY = clientY;
+
+        const pos = getScrollPosition({ scrollContainer, direction });
+        const params = fillParams<OnScroll>(moveable, e, {
+            scrollContainer,
+            direction,
+        }) as any;
+
+        const eventName = targets ? "onScrollGroup" : "onScroll" as any;
+        if (targets) {
+            params.targets = targets;
         }
+        triggerEvent(moveable, eventName, params);
 
-        const prevRect = moveable.state.clientRect!;
-        const prevLeft = prevRect.left + moveable.state.beforeOrigin[0];
-        const prevTop = prevRect.top + moveable.state.beforeOrigin[1];
+        requestAnimationFrame(() => {
+            if (datas.prevClientX !== clientX || datas.prevClientY !== clientY) {
+                return;
+            }
 
-        if () {
+            const nextPos = getScrollPosition({ scrollContainer, direction });
+            const offsetX = nextPos[0] - pos[0];
+            const offsetY = nextPos[1] - pos[1];
 
-        }
+            if (!offsetX && !offsetY) {
+                return;
+            }
+            moveable.targetDragger.scrollBy(direction[0] ? offsetX : 0, direction[1] ? offsetY : 0, inputEvent, false);
 
-        datas.pos = {
-            left: prevLeft,
-            top: prevTop,
-        };
+            setTimeout(() => {
+                if (datas.prevClientX !== clientX || datas.prevClientY !== clientY) {
+                    return;
+                }
 
-        if (direction[0] || direction[1]) {
-            triggerEvent(moveable, "onScroll", fillParams<OnScroll>(moveable, e, {
-                scrollContainer,
-                direction,
-                isOverflowX: false,
-                isOverflowY: false,
-            }));
-            // requestAnimationFrame(() => {
-            //     const rect = moveable.state.clientRect!;
-            //     const left = rect.left + moveable.state.beforeOrigin[0];
-            //     const top = rect.top + moveable.state.beforeOrigin[1];
-
-            //     const offsetX = left - prevLeft;
-            //     const offsetY = top - prevTop;
-
-            //     if ((direction[0] && offsetX) || (direction[1] && offsetY)) {
-            //         moveable.targetDragger.scrollBy(-offsetX, -offsetY, inputEvent);
-            //     }
-            // });
-        }
+                moveable.targetDragger.onDrag(inputEvent, true);
+            }, 10);
+        });
     },
 };

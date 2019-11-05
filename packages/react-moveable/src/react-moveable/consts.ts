@@ -86,23 +86,17 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .area {
     position: absolute;
 }
-.area.avoid, .area.avoid:before, .area.avoid:after {
-    transform-origin: 50% calc(100% + 20px);
+.area.avoid {
+    transform: none!important;
+    width: 0px!important;
+    height: 0px!important;
 }
-.area.avoid:before, .area.avoid:after {
-    content: "";
-    top: 0px;
-    left: 0px;
+.area-piece {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    display: none;
 }
-
-.area.avoid:before {
-    transform: rotate(120deg);
-}
-.area.avoid:after {
-    transform: rotate(-120deg);
+.area.avoid .area-piece {
+    display: block;
 }
 ${isWebkit ? `:global svg *:before {
 	content:"";
