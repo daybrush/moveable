@@ -109,6 +109,8 @@ export default {
         const state = moveable.state;
         let scaleX: number = 1;
         let scaleY: number = 1;
+        let ratio = 1;
+        let isWidth = direction[0] || !direction[1];
 
         if (parentScale) {
             scaleX = parentScale[0];
@@ -129,20 +131,18 @@ export default {
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
                 const distDiagonal = Math.cos(rad - standardRad) * size;
-                const isWidth = direction[0] || !direction[1];
 
-                distWidth = isWidth ? distDiagonal : distDiagonal * width / height;
-                distHeight = isWidth ? distDiagonal * height / width : distDiagonal;
+                ratio = width * startScale[0] / height / startScale[1];
+                isWidth && (ratio = 1 / ratio);
+
+                distWidth = isWidth ? distDiagonal : distDiagonal * ratio;
+                distHeight = isWidth ? distDiagonal * ratio : distDiagonal;
             }
             scaleX = (width + distWidth) / width;
             scaleY = (height + distHeight) / height;
         }
-        scaleX = direction[0]
-            ? throttle(scaleX * startScale[0], throttleScale!)
-            : startScale[0];
-        scaleY = direction[1]
-            ? throttle(scaleY * startScale[1], throttleScale!)
-            : startScale[1];
+        scaleX = direction[0] ? scaleX * startScale[0] : startScale[0];
+        scaleY = direction[1] ? scaleY * startScale[1] : startScale[1];
 
         if (scaleX === 0) {
             scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -167,21 +167,72 @@ export default {
                 state.snapDirection = snapDirection;
             }
         }
+        let snapDist = [0, 0];
+
         if (!pinchFlag) {
-            nowDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
+            snapDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
         }
 
-        if (keepRatio && !parentScale && !pinchFlag && (!direction[0] || !direction[1])) {
-            const distWidth = width * nowDist[0] - width;
-            const distHeight = height * nowDist[1] - height;
+        if (keepRatio) {
+            if (direction[0] && direction[1]) {
+                if (snapDist[0] && snapDist[1]) {
+                    if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
+                        snapDist[1] = 0;
+                    } else {
+                        snapDist[0] = 0;
+                    }
+                }
+                if (snapDist[0] && !snapDist[1]) {
+                    nowDist[0] += snapDist[0];
 
-            if (direction[0]) {
-                nowDist[1] = throttle((height + distWidth * height / width) / height, throttleScale!);
-            } else {
-                nowDist[0] = throttle((width + distHeight * width / height) / width, throttleScale!);
+                    const snapWidth = width * nowDist[0] * startScale[0];
+                    const snapHeight = snapWidth * (isWidth ? ratio : 1 / ratio);
+
+                    nowDist[1] = snapHeight / height / startScale[1];
+                } else if (snapDist[1] && !snapDist[0]) {
+                    nowDist[1] += snapDist[1];
+
+                    const snapHeight = height * nowDist[1] * startScale[1];
+                    const snapWidth = snapHeight * (isWidth ? 1 / ratio : ratio);
+
+                    nowDist[0] = snapWidth / width / startScale[0];
+                }
+            } else if (!parentScale && !pinchFlag) {
+                const distWidth = width * nowDist[0] - width;
+                const distHeight = height * nowDist[1] - height;
+
+                if (direction[0]) {
+                    nowDist[1] = (height + distWidth * height / width) / height;
+                } else {
+                    nowDist[0] = (width + distHeight * width / height) / width;
+                }
+            }
+            if (!snapDist[0] && !snapDist[1]) {
+                if (isWidth) {
+                    nowDist[0] = throttle(nowDist[0] * startScale[0], throttleScale!) / startScale[0];
+
+                    const snapWidth = width * nowDist[0] * startScale[0];
+                    const snapHeight = snapWidth * (isWidth ? ratio : 1 / ratio);
+
+                    nowDist[1] = snapHeight / height / startScale[1];
+                } else {
+                    nowDist[1] = throttle(nowDist[1] * startScale[1], throttleScale!) / startScale[1];
+
+                    const snapHeight = height * nowDist[1] * startScale[1];
+                    const snapWidth = snapHeight * (isWidth ? 1 / ratio : ratio);
+
+                    nowDist[0] = snapWidth / width / startScale[0];
+                }
+            }
+        } else {
+            if (!snapDist[0]) {
+                nowDist[0] = throttle(nowDist[0] * startScale[0], throttleScale!) / startScale[0];
+            }
+            if (!snapDist[1]) {
+                nowDist[1] = throttle(nowDist[1] * startScale[1], throttleScale!) / startScale[1];
             }
         }
-        const  delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
+        const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
         // const prevScale = scale;
         scale = multiply2(nowDist, startScale);
 

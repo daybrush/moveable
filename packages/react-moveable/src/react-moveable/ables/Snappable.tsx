@@ -1,5 +1,5 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo } from "../types";
+import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo, ScalableProps } from "../types";
 import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, getOffsetInfo } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
@@ -634,7 +634,7 @@ export function checkSnapSize(
     return plus(nextSizes, checkSizeDist(moveable, matrix, width, height, direction, direction, datas, is3d));
 }
 export function checkSnapScale(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManager<ScalableProps, any>,
     scale: number[],
     direction: number[],
     snapDirection: number[],
@@ -644,10 +644,9 @@ export function checkSnapScale(
         width,
         height,
     } = datas;
-    const nextScale = scale.slice();
 
     if (!hasGuidelines(moveable, "scalable")) {
-        return nextScale;
+        return [0, 0];
     }
     const sizeDist = checkSizeDist(
         moveable, scaleMatrix(datas, scale),
@@ -658,8 +657,8 @@ export function checkSnapScale(
     );
 
     return [
-        scale[0] + sizeDist[0] / width,
-        scale[1] + sizeDist[1] / height,
+        sizeDist[0] / width,
+        sizeDist[1] / height,
     ];
 }
 export function solveEquation(

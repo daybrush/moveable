@@ -159,8 +159,9 @@ class App extends React.Component {
                     elementGuidelines={[document.querySelector(".box1 span")!, document.querySelector(".emo img")!]}
                     snapCenter={false}
                     snapThreshold={10}
-                    scalable={!isResizable}
-                    resizable={isResizable}
+                    // scalable={!isResizable}
+                    scalable={true}
+                    // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
