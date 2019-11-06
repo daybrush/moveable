@@ -106,15 +106,17 @@ export default {
         }
 
         const {
-            keepRatio,
             throttleScale,
             parentMoveable,
         } = moveable.props;
+        const keepRatio = moveable.props.keepRatio || parentScale;
         const state = moveable.state;
         const isWidth = direction[0] || !direction[1];
         let scaleX: number = 1;
         let scaleY: number = 1;
-        let ratio = 1;
+        const startWidth = width * startScale[0];
+        const startHeight = height * startScale[1];
+        const ratio = isWidth ? startHeight / startWidth : startWidth / startHeight;
 
         if (parentScale) {
             scaleX = parentScale[0];
@@ -129,18 +131,27 @@ export default {
             let distWidth = direction[0] * dist[0];
             let distHeight = direction[1] * dist[1];
 
-            // diagonal
             if (keepRatio && width && height) {
-                const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
-                const distDiagonal = Math.cos(rad - standardRad) * size;
+                const ratioRad = getRad([0, 0], [startWidth, startHeight]);
+                const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+                const sign = Math.cos(rad - standardRad) > 0 ? 1 : -1;
+                const signSize = sign * size;
 
-                ratio = width * startScale[0] / height / startScale[1];
-                isWidth && (ratio = 1 / ratio);
-
-                distWidth = isWidth ? distDiagonal : distDiagonal * ratio;
-                distHeight = isWidth ? distDiagonal * ratio : distDiagonal;
+                if (!direction[0]) {
+                    // top, bottom
+                    distHeight = signSize;
+                    distWidth = getKeepRatioWidth(distHeight, isWidth, ratio);
+                } else if (!direction[1]) {
+                    // left, right
+                    distWidth = signSize;
+                    distHeight = getKeepRatioHeight(distWidth, isWidth, ratio);
+                } else {
+                    // two-way
+                    distWidth = Math.cos(ratioRad) * signSize;
+                    distHeight = Math.sin(ratioRad) * signSize;
+                }
             }
             scaleX = (width + distWidth) / width;
             scaleY = (height + distHeight) / height;

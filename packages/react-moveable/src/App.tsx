@@ -51,10 +51,10 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    // resizable={true}
-                    scalable={true}
+                    resizable={true}
+                    // scalable={true}
                     ref={ref(this, "ab")}
-                    keepRatio={false}
+                    // keepRatio={false}
                     target={this.state.targets}
                     origin={true}
                     snappable={true}

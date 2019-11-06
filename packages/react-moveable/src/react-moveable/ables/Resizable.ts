@@ -119,13 +119,12 @@ export default {
             return;
         }
         const {
-            keepRatio,
             throttleResize = 0,
             parentMoveable,
         } = moveable.props;
-
+        const keepRatio = moveable.props.keepRatio || parentScale;
         const isWidth = direction[0] || !direction[1];
-        let ratio = 1;
+        const ratio = isWidth ? offsetHeight / offsetWidth : offsetWidth / offsetHeight;
         let distWidth: number = 0;
         let distHeight: number = 0;
 
@@ -146,15 +145,26 @@ export default {
             distHeight = direction[1] * dist[1];
 
             if (keepRatio && offsetWidth && offsetHeight) {
-                const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
-                const distDiagonal = Math.cos(rad - standardRad) * size;
+                const ratioRad = getRad([0, 0], [offsetWidth, offsetHeight]);
+                const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+                const sign = Math.cos(rad - standardRad) > 0 ? 1 : -1;
+                const signSize = sign * size;
 
-                ratio = isWidth ? offsetHeight / offsetWidth : offsetWidth / offsetHeight;
-
-                distWidth = isWidth ? distDiagonal : distDiagonal * ratio;
-                distHeight = isWidth ? distDiagonal * ratio : distDiagonal;
+                if (!direction[0]) {
+                    // top, bottom
+                    distHeight = signSize;
+                    distWidth = getKeepRatioWidth(distHeight, isWidth, ratio);
+                } else if (!direction[1]) {
+                    // left, right
+                    distWidth = signSize;
+                    distHeight = getKeepRatioHeight(distWidth, isWidth, ratio);
+                } else {
+                    // two-way
+                    distWidth = Math.cos(ratioRad) * signSize;
+                    distHeight = Math.sin(ratioRad) * signSize;
+                }
             }
         }
         let nextWidth = direction[0] ? Math.max(offsetWidth + distWidth, 0) : offsetWidth;
@@ -183,7 +193,6 @@ export default {
                     nextHeight = throttle(nextHeight, throttleResize!);
                 }
             }
-            console.log(snapDist);
             if (
                 (direction[0] && !direction[1])
                 || (snapDist[0] && !snapDist[1])
