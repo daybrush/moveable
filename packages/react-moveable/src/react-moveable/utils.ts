@@ -204,8 +204,8 @@ export function caculateMatrixStack(
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
             createOriginMatrix([
-                hasNotOffset ? el : offsetLeft + el.scrollLeft,
-                hasNotOffset ? origin : offsetTop + el.scrollTop,
+                (hasNotOffset ? el : offsetLeft - el.scrollLeft) as any,
+                (hasNotOffset ? origin : offsetTop - el.scrollTop) as any,
             ], n),
         );
         if (!targetMatrix) {
@@ -577,6 +577,7 @@ export function getTargetInfo(
     let targetTransform = "";
     let beforeOrigin = [0, 0];
     let clientRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
+    let containerRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
     const prevN = state ? (state.is3d ? 4 : 3) : undefined;
@@ -623,18 +624,12 @@ export function getTargetInfo(
             beforeOrigin[1] + beforePos[1] - top,
         ];
 
-        const targetRect = target.getBoundingClientRect();
-        clientRect = {
-            left: targetRect.left,
-            top: targetRect.top,
-            right: targetRect.right,
-            bottom: targetRect.bottom,
-            width: targetRect.width,
-            height: targetRect.height,
-        };
+        clientRect = getClientRect(target);
+        containerRect = getClientRect(getOffsetInfo(container, container, true).offsetParent || document.body);
     }
 
     return {
+        containerRect,
         beforeDirection,
         direction,
         target,
@@ -658,6 +653,18 @@ export function getTargetInfo(
         origin,
         transformOrigin,
         clientRect,
+    };
+}
+export function getClientRect(el: HTMLElement | SVGElement) {
+    const { left, width, top, bottom, right, height } = el.getBoundingClientRect();
+
+    return {
+        left,
+        right,
+        top,
+        bottom,
+        width,
+        height,
     };
 }
 export function getDirection(target: SVGElement | HTMLElement) {

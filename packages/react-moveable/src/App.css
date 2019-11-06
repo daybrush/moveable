@@ -39,6 +39,10 @@ img {
     top: 100px;
     height: 800px;
 }
+.App {
+    /* overflow: scroll;
+    height: 600px; */
+}
 .App-header {
     /* position: static!important; */
     position: relative;

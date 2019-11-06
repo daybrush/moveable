@@ -4,6 +4,14 @@ import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
 import MoveableManager from "./MoveableManager";
 
+export interface MoveableClientRect {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+    width: number;
+    height: number;
+}
 export type MoveableManagerProps<T = {}> = {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
@@ -43,7 +51,8 @@ export type MoveableManagerState<T = {}> = {
     pos3: number[];
     pos4: number[];
     dragger: Dragger | CustomDragger | null;
-    clientRect: { left: number, right: number, top: number, bottom: number, width: number, height: number };
+    clientRect: MoveableClientRect;
+    containerRect: MoveableClientRect;
 } & T;
 
 export interface Renderer {

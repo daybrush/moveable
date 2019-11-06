@@ -1,6 +1,6 @@
 import MoveableManager from "../MoveableManager";
 import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo, ScalableProps } from "../types";
-import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, getOffsetInfo } from "../utils";
+import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
 import {
@@ -20,7 +20,6 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         verticalGuidelines = [],
         elementGuidelines = [],
         bounds,
-        container,
         snapCenter,
     } = moveable.props;
 
@@ -28,14 +27,23 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         return;
     }
 
-    const containerRect = getOffsetInfo(container, container, true).offsetParent.getBoundingClientRect();
     const {
-        top: containerTop,
-        left: containerLeft,
-        width: containerWidth,
-        height: containerHeight,
-    } = containerRect;
+        containerRect: {
+            width: containerWidth,
+            height: containerHeight,
+            top: containerTop,
+            left: containerLeft,
+        },
+        clientRect: {
+            top: clientTop,
+            left: clientLeft,
+        },
+        left: targetLeft,
+        top: targetTop,
+    } = state;
 
+    const distLeft = targetLeft - (clientLeft - containerLeft);
+    const distTop = targetTop - (clientTop - containerTop);
     const guidelines: Guideline[] = [];
 
     horizontalGuidelines!.forEach(pos => {
@@ -47,29 +55,28 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     elementGuidelines!.forEach(el => {
         const rect = el.getBoundingClientRect();
         const { top, left, width, height } = rect;
-
         const elementTop = top - containerTop;
         const elementBottom = elementTop + height;
         const elementLeft = left - containerLeft;
         const elementRight = elementLeft + width;
 
-        guidelines.push({ type: "vertical", element: el, pos: [elementLeft, elementTop], size: height });
-        guidelines.push({ type: "vertical", element: el, pos: [elementRight, elementTop], size: height });
-        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementTop], size: width });
-        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementBottom], size: width });
+        guidelines.push({ type: "vertical", element: el, pos: [elementLeft + distLeft, elementTop], size: height });
+        guidelines.push({ type: "vertical", element: el, pos: [elementRight + distLeft, elementTop], size: height });
+        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementTop + distTop], size: width });
+        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementBottom + distTop], size: width });
 
         if (snapCenter) {
             guidelines.push({
                 type: "vertical",
                 element: el,
-                pos: [(elementLeft + elementRight) / 2, elementTop],
+                pos: [(elementLeft + elementRight) / 2 + distLeft, elementTop],
                 size: height,
                 center: true,
             });
             guidelines.push({
                 type: "horizontal",
                 element: el,
-                pos: [elementLeft, (elementTop + elementBottom) / 2],
+                pos: [elementLeft, (elementTop + elementBottom) / 2 + distTop],
                 size: width,
                 center: true,
             });
@@ -804,16 +811,24 @@ export default {
     name: "snappable",
     render(moveable: MoveableManager<SnappableProps, SnappableState>, React: Renderer): any[] {
         const {
-            left: targetLeft,
             top: targetTop,
+            left: targetLeft,
             snapDirection,
+            clientRect,
+            containerRect,
         } = moveable.state;
+
+        const clientLeft = clientRect.left - containerRect.left;
+        const clientTop = clientRect.top - containerRect.top;
+
+        // console.log(targetLeft, targetTop);
 
         if (!snapDirection || !hasGuidelines(moveable, "")) {
             return [];
         }
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
+
         const {
             vertical: {
                 guidelines: verticalGuildelines,
@@ -837,19 +852,19 @@ export default {
         } = checkBounds(moveable, [left, right], [top, bottom], 1);
 
         if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
-            verticalGuildelines.push({
-                type: "vertical",
-                pos: [verticalBoundPos, top],
-                size: height,
-            });
+            // verticalGuildelines.push({
+            //     type: "vertical",
+            //     pos: [verticalBoundPos, top],
+            //     size: height,
+            // });
             verticalSnapPoses.push(verticalBoundPos);
         }
         if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
-            horizontalGuidelines.push({
-                type: "horizontal",
-                pos: [left, horizontalBoundPos],
-                size: width,
-            });
+            // horizontalGuidelines.push({
+            //     type: "horizontal",
+            //     pos: [left, horizontalBoundPos],
+            //     size: width,
+            // });
             horizontalSnapPoses.push(horizontalBoundPos);
         }
         return [
@@ -888,7 +903,7 @@ export default {
                     "guideline",
                     element ? "bold" : "",
                 )} key={`verticalGuidline${i}`} style={{
-                    top: `${-targetTop + pos[1]}px`,
+                    top: `${-clientTop + pos[1]}px`,
                     left: `${-targetLeft + pos[0]}px`,
                     height: `${size}px`,
                 }} />;
@@ -903,7 +918,7 @@ export default {
                     element ? "bold" : "",
                 )} key={`horizontalGuidline${i}`} style={{
                     top: `${-targetTop + pos[1]}px`,
-                    left: `${-targetLeft + pos[0]}px`,
+                    left: `${-clientLeft + pos[0]}px`,
                     width: `${size}px`,
                 }} />;
             }),
