@@ -10,9 +10,9 @@ function getRotatiion(touches: Client[]) {
         touches[0].clientX,
         touches[0].clientY,
     ], [
-            touches[1].clientX,
-            touches[1].clientY,
-        ]) / Math.PI * 180;
+        touches[1].clientX,
+        touches[1].clientY,
+    ]) / Math.PI * 180;
 }
 
 export default {
@@ -54,7 +54,7 @@ export default {
 
         pinchAbles.forEach(able => {
             datas[able.name + "Datas"] = {};
-            const e: any = {
+            const ableEvent: any = {
                 datas: datas[able.name + "Datas"],
                 clientX,
                 clientY,
@@ -62,7 +62,7 @@ export default {
                 parentRotate,
                 pinchFlag: true,
             };
-            able[controlEventName]!(moveable, e);
+            able[controlEventName]!(moveable, ableEvent);
         });
 
         moveable.state.snapDirection = [0, 0];

@@ -13,7 +13,11 @@ import {
 import { NEARBY_POS } from "../consts";
 import { setDragStart, getDragDist, getPosIndexesByDirection } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
-import { WarpableProps, ScalableProps, ResizableProps, Renderer, SnappableProps, SnappableState, OnWarpStart, OnWarp, OnWarpEnd } from "../types";
+import {
+    WarpableProps, ScalableProps, ResizableProps,
+    Renderer, SnappableProps, SnappableState,
+    OnWarpStart, OnWarp, OnWarpEnd,
+} from "../types";
 import { hasClass, dot } from "@daybrush/utils";
 import { renderAllDirections } from "../renderDirection";
 import { checkSnapPoses, hasGuidelines } from "./Snappable";
@@ -121,7 +125,7 @@ export default {
             set: (matrix: number[]) => {
                 datas.startMatrix = matrix;
             },
-        })
+        });
         const result = triggerEvent(moveable, "onWarpStart", params);
         if (result !== false) {
             datas.isWarp = true;

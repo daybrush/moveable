@@ -160,8 +160,8 @@ class App extends React.Component {
                     snapCenter={false}
                     snapThreshold={10}
                     // scalable={!isResizable}
-                    scalable={true}
-                    // resizable={isResizable}
+                    // scalable={true}
+                    resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}

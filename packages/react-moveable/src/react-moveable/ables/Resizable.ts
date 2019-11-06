@@ -1,4 +1,7 @@
-import { throttle, getDirection, triggerEvent, getAbsolutePosesByState, fillParams } from "../utils";
+import {
+    throttle, getDirection, triggerEvent,
+    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth,
+} from "../utils";
 import {
     setDragStart,
     getDragDist,
@@ -121,6 +124,8 @@ export default {
             parentMoveable,
         } = moveable.props;
 
+        const isWidth = direction[0] || !direction[1];
+        let ratio = 1;
         let distWidth: number = 0;
         let distHeight: number = 0;
 
@@ -145,28 +150,61 @@ export default {
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
                 const distDiagonal = Math.cos(rad - standardRad) * size;
-                const isWidth = direction[0] || !direction[1];
 
-                distWidth = isWidth ? distDiagonal : distDiagonal * offsetWidth / offsetHeight;
-                distHeight = isWidth ? distDiagonal * offsetHeight / offsetWidth : distDiagonal;
+                ratio = isWidth ? offsetHeight / offsetWidth : offsetWidth / offsetHeight;
+
+                distWidth = isWidth ? distDiagonal : distDiagonal * ratio;
+                distHeight = isWidth ? distDiagonal * ratio : distDiagonal;
             }
         }
-        let nextWidth = direction[0]
-            ? throttle(Math.max(offsetWidth + distWidth, 0), throttleResize!)
-            : offsetWidth;
-        let nextHeight = direction[1]
-            ? throttle(Math.max(offsetHeight + distHeight, 0), throttleResize!)
-            : offsetHeight;
+        let nextWidth = direction[0] ? Math.max(offsetWidth + distWidth, 0) : offsetWidth;
+        let nextHeight = direction[1] ? Math.max(offsetHeight + distHeight, 0) : offsetHeight;
+
+        let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            [nextWidth, nextHeight] = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
+            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
         }
+        if (keepRatio) {
+            if (direction[0] && direction[1] && snapDist[0] && snapDist[1]) {
+                if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
+                    snapDist[1] = 0;
+                } else {
+                    snapDist[0] = 0;
+                }
+            }
 
-        if (keepRatio && (!direction[0] || !direction[1])) {
-            if (direction[0]) {
-                nextHeight = throttle(nextWidth * offsetHeight / offsetWidth, throttleResize!);
-            } else {
-                nextWidth = throttle(nextHeight * offsetWidth / offsetHeight, throttleResize!);
+            const isNoSnap = !snapDist[0] && !snapDist[1];
+
+            if (isNoSnap) {
+                if (isWidth) {
+                    nextWidth = throttle(nextWidth, throttleResize!);
+                } else {
+                    nextHeight = throttle(nextHeight, throttleResize!);
+                }
+            }
+            console.log(snapDist);
+            if (
+                (direction[0] && !direction[1])
+                || (snapDist[0] && !snapDist[1])
+                || (isNoSnap && isWidth)
+            ) {
+                nextWidth += snapDist[0];
+                nextHeight = getKeepRatioHeight(nextWidth, isWidth, ratio);
+            } else if (
+                (!direction[0] && direction[1])
+                || (!snapDist[0] && snapDist[1])
+                || (isNoSnap && !isWidth)
+            ) {
+                nextHeight += snapDist[1];
+                nextWidth = getKeepRatioWidth(nextHeight, isWidth, ratio);
+            }
+        } else {
+            if (!snapDist[0]) {
+                nextWidth = throttle(nextWidth, throttleResize!);
+            }
+            if (!snapDist[1]) {
+                nextHeight = throttle(nextHeight, throttleResize!);
             }
         }
         nextWidth = Math.round(nextWidth);

@@ -30,7 +30,7 @@ export default {
                     <div className={AREA_PIECE}></div>
                     <div className={AREA_PIECE}></div>
                     <div className={AREA_PIECE}></div>
-                </div>
+                </div>,
             ];
         }
         if (!target || !dragArea) {
@@ -71,15 +71,16 @@ export default {
         const posX = clientX - left;
         const posY = clientY - top;
         const rects = [
-            { left: 0, top: 0, width: width, height: posY - 10 },
-            { left: 0, top: 0, width: posX - 10, height: height },
-            { left: 0, top: posY + 10, width: width, height: height - posY - 10 },
-            { left: posX + 10, top: 0, width: width - posX - 10, height: height},
+            { left: 0, top: 0, width, height: posY - 10 },
+            { left: 0, top: 0, width: posX - 10, height },
+            { left: 0, top: posY + 10, width, height: height - posY - 10 },
+            { left: posX + 10, top: 0, width: width - posX - 10, height },
         ];
 
         const children = [].slice.call(areaElement.children) as HTMLElement[];
         rects.forEach((rect, i) => {
-            children[i].style.cssText = `left: ${rect.left}px;top: ${rect.top}px; width: ${rect.width}px; height: ${rect.height}px;`;
+            children[i].style.cssText
+                = `left: ${rect.left}px;top: ${rect.top}px; width: ${rect.width}px; height: ${rect.height}px;`;
         });
         addClass(areaElement, AVOID);
     },

@@ -803,6 +803,9 @@ export function filterAbles(ables: Able[], methods: Array<keyof Able>) {
     });
 }
 
-// export function createMoveable<T>(customCSS: string) {
-//     const ControlBoxElement = styler("div", MOVEABLE_CSS + customCSS);
-// }
+export function getKeepRatioHeight(width: number, isWidth: boolean, ratio: number) {
+    return width * (isWidth ? ratio : 1 / ratio);
+}
+export function getKeepRatioWidth(height: number, isWidth: boolean, ratio: number) {
+    return height * (isWidth ? 1 / ratio : ratio);
+}

@@ -7,7 +7,7 @@ import {
     getPosByReverseDirection, getPosesByDirection,
     getDragDist, scaleMatrix, getPosByDirection,
 } from "../DraggerUtils";
-import { minus, plus } from "@moveable/matrix";
+import { minus } from "@moveable/matrix";
 
 function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
@@ -623,15 +623,14 @@ export function checkSnapSize(
     direction: number[],
     datas: any,
 ) {
-    const nextSizes = [width, height];
     if (!hasGuidelines(moveable, "resizable")) {
-        return nextSizes;
+        return [0, 0];
     }
     const {
         matrix,
         is3d,
     } = moveable.state;
-    return plus(nextSizes, checkSizeDist(moveable, matrix, width, height, direction, direction, datas, is3d));
+    return checkSizeDist(moveable, matrix, width, height, direction, direction, datas, is3d);
 }
 export function checkSnapScale(
     moveable: MoveableManager<ScalableProps, any>,

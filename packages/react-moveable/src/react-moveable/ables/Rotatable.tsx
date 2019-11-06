@@ -1,7 +1,10 @@
 import { throttle, prefix, triggerEvent, fillParams } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
-import { RotatableProps, OnRotateGroup, OnRotateGroupEnd, Renderer, OnRotateGroupStart, OnRotateStart, OnRotate, OnRotateEnd } from "../types";
+import {
+    RotatableProps, OnRotateGroup, OnRotateGroupEnd,
+    Renderer, OnRotateGroupStart, OnRotateStart, OnRotate, OnRotateEnd,
+} from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";

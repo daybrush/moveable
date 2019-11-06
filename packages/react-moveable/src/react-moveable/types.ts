@@ -43,7 +43,7 @@ export type MoveableManagerState<T = {}> = {
     pos3: number[];
     pos4: number[];
     dragger: Dragger | CustomDragger | null;
-    clientRect: { left: number, right: number, top: number, bottom: number, width: number, height: number};
+    clientRect: { left: number, right: number, top: number, bottom: number, width: number, height: number };
 } & T;
 
 export interface Renderer {
@@ -90,7 +90,6 @@ export interface MoveableProps extends
 }
 export type MoveableState = MoveableManagerState;
 
-
 export interface Able<T = any> {
     name: string & keyof MoveableManagerProps<T>;
     ableGroup?: string;
@@ -128,7 +127,6 @@ export interface Able<T = any> {
     dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 }
 
-
 /**
  * @typedef
  * @memberof Moveable
@@ -140,7 +138,7 @@ export interface Able<T = any> {
  * @property - The mouse or touch input event that is invoking the moveable event
  */
 export interface OnEvent {
-    currentTarget: MoveableManager,
+    currentTarget: MoveableManager;
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
