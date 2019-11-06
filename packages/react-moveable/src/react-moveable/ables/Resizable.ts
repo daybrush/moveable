@@ -149,8 +149,7 @@ export default {
                 const standardRad = getRad([0, 0], direction);
                 const ratioRad = getRad([0, 0], [offsetWidth, offsetHeight]);
                 const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
-                const sign = Math.cos(rad - standardRad) > 0 ? 1 : -1;
-                const signSize = sign * size;
+                const signSize = Math.cos(rad - standardRad) * size;
 
                 if (!direction[0]) {
                     // top, bottom
