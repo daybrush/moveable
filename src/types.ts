@@ -9,7 +9,9 @@ import {
     OnResizeGroup, OnResizeGroupEnd, OnScaleGroupStart,
     OnScaleGroup, OnScaleGroupEnd, OnRotateGroupStart,
     OnRotateGroup, OnRotateGroupEnd, OnPinchGroupStart,
-    OnPinchGroup, OnPinchGroupEnd, OnClickGroup, OnRenderStart, OnRender, OnRenderEnd, OnScroll, OnScrollGroup, OnRenderGroupStart, OnRenderGroup, OnRenderGroupEnd, MoveableProps, OnClick,
+    OnPinchGroup, OnPinchGroupEnd, OnClickGroup, OnRenderStart,
+    OnRender, OnRenderEnd, OnScroll, OnScrollGroup, OnRenderGroupStart,
+    OnRenderGroup, OnRenderGroupEnd, OnClick,
 } from "react-moveable/declaration/types";
 
 /**
@@ -56,7 +58,6 @@ export interface MoveableOptions {
     warpable?: boolean;
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
     snappable?: boolean | string[];
-
 
     origin?: boolean;
     className?: string;
@@ -147,6 +148,4 @@ export interface MoveableEvents {
 
     scroll: OnScroll;
     scrollGroup: OnScrollGroup;
-
-
 }

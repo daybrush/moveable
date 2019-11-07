@@ -532,7 +532,6 @@ class Moveable extends EgComponent implements MoveableInterface {
  *
  */
 
-
 /**
  * When the drag starts, the dragStart event is called.
  * @memberof Moveable
@@ -572,6 +571,66 @@ class Moveable extends EgComponent implements MoveableInterface {
  *     console.log(target, isDrag);
  * });
  */
+
+ /**
+ * When the group drag starts, the `dragGroupStart` event is called.
+ * @memberof Moveable
+ * @event dragGroupStart
+ * @param {Moveable.OnDragGroupStart} - Parameters for the `dragGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroupStart", ({ targets }) => {
+ *     console.log("onDragGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group drag, the `dragGroup` event is called.
+ * @memberof Moveable
+ * @event dragGroup
+ * @param {Moveable.onDragGroup} - Parameters for the `dragGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroup", ({ targets, events }) => {
+ *     console.log("onDragGroup", targets);
+ *     events.forEach(ev => {
+ *          // drag event
+ *          console.log("onDrag left, top", ev.left, ev.top);
+ *          // ev.target!.style.left = `${ev.left}px`;
+ *          // ev.target!.style.top = `${ev.top}px`;
+ *          console.log("onDrag translate", ev.dist);
+ *          ev.target!.style.transform = ev.transform;)
+ *     });
+ * });
+ */
+
+/**
+ * When the group drag finishes, the `dragGroupEnd` event is called.
+ * @memberof Moveable
+ * @event dragGroupEnd
+ * @param {Moveable.OnDragGroupEnd} - Parameters for the `dragGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onDragGroupEnd", targets, isDrag);
+ * });
+ */
+
 /**
  * When the resize starts, the resizeStart event is called.
  * @memberof Moveable
@@ -804,65 +863,6 @@ class Moveable extends EgComponent implements MoveableInterface {
  * });
  * moveable.on("scaleEnd", ({ target }) => {
  *     console.log(target);
- * });
- */
-
- /**
- * When the group drag starts, the `dragGroupStart` event is called.
- * @memberof Moveable
- * @event dragGroupStart
- * @param {Moveable.OnDragGroupStart} - Parameters for the `dragGroupStart` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     draggable: true
- * });
- * moveable.on("dragGroupStart", ({ targets }) => {
- *     console.log("onDragGroupStart", targets);
- * });
- */
-
- /**
- * When the group drag, the `dragGroup` event is called.
- * @memberof Moveable
- * @event dragGroup
- * @param {Moveable.onDragGroup} - Parameters for the `dragGroup` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     draggable: true
- * });
- * moveable.on("dragGroup", ({ targets, events }) => {
- *     console.log("onDragGroup", targets);
- *     events.forEach(ev => {
- *          // drag event
- *          console.log("onDrag left, top", ev.left, ev.top);
- *          // ev.target!.style.left = `${ev.left}px`;
- *          // ev.target!.style.top = `${ev.top}px`;
- *          console.log("onDrag translate", ev.dist);
- *          ev.target!.style.transform = ev.transform;)
- *     });
- * });
- */
-
-/**
- * When the group drag finishes, the `dragGroupEnd` event is called.
- * @memberof Moveable
- * @event dragGroupEnd
- * @param {Moveable.OnDragGroupEnd} - Parameters for the `dragGroupEnd` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     draggable: true
- * });
- * moveable.on("dragGroupEnd", ({ targets, isDrag }) => {
- *     console.log("onDragGroupEnd", targets, isDrag);
  * });
  */
 
@@ -1107,9 +1107,9 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: document.querySelector(".target"),
  * });
- * moveable.on("click", ({ hasTarget, containsTarget, targetIndex }) => {
+ * moveable.on("click", ({ isTarget, containsTarget, targetIndex }) => {
  *     // If you click on an element other than the target and not included in the target, index is -1.
- *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
+ *     console.log("onClick", target, isTarget, containsTarget, targetIndex);
  * });
  */
 
@@ -1124,13 +1124,11 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: [].slice.call(document.querySelectorAll(".target")),
  * });
- * moveable.on("clickGroup", ({ target, hasTarget, containsTarget, targetIndex }) => {
+ * moveable.on("clickGroup", ({ target, isTarget, containsTarget, targetIndex }) => {
  *     // If you click on an element other than the target and not included in the target, index is -1.
- *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
+ *     console.log("onClickGroup", target, isTarget, containsTarget, targetIndex);
  * });
  */
-
-
 
 /**
  * `renderStart` event occurs at the first start of all events.
@@ -1180,6 +1178,54 @@ class Moveable extends EgComponent implements MoveableInterface {
  * });
  */
 
+/**
+ * `renderGroupStart` event occurs at the first start of all events in group.
+ * @memberof Moveable
+ * @event renderGroupStart
+ * @param {Moveable.OnRenderGroupStart} - Parameters for the `renderGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroupStart", ({ target }) => {
+ *     console.log("onRenderGroupStart", target);
+ * });
+ */
+
+/**
+ * `renderGroup` event occurs before the target is drawn on the screen in group.
+ * @memberof Moveable
+ * @event renderGroup
+ * @param {Moveable.OnRenderGroup} - Parameters for the `renderGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroup", ({ target }) => {
+ *     console.log("onRenderGroup", target);
+ * });
+ */
+
+/**
+ * `renderGroupEnd` event occurs at the end of all events in group.
+ * @memberof Moveable
+ * @event renderGroupEnd
+ * @param {Moveable.OnRenderGroupEnd} - Parameters for the `renderGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroupEnd", ({ target }) => {
+ *     console.log("onRenderGroupEnd", target);
+ * });
+ */
+
 interface Moveable extends MoveableGetterSetter {
     on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
     on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
@@ -1187,7 +1233,6 @@ interface Moveable extends MoveableGetterSetter {
     on(eventName: "dragGroup", handlerToAttach: (event: OnDragGroup) => any): this;
     on(eventName: "dragGroupStart", handlerToAttach: (event: OnDragGroupStart) => any): this;
     on(eventName: "dragGroupEnd", handlerToAttach: (event: OnDragGroupEnd) => any): this;
-
 
     on(eventName: "resize", handlerToAttach: (event: OnResize) => any): this;
     on(eventName: "resizeStart", handlerToAttach: (event: OnResizeStart) => any): this;
