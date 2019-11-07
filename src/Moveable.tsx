@@ -15,6 +15,15 @@ import {
     OnPinchGroup, OnPinchGroupStart, OnPinchGroupEnd, OnScaleGroupStart, OnClickGroup,
     MoveableInterface,
     RectInfo,
+    OnClick,
+    OnScroll,
+    OnScrollGroup,
+    OnRenderStart,
+    OnRender,
+    OnRenderEnd,
+    OnRenderGroupStart,
+    OnRenderGroup,
+    OnRenderGroupEnd,
 } from "react-moveable/declaration/types";
 import { PROPERTIES, EVENTS } from "./consts";
 import { camelize, isArray } from "@daybrush/utils";
@@ -30,7 +39,7 @@ import { camelize, isArray } from "@daybrush/utils";
             return this.getMoveable().props[property];
         },
         set(value) {
-            this.innerMoveable.setState({
+            this.setState({
                 [property]: value,
             });
         },
@@ -138,8 +147,36 @@ class Moveable extends EgComponent implements MoveableInterface {
     public isInside(clientX: number, clientY: number): boolean {
         return this.getMoveable().isInside(clientX, clientY);
     }
+    /**
+     * You can get the vertex information, position and offset size information of the target based on the container.
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const rectInfo = moveable.getRect();
+     */
     public getRect(): RectInfo {
         return this.getMoveable().getRect();
+    }
+    /**
+     * You can change options or properties dynamically.
+     * @param - options or properties
+     * @param - After the change, the callback function is executed when the update is completed.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.setState({
+     *   target: document.querySelector(".target"),
+     * }, () => {
+     *   moveable.dragStart(e);
+     * })
+     */
+    public setState(state: Partial<MoveableOptions>, callback?: () => any) {
+        this.innerMoveable.setState(state, callback);
     }
     /**
      * If the width, height, left, and top of the only target change, update the shape of the moveable.
@@ -412,6 +449,89 @@ class Moveable extends EgComponent implements MoveableInterface {
  *
  * moveable.rotationPosition = "bottom"
  */
+/**
+ * You can specify the className of the moveable controlbox. (default: "")
+ * @name Moveable#className
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   className: "",
+ * });
+ *
+ * moveable.className = "moveable1";
+ */
+/**
+ * Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * @name Moveable#renderDirections
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+ * });
+ *
+ * moveable.renderDirections = ["nw", "ne", "sw", "se"];
+ */
+
+/**
+ * Whether or not target can be scrolled to the scroll container (default: false)
+ * @name Moveable#scrollable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   scrollable: true,
+ *   scrollContainer: document.body,
+ *   scrollThreshold: 0,
+ *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
+ * });
+ *
+ * moveable.scrollable = true;
+ */
+
+/**
+ * The container to which scroll is applied (default: container)
+ * @name Moveable#scrollContainer
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   scrollable: true,
+ *   scrollContainer: document.body,
+ *   scrollThreshold: 0,
+ *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
+ * });
+ */
+/**
+ * Expand the range of the scroll check area. (default: 0)
+ * @name Moveable#scrollThreshold
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   scrollable: true,
+ *   scrollContainer: document.body,
+ *   scrollThreshold: 0,
+ *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
+ * });
+ */
+
+/**
+ * Sets a function to get the scroll position. (default: Function)
+ * @name Moveable#getScrollPosition
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   scrollable: true,
+ *   scrollContainer: document.body,
+ *   scrollThreshold: 0,
+ *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
+ * });
+ *
+ */
+
 
 /**
  * When the drag starts, the dragStart event is called.
@@ -942,7 +1062,7 @@ class Moveable extends EgComponent implements MoveableInterface {
  * });
  */
 
- /**
+/**
  * When the group pinch, the `pinchGroup` event is called.
  * @memberof Moveable
  * @event pinchGroup
@@ -976,7 +1096,24 @@ class Moveable extends EgComponent implements MoveableInterface {
  * });
  */
 
- /**
+/**
+ * When you click on the element, the `click` event is called.
+ * @memberof Moveable
+ * @event click
+ * @param {Moveable.OnClick} - Parameters for the `click` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("click", ({ hasTarget, containsTarget, targetIndex }) => {
+ *     // If you click on an element other than the target and not included in the target, index is -1.
+ *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
+ * });
+ */
+
+/**
  * When you click on the element inside the group, the `clickGroup` event is called.
  * @memberof Moveable
  * @event clickGroup
@@ -993,22 +1130,85 @@ class Moveable extends EgComponent implements MoveableInterface {
  * });
  */
 
+
+
+/**
+ * `renderStart` event occurs at the first start of all events.
+ * @memberof Moveable
+ * @event renderStart
+ * @param {Moveable.OnRenderStart} - Parameters for the `renderStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("renderStart", ({ target }) => {
+ *     console.log("onRenderStart", target);
+ * });
+ */
+
+/**
+ * `render` event occurs before the target is drawn on the screen.
+ * @memberof Moveable
+ * @event render
+ * @param {Moveable.OnRender} - Parameters for the `render` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("render", ({ target }) => {
+ *     console.log("onRender", target);
+ * });
+ */
+
+/**
+ * `renderEnd` event occurs at the end of all events.
+ * @memberof Moveable
+ * @event renderEnd
+ * @param {Moveable.OnRenderEnd} - Parameters for the `renderEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("renderEnd", ({ target }) => {
+ *     console.log("onRenderEnd", target);
+ * });
+ */
+
 interface Moveable extends MoveableGetterSetter {
     on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
     on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
     on(eventName: "dragEnd", handlerToAttach: (event: OnDragEnd) => any): this;
+    on(eventName: "dragGroup", handlerToAttach: (event: OnDragGroup) => any): this;
+    on(eventName: "dragGroupStart", handlerToAttach: (event: OnDragGroupStart) => any): this;
+    on(eventName: "dragGroupEnd", handlerToAttach: (event: OnDragGroupEnd) => any): this;
+
 
     on(eventName: "resize", handlerToAttach: (event: OnResize) => any): this;
     on(eventName: "resizeStart", handlerToAttach: (event: OnResizeStart) => any): this;
     on(eventName: "resizeEnd", handlerToAttach: (event: OnResizeEnd) => any): this;
+    on(eventName: "resizeGroup", handlerToAttach: (event: OnResizeGroup) => any): this;
+    on(eventName: "resizeGroupStart", handlerToAttach: (event: OnResizeGroupStart) => any): this;
+    on(eventName: "resizeGroupEnd", handlerToAttach: (event: OnResizeGroupEnd) => any): this;
 
     on(eventName: "scale", handlerToAttach: (event: OnScale) => any): this;
     on(eventName: "scaleStart", handlerToAttach: (event: OnScaleStart) => any): this;
     on(eventName: "scaleEnd", handlerToAttach: (event: OnScaleEnd) => any): this;
+    on(eventName: "scaleGroup", handlerToAttach: (event: OnScaleGroup) => any): this;
+    on(eventName: "scaleGroupStart", handlerToAttach: (event: OnScaleGroupStart) => any): this;
+    on(eventName: "scaleGroupEnd", handlerToAttach: (event: OnScaleGroupEnd) => any): this;
 
     on(eventName: "rotate", handlerToAttach: (event: OnRotate) => any): this;
     on(eventName: "rotateStart", handlerToAttach: (event: OnRotateStart) => any): this;
     on(eventName: "rotateEnd", handlerToAttach: (event: OnRotateEnd) => any): this;
+    on(eventName: "rotateGroup", handlerToAttach: (event: OnRotateGroup) => any): this;
+    on(eventName: "rotateGroupStart", handlerToAttach: (event: OnRotateGroupStart) => any): this;
+    on(eventName: "rotateGroupEnd", handlerToAttach: (event: OnRotateGroupEnd) => any): this;
 
     on(eventName: "warp", handlerToAttach: (event: OnWarp) => any): this;
     on(eventName: "warpStart", handlerToAttach: (event: OnWarpStart) => any): this;
@@ -1017,28 +1217,22 @@ interface Moveable extends MoveableGetterSetter {
     on(eventName: "pinch", handlerToAttach: (event: OnPinch) => any): this;
     on(eventName: "pinchStart", handlerToAttach: (event: OnPinchStart) => any): this;
     on(eventName: "pinchEnd", handlerToAttach: (event: OnPinchEnd) => any): this;
-
-    on(eventName: "dragGroup", handlerToAttach: (event: OnDragGroup) => any): this;
-    on(eventName: "dragGroupStart", handlerToAttach: (event: OnDragGroupStart) => any): this;
-    on(eventName: "dragGroupEnd", handlerToAttach: (event: OnDragGroupEnd) => any): this;
-
-    on(eventName: "resizeGroup", handlerToAttach: (event: OnResizeGroup) => any): this;
-    on(eventName: "resizeGroupStart", handlerToAttach: (event: OnResizeGroupStart) => any): this;
-    on(eventName: "resizeGroupEnd", handlerToAttach: (event: OnResizeGroupEnd) => any): this;
-
-    on(eventName: "scaleGroup", handlerToAttach: (event: OnScaleGroup) => any): this;
-    on(eventName: "scaleGroupStart", handlerToAttach: (event: OnScaleGroupStart) => any): this;
-    on(eventName: "scaleGroupEnd", handlerToAttach: (event: OnScaleGroupEnd) => any): this;
-
-    on(eventName: "rotateGroup", handlerToAttach: (event: OnRotateGroup) => any): this;
-    on(eventName: "rotateGroupStart", handlerToAttach: (event: OnRotateGroupStart) => any): this;
-    on(eventName: "rotateGroupEnd", handlerToAttach: (event: OnRotateGroupEnd) => any): this;
-
     on(eventName: "pinchGroup", handlerToAttach: (event: OnPinchGroup) => any): this;
     on(eventName: "pinchGroupStart", handlerToAttach: (event: OnPinchGroupStart) => any): this;
     on(eventName: "pinchGroupEnd", handlerToAttach: (event: OnPinchGroupEnd) => any): this;
 
+    on(eventName: "click", handlerToAttach: (event: OnClick) => any): this;
     on(eventName: "clickGroup", handlerToAttach: (event: OnClickGroup) => any): this;
+
+    on(eventName: "scroll", handlerToAttach: (event: OnScroll) => any): this;
+    on(eventName: "scrollGroup", handlerToAttach: (event: OnScrollGroup) => any): this;
+
+    on(eventName: "renderStart", handlerToAttach: (event: OnRenderStart) => any): this;
+    on(eventName: "render", handlerToAttach: (event: OnRender) => any): this;
+    on(eventName: "renderEnd", handlerToAttach: (event: OnRenderEnd) => any): this;
+    on(eventName: "renderGroupStart", handlerToAttach: (event: OnRenderGroupStart) => any): this;
+    on(eventName: "renderGroup", handlerToAttach: (event: OnRenderGroup) => any): this;
+    on(eventName: "renderGroupEnd", handlerToAttach: (event: OnRenderGroupEnd) => any): this;
 
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;

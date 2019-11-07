@@ -2,7 +2,6 @@ import { IObject } from "@daybrush/utils";
 import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
-import MoveableManager from "./MoveableManager";
 
 export interface MoveableClientRect {
     left: number;
@@ -147,7 +146,7 @@ export interface Able<T = any> {
  * @property - The mouse or touch input event that is invoking the moveable event
  */
 export interface OnEvent {
-    currentTarget: MoveableManager;
+    currentTarget: MoveableInterface;
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
@@ -823,6 +822,18 @@ export interface OnCustomDrag extends Position {
     parentDragger: CustomDragger;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The coordinates of the vertex 1
+ * @property - The coordinates of the vertex 1
+ * @property - The coordinates of the vertex 1
+ * @property - The coordinates of the vertex 1
+ * @property - left position of the target relative to the container
+ * @property - top position of the target relative to the container
+ * @property - the offset width of the target
+ * @property - the offset height of the target
+ */
 export interface RectInfo {
     pos1: number[];
     pos2: number[];
@@ -841,5 +852,5 @@ export interface MoveableInterface {
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
-    setState(state: IObject<any>, callback: () => any): void;
+    setState(state: any, callback?: () => any): any;
 }

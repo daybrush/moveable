@@ -6,10 +6,9 @@ const defaultOptions = {
     tsconfig: "tsconfig.build.json",
     external: {
         "@daybrush/utils": "utils",
-        "@daybrush/drag": "utils",
+        "@daybrush/drag": "Dragger",
         "preact": "Preact",
         "preact-compat": "preact-compat",
-        // "preact/compat": "preact/compat",
         "framework-utils": "framework-utils",
         "preact-css-styler": "preact-css-styler",
         "@egjs/agent": "eg.Agent",
