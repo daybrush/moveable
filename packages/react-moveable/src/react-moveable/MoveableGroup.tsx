@@ -148,7 +148,6 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
 
         // tslint:disable-next-line: max-line-length
         target.style.cssText += `left:0px;top:0px;width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`;
-
         state.width = width;
         state.height = height;
 
