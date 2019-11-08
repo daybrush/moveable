@@ -11,6 +11,8 @@
     onDestroy,
     createEventDispatcher,
     beforeUpdate,
+    afterUpdate,
+    tick,
   } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -31,8 +33,9 @@
     container = options.container;
 
     if (moveable) {
-      moveable.target = options.target;
-      moveable.setState(options);
+      tick().then(() => {
+        moveable.setState(options);
+      });
     }
   });
   onMount(() => {
