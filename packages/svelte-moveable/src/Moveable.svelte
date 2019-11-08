@@ -4,12 +4,13 @@
     EVENTS,
     MoveableOptions
   } from "moveable";
+  import { camelize } from "@daybrush/utils";
+
   import {
     onMount,
     onDestroy,
     createEventDispatcher,
     beforeUpdate,
-    afterUpdate,
   } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -18,7 +19,7 @@
   let container: SVGElement | HTMLElement;
   let moveable: VanillaMoveable;
 
-  $: {
+  beforeUpdate(() => {
     const props = $$props;
 
     options = {};
@@ -28,23 +29,25 @@
       }
     });
     container = options.container;
+
     if (moveable) {
       moveable.target = options.target;
       moveable.setState(options);
     }
-  }
-
+  });
   onMount(() => {
     moveable = new VanillaMoveable(container || document.body, options);
 
     EVENTS.forEach(name => {
+      const onName = camelize(`on ${name}`);
       moveable.on(name, e => {
+        $$props[onName] && $$props[onName](e);
         dispatch(name, e);
       });
     });
   });
   onDestroy(() => {
-    destroy();
+    moveable.destroy();
   });
 
   export function updateRect() {
@@ -67,5 +70,8 @@
   }
   export function dragStart(e: MouseEvent | TouchEvent) {
     moveable.dragStart(e);
+  }
+  export function setState(state: any, callback: () => any) {
+    moveable.setState(state, callback);
   }
 </script>
