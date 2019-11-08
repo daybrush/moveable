@@ -69,9 +69,8 @@
     }
     targets = [...targets, target];
     setTimeout(() => {
-      console.log(e);
       moveable.dragStart(e);
-    }, 50);
+    });
   }
   function onClickGroup(e) {
     const target = e.inputTarget;
@@ -134,7 +133,6 @@
     detail.events.forEach(onDragStart);
   }}
   on:dragGroup={({ detail }) => {
-    console.log("dragGroup", detail.events);
     detail.events.forEach(onDrag);
   }}
   on:scaleStart={({ detail }) => {
@@ -142,6 +140,12 @@
   }}
   on:scale={({ detail }) => {
     onScale(detail);
+  }}
+  on:scaleGroupStart={({ detail }) => {
+    detail.events.forEach(onScaleStart);
+  }}
+  on:scaleGroup={({ detail }) => {
+    detail.events.forEach(onScale);
   }}
   on:render={({ detail }) => {
     onRender(detail);
