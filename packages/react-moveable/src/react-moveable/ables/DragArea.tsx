@@ -64,8 +64,9 @@ export default {
             renderPieces(React),
         ];
     },
-    dragStart(moveable: MoveableManager, { datas, clientX, clientY }: any) {
-        datas.isDrag = false;
+    dragStart(moveable: MoveableManager, { datas, clientX, clientY, inputEvent }: any) {
+        datas.isDragArea = false;
+        datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
         const { left, top, width, height } = moveable.state.clientRect;
         const posX = clientX - left;
@@ -85,21 +86,21 @@ export default {
         addClass(areaElement, AVOID);
     },
     drag(moveable: MoveableManager, { datas }: any) {
-        if (!datas.isDrag) {
-            datas.isDrag = true;
+        if (!datas.isDragArea) {
+            datas.isDragArea = true;
             restoreStyle(moveable);
         }
     },
     dragEnd(moveable: MoveableManager<DragAreaProps>, e: any) {
-        const { inputEvent, isDrag, datas } = e;
-        if (!datas.isDrag) {
+        const { inputEvent, isDragArea, datas } = e;
+        if (!datas.isDragArea) {
             restoreStyle(moveable);
         }
 
         const target = moveable.state.target!;
         const inputTarget = inputEvent.target;
 
-        if (isDrag || moveable.isMoveableElement(inputTarget)) {
+        if (isDragArea || moveable.isMoveableElement(inputTarget)) {
             return;
         }
         const containsTarget = target.contains(inputTarget);
@@ -120,14 +121,15 @@ export default {
         moveable: MoveableGroup,
         e: any,
     ) {
-        const { inputEvent, isDrag, datas } = e;
-        if (!datas.isDrag) {
+        const { inputEvent, isDragArea, datas } = e;
+
+        if (!isDragArea) {
             restoreStyle(moveable);
         }
-
+        const prevInputTarget = datas.inputTarget;
         const inputTarget = inputEvent.target;
 
-        if (isDrag || moveable.isMoveableElement(inputTarget)) {
+        if (isDragArea || moveable.isMoveableElement(inputTarget) || prevInputTarget === inputTarget) {
             return;
         }
         const targets = moveable.props.targets!;

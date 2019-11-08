@@ -23,7 +23,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Fix problem where the ratio is not maintained with keepRatio #70
 * Fix that `el is undefined` #73
 * Fix `dragArea`'s caculation
-
+* Fix that `dragStart` method is not work with group
+* Fix that `clickGroup` event occurs when `dragStart` a mousedown target
+* Fix that Moveable is deleted when a single target is changed to multiple targets
 
 ## [0.9.8] - 2019-10-26
 ### Fixed
