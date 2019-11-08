@@ -12,13 +12,13 @@ function triggerAble<T extends IObject<any>>(
     eventType: any,
     e: OnDragStart | OnDrag | OnDragEnd | OnPinchEnd,
 ) {
-    if (eventAffix.indexOf("Control") > -1 && moveable.areaElement === e.inputEvent.target) {
+    const isStart = eventType === "Start";
+
+    if (isStart && eventAffix.indexOf("Control") > -1 && moveable.areaElement === e.inputEvent.target) {
         return false;
     }
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
-
-    const isStart = eventType === "Start";
     const isEnd = eventType === "End";
 
     if (isStart) {
