@@ -3,23 +3,29 @@
 This document explains how to use [moveable](https://github.com/daybrush/moveable).
 
 # Table of Contents
-  * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
-  * [Introduction](#toc-introduction)
-  * [Basic Support](#toc-support)
-  * [Ables](#toc-ables)
-      * [Draggable](#toc-draggable)
-      * [Resizable](#toc-resizable)
-      * [Scalable](#toc-scalable)
-      * [Rotatable](#toc-rotatable)
-      * [Warpable](#toc-warpable)
-      * [Pinchable](#toc-pinchable)
-      * [Snappable(Guidelines & Boundaries)](#toc-snappable)
-  * [How to use Group](#toc-group)
-    * [Group with Draggable](#toc-group-draggable)
-    * [Group with Resizable](#toc-group-resizable)
-    * [Group with Scalable](#toc-group-scalable)
-    * [Group with Rotatable](#toc-group-rotatable)
-  * [How to use custom css](#toc-custom-css)
+* [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
+* [Introduction](#toc-introduction)
+* [Basic Support](#toc-support)
+* [Events](#toc-events)
+* [Ables](#toc-ables)
+    * [Draggable](#toc-draggable)
+    * [Resizable](#toc-resizable)
+    * [Scalable](#toc-scalable)
+    * [Rotatable](#toc-rotatable)
+    * [Warpable](#toc-warpable)
+    * [Pinchable](#toc-pinchable)
+    * [Snappable(Guidelines & Boundaries)](#toc-snappable)
+    * [Scrollable](#toc-scrollable)
+* [How to use Group](#toc-group)
+* [Group with Draggable](#toc-group-draggable)
+* [Group with Resizable](#toc-group-resizable)
+* [Group with Scalable](#toc-group-scalable)
+* [Group with Rotatable](#toc-group-rotatable)
+* [How to use custom css](#toc-custom-css)
+    * [Show Partial ControlBox](#toc-directions)
+    * [Set className](#toc-classname)
+    * [Use important](#toc-important)
+    * [Moveable's Default CSS](#toc-defaultcss)
 
 
 # <a id="toc-introduction"></a>Introduction
@@ -47,6 +53,26 @@ If the transform overlaps from the root element to the parent element, the dista
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
 
+# <a id="toc-events></a> Events
+
+All events in moveable have the following properties by default:
+
+* **currentTarget**: An instance of Moveable that occur an event.
+* **target**: The target of the event where the MouseEvent or TouchEvent occurred.
+* **clientX**: The x coordinate where the MouseEvent or TouchEvent occurred.
+* **clientY**: The y coordinate where the MouseEvent or TouchEvent occurred.
+* **datas**: Information can be shared between the same event. (ex: `dragStart`, `drag`, `dragEnd`)
+* **inputEvent**: MouseEvent or TouchEvent source where the event occurred.
+```ts
+export interface OnEvent {
+    currentTarget: MoveableInterface;
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+    inputEvent: any;
+}
+```
 
 # <a id="toc-ables"></a>Ables
 You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
@@ -814,6 +840,97 @@ export class AppComponent {
 ```
 
 
+## <a id="toc-scrollable"></a>Scrollable
+
+**Scrollable** indicates whether or not target can be scrolled to the scroll container (default: false)
+
+### Events
+* [onScroll](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scroll): When the drag cursor leaves the scrollContainer, the `scroll` event occur to scroll.
+* [onScrollGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scrollGroup): When the drag cursor leaves the scrollContainer, the `scrollGroup` event occur to scroll in group.
+
+### Options
+* [scrollContainer](https://daybrush.com/moveable/release/latest/doc/Moveable.html#scrollContainer): The container to which scroll is applied (default: container)
+* [scrollThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#scrollThreshold): Expand the range of the scroll check area. (default: 0)
+* [getScrollPosition](https://daybrush.com/moveable/release/latest/doc/Moveable.html#getScrollPosition): Sets a function to get the scroll position. (default: Function)
+
+
+### Vanilla Example
+
+```ts
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    scrollable: true,
+    scrollContainer: document.body,
+    scrollThreshold: 0,
+    getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
+}).on("scroll", ({ scrollContainer, direction }) => {
+    scrollContainer.scrollLeft += direction[0] * 10;
+    scrollContainer.scrollTop += direction[1] * 10;
+}).on("scrollGroup", ({ scrollContainer, direction }) => {
+    scrollContainer.scrollLeft += direction[0] * 10;
+    scrollContainer.scrollTop += direction[1] * 10;
+});
+```
+
+### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+<Moveable
+    target={document.querySelector(".target")}
+    scrollable={true}
+    container={document.body}
+    scrollContainer={document.body}
+    scrollThreshold={0}
+    getScrollPosition={({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop])}
+    onScroll={({ scrollContainer, direction }) => {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }}
+    onScrollGroup={({ scrollContainer, direction }) => {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }}
+    />
+```
+
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [container]="container"
+    [scrollable]="true"
+    [scrollContainer]="container"
+    [scrollThreshold]="0"
+    [getScrollPosition]="getScrollPosition"
+    (scroll)="onScroll($event)"
+    (scrollGroup)="onScroll($event)"
+    />
+`,
+})
+export class AppComponent {
+    container = document.body;
+    getScrollPosition({ scrollContainer }) {
+        return [scrollContainer.scrollLeft, scrollContainer.scrollTop];
+    }
+    onScroll({ scrollContainer, direction }) {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }
+}
+```
+
 # <a id="toc-group"></a> How to use Group
 
 **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
@@ -1440,7 +1557,39 @@ export class AppComponent implements OnInit {
 
 # <a id="toc-custom-css"></a>✨ How to use custom CSS
 
-If you want to custom CSS, use **`!important`**.
+
+## <a id="toc-directions"></a>Show Partial Control Box
+### Options
+* [renderDirections](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:renderDirections) : Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+
+### Vanilla Example
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+});
+
+moveable.renderDirections = ["nw", "ne", "sw", "se"];
+```
+
+## <a id="toc-classname"></a>Set className
+### Options
+* [className](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:className) : You can specify the className of the moveable controlbox. (default: "")
+
+### Vanilla Example
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    className: "moveable1",
+});
+
+moveable.classname = "moveable2";
+```
+
+## <a id="toc-important"></a>Use important
+* If you want to custom CSS, use **`!important`**.
 
 ```css
 .moveable-control {
@@ -1451,7 +1600,8 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 
-## moveable-line
+## <a id="toc-defaultcss"></a>Moveable's Default CSS
+### moveable-line
 
 ```css
 .moveable-line {
@@ -1473,7 +1623,7 @@ If you want to custom CSS, use **`!important`**.
     transform-origin: 0.5px 39.5px;
 }
 ```
-## moveable-control
+### moveable-control
 
 ```css
 .moveable-control {
@@ -1492,7 +1642,7 @@ If you want to custom CSS, use **`!important`**.
 
 ![](../demo/images/control.png)
 
-## moveable-rotataion
+### moveable-rotataion
 
 ```css
 /* moveable-rotation */
@@ -1503,7 +1653,7 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 
-## moveable-origin
+### moveable-origin
 ```css
 .moveable-control.moveable-origin {
     border-color: #f55;
@@ -1516,7 +1666,7 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 
-## moveable-direction
+### moveable-direction
 
 ```css
 .moveable-direction.moveable-e, .moveable-direction.moveable-w {
@@ -1534,7 +1684,7 @@ If you want to custom CSS, use **`!important`**.
 ```
 
 
-## Default CSS
+### Default CSS
 
 ```css
 .moveable-control-box {
