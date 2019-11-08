@@ -19,8 +19,8 @@
         translateX: "0px",
         translateY: "0px",
         scaleX: 1,
-        scaleY: 1,
-      },
+        scaleY: 1
+      }
     });
 
     frameMap.set(el, frame);
@@ -38,15 +38,12 @@
 
     set([
       parseFloat(frame.get("transform", "translateX")),
-      parseFloat(frame.get("transform", "translateY")),
+      parseFloat(frame.get("transform", "translateY"))
     ]);
   }
   function onScaleStart({ target, dragStart, set }) {
     const frame = getFrame(target);
-    set([
-      frame.get("transform", "scaleX"),
-      frame.get("transform", "scaleY"),
-    ]);
+    set([frame.get("transform", "scaleX"), frame.get("transform", "scaleY")]);
     dragStart && onDragStart(dragStart);
   }
   function onScale({ target, scale, drag }) {
@@ -66,13 +63,27 @@
   function onMouseDown(e) {
     const target = e.target;
     if (
-      target === document.body
-      || moveable.isMoveableElement(target)
-      || targets.indexOf(target) > -1
+      target === document.body ||
+      moveable.isMoveableElement(target) ||
+      targets.indexOf(target) > -1
     ) {
       return;
     }
     targets = [...targets, target];
+  }
+  function onClickGroup(e) {
+    const target = e.inputTarget;
+
+    console.log(target);
+    if (
+      target === document.body ||
+      moveable.isMoveableElement(target) ||
+      targets.indexOf(target) < 0
+    ) {
+      return;
+    }
+    targets.splice(targets.indexOf(target), 1);
+    targets = [...targets];
   }
   onMount(() => {
     targets = [document.querySelector(".target")];
@@ -105,6 +116,7 @@
     width: 80px;
   }
 </style>
+
 <svelte:body on:mousedown={onMouseDown} />
 <Moveable
   bind:this={moveable}
@@ -126,7 +138,9 @@
   on:render={({ detail }) => {
     onRender(detail);
   }}
-  />
+  on:clickGroup={({ detail }) => {
+    onClickGroup(detail);
+  }} />
 
 <div class="target">T1</div>
 <div class="target">T2</div>
