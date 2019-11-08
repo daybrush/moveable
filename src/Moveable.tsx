@@ -1107,9 +1107,9 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: document.querySelector(".target"),
  * });
- * moveable.on("click", ({ isTarget, containsTarget, targetIndex }) => {
+ * moveable.on("click", ({ hasTarget, containsTarget, targetIndex }) => {
  *     // If you click on an element other than the target and not included in the target, index is -1.
- *     console.log("onClick", target, isTarget, containsTarget, targetIndex);
+ *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
  * });
  */
 
@@ -1124,9 +1124,9 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: [].slice.call(document.querySelectorAll(".target")),
  * });
- * moveable.on("clickGroup", ({ target, isTarget, containsTarget, targetIndex }) => {
+ * moveable.on("clickGroup", ({ inputTarget, isTarget, containsTarget, targetIndex }) => {
  *     // If you click on an element other than the target and not included in the target, index is -1.
- *     console.log("onClickGroup", target, isTarget, containsTarget, targetIndex);
+ *     console.log("onClickGroup", inputTarget, isTarget, containsTarget, targetIndex);
  * });
  */
 
@@ -1189,8 +1189,8 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: [].slice.call(document.querySelectorAll(".target")),
  * });
- * moveable.on("renderGroupStart", ({ target }) => {
- *     console.log("onRenderGroupStart", target);
+ * moveable.on("renderGroupStart", ({ targets }) => {
+ *     console.log("onRenderGroupStart", targets);
  * });
  */
 
@@ -1205,8 +1205,8 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: [].slice.call(document.querySelectorAll(".target")),
  * });
- * moveable.on("renderGroup", ({ target }) => {
- *     console.log("onRenderGroup", target);
+ * moveable.on("renderGroup", ({ targets }) => {
+ *     console.log("onRenderGroup", targets);
  * });
  */
 
@@ -1221,8 +1221,42 @@ class Moveable extends EgComponent implements MoveableInterface {
  * const moveable = new Moveable(document.body, {
  *     target: [].slice.call(document.querySelectorAll(".target")),
  * });
- * moveable.on("renderGroupEnd", ({ target }) => {
- *     console.log("onRenderGroupEnd", target);
+ * moveable.on("renderGroupEnd", ({ targets }) => {
+ *     console.log("onRenderGroupEnd", targets);
+ * });
+ */
+
+/**
+ * When the drag cursor leaves the scrollContainer, the `scroll` event occur to scroll.
+ * @memberof Moveable
+ * @event scroll
+ * @param {Moveable.OnScroll} - Parameters for the `scroll` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("scroll", ({ scrollContainer, direction }) => {
+ *   scrollContainer.scrollLeft += direction[0] * 10;
+ *   scrollContainer.scrollTop += direction[1] * 10;
+ * });
+ */
+
+/**
+ * When the drag cursor leaves the scrollContainer, the `scrollGroup` event occur to scroll in group.
+ * @memberof Moveable
+ * @event scrollGroup
+ * @param {Moveable.OnScrollGroup} - Parameters for the `scrollGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("scroll", ({ scrollContainer, direction }) => {
+ *   scrollContainer.scrollLeft += direction[0] * 10;
+ *   scrollContainer.scrollTop += direction[1] * 10;
  * });
  */
 
