@@ -4,42 +4,49 @@ import { IObject } from "@daybrush/utils";
 
 export function triggerRenderStart(
     moveable: MoveableManager<any>,
-    eventAffix: string,
+    isGroup: boolean,
     e: any,
 ) {
     const params: IObject<any> = fillParams(moveable, e, {
         isPinch: !!e.isPinch,
     });
 
-    if (eventAffix === "Group") {
+    const eventAffix = isGroup ? "Group" : "";
+
+    if (isGroup) {
         params.targets = moveable.props.targets;
     }
     triggerEvent(moveable, `onRender${eventAffix}Start`, params);
 }
 export function triggerRender(
     moveable: MoveableManager<any>,
-    eventAffix: string,
+    isGroup: boolean,
     e: any,
 ) {
     const params: IObject<any> = fillParams(moveable, e, {
         isPinch: !!e.isPinch,
     });
 
-    if (eventAffix === "Group") {
+    const eventAffix = isGroup ? "Group" : "";
+
+    if (isGroup) {
         params.targets = moveable.props.targets;
     }
     triggerEvent(moveable, `onRender${eventAffix}`, params);
 }
 export function triggerRenderEnd(
     moveable: MoveableManager<any>,
-    eventAffix: string,
+    isGroup: boolean,
     e: any,
 ) {
     const params: IObject<any> = fillParams(moveable, e, {
         isPinch: !!e.sPinch,
+        isDrag: e.isDrag,
     });
 
-    if (eventAffix === "Group") {
+    const eventAffix = isGroup ? "Group" : "";
+
+    if (isGroup) {
         params.targets = moveable.props.targets;
     }
     triggerEvent(moveable, `onRender${eventAffix}End`, params);

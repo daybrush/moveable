@@ -55,7 +55,7 @@
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
     "@egjs/component": "^2.1.2",
-    "preact-moveable": "^0.12.2"
+    "preact-moveable": "^0.12.3"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",
