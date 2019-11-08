@@ -1,7 +1,18 @@
 <script lang="ts">
-  import VanillaMoveable, { PROPERTIES, EVENTS, MoveableOptions } from "moveable";
-  import { onMount, onDestroy, createEventDispatcher } from "svelte";
+  import VanillaMoveable, {
+    PROPERTIES,
+    EVENTS,
+    MoveableOptions
+  } from "moveable";
+  import {
+    onMount,
+    onDestroy,
+    createEventDispatcher,
+    beforeUpdate,
+    afterUpdate,
+  } from "svelte";
 
+  const dispatch = createEventDispatcher();
   declare var $$props: any;
   let options: Partial<MoveableOptions> = {};
   let container: SVGElement | HTMLElement;
@@ -13,25 +24,21 @@
     options = {};
     PROPERTIES.forEach(name => {
       if (name in props) {
-        options[name] = props[name];
+        (options as any)[name] = props[name];
       }
     });
     container = options.container;
     if (moveable) {
       moveable.target = options.target;
-      // moveable.setState(options);
+      moveable.setState(options);
     }
   }
 
   onMount(() => {
     moveable = new VanillaMoveable(container || document.body, options);
-    const dispatch = createEventDispatcher();
 
-
-    console.log(options, moveable);
     EVENTS.forEach(name => {
       moveable.on(name, e => {
-        console.log(name, e);
         dispatch(name, e);
       });
     });

@@ -56,12 +56,13 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "moveable": "^0.9.8"
+    "moveable": "^0.10.0-rc"
   },
   "scripts": {
     "build": "rollup -c rollup.build.config.js",
     "dev": "rollup -c -w",
     "start": "sirv public --single",
-    "start:dev": "sirv public --single --dev"
+    "start:dev": "sirv public --single --dev",
+    "build:dev": "rollup -c"
   }
 }
