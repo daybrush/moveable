@@ -1,6 +1,6 @@
 <script>
   import Moveable from "./Moveable.svelte";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { Frame } from "scenejs";
   import keycon from "keycon";
   export let name;
@@ -10,9 +10,7 @@
   let targets = [];
   let moveable;
 
-  function handleDrag() {
-    console.log(1);
-  }
+
   function newFrame(el) {
     const frame = new Frame({
       transform: {
@@ -70,11 +68,14 @@
       return;
     }
     targets = [...targets, target];
+    setTimeout(() => {
+      console.log(e);
+      moveable.dragStart(e);
+    }, 50);
   }
   function onClickGroup(e) {
     const target = e.inputTarget;
 
-    console.log(target);
     if (
       target === document.body ||
       moveable.isMoveableElement(target) ||
@@ -129,6 +130,13 @@
   on:drag={({ detail }) => {
     onDrag(detail);
   }}
+  on:dragGroupStart={({ detail }) => {
+    detail.events.forEach(onDragStart);
+  }}
+  on:dragGroup={({ detail }) => {
+    console.log("dragGroup", detail.events);
+    detail.events.forEach(onDrag);
+  }}
   on:scaleStart={({ detail }) => {
     onScaleStart(detail);
   }}
@@ -137,6 +145,9 @@
   }}
   on:render={({ detail }) => {
     onRender(detail);
+  }}
+  on:renderGroup={({ detail }) => {
+    detail.targets.forEach(target => onRender({ target }));
   }}
   on:clickGroup={({ detail }) => {
     onClickGroup(detail);
