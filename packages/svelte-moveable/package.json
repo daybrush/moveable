@@ -58,7 +58,7 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "moveable": "^0.10.0-rc6"
+    "moveable": "^0.10.0-rc8"
   },
   "scripts": {
     "build": "rollup -c rollup.build.config.js",
