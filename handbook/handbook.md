@@ -53,7 +53,7 @@ If the transform overlaps from the root element to the parent element, the dista
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
 
-# <a id="toc-events></a> Events
+# <a id="toc-events"></a> Events
 
 All events in moveable have the following properties by default:
 
