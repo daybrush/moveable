@@ -1,4 +1,5 @@
 import { Component, h } from "preact";
+import { createPortal } from "preact/compat";
 import Moveable, { MoveableProps, PreactMoveableInterface } from "preact-moveable";
 import { ref } from "framework-utils";
 
@@ -10,6 +11,6 @@ export default class InnerMoveable extends Component<MoveableProps> {
         this.state = this.props;
     }
     public render() {
-        return <Moveable ref={ref(this, "preactMoveable")} {...this.state} />;
+        return createPortal(<Moveable ref={ref(this, "preactMoveable")} {...this.state} />, this.props.parentElement);
     }
 }

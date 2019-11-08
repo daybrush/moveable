@@ -49,13 +49,13 @@ import { camelize, isArray } from "@daybrush/utils";
 })
 class Moveable extends EgComponent implements MoveableInterface {
     private innerMoveable!: InnerMoveable;
+    private tempElement = document.createElement("div");
 
     /**
      *
      */
     constructor(parentElement: HTMLElement | SVGElement, options: MoveableOptions = {}) {
         super();
-        const element = document.createElement("div");
         const nextOptions = { container: parentElement, ...options };
 
         const events: any = {};
@@ -67,13 +67,12 @@ class Moveable extends EgComponent implements MoveableInterface {
         render(
             <InnerMoveable
                 ref={ref(this, "innerMoveable")}
+                parentElement={parentElement}
                 {...nextOptions}
                 {...events}
             />,
-            element,
+            this.tempElement,
         );
-        parentElement.appendChild(element.children[0]);
-
         const target = nextOptions.target!;
         if (isArray(target) && target.length > 1) {
             this.updateRect();
@@ -201,11 +200,9 @@ class Moveable extends EgComponent implements MoveableInterface {
      * moveable.destroy();
      */
     public destroy() {
-        const el = this.getMoveable().base;
-
-        el.remove ? el.remove() : el.parentElement.removeChild(el);
+        render("", this.tempElement);
         this.off();
-        this.getMoveable().destroy();
+        this.tempElement = null;
         this.innerMoveable = null;
     }
     private getMoveable() {
