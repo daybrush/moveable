@@ -1,6 +1,6 @@
-import { MoveableEvents } from "./types";
+import { MoveableEvents, MoveableOptions } from "./types";
 
-export const PROPERTIES = [
+export const PROPERTIES: Array<keyof MoveableOptions> = [
     "draggable", "resizable", "scalable", "rotatable",
     "warpable", "pinchable", "snappable", "origin", "target", "edge",
     "throttleDrag", "throttleResize",
@@ -10,6 +10,13 @@ export const PROPERTIES = [
     "snapCenter", "snapThreshold",
     "horizontalGuidelines", "verticalGuidelines", "elementGuidelines",
     "bounds",
+
+    "className",
+    "renderDirections",
+    "scrollable",
+    "getScrollPosition",
+    "scrollContainer",
+    "scrollThreshold",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",
@@ -46,7 +53,14 @@ export const EVENTS: Array<keyof MoveableEvents> = [
     "pinchGroup",
     "pinchGroupEnd",
     "clickGroup",
+
+    "scroll",
+    "scrollGroup",
+
     "renderStart",
     "render",
     "renderEnd",
+    "renderGroupStart",
+    "renderGroup",
+    "renderGroupEnd",
 ];

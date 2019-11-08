@@ -3,7 +3,7 @@ import { createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
 import { ref } from "framework-utils";
 import { triggerEvent, fillParams } from "../utils";
 import { Renderer, GroupableProps, DragAreaProps, OnClick } from "../types";
-import { AREA_PIECE, AREA, AVOID } from "../classNames";
+import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
 import MoveableGroup from "../MoveableGroup";
 import { addClass, findIndex, removeClass } from "@daybrush/utils";
 
@@ -16,6 +16,14 @@ function restoreStyle(moveable: MoveableManager) {
     el.style.cssText += `left: 0px; top: 0px; width: ${width}px; height: ${height}px`;
 }
 
+function renderPieces(React: Renderer): any {
+    return (<div key="area_pieces" className={AREA_PIECES}>
+        <div className={AREA_PIECE}></div>
+        <div className={AREA_PIECE}></div>
+        <div className={AREA_PIECE}></div>
+        <div className={AREA_PIECE}></div>
+    </div>);
+}
 export default {
     name: "dragArea",
     render(moveable: MoveableManager<GroupableProps>, React: Renderer): any[] {
@@ -25,12 +33,8 @@ export default {
 
         if (groupable) {
             return [
-                <div key="area" ref={ref(moveable, "areaElement")} className={AREA}>
-                    <div className={AREA_PIECE}></div>
-                    <div className={AREA_PIECE}></div>
-                    <div className={AREA_PIECE}></div>
-                    <div className={AREA_PIECE}></div>
-                </div>,
+                <div key="area" ref={ref(moveable, "areaElement")} className={AREA}></div>,
+                renderPieces(React),
             ];
         }
         if (!target || !dragArea) {
@@ -56,18 +60,15 @@ export default {
                 height: `${height}px`,
                 transformOrigin: "0 0",
                 transform,
-            }}>
-                <div className={AREA_PIECE}></div>
-                <div className={AREA_PIECE}></div>
-                <div className={AREA_PIECE}></div>
-                <div className={AREA_PIECE}></div>
-            </div>,
+            }}></div>,
+            renderPieces(React),
         ];
     },
-    dragStart(moveable: MoveableManager, { datas, clientX, clientY }: any) {
-        datas.isDrag = false;
+    dragStart(moveable: MoveableManager, { datas, clientX, clientY, inputEvent }: any) {
+        datas.isDragArea = false;
+        datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
-        const { left, top, width, height } = moveable.state.target!.getBoundingClientRect();
+        const { left, top, width, height } = moveable.state.clientRect;
         const posX = clientX - left;
         const posY = clientY - top;
         const rects = [
@@ -77,7 +78,7 @@ export default {
             { left: posX + 10, top: 0, width: width - posX - 10, height },
         ];
 
-        const children = [].slice.call(areaElement.children) as HTMLElement[];
+        const children = [].slice.call(areaElement.nextElementSibling!.children) as HTMLElement[];
         rects.forEach((rect, i) => {
             children[i].style.cssText
                 = `left: ${rect.left}px;top: ${rect.top}px; width: ${rect.width}px; height: ${rect.height}px;`;
@@ -85,21 +86,21 @@ export default {
         addClass(areaElement, AVOID);
     },
     drag(moveable: MoveableManager, { datas }: any) {
-        if (!datas.isDrag) {
-            datas.isDrag = true;
+        if (!datas.isDragArea) {
+            datas.isDragArea = true;
             restoreStyle(moveable);
         }
     },
     dragEnd(moveable: MoveableManager<DragAreaProps>, e: any) {
-        const { inputEvent, isDrag, datas } = e;
-        if (!datas.isDrag) {
+        const { inputEvent, isDragArea, datas } = e;
+        if (!datas.isDragArea) {
             restoreStyle(moveable);
         }
 
         const target = moveable.state.target!;
         const inputTarget = inputEvent.target;
 
-        if (isDrag || moveable.isMoveableElement(inputTarget)) {
+        if (isDragArea || moveable.isMoveableElement(inputTarget)) {
             return;
         }
         const containsTarget = target.contains(inputTarget);
@@ -120,14 +121,15 @@ export default {
         moveable: MoveableGroup,
         e: any,
     ) {
-        const { inputEvent, isDrag, datas } = e;
-        if (!datas.isDrag) {
+        const { inputEvent, isDragArea, datas } = e;
+
+        if (!isDragArea) {
             restoreStyle(moveable);
         }
-
+        const prevInputTarget = datas.inputTarget;
         const inputTarget = inputEvent.target;
 
-        if (isDrag || moveable.isMoveableElement(inputTarget)) {
+        if (isDragArea || moveable.isMoveableElement(inputTarget) || prevInputTarget === inputTarget) {
             return;
         }
         const targets = moveable.props.targets!;

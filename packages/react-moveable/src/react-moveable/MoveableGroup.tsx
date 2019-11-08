@@ -128,7 +128,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         this.updateAbles();
     }
 
-    public updateRect(type?: "Start" | "" | "End", isTarget?: boolean) {
+    public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         if (!this.controlBox) {
             return;
         }
@@ -148,7 +148,6 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
 
         // tslint:disable-next-line: max-line-length
         target.style.cssText += `left:0px;top:0px;width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`;
-
         state.width = width;
         state.height = height;
 
@@ -169,7 +168,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
                 left: left - info.left!,
                 top: top - info.top!,
             },
-            true,
+            isSetState,
         );
     }
     public triggerEvent(name: string, e: any): any {

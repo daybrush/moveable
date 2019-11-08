@@ -3,6 +3,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.10.0] - 2019-11-09
+### Added
+* Add `scrollable` props. #39
+    * Add `onScroll`, `onScrollGroup` event
+    * Add `scrollContainer` props
+    * Add `getScrollPosition` props
+* Add `currentTarget` and `inputEvent` on all events #74 #86
+* Add `setState` method #82
+* Add `getRect` method #71
+* Add `renderDirection` props #63
+* Add `className` props #53 #63
+* Add `onClick` event
+* Add `onRenderStart`, `onRender`, `onRenderEnd` events #52
+* Add `onRenderGroupStart`, `onRenderGroup`, `onRenderGroupEnd` events #52
+
+### Fixed
+* Fix target's boundingRect matrix caculation with scroll position
+* Fix problem where the ratio is not maintained with keepRatio #70
+* Fix that `el is undefined` #73
+* Fix `dragArea`'s caculation
+* Fix that `dragStart` method is not work with group
+* Fix that `clickGroup` event occurs when `dragStart` a mousedown target
+* Fix that Moveable is deleted when a single target is changed to multiple targets
+
 ## [0.9.8] - 2019-10-26
 ### Fixed
 * Fix that miscaculate static parent's offset position

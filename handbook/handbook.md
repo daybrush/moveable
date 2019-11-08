@@ -3,23 +3,29 @@
 This document explains how to use [moveable](https://github.com/daybrush/moveable).
 
 # Table of Contents
-  * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
-  * [Introduction](#toc-introduction)
-  * [Basic Support](#toc-support)
-  * [Ables](#toc-ables)
-      * [Draggable](#toc-draggable)
-      * [Resizable](#toc-resizable)
-      * [Scalable](#toc-scalable)
-      * [Rotatable](#toc-rotatable)
-      * [Warpable](#toc-warpable)
-      * [Pinchable](#toc-pinchable)
-      * [Snappable(Guidelines & Boundaries)](#toc-snappable)
-  * [How to use Group](#toc-group)
-    * [Group with Draggable](#toc-group-draggable)
-    * [Group with Resizable](#toc-group-resizable)
-    * [Group with Scalable](#toc-group-scalable)
-    * [Group with Rotatable](#toc-group-rotatable)
-  * [How to use custom css](#toc-custom-css)
+* [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
+* [Introduction](#toc-introduction)
+* [Basic Support](#toc-support)
+* [Events](#toc-events)
+* [Ables](#toc-ables)
+    * [Draggable](#toc-draggable)
+    * [Resizable](#toc-resizable)
+    * [Scalable](#toc-scalable)
+    * [Rotatable](#toc-rotatable)
+    * [Warpable](#toc-warpable)
+    * [Pinchable](#toc-pinchable)
+    * [Snappable(Guidelines & Boundaries)](#toc-snappable)
+    * [Scrollable](#toc-scrollable)
+* [How to use Group](#toc-group)
+* [Group with Draggable](#toc-group-draggable)
+* [Group with Resizable](#toc-group-resizable)
+* [Group with Scalable](#toc-group-scalable)
+* [Group with Rotatable](#toc-group-rotatable)
+* [How to use custom css](#toc-custom-css)
+    * [Show Partial ControlBox](#toc-directions)
+    * [Set className](#toc-classname)
+    * [Use important](#toc-important)
+    * [Moveable's Default CSS](#toc-defaultcss)
 
 
 # <a id="toc-introduction"></a>Introduction
@@ -47,6 +53,26 @@ If the transform overlaps from the root element to the parent element, the dista
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
 
+# <a id="toc-events></a> Events
+
+All events in moveable have the following properties by default:
+
+* **currentTarget**: An instance of Moveable that occur an event.
+* **target**: The target of the event where the MouseEvent or TouchEvent occurred.
+* **clientX**: The x coordinate where the MouseEvent or TouchEvent occurred.
+* **clientY**: The y coordinate where the MouseEvent or TouchEvent occurred.
+* **datas**: Information can be shared between the same event. (ex: `dragStart`, `drag`, `dragEnd`)
+* **inputEvent**: MouseEvent or TouchEvent source where the event occurred.
+```ts
+export interface OnEvent {
+    currentTarget: MoveableInterface;
+    target: HTMLElement | SVGElement;
+    clientX: number;
+    clientY: number;
+    datas: IObject<any>;
+    inputEvent: any;
+}
+```
 
 # <a id="toc-ables"></a>Ables
 You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
@@ -761,6 +787,7 @@ const moveable = new Moveable(document.body, {
     target: document.querySelector(".target"),
     snappable: true,
     snapThreshold: 5,
+    snapCenter: false,
     bounds: { left: 0, top: 0, bottom: 1000, right: 1000 },
     verticalGuidelines: [100, 200, 300],
     horizontalGuidelines: [0, 100, 200],
@@ -777,6 +804,7 @@ import Moveable from "react-moveable"; // preact-moveable
     target={document.querySelector(".target")}
     snappable={true}
     snapThreshold={5}
+    snapCenter={false}
     bounds={{ left: 0, top: 0, bottom: 1000, right: 1000 }}
     verticalGuidelines={[100, 200, 300]}
     horizontalGuidelines={[0, 100, 200]}
@@ -799,6 +827,7 @@ import {
     [target]="target"
     [snappable]="true"
     [bounds]="bounds"
+    [snapCenter]="false"
     [verticalGuidelines]="verticalGuidelines"
     [horizontalGuidelines]="horizontalGuidelines"
     [elementGuidelines]="elementGuidelines"
@@ -813,6 +842,97 @@ export class AppComponent {
 }
 ```
 
+
+## <a id="toc-scrollable"></a>Scrollable
+
+**Scrollable** indicates whether or not target can be scrolled to the scroll container (default: false)
+
+### Events
+* [onScroll](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scroll): When the drag cursor leaves the scrollContainer, the `scroll` event occur to scroll.
+* [onScrollGroup](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:scrollGroup): When the drag cursor leaves the scrollContainer, the `scrollGroup` event occur to scroll in group.
+
+### Options
+* [scrollContainer](https://daybrush.com/moveable/release/latest/doc/Moveable.html#scrollContainer): The container to which scroll is applied (default: container)
+* [scrollThreshold](https://daybrush.com/moveable/release/latest/doc/Moveable.html#scrollThreshold): Expand the range of the scroll check area. (default: 0)
+* [getScrollPosition](https://daybrush.com/moveable/release/latest/doc/Moveable.html#getScrollPosition): Sets a function to get the scroll position. (default: Function)
+
+
+### Vanilla Example
+
+```ts
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target"),
+    scrollable: true,
+    scrollContainer: document.body,
+    scrollThreshold: 0,
+    getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
+}).on("scroll", ({ scrollContainer, direction }) => {
+    scrollContainer.scrollLeft += direction[0] * 10;
+    scrollContainer.scrollTop += direction[1] * 10;
+}).on("scrollGroup", ({ scrollContainer, direction }) => {
+    scrollContainer.scrollLeft += direction[0] * 10;
+    scrollContainer.scrollTop += direction[1] * 10;
+});
+```
+
+### React & Preact Example
+
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+<Moveable
+    target={document.querySelector(".target")}
+    scrollable={true}
+    container={document.body}
+    scrollContainer={document.body}
+    scrollThreshold={0}
+    getScrollPosition={({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop])}
+    onScroll={({ scrollContainer, direction }) => {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }}
+    onScrollGroup={({ scrollContainer, direction }) => {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }}
+    />
+```
+
+
+### Angular Example
+```ts
+import {
+    NgxMoveableModule,
+    NgxMoveableComponent,
+} from "ngx-moveable";
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div #target class="target">target</div>
+<ngx-moveable
+    [target]="target"
+    [container]="container"
+    [scrollable]="true"
+    [scrollContainer]="container"
+    [scrollThreshold]="0"
+    [getScrollPosition]="getScrollPosition"
+    (scroll)="onScroll($event)"
+    (scrollGroup)="onScroll($event)"
+    />
+`,
+})
+export class AppComponent {
+    container = document.body;
+    getScrollPosition({ scrollContainer }) {
+        return [scrollContainer.scrollLeft, scrollContainer.scrollTop];
+    }
+    onScroll({ scrollContainer, direction }) {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }
+}
+```
 
 # <a id="toc-group"></a> How to use Group
 
@@ -1440,7 +1560,39 @@ export class AppComponent implements OnInit {
 
 # <a id="toc-custom-css"></a>✨ How to use custom CSS
 
-If you want to custom CSS, use **`!important`**.
+
+## <a id="toc-directions"></a>Show Partial Control Box
+### Options
+* [renderDirections](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:renderDirections) : Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+
+### Vanilla Example
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+});
+
+moveable.renderDirections = ["nw", "ne", "sw", "se"];
+```
+
+## <a id="toc-classname"></a>Set className
+### Options
+* [className](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:className) : You can specify the className of the moveable controlbox. (default: "")
+
+### Vanilla Example
+```ts
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+    className: "moveable1",
+});
+
+moveable.classname = "moveable2";
+```
+
+## <a id="toc-important"></a>Use important
+* If you want to custom CSS, use **`!important`**.
 
 ```css
 .moveable-control {
@@ -1451,7 +1603,8 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 
-## moveable-line
+## <a id="toc-defaultcss"></a>Moveable's Default CSS
+### moveable-line
 
 ```css
 .moveable-line {
@@ -1473,7 +1626,7 @@ If you want to custom CSS, use **`!important`**.
     transform-origin: 0.5px 39.5px;
 }
 ```
-## moveable-control
+### moveable-control
 
 ```css
 .moveable-control {
@@ -1492,7 +1645,7 @@ If you want to custom CSS, use **`!important`**.
 
 ![](../demo/images/control.png)
 
-## moveable-rotataion
+### moveable-rotataion
 
 ```css
 /* moveable-rotation */
@@ -1503,7 +1656,7 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 
-## moveable-origin
+### moveable-origin
 ```css
 .moveable-control.moveable-origin {
     border-color: #f55;
@@ -1516,7 +1669,7 @@ If you want to custom CSS, use **`!important`**.
 }
 ```
 
-## moveable-direction
+### moveable-direction
 
 ```css
 .moveable-direction.moveable-e, .moveable-direction.moveable-w {
@@ -1534,10 +1687,12 @@ If you want to custom CSS, use **`!important`**.
 ```
 
 
-## Default CSS
+### Default CSS
+
+* `rCS1cac4f3` is The hash value of the class name, which can be changed at any time.
 
 ```css
-.moveable-control-box {
+.rCS1cac4f3 {
 	position: fixed;
 	width: 0;
 	height: 0;
@@ -1545,15 +1700,14 @@ If you want to custom CSS, use **`!important`**.
 	top: 0;
 	z-index: 3000;
 }
-.moveable-control-box .moveable-control-box{
+.rCS1cac4f3 .moveable-control-box{
     z-index: 0;
 }
-.moveable-control-box .moveable-line,
-.moveable-control-box .moveable-control{
+.rCS1cac4f3 .moveable-line, .rCS1cac4f3 .moveable-control{
 	left: 0;
 	top: 0;
 }
-.moveable-control-box .moveable-control{
+.rCS1cac4f3 .moveable-control{
 	position: absolute;
 	width: 14px;
 	height: 14px;
@@ -1565,32 +1719,32 @@ If you want to custom CSS, use **`!important`**.
     margin-left: -7px;
     z-index: 10;
 }
-.moveable-control-box .moveable-line{
+.rCS1cac4f3 .moveable-line{
 	position: absolute;
 	width: 1px;
 	height: 1px;
 	background: #4af;
 	transform-origin: 0px 0.5px;
 }
-.moveable-control-box .moveable-line.moveable-rotation-line{
+.rCS1cac4f3 .moveable-line.moveable-rotation-line{
 	height: 40px;
 	width: 1px;
 	transform-origin: 0.5px 39.5px;
 }
-.moveable-control-box .moveable-line.moveable-rotation-line .moveable-control{
+.rCS1cac4f3 .moveable-line.moveable-rotation-line .moveable-control{
 	border-color: #4af;
 	background:#fff;
 	cursor: alias;
 }
-.moveable-control-box .moveable-line.moveable-vertical.moveable-bold{
+.rCS1cac4f3 .moveable-line.moveable-vertical.moveable-bold{
     width: 2px;
     margin-left: -1px;
 }
-.moveable-control-box .moveable-line.moveable-horizontal.moveable-bold{
+.rCS1cac4f3 .moveable-line.moveable-horizontal.moveable-bold{
     height: 2px;
     margin-top: -1px;
 }
-.moveable-control-box .moveable-control.moveable-origin{
+.rCS1cac4f3 .moveable-control.moveable-origin{
 	border-color: #f55;
 	background: #fff;
 	width: 12px;
@@ -1599,47 +1753,46 @@ If you want to custom CSS, use **`!important`**.
 	margin-left: -6px;
 	pointer-events: none;
 }
-.moveable-control-box .moveable-direction.moveable-e,
-.moveable-control-box .moveable-direction.moveable-w{
+.rCS1cac4f3 .moveable-direction.moveable-e,
+.rCS1cac4f3 .moveable-direction.moveable-w{
 	cursor: ew-resize;
 }
-.moveable-control-box .moveable-direction.moveable-s,
-.moveable-control-box .moveable-direction.moveable-n{
+.rCS1cac4f3 .moveable-direction.moveable-s,
+.rCS1cac4f3 .moveable-direction.moveable-n{
 	cursor: ns-resize;
 }
-.moveable-control-box .moveable-direction.moveable-nw,
-.moveable-control-box .moveable-direction.moveable-se, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-ne, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-sw{
+.rCS1cac4f3 .moveable-direction.moveable-nw,
+.rCS1cac4f3 .moveable-direction.moveable-se,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-ne,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-sw {
 	cursor: nwse-resize;
 }
-.moveable-control-box .moveable-direction.moveable-ne,
-.moveable-control-box .moveable-direction.moveable-sw, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-nw, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-se{
+.rCS1cac4f3 .moveable-direction.moveable-ne,
+.rCS1cac4f3 .moveable-direction.moveable-sw,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-nw,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-se {
 	cursor: nesw-resize;
 }
-.moveable-control-box .moveable-group{
+.rCS1cac4f3 .moveable-group{
     z-index: -1;
 }
-.moveable-control-box .moveable-area{
+.rCS1cac4f3 .moveable-area{
     position: absolute;
 }
-.moveable-control-box .moveable-area.moveable-avoid,
-.moveable-control-box .moveable-area.moveable-avoid:before,
-.moveable-control-box .moveable-area.moveable-avoid:after{
-    transform-origin: 50% calc(100% + 20px);
-}
-.moveable-control-box .moveable-area.moveable-avoid:before,
-.moveable-control-box .moveable-area.moveable-avoid:after{
-    content: "";
-    top: 0px;
-    left: 0px;
+.rCS1cac4f3 .moveable-area-pieces{
     position: absolute;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
 }
-.moveable-control-box .moveable-area.moveable-avoid:before{
-    transform: rotate(120deg);
+.rCS1cac4f3 .moveable-area.moveable-avoid{
+    pointer-events: none;
 }
-.moveable-control-box .moveable-area.moveable-avoid:after{
-    transform: rotate(-120deg);
+.rCS1cac4f3 .moveable-area.moveable-avoid+.moveable-area-pieces {
+    display: block;
+}
+.rCS1cac4f3 .moveable-area-piece{
+    position: absolute;
 }
 
 

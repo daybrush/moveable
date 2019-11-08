@@ -12,14 +12,17 @@ function triggerAble<T extends IObject<any>>(
     eventType: any,
     e: OnDragStart | OnDrag | OnDragEnd | OnPinchEnd,
 ) {
+    const isStart = eventType === "Start";
+
+    if (isStart && eventAffix.indexOf("Control") > -1 && moveable.areaElement === e.inputEvent.target) {
+        return false;
+    }
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
-
-    const isStart = eventType === "Start";
     const isEnd = eventType === "End";
 
     if (isStart) {
-        moveable.updateTarget(eventType);
+        moveable.updateRect(eventType, true, false);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
@@ -34,11 +37,11 @@ function triggerAble<T extends IObject<any>>(
     const isUpdate = results.length;
 
     if (isStart) {
-        triggerRenderStart(moveable, eventAffix, e);
+        triggerRenderStart(moveable, isGroup, e);
     } else if (isEnd) {
-        triggerRenderEnd(moveable, eventAffix, e);
+        triggerRenderEnd(moveable, isGroup, e);
     } else {
-        triggerRender(moveable, eventAffix, e);
+        triggerRender(moveable, isGroup, e);
     }
     if (isEnd) {
         moveable.state.dragger = null;
@@ -58,7 +61,6 @@ export function getAbleDragger<T>(
     target: HTMLElement | SVGElement,
     ableType: string,
     eventAffix: string,
-
 ) {
     const options: IObject<any> = {
         container: window,

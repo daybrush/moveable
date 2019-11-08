@@ -142,9 +142,6 @@ export default {
         }));
         return isDrag;
     },
-    dragGroupCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, AREA);
-    },
     dragGroupStart(moveable: MoveableGroup, e: any) {
         const datas = e.datas;
 
