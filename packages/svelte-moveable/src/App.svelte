@@ -1,10 +1,14 @@
 <script>
   import Moveable from "./Moveable.svelte";
+  import { onMount } from "svelte";
   import { Frame } from "scenejs";
+  import keycon from "keycon";
   export let name;
 
+  const KeyController = keycon.setGlobal();
   const frameMap = new Map();
-  let target = [];
+  let targets = [];
+  let moveable;
 
   function handleDrag() {
     console.log(1);
@@ -14,6 +18,8 @@
       transform: {
         translateX: "0px",
         translateY: "0px",
+        scaleX: 1,
+        scaleY: 1,
       },
     });
 
@@ -24,11 +30,10 @@
   function getFrame(target) {
     return frameMap.get(target) || newFrame(target);
   }
-  function render({ target }) {
-    console.log("?");
+  function onRender({ target }) {
     target.style.cssText += getFrame(target).toCSS();
   }
-  function dragStart({ target, set }) {
+  function onDragStart({ target, set }) {
     const frame = getFrame(target);
 
     set([
@@ -36,19 +41,42 @@
       parseFloat(frame.get("transform", "translateY")),
     ]);
   }
-  function resize({ target, width, height }) {
+  function onScaleStart({ target, dragStart, set }) {
+    const frame = getFrame(target);
+    set([
+      frame.get("transform", "scaleX"),
+      frame.get("transform", "scaleY"),
+    ]);
+    dragStart && onDragStart(dragStart);
+  }
+  function onScale({ target, scale, drag }) {
     const frame = getFrame(target);
 
-console.log(target, width, height);
-    frame.set("width", `${width}px`);
-    frame.set("height", `${height}px`);
+    frame.set("transform", "scaleX", scale[0]);
+    frame.set("transform", "scaleY", scale[1]);
+
+    onDrag(drag);
   }
-  function drag({ target, beforeTranslate }) {
+  function onDrag({ target, beforeTranslate }) {
     const frame = getFrame(target);
 
     frame.set("transform", "translateX", `${beforeTranslate[0]}px`);
     frame.set("transform", "translateY", `${beforeTranslate[1]}px`);
   }
+  function onMouseDown(e) {
+    const target = e.target;
+    if (
+      target === document.body
+      || moveable.isMoveableElement(target)
+      || targets.indexOf(target) > -1
+    ) {
+      return;
+    }
+    targets = [...targets, target];
+  }
+  onMount(() => {
+    targets = [document.querySelector(".target")];
+  });
 </script>
 
 <style>
@@ -77,24 +105,29 @@ console.log(target, width, height);
     width: 80px;
   }
 </style>
-
+<svelte:body on:mousedown={onMouseDown} />
 <Moveable
-  {target}
+  bind:this={moveable}
+  target={targets}
   draggable={true}
-  resizable={true}
+  scalable={true}
   on:dragStart={({ detail }) => {
-    dragStart(detail);
+    onDragStart(detail);
   }}
   on:drag={({ detail }) => {
-    drag(detail);
+    onDrag(detail);
   }}
-  on:resize={({ detail }) => {
-    resize(detail);
+  on:scaleStart={({ detail }) => {
+    onScaleStart(detail);
+  }}
+  on:scale={({ detail }) => {
+    onScale(detail);
   }}
   on:render={({ detail }) => {
-    render(detail);
+    onRender(detail);
   }}
   />
-<div class="target" bind:this={target[0]}>T1</div>
-<!-- <div class="target" bind:this={target[1]}>T2</div>
-<div class="target" bind:this={target[2]}>T3</div> -->
+
+<div class="target">T1</div>
+<div class="target">T2</div>
+<div class="target">T3</div>
