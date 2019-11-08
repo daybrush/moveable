@@ -1686,8 +1686,10 @@ moveable.classname = "moveable2";
 
 ### Default CSS
 
+* `rCS1cac4f3` is The hash value of the class name, which can be changed at any time.
+
 ```css
-.moveable-control-box {
+.rCS1cac4f3 {
 	position: fixed;
 	width: 0;
 	height: 0;
@@ -1695,15 +1697,14 @@ moveable.classname = "moveable2";
 	top: 0;
 	z-index: 3000;
 }
-.moveable-control-box .moveable-control-box{
+.rCS1cac4f3 .moveable-control-box{
     z-index: 0;
 }
-.moveable-control-box .moveable-line,
-.moveable-control-box .moveable-control{
+.rCS1cac4f3 .moveable-line, .rCS1cac4f3 .moveable-control{
 	left: 0;
 	top: 0;
 }
-.moveable-control-box .moveable-control{
+.rCS1cac4f3 .moveable-control{
 	position: absolute;
 	width: 14px;
 	height: 14px;
@@ -1715,32 +1716,32 @@ moveable.classname = "moveable2";
     margin-left: -7px;
     z-index: 10;
 }
-.moveable-control-box .moveable-line{
+.rCS1cac4f3 .moveable-line{
 	position: absolute;
 	width: 1px;
 	height: 1px;
 	background: #4af;
 	transform-origin: 0px 0.5px;
 }
-.moveable-control-box .moveable-line.moveable-rotation-line{
+.rCS1cac4f3 .moveable-line.moveable-rotation-line{
 	height: 40px;
 	width: 1px;
 	transform-origin: 0.5px 39.5px;
 }
-.moveable-control-box .moveable-line.moveable-rotation-line .moveable-control{
+.rCS1cac4f3 .moveable-line.moveable-rotation-line .moveable-control{
 	border-color: #4af;
 	background:#fff;
 	cursor: alias;
 }
-.moveable-control-box .moveable-line.moveable-vertical.moveable-bold{
+.rCS1cac4f3 .moveable-line.moveable-vertical.moveable-bold{
     width: 2px;
     margin-left: -1px;
 }
-.moveable-control-box .moveable-line.moveable-horizontal.moveable-bold{
+.rCS1cac4f3 .moveable-line.moveable-horizontal.moveable-bold{
     height: 2px;
     margin-top: -1px;
 }
-.moveable-control-box .moveable-control.moveable-origin{
+.rCS1cac4f3 .moveable-control.moveable-origin{
 	border-color: #f55;
 	background: #fff;
 	width: 12px;
@@ -1749,47 +1750,46 @@ moveable.classname = "moveable2";
 	margin-left: -6px;
 	pointer-events: none;
 }
-.moveable-control-box .moveable-direction.moveable-e,
-.moveable-control-box .moveable-direction.moveable-w{
+.rCS1cac4f3 .moveable-direction.moveable-e,
+.rCS1cac4f3 .moveable-direction.moveable-w{
 	cursor: ew-resize;
 }
-.moveable-control-box .moveable-direction.moveable-s,
-.moveable-control-box .moveable-direction.moveable-n{
+.rCS1cac4f3 .moveable-direction.moveable-s,
+.rCS1cac4f3 .moveable-direction.moveable-n{
 	cursor: ns-resize;
 }
-.moveable-control-box .moveable-direction.moveable-nw,
-.moveable-control-box .moveable-direction.moveable-se, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-ne, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-sw{
+.rCS1cac4f3 .moveable-direction.moveable-nw,
+.rCS1cac4f3 .moveable-direction.moveable-se,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-ne,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-sw {
 	cursor: nwse-resize;
 }
-.moveable-control-box .moveable-direction.moveable-ne,
-.moveable-control-box .moveable-direction.moveable-sw, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-nw, .rCSw4d7my.moveable-reverse .moveable-direction.moveable-se{
+.rCS1cac4f3 .moveable-direction.moveable-ne,
+.rCS1cac4f3 .moveable-direction.moveable-sw,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-nw,
+.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-se {
 	cursor: nesw-resize;
 }
-.moveable-control-box .moveable-group{
+.rCS1cac4f3 .moveable-group{
     z-index: -1;
 }
-.moveable-control-box .moveable-area{
+.rCS1cac4f3 .moveable-area{
     position: absolute;
 }
-.moveable-control-box .moveable-area.moveable-avoid,
-.moveable-control-box .moveable-area.moveable-avoid:before,
-.moveable-control-box .moveable-area.moveable-avoid:after{
-    transform-origin: 50% calc(100% + 20px);
-}
-.moveable-control-box .moveable-area.moveable-avoid:before,
-.moveable-control-box .moveable-area.moveable-avoid:after{
-    content: "";
-    top: 0px;
-    left: 0px;
+.rCS1cac4f3 .moveable-area-pieces{
     position: absolute;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    left: 0;
+    display: none;
 }
-.moveable-control-box .moveable-area.moveable-avoid:before{
-    transform: rotate(120deg);
+.rCS1cac4f3 .moveable-area.moveable-avoid{
+    pointer-events: none;
 }
-.moveable-control-box .moveable-area.moveable-avoid:after{
-    transform: rotate(-120deg);
+.rCS1cac4f3 .moveable-area.moveable-avoid+.moveable-area-pieces {
+    display: block;
+}
+.rCS1cac4f3 .moveable-area-piece{
+    position: absolute;
 }
 
 
