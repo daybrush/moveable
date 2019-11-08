@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `onClick` event
 * Add `onRenderStart`, `onRender`, `onRenderEnd` events #52
 * Add `onRenderGroupStart`, `onRenderGroup`, `onRenderGroupEnd` events #52
+* Add `warp` in top, right, bottom and left directions.
 
 ### Fixed
 * Fix target's boundingRect matrix caculation with scroll position
