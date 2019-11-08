@@ -787,6 +787,7 @@ const moveable = new Moveable(document.body, {
     target: document.querySelector(".target"),
     snappable: true,
     snapThreshold: 5,
+    snapCenter: false,
     bounds: { left: 0, top: 0, bottom: 1000, right: 1000 },
     verticalGuidelines: [100, 200, 300],
     horizontalGuidelines: [0, 100, 200],
@@ -803,6 +804,7 @@ import Moveable from "react-moveable"; // preact-moveable
     target={document.querySelector(".target")}
     snappable={true}
     snapThreshold={5}
+    snapCenter={false}
     bounds={{ left: 0, top: 0, bottom: 1000, right: 1000 }}
     verticalGuidelines={[100, 200, 300]}
     horizontalGuidelines={[0, 100, 200]}
@@ -825,6 +827,7 @@ import {
     [target]="target"
     [snappable]="true"
     [bounds]="bounds"
+    [snapCenter]="false"
     [verticalGuidelines]="verticalGuidelines"
     [horizontalGuidelines]="horizontalGuidelines"
     [elementGuidelines]="elementGuidelines"
