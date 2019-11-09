@@ -110,7 +110,7 @@ class Moveable extends EgComponent implements MoveableInterface {
         this.getMoveable().updateRect();
     }
     /**
-     * You can move the Moveable through the external `MouseEvent`or `TouchEvent`.
+     * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
      * @param - external `MouseEvent`or `TouchEvent`
      * @example
      * import Moveable from "moveable";

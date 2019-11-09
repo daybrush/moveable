@@ -7,6 +7,7 @@ This document explains how to use [moveable](https://github.com/daybrush/moveabl
 * [Introduction](#toc-introduction)
 * [Basic Support](#toc-support)
 * [Events](#toc-events)
+
 * [Ables](#toc-ables)
     * [Draggable](#toc-draggable)
     * [Resizable](#toc-resizable)
@@ -21,6 +22,7 @@ This document explains how to use [moveable](https://github.com/daybrush/moveabl
 * [Group with Resizable](#toc-group-resizable)
 * [Group with Scalable](#toc-group-scalable)
 * [Group with Rotatable](#toc-group-rotatable)
+* [When the event starts while changing the target](#toc-change-target)
 * [How to use custom css](#toc-custom-css)
     * [Show Partial ControlBox](#toc-directions)
     * [Set className](#toc-classname)
@@ -1557,6 +1559,78 @@ export class AppComponent implements OnInit {
     }
 }
 ```
+# <a id="toc-change-target></a> When the event starts while changing the target
+
+### methods
+* [dragStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#dragStart): You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
+* [setState](https://daybrush.com/moveable/release/latest/doc/Moveable.html#setState): You can change options or properties dynamically.
+
+### Vanilla Exmaple
+```js
+import Moveable from "moveable";
+
+
+const moveable = new Moveable(document.body, {
+    target: document.querySelector(".target1");
+});
+
+window.addEventListener("mousedown", e => {
+    moveable.setState({
+        target: e.target,
+    }, () => {
+        moveable.dragStart(e);
+    });
+});
+```
+
+### React, Preact
+```tsx
+import Moveable from "react-moveable"; // preact-moveable
+
+<div onMouseDown={onMouseDown}></div>
+<Moveable ref={e => { this.moveable = e; }} target={this.state.target} />
+
+onMouseDown(e) {
+    // Use nativeEvent if you are using react event handling
+    const nativeEvent = e.nativeEvent
+
+    this.setState({
+        target: nativeEvent.target,
+    }, () => {
+        this.moveable.dragStart(nativeEvent);
+    });
+}
+```
+
+### Angular
+```tsx
+
+@Component({
+    selector: 'AppComponent',
+    template: `
+<div (mousedown)="onMouseDown($event)">
+    <div class="target">target</div>
+    <div class="target">target2</div>
+</div>
+<ngx-moveable
+    #moveable
+    [target]="target"
+    />
+`,
+})
+export class AppComponent {
+    targert = null;
+    @ViewChild('moveable', { static: false })  moveable;
+    onMouseDown(e) {
+        this.target = e.target;
+        setTimeout(() => {
+            this.moveable.ngDragStart(e);
+        });
+    }
+}
+```
+
+### Vanilla Example
 
 # <a id="toc-custom-css"></a>✨ How to use custom CSS
 
