@@ -13,10 +13,11 @@ import Moveable, {
   OnResizeGroupStart, OnScaleGroupEnd, OnResizeGroupEnd,
   OnRotateStart, OnRotate, OnRotateEnd, OnRotateGroupStart,
   OnRotateGroup, OnRotateGroupEnd, OnPinch, OnPinchEnd,
-  OnPinchStart, OnPinchGroupStart, OnPinchGroup, OnPinchGroupEnd, OnClickGroup,
+  OnPinchStart, OnPinchGroupStart, OnPinchGroup, OnPinchGroupEnd, OnClickGroup, OnClick,
+  OnScrollGroup, OnScroll, OnRenderGroupEnd, OnRenderGroup, OnRenderGroupStart, OnRenderEnd, OnRenderStart, OnRender,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
-import { NgxMoveableInterface } from './types';
+import { NgxMoveableInterface, NgxMoveableEvents } from './types';
 
 
 // type NgxMoveableEmitter = {
@@ -32,7 +33,7 @@ import { NgxMoveableInterface } from './types';
   template: '',
 })
 export class NgxMoveableComponent
-  implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableInterface {
+  implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableInterface, NgxMoveableEvents {
   @Input() public draggable!: boolean;
   @Input() public resizable!: boolean;
   @Input() public scalable!: boolean;
@@ -59,21 +60,40 @@ export class NgxMoveableComponent
   @Input() public dragArea!: boolean;
   @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
 
+  @Input() public className!: string;
+  @Input() public renderDirections!: string[];
+  @Input() public scrollable!: boolean;
+  @Input() public scrollContainer!: HTMLElement;
+  @Input() public scrollThreshold!: number;
+  @Input() public getScrollPosition!: MoveableOptions['getScrollPosition'];
+
   @Output() public dragStart!: EventEmitter<OnDragStart>;
   @Output() public drag!: EventEmitter<OnDrag>;
   @Output() public dragEnd!: EventEmitter<OnDragEnd>;
+  @Output() public dragGroupStart!: EventEmitter<OnDragGroupStart>;
+  @Output() public dragGroup!: EventEmitter<OnDragGroup>;
+  @Output() public dragGroupEnd!: EventEmitter<OnDragGroupEnd>;
 
   @Output() public resizeStart!: EventEmitter<OnResizeStart>;
   @Output() public resize!: EventEmitter<OnResize>;
   @Output() public resizeEnd!: EventEmitter<OnResizeEnd>;
+  @Output() public resizeGroupStart!: EventEmitter<OnResizeGroupStart>;
+  @Output() public resizeGroup!: EventEmitter<OnResizeGroup>;
+  @Output() public resizeGroupEnd!: EventEmitter<OnResizeGroupEnd>;
 
   @Output() public scaleStart!: EventEmitter<OnScaleStart>;
   @Output() public scale!: EventEmitter<OnScale>;
   @Output() public scaleEnd!: EventEmitter<OnScaleEnd>;
+  @Output() public scaleGroupStart!: EventEmitter<OnScaleGroupStart>;
+  @Output() public scaleGroup!: EventEmitter<OnScaleGroup>;
+  @Output() public scaleGroupEnd!: EventEmitter<OnScaleGroupEnd>;
 
   @Output() public rotateStart!: EventEmitter<OnRotateStart>;
   @Output() public rotate!: EventEmitter<OnRotate>;
   @Output() public rotateEnd!: EventEmitter<OnRotateEnd>;
+  @Output() public rotateGroupStart!: EventEmitter<OnRotateGroupStart>;
+  @Output() public rotateGroup!: EventEmitter<OnRotateGroup>;
+  @Output() public rotateGroupEnd!: EventEmitter<OnRotateGroupEnd>;
 
   @Output() public warpStart!: EventEmitter<OnWarpStart>;
   @Output() public warp!: EventEmitter<OnWarp>;
@@ -82,28 +102,22 @@ export class NgxMoveableComponent
   @Output() public pinchStart!: EventEmitter<OnPinchStart>;
   @Output() public pinch!: EventEmitter<OnPinch>;
   @Output() public pinchEnd!: EventEmitter<OnPinchEnd>;
-
-  @Output() public dragGroupStart!: EventEmitter<OnDragGroupStart>;
-  @Output() public dragGroup!: EventEmitter<OnDragGroup>;
-  @Output() public dragGroupEnd!: EventEmitter<OnDragGroupEnd>;
-
-  @Output() public resizeGroupStart!: EventEmitter<OnResizeGroupStart>;
-  @Output() public resizeGroup!: EventEmitter<OnResizeGroup>;
-  @Output() public resizeGroupEnd!: EventEmitter<OnResizeGroupEnd>;
-
-  @Output() public scaleGroupStart!: EventEmitter<OnScaleGroupStart>;
-  @Output() public scaleGroup!: EventEmitter<OnScaleGroup>;
-  @Output() public scaleGroupEnd!: EventEmitter<OnScaleGroupEnd>;
-
-  @Output() public rotateGroupStart!: EventEmitter<OnRotateGroupStart>;
-  @Output() public rotateGroup!: EventEmitter<OnRotateGroup>;
-  @Output() public rotateGroupEnd!: EventEmitter<OnRotateGroupEnd>;
-
   @Output() public pinchGroupStart!: EventEmitter<OnPinchGroupStart>;
   @Output() public pinchGroup!: EventEmitter<OnPinchGroup>;
   @Output() public pinchGroupEnd!: EventEmitter<OnPinchGroupEnd>;
 
+  @Output() public click!: EventEmitter<OnClick>;
   @Output() public clickGroup!: EventEmitter<OnClickGroup>;
+
+  @Output() public renderStart!: EventEmitter<OnRenderStart>;
+  @Output() public render!: EventEmitter<OnRender>;
+  @Output() public renderEnd!: EventEmitter<OnRenderEnd>;
+  @Output() public renderGroupStart!: EventEmitter<OnRenderGroupStart>;
+  @Output() public renderGroup!: EventEmitter<OnRenderGroup>;
+  @Output() public renderGroupEnd!: EventEmitter<OnRenderGroupEnd>;
+
+  @Output() public scroll!: EventEmitter<OnScroll>;
+  @Output() public scrollGroup!: EventEmitter<OnScrollGroup>;
 
 
   private moveable!: Moveable;
@@ -146,6 +160,9 @@ export class NgxMoveableComponent
   ngOnDestroy() {
     this.moveable.destroy();
   }
+  ngDragStart(e: MouseEvent | TouchEvent) {
+    this.moveable.dragStart(e);
+  }
   isMoveableElement(target: HTMLElement | SVGElement) {
     return this.moveable.isMoveableElement(target);
   }
@@ -157,6 +174,9 @@ export class NgxMoveableComponent
   }
   getRect() {
     return this.moveable.getRect();
+  }
+  setState(state: any, callback: () => any) {
+    this.moveable.setState(state, callback);
   }
   isInside(clientX: number, clientY: number) {
     return this.moveable.isInside(clientX, clientY);
