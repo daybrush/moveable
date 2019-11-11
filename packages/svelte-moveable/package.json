@@ -53,12 +53,13 @@
     "scenejs": "^1.1.5",
     "sirv-cli": "^0.4.4",
     "svelte": "^3.0.0",
+    "svelte-guides": "^0.1.1",
     "svelte-preprocess": "^3.2.2",
     "tslib": "^1.10.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "moveable": "^0.10.0-rc8"
+    "moveable": "^0.10.0"
   },
   "scripts": {
     "build": "rollup -c rollup.build.config.js",
