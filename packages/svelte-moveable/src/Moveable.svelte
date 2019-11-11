@@ -4,7 +4,7 @@
     EVENTS,
     MoveableOptions
   } from "moveable";
-  import { camelize } from "@daybrush/utils";
+  import { camelize, isUndefined } from "@daybrush/utils";
 
   import {
     onMount,
@@ -30,7 +30,7 @@
         (options as any)[name] = props[name];
       }
     });
-    container = options.container;
+    container = options.container || $$props.container;
 
     if (moveable) {
       tick().then(() => {
@@ -44,8 +44,10 @@
     EVENTS.forEach(name => {
       const onName = camelize(`on ${name}`);
       moveable.on(name, e => {
-        $$props[onName] && $$props[onName](e);
-        dispatch(name, e);
+        const result = $$props[onName] && $$props[onName](e);
+        const result2 = dispatch(name, e);
+
+        return !isUndefined(result) ? result : (!isUndefined(result2) ? result2 : undefined);
       });
     });
   });
