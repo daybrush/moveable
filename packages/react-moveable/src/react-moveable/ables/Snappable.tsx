@@ -813,6 +813,7 @@ export default {
         const {
             top: targetTop,
             left: targetLeft,
+            pos1, pos2, pos3, pos4,
             snapDirection,
             clientRect,
             containerRect,
@@ -820,8 +821,8 @@ export default {
 
         const clientLeft = clientRect.left - containerRect.left;
         const clientTop = clientRect.top - containerRect.top;
-
-        // console.log(targetLeft, targetTop);
+        const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
+        const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
 
         if (!snapDirection || !hasGuidelines(moveable, "")) {
             return [];
@@ -876,7 +877,7 @@ export default {
                     "target",
                     "bold",
                 )} key={`verticalTargetGuidline${i}`} style={{
-                    top: `${0}px`,
+                    top: `${minTop}px`,
                     left: `${-targetLeft + pos}px`,
                     height: `${height}px`,
                 }} />;
@@ -890,7 +891,7 @@ export default {
                     "bold",
                 )} key={`horizontalTargetGuidline${i}`} style={{
                     top: `${-targetTop + pos}px`,
-                    left: `${0}px`,
+                    left: `${minLeft}px`,
                     width: `${width}px`,
                 }} />;
             }),
@@ -903,7 +904,7 @@ export default {
                     "guideline",
                     element ? "bold" : "",
                 )} key={`verticalGuidline${i}`} style={{
-                    top: `${-clientTop + pos[1]}px`,
+                    top: `${minTop - clientTop + pos[1]}px`,
                     left: `${-targetLeft + pos[0]}px`,
                     height: `${size}px`,
                 }} />;
@@ -918,7 +919,7 @@ export default {
                     element ? "bold" : "",
                 )} key={`horizontalGuidline${i}`} style={{
                     top: `${-targetTop + pos[1]}px`,
-                    left: `${-clientLeft + pos[0]}px`,
+                    left: `${minLeft - clientLeft + pos[0]}px`,
                     width: `${size}px`,
                 }} />;
             }),

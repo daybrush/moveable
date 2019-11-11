@@ -38,6 +38,7 @@ img {
     overflow: scroll;
     top: 100px;
     height: 800px;
+    border: 1px solid #f55;
 }
 .App {
     /* overflow: scroll;

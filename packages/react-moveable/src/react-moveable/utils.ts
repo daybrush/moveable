@@ -627,7 +627,7 @@ export function getTargetInfo(
 
         clientRect = getClientRect(target);
         containerRect = getClientRect(
-            getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body.offsetParent,
+            getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
         );
     }
 
