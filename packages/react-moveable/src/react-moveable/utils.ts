@@ -553,6 +553,7 @@ export function getSize(
 export function getTargetInfo(
     target?: HTMLElement | SVGElement,
     container?: HTMLElement | SVGElement | null,
+    parentContainer?: HTMLElement | SVGElement | null,
     state?: Partial<MoveableManagerState> | false | undefined,
 ): Partial<MoveableManagerState> {
     let left = 0;
@@ -625,7 +626,9 @@ export function getTargetInfo(
         ];
 
         clientRect = getClientRect(target);
-        containerRect = getClientRect(getOffsetInfo(container, container, true).offsetParent || document.body);
+        containerRect = getClientRect(
+            getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body.offsetParent,
+        );
     }
 
     return {
@@ -781,8 +784,7 @@ export function triggerEvent<T extends IObject<any>, U extends keyof T>(
     name: U & string,
     params: T[U] extends ((e: infer P) => any) | undefined ? P : {},
 ): any {
-    return moveable.triggerEvent(name,  params);
-
+    return moveable.triggerEvent(name, params);
 }
 
 export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: string | null) {

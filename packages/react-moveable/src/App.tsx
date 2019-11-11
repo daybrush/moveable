@@ -57,20 +57,29 @@ class App extends React.Component {
                     // keepRatio={false}
                     target={this.state.targets}
                     origin={true}
-                    // snappable={true}
-                    verticalGuidelines={[100.5, 200.5, 400, 500]}
+                    snappable={true}
+                    verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     throttleRotate={30}
                     onDragGroupStart={e => {
                         console.log("start", e);
+
+                        e.events.forEach(ev => {
+                            const groupItem = this.itemMap.get(ev.target)!;
+
+                            ev.set([
+                                parseFloat(groupItem.get("tx")),
+                                parseFloat(groupItem.get("ty")),
+                            ]);
+                        });
                     }}
                     onDragGroup={e => {
                         // console.log(e.beforeDelta);
 
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
-                            groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.beforeDelta[0]}px`);
-                            groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.beforeDelta[1]}px`);
+                            groupItem.set("tx", `${ev.beforeTranslate[0]}px`);
+                            groupItem.set("ty", `${ev.beforeTranslate[1]}px`);
 
                             ev.target.style.cssText += groupItem.toCSS();
                         });
@@ -158,7 +167,7 @@ class App extends React.Component {
                     // renderDirections={["n", "ne", "nw"]}
                     elementGuidelines={[document.querySelector(".box1 span")!, document.querySelector(".emo img")!]}
                     snapCenter={false}
-                    snapThreshold={10}
+                    // snapThreshold={10}
                     // scalable={!isResizable}
                     // scalable={true}
                     resizable={isResizable}

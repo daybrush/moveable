@@ -5,9 +5,7 @@ import MoveableManager from "../MoveableManager";
 import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, OnDragStart, OnDragEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
-import { hasClass } from "@daybrush/utils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
-import { AREA } from "../classNames";
 
 export default {
     name: "draggable",
@@ -83,6 +81,8 @@ export default {
             distX -= verticalInfo.offset;
             distY -= horizontalInfo.offset;
         }
+        datas.passDistX = distX;
+        datas.passDistY = distY;
         const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
         const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
 
@@ -167,8 +167,9 @@ export default {
         if (!datas.isDrag) {
             return;
         }
-        const events = triggerChildAble(moveable, this, "drag", datas, e);
         const params = this.drag(moveable, e);
+        const { passDistX, passDistY } = e.datas;
+        const events = triggerChildAble(moveable, this, "drag", datas, { ...e, distX: passDistX, distY: passDistY });
 
         if (!params) {
             return;

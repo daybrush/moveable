@@ -11,7 +11,7 @@ import {
     OnRotateGroup, OnRotateGroupEnd, OnPinchGroupStart,
     OnPinchGroup, OnPinchGroupEnd, OnClickGroup, OnRenderStart,
     OnRender, OnRenderEnd, OnScroll, OnScrollGroup, OnRenderGroupStart,
-    OnRenderGroup, OnRenderGroupEnd, OnClick,
+    OnRenderGroup, OnRenderGroupEnd, OnClick, Able,
 } from "react-moveable/declaration/types";
 
 /**
@@ -24,7 +24,8 @@ import {
  * @property - Whether or not target can be warped. (default: false)
  * @property - Whether or not target can be pinched with draggable, resizable, scalable, rotatable. (default: false)
  * @property - Whether or not target can be snapped to the guideline. (default: false)
- * @property - Whether or not the origin controlbox will be visible or not (default: false)
+ * @property - You can add your custom able. (default: [])
+ * @property - Whether or not the origin control box will be visible or not (default: false)
  * @property - You can specify the className of the moveable controlbox. (default: "")
  * @property - The target(s) to indicate Moveable Control Box. (default: true)
  * @property - Moveable Container. (default: parentElement)
@@ -59,6 +60,7 @@ export interface MoveableOptions {
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
     snappable?: boolean | string[];
 
+    ables?: Able[];
     origin?: boolean;
     className?: string;
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement>;

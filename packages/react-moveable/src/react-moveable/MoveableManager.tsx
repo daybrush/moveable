@@ -142,9 +142,9 @@ export default class MoveableManager<T = {}, U = {}>
         const parentMoveable = this.props.parentMoveable;
         const state = this.state;
         const target = (state.target || this.props.target) as HTMLElement | SVGElement;
-
+        const container = this.getContainer();
         this.updateState(
-            getTargetInfo(target, this.getContainer(), isTarget ? state : undefined),
+            getTargetInfo(target, container, container, isTarget ? state : undefined),
             parentMoveable ? false : isSetState,
         );
     }
