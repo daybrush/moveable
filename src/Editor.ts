@@ -187,6 +187,8 @@ KeyContoller.global.on("keydown", ({ shiftKey }) => {
 window.addEventListener("resize", () => {
     refreshGuidelines();
     moveable.updateRect();
+    guides1.resize();
+    guides2.resize();
 });
 
 document.body.addEventListener("gesturestart", e => {
