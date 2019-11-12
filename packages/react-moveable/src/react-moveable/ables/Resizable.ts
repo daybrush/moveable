@@ -166,8 +166,8 @@ export default {
                 }
             }
         }
-        let nextWidth = direction[0] ? Math.max(offsetWidth + distWidth, 0) : offsetWidth;
-        let nextHeight = direction[1] ? Math.max(offsetHeight + distHeight, 0) : offsetHeight;
+        let nextWidth = direction[0] || keepRatio ? Math.max(offsetWidth + distWidth, 0) : offsetWidth;
+        let nextHeight = direction[1] || keepRatio ? Math.max(offsetHeight + distHeight, 0) : offsetHeight;
 
         let snapDist = [0, 0];
 

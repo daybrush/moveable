@@ -162,6 +162,11 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         info.origin = plus(pos, info.origin!);
         info.beforeOrigin = plus(pos, info.beforeOrigin!);
 
+        const clientRect = info.clientRect!;
+
+        clientRect.top += (top - info.top!) - state.top;
+        clientRect.left += (left - info.left!) - state.left;
+
         this.updateState(
             {
                 ...info,

@@ -452,21 +452,30 @@ export function checkOneWayDist(
     direction: number[],
     datas: any,
 ) {
-    const directionPoses = getPosesByDirection(poses, direction);
-    const reversePoses = poses.slice().reverse();
+
     const directionIndex = direction[0] !== 0 ? 0 : 1;
     const isDirectionVertical = directionIndex > 0;
-    const reverseDirectionPoses = getPosesByDirection(reversePoses, direction);
+    const reversePoses = poses.slice().reverse();
+    let directionPoses!: number[][];
+    let reverseDirectionPoses!: number[][];
 
-    directionPoses.push([
-        (directionPoses[0][0] + directionPoses[1][0]) / 2,
-        (directionPoses[0][1] + directionPoses[1][1]) / 2,
-    ]);
-    reverseDirectionPoses.reverse();
-    reverseDirectionPoses.push([
-        (reverseDirectionPoses[0][0] + reverseDirectionPoses[1][0]) / 2,
-        (reverseDirectionPoses[0][1] + reverseDirectionPoses[1][1]) / 2,
-    ]);
+    if (moveable.props.keepRatio) {
+        directionPoses = [getPosByDirection(poses, direction)];
+        reverseDirectionPoses = [getPosByDirection(reversePoses, direction)];
+    } else {
+        directionPoses = getPosesByDirection(poses, direction);
+        reverseDirectionPoses = getPosesByDirection(reversePoses, direction);
+
+        directionPoses.push([
+            (directionPoses[0][0] + directionPoses[1][0]) / 2,
+            (directionPoses[0][1] + directionPoses[1][1]) / 2,
+        ]);
+        reverseDirectionPoses.reverse();
+        reverseDirectionPoses.push([
+            (reverseDirectionPoses[0][0] + reverseDirectionPoses[1][0]) / 2,
+            (reverseDirectionPoses[0][1] + reverseDirectionPoses[1][1]) / 2,
+        ]);
+    }
 
     const posOffset = checkOneWayPos(moveable, directionPoses, reverseDirectionPoses, isDirectionVertical, datas);
 
@@ -733,13 +742,19 @@ export function getSnapInfosByDirection(
         }
         return checkSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), true, 1);
     } else {
-        const nextPoses = getPosesByDirection(poses, snapDirection);
+        let nextPoses!: number[][];
 
-        if (nextPoses.length > 1) {
-            nextPoses.push([
-                (nextPoses[0][0] + nextPoses[1][0]) / 2,
-                (nextPoses[0][1] + nextPoses[1][1]) / 2,
-            ]);
+        if (moveable.props.keepRatio) {
+            nextPoses = [getPosByDirection(poses, snapDirection)];
+        } else {
+            nextPoses = getPosesByDirection(poses, snapDirection);
+
+            if (nextPoses.length > 1) {
+                nextPoses.push([
+                    (nextPoses[0][0] + nextPoses[1][0]) / 2,
+                    (nextPoses[0][1] + nextPoses[1][1]) / 2,
+                ]);
+            }
         }
         return checkSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), true, 1);
     }
