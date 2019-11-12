@@ -7,7 +7,6 @@ This document explains how to use [moveable](https://github.com/daybrush/moveabl
 * [Introduction](#toc-introduction)
 * [Basic Support](#toc-support)
 * [Events](#toc-events)
-
 * [Ables](#toc-ables)
     * [Draggable](#toc-draggable)
     * [Resizable](#toc-resizable)
@@ -195,6 +194,37 @@ export class AppComponent {
 }
 ```
 
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    const frame = {
+        translate: [0, 0],
+    };
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    draggable={true}
+    target={target}
+    throttleDrag={0}
+    on:dragStart={({ detail: { set } }) => {
+        set(frame.translate)
+    }}
+    on:drag={({ detail: { target, beforeTranslate }}) => {
+        frame.translate = beforeTranslate;
+        target.style.transform
+            = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+    }}
+    on:dragEnd={({ detail: { target, isDrag, clientX, clientY }}) => {
+        console.log("onDragEnd", target, isDrag);
+    }}
+/>
+```
+
 
 ## <a id="toc-resizable"></a>Resizable
 
@@ -349,6 +379,52 @@ export class AppComponent {
 }
 ```
 
+
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    const frame = {
+        translate: [0, 0],
+    };
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    target={target}
+    resizable={true}
+    throttleResize={0}
+    on:resizeStart={({ detail: {target, set, setOrigin, dragStart }}) => {
+        // Set origin if transform-orgin use %.
+        setOrigin(["%", "%"]);
+
+        // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
+        const style = window.getComputedStyle(target);
+        const cssWidth = parseFloat(style.width);
+        const cssHeight = parseFloat(style.height);
+        set([cssWidth, cssHeight]);
+
+        // If a drag event has already occurred, there is no dragStart.
+        dragStart && dragStart.set(frame.translate);
+    }}
+    on:resize={({ detail: { target, width, height, drag }}) => {
+        target.style.width = `${width}px`;
+        target.style.height = `${height}px`;
+
+        // get drag event
+        frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+    }}
+    on:resizeEnd={({ detail: { target, isDrag, clientX, clientY }}) => {
+        console.log("onResizeEnd", target, isDrag);
+    }}
+/>
+```
+
 ## <a id="toc-scalable"></a>Scalable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif"></a>
 
@@ -478,6 +554,46 @@ export class AppComponent {
 }
 ```
 
+
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    const frame = {
+        translate: [0, 0],
+        scale: [1, 1],
+    };
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    target={target}
+    scalable={true}
+    throttleScale={0}
+    keepRatio={false}
+    on:scaleStart={({ detail: { set, dragStart }}) => {
+        set(frame.scale);
+
+        // If a drag event has already occurred, there is no dragStart.
+        dragStart && dragStart.set(this.frame.translate);
+    }}
+    on:scale={({ detail: { target, scale, drag }}) => {
+        frame.scale = scale;
+        // get drag event
+        frame.translate = drag.beforeTranslate;
+        target.style.transform
+            = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`
+            + `scale(${scale[0]}, ${scale[1]})`;
+    }}
+    on:scaleEnd={({ detail: { target, isDrag, clientX, clientY }}) => {
+        console.log("onScaleEnd", target, isDrag);
+    }}
+/>
+```
+
 ## <a id="toc-rotatable"></a>Rotatable
 <p align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif"></a>
 
@@ -582,6 +698,37 @@ export class AppComponent {
 }
 ```
 
+
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    const frame = {
+        rotate: 0,
+    };
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    target={target}
+    rotatable={true}
+    throttleRotate={0}
+    rotationPosition="top"
+    on:rotateStart={({ detail: { set }}) => {
+        set(frame.rotate);
+    }}
+    on:rotate={({ detail: { target, beforeRotate }}) => {
+        frame.rotate = beforeRotate;
+        target.style.transform = `rotate(${beforeRotate}deg)`;
+    }}
+    on:rotateEnd={({ detail: { target, isDrag, clientX, clientY }}) => {
+        console.log("onRotateEnd", target, isDrag);
+    }}
+/>
+```
 
 ## <a id="toc-warpable"></a>Warpable
 
@@ -694,6 +841,39 @@ export class AppComponent {
     }
 }
 ```
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    const warpMatrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    target={target}
+    warpable={true}
+    on:warpStart={({ detail: { set }}) => {
+        set(warpMatrix);
+    }}
+    on:warp={({ detail: { target, matrix, transform }}) => {
+        warpMatrix = matrix;
+
+        // target.style.transform = transform;
+        target.style.transform = `matrix3d(${matrix.join(",")})`;
+    }}
+    on:warpEnd={({ detail: { target, isDrag, clientX, clientY }}) => {
+        console.log("onWarpEnd", target, isDrag);
+    }}
+/>
+```
 
 ## <a id="toc-pinchable"></a>Pinchable
 
@@ -759,6 +939,25 @@ export class AppComponent {
 
 }
 ```
+
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    target={target}
+    pinchable={true}
+    draggable={true}
+    resizable={true}
+    pinchThreshold={20} />
+```
+
 
 ## <a id="toc-snappable"></a>Snappable(Guidelines & Boundaries)
 
@@ -844,6 +1043,28 @@ export class AppComponent {
 }
 ```
 
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    let target;
+    let element;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<div class="target" bind:this={element}>elementGuideline</div>
+<Moveable
+    target={target}
+    snappable={true}
+    snapThreshold={5}
+    snapCenter={false}
+    bounds={{ left: 0, top: 0, bottom: 1000, right: 1000 }}
+    verticalGuidelines={[100, 200, 300]}
+    horizontalGuidelines={[0, 100, 200]}
+    elementGuidelines={[element]}  />
+```
 
 ## <a id="toc-scrollable"></a>Scrollable
 
@@ -934,6 +1155,35 @@ export class AppComponent {
         scrollContainer.scrollTop += direction[1] * 10;
     }
 }
+```
+
+
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+
+    let target;
+</script>
+```
+```jsx
+<div class="target" bind:this={target}>Target</div>
+<Moveable
+    target={target}
+    scrollable={true}
+    container={document.body}
+    scrollContainer={document.body}
+    scrollThreshold={0}
+    getScrollPosition={({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop])}
+    on:scroll={({ detail: { scrollContainer, direction }}) => {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }}
+    on:scrollGroup={({ detail: { scrollContainer, direction }}) => {
+        scrollContainer.scrollLeft += direction[0] * 10;
+        scrollContainer.scrollTop += direction[1] * 10;
+    }}
+    />
 ```
 
 # <a id="toc-group"></a> How to use Group
@@ -1083,6 +1333,50 @@ export class AppComponent implements OnInit {
 }
 ```
 
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+    import { onMount } from "svelte";
+
+    let targets = [];
+    let frames = [];
+
+    onMount(() => {
+        targets = [].slice.call(document.querySelectorAll(".target"));
+        frames = targets.map(() => ({
+            translate: [0, 0],
+        }));
+    });
+</script>
+```
+```jsx
+<div class="target">Target1</div>
+<div class="target">Target2</div>
+<div class="target">Target3</div>
+<Moveable
+    target={targets}
+    draggable={true}
+    on:dragGroupStart={({ detail: { events }}) => {
+        events.forEach((ev, i) => {
+            const frame = frames[i];
+            ev.set(frame.translate);
+        });
+    }}
+    on:dragGroup={({ detail: { targets, events }}) => {
+        events.forEach(({ target, beforeTranslate }, i) => {
+            const frame = frames[i];
+
+            frame.translate = beforeTranslate;
+            target.style.transform
+                = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+        });
+    }}
+    on:dragGroupEnd={({ detail: { targets, isDrag, clientX, clientY }}) => {
+        console.log("onDragGroupEnd", targets, isDrag);
+    }}
+    />
+```
 
 ## <a id="toc-group-resizable"></a>Group with Resizable
 ### Events
@@ -1255,6 +1549,65 @@ export class AppComponent implements OnInit {
 }
 ```
 
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+    import { onMount } from "svelte";
+
+    let targets = [];
+    let frames = [];
+
+    onMount(() => {
+        targets = [].slice.call(document.querySelectorAll(".target"));
+        frames = targets.map(() => ({
+            translate: [0, 0],
+        }));
+    });
+</script>
+```
+```jsx
+<div class="target">Target1</div>
+<div class="target">Target2</div>
+<div class="target">Target3</div>
+<Moveable
+    target={targets}
+    resizable={true}
+    on:resizeGroupStart={({ detail: { events }}) => {
+        events.forEach((ev, i) => {
+            const frame = frames[i];
+
+            // Set origin if transform-orgin use %.
+            ev.setOrigin(["%", "%"]);
+
+            // If cssSize and offsetSize are different, set cssSize.
+            const style = window.getComputedStyle(ev.target);
+            const cssWidth = parseFloat(style.width);
+            const cssHeight = parseFloat(style.height);
+            ev.set([cssWidth, cssHeight]);
+
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }}
+    on:resizeGroup={({ detail: { events }}) => {
+        events.forEach(({ target, width, height, drag }, i) => {
+            const frame = frames[i];
+
+            target.style.width = `${width}px`;
+            target.style.height = `${height}px`;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
+        });
+    }}
+    on:resizeGroupEnd={({ detail: { targets, isDrag, clientX, clientY }}) => {
+        console.log("onResizeGroupEnd", targets, isDrag);
+    }}
+    />
+```
 
 ## <a id="toc-group-scalable"></a>Group with Scalable
 
@@ -1408,6 +1761,59 @@ export class AppComponent implements OnInit {
 }
 ```
 
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+    import { onMount } from "svelte";
+
+    let targets = [];
+    let frames = [];
+
+    onMount(() => {
+        targets = [].slice.call(document.querySelectorAll(".target"));
+        frames = targets.map(() => ({
+            translate: [0, 0],
+            scale: [1, 1],
+        }));
+    });
+</script>
+```
+```jsx
+<div class="target">Target1</div>
+<div class="target">Target2</div>
+<div class="target">Target3</div>
+<Moveable
+    target={targets}
+    scalable={true}
+    on:scaleGroupStart={({ detail: { events }}) => {
+        events.forEach((ev, i) => {
+            const frame = frames[i];
+
+            ev.set(frame.scale);
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }}
+    on:scaleGroup={({ detail: { events }}) => {
+        events.forEach(({ target, scale, drag }, i) => {
+            const frame = frames[i];
+
+            frame.scale = scale;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+                + `scale(${scale[0]}, ${scale[1]})`;
+        });
+    }}
+    on:scaleGroupEnd={({ detail: { targets, isDrag, clientX, clientY }}) => {
+        console.log("onScaleGroupEnd", targets, isDrag);
+    }}
+    />
+```
+
 
 ## <a id="toc-group-rotatable"></a>Group with Rotatable
 ### Events
@@ -1559,6 +1965,63 @@ export class AppComponent implements OnInit {
     }
 }
 ```
+
+
+
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+    import { onMount } from "svelte";
+
+    let targets = [];
+    let frames = [];
+
+    onMount(() => {
+        targets = [].slice.call(document.querySelectorAll(".target"));
+        frames = targets.map(() => ({
+            translate: [0, 0],
+            rotate: 0,
+        }));
+    });
+</script>
+```
+```jsx
+<div class="target">Target1</div>
+<div class="target">Target2</div>
+<div class="target">Target3</div>
+<Moveable
+    target={targets}
+    rotatable={true}
+    on:rotateGroupStart={({ detail: { events }}) => {
+        events.forEach((ev, i) => {
+            const frame = frames[i];
+
+            ev.set(frame.rotate);
+            // If a drag event has already occurred, there is no dragStart.
+            ev.dragStart && ev.dragStart.set(frame.translate);
+        });
+    }}
+    on:rotateGroup={({ detail: { events }}) => {
+        events.forEach(({ target, beforeRotate, drag }, i) => {
+            const frame = frames[i];
+
+            frame.rotate = beforeRotate;
+
+            // get drag event
+            frame.translate = drag.beforeTranslate;
+            target.style.transform
+                = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px) `
+                + `rotate(${beforeRotate}deg)`;
+        });
+    }}
+    on:rotateGroupEnd={({ detail: { targets, isDrag, clientX, clientY }}) => {
+        console.log("onRotateGroupEnd", targets, isDrag);
+    }}
+    />
+```
+
+
 # <a id="toc-change-target></a> When the event starts while changing the target
 
 ### methods
@@ -1583,7 +2046,7 @@ window.addEventListener("mousedown", e => {
 });
 ```
 
-### React, Preact
+### React, Preact Example
 ```tsx
 import Moveable from "react-moveable"; // preact-moveable
 
@@ -1602,7 +2065,7 @@ onMouseDown(e) {
 }
 ```
 
-### Angular
+### Angular Example
 ```tsx
 
 @Component({
@@ -1630,7 +2093,34 @@ export class AppComponent {
 }
 ```
 
-### Vanilla Example
+### Svelte Example
+```html
+<script>
+    import Moveable from "svelte-moveable";
+    import { onMount } from "svelte";
+
+    let moveable;
+    let target;
+
+    function nonMouseDown(e) {
+        target = e.target;
+
+        setTimeout(() => {
+            moveable.dragStart(e);
+        });
+    }
+</script>
+```
+```jsx
+<div class="target" on:mousedown={onMouseDown}>Target1</div>
+<div class="target" on:mousedown={onMouseDown}>Target2</div>
+<div class="target" on:mousedown={onMouseDown}>Target3</div>
+<Moveable
+    bind:this={moveable}
+    target={target}
+    />
+```
+
 
 # <a id="toc-custom-css"></a>✨ How to use custom CSS
 
