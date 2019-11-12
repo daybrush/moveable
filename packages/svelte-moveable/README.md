@@ -90,8 +90,11 @@ $ npm i svelte-moveable
 > If you don't want to use detail, use camelcase props instead of `on:event`
 >
 > ex)
-> from: on:dragStart={({ detail: e}) => {}}
-> to: onDragStart={e => {}}
+> ```
+> on:dragStart={({ detail: e}) => {}}
+> onDragStart={e => {}}
+> ```
+
 ```html
 <script>
     import Moveable from "svelte-moveable";
