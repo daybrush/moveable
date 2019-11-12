@@ -143,10 +143,12 @@ const moveable = new Moveable(editorElement, {
 const guides1 = new Guides(horizontalRulerElement, {
     type: "horizontal",
     setGuides: refreshGuidelines,
+    backgroundColor: "#333333",
 });
 const guides2 = new Guides(verticalRulerElement, {
     type: "vertical",
     setGuides: refreshGuidelines,
+    backgroundColor: "#333333",
 });
 
 function setLabelCSS(clientX: number, clientY: number) {
