@@ -1,6 +1,6 @@
 {
     "name": "preact-moveable",
-    "version": "0.12.7",
+    "version": "0.12.8",
     "description": "A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -62,6 +62,6 @@
     "dependencies": {
         "preact-compat": "^3.0.0",
         "preact-css-styler": "^0.4.1",
-        "react-moveable": "^0.13.7"
+        "react-moveable": "^0.13.8"
     }
 }

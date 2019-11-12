@@ -18,6 +18,7 @@ import Moveable, {
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
 import { NgxMoveableInterface, NgxMoveableEvents } from './types';
+import { Able } from 'moveable';
 
 
 // type NgxMoveableEmitter = {
@@ -59,6 +60,7 @@ export class NgxMoveableComponent
   @Input() public bounds!: { left?: number, top?: number, right?: number, bottom?: number };
   @Input() public dragArea!: boolean;
   @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
+  @Input() public ables!: Able[];
 
   @Input() public className!: string;
   @Input() public renderDirections!: string[];
@@ -131,7 +133,7 @@ export class NgxMoveableComponent
     const events: IObject<any> = {};
 
     PROPERTIES.forEach(name => {
-      options[name] = this[name];
+      (options as any)[name] = this[name];
     });
     EVENTS.forEach(name => {
       events[name] = e => {
