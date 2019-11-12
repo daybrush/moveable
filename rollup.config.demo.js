@@ -15,8 +15,12 @@ export default builder([
         output: "./demo/dist/index.js",
         format: "iife",
         exports: "named",
-        plugins: [cssbundle({output: "./demo/dist/index.css"}), preactPlugin],
+        plugins: [
+            cssbundle({output: "./demo/dist/index.css"}),
+            // preactPlugin
+        ],
         resolve: true,
-        // uglify: true,
+        sourcemap: false,
+        uglify: true,
     },
 ]);

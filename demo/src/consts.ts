@@ -74,6 +74,23 @@ export class AppComponent {
     }
 }
 `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let translate = [0, 0];
+    let target;
+</script>
+<div class="target draggable" bind:this={target}>Draggable</div>
+<Moveable
+    target={target}
+    draggable={true}
+    throttleDrag={0}
+    on:drag={({ detail }) => {
+        target.style.left = detail.left + "px";
+        target.style.top = detail.top + "px";
+    }}
+/>`,
     },
     resizable: {
         vanilla: `
@@ -134,6 +151,25 @@ export class AppComponent {
     }
 }
         `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let translate = [0, 0];
+    let target;
+</script>
+<div class="target resizable" bind:this={target}>Resizable</div>
+<Moveable
+    target={target}
+    resizable={true}
+    throttleResize={0}
+    keepRatio={true}
+    on:resize={({ detail }) => {
+        const { target, width, height, dist } = detail;
+        target.style.width = width + "px";
+        target.style.height = height + "px";
+    }}
+/>`,
     },
     scalable: {
         vanilla: `
@@ -201,6 +237,26 @@ export class AppComponent {
     }
 }
         `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let scale = [1, 1];
+    let target;
+</script>
+<div class="target scalable" bind:this={target}>Scalable</div>
+<Moveable
+    target={target}
+    scalable={true}
+    throttleScale={0}
+    keepRatio={true}
+    on:scale={({ detail: { target, delta }}) => {
+        scale[0] *= delta[0];
+        scale[1] *= delta[1];
+        target.style.transform
+            = "scale(" + scale[0] +  "," + scale[1] + ")";
+    }}
+/>`,
     },
     rotatable: {
         vanilla: `
@@ -264,6 +320,25 @@ export class AppComponent {
     }
 }
         `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let rotate = 0;
+    let target;
+</script>
+<div class="target rotatable" bind:this={target}>Rotatable</div>
+<Moveable
+    target={target}
+    rotatable={true}
+    throttleRotate={0}
+    on:rotate={({ detail }) => {
+        const { target, beforeDelta, delta } = detail;
+        rotate += delta;
+        target.style.transform
+            = "rotate(" + rotate +  "deg)";
+    }}
+/>`,
     },
     warpable: {
         vanilla: `
@@ -339,6 +414,29 @@ export class AppComponent {
     }
 }
         `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let matrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+    let target;
+</script>
+<div class="target scalable" bind:this={target}>Scalable</div>
+<Moveable
+    target={target}
+    warpable={true}
+    on:warp={({ detail }) => {
+        const { target, multiply, delta } = detail;
+        matrix = multiply(matrix, delta);
+        target.style.transform
+            = "matrix3d(" + matrix.join(",") +  ")";
+    }}
+/>`,
     },
     pinchable: {
         vanilla: `
@@ -417,6 +515,36 @@ export class AppComponent {
     }
 }
 `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let matrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+    let target;
+</script>
+<div class="target pinchable" bind:this={target}>Pinchable</div>
+<Moveable
+    target={target}
+    pinchable={["rotatable", "scalable"]},
+    on:rotate={({ detail: { target, beforeDelta }}) => {
+        this.rotate += beforeDelta;
+        target.style.transform
+            = "scale(" + this.scale.join(", ") + ") "
+            + "rotate(" + this.rotate + "deg)";
+    }}
+    on:scale={({ detail: { target, beforeDelta }}) => {
+        this.scale[0] *= delta[0];
+        this.scale[1] *= delta[1];
+        target.style.transform
+            = "scale(" + this.scale.join(", ") + ") "
+            + "rotate(" + this.rotate + "deg)";
+    }}
+/>`,
     },
     snappable: {
         vanilla: `
@@ -474,6 +602,24 @@ export class AppComponent {
     }
 }
 `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+
+    let target;
+</script>
+<div class="target pinchable" bind:this={target}>Pinchable</div>
+<Moveable
+    target={target}
+    origin={true}
+    snappable={true}
+    verticalGuidelines={[0, 150, 200]}
+    horizontalGuidelines={[0, 150, 200]}
+    on:drag={({ detail: { target, left, top }}) => {
+        target.style.left = left + "px";
+        target.style.top = top + "px";
+    }}
+/>`,
     },
     groupable: {
         vanilla: `
@@ -569,5 +715,37 @@ export class AppComponent {
     }
 }
         `,
+        svelte: `
+<script>
+    import Moveable from "svelte-moveable";
+    import { onMount } from "svelte";
+    let targets = [];
+    let translates = [];
+
+    onMount(() => {
+        targets = [].slice.call(document.querySelectorAll(".target"));
+        translates = targets.map(() => {
+            return [0, 0];
+        });
+    });
+</script>
+<div class="target">Target1</div>
+<div class="target">Target2</div>
+<div class="target">Target3</div>
+<Moveable
+    target={targets}
+    draggable={true}
+    on:dragGroup={({ detail: { events }}) => {
+        events.forEach(({ target, beforeDelta }, i) => {
+            translates[i][0] += beforeDelta[0];
+            translates[i][1] += beforeDelta[1];
+
+            target.style.transform
+                = "translate("
+                + translates[i][0] + "px, "
+                + translates[i][1] + "px)";
+        });
+    }}
+/>`,
     },
 };

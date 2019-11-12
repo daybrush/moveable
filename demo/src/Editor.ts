@@ -1,9 +1,9 @@
 import { Frame } from "scenejs";
 import Moveable from "../../src/Moveable";
-import Dragger from "@daybrush/drag";
+import Guides from "@scena/guides";
 import agent from "@egjs/agent";
 import KeyContoller from "keycon";
-import { addClass, removeClass, hasClass } from "@daybrush/utils";
+import { addClass } from "@daybrush/utils";
 
 const uaInfo = agent();
 const isMobile = uaInfo.isMobile || uaInfo.os.name.indexOf("ios") > -1 || uaInfo.browser.name.indexOf("safari") > -1;
@@ -11,25 +11,14 @@ const isMobile = uaInfo.isMobile || uaInfo.os.name.indexOf("ios") > -1 || uaInfo
 isMobile && addClass(document.body, "mobile");
 const editorElement: HTMLElement = document.querySelector(".editor");
 const labelElement: HTMLElement = document.querySelector(".label");
-const controlsElement: HTMLElement = document.querySelector(".controls");
 const rulersElement = document.querySelector(".rulers");
-const guidelinesElement = document.querySelector(".guidelines");
-const horizontalRulerElement = rulersElement.querySelector(".ruler.horizontal");
-const verticalRulerElement = rulersElement.querySelector(".ruler.vertical");
-const horizontalDivisionsElement = horizontalRulerElement.querySelector(".divisions");
-const verticalDivisionsElement = document.querySelector(".ruler.vertical .divisions");
+const horizontalRulerElement: HTMLElement = rulersElement.querySelector(".ruler.horizontal");
+const verticalRulerElement: HTMLElement = rulersElement.querySelector(".ruler.vertical");
 const controlXElement: HTMLInputElement = document.querySelector(`.control input[name="x"]`);
 const controlYElement: HTMLInputElement = document.querySelector(`.control input[name="y"]`);
 const controlWElement: HTMLInputElement = document.querySelector(`.control input[name="w"]`);
 const controlHElement: HTMLInputElement = document.querySelector(`.control input[name="h"]`);
 const controlRElement: HTMLInputElement = document.querySelector(`.control input[name="r"]`);
-
-const divisions = [];
-for (let i = 0; i <= 500; ++i) {
-    divisions.push(`<div class="division" data-px="${i * 5}"></div>`);
-}
-horizontalDivisionsElement.innerHTML = divisions.join("");
-verticalDivisionsElement.innerHTML = divisions.join("");
 
 const moveableTarget: HTMLElement = document.querySelector(".moveable.target");
 const frame = new Frame({
@@ -150,6 +139,16 @@ const moveable = new Moveable(editorElement, {
     isPinchStart = false;
     hideLabel();
 });
+
+const guides1 = new Guides(horizontalRulerElement, {
+    type: "horizontal",
+    setGuides: refreshGuidelines,
+});
+const guides2 = new Guides(verticalRulerElement, {
+    type: "vertical",
+    setGuides: refreshGuidelines,
+});
+
 function setLabelCSS(clientX: number, clientY: number) {
     labelElement.style.cssText
         = `display: block; transform: translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%);`;
@@ -161,135 +160,13 @@ function setLabel(clientX: number, clientY: number, text: string) {
 function hideLabel() {
     labelElement.style.display = "none";
 }
-function snap(poses, targetPos) {
-    let nextPos = targetPos;
-    let snapDist = Infinity;
-
-    poses.forEach(pos => {
-        const dist = Math.abs(pos - targetPos);
-        if (dist > 10) {
-            return;
-        }
-        if (snapDist > dist) {
-            snapDist = dist;
-            nextPos = pos;
-        }
-    });
-
-    return nextPos;
-}
-function dragStartGuideline({ datas, clientX, clientY }) {
-    const rect = moveableTarget.getBoundingClientRect();
-    const type = datas.type;
-    const guideline = datas.guideline;
-
-    datas.verticalPoses = [rect.left, rect.left + rect.width];
-    datas.horizontalPoses = [rect.top, rect.top + rect.height];
-    datas.isHorizontal = type === "horizontal";
-    datas.offset = datas.isHorizontal ? controlsElement.offsetHeight - document.documentElement.scrollTop : 0;
-    addClass(guideline, "dragging");
-
-    dragGuideline({ datas, clientX, clientY });
-}
-
-function dragGuideline({ clientX, clientY, datas }) {
-    const { guideline, isHorizontal, offset} = datas;
-    const style = guideline.style;
-
-    if (isHorizontal) {
-        const nextPos = snap(datas.horizontalPoses, clientY) - offset;
-
-        style.top = `${nextPos}px`;
-
-        return nextPos;
-    } else {
-        const nextPos = snap(datas.verticalPoses, clientX) - offset;
-
-        style.left = `${nextPos}px`;
-
-        return nextPos - offset;
-    }
-}
-
-function dragEndGuideline({ datas, clientX, clientY }) {
-    const el = datas.guideline;
-    const clientPos = dragGuideline({ datas, clientX, clientY });
-
-    if (clientPos < 30) {
-        guidelinesElement.removeChild(el);
-        return;
-    }
-    el.setAttribute("data-position", clientPos);
-
-    removeClass(el, "dragging");
-    refreshGuidelines();
-}
 function refreshGuidelines() {
     const centerX = window.innerWidth / 2 + 15;
     const centerY = window.innerHeight / 2;
 
-    const horizontalGuidelines = [centerY];
-    const verticalGuidelines = [centerX];
-    [].slice.call(guidelinesElement.children).forEach(guideline => {
-        const type = guideline.getAttribute("data-type");
-        const pos = parseFloat(guideline.getAttribute("data-position"));
-        (type === "horizontal" ? horizontalGuidelines : verticalGuidelines).push(pos);
-    });
-    moveable.verticalGuidelines = verticalGuidelines;
-    moveable.horizontalGuidelines = horizontalGuidelines;
+    moveable.verticalGuidelines = [...guides2.getGuides().map(pos => pos + 30), centerX];
+    moveable.horizontalGuidelines = [...guides1.getGuides().map(pos => pos + 30), centerY];
 }
-new Dragger(guidelinesElement, {
-    container: document.body,
-    dragstart: ({ inputEvent, datas, clientX, clientY }) => {
-        const guideline = inputEvent.target;
-
-        if (hasClass(guideline, "horizontal")) {
-            datas.type = "horizontal";
-        } else if (hasClass(guideline, "vertical")) {
-            datas.type = "vertical";
-        } else {
-            return false;
-        }
-        datas.guideline = guideline;
-
-        dragStartGuideline({ datas, clientX, clientY });
-        inputEvent.stopPropagation();
-        inputEvent.preventDefault();
-    },
-    drag: dragGuideline,
-    dragend: dragEndGuideline,
-});
-
-new Dragger(rulersElement, {
-    container: document.body,
-    dragstart: ({ inputEvent, datas, clientX, clientY }) => {
-        const ruler = inputEvent.target;
-
-        if (ruler === horizontalRulerElement) {
-            datas.type = "horizontal";
-        } else if (ruler === verticalRulerElement) {
-            datas.type = "vertical";
-        } else {
-            return false;
-        }
-        const el = document.createElement("div");
-        const type = datas.type;
-
-        el.className = `guideline ${type}`;
-        el.setAttribute("data-type", type);
-
-        datas.guideline = el;
-
-        dragStartGuideline({ datas, clientX, clientY });
-        guidelinesElement.appendChild(el);
-
-        inputEvent.stopPropagation();
-        inputEvent.preventDefault();
-    },
-    drag: dragGuideline,
-    dragend: dragEndGuideline,
-});
-
 function toggleShift(shiftKey) {
     if (shiftKey) {
         moveable.throttleRotate = 30;
