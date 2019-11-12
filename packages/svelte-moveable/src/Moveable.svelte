@@ -30,11 +30,14 @@
         (options as any)[name] = props[name];
       }
     });
-    container = options.container || $$props.container;
+    container = options.container || $$props.container || document.body;
 
     if (moveable) {
       tick().then(() => {
-        moveable.setState(options);
+        moveable.setState({
+          ...options,
+          parentElement: container,
+        });
       });
     }
   });

@@ -4,7 +4,6 @@
   import { onMount, tick } from "svelte";
   import { Frame } from "scenejs";
   import keycon from "keycon";
-  export let name;
 
   const KeyController = keycon.setGlobal();
   const frameMap = new Map();
@@ -227,7 +226,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    z-index: 0;
+    z-index: 1;
   }
   .scroller {
     position: absolute;
@@ -240,7 +239,6 @@
     -ms-user-select: none; /* IE 10+ */
     user-select: none; /* Likely future */
     overflow: hidden;
-    z-index: 1;
   }
   .target {
     position: absolute;
@@ -251,6 +249,7 @@
     font-size: 30px;
     text-align: center;
     box-sizing: border-box;
+    z-index: 20;
   }
   .target:nth-child(1) {
     top: 100px;
@@ -268,7 +267,6 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1;
   }
   .ruler.horizontal {
     left: 0px;
@@ -327,58 +325,56 @@
       {setGuides} />
   </div>
   <div class="scroller" bind:this={scroller} on:mousedown={onMouseDown}>
-    {#if scroller}
-      <Moveable
-        className="moveable"
-        {scroller}
-        bind:this={moveable}
-        target={targets}
-        draggable={true}
-        scalable={true}
-        rotatable={true}
-        snappable={true}
-        snapCenter={true}
-        {throttleRotate}
-        {horizontalGuidelines}
-        {verticalGuidelines}
-        on:dragStart={({ detail }) => {
-          onDragStart(detail);
-        }}
-        on:drag={({ detail }) => {
-          onDrag(detail);
-        }}
-        on:dragGroupStart={({ detail }) => {
-          detail.events.forEach(onDragStart);
-        }}
-        on:dragGroup={({ detail }) => {
-          detail.events.forEach(onDrag);
-        }}
-        on:scaleStart={({ detail }) => onScaleStart(detail)}
-        on:scale={({ detail }) => onScale(detail)}
-        on:scaleGroupStart={({ detail }) => {
-          detail.events.forEach(onScaleStart);
-        }}
-        on:scaleGroup={({ detail }) => {
-          detail.events.forEach(onScale);
-        }}
-        on:rotateStart={({ detail }) => onRotateStart(detail)}
-        on:rotate={({ detail }) => onRotate(detail)}
-        on:rotateGroupStart={({ detail }) => {
-          detail.events.forEach(onRotateStart);
-        }}
-        on:rotateGroup={({ detail }) => {
-          detail.events.forEach(onRotate);
-        }}
-        on:render={({ detail }) => {
-          onRender(detail);
-        }}
-        on:renderGroup={({ detail }) => {
-          detail.targets.forEach(target => onRender({ target }));
-        }}
-        on:clickGroup={({ detail }) => {
-          onClickGroup(detail);
-        }} />
-    {/if}
+    <Moveable
+      className="moveable"
+      container={scroller}
+      bind:this={moveable}
+      target={targets}
+      draggable={true}
+      scalable={true}
+      rotatable={true}
+      snappable={true}
+      snapCenter={true}
+      {throttleRotate}
+      {horizontalGuidelines}
+      {verticalGuidelines}
+      on:dragStart={({ detail }) => {
+        onDragStart(detail);
+      }}
+      on:drag={({ detail }) => {
+        onDrag(detail);
+      }}
+      on:dragGroupStart={({ detail }) => {
+        detail.events.forEach(onDragStart);
+      }}
+      on:dragGroup={({ detail }) => {
+        detail.events.forEach(onDrag);
+      }}
+      on:scaleStart={({ detail }) => onScaleStart(detail)}
+      on:scale={({ detail }) => onScale(detail)}
+      on:scaleGroupStart={({ detail }) => {
+        detail.events.forEach(onScaleStart);
+      }}
+      on:scaleGroup={({ detail }) => {
+        detail.events.forEach(onScale);
+      }}
+      on:rotateStart={({ detail }) => onRotateStart(detail)}
+      on:rotate={({ detail }) => onRotate(detail)}
+      on:rotateGroupStart={({ detail }) => {
+        detail.events.forEach(onRotateStart);
+      }}
+      on:rotateGroup={({ detail }) => {
+        detail.events.forEach(onRotate);
+      }}
+      on:render={({ detail }) => {
+        onRender(detail);
+      }}
+      on:renderGroup={({ detail }) => {
+        detail.targets.forEach(target => onRender({ target }));
+      }}
+      on:clickGroup={({ detail }) => {
+        onClickGroup(detail);
+      }} />
     <div class="target" bind:this={target1}>Moveable1</div>
     <div class="target" bind:this={target2}>Moveable2</div>
     <div class="target" bind:this={target3}>Svelte</div>
