@@ -87,13 +87,19 @@ $ npm i svelte-moveable
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
 ## 🚀 How to use
-
+> If you don't want to use detail, use camelcase props instead of `on:event`
+>
+> ex)
+> from: on:dragStart={({ detail: e}) => {}}
+> to: onDragStart={e => {}}
 ```html
 <script>
     import Moveable from "svelte-moveable";
+    let target;
 </script>
 ```
 ```jsx
+<div class="target" bind:this={target}>Target</div>
 <Moveable
   target={target}
   origin={true}

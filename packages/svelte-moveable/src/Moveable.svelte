@@ -12,7 +12,7 @@
     createEventDispatcher,
     beforeUpdate,
     afterUpdate,
-    tick,
+    tick
   } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -34,10 +34,12 @@
 
     if (moveable) {
       tick().then(() => {
+
         moveable.setState({
           ...options,
-          parentElement: container,
-        });
+          container,
+          parentElement: container
+        } as any);
       });
     }
   });
@@ -50,7 +52,11 @@
         const result = $$props[onName] && $$props[onName](e);
         const result2 = dispatch(name, e);
 
-        return !isUndefined(result) ? result : (!isUndefined(result2) ? result2 : undefined);
+        return !isUndefined(result)
+          ? result
+          : !isUndefined(result2)
+          ? result2
+          : undefined;
       });
     });
   });
