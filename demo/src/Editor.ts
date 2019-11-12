@@ -143,10 +143,12 @@ const moveable = new Moveable(editorElement, {
 const guides1 = new Guides(horizontalRulerElement, {
     type: "horizontal",
     setGuides: refreshGuidelines,
+    backgroundColor: "#444444",
 });
 const guides2 = new Guides(verticalRulerElement, {
     type: "vertical",
     setGuides: refreshGuidelines,
+    backgroundColor: "#444444",
 });
 
 function setLabelCSS(clientX: number, clientY: number) {
@@ -185,6 +187,8 @@ KeyContoller.global.on("keydown", ({ shiftKey }) => {
 window.addEventListener("resize", () => {
     refreshGuidelines();
     moveable.updateRect();
+    guides1.resize();
+    guides2.resize();
 });
 
 document.body.addEventListener("gesturestart", e => {
