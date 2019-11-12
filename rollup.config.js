@@ -15,6 +15,8 @@ const external = {
     "framework-utils": "framework-utils",
     "@egjs/agent": "eg.Agent",
     "@egjs/children-differ": "eg.ChildrenDiffer",
+    "preact": "preact",
+    "preact-moveable": "preact-moveable",
 };
 export default builder([
     {
