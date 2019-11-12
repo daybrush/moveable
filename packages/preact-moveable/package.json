@@ -1,6 +1,6 @@
 {
     "name": "preact-moveable",
-    "version": "0.12.8",
+    "version": "0.12.9",
     "description": "A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -50,7 +50,7 @@
         "@daybrush/builder": "^0.1.0",
         "@scenejs/effects": "^1.0.1",
         "keycon": "^0.3.0",
-        "preact": "^8.5.2",
+        "preact": "^10.0.0",
         "print-sizes": "^0.1.0",
         "rollup-plugin-css-bundle": "^1.0.4",
         "rollup-plugin-preact": "^0.5.2",
@@ -60,8 +60,7 @@
         "typescript": "^3.4.5"
     },
     "dependencies": {
-        "preact-compat": "^3.0.0",
-        "preact-css-styler": "^0.4.1",
+        "preact-css-styler": "^1.0.0",
         "react-moveable": "^0.13.8"
     }
 }
