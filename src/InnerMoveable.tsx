@@ -11,6 +11,6 @@ export default class InnerMoveable extends Component<MoveableProps> {
         this.state = this.props;
     }
     public render() {
-        return createPortal(<Moveable ref={ref(this, "preactMoveable")} {...this.state} />, this.props.parentElement);
+        return createPortal(<Moveable ref={ref(this, "preactMoveable")} {...this.state} />, this.state.parentElement);
     }
 }
