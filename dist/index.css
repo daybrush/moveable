@@ -311,7 +311,6 @@ code.hljs {
 .ruler {
     position: absolute;
     background: #444;
-    overflow: hidden;
 }
 .ruler.horizontal {
     width: calc(100vw - 30px);
