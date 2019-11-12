@@ -44,6 +44,6 @@
   },
   "dependencies": {
     "framework-utils": "^0.2.1",
-    "moveable": "^0.10.2"
+    "moveable": "^0.10.3"
   }
 }

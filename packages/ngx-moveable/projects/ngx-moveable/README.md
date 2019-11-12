@@ -13,6 +13,7 @@
 <a href="https://github.com/probil/vue-moveable" target="_blank"><img
     alt="Vue"
     src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
+<a href="https://github.com/daybrush/moveable/tree/master/packages/svelte-moveable" target="_blank"><img alt="Svelte" src="https://img.shields.io/static/v1.svg?label=&message=Svelte&style=flat-square&color=C82B38"></a>
 </p>
 <p align="middle">An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
 <p align="middle">
@@ -147,9 +148,9 @@ export class AppModule { }
   (rotateEnd)="onRotateEnd($event)"
 
   [warpable]="false"
-  (warpStart)="onRotateStart($event)"
-  (warp)="onRotate($event)"
-  (warpEnd)="onRotateEnd($event)"
+  (warpStart)="onWarpStart($event)"
+  (warp)="onWarp($event)"
+  (warpEnd)="onWarpEnd($event)"
 
   [pinchable]="false"
   (pinchStart)="onPinchStart($event)"

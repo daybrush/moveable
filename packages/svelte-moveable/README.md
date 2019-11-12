@@ -1,30 +1,25 @@
 
 
 <p align="middle" ><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/logo.png"/></p>
-<h2 align="middle">Angular Moveable</h2>
+<h2 align="middle">Svelte Moveable</h2>
 <p align="middle">
-<a href="https://www.npmjs.com/package/ngx-moveable" target="_blank"><img src="https://img.shields.io/npm/v/ngx-moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
+<a href="https://www.npmjs.com/package/svelte-moveable" target="_blank"><img src="https://img.shields.io/npm/v/svelte-moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://travis-ci.org/daybrush/moveable" target="_blank"><img alt="Travis (.org)" src="https://img.shields.io/travis/daybrush/moveable.svg?style=flat-square&label=build" /></a>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img alt="Preact" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&color=C82B38"></a>
-<a href="https://github.com/probil/vue-moveable" target="_blank"><img
-    alt="Vue"
-    src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/svelte-moveable" target="_blank"><img alt="Svelte" src="https://img.shields.io/static/v1.svg?label=&message=Svelte&style=flat-square&color=C82B38"></a>
 </p>
-<p align="middle">An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.</p>
+<p align="middle">A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.</p>
 <p align="middle">
-  <a href="https://github.com/daybrush/moveable" target="_blank"><strong>About Moveable</strong></a> /
-  <a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md" target="_blank"><strong>Handbook</strong></a> /
-  <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
-  <a href="https://github.com/daybrush/scenejs-editor" target="_blank"><strong>Main Project</strong></a>
+    <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
+    <a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md" target="_blank"><strong>Handbook</strong></a> /
+    <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
+    <a href="https://github.com/daybrush/scenejs-editor" target="_blank"><strong>Main Project</strong></a>
 </p>
+
 <p align="middle">
-  <a href="https://codesandbox.io/s/ngx-moveable-demo-o6o5w" target="_blank"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" /></a>
+  <a href="https://codesandbox.io/s/svelte-moveable-demo-qi7fu" target="_blank"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" /></a>
 </p>
+
 
 <table width="100%" align="center">
 <tr>
@@ -78,9 +73,10 @@
 * Support Major Browsers
 * Support 3d Transform
 
+
 ## ⚙️ Installation
 ```sh
-$ npm i ngx-moveable
+$ npm i svelte-moveable
 ```
 
 ## 📄 Documents
@@ -91,82 +87,68 @@ $ npm i ngx-moveable
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
 ## 🚀 How to use
-```js
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
-import { NgxMoveableModule, NgxMoveableComponent } from '../ngx-moveable';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    NgxMoveableComponent,
-  ],
-  imports: [
-    BrowserModule,
-    // NgxMoveableModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
-```
-
-### Template
 ```html
-<ngx-moveable
-  [target]="target"
-  [origin]="true"
-  [edge]="false"
+<script>
+    import Moveable from "svelte-moveable";
+</script>
+```
+```jsx
+<Moveable
+  target={target}
+  origin={true}
+  edge={false}
 
-  [draggable]="true"
-  [throttleDrag]="0"
-  (dragStart)="onDragStart($event)"
-  (drag)="onDrag($event)"
-  (dragEnd)="onDragEnd($event)"
+  draggable={true}
+  throttleDrag={0}
+  on:dragStart={({ detail }) => onDragStart(detail)}
+  on:drag={({ detail }) => onDrag(detail)}
+  on:dragEnd={({ detail }) => onDragEnd(detail)}
+
+  keepRatio={false}
+  renderDirections={["nw", "ne", "sw", "se", "n", "w", "s", "e"]}
+
+  resizable={false}
+  throttleResize={0}
+  on:resizeStart={({ detail }) => onResizeStart(detail)}
+  on:resize={({ detail }) => onResize(detail)}
+  on:resizeEnd={({ detail }) => onResizeEnd(detail)}
+
+  scalable={false}
+  throttleScale={0}
+  on:scaleStart={({ detail }) => onScaleStart(detail)}
+  on:scale={({ detail }) => onScale(detail)}
+  on:scaleEnd={({ detail }) => onScaleEnd(detail)}
 
 
-  [keepRatio]="false"
+  rotatable={false}
+  throttleRotate={0}
+  on:rotateStart={({ detail }) => onRotateStart(detail)}
+  on:rotate={({ detail }) => onRotate(detail)}
+  on:rotateEnd={({ detail }) => onRotateEnd(detail)}
 
-  [resizable]="false"
-  [throttleResize]="0"
-  (resizeStart)="onResizeStart($event)"
-  (resize)="onResize($event)"
-  (resizeEnd)="onResizeEnd($event)"
-  
-  [scalable]="false"
-  [throttleScale]="0"
-  (scaleStart)="onScaleStart($event)"
-  (scale)="onScale($event)"
-  (scaleEnd)="onScaleEnd($event)"
+  warpable={false}
+  on:warpStart={({ detail }) => onWarpStart(detail)}
+  on:warp={({ detail }) => onWarp(detail)}
+  on:warpEnd={({ detail }) => onWarpEnd(detail)}
 
-
-  [rotatable]="false"
-  [throttleRotate]="0"
-  (rotateStart)="onRotateStart($event)"
-  (rotate)="onRotate($event)"
-  (rotateEnd)="onRotateEnd($event)"
-
-  [warpable]="false"
-  (warpStart)="onWarpStart($event)"
-  (warp)="onWarp($event)"
-  (warpEnd)="onWarpEnd($event)"
-
-  [pinchable]="false"
-  (pinchStart)="onPinchStart($event)"
-  (pinch)="onPinch($event)"
-  (pinchEnd)="onPinchEnd($event)"
+  pinchable="false"
+  on:pinchStart={({ detail }) => onPinchStart(detail)}
+  on:pinch={({ detail }) => onPinch(detail)}
+  on:pinchEnd={({ detail }) => onPinchEnd(detail)}
 />
+
 ```
 
 
-## ⚙️ Development
+## ⚙️ Developments
+### `npm run dev`
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.1.
+Runs the app in the development mode.<br>
+Open [http://localhost:5000](http://localhost:5000) to view it in the browser.
 
-## Development server
-
-Run `npm run start(ng serve)` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
 
 
