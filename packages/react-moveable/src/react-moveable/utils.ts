@@ -91,19 +91,24 @@ export function getOffsetInfo(
     const body = document.body;
     let target = !el || isParent ? el : el.parentElement;
     let isEnd = false;
+    let position = "relative";
 
     while (target && target !== body) {
         if (lastParent === target) {
             isEnd = true;
         }
-        const { position, transform } = getComputedStyle(target);
+        const style = getComputedStyle(target);
+        const transform = style.transform;
+        position = style.position!;
 
         if (position !== "static" || (transform && transform !== "none")) {
             break;
         }
         target = target.parentElement;
+        position = "relative";
     }
     return {
+        isStatic: position === "static",
         isEnd: isEnd || !target || target === body,
         offsetParent: target as HTMLElement || body,
     };
@@ -187,19 +192,17 @@ export function caculateMatrixStack(
                 createIdentityMatrix(n),
             );
         }
-        let parentElement: HTMLElement | null = el.parentElement;
+        const {
+            offsetParent,
+            isEnd: isOffsetEnd,
+            isStatic,
+        } = getOffsetInfo(el, container);
 
-        if (isWebkit && !hasNotOffset && !isSVG) {
-            const {
-                isEnd: isWebkitEnd,
-                offsetParent,
-            } = getOffsetInfo(el, container);
+        if (isWebkit && !hasNotOffset && !isSVG && isStatic && position === "relative") {
+            offsetLeft -= offsetParent.offsetLeft;
+            offsetTop -= offsetParent.offsetTop;
 
-            parentElement = offsetParent;
-            offsetLeft -= (parentElement || container as HTMLElement || document.body).offsetLeft;
-            offsetTop -= (parentElement || container as HTMLElement || document.body).offsetTop;
-
-            isEnd = isEnd || isWebkitEnd;
+            isEnd = isEnd || isOffsetEnd;
         }
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
@@ -216,11 +219,7 @@ export function caculateMatrixStack(
         }
         if (isEnd || isFixed) {
             break;
-        } else if (isWebkit) {
-            el = parentElement;
         } else {
-            const { offsetParent, isEnd: isOffsetEnd } = getOffsetInfo(el, container);
-
             el = offsetParent;
             isEnd = isOffsetEnd;
         }

@@ -156,7 +156,7 @@ class App extends React.Component {
                     ref={ref(this, "moveable")}
                     keepRatio={true}
                     origin={false}
-                    dragArea={true}
+                    // dragArea={true}
                     draggable={true}
                     snappable={true}
                     scrollable={true}
@@ -266,11 +266,16 @@ class App extends React.Component {
                 onWarp={e => {
                     e.target.style.transform = e.transform;
                 }} />}
-                        <div className="emo">
-                            <img src="./emo.png" />
+                        <div className="staticbox">
+                            <div className="emo">
+                                <img src="./emo.png" />
+                            </div>
                         </div>
 
                         <div className="box box2" data-target="box2"><span>A</span></div>
+
+                        <div className="box box23" data-target="box23"><span>AA</span></div>
+
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />
                         <p data-target="p">
                             Edit <code data-target="code">src/App.tsx</code> and save to reload.

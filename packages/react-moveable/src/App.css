@@ -45,8 +45,8 @@ img {
     height: 600px; */
 }
 .App-header {
-    /* position: static!important; */
-    position: relative;
+    position: static!important;
+    /* position: relative; */
     background-color: #282c34;
     min-height: 100vh;
     /* display: flex;
@@ -54,14 +54,18 @@ img {
     align-items: center;
     justify-content: center; */
     font-size: calc(10px + 2vmin);
-    /* transform: rotate(-9deg); */
+    transform: rotate(-9deg);
     color: white;
 }
 
 .App-link {
     color: #61dafb;
 }
-
+.App svg {
+    position: absolute;
+    top: 100px;
+    left: 100px;
+}
 .App svg * {
     transform-origin: 20% 50%;
 }
@@ -77,6 +81,11 @@ img {
 .box.box2 {
     width: 120px;
     height: 120px;
+}
+.box.box23 {
+    position: absolute;
+    top: 150px;
+    left: 450px;
 }
 .box2 span {
     pointer-events: none;
@@ -119,6 +128,10 @@ img {
     margin-left: -8px;
 }
 
+.staticbox {
+    margin-top: 20px;
+    margin-left: 20px;
+}
 .emo {
     position: absolute;
     width: 200px;

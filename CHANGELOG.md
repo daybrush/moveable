@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.10.4] - 2019-11-15
+### Fixed
+* Fixes incorrect calculation when parent element is static in safari.
+
 ## [0.10.2] - 2019-11-12
 ### Fixed
 * Fix that scale or resize with `keepRatio`, snap is wrong.
