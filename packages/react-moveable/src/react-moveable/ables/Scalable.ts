@@ -231,6 +231,12 @@ export default {
                 nowDist[1] = throttle(nowDist[1] * startScale[1], throttleScale!) / startScale[1];
             }
         }
+        if (nowDist[0] === 0) {
+            nowDist[0] = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+        }
+        if (nowDist[1] === 0) {
+            nowDist[1] = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+        }
         const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
         scale = multiply2(nowDist, startScale);
 
