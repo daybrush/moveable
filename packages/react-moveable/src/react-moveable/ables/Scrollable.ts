@@ -18,7 +18,7 @@ export default {
     dragStart(moveable: MoveableManager<ScrollableProps>, e: any) {
         const props = moveable.props;
         const {
-            scrollContainer = props.container || document.body,
+            scrollContainer = moveable.getContainer(),
         } = props;
 
         const scrollClientRect = scrollContainer.getBoundingClientRect();

@@ -56,7 +56,7 @@
   "dependencies": {
     "@egjs/component": "^2.1.2",
     "preact": "^10.0.4",
-    "preact-moveable": "^0.12.11"
+    "preact-moveable": "^0.12.12"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",

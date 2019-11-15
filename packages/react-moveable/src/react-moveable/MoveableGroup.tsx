@@ -4,7 +4,7 @@ import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
-import { getTargetInfo, throttle, getAbsolutePosesByState } from "./utils";
+import { getTargetInfo, throttle, getAbsolutePosesByState, equals } from "./utils";
 import { plus, rotate } from "@moveable/matrix";
 
 function getMaxPos(poses: number[][][], index: number) {
@@ -113,7 +113,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
             this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "Group");
             this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
         }
-        const isContainerChanged = prevProps.container !== props.container;
+        const isContainerChanged = !equals(prevProps.container, props.container);
 
         if (isContainerChanged) {
             state.container = props.container;

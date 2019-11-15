@@ -130,9 +130,12 @@ export function caculateMatrixStack(
     let transformOrigin!: number[];
     let targetMatrix!: number[];
 
+    const offsetContainer = getOffsetInfo(container, container, true).offsetParent;
+
     if (prevMatrix) {
         container = target.parentElement;
     }
+
     while (el && !isEnd) {
         const style: CSSStyleDeclaration = getComputedStyle(el);
         const tagName = el.tagName.toLowerCase();
@@ -154,14 +157,14 @@ export function caculateMatrixStack(
             matrix = convertDimension(matrix, 3, 4);
         }
 
-        let offsetLeft = (el as any).offsetLeft;
-        let offsetTop = (el as any).offsetTop;
+        let offsetLeft = (el as HTMLElement).offsetLeft;
+        let offsetTop = (el as HTMLElement).offsetTop;
 
         if (isFixed) {
             const containerRect = (container || document.documentElement).getBoundingClientRect();
 
             offsetLeft -= containerRect.left;
-            offsetTop -= containerRect.top;
+            offsetTop  -= containerRect.top;
         }
         // svg
         const isSVG = isUndefined(offsetLeft);
@@ -204,11 +207,18 @@ export function caculateMatrixStack(
 
             isEnd = isEnd || isOffsetEnd;
         }
+        let parentClientLeft = 0;
+        let parentClientTop = 0;
+
+        if (!hasNotOffset && offsetContainer !== offsetParent) {
+            parentClientLeft = offsetParent.clientLeft;
+            parentClientTop = offsetParent.clientTop;
+        }
         matrixes.push(
             getAbsoluteMatrix(matrix, n, origin),
             createOriginMatrix([
-                (hasNotOffset ? el : offsetLeft - el.scrollLeft) as any,
-                (hasNotOffset ? origin : offsetTop - el.scrollTop) as any,
+                (hasNotOffset ? el : offsetLeft - el.scrollLeft + parentClientLeft) as any,
+                (hasNotOffset ? origin : offsetTop - el.scrollTop + parentClientTop) as any,
             ], n),
         );
         if (!targetMatrix) {
@@ -816,4 +826,14 @@ export function getKeepRatioHeight(width: number, isWidth: boolean, ratio: numbe
 }
 export function getKeepRatioWidth(height: number, isWidth: boolean, ratio: number) {
     return height * (isWidth ? 1 / ratio : ratio);
+}
+
+export function equals(a1: any, a2: any) {
+    if (a1 === a2) {
+        return true;
+    } else if (a1 == null && a2 == null) {
+        return true;
+    } else {
+        return false;
+    }
 }

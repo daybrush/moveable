@@ -262,7 +262,7 @@ class App extends React.Component {
                 ref={ref(window, "er")}
                 warpable={true}
                 target={this.state.emo}
-                container={this.state.container}
+                // container={document.querySelector<HTMLElement>(".App")}
                 onWarp={e => {
                     e.target.style.transform = e.transform;
                 }} />}
@@ -306,7 +306,6 @@ class App extends React.Component {
     }
     public onClickInside = (e: any) => {
         const target = e.target;
-
     }
     public setItem(el: HTMLElement | SVGElement) {
         this.itemMap.set(el, new Frame({

@@ -9,6 +9,7 @@ import {
     getAbsolutePosesByState,
     getRect,
     filterAbles,
+    equals,
 } from "./utils";
 import styler from "react-css-styler";
 import Dragger from "@daybrush/drag";
@@ -112,12 +113,12 @@ export default class MoveableManager<T = {}, U = {}>
         unset(this, "targetDragger");
         unset(this, "controlDragger");
     }
-    public getContainer(): HTMLElement | SVGElement | null {
+    public getContainer(): HTMLElement | SVGElement {
         const { parentMoveable, container } = this.props;
 
         return container!
             || (parentMoveable && parentMoveable.getContainer())
-            || this.controlBox.getElement().offsetParent as HTMLElement;
+            || this.controlBox.getElement().parentElement!;
     }
     public isMoveableElement(target: HTMLElement | SVGElement) {
         return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
@@ -219,7 +220,7 @@ export default class MoveableManager<T = {}, U = {}>
         }
         this.updateAbles();
 
-        const isChanged = stateTarget !== target || stateContainer !== container;
+        const isChanged = !equals(stateTarget, target) || !equals(stateContainer, container);
 
         if (!isChanged) {
             return;

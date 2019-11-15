@@ -13,6 +13,9 @@
     /* transform-origin: 0% 0%; */
     box-sizing: border-box;
 }
+[data-target]:nth-child(2n) {
+    border: 10px solid black;
+}
 
 .App-logo {
     position: relative;
@@ -54,7 +57,7 @@ img {
     align-items: center;
     justify-content: center; */
     font-size: calc(10px + 2vmin);
-    transform: rotate(-9deg);
+    /* transform: rotate(-9deg); */
     color: white;
 }
 
