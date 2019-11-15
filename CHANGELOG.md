@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+
+## [0.10.5] - 2019-11-15
+### Fixed
+* Fixed calculation of client, offset position considering borderWidth.
+* Fixed zero scale
+
+
 ## [0.10.4] - 2019-11-15
 ### Fixed
 * Fixes incorrect calculation when parent element is static in safari.

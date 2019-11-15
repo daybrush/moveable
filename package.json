@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -16,7 +16,8 @@
     "prerelease": "npm run doc && npm run build && prerelease --dirs=dist,doc",
     "release": "npm run build && npm run doc && release --dirs=dist,doc",
     "release:init": "npm run build && npm run doc && release -i --dirs=dist,doc",
-    "deploy": "gh-pages -d ./demo --dest=./ --add --remote origin"
+    "deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
+    "packages": "pvu --path=packages --packages=svelte-moveable,ngx-moveable/projects/ngx-moveable"
   },
   "keywords": [
     "moveable",
@@ -70,6 +71,7 @@
     "gh-pages": "^2.0.1",
     "keycon": "^0.5.0",
     "print-sizes": "0.0.4",
+    "pvu": "^0.1.0",
     "rollup-plugin-css-bundle": "^1.0.4",
     "rollup-plugin-preact": "^0.5.2",
     "scenejs": "^1.1.4",
