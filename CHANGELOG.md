@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+
+## [0.10.8] - 2019-11-21
+### Fixed
+* Fix Resizable's wrong position calculation
+* Fixes incorrect import issue in Preact.
+
+
 ## [0.10.5] - 2019-11-15
 ### Fixed
 * Fixed calculation of client, offset position considering borderWidth.
