@@ -7,7 +7,8 @@ const defaultOptions = {
     external: {
         "@daybrush/utils": "utils",
         "@daybrush/drag": "Dragger",
-        "preact": "Preact",
+        "preact": "preact",
+        "preact/compat": "preact/compat",
         "preact-compat": "preact-compat",
         "framework-utils": "framework-utils",
         "preact-css-styler": "preact-css-styler",
@@ -21,7 +22,7 @@ const defaultOptions = {
             noEnv: false,
             noReactIs: false,
             usePreactX: true,
-            resolvePreactCompat: true,
+            // resolvePreactCompat: true,
             aliasModules: {
                 "react-css-styler": "preact-css-styler",
             },

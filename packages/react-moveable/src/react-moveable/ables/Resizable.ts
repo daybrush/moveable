@@ -229,11 +229,18 @@ export default {
         if (!parentMoveable && delta.every(num => !num)) {
             return;
         }
-
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
             : getResizeDist(moveable, nextWidth, nextHeight, direction, transformOrigin, dragClient);
 
+        if (!keepRatio && !parentFlag) {
+            if (!direction[0]) {
+                inverseDelta[0] = 0;
+            }
+            if (!direction[1]) {
+                inverseDelta[1] = 0;
+            }
+        }
         const params = fillParams<OnResize>(moveable, e, {
             width: width + distWidth,
             height: height + distHeight,

@@ -145,3 +145,8 @@ img {
 .emo img {
     width: 100%;
 }
+
+.box.box23 {
+    border-left-width: 0px;
+    border-right-width: 0px;
+}
