@@ -154,7 +154,7 @@ class App extends React.Component {
                     target={selectedTarget}
                     container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
-                    keepRatio={true}
+                    // keepRatio={true}
                     origin={false}
                     // dragArea={true}
                     draggable={true}
@@ -231,7 +231,7 @@ class App extends React.Component {
                     onResize={({ target, width, height, drag, delta }) => {
                         // console.log(width, height);
                         item.set("width", `${width}px`);
-                        item.set("height", `${height}px`);
+                        // item.set("height", `${height}px`);
                         item.set("tx", `${drag.beforeTranslate[0]}px`);
                         item.set("ty", `${drag.beforeTranslate[1]}px`);
 

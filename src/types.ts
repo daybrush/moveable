@@ -83,6 +83,7 @@ export interface MoveableOptions {
     dragArea?: boolean;
     rotationPosition?: "top" | "bottom" | "left" | "right";
 
+    baseDirection?: number[];
     renderDirections?: string[];
 
     scrollable?: boolean;

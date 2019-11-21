@@ -149,4 +149,9 @@ img {
 .box.box23 {
     border-left-width: 0px;
     border-right-width: 0px;
+    word-break: break-all;
+    height: auto;
+}
+.box.box23 span {
+    position: relative;
 }
