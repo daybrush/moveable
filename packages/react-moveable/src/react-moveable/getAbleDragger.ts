@@ -40,7 +40,7 @@ function triggerAble<T extends IObject<any>>(
         triggerRenderStart(moveable, isGroup, e);
     } else if (isEnd) {
         triggerRenderEnd(moveable, isGroup, e);
-    } else {
+    } else if (isUpdate) {
         triggerRender(moveable, isGroup, e);
     }
     if (isEnd) {
@@ -54,6 +54,9 @@ function triggerAble<T extends IObject<any>>(
         }
     } else if (isEnd && !isUpdate) {
         moveable.forceUpdate();
+    }
+    if (!isStart && !isEnd && isUpdate) {
+        triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
     }
 }
 export function getAbleDragger<T>(

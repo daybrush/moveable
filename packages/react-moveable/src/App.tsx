@@ -17,18 +17,20 @@ setAlias("matrix3d", ["transform", "matrix3d"]);
 
 class App extends React.Component {
     public moveable!: Moveable;
-    public state = {
+    public state: {
+        container: any,
+        target: any,
+        emo: any,
+        isShift: boolean,
+        targets: Array<HTMLElement | SVGElement>,
+        isResizable: boolean,
+    } = {
         target: null,
         container: null,
         targets: [],
         isResizable: true,
+        isShift: false,
         emo: null,
-    } as {
-        container: any,
-        target: any,
-        emo: any,
-        targets: Array<HTMLElement | SVGElement>,
-        isResizable: boolean,
     };
     private itemMap: Map<HTMLElement |SVGElement, Frame> = new Map();
     private items: IObject<Frame> = {};
@@ -51,8 +53,8 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    // resizable={true}
-                    scalable={true}
+                    resizable={true}
+                    // scalable={true}
                     ref={ref(this, "ab")}
                     // keepRatio={false}
                     target={this.state.targets}
@@ -154,7 +156,7 @@ class App extends React.Component {
                     target={selectedTarget}
                     container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
-                    // keepRatio={true}
+                    // keepRatio={this.state.isShift}
                     origin={false}
                     // dragArea={true}
                     draggable={true}
@@ -231,7 +233,7 @@ class App extends React.Component {
                     onResize={({ target, width, height, drag, delta }) => {
                         // console.log(width, height);
                         item.set("width", `${width}px`);
-                        // item.set("height", `${height}px`);
+                        item.set("height", `${height}px`);
                         item.set("tx", `${drag.beforeTranslate[0]}px`);
                         item.set("ty", `${drag.beforeTranslate[1]}px`);
 
@@ -352,9 +354,9 @@ class App extends React.Component {
         const keycon = new KeyController(window);
 
         keycon.keydown("shift", () => {
-            this.setState({ isResizable: false });
+            this.setState({ isResizable: false, isShift: true });
         }).keyup("shift", () => {
-            this.setState({ isResizable: true });
+            this.setState({ isResizable: true, isShift: false });
         });
 
         const targets: any[] = [].slice.call(document.querySelectorAll(`[data-target="box"] span`));
