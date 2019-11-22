@@ -6,7 +6,7 @@ import {
 import MoveableManager from "./MoveableManager";
 import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
 import { splitUnit } from "@daybrush/utils";
-import { MoveableManagerState } from "./types";
+import { MoveableManagerState, GroupableProps, ResizableProps } from "./types";
 
 export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
     const {
@@ -229,12 +229,14 @@ export function getScaleDist(
 }
 
 export function getResizeDist(
-    moveable: MoveableManager<any>,
+    moveable: MoveableManager<GroupableProps>,
     width: number,
     height: number,
+    // prevWidth: number,
+    // prevHeight: number,
     direction: number[],
+    fixedPosition: number[],
     transformOrigin: string[],
-    dragClient?: number[],
 ) {
     const {
         groupable,
@@ -245,7 +247,7 @@ export function getResizeDist(
         offsetMatrix,
         is3d,
         width: prevWidth,
-        height: prevheight,
+        height: prevHeight,
         left,
         top,
     } = moveable.state;
@@ -256,14 +258,31 @@ export function getResizeDist(
         width,
         height,
         prevWidth,
-        prevheight,
+        prevHeight,
         prevOrigin,
     );
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
-    const startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
-    const dist = getDist(startPos, nextMatrix, width, height, n, direction);
+    const dist = getDist(fixedPosition, nextMatrix, width, height, n, direction);
 
     return minus(dist, [groupLeft, groupTop]);
+}
+export function getStartDirection(
+    moveable: MoveableManager<ResizableProps>,
+    direction: number[],
+) {
+    const {
+        baseDirection = [-1, -1],
+    } = moveable.props;
+    return [
+        direction[0] ? direction[0] : baseDirection[0] * -1,
+        direction[1] ? direction[0] : baseDirection[1] * -1,
+    ];
+}
+export function getFixedPosition(
+    moveable: MoveableManager<ResizableProps>,
+    direction: number[],
+) {
+    return getStartPos(getAbsolutePosesByState(moveable.state), direction);
 }

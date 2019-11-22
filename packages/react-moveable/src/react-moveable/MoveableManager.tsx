@@ -188,9 +188,14 @@ export default class MoveableManager<T = {}, U = {}>
         this.updateRect(type, true);
     }
     public getRect(): RectInfo {
+        const state = this.state;
         const poses = getAbsolutePosesByState(this.state);
         const [pos1, pos2, pos3, pos4] = poses;
         const rect = getRect(poses);
+        const {
+            width: offsetWidth,
+            height: offsetHeight,
+        } = state;
         const {
             width,
             height,
@@ -206,6 +211,8 @@ export default class MoveableManager<T = {}, U = {}>
             pos2,
             pos3,
             pos4,
+            offsetWidth,
+            offsetHeight,
         };
     }
     public checkUpdate() {

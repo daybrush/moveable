@@ -705,6 +705,7 @@ export interface ResizableProps {
     resizable?: boolean;
     throttleResize?: number;
     renderDirections?: string[];
+    baseDirection?: number[];
 
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
@@ -831,8 +832,10 @@ export interface OnCustomDrag extends Position {
  * @property - The coordinates of the vertex 1
  * @property - left position of the target relative to the container
  * @property - top position of the target relative to the container
- * @property - the offset width of the target
- * @property - the offset height of the target
+ * @property - The width of moveable element
+ * @property - The height of moveable element
+ * @property - The offset width of the target
+ * @property - The offset height of the target
  */
 export interface RectInfo {
     pos1: number[];
@@ -843,6 +846,8 @@ export interface RectInfo {
     top: number;
     width: number;
     height: number;
+    offsetWidth: number;
+    offsetHeight: number;
 }
 export interface MoveableInterface {
     getRect(): RectInfo;

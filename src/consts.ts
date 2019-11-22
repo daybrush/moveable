@@ -17,6 +17,7 @@ export const PROPERTIES: Array<keyof MoveableOptions> = [
     "getScrollPosition",
     "scrollContainer",
     "scrollThreshold",
+    "baseDirection",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",
