@@ -44,6 +44,7 @@ import {
  * @property - You can set up boundaries. (default: null)
  * @property - Add an event to the moveable area instead of the target for stopPropagation. (default: false)
 
+ * @property - Target's base direcition using top, left, right, bottom (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
  * @property - You can specify the position of the rotation. (default: "top")
  * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
  * @property - Whether or not target can be scrolled to the scroll container (default: false)

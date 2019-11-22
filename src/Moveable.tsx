@@ -471,6 +471,20 @@ class Moveable extends EgComponent implements MoveableInterface {
  * moveable.renderDirections = ["nw", "ne", "sw", "se"];
  */
 
+ /**
+ * Set target's base direciton using top, left, right, bottom
+ * (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
+ * @name Moveable#baseDirection
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   baseDirection: [-1, -1]
+ * });
+ *
+ * moveable.baseDirection = [-1, -1];
+ */
+
 /**
  * Whether or not target can be scrolled to the scroll container (default: false)
  * @name Moveable#scrollable

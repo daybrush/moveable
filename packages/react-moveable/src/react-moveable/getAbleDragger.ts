@@ -20,6 +20,7 @@ function triggerAble<T extends IObject<any>>(
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
     const isEnd = eventType === "End";
+    const isAfter = eventType.indexOf("After") > -1;
 
     if (isStart) {
         moveable.updateRect(eventType, true, false);
@@ -48,14 +49,15 @@ function triggerAble<T extends IObject<any>>(
     }
     if (!isStart && isUpdate) {
         if (results.some(able => able.updateRect) && !isGroup) {
-            moveable.updateRect(eventType);
+            moveable.updateRect(eventType, false, false);
         } else {
-            moveable.updateTarget(eventType);
+            moveable.updateRect(eventType, true, false);
         }
-    } else if (isEnd && !isUpdate) {
+    }
+    if ((!isStart && isUpdate) || (isEnd && !isUpdate)) {
         moveable.forceUpdate();
     }
-    if (!isStart && !isEnd && isUpdate) {
+    if (!isStart && !isEnd && !isAfter && isUpdate) {
         triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
     }
 }

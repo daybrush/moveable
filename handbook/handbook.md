@@ -170,9 +170,9 @@ import {
     [target]="target"
     [draggable]="true"
     [throttleDrag]="0"
-    (dragStart)="onDragStart($event)
-    (drag)="onDrag($event)
-    (dragEnd)="onDragEnd($event)
+    (dragStart)="onDragStart($event)"
+    (drag)="onDrag($event)"
+    (dragEnd)="onDragEnd($event)"
     />
 `,
 })
@@ -181,10 +181,10 @@ export class AppComponent {
         translate: [0, 0],
     };
     onDragStart({ set }) {
-        set(frame.translate);
+        set(this.frame.translate);
     }
     onDrag({ target, beforeTranslate }) {
-        frame.translate = beforeTranslate;
+        this.frame.translate = beforeTranslate;
         target.style.transform
             = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
     }
@@ -241,6 +241,8 @@ export class AppComponent {
 
 ### Options
 * [throttleResize](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleResize): throttle of width, height when resize. (default: 0)
+* [keepRatio](https://daybrush.com/moveable/release/latest/doc/Moveable.html#keepRatio): When resize or scale, keeps a ratio of the width, height. (default: false)
+* [baseDirection](https://daybrush.com/moveable/release/latest/doc/Moveable.html#baseDirection): Target's base direcition using top, left, right, bottom (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
 * [keepRatio](https://daybrush.com/moveable/release/latest/doc/Moveable.html#keepRatio): When resize or scale, keeps a ratio of the width, height. (default: false)
 
 
@@ -341,9 +343,9 @@ import {
     [resizable]="true"
     [throttleResize]="0"
     [keepRatio]="false"
-    (resizeStart)="onResizeStart($event)
-    (resize)="onResize($event)
-    (resizeEnd)="onResizeEnd($event)
+    (resizeStart)="onResizeStart($event)"
+    (resize)="onResize($event)"
+    (resizeEnd)="onResizeEnd($event)"
     />
 `,
 })
@@ -523,9 +525,9 @@ import {
     [scalable]="true"
     [throttleScale]="0"
     [keepRatio]="false"
-    (scaleStart)="onScaleStart($event)
-    (scale)="onScale($event)
-    (scaleEnd)="onScaleEnd($event)
+    (scaleStart)="onScaleStart($event)"
+    (scale)="onScale($event)"
+    (scaleEnd)="onScaleEnd($event)"
     />
 `,
 })
@@ -675,9 +677,9 @@ import {
     [rotatable]="true"
     [throttleRotate]="0"
     rotationPosition="top"
-    (rotateStart)="onRotateStart($event)
-    (rotate)="onRotate($event)
-    (rotateEnd)="onRotateEnd($event)
+    (rotateStart)="onRotateStart($event)"
+    (rotate)="onRotate($event)"
+    (rotateEnd)="onRotateEnd($event)"
     />
 `,
 })
@@ -814,9 +816,9 @@ import {
 <ngx-moveable
     [target]="target"
     [warpable]="true"
-    (warpStart)="onWarpStart($event)
-    (warp)="onWarp($event)
-    (warpEnd)="onWarpEnd($event)
+    (warpStart)="onWarpStart($event)"
+    (warp)="onWarp($event)"
+    (warpEnd)="onWarpEnd($event)"
     />
 `,
 })

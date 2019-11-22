@@ -60,6 +60,7 @@ export class NgxMoveableComponent
   @Input() public bounds!: { left?: number, top?: number, right?: number, bottom?: number };
   @Input() public dragArea!: boolean;
   @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
+  @Input() public baseDirection!: number[];
   @Input() public ables!: Able[];
 
   @Input() public className!: string;
