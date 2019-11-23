@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.11.1] - 2019-11-23
+### Fixed
+* Fix Resizable's base direction caculation
+
 ## [0.11.0] - 2019-11-23
 ### Added
-* add `baseDirection` props.
-* add `offsetWidth`, `offsetHeight` in `getRect`'s method return value. #99
+* Add `baseDirection` props.
+* Add `offsetWidth`, `offsetHeight` in `getRect`'s method return value. #99
 
 ### Fixed
 * Fix Resizable's wrong position calculation #99

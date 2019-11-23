@@ -277,7 +277,7 @@ export function getStartDirection(
     } = moveable.props;
     return [
         direction[0] ? direction[0] : baseDirection[0] * -1,
-        direction[1] ? direction[0] : baseDirection[1] * -1,
+        direction[1] ? direction[1] : baseDirection[1] * -1,
     ];
 }
 export function getFixedPosition(
