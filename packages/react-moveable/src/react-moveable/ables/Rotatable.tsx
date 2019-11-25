@@ -1,4 +1,4 @@
-import { throttle, prefix, triggerEvent, fillParams } from "../utils";
+import { throttle, prefix, triggerEvent, fillParams, getRotationRad } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import {
@@ -84,12 +84,6 @@ export function getPositions(
         return [pos4, pos3];
     }
     return [pos1, pos2];
-}
-export function getRotationRad(
-    poses: number[][],
-    direction: number,
-) {
-    return getRad(direction > 0 ? poses[0] : poses[1], direction > 0 ? poses[1] : poses[0]);
 }
 export function getRotationPosition(
     [pos1, pos2]: number[][],

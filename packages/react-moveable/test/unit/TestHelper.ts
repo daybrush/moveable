@@ -1,7 +1,8 @@
 import MoveableManager from "../../src/react-moveable/MoveableManager";
 import {  createRotateMatrix, caculate, minus, plus } from "@moveable/matrix";
-import { getPositions, getRotationPosition, getRotationRad } from "../../src/react-moveable/ables/Rotatable";
+import { getPositions, getRotationPosition } from "../../src/react-moveable/ables/Rotatable";
 import { RotatableProps } from "../../src/react-moveable";
+import { getRotationRad } from "../../src/react-moveable/utils";
 
 export async function wait(time: number) {
     return new Promise(resolve => {

@@ -58,11 +58,12 @@ class App extends React.Component {
                     ref={ref(this, "ab")}
                     // keepRatio={false}
                     target={this.state.targets}
+                    defaultGroupRotate={40}
                     origin={true}
                     snappable={true}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
-                    throttleRotate={30}
+                    throttleRotate={0}
                     onDragGroupStart={e => {
                         console.log("start", e);
 

@@ -507,13 +507,13 @@ export function getLineStyle(pos1: number[], pos2: number[]) {
         width: `${width}px`,
     };
 }
-export function getControlTransform(...poses: number[][]) {
+export function getControlTransform(rotation: number, ...poses: number[][]) {
     const length = poses.length;
 
     const x = poses.reduce((prev, pos) => prev + pos[0], 0) / length;
     const y = poses.reduce((prev, pos) => prev + pos[1], 0) / length;
     return {
-        transform: `translate(${x}px, ${y}px)`,
+        transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
     };
 }
 export function getSize(
@@ -559,6 +559,12 @@ export function getSize(
         ];
     }
 }
+export function getRotationRad(
+    poses: number[][],
+    direction: number,
+) {
+    return getRad(direction > 0 ? poses[0] : poses[1], direction > 0 ? poses[1] : poses[0]);
+}
 export function getTargetInfo(
     target?: HTMLElement | SVGElement,
     container?: HTMLElement | SVGElement | null,
@@ -588,6 +594,7 @@ export function getTargetInfo(
     let beforeOrigin = [0, 0];
     let clientRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
     let containerRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
+    let rotation = 0;
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
     const prevN = state ? (state.is3d ? 4 : 3) : undefined;
@@ -638,9 +645,11 @@ export function getTargetInfo(
         containerRect = getClientRect(
             getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
         );
+        rotation = getRotationRad([pos1, pos2], direction);
     }
 
     return {
+        rotation,
         containerRect,
         beforeDirection,
         direction,

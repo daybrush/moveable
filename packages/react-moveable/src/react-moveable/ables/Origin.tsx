@@ -8,11 +8,11 @@ export default {
         if (!moveable.props.origin) {
             return null;
         }
-        const { beforeOrigin } = moveable.state;
+        const { beforeOrigin, rotation } = moveable.state;
 
         return [
             <div className={prefix("control", "origin")}
-                style={getControlTransform(beforeOrigin)} key="beforeOrigin"></div>,
+                style={getControlTransform(rotation, beforeOrigin)} key="beforeOrigin"></div>,
         ];
     },
 };

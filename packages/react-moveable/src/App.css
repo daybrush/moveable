@@ -155,3 +155,6 @@ img {
 .box.box23 span {
     position: relative;
 }
+.moveable-area-pieces .moveable-area-piece {
+    background: #f55;
+}

@@ -9,7 +9,10 @@ export function renderControls(
     defaultDirections: string[],
     React: Renderer,
 ): any[] {
-    const { pos1, pos2, pos3, pos4 } = moveable.state;
+    const {
+        pos1, pos2, pos3, pos4,
+        rotation,
+    } = moveable.state;
     const {
         renderDirections: directions = defaultDirections,
     } = moveable.props;
@@ -27,7 +30,7 @@ export function renderControls(
         }
         return (
             <div className={prefix("control", "direction", direction)} data-direction={direction} key={direction}
-                style={getControlTransform(...indexes.map(index => poses[index]))}></div>
+                style={getControlTransform(rotation, ...indexes.map(index => poses[index]))}></div>
         );
     });
 }

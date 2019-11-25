@@ -63,6 +63,7 @@ export default class MoveableManager<T = {}, U = {}>
         pos4: [0, 0],
         clientRect: { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 },
         containerRect: { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 },
+        rotation: 0,
     } as any;
     public targetAbles: Array<Able<T>> = [];
     public controlAbles: Array<Able<T>> = [];
