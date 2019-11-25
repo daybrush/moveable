@@ -97,6 +97,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         dragArea: true,
         keepRatio: true,
         targets: [],
+        defaultGroupRotate: 0,
     };
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
@@ -137,11 +138,12 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         });
 
         const state = this.state;
-        const target = state.target! || this.props.target!;
+        const props = this.props;
+        const target = state.target! || props.target!;
 
-        if (!isTarget || (type !== "" && this.props.updateGroup)) {
+        if (!isTarget || (type !== "" && props.updateGroup)) {
             // reset rotataion
-            this.rotation = 0;
+            this.rotation = props.defaultGroupRotate!;
         }
         const rotation = this.rotation;
         const [left, top, width, height] = getGroupRect(this.moveables, rotation);

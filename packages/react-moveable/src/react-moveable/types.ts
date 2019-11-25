@@ -52,6 +52,7 @@ export type MoveableManagerState<T = {}> = {
     dragger: Dragger | CustomDragger | null;
     clientRect: MoveableClientRect;
     containerRect: MoveableClientRect;
+    rotation: number;
 } & T;
 
 export interface Renderer {
@@ -774,6 +775,7 @@ export interface GroupableProps extends
     DragAreaProps,
     ScrollableProps {
     groupable?: boolean;
+    defaultGroupRotate?: number;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
 }
