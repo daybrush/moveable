@@ -1,7 +1,7 @@
 import MoveableManager from "../MoveableManager";
 import { createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
 import { ref } from "framework-utils";
-import { triggerEvent, fillParams } from "../utils";
+import { triggerEvent, fillParams, getRect } from "../utils";
 import { Renderer, GroupableProps, DragAreaProps, OnClick } from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
 import MoveableGroup from "../MoveableGroup";
@@ -68,14 +68,23 @@ export default {
         datas.isDragArea = false;
         datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
-        const { left, top, width, height } = moveable.state.clientRect;
+        const {
+            clientRect,
+            pos1, pos2, pos3, pos4,
+        } = moveable.state;
+        const { left, top, width, height } = clientRect;
+        const {
+            left: relativeLeft,
+            top: relativeTop,
+        } = getRect([pos1, pos2, pos3, pos4]);
         const posX = clientX - left;
         const posY = clientY - top;
+
         const rects = [
-            { left: 0, top: 0, width, height: posY - 10 },
-            { left: 0, top: 0, width: posX - 10, height },
-            { left: 0, top: posY + 10, width, height: height - posY - 10 },
-            { left: posX + 10, top: 0, width: width - posX - 10, height },
+            { left: relativeLeft, top: relativeTop, width, height: posY - 10 },
+            { left: relativeLeft, top: relativeTop, width: posX - 10, height },
+            { left: relativeLeft, top: relativeTop + posY + 10, width, height: height - posY - 10 },
+            { left: relativeLeft + posX + 10, top: relativeTop, width: width - posX - 10, height },
         ];
 
         const children = [].slice.call(areaElement.nextElementSibling!.children) as HTMLElement[];
