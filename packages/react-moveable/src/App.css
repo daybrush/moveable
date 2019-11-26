@@ -25,6 +25,8 @@
     top: calc(50% - 100px);
     width: 300px;
     height: 200px;
+    border: 2px solid black;
+    box-sizing: content-box;
     /* transform-origin: 0% 0%!important; */
 }
 

@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent,
-    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth,
+    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth, getSize, getCSSSize,
 } from "../utils";
 import {
     setDragStart,
@@ -69,8 +69,10 @@ export default {
         datas.startOffsetHeight = height;
         datas.prevWidth = 0;
         datas.prevHeight = 0;
-        datas.startWidth = width;
-        datas.startHeight = height;
+        [
+            datas.startWidth,
+            datas.startHeight,
+        ] = getCSSSize(target);
         datas.transformOrigin = moveable.props.transformOrigin;
         datas.startDirection = getStartDirection(moveable, direction);
         datas.fixedPosition = getFixedPosition(moveable, datas.startDirection);

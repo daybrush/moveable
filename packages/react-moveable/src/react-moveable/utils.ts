@@ -516,9 +516,17 @@ export function getControlTransform(rotation: number, ...poses: number[][]) {
         transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
     };
 }
+export function getCSSSize(target: SVGElement | HTMLElement) {
+    const style = window.getComputedStyle(target);
+
+    return [
+        parseFloat(style.width!),
+        parseFloat(style.height!),
+    ];
+}
 export function getSize(
     target: SVGElement | HTMLElement,
-    style: CSSStyleDeclaration = getComputedStyle(target),
+    style: CSSStyleDeclaration = window.getComputedStyle(target),
     isOffset?: boolean,
     isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
 ) {
