@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent,
-    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth, getSize, getCSSSize,
+    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize,
 } from "../utils";
 import {
     setDragStart,
@@ -76,6 +76,7 @@ export default {
         datas.transformOrigin = moveable.props.transformOrigin;
         datas.startDirection = getStartDirection(moveable, direction);
         datas.fixedPosition = getFixedPosition(moveable, datas.startDirection);
+        datas.fixedOriginalPosition = getFixedPosition(moveable, direction);
 
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
@@ -238,8 +239,9 @@ export default {
         if (!parentMoveable && delta.every(num => !num)) {
             return;
         }
-        const startDirection = keepRatio ? direction : datas.startDirection;
-        const fixedPosition = dragClient || (keepRatio ? getFixedPosition(moveable, direction) : datas.fixedPosition);
+
+        const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
+        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
             : getResizeDist(

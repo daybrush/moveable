@@ -4,6 +4,7 @@
     /* transform: scaleX(1) translateY(30px); */
     top: 100px;
     position: relative;
+    /* transform: scale(0.75); */
 }
 
 .App * {

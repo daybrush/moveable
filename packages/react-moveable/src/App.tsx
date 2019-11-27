@@ -58,7 +58,7 @@ class App extends React.Component {
                     ref={ref(this, "ab")}
                     // keepRatio={false}
                     target={this.state.targets}
-                    defaultGroupRotate={40}
+                    defaultGroupRotate={0}
                     origin={true}
                     snappable={true}
                     verticalGuidelines={[100, 200, 400, 500]}
@@ -125,7 +125,7 @@ class App extends React.Component {
                             // groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
                             // groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
 
-                            console.log(ev.drag.beforeTranslate[0]);
+                            // console.log(ev.drag.beforeTranslate[0]);
                             groupItem.set("tx", `${ev.drag.beforeTranslate[0]}px`);
                             groupItem.set("ty", `${ev.drag.beforeTranslate[1]}px`);
                             groupItem.set("width", `${ev.width}px`);
@@ -155,9 +155,9 @@ class App extends React.Component {
                     />
                 <Moveable
                     target={selectedTarget}
-                    container={document.querySelector<HTMLElement>("#con")}
+                    // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
-                    // keepRatio={this.state.isShift}
+                    keepRatio={this.state.isShift}
                     origin={false}
                     // dragArea={true}
                     draggable={true}
