@@ -47,6 +47,9 @@ import {
  * @property - Target's base direcition using top, left, right, bottom (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
  * @property - You can specify the position of the rotation. (default: "top")
  * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+
+ * @property - Sets the initial rotation of the group. (default 0)
+
  * @property - Whether or not target can be scrolled to the scroll container (default: false)
  * @property - The container to which scroll is applied (default: container)
  * @property - Expand the range of the scroll check area. (default: 0)
@@ -86,6 +89,8 @@ export interface MoveableOptions {
 
     baseDirection?: number[];
     renderDirections?: string[];
+
+    defaultGroupRotate?: boolean;
 
     scrollable?: boolean;
     scrollContainer?: HTMLElement;

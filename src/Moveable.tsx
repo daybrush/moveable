@@ -485,6 +485,20 @@ class Moveable extends EgComponent implements MoveableInterface {
  * moveable.baseDirection = [-1, -1];
  */
 
+ /**
+ * Sets the initial rotation of the group. (default 0)
+ * @name Moveable#defaultGroupRotate
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   target: [].slice.call(document.querySelectorAll(".target")),
+ *   defaultGroupRotate: 0,
+ * });
+ *
+ * moveable.defaultGroupRotate = 40;
+ */
+
 /**
  * Whether or not target can be scrolled to the scroll container (default: false)
  * @name Moveable#scrollable
