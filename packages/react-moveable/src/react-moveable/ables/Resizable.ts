@@ -242,6 +242,7 @@ export default {
 
         const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
         const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
+
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
             : getResizeDist(
@@ -381,7 +382,7 @@ export default {
             offsetWidth / (offsetWidth - dist[0]),
             offsetHeight / (offsetHeight - dist[1]),
         ];
-        const prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+        const fixedPosition = datas.fixedOriginalPosition;
 
         const events = triggerChildAble(
             moveable,
@@ -399,7 +400,7 @@ export default {
                     3,
                 );
 
-                return { ...e, parentScale, dragClient: plus(prevPos, [clientX, clientY]) };
+                return { ...e, parentScale, dragClient: plus(fixedPosition, [clientX, clientY]) };
             },
         );
         const nextParams: OnResizeGroup = {
