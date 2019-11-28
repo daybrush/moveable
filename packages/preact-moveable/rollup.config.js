@@ -3,6 +3,7 @@ const preact = require("rollup-plugin-preact");
 
 
 const defaultOptions = {
+    sourcemap: false,
     tsconfig: "tsconfig.build.json",
     external: {
         "@daybrush/utils": "utils",

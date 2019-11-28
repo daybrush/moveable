@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.12.0] - 2019-11-28
+### Added
+* Add `defaultGroupRotate` props. #102
+
+### Fixed
+* Fix that `clickGroup` does not trigger after rotating #103
+* Fix that at certain angles, moveable-control handle gets cut #104
+* Fix that Element "sliding" when resizing #104
+
 ## [0.11.1] - 2019-11-23
 ### Fixed
 * Fix Resizable's base direction caculation

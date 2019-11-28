@@ -375,7 +375,6 @@ export default {
         }
         const {
             offsetWidth, offsetHeight, dist,
-            direction,
         } = params;
 
         const parentScale = [

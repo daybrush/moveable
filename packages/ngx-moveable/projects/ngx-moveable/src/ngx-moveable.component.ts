@@ -61,6 +61,7 @@ export class NgxMoveableComponent
   @Input() public dragArea!: boolean;
   @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
   @Input() public baseDirection!: number[];
+  @Input() public defaultGroupRotate!: boolean;
   @Input() public ables!: Able[];
 
   @Input() public className!: string;
