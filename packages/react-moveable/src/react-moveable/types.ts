@@ -449,10 +449,12 @@ export interface OnRotateGroupStart extends OnRotateStart {
  * @extends Moveable.OnRotate
  * @property - The rotating targets
  * @property - Each `rotate` & `drag` event on the targets
+ * @property - You can set the current rotate value.
  */
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
     events: Array<OnRotate & { drag: OnDrag }>;
+    set: (rotation: number) => any;
 }
 
 /**

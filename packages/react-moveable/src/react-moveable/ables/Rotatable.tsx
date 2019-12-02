@@ -332,6 +332,9 @@ export default {
         const nextParams: OnRotateGroup = {
             targets: moveable.props.targets!,
             events,
+            set: (rotation: number) => {
+                moveable.rotation = rotation;
+            },
             ...params,
         };
 
