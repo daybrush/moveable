@@ -30,7 +30,6 @@ export default class MoveableManager<T = {}, U = {}>
         target: null,
         container: null,
         origin: true,
-        keepRatio: false,
         edge: false,
         parentMoveable: null,
         parentPosition: null,

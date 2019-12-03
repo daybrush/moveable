@@ -50,6 +50,10 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
 export default {
     name: "warpable",
     ableGroup: "size",
+    props: {
+        warpable: Boolean,
+        renderDirections: Array,
+    },
     render(moveable: MoveableManager<ResizableProps & ScalableProps & WarpableProps>, React: Renderer) {
         const { resizable, scalable, warpable } = moveable.props;
 

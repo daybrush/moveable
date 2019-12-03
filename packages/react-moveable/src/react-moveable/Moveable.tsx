@@ -28,7 +28,7 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
         } else {
             const moveableTarget = isArr ? (target as any[])[0] : target;
 
-            return <MoveableManager key="single" ref={ref(this, "moveable")}
+            return <MoveableManager<MoveableProps> key="single" ref={ref(this, "moveable")}
                 {...{ ...this.props, target: moveableTarget, ables: [...MOVEABLE_ABLES, ...ables] }} />;
         }
     }

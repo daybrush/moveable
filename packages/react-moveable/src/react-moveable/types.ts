@@ -12,19 +12,21 @@ export interface MoveableClientRect {
     height: number;
 }
 export type MoveableManagerProps<T = {}> = {
+    parentMoveable?: any;
+    parentPosition?: { left: number, top: number } | null;
+} & MoveableDefaultProps & T;
+
+export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
     dragArea?: boolean;
-    parentMoveable?: any;
-    parentPosition?: { left: number, top: number } | null;
     origin?: boolean;
     transformOrigin?: Array<string | number> | "";
     edge?: boolean;
-    keepRatio?: boolean;
-    pinchThreshold?: number;
-    ables?: Array<Able<T>>;
+    ables?: Able[];
     className?: string;
-} & T;
+    pinchThreshold?: number;
+}
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
     target: SVGElement | HTMLElement | null | undefined;
@@ -89,22 +91,16 @@ export interface MoveableProps extends
     SnappableProps,
     ScrollableProps,
     RenderProps {
-    target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
-    container?: SVGElement | HTMLElement | null;
-    origin?: boolean;
-    keepRatio?: boolean;
-    edge?: boolean;
-    pinchThreshold?: number;
-    ables?: Able[];
+        target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
 export type MoveableState = MoveableManagerState;
 
 export interface Able<T = any> {
     name: string & keyof MoveableManagerProps<T>;
+    props: IObject<any>;
     ableGroup?: string;
     updateRect?: boolean;
     canPinch?: boolean;
-
     unset?: (moveable: MoveableManagerProps<any>) => any;
     render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
 
@@ -709,6 +705,7 @@ export interface ResizableProps {
     throttleResize?: number;
     renderDirections?: string[];
     baseDirection?: number[];
+    keepRatio?: boolean;
 
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
@@ -722,6 +719,7 @@ export interface ScalableProps {
     scalable?: boolean;
     throttleScale?: number;
     renderDirections?: string[];
+    keepRatio?: boolean;
 
     onScaleStart?: (e: OnScaleStart) => any;
     onScale?: (e: OnScale) => any;
@@ -757,6 +755,8 @@ export interface WarpableProps {
 
 export interface PinchableProps extends ResizableProps, ScalableProps, RotatableProps {
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
+    pinchThreshold?: number;
+
     onPinchStart?: (e: OnPinchStart) => any;
     onPinch?: (e: OnPinch) => any;
     onPinchEnd?: (e: OnPinchEnd) => any;

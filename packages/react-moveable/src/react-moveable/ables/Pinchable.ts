@@ -18,6 +18,10 @@ function getRotatiion(touches: Client[]) {
 export default {
     name: "pinchable",
     updateRect: true,
+    props: {
+        pinchable: Boolean,
+        pinchThreshold: Number,
+    },
     pinchStart(
         moveable: MoveableManager<PinchableProps, SnappableState>,
         e: any,

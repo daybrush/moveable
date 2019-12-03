@@ -25,6 +25,12 @@ export default {
     name: "scalable",
     ableGroup: "size",
     canPinch: true,
+    props: {
+        scalable: Boolean,
+        throttleScale: Number,
+        renderDirections: String,
+        keepRatio: Boolean,
+    },
     render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>, React: Renderer): any[] | undefined {
         const { resizable, scalable, edge } = moveable.props;
         if (!resizable && scalable) {

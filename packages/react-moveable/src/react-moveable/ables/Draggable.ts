@@ -9,6 +9,10 @@ import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 
 export default {
     name: "draggable",
+    props: {
+        draggable: Boolean,
+        throttleDrag: Number,
+    },
     dragStart(
         moveable: MoveableManager<DraggableProps>,
         e: any,

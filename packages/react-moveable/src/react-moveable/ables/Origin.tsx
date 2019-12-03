@@ -4,6 +4,9 @@ import { Renderer } from "../types";
 
 export default {
     name: "origin",
+    props: {
+        origin: Boolean,
+    },
     render(moveable: MoveableManager, React: Renderer): any {
         if (!moveable.props.origin) {
             return null;

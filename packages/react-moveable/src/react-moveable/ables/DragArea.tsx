@@ -26,6 +26,9 @@ function renderPieces(React: Renderer): any {
 }
 export default {
     name: "dragArea",
+    props: {
+        dragArea: Boolean,
+    },
     render(moveable: MoveableManager<GroupableProps>, React: Renderer): any[] {
         const { target, dragArea, groupable } = moveable.props;
 

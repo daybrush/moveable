@@ -31,7 +31,13 @@ export default {
     ableGroup: "size",
     updateRect: true,
     canPinch: true,
-
+    props: {
+        resizable: Boolean,
+        throttleResize: Number,
+        renderDirections: Array,
+        baseDirection: Array,
+        keepRatio: Boolean,
+    },
     render(moveable: MoveableManager<Partial<ResizableProps>>, React: Renderer): any[] | undefined {
         const { resizable, edge } = moveable.props;
         if (resizable) {

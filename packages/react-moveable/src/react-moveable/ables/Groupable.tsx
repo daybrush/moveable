@@ -5,6 +5,10 @@ import { Renderer } from "../types";
 
 export default {
     name: "groupable",
+    props: {
+        defaultGroupRotate: Number,
+        groupable: Boolean,
+    },
     render(moveable: MoveableGroup, React: Renderer): any[] {
         const targets = moveable.props.targets || [];
 

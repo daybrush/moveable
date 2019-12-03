@@ -106,7 +106,11 @@ function dragControlCondition(target: HTMLElement | SVGElement) {
 export default {
     name: "rotatable",
     canPinch: true,
-
+    props: {
+        rotatable: Boolean,
+        rotationPosition: String,
+        throttleRotate: Number,
+    },
     render(moveable: MoveableManager<RotatableProps>, React: Renderer): any {
         const {
             rotatable,

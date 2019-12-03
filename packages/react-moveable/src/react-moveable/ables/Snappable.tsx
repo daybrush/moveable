@@ -1,5 +1,11 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, SnappableProps, SnappableState, Guideline, SnapInfo, BoundInfo, ScalableProps } from "../types";
+import {
+    Renderer,
+    SnappableProps,
+    SnappableState, Guideline,
+    SnapInfo, BoundInfo,
+    ScalableProps, ResizableProps,
+} from "../types";
 import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
@@ -718,7 +724,7 @@ export function solveEquation(
 }
 
 export function getSnapInfosByDirection(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManager<SnappableProps & (ResizableProps | ScalableProps), SnappableState>,
     poses: number[][],
     snapDirection: number[] | true,
 ) {
@@ -824,6 +830,15 @@ export function checkSnapDrag(
 
 export default {
     name: "snappable",
+    props: {
+        snappable: [Boolean, Array],
+        snapCenter: Boolean,
+        snapThreshold: Number,
+        horizontalGuidelines: Array,
+        verticalGuidelines: Array,
+        elementGuidelines: Array,
+        bounds: Object,
+    } as const,
     render(moveable: MoveableManager<SnappableProps, SnappableState>, React: Renderer): any[] {
         const {
             top: targetTop,
