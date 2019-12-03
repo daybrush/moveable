@@ -210,6 +210,7 @@ export default {
                     nowDist[1] = throttle(nowDist[1] * startScale[1], throttleScale!) / startScale[1];
                 }
             }
+
             if (
                 (direction[0] && !direction[1])
                 || (snapDist[0] && !snapDist[1])
@@ -230,6 +231,8 @@ export default {
                 nowDist[0] = snapWidth / width / startScale[0];
             }
         } else {
+            nowDist[0] += snapDist[0];
+            nowDist[1] += snapDist[1];
             if (!snapDist[0]) {
                 nowDist[0] = throttle(nowDist[0] * startScale[0], throttleScale!) / startScale[0];
             }
