@@ -3,6 +3,7 @@ import Dragger, { OnDragStart, OnDrag, OnDragEnd, OnPinchEnd } from "@daybrush/d
 import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
 import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
+import MoveableGroup from "./MoveableGroup";
 
 function triggerAble<T extends IObject<any>>(
     moveable: MoveableManager<any>,
@@ -38,6 +39,16 @@ function triggerAble<T extends IObject<any>>(
     const isUpdate = results.length;
 
     if (isStart) {
+        if (!isUpdate) {
+            moveable.state.dragger = null;
+
+            if ((moveable as MoveableGroup).moveables) {
+                (moveable as MoveableGroup).moveables.forEach(childeMoveable => {
+                    childeMoveable.state.dragger = null;
+                });
+            }
+            return false;
+        }
         triggerRenderStart(moveable, isGroup, e);
     } else if (isEnd) {
         triggerRenderEnd(moveable, isGroup, e);

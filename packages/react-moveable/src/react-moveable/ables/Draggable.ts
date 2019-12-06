@@ -135,11 +135,11 @@ export default {
         e: any,
     ) {
         const { parentEvent, datas, isDrag } = e;
+
+        moveable.state.dragger = null;
         if (!datas.isDrag) {
             return;
         }
-
-        moveable.state.dragger = null;
         datas.isDrag = false;
         !parentEvent && triggerEvent(moveable, "onDragEnd", fillParams<OnDragEnd>(moveable, e, {
             isDrag,
@@ -163,6 +163,7 @@ export default {
         const result = triggerEvent(moveable, "onDragGroupStart", nextParams);
 
         datas.isDrag = result !== false;
+
         return datas.isDrag ? params : false;
     },
     dragGroup(moveable: MoveableGroup, e: any) {

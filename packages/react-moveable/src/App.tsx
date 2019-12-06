@@ -155,6 +155,7 @@ class App extends React.Component {
                     />
                 <Moveable
                     target={selectedTarget}
+                    className="no-radius"
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
@@ -274,7 +275,16 @@ class App extends React.Component {
                                 <img src="./emo.png" />
                             </div>
                         </div>
-
+                        <input type="text" style={{
+                            position: "absolute",
+                            left: "700px",
+                        }}/>
+                        <Moveable target={document.querySelector("input")}
+                        draggable={true}
+                            onDragStart={e => {
+                                return false;
+                            }}
+                        />
                         <div className="box box2" data-target="box2"><span>A</span></div>
 
                         <div className="box box23" data-target="box23"><span>AA</span></div>
@@ -321,6 +331,9 @@ class App extends React.Component {
         }));
     }
     public onClick = (e: any) => {
+        if (e.target.nodeName === "INPUT") {
+            return;
+        }
         const target = e.target;
 
         const id = target.getAttribute("data-target");

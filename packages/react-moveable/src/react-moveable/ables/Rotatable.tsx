@@ -221,6 +221,11 @@ export default {
                 beforeInfo, beforeDirection, clientX, clientY, startRotate, throttleRotate,
             );
         }
+        // let snapDist = [0, 0];
+
+        // if (!pinchFlag) {
+        //     snapDist = checkSnapRotate(moveable, nowDist, direction, snapDirection, datas);
+        // }
 
         if (!delta && !beforeDelta && !parentMoveable) {
             return;
@@ -295,7 +300,8 @@ export default {
         const result = triggerEvent(moveable, "onRotateGroupStart", nextParams);
 
         datas.isRotate = result !== false;
-        return datas.isDrag ? params : false;
+
+        return datas.isRotate ? params : false;
     },
     dragGroupControl(moveable: MoveableGroup, e: any) {
         const { inputEvent, datas } = e;
