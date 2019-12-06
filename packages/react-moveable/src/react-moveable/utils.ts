@@ -513,7 +513,7 @@ export function getControlTransform(rotation: number, ...poses: number[][]) {
     const x = poses.reduce((prev, pos) => prev + pos[0], 0) / length;
     const y = poses.reduce((prev, pos) => prev + pos[1], 0) / length;
     return {
-        transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
+        transform: `translate(${x}px, ${y}px) rotate(${rotation}rad)`,
     };
 }
 export function getCSSSize(target: SVGElement | HTMLElement) {
