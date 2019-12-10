@@ -14,6 +14,7 @@ import {
     getDragDist, scaleMatrix, getPosByDirection,
 } from "../DraggerUtils";
 import { minus } from "@moveable/matrix";
+import { TINY_NUM } from "../consts";
 
 function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
@@ -44,10 +45,10 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
             top: clientTop,
             left: clientLeft,
         },
-        left: targetLeft,
-        top: targetTop,
     } = state;
-
+    const poses = getAbsolutePosesByState(state);
+    const targetLeft = Math.min(...poses.map(pos => pos[0]));
+    const targetTop = Math.min(...poses.map(pos => pos[1]));
     const distLeft = targetLeft - (clientLeft - containerLeft);
     const distTop = targetTop - (clientTop - containerTop);
     const guidelines: Guideline[] = [];
@@ -374,8 +375,8 @@ function checkBoundOneWayPos(
         [pos[0]],
         [pos[1]],
     );
-    const fixedHorizontal = reversePos[1] === pos[1];
-    const fixedVertical = reversePos[0] === pos[0];
+    const fixedHorizontal = Math.abs(reversePos[1] - pos[1]) < TINY_NUM;
+    const fixedVertical = Math.abs(reversePos[0] - pos[0]) < TINY_NUM;
 
     let isVertical!: boolean;
 
@@ -426,6 +427,7 @@ export function checkOneWayPos(
             boundIndex = i;
         }
     });
+
     if (boundInfo) {
         const nextDist = solveNextDist(
             reversePoses[boundIndex],
@@ -440,6 +442,8 @@ export function checkOneWayPos(
             posOffset = nextDist;
         }
     } else  {
+        console.log(...reversePoses);
+        console.log(...poses);
         poses.some((pos, i) => {
             const nextDist = checkBoundOneWayPos(moveable, pos, reversePoses[i], isDirectionVertical, datas);
 
@@ -688,9 +692,15 @@ export function solveEquation(
     snapOffset: number,
     isVertical: boolean,
 ) {
-    const dx = pos2[0] - pos1[0];
-    const dy = pos2[1] - pos1[1];
+    let dx = pos2[0] - pos1[0];
+    let dy = pos2[1] - pos1[1];
 
+    if (Math.abs(dx) < TINY_NUM) {
+        dx = 0;
+    }
+    if (Math.abs(dy) < TINY_NUM) {
+        dy = 0;
+    }
     if (!dx) {
         // y = 0 * x + b
         // only horizontal
