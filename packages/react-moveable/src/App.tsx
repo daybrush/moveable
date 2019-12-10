@@ -63,6 +63,7 @@ class App extends React.Component {
                     snappable={true}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
+                    elementGuidelines={[document.querySelector<HTMLElement>(".box2")!]}
                     throttleRotate={0}
                     onDragGroupStart={e => {
                         console.log("start", e);
@@ -170,16 +171,16 @@ class App extends React.Component {
                     horizontalGuidelines={[100, 200, 400, 500]}
                     // renderDirections={["n", "ne", "nw"]}
                     elementGuidelines={[document.querySelector(".box1 span")!, document.querySelector(".emo img")!]}
-                    snapCenter={false}
+                    snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
-                    scalable={true}
-                    // resizable={isResizable}
+                    // scalable={true}
+                    resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
-                    throttleRotate={1}
+                    throttleRotate={10}
                     rotatable={true}
                     pinchable={true}
                     onScroll={({ scrollContainer, direction }) => {
@@ -232,7 +233,7 @@ class App extends React.Component {
                         setOrigin(["%", "%"]);
                         dragStart && dragStart.set([tx, ty]);
                     }}
-                    onResize={({ target, width, height, drag, delta }) => {
+                    onResize={({ target, width, height, drag, delta, dist }) => {
                         // console.log(width, height);
                         item.set("width", `${width}px`);
                         item.set("height", `${height}px`);

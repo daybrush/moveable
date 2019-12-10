@@ -893,21 +893,13 @@ export default {
         } = checkBounds(moveable, [left, right], [top, bottom], 1);
 
         if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
-            // verticalGuildelines.push({
-            //     type: "vertical",
-            //     pos: [verticalBoundPos, top],
-            //     size: height,
-            // });
             verticalSnapPoses.push(verticalBoundPos);
         }
         if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
-            // horizontalGuidelines.push({
-            //     type: "horizontal",
-            //     pos: [left, horizontalBoundPos],
-            //     size: width,
-            // });
             horizontalSnapPoses.push(horizontalBoundPos);
         }
+        const elementVerticalGuidelines = verticalGuildelines.filter(({ element }) => element);
+        const elementHorizontalGuidelines = horizontalGuidelines.filter(({ element }) => element);
         return [
             ...verticalSnapPoses.map((pos, i) => {
                 return <div className={prefix(
