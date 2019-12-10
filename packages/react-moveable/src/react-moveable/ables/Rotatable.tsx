@@ -271,6 +271,9 @@ export default {
         if (!params) {
             return false;
         }
+
+        params.set(moveable.rotation);
+
         const events = triggerChildAble(
             moveable,
             this,
@@ -339,6 +342,8 @@ export default {
                 result.drag = dragResult;
             },
         );
+        moveable.rotation = params.beforeRotate;
+
         const nextParams: OnRotateGroup = {
             targets: moveable.props.targets!,
             events,
@@ -348,7 +353,6 @@ export default {
             ...params,
         };
 
-        moveable.rotation += params.beforeDelta;
         triggerEvent(moveable, "onRotateGroup", nextParams);
         return nextParams;
     },
