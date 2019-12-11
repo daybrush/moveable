@@ -61,6 +61,7 @@ class App extends React.Component {
                     defaultGroupRotate={0}
                     origin={true}
                     snappable={true}
+                    snapCenter={true}
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     elementGuidelines={[document.querySelector<HTMLElement>(".box2")!]}

@@ -42,6 +42,16 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	background: #4af;
 	transform-origin: 0px 0.5px;
 }
+.line.dashed {
+    box-sizing: border-box;
+    background: transparent;
+}
+.line.dashed.horizontal {
+    border-top: 1px dashed #4af;
+}
+.line.dashed.vertical {
+    border-left: 1px dashed #4af;
+}
 .line.rotation-line {
 	height: 40px;
 	width: 1px;

@@ -6,7 +6,7 @@ import {
     SnapInfo, BoundInfo,
     ScalableProps, ResizableProps,
 } from "../types";
-import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses } from "../utils";
+import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, throttle } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
 import {
@@ -901,6 +901,36 @@ export default {
         const elementVerticalGuidelines = verticalGuildelines.filter(({ element }) => element);
         const elementHorizontalGuidelines = horizontalGuidelines.filter(({ element }) => element);
         return [
+            ...elementHorizontalGuidelines.map(({ pos, size }, i) => {
+                const lineLeft = Math.min(0, pos[0] - clientLeft);
+                const lineRight = Math.max(width, pos[0] - clientLeft + size);
+
+                return <div className={prefix(
+                    "line",
+                    "horizontal",
+                    "guideline",
+                    "dashed",
+                )} key={`horizontalLinkGuidline${i}`} style={{
+                    left: `${minLeft + lineLeft}px`,
+                    top: `${-targetTop + pos[1]}px`,
+                    width: `${lineRight - lineLeft}px`,
+                }} />;
+            }),
+            ...elementVerticalGuidelines.map(({ pos, size }, i) => {
+                const lineTop = Math.min(0, pos[1] - clientTop);
+                const lineBottom = Math.max(height, pos[1] - clientTop + size);
+
+                return <div className={prefix(
+                    "line",
+                    "vertical",
+                    "guideline",
+                    "dashed",
+                )} key={`verticalDashedGuidline${i}`} style={{
+                    top: `${minTop + lineTop}px`,
+                    left: `${-targetLeft + pos[0]}px`,
+                    height: `${lineBottom - lineTop}px`,
+                }} />;
+            }),
             ...verticalSnapPoses.map((pos, i) => {
                 return <div className={prefix(
                     "line",
