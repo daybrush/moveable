@@ -857,3 +857,16 @@ export function equals(a1: any, a2: any) {
         return false;
     }
 }
+
+export function selectValue<T = any>(...values: any[]): T {
+    const length = values.length - 1;
+    for (let i = 0; i < length; ++i) {
+        const value = values[i];
+
+        if (!isUndefined(value)) {
+            return value;
+        }
+    }
+
+    return values[length];
+}

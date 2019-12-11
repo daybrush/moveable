@@ -6,7 +6,10 @@ import {
     SnapInfo, BoundInfo,
     ScalableProps, ResizableProps,
 } from "../types";
-import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, throttle, round } from "../utils";
+import {
+    prefix, caculatePoses, getRect,
+    getAbsolutePosesByState, getAbsolutePoses, round, selectValue
+} from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
 import {
@@ -163,8 +166,10 @@ function checkSnap(
     guidelines: Guideline[],
     targetType: "horizontal" | "vertical",
     targetPoses: number[],
-    isSnapCenter: boolean | undefined,
     snapThreshold: number,
+    snapCenter: boolean,
+    snapDirection: boolean,
+    snapElement: boolean,
 ): SnapInfo {
     if (!guidelines) {
         return {
@@ -183,9 +188,14 @@ function checkSnap(
 
     const snapPoses = targetPoses.filter(targetPos => {
         return guidelines.filter(guideline => {
-            const { type, pos, center } = guideline;
+            const { type, pos, center, element } = guideline;
 
-            if ((!isSnapCenter && center) || type !== targetType) {
+            if (
+                (!snapElement && element)
+                || (!snapDirection && !element)
+                || (!snapCenter && center)
+                || type !== targetType
+            ) {
                 return false;
             }
             const offset = targetPos - pos[posType];
@@ -243,19 +253,30 @@ export function checkSnapPoses(
     moveable: MoveableManager<SnappableProps, SnappableState>,
     posesX: number[],
     posesY: number[],
-    isSnapCenter?: boolean,
+    snapCenter?: boolean,
     customSnapThreshold?: number,
 ) {
     const guidelines = moveable.state.guidelines;
-    const snapThreshold = !isUndefined(customSnapThreshold)
-        ? customSnapThreshold
-        : !isUndefined(moveable.props.snapThreshold)
-            ? moveable.props.snapThreshold
-            : 5;
-
+    const props = moveable.props;
+    const snapThreshold = selectValue<number>(customSnapThreshold, props.snapThreshold, 5);
+    const {
+        snapElement = true,
+        snapHorizontal = true,
+        snapVertical = true,
+    } = props;
     return {
-        vertical: checkSnap(guidelines, "vertical", posesX, isSnapCenter, snapThreshold),
-        horizontal: checkSnap(guidelines, "horizontal", posesY, isSnapCenter, snapThreshold),
+        vertical: checkSnap(
+            guidelines, "vertical", posesX, snapThreshold,
+            snapCenter!,
+            snapVertical,
+            snapElement,
+        ),
+        horizontal: checkSnap(
+            guidelines, "horizontal", posesY, snapThreshold,
+            snapCenter!,
+            snapHorizontal,
+            snapElement,
+        ),
     };
 }
 export function checkSnaps(
@@ -370,7 +391,7 @@ function getFixedPoses(
     return  getAbsolutePoses(nextPoses, minus(fixedPos, nextPos));
 }
 
-function checkBoundOneWayPos(
+function checkSnapOneWayPos(
     moveable: MoveableManager<any, any>,
     pos: number[],
     reversePos: number[],
@@ -461,7 +482,7 @@ export function checkOneWayPos(
         }
     } else  {
         poses.some((pos, i) => {
-            const nextDist = checkBoundOneWayPos(moveable, pos, reversePoses[i], isDirectionVertical, datas);
+            const nextDist = checkSnapOneWayPos(moveable, pos, reversePoses[i], isDirectionVertical, datas);
 
             if (isNaN(nextDist)) {
                 return false;
@@ -859,6 +880,9 @@ export default {
     props: {
         snappable: [Boolean, Array],
         snapCenter: Boolean,
+        snapHorizontal: Boolean,
+        snapVertical: Boolean,
+        snapElement: Boolean,
         snapThreshold: Number,
         horizontalGuidelines: Array,
         verticalGuidelines: Array,

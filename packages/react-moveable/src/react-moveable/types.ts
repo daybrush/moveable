@@ -785,6 +785,9 @@ export interface GroupableProps extends
 export interface SnappableProps {
     snappable?: boolean | string[];
     snapCenter?: boolean;
+    snapHorizontal?: boolean;
+    snapVertical?: boolean;
+    snapElement?: boolean;
     snapThreshold?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
