@@ -55,7 +55,6 @@ describe("test Moveable(triggerRender)", () => {
         mouseup(document.querySelector<HTMLElement>(".c2")!, [100, 0]);
         await wait(300);
 
-        console.log(onRenderStart.callCount, onRender.callCount, onRenderEnd.callCount);
         // Then
         expect(onRenderStart.callCount).to.be.equals(2);
         expect(onRender.callCount).to.be.equals(2);

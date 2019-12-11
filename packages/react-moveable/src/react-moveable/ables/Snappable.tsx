@@ -67,8 +67,6 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         const elementLeft = left - containerLeft;
         const elementRight = elementLeft + width;
 
-        console.log(elementLeft + distLeft);
-
         guidelines.push({ type: "vertical", element: el, pos: [
             round(elementLeft + distLeft),
             elementTop,
@@ -462,8 +460,6 @@ export function checkOneWayPos(
             posOffset = nextDist;
         }
     } else  {
-        console.log(...reversePoses);
-        console.log(...poses);
         poses.some((pos, i) => {
             const nextDist = checkBoundOneWayPos(moveable, pos, reversePoses[i], isDirectionVertical, datas);
 
@@ -921,7 +917,6 @@ export default {
         const elementVerticalGuidelines = verticalGuildelines.filter(({ element }) => element);
         const elementHorizontalGuidelines = horizontalGuidelines.filter(({ element }) => element);
 
-        console.log(verticalSnapPoses);
         return [
             ...elementHorizontalGuidelines.map(({ pos, size }, i) => {
                 const lineLeft = Math.min(0, pos[0] - clientLeft);
