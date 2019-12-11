@@ -62,13 +62,17 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	background:#fff;
 	cursor: alias;
 }
+.line.vertical {
+    transform: translateX(-50%);
+}
+.line.horizontal {
+    transform: translateY(-50%);
+}
 .line.vertical.bold {
     width: 2px;
-    margin-left: -1px;
 }
 .line.horizontal.bold {
     height: 2px;
-    margin-top: -1px;
 }
 .control.origin {
 	border-color: #f55;

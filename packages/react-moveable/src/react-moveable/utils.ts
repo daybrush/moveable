@@ -17,6 +17,9 @@ import {
 import MoveableManager from "./MoveableManager";
 import { MoveableManagerState, Able } from "./types";
 
+export function round(num: number) {
+    return Math.round(num);
+}
 export function multiply2(pos1: number[], pos2: number[]) {
     return [
         pos1[0] * pos2[0],

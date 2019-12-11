@@ -171,7 +171,11 @@ class App extends React.Component {
                     verticalGuidelines={[100, 200, 400, 500]}
                     horizontalGuidelines={[100, 200, 400, 500]}
                     // renderDirections={["n", "ne", "nw"]}
-                    elementGuidelines={[document.querySelector(".box1 span")!, document.querySelector(".emo img")!]}
+                    elementGuidelines={[
+                        document.querySelector(".box1 span")!,
+                        document.querySelector(".emo img")!,
+                        document.querySelector<HTMLElement>(".box2")!,
+                    ]}
                     snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}

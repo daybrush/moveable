@@ -6,7 +6,7 @@ import {
     SnapInfo, BoundInfo,
     ScalableProps, ResizableProps,
 } from "../types";
-import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, throttle } from "../utils";
+import { prefix, caculatePoses, getRect, getAbsolutePosesByState, getAbsolutePoses, throttle, round } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
 import {
@@ -67,23 +67,43 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         const elementLeft = left - containerLeft;
         const elementRight = elementLeft + width;
 
-        guidelines.push({ type: "vertical", element: el, pos: [elementLeft + distLeft, elementTop], size: height });
-        guidelines.push({ type: "vertical", element: el, pos: [elementRight + distLeft, elementTop], size: height });
-        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementTop + distTop], size: width });
-        guidelines.push({ type: "horizontal", element: el, pos: [elementLeft, elementBottom + distTop], size: width });
+        console.log(elementLeft + distLeft);
+
+        guidelines.push({ type: "vertical", element: el, pos: [
+            round(elementLeft + distLeft),
+            elementTop,
+        ], size: height });
+        guidelines.push({ type: "vertical", element: el, pos: [
+            round(elementRight + distLeft),
+            elementTop,
+        ], size: height });
+        guidelines.push({ type: "horizontal", element: el, pos: [
+            elementLeft,
+            round(elementTop + distTop),
+        ], size: width });
+        guidelines.push({ type: "horizontal", element: el, pos: [
+            elementLeft,
+            round(elementBottom + distTop),
+        ], size: width });
 
         if (snapCenter) {
             guidelines.push({
                 type: "vertical",
                 element: el,
-                pos: [(elementLeft + elementRight) / 2 + distLeft, elementTop],
+                pos: [
+                    round((elementLeft + elementRight) / 2 + distLeft),
+                    elementTop,
+                ],
                 size: height,
                 center: true,
             });
             guidelines.push({
                 type: "horizontal",
                 element: el,
-                pos: [elementLeft, (elementTop + elementBottom) / 2 + distTop],
+                pos: [
+                    elementLeft,
+                    round((elementTop + elementBottom) / 2 + distTop),
+                ],
                 size: width,
                 center: true,
             });
@@ -900,6 +920,8 @@ export default {
         }
         const elementVerticalGuidelines = verticalGuildelines.filter(({ element }) => element);
         const elementHorizontalGuidelines = horizontalGuidelines.filter(({ element }) => element);
+
+        console.log(verticalSnapPoses);
         return [
             ...elementHorizontalGuidelines.map(({ pos, size }, i) => {
                 const lineLeft = Math.min(0, pos[0] - clientLeft);
