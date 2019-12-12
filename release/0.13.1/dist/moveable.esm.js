@@ -118,9 +118,7 @@ function (_super) {
     var events = {};
     EVENTS.forEach(function (name) {
       events[camelize("on " + name)] = function (e) {
-        if (_this.trigger(name, e) === false) {
-          e.stop();
-        }
+        return _this.trigger(name, e);
       };
     });
     render(h(InnerMoveable, __assign({

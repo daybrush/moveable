@@ -120,9 +120,7 @@ function (_super) {
     var events = {};
     EVENTS.forEach(function (name) {
       events[utils.camelize("on " + name)] = function (e) {
-        if (_this.trigger(name, e) === false) {
-          e.stop();
-        }
+        return _this.trigger(name, e);
       };
     });
     preact.render(preact.h(InnerMoveable, __assign({

@@ -7477,9 +7477,7 @@ version: 0.13.1
         var events = {};
         EVENTS.forEach(function (name) {
           events[camelize("on " + name)] = function (e) {
-            if (_this.trigger(name, e) === false) {
-              e.stop();
-            }
+            return _this.trigger(name, e);
           };
         });
         H(h(InnerMoveable, __assign({
