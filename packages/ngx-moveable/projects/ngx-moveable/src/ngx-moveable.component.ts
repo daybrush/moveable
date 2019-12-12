@@ -53,6 +53,9 @@ export class NgxMoveableComponent
   @Input() public edge!: boolean;
   @Input() public pinchThreshold!: number;
   @Input() public snapCenter!: boolean;
+  @Input() public snapVertical!: boolean;
+  @Input() public snapElement!: boolean;
+  @Input() public snapHorizontal!: boolean;
   @Input() public snapThreshold!: number;
   @Input() public horizontalGuidelines!: number[];
   @Input() public verticalGuidelines!: number[];

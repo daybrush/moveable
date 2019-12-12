@@ -364,11 +364,58 @@ class Moveable extends EgComponent implements MoveableInterface {
  * @example
  * import Moveable from "moveable";
  *
- * const moveable = new Moveable(document.body);
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ * });
  *
  * moveable.snapCenter = true;
  */
 
+/**
+ * When you drag, make the snap in the vertical guidelines. (default: true)
+ * @name Moveable#snapVertical
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ * });
+ *
+ * moveable.snapVertical = false;
+ */
+ /**
+ * When you drag, make the snap in the horizontal guidelines. (default: true)
+ * @name Moveable#snapHorizontal
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ * });
+ *
+ * moveable.snapHorizontal = false;
+ */
+/**
+ * When you drag, make the snap in the element guidelines. (default: true)
+ * @name Moveable#snapElement
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ * });
+ *
+ * moveable.snapElement = false;
+ */
 /**
  * Distance value that can snap to guidelines. (default: 5)
  * @name Moveable#snapThreshold

@@ -37,6 +37,10 @@ import {
  * @property - Whether to scale and resize through edge lines. (default: false)
  * @property - Minimum distance to pinch. (default: 20)
  * @property - When you drag, make the snap in the center of the target. (default: false)
+ * @property - When you drag, make the snap in the vertical guidelines. (default: true)
+ * @property - When you drag, make the snap in the horizontal guidelines. (default: true)
+ * @property - When you drag, make the snap in the element guidelines. (default: true)
+
  * @property - Distance value that can snap to guidelines. (default: 0)
  * @property - Add guidelines in the horizontal direction. (default: [])
  * @property - Add guidelines in the vertical direction. (default: [])
@@ -78,6 +82,10 @@ export interface MoveableOptions {
     pinchThreshold?: number;
 
     snapCenter?: boolean;
+    snapVertical?: boolean;
+    snapHorizontal?: boolean;
+    snapElement?: boolean;
+
     snapThreshold?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];

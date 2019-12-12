@@ -18,6 +18,9 @@ export const PROPERTIES: Array<keyof MoveableOptions> = [
     "scrollContainer",
     "scrollThreshold",
     "baseDirection",
+    "snapElement",
+    "snapVertical",
+    "snapHorizontal",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",
