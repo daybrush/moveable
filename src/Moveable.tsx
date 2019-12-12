@@ -61,7 +61,11 @@ class Moveable extends EgComponent implements MoveableInterface {
         const events: any = {};
 
         EVENTS.forEach(name => {
-            events[camelize(`on ${name}`)] = (e: any) => this.trigger(name, e);
+            events[camelize(`on ${name}`)] = (e: any) => {
+                if (this.trigger(name, e) === false) {
+                    e.stop();
+                }
+            };
         });
 
         render(
