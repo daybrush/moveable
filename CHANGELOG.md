@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.13.0] - 2019-12-12
+* `moveable` 0.13.0
+* `react-moveable` 0.16.1
+* `preact-moveable` 0.15.0
+* `ngx-moveable` 0.9.0
+* `svelte-movable` 0.4.0
+
+### Added
+* Add `snapVertical`, `snapHorizontal`, `snapElement` props. #119
+* Add `set` method on rotateGroup event. #107
+* Add dashed line in element guidelines. #120
+
+### Fixed
+* moveable-control is abnormally rotated. #115
+* Element snaps with elementGuideline and verticalGuideline at the same posiiton #121
+* Huge width value on resizing rotated element on guidelines #122
+* Weird snapping with rotated groupables #112
+* Input box failed to get focus #110
+* Snappable with Scalable does not work. #108
+
 ## [0.12.0] - 2019-11-28
 ### Added
 * Add `defaultGroupRotate` props. #102
