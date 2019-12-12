@@ -63,7 +63,7 @@ class App extends React.Component {
                     snappable={true}
                     snapCenter={true}
                     verticalGuidelines={[100, 200, 400, 500]}
-                    horizontalGuidelines={[100, 200, 400, 500]}
+                    horizontalGuidelines={[100.5, 200.5, 400, 500.5]}
                     elementGuidelines={[document.querySelector<HTMLElement>(".box2")!]}
                     throttleRotate={0}
                     onDragGroupStart={e => {
@@ -168,8 +168,8 @@ class App extends React.Component {
                     scrollable={true}
                     transformOrigin="% %"
                     bounds={{ left: 30, top: 20 }}
-                    verticalGuidelines={[100, 200, 400, 500]}
-                    horizontalGuidelines={[100, 200, 400, 500]}
+                    verticalGuidelines={[100, 200, 400, 500.5]}
+                    horizontalGuidelines={[100, 200.5, 400, 500.5]}
                     // renderDirections={["n", "ne", "nw"]}
                     elementGuidelines={[
                         document.querySelector(".box1 span")!,

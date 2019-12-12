@@ -8,7 +8,7 @@ import {
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, round, selectValue
+    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle
 } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
@@ -39,8 +39,6 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
 
     const {
         containerRect: {
-            width: containerWidth,
-            height: containerHeight,
             top: containerTop,
             left: containerLeft,
         },
@@ -56,12 +54,6 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const distTop = targetTop - (clientTop - containerTop);
     const guidelines: Guideline[] = [];
 
-    horizontalGuidelines!.forEach(pos => {
-        guidelines.push({ type: "horizontal", pos: [0, pos], size: containerWidth });
-    });
-    verticalGuidelines!.forEach(pos => {
-        guidelines.push({ type: "vertical", pos: [pos, 0], size: containerHeight });
-    });
     elementGuidelines!.forEach(el => {
         const rect = el.getBoundingClientRect();
         const { top, left, width, height } = rect;
@@ -71,20 +63,20 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         const elementRight = elementLeft + width;
 
         guidelines.push({ type: "vertical", element: el, pos: [
-            round(elementLeft + distLeft),
+            throttle(elementLeft + distLeft, 0.1),
             elementTop,
         ], size: height });
         guidelines.push({ type: "vertical", element: el, pos: [
-            round(elementRight + distLeft),
+            throttle(elementRight + distLeft, 0.1),
             elementTop,
         ], size: height });
         guidelines.push({ type: "horizontal", element: el, pos: [
             elementLeft,
-            round(elementTop + distTop),
+            throttle(elementTop + distTop, 0.1),
         ], size: width });
         guidelines.push({ type: "horizontal", element: el, pos: [
             elementLeft,
-            round(elementBottom + distTop),
+            throttle(elementBottom + distTop, 0.1),
         ], size: width });
 
         if (snapCenter) {
@@ -92,7 +84,7 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
                 type: "vertical",
                 element: el,
                 pos: [
-                    round((elementLeft + elementRight) / 2 + distLeft),
+                    throttle((elementLeft + elementRight) / 2 + distLeft, 0.1),
                     elementTop,
                 ],
                 size: height,
@@ -103,7 +95,7 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
                 element: el,
                 pos: [
                     elementLeft,
-                    round((elementTop + elementBottom) / 2 + distTop),
+                    throttle((elementTop + elementBottom) / 2 + distTop, 0.1),
                 ],
                 size: width,
                 center: true,
@@ -168,10 +160,9 @@ function checkSnap(
     targetPoses: number[],
     snapThreshold: number,
     snapCenter: boolean,
-    snapDirection: boolean,
     snapElement: boolean,
 ): SnapInfo {
-    if (!guidelines) {
+    if (!guidelines || !guidelines.length) {
         return {
             isSnap: false,
             dist: -1,
@@ -192,7 +183,6 @@ function checkSnap(
 
             if (
                 (!snapElement && element)
-                || (!snapDirection && !element)
                 || (!snapCenter && center)
                 || type !== targetType
             ) {
@@ -256,25 +246,46 @@ export function checkSnapPoses(
     snapCenter?: boolean,
     customSnapThreshold?: number,
 ) {
-    const guidelines = moveable.state.guidelines;
+    const {
+        guidelines,
+        containerRect: {
+            height: containerHeight,
+            width: containerWidth,
+        },
+     } = moveable.state;
     const props = moveable.props;
     const snapThreshold = selectValue<number>(customSnapThreshold, props.snapThreshold, 5);
     const {
         snapElement = true,
         snapHorizontal = true,
         snapVertical = true,
+        verticalGuidelines,
+        horizontalGuidelines,
     } = props;
+
+    const totalGuidelines = [...guidelines];
+
+    if (snapHorizontal && horizontalGuidelines) {
+        horizontalGuidelines!.forEach(pos => {
+            totalGuidelines.push({ type: "horizontal", pos: [0, throttle(pos, 0.1)], size: containerWidth });
+        });
+    }
+    if (snapVertical && verticalGuidelines) {
+        verticalGuidelines!.forEach(pos => {
+            totalGuidelines.push({ type: "vertical", pos: [throttle(pos, 0.1), 0], size: containerHeight });
+        });
+    }
     return {
         vertical: checkSnap(
-            guidelines, "vertical", posesX, snapThreshold,
+            totalGuidelines,
+            "vertical", posesX, snapThreshold,
             snapCenter!,
-            snapVertical,
             snapElement,
         ),
         horizontal: checkSnap(
-            guidelines, "horizontal", posesY, snapThreshold,
+            totalGuidelines,
+            "horizontal", posesY, snapThreshold,
             snapCenter!,
-            snapHorizontal,
             snapElement,
         ),
     };
