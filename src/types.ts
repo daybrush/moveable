@@ -113,56 +113,60 @@ export interface MoveableGetterSetter extends Pick<MoveableOptions, Exclude<keyo
 
 }
 export interface MoveableEvents {
-    dragStart: OnDragStart;
-    drag: OnDrag;
-    dragEnd: OnDragEnd;
-    dragGroupStart: OnDragGroupStart;
-    dragGroup: OnDragGroup;
-    dragGroupEnd: OnDragGroupEnd;
+    dragStart: OnDragStart & WithEventStop;
+    drag: OnDrag & WithEventStop;
+    dragEnd: OnDragEnd & WithEventStop;
+    dragGroupStart: OnDragGroupStart & WithEventStop;
+    dragGroup: OnDragGroup & WithEventStop;
+    dragGroupEnd: OnDragGroupEnd & WithEventStop;
 
-    resizeStart: OnResizeStart;
-    resize: OnResize;
-    resizeEnd: OnResizeEnd;
-    resizeGroupStart: OnResizeGroupStart;
-    resizeGroup: OnResizeGroup;
-    resizeGroupEnd: OnResizeGroupEnd;
+    resizeStart: OnResizeStart & WithEventStop;
+    resize: OnResize & WithEventStop;
+    resizeEnd: OnResizeEnd & WithEventStop;
+    resizeGroupStart: OnResizeGroupStart & WithEventStop;
+    resizeGroup: OnResizeGroup & WithEventStop;
+    resizeGroupEnd: OnResizeGroupEnd & WithEventStop;
 
-    scaleStart: OnScaleStart;
-    scale: OnScale;
-    scaleEnd: OnScaleEnd;
-    scaleGroupStart: OnScaleGroupStart;
-    scaleGroup: OnScaleGroup;
-    scaleGroupEnd: OnScaleGroupEnd;
+    scaleStart: OnScaleStart & WithEventStop;
+    scale: OnScale & WithEventStop;
+    scaleEnd: OnScaleEnd & WithEventStop;
+    scaleGroupStart: OnScaleGroupStart & WithEventStop;
+    scaleGroup: OnScaleGroup & WithEventStop;
+    scaleGroupEnd: OnScaleGroupEnd & WithEventStop;
 
-    rotateStart: OnRotateStart;
-    rotate: OnRotate;
-    rotateEnd: OnRotateEnd;
-    rotateGroupStart: OnRotateGroupStart;
-    rotateGroup: OnRotateGroup;
-    rotateGroupEnd: OnRotateGroupEnd;
+    rotateStart: OnRotateStart & WithEventStop;
+    rotate: OnRotate & WithEventStop;
+    rotateEnd: OnRotateEnd & WithEventStop;
+    rotateGroupStart: OnRotateGroupStart & WithEventStop;
+    rotateGroup: OnRotateGroup & WithEventStop;
+    rotateGroupEnd: OnRotateGroupEnd & WithEventStop;
 
-    warpStart: OnWarpStart;
-    warp: OnWarp;
-    warpEnd: OnWarpEnd;
+    warpStart: OnWarpStart & WithEventStop;
+    warp: OnWarp & WithEventStop;
+    warpEnd: OnWarpEnd & WithEventStop;
 
-    pinchStart: OnPinchStart;
-    pinch: OnPinch;
-    pinchEnd: OnPinchEnd;
+    pinchStart: OnPinchStart & WithEventStop;
+    pinch: OnPinch & WithEventStop;
+    pinchEnd: OnPinchEnd & WithEventStop;
 
-    renderStart: OnRenderStart;
-    render: OnRender;
-    renderEnd: OnRenderEnd;
-    renderGroupStart: OnRenderGroupStart;
-    renderGroup: OnRenderGroup;
-    renderGroupEnd: OnRenderGroupEnd;
+    renderStart: OnRenderStart & WithEventStop;
+    render: OnRender & WithEventStop;
+    renderEnd: OnRenderEnd & WithEventStop;
+    renderGroupStart: OnRenderGroupStart & WithEventStop;
+    renderGroup: OnRenderGroup & WithEventStop;
+    renderGroupEnd: OnRenderGroupEnd & WithEventStop;
 
-    pinchGroupStart: OnPinchGroupStart;
-    pinchGroup: OnPinchGroup;
-    pinchGroupEnd: OnPinchGroupEnd;
+    pinchGroupStart: OnPinchGroupStart & WithEventStop;
+    pinchGroup: OnPinchGroup & WithEventStop;
+    pinchGroupEnd: OnPinchGroupEnd & WithEventStop;
 
-    click: OnClick;
-    clickGroup: OnClickGroup;
+    click: OnClick & WithEventStop;
+    clickGroup: OnClickGroup & WithEventStop;
 
     scroll: OnScroll;
     scrollGroup: OnScrollGroup;
+}
+
+export interface WithEventStop {
+    stop: () => any;
 }

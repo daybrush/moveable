@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.1] - 2019-12-13
+### Fixed
+* Fix Snappable for dymaic guidelines (vertical, horizontal) #119
+* Element snaps with elementGuideline and verticalGuideline at the same posiiton #121
 
 ## [0.13.0] - 2019-12-12
 * `moveable` 0.13.0

@@ -14,7 +14,7 @@ import Moveable, {
   OnRotateStart, OnRotate, OnRotateEnd, OnRotateGroupStart,
   OnRotateGroup, OnRotateGroupEnd, OnPinch, OnPinchEnd,
   OnPinchStart, OnPinchGroupStart, OnPinchGroup, OnPinchGroupEnd, OnClickGroup, OnClick,
-  OnScrollGroup, OnScroll, OnRenderGroupEnd, OnRenderGroup, OnRenderGroupStart, OnRenderEnd, OnRenderStart, OnRender,
+  OnScrollGroup, OnScroll, OnRenderGroupEnd, OnRenderGroup, OnRenderGroupStart, OnRenderEnd, OnRenderStart, OnRender, MoveableEvents,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
 import { NgxMoveableInterface, NgxMoveableEvents } from './types';
@@ -74,54 +74,54 @@ export class NgxMoveableComponent
   @Input() public scrollThreshold!: number;
   @Input() public getScrollPosition!: MoveableOptions['getScrollPosition'];
 
-  @Output() public dragStart!: EventEmitter<OnDragStart>;
-  @Output() public drag!: EventEmitter<OnDrag>;
-  @Output() public dragEnd!: EventEmitter<OnDragEnd>;
-  @Output() public dragGroupStart!: EventEmitter<OnDragGroupStart>;
-  @Output() public dragGroup!: EventEmitter<OnDragGroup>;
-  @Output() public dragGroupEnd!: EventEmitter<OnDragGroupEnd>;
+  @Output() public dragStart!: EventEmitter<MoveableEvents['dragStart']>;
+  @Output() public drag!: EventEmitter<MoveableEvents['drag']>;
+  @Output() public dragEnd!: EventEmitter<MoveableEvents['dragEnd']>;
+  @Output() public dragGroupStart!: EventEmitter<MoveableEvents['dragGroupStart']>;
+  @Output() public dragGroup!: EventEmitter<MoveableEvents['dragGroup']>;
+  @Output() public dragGroupEnd!: EventEmitter<MoveableEvents['dragGroupEnd']>;
 
-  @Output() public resizeStart!: EventEmitter<OnResizeStart>;
-  @Output() public resize!: EventEmitter<OnResize>;
-  @Output() public resizeEnd!: EventEmitter<OnResizeEnd>;
-  @Output() public resizeGroupStart!: EventEmitter<OnResizeGroupStart>;
-  @Output() public resizeGroup!: EventEmitter<OnResizeGroup>;
-  @Output() public resizeGroupEnd!: EventEmitter<OnResizeGroupEnd>;
+  @Output() public resizeStart!: EventEmitter<MoveableEvents['resizeStart']>;
+  @Output() public resize!: EventEmitter<MoveableEvents['resize']>;
+  @Output() public resizeEnd!: EventEmitter<MoveableEvents['resizeEnd']>;
+  @Output() public resizeGroupStart!: EventEmitter<MoveableEvents['resizeGroupStart']>;
+  @Output() public resizeGroup!: EventEmitter<MoveableEvents['resizeGroup']>;
+  @Output() public resizeGroupEnd!: EventEmitter<MoveableEvents['resizeGroupEnd']>;
 
-  @Output() public scaleStart!: EventEmitter<OnScaleStart>;
-  @Output() public scale!: EventEmitter<OnScale>;
-  @Output() public scaleEnd!: EventEmitter<OnScaleEnd>;
-  @Output() public scaleGroupStart!: EventEmitter<OnScaleGroupStart>;
-  @Output() public scaleGroup!: EventEmitter<OnScaleGroup>;
-  @Output() public scaleGroupEnd!: EventEmitter<OnScaleGroupEnd>;
+  @Output() public scaleStart!: EventEmitter<MoveableEvents['scaleStart']>;
+  @Output() public scale!: EventEmitter<MoveableEvents['scale']>;
+  @Output() public scaleEnd!: EventEmitter<MoveableEvents['scaleEnd']>;
+  @Output() public scaleGroupStart!: EventEmitter<MoveableEvents['scaleGroupStart']>;
+  @Output() public scaleGroup!: EventEmitter<MoveableEvents['scaleGroup']>;
+  @Output() public scaleGroupEnd!: EventEmitter<MoveableEvents['scaleGroupEnd']>;
 
-  @Output() public rotateStart!: EventEmitter<OnRotateStart>;
-  @Output() public rotate!: EventEmitter<OnRotate>;
-  @Output() public rotateEnd!: EventEmitter<OnRotateEnd>;
-  @Output() public rotateGroupStart!: EventEmitter<OnRotateGroupStart>;
-  @Output() public rotateGroup!: EventEmitter<OnRotateGroup>;
-  @Output() public rotateGroupEnd!: EventEmitter<OnRotateGroupEnd>;
+  @Output() public rotateStart!: EventEmitter<MoveableEvents['rotateStart']>;
+  @Output() public rotate!: EventEmitter<MoveableEvents['rotate']>;
+  @Output() public rotateEnd!: EventEmitter<MoveableEvents['rotateEnd']>;
+  @Output() public rotateGroupStart!: EventEmitter<MoveableEvents['rotateGroupStart']>;
+  @Output() public rotateGroup!: EventEmitter<MoveableEvents['rotateGroup']>;
+  @Output() public rotateGroupEnd!: EventEmitter<MoveableEvents['rotateGroupEnd']>;
 
-  @Output() public warpStart!: EventEmitter<OnWarpStart>;
-  @Output() public warp!: EventEmitter<OnWarp>;
-  @Output() public warpEnd!: EventEmitter<OnWarpEnd>;
+  @Output() public warpStart!: EventEmitter<MoveableEvents['warpStart']>;
+  @Output() public warp!: EventEmitter<MoveableEvents['warp']>;
+  @Output() public warpEnd!: EventEmitter<MoveableEvents['warpEnd']>;
 
-  @Output() public pinchStart!: EventEmitter<OnPinchStart>;
-  @Output() public pinch!: EventEmitter<OnPinch>;
-  @Output() public pinchEnd!: EventEmitter<OnPinchEnd>;
-  @Output() public pinchGroupStart!: EventEmitter<OnPinchGroupStart>;
-  @Output() public pinchGroup!: EventEmitter<OnPinchGroup>;
-  @Output() public pinchGroupEnd!: EventEmitter<OnPinchGroupEnd>;
+  @Output() public pinchStart!: EventEmitter<MoveableEvents['pinchStart']>;
+  @Output() public pinch!: EventEmitter<MoveableEvents['pinch']>;
+  @Output() public pinchEnd!: EventEmitter<MoveableEvents['pinchEnd']>;
+  @Output() public pinchGroupStart!: EventEmitter<MoveableEvents['pinchGroupStart']>;
+  @Output() public pinchGroup!: EventEmitter<MoveableEvents['pinchGroup']>;
+  @Output() public pinchGroupEnd!: EventEmitter<MoveableEvents['pinchGroupEnd']>;
 
-  @Output() public click!: EventEmitter<OnClick>;
-  @Output() public clickGroup!: EventEmitter<OnClickGroup>;
+  @Output() public click!: EventEmitter<MoveableEvents['click']>;
+  @Output() public clickGroup!: EventEmitter<MoveableEvents['clickGroup']>;
 
-  @Output() public renderStart!: EventEmitter<OnRenderStart>;
-  @Output() public render!: EventEmitter<OnRender>;
-  @Output() public renderEnd!: EventEmitter<OnRenderEnd>;
-  @Output() public renderGroupStart!: EventEmitter<OnRenderGroupStart>;
-  @Output() public renderGroup!: EventEmitter<OnRenderGroup>;
-  @Output() public renderGroupEnd!: EventEmitter<OnRenderGroupEnd>;
+  @Output() public renderStart!: EventEmitter<MoveableEvents['renderStart']>;
+  @Output() public render!: EventEmitter<MoveableEvents['render']>;
+  @Output() public renderEnd!: EventEmitter<MoveableEvents['renderEnd']>;
+  @Output() public renderGroupStart!: EventEmitter<MoveableEvents['renderGroupStart']>;
+  @Output() public renderGroup!: EventEmitter<MoveableEvents['renderGroup']>;
+  @Output() public renderGroupEnd!: EventEmitter<MoveableEvents['renderGroupEnd']>;
 
   @Output() public scroll!: EventEmitter<OnScroll>;
   @Output() public scrollGroup!: EventEmitter<OnScrollGroup>;

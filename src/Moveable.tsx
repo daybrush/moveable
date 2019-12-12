@@ -2,7 +2,7 @@ import EgComponent from "@egjs/component";
 import { ref, Properties } from "framework-utils";
 import { h, render } from "preact";
 import InnerMoveable from "./InnerMoveable";
-import { MoveableOptions, MoveableGetterSetter } from "./types";
+import { MoveableOptions, MoveableGetterSetter, MoveableEvents } from "./types";
 import {
     OnDragStart, OnDrag, OnResize, OnResizeStart,
     OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
@@ -61,11 +61,7 @@ class Moveable extends EgComponent implements MoveableInterface {
         const events: any = {};
 
         EVENTS.forEach(name => {
-            events[camelize(`on ${name}`)] = (e: any) => {
-                if (this.trigger(name, e) === false) {
-                    e.stop();
-                }
-            };
+            events[camelize(`on ${name}`)] = (e: any) => this.trigger(name, e);
         });
 
         render(
@@ -1337,58 +1333,7 @@ class Moveable extends EgComponent implements MoveableInterface {
  */
 
 interface Moveable extends MoveableGetterSetter {
-    on(eventName: "drag", handlerToAttach: (event: OnDrag) => any): this;
-    on(eventName: "dragStart", handlerToAttach: (event: OnDragStart) => any): this;
-    on(eventName: "dragEnd", handlerToAttach: (event: OnDragEnd) => any): this;
-    on(eventName: "dragGroup", handlerToAttach: (event: OnDragGroup) => any): this;
-    on(eventName: "dragGroupStart", handlerToAttach: (event: OnDragGroupStart) => any): this;
-    on(eventName: "dragGroupEnd", handlerToAttach: (event: OnDragGroupEnd) => any): this;
-
-    on(eventName: "resize", handlerToAttach: (event: OnResize) => any): this;
-    on(eventName: "resizeStart", handlerToAttach: (event: OnResizeStart) => any): this;
-    on(eventName: "resizeEnd", handlerToAttach: (event: OnResizeEnd) => any): this;
-    on(eventName: "resizeGroup", handlerToAttach: (event: OnResizeGroup) => any): this;
-    on(eventName: "resizeGroupStart", handlerToAttach: (event: OnResizeGroupStart) => any): this;
-    on(eventName: "resizeGroupEnd", handlerToAttach: (event: OnResizeGroupEnd) => any): this;
-
-    on(eventName: "scale", handlerToAttach: (event: OnScale) => any): this;
-    on(eventName: "scaleStart", handlerToAttach: (event: OnScaleStart) => any): this;
-    on(eventName: "scaleEnd", handlerToAttach: (event: OnScaleEnd) => any): this;
-    on(eventName: "scaleGroup", handlerToAttach: (event: OnScaleGroup) => any): this;
-    on(eventName: "scaleGroupStart", handlerToAttach: (event: OnScaleGroupStart) => any): this;
-    on(eventName: "scaleGroupEnd", handlerToAttach: (event: OnScaleGroupEnd) => any): this;
-
-    on(eventName: "rotate", handlerToAttach: (event: OnRotate) => any): this;
-    on(eventName: "rotateStart", handlerToAttach: (event: OnRotateStart) => any): this;
-    on(eventName: "rotateEnd", handlerToAttach: (event: OnRotateEnd) => any): this;
-    on(eventName: "rotateGroup", handlerToAttach: (event: OnRotateGroup) => any): this;
-    on(eventName: "rotateGroupStart", handlerToAttach: (event: OnRotateGroupStart) => any): this;
-    on(eventName: "rotateGroupEnd", handlerToAttach: (event: OnRotateGroupEnd) => any): this;
-
-    on(eventName: "warp", handlerToAttach: (event: OnWarp) => any): this;
-    on(eventName: "warpStart", handlerToAttach: (event: OnWarpStart) => any): this;
-    on(eventName: "warpEnd", handlerToAttach: (event: OnWarpEnd) => any): this;
-
-    on(eventName: "pinch", handlerToAttach: (event: OnPinch) => any): this;
-    on(eventName: "pinchStart", handlerToAttach: (event: OnPinchStart) => any): this;
-    on(eventName: "pinchEnd", handlerToAttach: (event: OnPinchEnd) => any): this;
-    on(eventName: "pinchGroup", handlerToAttach: (event: OnPinchGroup) => any): this;
-    on(eventName: "pinchGroupStart", handlerToAttach: (event: OnPinchGroupStart) => any): this;
-    on(eventName: "pinchGroupEnd", handlerToAttach: (event: OnPinchGroupEnd) => any): this;
-
-    on(eventName: "click", handlerToAttach: (event: OnClick) => any): this;
-    on(eventName: "clickGroup", handlerToAttach: (event: OnClickGroup) => any): this;
-
-    on(eventName: "scroll", handlerToAttach: (event: OnScroll) => any): this;
-    on(eventName: "scrollGroup", handlerToAttach: (event: OnScrollGroup) => any): this;
-
-    on(eventName: "renderStart", handlerToAttach: (event: OnRenderStart) => any): this;
-    on(eventName: "render", handlerToAttach: (event: OnRender) => any): this;
-    on(eventName: "renderEnd", handlerToAttach: (event: OnRenderEnd) => any): this;
-    on(eventName: "renderGroupStart", handlerToAttach: (event: OnRenderGroupStart) => any): this;
-    on(eventName: "renderGroup", handlerToAttach: (event: OnRenderGroup) => any): this;
-    on(eventName: "renderGroupEnd", handlerToAttach: (event: OnRenderGroupEnd) => any): this;
-
+    on<T extends keyof MoveableEvents>(eventName: T, handlerToAttach: (event: MoveableEvents[T]) => any): this;
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
 }
