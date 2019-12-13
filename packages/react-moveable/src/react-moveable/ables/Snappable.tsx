@@ -178,7 +178,8 @@ function checkSnap(
     const posType = isVertical ? 0 : 1;
 
     const snapPoses = targetPoses.filter(targetPos => {
-        return guidelines.filter(guideline => {
+        let count = 0;
+        guidelines.forEach(guideline => {
             const { type, pos, center, element } = guideline;
 
             if (
@@ -186,24 +187,27 @@ function checkSnap(
                 || (!snapCenter && center)
                 || type !== targetType
             ) {
-                return false;
+                return;
             }
             const offset = targetPos - pos[posType];
             const dist = Math.abs(offset);
 
             if (dist > snapThreshold) {
-                return false;
+                return;
             }
             if (snapDist > dist) {
                 snapDist = dist;
                 snapGuidelines = [];
+                count = 0;
             }
             if (snapDist === dist) {
                 snapOffset = offset;
                 snapGuidelines.push(guideline);
+                ++count;
             }
-            return true;
-        }).length;
+        });
+
+        return count;
     });
 
     return {
