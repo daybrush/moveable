@@ -93,7 +93,10 @@ export default {
         moveable: MoveableManager<ScalableProps & DraggableProps & GroupableProps, SnappableState>,
         e: any) {
         const {
-            datas, distX, distY, parentScale, parentDistance,
+            datas, distX, distY,
+            parentScale,
+            parentDistance,
+            parentKeepRatio,
             parentFlag, pinchFlag, inputEvent,
             dragClient,
         } = e;
@@ -115,7 +118,7 @@ export default {
             throttleScale,
             parentMoveable,
         } = moveable.props;
-        const keepRatio = moveable.props.keepRatio || parentScale;
+        const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const state = moveable.state;
         const isWidth = direction[0] || !direction[1];
         let scaleX: number = 1;
@@ -337,6 +340,7 @@ export default {
         if (!params) {
             return;
         }
+        const keepRatio = moveable.props.keepRatio;
         const { scale, direction, dist } = params;
         const prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), multiply2(direction, dist));
 
@@ -356,7 +360,12 @@ export default {
                     3,
                 );
 
-                return { ...e, parentScale: scale, dragClient: plus(prevPos, [clientX, clientY]) };
+                return {
+                    ...e,
+                    parentScale: scale,
+                    parentKeepRatio: keepRatio,
+                    dragClient: plus(prevPos, [clientX, clientY]),
+                };
             },
         );
         const nextParams: OnScaleGroup = {

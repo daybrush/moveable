@@ -114,6 +114,7 @@ export default {
             distX, distY,
             parentFlag, pinchFlag,
             parentDistance, parentScale, inputEvent,
+            parentKeepRatio,
             dragClient,
         } = e;
         const {
@@ -137,7 +138,7 @@ export default {
             throttleResize = 0,
             parentMoveable,
         } = moveable.props;
-        const keepRatio = moveable.props.keepRatio || parentScale;
+        const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const isWidth = direction[0] || !direction[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
         let distWidth: number = 0;
@@ -383,6 +384,8 @@ export default {
             offsetWidth, offsetHeight, dist,
         } = params;
 
+        const keepRatio = moveable.props.keepRatio;
+
         const parentScale = [
             offsetWidth / (offsetWidth - dist[0]),
             offsetHeight / (offsetHeight - dist[1]),
@@ -405,7 +408,12 @@ export default {
                     3,
                 );
 
-                return { ...e, parentScale, dragClient: plus(fixedPosition, [clientX, clientY]) };
+                return {
+                    ...e,
+                    parentScale,
+                    dragClient: plus(fixedPosition, [clientX, clientY]),
+                    parentKeepRatio: keepRatio,
+                };
             },
         );
         const nextParams: OnResizeGroup = {
