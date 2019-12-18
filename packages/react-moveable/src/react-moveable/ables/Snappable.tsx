@@ -226,6 +226,8 @@ export function hasGuidelines(
         props: {
             snappable,
             bounds,
+            verticalGuidelines,
+            horizontalGuidelines,
         },
         state: {
             guidelines,
@@ -237,11 +239,18 @@ export function hasGuidelines(
         !snappable
         || !enableSnap
         || (ableName && snappable !== true && snappable.indexOf(ableName))
-        || (!bounds && (!guidelines || !guidelines.length))
     ) {
         return false;
     }
-    return true;
+    if (
+        bounds
+        || (guidelines && guidelines.length)
+        || (verticalGuidelines && verticalGuidelines.length)
+        || (horizontalGuidelines && horizontalGuidelines.length)
+     ) {
+        return true;
+    }
+    return false;
 }
 export function checkSnapPoses(
     moveable: MoveableManager<SnappableProps, SnappableState>,
@@ -796,7 +805,10 @@ export function getSnapInfosByDirection(
         (rect as any).middle = (rect.top + rect.bottom) / 2;
         (rect as any).center = (rect.left + rect.right) / 2;
 
-        return checkSnaps(moveable, rect, true, 1);
+        const snaps =  checkSnaps(moveable, rect, true, 1);
+
+        console.log(snaps);
+        return snaps;
     } else if (!snapDirection[0] && !snapDirection[1]) {
         const alignPoses = [poses[0], poses[1], poses[3], poses[2], poses[0]];
         const nextPoses = [];
