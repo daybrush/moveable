@@ -118,7 +118,7 @@ export function getRad(pos1: number[], pos2: number[]) {
     const distY = pos2[1] - pos1[1];
     const rad = Math.atan2(distY, distX);
 
-    return rad > 0 ? rad : rad + Math.PI * 2;
+    return rad >= 0 ? rad : rad + Math.PI * 2;
 }
 
 export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
