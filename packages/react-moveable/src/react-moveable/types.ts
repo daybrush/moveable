@@ -74,10 +74,16 @@ export interface BoundInfo {
 }
 export interface SnapInfo {
     isSnap: boolean;
+    posInfos: SnapPosInfo[];
+}
+export interface SnapPosInfo {
+    pos: number;
+    guidelineInfos: SnapGuidelineInfo[];
+}
+export interface SnapGuidelineInfo {
     dist: number;
     offset: number;
-    guidelines: Guideline[];
-    snapPoses: number[];
+    guideline: Guideline;
 }
 export interface MoveableProps extends
     MoveableManagerProps<any>,

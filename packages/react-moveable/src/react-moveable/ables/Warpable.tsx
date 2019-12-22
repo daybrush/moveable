@@ -20,7 +20,7 @@ import {
 } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
 import { renderAllDirections } from "../renderDirection";
-import { checkSnapPoses, hasGuidelines } from "./Snappable";
+import { checkSnapPoses, hasGuidelines, getNearestSnapGuidelineInfo } from "./Snappable";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {
     return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
@@ -162,22 +162,17 @@ export default {
                     (selectedPoses[0][1] + selectedPoses[1][1]) / 2,
                 ]);
             }
-            const snapInfos = checkSnapPoses(
+            const {
+                horizontal: horizontalSnapInfo,
+                vertical: verticalSnapInfo,
+            } = checkSnapPoses(
                 moveable,
                 selectedPoses.map(pos => pos[0] + distX),
                 selectedPoses.map(pos => pos[1] + distY),
             );
-            const {
-                horizontal: {
-                    offset: horizontalOffset,
-                },
-                vertical: {
-                    offset: verticalOffset,
-                },
-            } = snapInfos;
 
-            distY -= horizontalOffset;
-            distX -= verticalOffset;
+            distY -= getNearestSnapGuidelineInfo(horizontalSnapInfo).offset;
+            distX -= getNearestSnapGuidelineInfo(verticalSnapInfo).offset;
         }
 
         const dist = getDragDist({ datas, distX, distY }, true);
