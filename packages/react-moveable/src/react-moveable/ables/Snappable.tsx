@@ -8,7 +8,7 @@ import {
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle
+    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle, roundSign
 } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
@@ -50,8 +50,8 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const poses = getAbsolutePosesByState(state);
     const targetLeft = Math.min(...poses.map(pos => pos[0]));
     const targetTop = Math.min(...poses.map(pos => pos[1]));
-    const distLeft = targetLeft - (clientLeft - containerLeft);
-    const distTop = targetTop - (clientTop - containerTop);
+    const distLeft = roundSign(targetLeft - (clientLeft - containerLeft));
+    const distTop = roundSign(targetTop - (clientTop - containerTop));
     const guidelines: Guideline[] = [];
 
     elementGuidelines!.forEach(el => {
@@ -61,7 +61,6 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
         const elementBottom = elementTop + height;
         const elementLeft = left - containerLeft;
         const elementRight = elementLeft + width;
-
         guidelines.push({ type: "vertical", element: el, pos: [
             throttle(elementLeft + distLeft, 0.1),
             elementTop,

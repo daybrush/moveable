@@ -10,6 +10,7 @@ import {
     getRect,
     filterAbles,
     equals,
+    resetClientRect,
 } from "./utils";
 import styler from "react-css-styler";
 import Dragger from "@daybrush/drag";
@@ -60,8 +61,8 @@ export default class MoveableManager<T = {}, U = {}>
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
-        clientRect: { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 },
-        containerRect: { left: 0, top: 0, bottom: 0, right: 0, width: 0, height: 0 },
+        clientRect: resetClientRect(),
+        containerRect: resetClientRect(),
         rotation: 0,
     } as any;
     public targetAbles: Array<Able<T>> = [];

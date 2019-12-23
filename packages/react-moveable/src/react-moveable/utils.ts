@@ -15,7 +15,7 @@ import {
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState, Able } from "./types";
+import { MoveableManagerState, Able, MoveableClientRect } from "./types";
 
 export function round(num: number) {
     return Math.round(num);
@@ -603,8 +603,8 @@ export function getTargetInfo(
     let is3d = false;
     let targetTransform = "";
     let beforeOrigin = [0, 0];
-    let clientRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
-    let containerRect = { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
+    let clientRect = resetClientRect();
+    let containerRect = resetClientRect();
     let rotation = 0;
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
@@ -687,6 +687,9 @@ export function getTargetInfo(
         clientRect,
     };
 }
+export function resetClientRect(): MoveableClientRect {
+    return { left: 0, right: 0, top: 0, width: 0, height: 0, bottom: 0 };
+}
 export function getClientRect(el: HTMLElement | SVGElement) {
     const { left, width, top, bottom, right, height } = el.getBoundingClientRect();
 
@@ -741,6 +744,9 @@ export function getAbsolutePosesByState({
     pos4: number[],
 }) {
     return getAbsolutePoses([pos1, pos2, pos3, pos4], [left, top]);
+}
+export function roundSign(num: number) {
+    return Math.round(num % 1 === -0.5 ? num - 1 : num);
 }
 export function throttle(num: number, unit: number) {
     if (!unit) {
