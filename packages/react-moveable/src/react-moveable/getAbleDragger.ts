@@ -28,10 +28,11 @@ function triggerAble<T extends IObject<any>>(
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
-    const results = ables.filter((able: any) => {
+    const events = ables.filter((able: any) => able[eventName]);
+    const results = events.filter((able: any) => {
         const condition = isStart && able[conditionName];
 
-        if (able[eventName] && (!condition || condition(e.inputEvent.target, moveable))) {
+        if (!condition || condition(e.inputEvent.target, moveable)) {
             return able[eventName](moveable, e);
         }
         return false;
@@ -39,7 +40,7 @@ function triggerAble<T extends IObject<any>>(
     const isUpdate = results.length;
 
     if (isStart) {
-        if (!isUpdate) {
+        if (events.length && !isUpdate) {
             moveable.state.dragger = null;
 
             if ((moveable as MoveableGroup).moveables) {
