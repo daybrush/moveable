@@ -134,7 +134,7 @@ export default {
         if (result !== false) {
             datas.isWarp = true;
         }
-        return result;
+        return datas.isWarp;
     },
     dragControl(
         moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
