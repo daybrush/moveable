@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.2] - 2019-12-26
+* `moveable` 0.13.2
+* `react-moveable` 0.16.3
+* `preact-moveable` 0.15.2
+* `ngx-moveable` 0.9.2
+* `svelte-moveable` 0.4.2
+
+### Fixed
+* Fixed error that warp event does not occur in warpable.
+* Fixed minor differences in Snappable #121
+* Fixed a problem where the scale of a group was only keepRatio. #124
+* Fixed pinchable not working.
+* Fixed snappable not working. #127
+
 ## [0.13.1] - 2019-12-13
 ### Fixed
 * Fix Snappable for dymaic guidelines (vertical, horizontal) #119
