@@ -1,6 +1,6 @@
 {
   "name": "@moveable/matrix",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Matrix for moveable",
   "main": "./dist/matrix.cjs.js",
   "module": "./dist/matrix.esm.js",
