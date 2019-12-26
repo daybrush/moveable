@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Fixed a problem where the scale of a group was only keepRatio. #124
 * Fixed pinchable not working.
 * Fixed snappable not working. #127
+* Update @moveable/matrix #128
 
 ## [0.13.1] - 2019-12-13
 ### Fixed
