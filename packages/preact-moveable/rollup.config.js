@@ -12,9 +12,10 @@ const defaultOptions = {
         "preact/compat": "preact/compat",
         "preact-compat": "preact-compat",
         "framework-utils": "framework-utils",
-        "preact-css-styler": "preact-css-styler",
+        "preact-css-styled": "preact-css-styled",
         "@egjs/agent": "eg.Agent",
         "@egjs/children-differ": "eg.ChildrenDiffer",
+        "@moveable/matrix": "@moveable/matrix",
     },
     exports: "named",
     plugins: [
@@ -25,7 +26,7 @@ const defaultOptions = {
             usePreactX: true,
             // resolvePreactCompat: true,
             aliasModules: {
-                "react-css-styler": "preact-css-styler",
+                "react-css-styled": "preact-css-styled",
             },
         }),
     ],

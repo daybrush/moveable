@@ -1,6 +1,6 @@
 {
   "name": "react-moveable",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -72,12 +72,12 @@
   },
   "dependencies": {
     "@daybrush/drag": "^0.11.1",
-    "@daybrush/utils": "^0.10.0",
+    "@daybrush/utils": "^0.10.1",
     "@egjs/agent": "^2.1.5",
     "@egjs/children-differ": "^1.0.0",
-    "@moveable/matrix": "^0.3.0",
+    "@moveable/matrix": "^0.3.1",
     "framework-utils": "^0.2.1",
-    "react-css-styler": "^0.4.0",
+    "react-css-styled": "^0.1.1",
     "react-pure-props": "^0.1.5"
   },
   "browserslist": {

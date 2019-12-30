@@ -88,6 +88,9 @@ class App extends React.Component {
 
                             ev.target.style.cssText += groupItem.toCSS();
                         });
+
+                        (this as any).ab.updateTarget();
+                        (this as any).ab.updateRect();
                     }}
                     onRotateGroupStart={e => {
                         console.log("rgs", e);
@@ -179,8 +182,9 @@ class App extends React.Component {
                     snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
-                    // scalable={true}
-                    resizable={isResizable}
+                    scalable={true}
+                    resizable={true}
+                    // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}

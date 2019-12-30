@@ -12,14 +12,14 @@ import {
     equals,
     resetClientRect,
 } from "./utils";
-import styler from "react-css-styler";
+import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
 import { getAbleDragger } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
 
-const ControlBoxElement = styler("div", MOVEABLE_CSS);
+const ControlBoxElement = styled("div", MOVEABLE_CSS);
 
 function renderLine(direction: string, pos1: number[], pos2: number[], index: number) {
     return <div key={`line${index}`} className={prefix("line", "direction", direction)}
