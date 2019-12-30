@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.3] - 2019-12-30
+* `moveable` 0.13.3
+* `react-moveable` 0.16.4
+* `preact-moveable` 0.15.3
+* `ngx-moveable` 0.9.3
+* `svelte-moveable` 0.4.3
+
+### Fixed
+* Fixed the problem that resize and scale occur simultaneously
+* Change CSS Module (css-styler => css-styled)
+* Update @moveable/matrix #128
+
 ## [0.13.2] - 2019-12-26
 * `moveable` 0.13.2
 * `react-moveable` 0.16.3
