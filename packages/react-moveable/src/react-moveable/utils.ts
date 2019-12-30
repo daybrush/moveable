@@ -837,10 +837,10 @@ export function filterAbles(ables: Able[], methods: Array<keyof Able>) {
             return false;
         }
         if (able.ableGroup) {
-            if (ableGroups[name]) {
+            if (ableGroups[able.ableGroup]) {
                 return false;
             }
-            ableGroups[name] = true;
+            ableGroups[able.ableGroup] = true;
         }
         enabledAbles[name] = true;
         return true;
