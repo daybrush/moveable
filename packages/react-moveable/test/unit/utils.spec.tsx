@@ -96,7 +96,7 @@ describe("test utils", () => {
         const deg8 = getRad([0, 0], [10, -10]) / Math.PI * 180;
 
         // Then
-        expect(deg1).to.be.equals(360);
+        expect(deg1).to.be.equals(0);
         expect(deg2).to.be.equals(45);
         expect(deg3).to.be.equals(90);
         expect(deg4).to.be.equals(135);
