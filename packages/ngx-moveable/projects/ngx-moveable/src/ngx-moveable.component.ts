@@ -4,17 +4,7 @@ import {
 } from '@angular/core';
 import Moveable, {
   PROPERTIES, EVENTS, MoveableOptions,
-  OnDrag, OnDragStart, OnDragEnd,
-  OnResize, OnResizeStart, OnResizeEnd,
-  OnScaleStart, OnScale, OnScaleEnd,
-  OnWarpStart, OnDragGroupStart, OnWarp,
-  OnWarpEnd, OnDragGroupEnd, OnDragGroup,
-  OnScaleGroup, OnScaleGroupStart, OnResizeGroup,
-  OnResizeGroupStart, OnScaleGroupEnd, OnResizeGroupEnd,
-  OnRotateStart, OnRotate, OnRotateEnd, OnRotateGroupStart,
-  OnRotateGroup, OnRotateGroupEnd, OnPinch, OnPinchEnd,
-  OnPinchStart, OnPinchGroupStart, OnPinchGroup, OnPinchGroupEnd, OnClickGroup, OnClick,
-  OnScrollGroup, OnScroll, OnRenderGroupEnd, OnRenderGroup, OnRenderGroupStart, OnRenderEnd, OnRenderStart, OnRender, MoveableEvents,
+  OnScrollGroup, OnScroll, MoveableEvents,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
 import { NgxMoveableInterface, NgxMoveableEvents } from './types';
