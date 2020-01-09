@@ -41,6 +41,9 @@ export default {
     drag(moveable: MoveableManager<ScrollableProps>, e: any) {
         this.checkScroll(moveable, e);
     },
+    dragAfter(moveable: MoveableManager<ScrollableProps>, e: any) {
+        this.checkScrollAfter(moveable, e);
+    },
     dragEnd(moveable: MoveableManager<ScrollableProps>, e: any) {
         e.datas.isScroll = false;
     },
@@ -50,19 +53,21 @@ export default {
     dragGroup(moveable: MoveableGroup, e: any) {
         this.drag(moveable, {...e, targets: moveable.props.targets });
     },
+    dragGroupAfter(moveable: MoveableManager<ScrollableProps>, e: any) {
+        this.checkScrollAfter(moveable, e);
+    },
     dragGroupEnd(moveable: MoveableGroup, e: any) {
         this.dragEnd(moveable, e);
     },
     checkScroll(moveable: MoveableManager<ScrollableProps>, e: any) {
         const {
             datas,
-            inputEvent,
             clientX,
             clientY,
             isScroll,
             targets,
         } = e;
-
+        datas.direction = null;
         if (!datas.isScroll) {
             return;
         }
@@ -96,7 +101,8 @@ export default {
             return;
         }
 
-        const pos = getScrollPosition({ scrollContainer, direction });
+        datas.direction = direction;
+        datas.prevPos = getScrollPosition({ scrollContainer, direction });
         const params = fillParams<OnScroll>(moveable, e, {
             scrollContainer,
             direction,
@@ -107,28 +113,33 @@ export default {
             params.targets = targets;
         }
         triggerEvent(moveable, eventName, params);
+    },
+    checkScrollAfter(moveable: MoveableManager<ScrollableProps>, e: any) {
+        const { datas, inputEvent } = e;
+        const { direction, prevPos } = datas;
+        if (
+            !datas.isScroll
+            || !datas.direction
+        ) {
+            return;
+        }
+        const {
+            getScrollPosition = getDefaultScrollPosition,
+        } = moveable.props;
+        const {
+            scrollContainer,
+        } = datas;
+        const nextPos = getScrollPosition({ scrollContainer, direction });
+        const offsetX = nextPos[0] - prevPos[0];
+        const offsetY = nextPos[1] - prevPos[1];
 
-        requestAnimationFrame(() => {
-            if (datas.prevClientX !== clientX || datas.prevClientY !== clientY) {
-                return;
-            }
+        if (!offsetX && !offsetY) {
+            return;
+        }
+        moveable.targetDragger.scrollBy(direction[0] ? offsetX : 0, direction[1] ? offsetY : 0, inputEvent, false);
 
-            const nextPos = getScrollPosition({ scrollContainer, direction });
-            const offsetX = nextPos[0] - pos[0];
-            const offsetY = nextPos[1] - pos[1];
-
-            if (!offsetX && !offsetY) {
-                return;
-            }
-            moveable.targetDragger.scrollBy(direction[0] ? offsetX : 0, direction[1] ? offsetY : 0, inputEvent, false);
-
-            setTimeout(() => {
-                if (datas.prevClientX !== clientX || datas.prevClientY !== clientY) {
-                    return;
-                }
-
-                moveable.targetDragger.onDrag(inputEvent, true);
-            }, 10);
-        });
+        // setTimeout(() => {
+        //     moveable.targetDragger.onDrag(inputEvent, true);
+        // }, 10);
     },
 };
