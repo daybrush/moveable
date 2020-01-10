@@ -855,13 +855,7 @@ export function getKeepRatioWidth(height: number, isWidth: boolean, ratio: numbe
 }
 
 export function equals(a1: any, a2: any) {
-    if (a1 === a2) {
-        return true;
-    } else if (a1 == null && a2 == null) {
-        return true;
-    } else {
-        return false;
-    }
+    return a1 === a2 || (a1 == null && a2 == null);
 }
 
 export function selectValue<T = any>(...values: any[]): T {
