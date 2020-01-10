@@ -1,7 +1,6 @@
 import { prefixCSS } from "framework-utils";
 import getAgent from "@egjs/agent";
 import { IObject } from "@daybrush/utils";
-import { throttle } from "./utils";
 
 function getSVGCursor(scale: number, degree: number) {
     return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="${32 * scale}px" height="${32 * scale}px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(${degree}deg);transform-origin: 16px 16px"></path></svg>`;
@@ -9,7 +8,7 @@ function getSVGCursor(scale: number, degree: number) {
 function getCursorCSS(degree: number) {
     const x1 = getSVGCursor(1, degree);
     const x2 = getSVGCursor(2, degree);
-    const degree45 = throttle(degree, 45) % 180;
+    const degree45 = (Math.round(degree / 45) * 45) % 180;
     const defaultCursor
         = degree45 === 135
         ? "nwse-resize"
