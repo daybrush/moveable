@@ -1,7 +1,7 @@
 import MoveableManager from "./MoveableManager";
-import { prefix, getControlTransform } from "./utils";
+import { prefix, getControlTransform, throttle } from "./utils";
 import { ResizableProps, ScalableProps, WarpableProps, Renderer } from "./types";
-import { DIRECTION_INDEXES } from "./consts";
+import { DIRECTION_INDEXES, DIRECTION_ROTATIONS } from "./consts";
 import { IObject } from "@daybrush/utils";
 
 export function renderControls(
@@ -28,8 +28,11 @@ export function renderControls(
         if (!indexes || !directionMap[direction]) {
             return null;
         }
+        const directionRotation = (throttle(rotation / Math.PI * 180, 15) + DIRECTION_ROTATIONS[direction]) % 180;
+
         return (
-            <div className={prefix("control", "direction", direction)} data-direction={direction} key={direction}
+            <div className={prefix("control", "direction", direction)}
+                data-rotation={directionRotation} data-direction={direction} key={direction}
                 style={getControlTransform(rotation, ...indexes.map(index => poses[index]))}></div>
         );
     });

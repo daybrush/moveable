@@ -1,10 +1,32 @@
 import { prefixCSS } from "framework-utils";
 import getAgent from "@egjs/agent";
 import { IObject } from "@daybrush/utils";
+import { throttle } from "./utils";
+
+function getSVGCursor(scale: number, degree: number) {
+    return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="${32 * scale}px" height="${32 * scale}px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(${degree}deg);transform-origin: 16px 16px"></path></svg>`;
+}
+function getCursorCSS(degree: number) {
+    const x1 = getSVGCursor(1, degree);
+    const x2 = getSVGCursor(2, degree);
+    const degree45 = throttle(degree, 45) % 180;
+    const defaultCursor
+        = degree45 === 135
+        ? "nwse-resize"
+        : degree45 === 45
+        ? "nesw-resize"
+        : degree45 === 90
+        ? "ew-resize"
+        : "ns-resize"; // 135
+
+    // tslint:disable-next-line: max-line-length
+    return `cursor:${defaultCursor};cursor: url('${x1}') 16 16, ${defaultCursor};cursor: -webkit-image-set(url('${x1}') 1x, url('${x2}') 2x) 16 16, ${defaultCursor};`;
+}
 
 export const agent = getAgent();
 export const isWebkit
     = agent.os.name.indexOf("ios") > -1 || agent.browser.name.indexOf("safari") > -1;
+
 export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 {
@@ -83,18 +105,11 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	margin-left: -6px;
 	pointer-events: none;
 }
-.direction.e, .direction.w {
-	cursor: ew-resize;
+${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
+.direction[data-rotation="${degree}"] {
+	${getCursorCSS(degree)}
 }
-.direction.s, .direction.n {
-	cursor: ns-resize;
-}
-.direction.nw, .direction.se, :host.reverse .direction.ne, :host.reverse .direction.sw {
-	cursor: nwse-resize;
-}
-.direction.ne, .direction.sw, :host.reverse .direction.nw, :host.reverse .direction.se {
-	cursor: nesw-resize;
-}
+`).join("\n")}
 .group {
     z-index: -1;
 }
@@ -144,4 +159,14 @@ export const DIRECTION_INDEXES: IObject<number[]> = {
     ne: [1],
     sw: [2],
     se: [3],
+};
+export const DIRECTION_ROTATIONS: IObject<number> = {
+    n: 0,
+    s: 180,
+    w: 270,
+    e: 90,
+    nw: 315,
+    ne: 45,
+    sw: 225,
+    se: 135,
 };
