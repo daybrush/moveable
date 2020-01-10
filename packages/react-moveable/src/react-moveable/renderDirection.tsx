@@ -15,6 +15,7 @@ export function renderControls(
     } = moveable.state;
     const {
         renderDirections: directions = defaultDirections,
+        fullEdgesResize,
     } = moveable.props;
     const poses = [pos1, pos2, pos3, pos4];
 
@@ -28,9 +29,33 @@ export function renderControls(
         if (!indexes || !directionMap[direction]) {
             return null;
         }
+        
+        const baseStyle = getControlTransform(rotation, ...indexes.map((index) => poses[index]));
+        const style: React.CSSProperties = Object.assign(baseStyle, {});
+
+        if (fullEdgesResize) {
+            style.borderRadius = 0;
+
+            if (direction === 's' || direction === 'n') {
+                style.width = width - 10;
+                style.height = 20;
+                style.marginTop = '-10px';
+                style.marginLeft = -width / 2 + 5;
+                style.background = 'transparent';
+                style.border = 'none';
+            } else if (direction === 'e' || direction === 'w') {
+                style.height = height - 10;
+                style.width = 20;
+                style.marginLeft = '-10px';
+                style.marginTop = -height / 2 + 5;
+                style.background = 'transparent';
+                style.border = 'none';
+            }
+        }
+
         return (
             <div className={prefix("control", "direction", direction)} data-direction={direction} key={direction}
-                style={getControlTransform(rotation, ...indexes.map(index => poses[index]))}></div>
+                style={style}></div>
         );
     });
 }

@@ -712,6 +712,8 @@ export interface ResizableProps {
     renderDirections?: string[];
     baseDirection?: number[];
     keepRatio?: boolean;
+    /**Resizeable full along edges*/
+    fullEdgesResize?: boolean;
 
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
