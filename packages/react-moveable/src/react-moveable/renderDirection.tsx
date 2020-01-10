@@ -12,6 +12,8 @@ export function renderControls(
     const {
         pos1, pos2, pos3, pos4,
         rotation,
+        width,
+        height,
     } = moveable.state;
     const {
         renderDirections: directions = defaultDirections,
@@ -29,7 +31,7 @@ export function renderControls(
         if (!indexes || !directionMap[direction]) {
             return null;
         }
-        
+
         const baseStyle = getControlTransform(rotation, ...indexes.map((index) => poses[index]));
         const style: React.CSSProperties = Object.assign(baseStyle, {});
 
