@@ -39,7 +39,7 @@ export default {
         datas.isScroll = true;
     },
     drag(moveable: MoveableManager<ScrollableProps>, e: any) {
-        this.checkScroll(moveable, e);
+        return this.checkScroll(moveable, e);
     },
     dragAfter(moveable: MoveableManager<ScrollableProps>, e: any) {
         this.checkScrollAfter(moveable, e);
@@ -51,7 +51,7 @@ export default {
         this.dragStart(moveable, e);
     },
     dragGroup(moveable: MoveableGroup, e: any) {
-        this.drag(moveable, {...e, targets: moveable.props.targets });
+        return this.drag(moveable, {...e, targets: moveable.props.targets });
     },
     dragGroupAfter(moveable: MoveableManager<ScrollableProps>, e: any) {
         this.checkScrollAfter(moveable, e);
@@ -113,10 +113,13 @@ export default {
             params.targets = targets;
         }
         triggerEvent(moveable, eventName, params);
+
+        return true;
     },
     checkScrollAfter(moveable: MoveableManager<ScrollableProps>, e: any) {
         const { datas, inputEvent } = e;
         const { direction, prevPos } = datas;
+
         if (
             !datas.isScroll
             || !datas.direction

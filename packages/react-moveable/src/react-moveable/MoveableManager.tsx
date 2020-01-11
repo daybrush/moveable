@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MOVEABLE_CSS, PREFIX, DIRECTION_ROTATIONS } from "./consts";
+import { MOVEABLE_CSS, PREFIX } from "./consts";
 import {
     prefix, getLineStyle,
     getTargetInfo,
@@ -80,19 +80,19 @@ export default class MoveableManager<T = {}, U = {}>
     public customDragger!: CustomDragger;
 
     public render() {
-        const { edge, parentPosition, className } = this.props;
+        const { edge, parentPosition, className, target: propsTarget } = this.props;
 
         this.checkUpdate();
 
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
-        const { left, top, pos1, pos2, pos3, pos4, target, direction } = this.state;
+        const { left, top, pos1, pos2, pos3, pos4, target: stateTarget, direction } = this.state;
 
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
                 className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`} style={{
                     position: "absolute",
-                    display: target ? "block" : "none",
+                    display: !propsTarget || !stateTarget ? "none" : "block",
                     transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
                 }}>
                 {this.renderAbles()}
