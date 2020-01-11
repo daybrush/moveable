@@ -140,9 +140,5 @@ export default {
             return;
         }
         moveable.targetDragger.scrollBy(direction[0] ? offsetX : 0, direction[1] ? offsetY : 0, inputEvent, false);
-
-        // setTimeout(() => {
-        //     moveable.targetDragger.onDrag(inputEvent, true);
-        // }, 10);
     },
 };
