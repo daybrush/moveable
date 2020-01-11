@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MOVEABLE_CSS, PREFIX } from "./consts";
+import { MOVEABLE_CSS, PREFIX, DIRECTION_ROTATIONS } from "./consts";
 import {
     prefix, getLineStyle,
     getTargetInfo,
@@ -11,6 +11,7 @@ import {
     filterAbles,
     equals,
     resetClientRect,
+    throttle,
 } from "./utils";
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
@@ -18,12 +19,17 @@ import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
 import { getAbleDragger } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
+import { getRad } from "@moveable/matrix";
 
 const ControlBoxElement = styled("div", MOVEABLE_CSS);
 
 function renderLine(direction: string, pos1: number[], pos2: number[], index: number) {
+    const rad = getRad(pos1, pos2);
+    const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
+
     return <div key={`line${index}`} className={prefix("line", "direction", direction)}
-        data-direction={direction} style={getLineStyle(pos1, pos2)}></div>;
+        data-rotation={rotation}
+        data-direction={direction} style={getLineStyle(pos1, pos2, rad)}></div>;
 }
 export default class MoveableManager<T = {}, U = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState<U>> {

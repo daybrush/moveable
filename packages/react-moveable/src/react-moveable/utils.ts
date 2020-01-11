@@ -499,11 +499,10 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
     ];
 }
 
-export function getLineStyle(pos1: number[], pos2: number[]) {
+export function getLineStyle(pos1: number[], pos2: number[], rad: number = getRad(pos1, pos2)) {
     const distX = pos2[0] - pos1[0];
     const distY = pos2[1] - pos1[1];
     const width = Math.sqrt(distX * distX + distY * distY);
-    const rad = getRad(pos1, pos2);
 
     return {
         transform: `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad)`,

@@ -165,12 +165,13 @@ class App extends React.Component {
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
                     origin={false}
+                    edge={true}
                     // dragArea={true}
                     draggable={true}
                     snappable={true}
                     scrollable={true}
                     transformOrigin="% %"
-                    bounds={{ left: 30, top: 20 }}
+                    // bounds={{ left: 30, top: 20 }}
                     verticalGuidelines={[100, 200, 400, 500.5, 1100.321]}
                     horizontalGuidelines={[100.5, 200.5, 500.35]}
                     // renderDirections={["n", "ne", "nw"]}
