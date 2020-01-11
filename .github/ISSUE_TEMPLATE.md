@@ -1,7 +1,6 @@
 ## Environments
 * Framework name:
 * Framework version:
-* Moveable Component name:
 * Moveable Component version:
 * Testable Address(optional):
 
