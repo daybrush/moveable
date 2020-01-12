@@ -7,15 +7,9 @@ import Moveable, {
   OnScrollGroup, OnScroll, MoveableEvents,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
-import { NgxMoveableInterface, NgxMoveableEvents } from './types';
+import { NgxMoveableEvents } from './types';
 import { Able } from 'moveable';
-
-
-// type NgxMoveableEmitter = {
-//   [name in keyof MoveableEvents]: EventEmitter<MoveableEvents[name]>;
-// };
-
-// , MoveableGetterSetter, NgxMoveableEmitter
+import { NgxMoveableInterface } from './ngx-moveable.interface';
 
 
 // @dynamic
@@ -24,7 +18,8 @@ import { Able } from 'moveable';
   template: '',
 })
 export class NgxMoveableComponent
-  implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableInterface, NgxMoveableEvents {
+  extends NgxMoveableInterface
+  implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableEvents {
   @Input() public draggable!: boolean;
   @Input() public resizable!: boolean;
   @Input() public scalable!: boolean;
@@ -116,9 +111,8 @@ export class NgxMoveableComponent
   @Output() public scroll!: EventEmitter<OnScroll>;
   @Output() public scrollGroup!: EventEmitter<OnScrollGroup>;
 
-
-  private moveable!: Moveable;
   constructor() {
+    super();
     EVENTS.forEach(name => {
       this[name] = new EventEmitter<any>();
     });
@@ -157,29 +151,4 @@ export class NgxMoveableComponent
   ngOnDestroy() {
     this.moveable.destroy();
   }
-  ngDragStart(e: MouseEvent | TouchEvent) {
-    this.moveable.dragStart(e);
-  }
-  isMoveableElement(target: HTMLElement | SVGElement) {
-    return this.moveable.isMoveableElement(target);
-  }
-  updateRect() {
-    this.moveable.updateRect();
-  }
-  updateTarget() {
-    this.moveable.updateTarget();
-  }
-  getRect() {
-    return this.moveable.getRect();
-  }
-  setState(state: any, callback: () => any) {
-    this.moveable.setState(state, callback);
-  }
-  isInside(clientX: number, clientY: number) {
-    return this.moveable.isInside(clientX, clientY);
-  }
-  destroy() {
-    this.moveable.destroy();
-  }
-
 }
