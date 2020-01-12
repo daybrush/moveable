@@ -5,10 +5,6 @@ import preact from "rollup-plugin-preact";
 const preactPlugin = preact({
     noPropTypes: true,
     usePreactX: true,
-});
-const preactResolvePlugin = preact({
-    noPropTypes: true,
-    usePreactX: true,
     resolvePreactCompat: true,
 });
 
@@ -19,22 +15,20 @@ const external = {
     "framework-utils": "framework-utils",
     "@egjs/agent": "eg.Agent",
     "@egjs/children-differ": "eg.ChildrenDiffer",
-    "preact": "preact",
-    "preact/compat": "preact/compat",
-    "preact-moveable": "preact-moveable",
+    "css-styled": "css-styled"
 };
 export default builder([
     {
         name: "Moveable",
         input: "src/index.umd.ts",
         output: "./dist/moveable.js",
-        plugins: [preactResolvePlugin],
+        plugins: [preactPlugin],
     },
     {
         name: "Moveable",
         input: "src/index.umd.ts",
         output: "./dist/moveable.min.js",
-        plugins: [preactResolvePlugin],
+        plugins: [preactPlugin],
         uglify: true,
     },
     {
