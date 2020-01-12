@@ -4,28 +4,10 @@ import { h, render } from "preact";
 import InnerMoveable from "./InnerMoveable";
 import { MoveableOptions, MoveableGetterSetter, MoveableEvents } from "./types";
 import {
-    OnDragStart, OnDrag, OnResize, OnResizeStart,
-    OnResizeEnd, OnScaleStart, OnScaleEnd, OnRotateStart,
-    OnRotateEnd, OnDragEnd, OnRotate, OnScale,
-    OnWarpStart, OnWarpEnd, OnWarp, OnPinchStart,
-    OnPinch, OnPinchEnd, OnDragGroup, OnDragGroupStart,
-    OnDragGroupEnd, OnResizeGroup, OnResizeGroupStart,
-    OnResizeGroupEnd, OnScaleGroup, OnScaleGroupEnd,
-    OnRotateGroup, OnRotateGroupStart, OnRotateGroupEnd,
-    OnPinchGroup, OnPinchGroupStart, OnPinchGroupEnd, OnScaleGroupStart, OnClickGroup,
     MoveableInterface,
     RectInfo,
-    OnClick,
-    OnScroll,
-    OnScrollGroup,
-    OnRenderStart,
-    OnRender,
-    OnRenderEnd,
-    OnRenderGroupStart,
-    OnRenderGroup,
-    OnRenderGroupEnd,
 } from "react-moveable/declaration/types";
-import { PROPERTIES, EVENTS } from "./consts";
+import { PROPERTIES, EVENTS, METHODS } from "./consts";
 import { camelize, isArray } from "@daybrush/utils";
 
 /**
@@ -33,6 +15,19 @@ import { camelize, isArray } from "@daybrush/utils";
  * @sort 1
  * @extends eg.Component
  */
+@Properties(METHODS, (prototype, property) => {
+    if (prototype[property]) {
+        return;
+    }
+    prototype[property] = function(...args) {
+        const self = this.getMoveable();
+
+        if (!self || !self[property]) {
+            return;
+        }
+        return self[property](...args);
+    };
+})
 @Properties(PROPERTIES, (prototype, property) => {
     Object.defineProperty(prototype, property, {
         get() {
@@ -47,7 +42,7 @@ import { camelize, isArray } from "@daybrush/utils";
         configurable: true,
     });
 })
-class Moveable extends EgComponent implements MoveableInterface {
+class Moveable extends EgComponent {
     private innerMoveable!: InnerMoveable;
     private tempElement = document.createElement("div");
 
@@ -78,117 +73,8 @@ class Moveable extends EgComponent implements MoveableInterface {
             this.updateRect();
         }
     }
-    /**
-     * Check if the target is an element included in the moveable.
-     * @param - the target
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * window.addEventListener("click", e => {
-     *     if (!moveable.isMoveableElement(e.target)) {
-     *         moveable.target = e.target;
-     *     }
-     * });
-     */
-    public isMoveableElement(target: HTMLElement | SVGElement) {
-        return this.getMoveable().isMoveableElement(target);
-    }
-    /**
-     * If the width, height, left, and top of all elements change, update the shape of the moveable.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * window.addEventListener("resize", e => {
-     *     moveable.updateRect();
-     * });
-     */
-    public updateRect() {
-        this.getMoveable().updateRect();
-    }
-    /**
-     * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
-     * @param - external `MouseEvent`or `TouchEvent`
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * document.body.addEventListener("mousedown", e => {
-     *     if (!moveable.isMoveableElement(e.target)) {
-     *          moveable.dragStart(e);
-     *     }
-     * });
-     */
-    public dragStart(e: MouseEvent | TouchEvent): void {
-        this.getMoveable().dragStart(e);
-    }
-
-    /**
-     * Whether the coordinates are inside Moveable
-     * @param - x coordinate
-     * @param - y coordinate
-     * @return - True if the coordinate is in moveable or false
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * document.body.addEventListener("mousedown", e => {
-     *     if (moveable.isInside(e.clientX, e.clientY)) {
-     *          console.log("inside");
-     *     }
-     * });
-     */
-    public isInside(clientX: number, clientY: number): boolean {
-        return this.getMoveable().isInside(clientX, clientY);
-    }
-    /**
-     * You can get the vertex information, position and offset size information of the target based on the container.
-     * @return - The Rect Info
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * const rectInfo = moveable.getRect();
-     */
-    public getRect(): RectInfo {
-        return this.getMoveable().getRect();
-    }
-    /**
-     * You can change options or properties dynamically.
-     * @param - options or properties
-     * @param - After the change, the callback function is executed when the update is completed.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.setState({
-     *   target: document.querySelector(".target"),
-     * }, () => {
-     *   moveable.dragStart(e);
-     * })
-     */
     public setState(state: Partial<MoveableOptions>, callback?: () => any) {
         this.innerMoveable.setState(state, callback);
-    }
-    /**
-     * If the width, height, left, and top of the only target change, update the shape of the moveable.
-     * @param - the values of x and y to move moveable.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.updateTarget();
-     */
-    public updateTarget(): void {
-        this.getMoveable().updateTarget();
     }
     /**
      * Remove the Moveable object and the events.
@@ -209,6 +95,106 @@ class Moveable extends EgComponent implements MoveableInterface {
         return this.innerMoveable.preactMoveable;
     }
 }
+
+/**
+ * Check if the target is an element included in the moveable.
+ * @method Moveable#isMoveableElement
+ * @param {HTMLElement | SVGElement} target - the target
+ * @returns {boolean}
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * window.addEventListener("click", e => {
+ *     if (!moveable.isMoveableElement(e.target)) {
+ *         moveable.target = e.target;
+ *     }
+ * });
+ */
+/**
+ * If the width, height, left, and top of all elements change, update the shape of the moveable.
+ * @method Moveable#updateRect
+ * @return {void}
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * window.addEventListener("resize", e => {
+ *     moveable.updateRect();
+ * });
+ */
+/**
+ * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
+ * @method Moveable#dragStart
+ * @param {MouseEvent | TouchEvent} e - external `MouseEvent`or `TouchEvent`
+ * @return {void}
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * document.body.addEventListener("mousedown", e => {
+ *     if (!moveable.isMoveableElement(e.target)) {
+ *          moveable.dragStart(e);
+ *     }
+ * });
+ */
+
+/**
+ * Whether the coordinates are inside Moveable
+ * @method Moveable#isInside
+ * @param {number} clientX - x coordinate
+ * @param {number} clientY - y coordinate
+ * @return {boolean} - True if the coordinate is in moveable or false
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * document.body.addEventListener("mousedown", e => {
+ *     if (moveable.isInside(e.clientX, e.clientY)) {
+ *          console.log("inside");
+ *     }
+ * });
+ */
+/**
+ * You can get the vertex information, position and offset size information of the target based on the container.
+ * @method Moveable#getRect
+ * @return {Moveable.RectInfo}- The Rect Info
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * const rectInfo = moveable.getRect();
+ */
+/**
+ * You can change options or properties dynamically.
+ * @param - options or properties
+ * @param - After the change, the callback function is executed when the update is completed.
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.setState({
+ *   target: document.querySelector(".target"),
+ * }, () => {
+ *   moveable.dragStart(e);
+ * })
+ */
+/**
+ * If the width, height, left, and top of the only target change, update the shape of the moveable.
+ * @param - the values of x and y to move moveable.
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.updateTarget();
+ */
 /**
  * Whether or not the origin controlbox will be visible or not (default: true)
  * @name Moveable#origin
@@ -1332,7 +1318,7 @@ class Moveable extends EgComponent implements MoveableInterface {
  * });
  */
 
-interface Moveable extends MoveableGetterSetter {
+interface Moveable extends MoveableGetterSetter, MoveableInterface {
     on<T extends keyof MoveableEvents>(eventName: T, handlerToAttach: (event: MoveableEvents[T]) => any): this;
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;

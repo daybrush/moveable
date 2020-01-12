@@ -1,7 +1,7 @@
-import Moveable from "./Moveable";
-import { PROPERTIES, EVENTS } from "./consts";
+import Moveable, * as modules from "./index.esm";
 
-(Moveable as any).PROPERTIES = PROPERTIES;
-(Moveable as any).EVENTS = EVENTS;
+for (const name in modules) {
+    (Moveable as any)[name] = modules[name];
+}
 
 export default Moveable;

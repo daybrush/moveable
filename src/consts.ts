@@ -1,4 +1,5 @@
 import { MoveableEvents, MoveableOptions } from "./types";
+import { MoveableInterface } from "react-moveable/declaration/types";
 
 export const PROPERTIES: Array<keyof MoveableOptions> = [
     "draggable", "resizable", "scalable", "rotatable",
@@ -67,4 +68,13 @@ export const EVENTS: Array<keyof MoveableEvents> = [
     "renderGroupStart",
     "renderGroup",
     "renderGroupEnd",
+];
+export const METHODS: Array<keyof MoveableInterface> = [
+    "isMoveableElement",
+    "updateRect",
+    "updateTarget",
+    "destroy",
+    "dragStart",
+    "isInside",
+    "setState",
 ];
