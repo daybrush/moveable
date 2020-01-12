@@ -1,6 +1,6 @@
 {
   "name": "react-moveable",
-  "version": "0.16.4",
+  "version": "0.16.6",
   "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -14,7 +14,8 @@
     "test": "karma start",
     "test:chrome": "karma start --chrome",
     "coverage": "karma start --coverage && print-coveralls --sort=desc",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "packages": "pvu --path=../ --update=preact-moveable"
   },
   "keywords": [
     "moveable",
@@ -62,6 +63,7 @@
     "@types/react-dom": "^16.8.4",
     "keycon": "^0.3.0",
     "print-sizes": "0.0.4",
+    "pvu": "^0.3.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1",
@@ -82,7 +84,7 @@
   "peerDependencies": {
     "@daybrush/drag": ">=0.12.0",
     "@daybrush/utils": ">=0.10.1",
-    "framework-utils": ">=0.3.3",
+    "framework-utils": ">=0.3.4",
     "react-css-styled": ">=0.1.3"
   },
   "browserslist": {

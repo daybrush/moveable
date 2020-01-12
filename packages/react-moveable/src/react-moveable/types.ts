@@ -607,6 +607,7 @@ export interface OnClickGroup extends OnEvent {
 
 // `renderStart` event occurs at the first start of all events.
 /**
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.

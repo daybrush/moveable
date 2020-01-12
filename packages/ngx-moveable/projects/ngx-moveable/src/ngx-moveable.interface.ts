@@ -2,7 +2,7 @@ import Moveable, { MoveableInterface, METHODS } from 'moveable';
 import { MethodInterface, withMethods } from 'framework-utils';
 
 export class NgxMoveableInterface {
-  @withMethods(METHODS, { dragStart: 'ngDragstart' })
+  @withMethods(METHODS, { dragStart: 'ngDragStart' })
   protected moveable!: Moveable;
 }
 

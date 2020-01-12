@@ -1,6 +1,6 @@
 {
     "name": "preact-moveable",
-    "version": "0.15.3",
+    "version": "0.15.5",
     "description": "A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -10,7 +10,8 @@
         "lint": "tslint -c tslint.json 'src/**/*.ts'",
         "start": "open ./demo/index.html && rollup -c rollup.config.demo.js -w",
         "build": "rollup -c && npm run declaration && print-sizes ./dist ",
-        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+        "packages": "pvu --path=../../ --update=./"
     },
     "keywords": [
         "moveable",
@@ -52,6 +53,7 @@
         "keycon": "^0.3.0",
         "preact": "^10.0.0",
         "print-sizes": "^0.1.0",
+        "pvu": "^0.3.1",
         "rollup-plugin-css-bundle": "^1.0.4",
         "rollup-plugin-preact": "^0.5.2",
         "scenejs": "^1.1.4",
@@ -61,6 +63,9 @@
     },
     "dependencies": {
         "preact-css-styled": "^0.1.2",
-        "react-moveable": "^0.16.4"
+        "react-moveable": "^0.16.6"
+    },
+    "peerDependencies": {
+        "preact-css-styled": ">=0.1.2"
     }
 }

@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [0.13.4] - 2020-01-12
+* `moveable` 0.13.4
+* `react-moveable` 0.16.6
+* `preact-moveable` 0.15.5
+* `ngx-moveable` 0.9.4
+* `svelte-moveable` 0.4.4
+
+### Fixed
+* Fixed that control points rotation is wrong bug #151
+* Fixed that Scrollable isn't working. (wrong caculation) #150
+* Fixed that Crash of ngx-moveable when using --prod on angular bug #129
 
 ## [0.13.3] - 2019-12-30
 * `moveable` 0.13.3
