@@ -1,8 +1,7 @@
-<script lang="ts">
+<script>
   import VanillaMoveable, {
     PROPERTIES,
     EVENTS,
-    MoveableOptions
   } from "moveable";
   import { camelize, isUndefined } from "@daybrush/utils";
 
@@ -16,10 +15,9 @@
   } from "svelte";
 
   const dispatch = createEventDispatcher();
-  declare var $$props: any;
-  let options: Partial<MoveableOptions> = {};
-  let container: SVGElement | HTMLElement;
-  let moveable: VanillaMoveable;
+  let options = {};
+  let container;
+  let moveable;
 
   beforeUpdate(() => {
     const props = $$props;
@@ -27,19 +25,18 @@
     options = {};
     PROPERTIES.forEach(name => {
       if (name in props) {
-        (options as any)[name] = props[name];
+        options[name] = props[name];
       }
     });
     container = options.container || $$props.container || document.body;
 
     if (moveable) {
       tick().then(() => {
-
         moveable.setState({
           ...options,
           container,
           parentElement: container
-        } as any);
+        });
       });
     }
   });
@@ -64,28 +61,7 @@
     moveable.destroy();
   });
 
-  export function updateRect() {
-    return moveable.updateRect();
-  }
-  export function updateTarget() {
-    return moveable.updateTarget();
-  }
-  export function isInside(clientX: number, clientY: number) {
-    return moveable.isInside(clientX, clientY);
-  }
-  export function isMoveableElement(target: SVGElement | HTMLElement) {
-    return moveable.isMoveableElement(target);
-  }
-  export function getRect() {
-    return moveable.getRect();
-  }
-  export function destroy() {
-    moveable.destroy();
-  }
-  export function dragStart(e: MouseEvent | TouchEvent) {
-    moveable.dragStart(e);
-  }
-  export function setState(state: any, callback: () => any) {
-    moveable.setState(state, callback);
+  export function getInstance() {
+    return moveable;
   }
 </script>

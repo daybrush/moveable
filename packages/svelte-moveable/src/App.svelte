@@ -1,5 +1,5 @@
 <script>
-  import Moveable from "./Moveable.svelte";
+  import Moveable from "./index";
   import Guides from "svelte-guides";
   import { onMount, tick } from "svelte";
   import { Frame } from "scenejs";
@@ -87,6 +87,7 @@
       targets = [];
       return;
     }
+    console.log(moveable.isMoveableElement(target) );
     if (moveable.isMoveableElement(target) || targets.indexOf(target) > -1) {
       return;
     }

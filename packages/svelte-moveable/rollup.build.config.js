@@ -1,18 +1,14 @@
 import buildHelper from "@daybrush/builder";
 import svelte from 'rollup-plugin-svelte';
-import { preprocess } from "@pyoner/svelte-ts-preprocess";
 
 const defaultOptions = {
     tsconfig: "",
-    input: './src/Moveable.svelte',
-    commonjs: true,
+    input: './src/index.js',
     external: {
         "svelte": "svelte",
     },
     plugins: [
-        svelte({
-            preprocess: preprocess(),
-        }),
+        svelte(),
     ],
 }
 export default buildHelper([
