@@ -1,0 +1,73 @@
+{
+    "name": "react-compat-moveable",
+    "version": "0.1.0",
+    "description": "A React Compat Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
+    "main": "./dist/moveable.cjs.js",
+    "module": "./dist/moveable.esm.js",
+    "sideEffects": false,
+    "types": "declaration/index.d.ts",
+    "scripts": {
+        "lint": "tslint -c tslint.json 'src/**/*.ts'",
+        "start": "open ./demo/index.html && rollup -c rollup.config.demo.js -w",
+        "build": "rollup -c && npm run declaration && print-sizes ./dist ",
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
+    },
+    "keywords": [
+        "moveable",
+        "resizable",
+        "scalable",
+        "draggable",
+        "rotatable",
+        "groupable",
+        "movable",
+        "warpable",
+        "pinchable",
+        "snappable",
+        "throttle",
+        "ratio",
+        "dom",
+        "resize",
+        "scale",
+        "drag",
+        "move",
+        "rotate",
+        "warp",
+        "react",
+        "pinch",
+        "snap",
+        "compat"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/moveable/issues"
+    },
+    "homepage": "https://daybrush.com/moveable",
+    "devDependencies": {
+        "@daybrush/builder": "^0.1.0",
+        "@scenejs/effects": "^1.0.1",
+        "keycon": "^0.3.0",
+        "print-sizes": "^0.1.0",
+        "rollup-plugin-css-bundle": "^1.0.4",
+        "rollup-plugin-react-compat": "^0.1.0",
+        "scenejs": "^1.1.4",
+        "shape-svg": "^0.3.3",
+        "tslint": "^5.16.0",
+        "typescript": "^3.4.5"
+    },
+    "dependencies": {
+        "@types/react": "^16.0.0",
+        "react-compat-css-styled": "^0.1.0",
+        "react-moveable": "^0.16.6",
+        "react-simple-compat": "^0.1.0"
+    },
+    "peerDependencies": {
+        "@types/react": "^16.0.0",
+        "react-compat-css-styled": ">=0.1.0",
+        "react-simple-compat": ">=0.1.0"
+    }
+}
