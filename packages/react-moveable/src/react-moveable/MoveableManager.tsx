@@ -80,19 +80,22 @@ export default class MoveableManager<T = {}, U = {}>
     public customDragger!: CustomDragger;
 
     public render() {
+        const props = this.props;
         const { edge, parentPosition, className, target: propsTarget } = this.props;
 
         this.checkUpdate();
 
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
         const { left, top, pos1, pos2, pos3, pos4, target: stateTarget, direction } = this.state;
+        const groupTargets = (props as any).targets;
+        const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
 
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
                 className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`} style={{
                     position: "absolute",
-                    display: !propsTarget || !stateTarget ? "none" : "block",
+                    display: isDisplay ? "block" : "none",
                     transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
                 }}>
                 {this.renderAbles()}
