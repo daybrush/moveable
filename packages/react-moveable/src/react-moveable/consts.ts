@@ -41,7 +41,8 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 }
 .line, .control {
 	left: 0;
-	top: 0;
+    top: 0;
+    will-change: transform;
 }
 .control {
 	position: absolute;
@@ -54,7 +55,6 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	margin-top: -7px;
     margin-left: -7px;
     z-index: 10;
-    will-change: transform;
 }
 .line {
 	position: absolute;
