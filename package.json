@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.13.4",
+  "version": "0.13.5-rc",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -59,7 +59,10 @@
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
     "@egjs/component": "^2.1.2",
-    "preact-moveable": "^0.15.5"
+    "react-compat-moveable": "^0.1.0"
+  },
+  "peerDependencies": {
+      "react-compat-moveable": ">=0.1.0"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",
@@ -69,16 +72,19 @@
     "@scena/guides": "^0.4.1",
     "@types/karma-chai": "^0.1.2",
     "@types/mocha": "^5.2.7",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
     "daybrush-jsdoc-template": "^1.6.0",
     "gh-pages": "^2.0.1",
     "keycon": "^0.5.0",
     "print-sizes": "0.0.4",
     "pvu": "^0.3.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "rollup-plugin-css-bundle": "^1.0.4",
-    "rollup-plugin-preact": "^0.5.2",
+    "rollup-plugin-react-compat": "^0.1.0",
     "scenejs": "^1.1.4",
     "tslint": "^5.18.0",
-    "preact": "^10.0.4",
     "typescript": "^3.5.2"
   }
 }
