@@ -36,7 +36,7 @@ This document explains how to use [moveable](https://github.com/daybrush/moveabl
 
 Moveable makes the target draggable, resizable, scalable, warpable, rotatable, pinchable and snappable.
 
-The reason for creating a moveable is to create an editor. Main Project is **[scenejs-editor](https://github.com/daybrush/scenejs-editor)**.
+The reason for creating a moveable is to create an editor. Main Project is **[scenejs-editor](https://github.com/daybrush/scena)**.
 
 
 Another reason for this is the [transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
