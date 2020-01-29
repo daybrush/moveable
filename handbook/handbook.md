@@ -1229,7 +1229,7 @@ const moveable = new Moveable(document.body, {
 const frames = targets.map(() => ({
     translate: [0, 0],
 }));
-moveable.on("draGroupStart", ({ events }) => {
+moveable.on("dragGroupStart", ({ events }) => {
     events.forEach((ev, i) => {
         const frame = frames[i];
         ev.set(frame.translate);
