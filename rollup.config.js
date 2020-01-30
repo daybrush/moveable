@@ -1,14 +1,22 @@
 
 import builder from "@daybrush/builder";
-import preact from "rollup-plugin-preact";
+import compat from "rollup-plugin-react-compat";
 
-const preactPlugin = preact({
-    noPropTypes: true,
-    usePreactX: true,
-    resolvePreactCompat: true,
+const compatPlugin = compat({
+    useReactCompat: true,
+    aliasModules: {
+        "react-moveable": "react-compat-moveable"
+    }
+});
+const resolveCompatPlugin = compat({
+    useReactCompat: true,
+    resolveCompat: true,
 });
 
 const external = {
+    "react-simple-compat": "react-simple-compat",
+    "react-compat-css-styled": "react-compat-css-styled",
+    "react-compat-moveable": "react-compat-moveable",
     "@egjs/component": "@egjs/component",
     "@daybrush/utils": "@daybrush/utils",
     "@daybrush/drag": "@daybrush/drag",
@@ -22,13 +30,13 @@ export default builder([
         name: "Moveable",
         input: "src/index.umd.ts",
         output: "./dist/moveable.js",
-        plugins: [preactPlugin],
+        plugins: [resolveCompatPlugin],
     },
     {
         name: "Moveable",
         input: "src/index.umd.ts",
         output: "./dist/moveable.min.js",
-        plugins: [preactPlugin],
+        plugins: [resolveCompatPlugin],
         uglify: true,
     },
     {
@@ -36,7 +44,7 @@ export default builder([
         output: "./dist/moveable.esm.js",
         exports: "named",
         format: "es",
-        plugins: [preactPlugin],
+        plugins: [compatPlugin],
         external,
     },
     {
@@ -44,7 +52,7 @@ export default builder([
         output: "./dist/moveable.cjs.js",
         exports: "default",
         format: "cjs",
-        plugins: [preactPlugin],
+        plugins: [compatPlugin],
         external,
     },
 ]);

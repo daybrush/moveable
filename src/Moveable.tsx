@@ -1,6 +1,7 @@
 import EgComponent from "@egjs/component";
 import { ref, Properties } from "framework-utils";
-import { h, render } from "preact";
+import * as React from "react";
+import { render } from "react-dom";
 import InnerMoveable from "./InnerMoveable";
 import { MoveableOptions, MoveableGetterSetter, MoveableEvents } from "./types";
 import {
@@ -86,13 +87,13 @@ class Moveable extends EgComponent {
      * moveable.destroy();
      */
     public destroy() {
-        render("", this.tempElement);
+        render(null, this.tempElement);
         this.off();
         this.tempElement = null;
         this.innerMoveable = null;
     }
     private getMoveable() {
-        return this.innerMoveable.preactMoveable;
+        return this.innerMoveable.moveable;
     }
 }
 
