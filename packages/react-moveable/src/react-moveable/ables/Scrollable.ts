@@ -53,9 +53,8 @@ export default {
     checkScroll(moveable: MoveableManager<ScrollableProps>, e: any) {
         const {
             dragScroll,
-            isScroll,
         } = e.datas;
-        if (!isScroll) {
+        if (!dragScroll) {
             return;
         }
         const {
@@ -78,8 +77,8 @@ export default {
         return this.checkScroll(moveable, e);
     },
     dragEnd(moveable: MoveableManager<ScrollableProps>, e: any) {
-        e.datas.isScroll = false;
         e.datas.dragScroll.dragEnd();
+        e.datas.dragScroll = null;
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
         this.dragStart(moveable, e);
