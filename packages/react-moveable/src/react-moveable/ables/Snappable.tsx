@@ -728,6 +728,13 @@ export function checkSizeDist(
     }
 
 }
+export function checkSnapRotate(
+    moveable: MoveableManager<any, any>,
+    rotate: number[],
+    datas: any,
+) {
+
+}
 export function checkSnapSize(
     moveable: MoveableManager<any, any>,
     width: number,
