@@ -164,10 +164,10 @@ export function caculateMatrixStack(
         let offsetTop = (el as HTMLElement).offsetTop;
 
         if (isFixed) {
-            const containerRect = (container || document.documentElement).getBoundingClientRect();
+            const containerClientRect = (container || document.documentElement).getBoundingClientRect();
 
-            offsetLeft -= containerRect.left;
-            offsetTop  -= containerRect.top;
+            offsetLeft -= containerClientRect.left;
+            offsetTop  -= containerClientRect.top;
         }
         // svg
         const isSVG = isUndefined(offsetLeft);
@@ -388,10 +388,10 @@ export function getSVGOffset(
     n: number, origin: number[], beforeMatrix: number[], absoluteMatrix: number[]) {
 
     const [width, height] = getSize(el);
-    const containerRect = container.getBoundingClientRect();
+    const containerClientRect = container.getBoundingClientRect();
     const rect = el.getBoundingClientRect();
-    const rectLeft = rect.left - containerRect.left + container.scrollLeft;
-    const rectTop = rect.top - containerRect.top + container.scrollTop;
+    const rectLeft = rect.left - containerClientRect.left + container.scrollLeft;
+    const rectTop = rect.top - containerClientRect.top + container.scrollTop;
     const rectWidth = rect.width;
     const rectHeight = rect.height;
     const mat = multiplies(
@@ -602,8 +602,8 @@ export function getTargetInfo(
     let is3d = false;
     let targetTransform = "";
     let beforeOrigin = [0, 0];
-    let clientRect = resetClientRect();
-    let containerRect = resetClientRect();
+    let targetClientRect = resetClientRect();
+    let containerClientRect = resetClientRect();
     let rotation = 0;
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
@@ -651,8 +651,8 @@ export function getTargetInfo(
             beforeOrigin[1] + beforePos[1] - top,
         ];
 
-        clientRect = getClientRect(target);
-        containerRect = getClientRect(
+        targetClientRect = getClientRect(target);
+        containerClientRect = getClientRect(
             getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
         );
         rotation = getRotationRad([pos1, pos2], direction);
@@ -660,7 +660,8 @@ export function getTargetInfo(
 
     return {
         rotation,
-        containerRect,
+        targetClientRect,
+        containerClientRect,
         beforeDirection,
         direction,
         target,
@@ -683,7 +684,6 @@ export function getTargetInfo(
         beforeOrigin,
         origin,
         transformOrigin,
-        clientRect,
     };
 }
 export function resetClientRect(): MoveableClientRect {

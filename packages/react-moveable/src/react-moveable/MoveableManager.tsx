@@ -67,8 +67,8 @@ export default class MoveableManager<T = {}, U = {}>
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
-        clientRect: resetClientRect(),
-        containerRect: resetClientRect(),
+        targetClientRect: resetClientRect(),
+        containerClientRect: resetClientRect(),
         rotation: 0,
     } as any;
     public targetAbles: Array<Able<T>> = [];
@@ -138,12 +138,12 @@ export default class MoveableManager<T = {}, U = {}>
         }
     }
     public isInside(clientX: number, clientY: number) {
-        const { pos1, pos2, pos3, pos4, target } = this.state;
+        const { pos1, pos2, pos3, pos4, target, targetClientRect } = this.state;
 
         if (!target) {
             return false;
         }
-        const { left, top } = target.getBoundingClientRect();
+        const { left, top } = targetClientRect;
         const pos = [clientX - left, clientY - top];
 
         return isInside(pos, pos1, pos2, pos4, pos3);

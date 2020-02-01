@@ -186,7 +186,7 @@ class App extends React.Component {
                     // scalable={true}
                     // resizable={true}
                     resizable={isResizable}
-                    // rotatable={true}
+                    rotatable={true}
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}

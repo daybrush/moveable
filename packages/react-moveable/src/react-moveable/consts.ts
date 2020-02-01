@@ -76,7 +76,8 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .line.rotation-line {
 	height: 40px;
 	width: 1px;
-	transform-origin: 0.5px 39.5px;
+    transform-origin: 0.5px 39.5px;
+    top: -40px;
 }
 .line.rotation-line .control {
 	border-color: #4af;

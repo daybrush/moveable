@@ -71,10 +71,10 @@ export default {
         datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
         const {
-            clientRect,
+            targetClientRect,
             pos1, pos2, pos3, pos4,
         } = moveable.state;
-        const { left, top, width, height } = clientRect;
+        const { left, top, width, height } = targetClientRect;
         const {
             left: relativeLeft,
             top: relativeTop,

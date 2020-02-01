@@ -38,11 +38,11 @@ function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     }
 
     const {
-        containerRect: {
+        containerClientRect: {
             top: containerTop,
             left: containerLeft,
         },
-        clientRect: {
+        targetClientRect: {
             top: clientTop,
             left: clientLeft,
         },
@@ -254,7 +254,7 @@ export function checkSnapPoses(
 ) {
     const {
         guidelines,
-        containerRect: {
+        containerClientRect: {
             height: containerHeight,
             width: containerWidth,
         },
@@ -966,12 +966,12 @@ export default {
             left: targetLeft,
             pos1, pos2, pos3, pos4,
             snapDirection,
-            clientRect,
-            containerRect,
+            targetClientRect,
+            containerClientRect,
         } = moveable.state;
 
-        const clientLeft = clientRect.left - containerRect.left;
-        const clientTop = clientRect.top - containerRect.top;
+        const clientLeft = targetClientRect.left - containerClientRect.left;
+        const clientTop = targetClientRect.top - containerClientRect.top;
         const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
         const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
 

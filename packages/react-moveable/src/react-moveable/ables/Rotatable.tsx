@@ -1,9 +1,9 @@
-import { throttle, prefix, triggerEvent, fillParams, getRotationRad } from "../utils";
+import { throttle, prefix, triggerEvent, fillParams, getRotationRad, getClientRect } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import {
     RotatableProps, OnRotateGroup, OnRotateGroupEnd,
-    Renderer, OnRotateGroupStart, OnRotateStart, OnRotate, OnRotateEnd,
+    Renderer, OnRotateGroupStart, OnRotateStart, OnRotate, OnRotateEnd, MoveableClientRect,
 } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
@@ -12,11 +12,12 @@ import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 
 function setRotateStartInfo(
-    datas: IObject<any>, clientX: number, clientY: number, origin: number[], rotationPos: number[]) {
+    datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
     datas.startAbsoluteOrigin = [
-        clientX - rotationPos[0] + origin[0],
-        clientY - rotationPos[1] + origin[1],
+        rect.left + origin[0],
+        rect.top + origin[1],
     ];
+
     datas.prevDeg = getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
     datas.startDeg = datas.prevDeg;
     datas.loop = 0;
@@ -85,19 +86,19 @@ export function getPositions(
     }
     return [pos1, pos2];
 }
-export function getRotationPosition(
-    [pos1, pos2]: number[][],
-    rad: number,
-): number[] {
-    const relativeRotationPos = rotateMatrix([0, -40, 1], rad);
+// export function getRotationPosition(
+//     [pos1, pos2]: number[][],
+//     rad: number,
+// ): number[] {
+//     const relativeRotationPos = rotateMatrix([0, -40, 1], rad);
 
-    const rotationPos = [
-        (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
-        (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
-    ];
+//     const rotationPos = [
+//         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
+//         (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
+//     ];
 
-    return rotationPos;
-}
+//     return rotationPos;
+// }
 
 function dragControlCondition(target: HTMLElement | SVGElement) {
     return hasClass(target, prefix("rotation"));
@@ -126,7 +127,7 @@ export default {
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) translateY(-40px) rotate(${rotationRad}rad)`,
+                transform: `translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) rotate(${rotationRad}rad)`,
             }}>
                 <div className={prefix("control", "rotation")}></div>
             </div>
@@ -140,7 +141,6 @@ export default {
         const {
             target, left, top, origin, beforeOrigin,
             direction, beforeDirection, targetTransform,
-            pos1, pos2, pos3, pos4,
         } = moveable.state;
 
         if (!target) {
@@ -151,20 +151,16 @@ export default {
         datas.left = left;
         datas.top = top;
 
-        const poses = getPositions(moveable.props.rotationPosition!, pos1, pos2, pos3, pos4);
-        const rotationPos = getRotationPosition(
-            poses,
-            getRotationRad(poses, direction),
-        );
-
         if (pinchFlag || parentFlag) {
             datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
             datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
         } else {
             datas.afterInfo = {};
             datas.beforeInfo = {};
-            setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rotationPos);
-            setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, rotationPos);
+
+            const rect = getClientRect(moveable.controlBox.getElement());
+            setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rect);
+            setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, rect);
         }
 
         datas.direction = direction;
