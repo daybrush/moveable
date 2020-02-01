@@ -31,7 +31,6 @@ export default {
     },
     render(moveable: MoveableManager<GroupableProps>, React: Renderer): any[] {
         const { target, dragArea, groupable } = moveable.props;
-
         const { width, height, pos1, pos2, pos3, pos4 } = moveable.state;
 
         if (groupable) {

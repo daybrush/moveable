@@ -16,16 +16,15 @@ export default {
         const { left, top } = moveable.state;
         const position = { left, top };
 
-        return [...targets.map((target, i) => {
+        return targets.map((target, i) => {
             return <MoveableManager
-                key={i}
+                key={"moveable" + i}
                 ref={refs(moveable, "moveables", i)}
                 target={target}
                 origin={false}
                 parentMoveable={moveable}
                 parentPosition={position}
             />;
-        }),
-        ];
+        });
     },
 };

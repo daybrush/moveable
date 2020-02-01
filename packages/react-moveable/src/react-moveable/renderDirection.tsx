@@ -32,7 +32,7 @@ export function renderControls(
 
         return (
             <div className={prefix("control", "direction", direction)}
-                data-rotation={directionRotation} data-direction={direction} key={direction}
+                data-rotation={directionRotation} data-direction={direction} key={`direction-${direction}`}
                 style={getControlTransform(rotation, ...indexes.map(index => poses[index]))}></div>
         );
     });

@@ -36,7 +36,7 @@ class App extends React.Component {
     private items: IObject<Frame> = {};
     public render() {
         const selectedTarget = this.state.target;
-        const isResizable = true; // this.state.isResizable;
+        const isResizable = this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;
@@ -52,7 +52,7 @@ class App extends React.Component {
                     // edge={true}
                     pinchable={true}
                     draggable={true}
-                    rotatable={true}
+                    rotatable={isResizable}
                     resizable={true}
                     // scalable={true}
                     ref={ref(this, "ab")}
@@ -164,7 +164,7 @@ class App extends React.Component {
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
-                    origin={false}
+                    origin={true}
                     edge={true}
                     // dragArea={true}
                     draggable={true}
@@ -183,15 +183,17 @@ class App extends React.Component {
                     snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
-                    scalable={true}
-                    resizable={true}
+                    // scalable={true}
+                    // resizable={true}
+                    resizable={isResizable}
+                    // rotatable={true}
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
                     throttleScale={0}
                     throttleResize={0}
                     throttleRotate={10}
-                    rotatable={true}
+
                     pinchable={true}
                     onScroll={({ scrollContainer, direction }) => {
                         scrollContainer.scrollBy(direction[0] * 10, direction[1] * 10);

@@ -11,5 +11,5 @@ import Scrollable from "./Scrollable";
 import Default from "./Default";
 
 export const MOVEABLE_ABLES = [
-    Default, Snappable, Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable, Scrollable, DragArea,  Origin,
+    Default, Snappable, Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable, Scrollable, DragArea, Origin,
 ] as const;

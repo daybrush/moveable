@@ -89,7 +89,6 @@ export default class MoveableManager<T = {}, U = {}>
         const { left, top, pos1, pos2, pos3, pos4, target: stateTarget, direction } = this.state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
-
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
@@ -298,6 +297,12 @@ export default class MoveableManager<T = {}, U = {}>
         const props = this.props as any;
         const ables: Able[] = props.ables!;
         const enabledAbles = ables.filter(able => able && props[able.name]);
-        return filterAbles(enabledAbles, ["render"]).map(({ render }) => render!(this, React));
+        const Renderer = { createElement: React.createElement };
+
+        return filterAbles(enabledAbles, ["render"]).map(({ render }) => {
+            return render!(this, Renderer);
+        }).reduce((prev, cur) => {
+            return prev.concat(cur);
+        }, []);
     }
 }
