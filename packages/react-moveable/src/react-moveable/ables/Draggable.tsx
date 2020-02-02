@@ -1,8 +1,11 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray, triggerEvent, fillParams } from "../utils";
-import { minus, plus } from "@moveable/matrix";
+import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix } from "../utils";
+import { minus, plus, getRad } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
-import { DraggableProps, OnDrag, OnDragGroup, OnDragGroupStart, OnDragStart, OnDragEnd } from "../types";
+import {
+    DraggableProps, OnDrag, OnDragGroup,
+    OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState, Renderer,
+} from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
@@ -12,9 +15,39 @@ export default {
     props: {
         draggable: Boolean,
         throttleDrag: Number,
+        throttleDragRotate: Number,
+    },
+    render(
+        moveable: MoveableManager<DraggableProps, DraggableState>,
+        React: Renderer,
+    ) {
+        const throttleDragRotate = moveable.props.throttleDragRotate;
+        const { dragInfo, beforeOrigin } = moveable.state;
+
+        if (!throttleDragRotate || !dragInfo) {
+            return;
+        }
+        const dist = dragInfo.dist;
+
+        if (!dist[0] && !dist[1]) {
+            return;
+        }
+        const width = getDistSize(dist);
+        const rad = getRad(dist, [0, 0]);
+
+        return <div className={prefix(
+            "line",
+            "horizontal",
+            "guideline",
+            "dashed",
+            "bold",
+        )} key={`dragRotateGuideline`} style={{
+            width: `${width}px`,
+            transform: `translate(${beforeOrigin[0]}px, ${beforeOrigin[1]}px) rotate(${rad}rad)`,
+        }} />;
     },
     dragStart(
-        moveable: MoveableManager<DraggableProps>,
+        moveable: MoveableManager<DraggableProps, any>,
         e: any,
     ) {
         const { datas, parentEvent, parentDragger } = e;
@@ -55,6 +88,10 @@ export default {
 
         if (result !== false) {
             datas.isDrag = true;
+            moveable.state.dragInfo = {
+                startRect: moveable.getRect(),
+                dist: [0, 0],
+            };
         } else {
             state.dragger = null;
             datas.isPinch = false;
@@ -62,7 +99,7 @@ export default {
         return datas.isDrag ? params : false;
     },
     drag(
-        moveable: MoveableManager<DraggableProps>,
+        moveable: MoveableManager<DraggableProps, any>,
         e: any,
     ): OnDrag | undefined {
         const { datas, parentEvent, parentFlag } = e;
@@ -73,12 +110,24 @@ export default {
             return;
         }
         const props = moveable.props;
+
         const parentMoveable = props.parentMoveable;
         const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
+        const throttleDragRotate = parentEvent ? 0 : (props.throttleDragRotate || 0);
 
         let isSnap = false;
+        let dragRotateRad = 0;
 
-        if (!isPinch && !parentEvent && !parentFlag) {
+        if (throttleDragRotate > 0 && distX && distY) {
+            const deg = throttle(getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate);
+            const r = getDistSize([distX, distY]);
+            dragRotateRad = deg * Math.PI / 180;
+
+            distX = r * Math.cos(dragRotateRad);
+            distY = r * Math.sin(dragRotateRad);
+        }
+
+        if (!isPinch && !parentEvent && !parentFlag && distX && distY) {
             const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
 
             isSnap = verticalInfo.isSnap || horizontalInfo.isSnap;
@@ -90,7 +139,7 @@ export default {
         const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
         const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
 
-        if (!isSnap) {
+        if (!throttleDragRotate && !isSnap) {
             throttleArray(translate, throttleDrag);
             throttleArray(beforeTranslate, throttleDrag);
         }
@@ -109,6 +158,7 @@ export default {
         const bottom = datas.bottom - beforeDist[1];
         const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
+        moveable.state.dragInfo.dist = dist;
         if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }
@@ -131,12 +181,13 @@ export default {
         return params;
     },
     dragEnd(
-        moveable: MoveableManager<DraggableProps>,
+        moveable: MoveableManager<DraggableProps, DraggableState>,
         e: any,
     ) {
         const { parentEvent, datas, isDrag } = e;
 
         moveable.state.dragger = null;
+        moveable.state.dragInfo = null;
         if (!datas.isDrag) {
             return;
         }
@@ -202,5 +253,8 @@ export default {
         }));
 
         return isDrag;
+    },
+    unset(moveable: any) {
+        moveable.state.dragInfo = null;
     },
 };

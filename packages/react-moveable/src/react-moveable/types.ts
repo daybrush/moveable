@@ -698,6 +698,7 @@ export interface OriginProps {
 export interface DraggableProps {
     draggable?: boolean;
     throttleDrag?: number;
+    throttleDragRotate?: number;
 
     onDragStart?: (e: OnDragStart) => any;
     onDrag?: (e: OnDrag) => any;
@@ -706,6 +707,12 @@ export interface DraggableProps {
     onDragGroupStart?: (e: OnDragGroupStart) => any;
     onDragGroup?: (e: OnDragGroup) => any;
     onDragGroupEnd?: (e: OnDragGroupEnd) => any;
+}
+export interface DraggableState {
+    dragInfo: {
+        startRect: RectInfo;
+        dist: number[];
+    } | null;
 }
 export interface ResizableProps {
     resizable?: boolean;

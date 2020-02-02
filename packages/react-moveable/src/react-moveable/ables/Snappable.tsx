@@ -990,10 +990,12 @@ export function checkSnapDrag(
 ) {
     const snapVerticalInfo = {
         isSnap: false,
+        isBound: false,
         offset: 0,
     };
     const snapHorizontalInfo = {
         isSnap: false,
+        isBound: false,
         offset: 0,
     };
 
@@ -1019,6 +1021,7 @@ export function checkSnapDrag(
     if (boundInfos.vertical.isBound) {
         snapVerticalInfo.offset = boundInfos.vertical.offset;
         snapVerticalInfo.isSnap = true;
+        snapVerticalInfo.isBound = true;
     } else if (snapInfos.vertical.isSnap) {
         // has vertical guidelines
         snapVerticalInfo.offset = snapInfos.vertical.posInfos[0].guidelineInfos[0].offset;
@@ -1027,6 +1030,7 @@ export function checkSnapDrag(
     if (boundInfos.horizontal.isBound) {
         snapHorizontalInfo.offset = boundInfos.horizontal.offset;
         snapHorizontalInfo.isSnap = true;
+        snapHorizontalInfo.isBound = true;
     } else if (snapInfos.horizontal.isSnap) {
         // has horizontal guidelines
         snapHorizontalInfo.offset = snapInfos.horizontal.posInfos[0].guidelineInfos[0].offset;
