@@ -8,7 +8,7 @@ import {
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle, roundSign, getDistSize
+    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle, roundSign, getDistSize, groupBy, flat
 } from "../utils";
 import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject } from "@daybrush/utils";
@@ -1054,6 +1054,24 @@ function getSnapGuidelines(posInfos: SnapPosInfo[]) {
     return guidelines;
 }
 
+function getElementGuidelineDist(
+    elementPos: number,
+    elementSize: number,
+    targetPos: number,
+    targetSize: number,
+) {
+    // relativePos < 0  => element(l)  ---  (r)target
+    // relativePos > 0  => target(l)   ---  (r)element
+    const relativePos = elementPos - targetPos;
+    const startPos = relativePos < 0 ? relativePos + elementSize : targetSize;
+    const endPos = relativePos < 0 ? 0 : relativePos;
+    const size = endPos - startPos;
+
+    return {
+        size,
+        pos: startPos,
+    };
+}
 export default {
     name: "snappable",
     props: {
@@ -1086,6 +1104,9 @@ export default {
         if (!snapRenderInfo || !hasGuidelines(moveable, "")) {
             return [];
         }
+        const {
+            snapThreshold = 5,
+        } = moveable.props;
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
         const verticalSnapPoses: number[] = [];
@@ -1138,48 +1159,74 @@ export default {
             horizontalSnapPoses.push(horizontalBoundPos);
         }
 
-        const elementVerticalGuidelines = verticalGuildelines.filter(({ element }) => element);
-        const elementHorizontalGuidelines = horizontalGuidelines.filter(({ element }) => element);
+        const elementVerticalGroup = groupBy(verticalGuildelines.filter(({ element }) => element), ({ pos }) => {
+            return Math.min(0, pos[1] - clientTop) < 0 ? -pos[0] : pos[0];
+        });
+        const elementHorizontalGroup = groupBy(horizontalGuidelines.filter(({ element }) => element), ({ pos }) => {
+            return Math.min(0, pos[0] - clientLeft) < 0 ? -pos[1] : pos[1];
+        });
 
+        elementHorizontalGroup.forEach(elementGuidelines => {
+            elementGuidelines.sort((a, b) => {
+                return getElementGuidelineDist(a.pos[0], a.size, clientLeft, width).size
+                    - getElementGuidelineDist(b.pos[0], a.size, clientLeft, width).size;
+            });
+        });
+        elementVerticalGroup.forEach(elementGuidelines => {
+            elementGuidelines.sort((a, b) => {
+                return getElementGuidelineDist(a.pos[1], a.size, clientTop, height).size
+                    - getElementGuidelineDist(b.pos[1], a.size, clientTop, height).size;
+            });
+        });
         return [
-            ...elementHorizontalGuidelines.map(({ pos, size }, i) => {
-                const lineLeft = minLeft + Math.min(0, pos[0] - clientLeft) + size;
-                const lineRight = minLeft + Math.max(width, pos[0] - clientLeft + size) - width;
-                const lineSize = lineRight - lineLeft;
+            ...flat(elementHorizontalGroup.map((elementGuidelines, i) => {
+                return elementGuidelines.map(({ pos, size}, j) => {
+                    const {
+                        pos: lineLeft,
+                        size: lineSize,
+                    } = getElementGuidelineDist(pos[0], size, clientLeft, width);
 
-                if (lineSize <= 0) {
-                    return;
-                }
-                return <div className={prefix(
-                    "line",
-                    "horizontal",
-                    "guideline",
-                    "dashed",
-                )}
-                data-size={lineSize}
-                key={`horizontalLinkGuidline${i}`} style={{
-                    left: `${lineLeft}px`,
-                    top: `${-targetTop + pos[1]}px`,
-                    width: `${lineSize}px`,
-                }} />;
-            }),
-            ...elementVerticalGuidelines.map(({ pos, size }, i) => {
-                const lineTop = minLeft + Math.min(0, pos[1] - clientTop) + size;
-                const lineBottom = minLeft + Math.max(height, pos[1] - clientTop + size) - height;
-                const lineSize = lineBottom - lineTop;
-                return <div className={prefix(
-                    "line",
-                    "vertical",
-                    "guideline",
-                    "dashed",
-                )} key={`verticalDashedGuidline${i}`}
-                data-size={throttle(lineSize, 0.01)}
-                style={{
-                    top: `${lineTop}px`,
-                    left: `${-targetLeft + pos[0]}px`,
-                    height: `${lineBottom - lineTop}px`,
-                }} />;
-            }),
+                    if (lineSize < snapThreshold) {
+                        return null;
+                    }
+                    return <div className={prefix(
+                        "line",
+                        "horizontal",
+                        "guideline",
+                        "dashed",
+                    )}
+                    data-size={!j ? parseFloat(lineSize.toFixed(4)) : ""}
+                    key={`horizontalLinkGuidline${i}-${j}`} style={{
+                        left: `${minLeft + lineLeft}px`,
+                        top: `${-targetTop + pos[1]}px`,
+                        width: `${lineSize}px`,
+                    }} />;
+                });
+            })),
+            ...flat(elementVerticalGroup.map((elementGuidelines, i) => {
+                return elementGuidelines.map(({ pos, size}, j) => {
+                    const {
+                        pos: lineTop,
+                        size: lineSize,
+                    } = getElementGuidelineDist(pos[1], size, clientTop, height);
+
+                    if (lineSize < snapThreshold) {
+                        return null;
+                    }
+                    return <div className={prefix(
+                        "line",
+                        "vertical",
+                        "guideline",
+                        "dashed",
+                    )}
+                    data-size={!j ? parseFloat(lineSize.toFixed(4)) : ""}
+                    key={`verticalLinkGuidline${i}-${j}`} style={{
+                        top: `${lineTop}px`,
+                        left: `${-targetLeft + pos[0]}px`,
+                        height: `${lineSize}px`,
+                    }} />;
+                });
+            })),
             ...verticalSnapPoses.map((pos, i) => {
                 return <div className={prefix(
                     "line",

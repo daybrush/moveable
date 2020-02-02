@@ -12,6 +12,7 @@ import {
     equals,
     resetClientRect,
     throttle,
+    flat,
 } from "./utils";
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
@@ -299,10 +300,8 @@ export default class MoveableManager<T = {}, U = {}>
         const enabledAbles = ables.filter(able => able && props[able.name]);
         const Renderer = { createElement: React.createElement };
 
-        return filterAbles(enabledAbles, ["render"]).map(({ render }) => {
+        return flat(filterAbles(enabledAbles, ["render"]).map(({ render }) => {
             return render!(this, Renderer);
-        }).reduce((prev, cur) => {
-            return prev.concat(cur);
-        }, []);
+        }));
     }
 }

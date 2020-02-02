@@ -875,3 +875,25 @@ export function selectValue<T = any>(...values: any[]): T {
 
     return values[length];
 }
+
+export function groupBy<T>(arr: T[], func: (el: T, index: number, arr: T[]) => number) {
+    const group: T[][] = [];
+    const groupMap: IObject<T[]> = {};
+
+    arr.forEach((el, index) => {
+        const groupKey = func(el, index, arr);
+
+        if (!groupMap[groupKey]) {
+            groupMap[groupKey] = [];
+            group.push(groupMap[groupKey]);
+        }
+        groupMap[groupKey].push(el);
+    });
+    return group;
+}
+
+export function flat<T>(arr: T[][]): T[] {
+    return arr.reduce((prev, cur) => {
+        return prev.concat(cur);
+    }, []);
+}
