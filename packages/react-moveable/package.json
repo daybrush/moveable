@@ -15,7 +15,10 @@
     "test:chrome": "karma start --chrome",
     "coverage": "karma start --coverage && print-coveralls --sort=desc",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "packages": "pvu --path=../ --update=preact-moveable,react-compat-moveable --build=preact-moveable,react-compat-moveable --publish=preact-moveable,react-compat-moveable"
+    "packages": "npm run package:update && npm run packages:build && npm run packages:publish",
+    "packages:update": "pvu --path=../ --update=preact-moveable,react-compat-moveable",
+    "packages:build": "pvu --path=../ --build=preact-moveable,react-compat-moveable",
+    "packages:publish": "pvu --path=../  --publish=preact-moveable,react-compat-moveable"
   },
   "keywords": [
     "moveable",
