@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent,
-    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize,
+    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize,
 } from "../utils";
 import {
     setDragStart,
@@ -101,7 +101,9 @@ export default {
         const result = triggerEvent(moveable, "onResizeStart", params);
         if (result !== false) {
             datas.isResize = true;
-            moveable.state.snapDirection = direction;
+            moveable.state.snapRenderInfo = {
+                direction,
+            };
         }
         return datas.isResize ? params : false;
     },
@@ -163,7 +165,7 @@ export default {
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
                 const ratioRad = getRad([0, 0], [startOffsetWidth, startOffsetHeight]);
-                const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+                const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
                 if (!direction[0]) {

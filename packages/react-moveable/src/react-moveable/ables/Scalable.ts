@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent, multiply2, getAbsolutePosesByState,
-    fillParams, getKeepRatioHeight, getKeepRatioWidth,
+    fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import { setDragStart, getDragDist, getScaleDist, getPosByReverseDirection } from "../DraggerUtils";
@@ -84,7 +84,9 @@ export default {
 
         if (result !== false) {
             datas.isScale = true;
-            moveable.state.snapDirection = direction;
+            moveable.state.snapRenderInfo = {
+                direction,
+            };
 
         }
         return datas.isScale ? params : false;
@@ -144,7 +146,7 @@ export default {
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], direction);
                 const ratioRad = getRad([0, 0], [startWidth, startHeight]);
-                const size = Math.sqrt(distWidth * distWidth + distHeight * distHeight);
+                const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
                 if (!direction[0]) {
@@ -183,10 +185,11 @@ export default {
                 (nowDist[0] >= 0 ? 1 : -1) * direction[0],
                 (nowDist[1] >= 0 ? 1 : -1) * direction[1],
             ];
-            const stateDirection = state.snapDirection;
+            const snapRenderInfo = state.snapRenderInfo || {};
+            const stateDirection = snapRenderInfo.direction;
 
             if (isArray(stateDirection) && (stateDirection[0] || stateDirection[1])) {
-                state.snapDirection = snapDirection;
+                state.snapRenderInfo = { direction };
             }
         }
         let snapDist = [0, 0];

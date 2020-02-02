@@ -3,13 +3,15 @@ import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import {
     RotatableProps, OnRotateGroup, OnRotateGroupEnd,
-    Renderer, OnRotateGroupStart, OnRotateStart, OnRotate, OnRotateEnd, MoveableClientRect,
+    Renderer, OnRotateGroupStart, OnRotateStart, OnRotate,
+    OnRotateEnd, MoveableClientRect, SnappableProps, SnappableState,
 } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import { checkSnapRotate } from "./Snappable";
 
 function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
@@ -23,11 +25,14 @@ function setRotateStartInfo(
     datas.loop = 0;
 }
 function getDeg(
+    moveable: MoveableManager<any, any>,
+    moveableRect: any,
     datas: IObject<any>,
     deg: number,
     direction: number,
     startRotate: number,
     throttleRotate: number,
+    isSnap?: boolean,
 ) {
     const {
         prevDeg,
@@ -47,14 +52,21 @@ function getDeg(
     let absoluteDeg = loop * 360 + deg - startDeg + startRotate;
 
     absoluteDeg = throttle(absoluteDeg, throttleRotate);
+
+    let dist = direction * (absoluteDeg - startRotate);
+    if (isSnap) {
+        dist = checkSnapRotate(moveable, moveableRect, datas.origin, dist);
+        absoluteDeg = dist / direction + startRotate;
+    }
     const delta = direction * (absoluteDeg - absolutePrevDeg);
-    const dist = direction * (absoluteDeg - startRotate);
 
     datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
 
     return [delta, dist, absoluteDeg];
 }
 function getRotateInfo(
+    moveable: MoveableManager<any, any>,
+    moveableRect: any,
     datas: IObject<any>,
     direction: number,
     clientX: number, clientY: number,
@@ -62,11 +74,14 @@ function getRotateInfo(
     throttleRotate: number,
 ) {
     return getDeg(
+        moveable,
+        moveableRect,
         datas,
         getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
         direction,
         startRotate,
         throttleRotate,
+        true,
     );
 }
 
@@ -86,21 +101,8 @@ export function getPositions(
     }
     return [pos1, pos2];
 }
-// export function getRotationPosition(
-//     [pos1, pos2]: number[][],
-//     rad: number,
-// ): number[] {
-//     const relativeRotationPos = rotateMatrix([0, -40, 1], rad);
 
-//     const rotationPos = [
-//         (pos1[0] + pos2[0]) / 2 + relativeRotationPos[0],
-//         (pos1[1] + pos2[1]) / 2 + relativeRotationPos[1],
-//     ];
-
-//     return rotationPos;
-// }
-
-function dragControlCondition(target: HTMLElement | SVGElement) {
+export function dragControlCondition(target: HTMLElement | SVGElement) {
     return hasClass(target, prefix("rotation"));
 }
 
@@ -135,7 +137,7 @@ export default {
     },
     dragControlCondition,
     dragControlStart(
-        moveable: MoveableManager<RotatableProps>,
+        moveable: MoveableManager<RotatableProps & SnappableProps, SnappableState>,
         e: any) {
         const { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag } = e;
         const {
@@ -146,7 +148,7 @@ export default {
         if (!target) {
             return false;
         }
-
+        datas.rect = moveable.getRect();
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
@@ -155,8 +157,8 @@ export default {
             datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
             datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
         } else {
-            datas.afterInfo = {};
-            datas.beforeInfo = {};
+            datas.beforeInfo = { origin: plus([left, top], beforeOrigin) };
+            datas.afterInfo = { origin: plus([left, top], origin) };
 
             const rect = getClientRect(moveable.controlBox.getElement());
             setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rect);
@@ -175,6 +177,7 @@ export default {
         });
         const result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
+        moveable.state.snapRenderInfo = {};
 
         return datas.isRotate ? params : false;
     },
@@ -190,6 +193,7 @@ export default {
             afterInfo,
             isRotate,
             startRotate,
+            rect,
         } = datas;
 
         if (!isRotate) {
@@ -208,20 +212,17 @@ export default {
         let beforeRotate: number;
 
         if (pinchFlag || parentFlag) {
-            [delta, dist, rotate] = getDeg(afterInfo, parentRotate, direction, startRotate, throttleRotate);
+            [delta, dist, rotate]
+                = getDeg(moveable, rect, afterInfo, parentRotate, direction, startRotate, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate]
-                = getDeg(beforeInfo, parentRotate, direction, startRotate, throttleRotate);
+                = getDeg(moveable, rect, beforeInfo, parentRotate, direction, startRotate, throttleRotate);
         } else {
-            [delta, dist, rotate] = getRotateInfo(afterInfo, direction, clientX, clientY, startRotate, throttleRotate);
+            [delta, dist, rotate]
+                = getRotateInfo(moveable, rect, afterInfo, direction, clientX, clientY, startRotate, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate] = getRotateInfo(
-                beforeInfo, beforeDirection, clientX, clientY, startRotate, throttleRotate,
+                moveable, rect, beforeInfo, beforeDirection, clientX, clientY, startRotate, throttleRotate,
             );
         }
-        // let snapDist = [0, 0];
-
-        // if (!pinchFlag) {
-        //     snapDist = checkSnapRotate(moveable, nowDist, direction, snapDirection, datas);
-        // }
 
         if (!delta && !beforeDelta && !parentMoveable) {
             return;

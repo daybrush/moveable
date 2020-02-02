@@ -498,11 +498,17 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
         direction,
     ];
 }
-
+export function getDistSize(vec: number[]) {
+    return  Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1]);
+}
+export function getDiagonalSize(pos1: number[], pos2: number[]) {
+    return getDistSize([
+        pos2[0] - pos1[0],
+        pos2[1] - pos1[1],
+    ]);
+}
 export function getLineStyle(pos1: number[], pos2: number[], rad: number = getRad(pos1, pos2)) {
-    const distX = pos2[0] - pos1[0];
-    const distY = pos2[1] - pos1[1];
-    const width = Math.sqrt(distX * distX + distY * distY);
+    const width = getDiagonalSize(pos1, pos2);
 
     return {
         transform: `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad)`,

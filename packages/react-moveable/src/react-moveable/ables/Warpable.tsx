@@ -123,7 +123,9 @@ export default {
         datas.prevMatrix = createIdentityMatrix(4);
         datas.absolutePoses = getAbsolutePosesByState(state);
         datas.posIndexes = getPosIndexesByDirection(direction);
-        state.snapDirection = direction;
+        state.snapRenderInfo = {
+            direction,
+        };
 
         const params = fillParams<OnWarpStart>(moveable, e, {
             set: (matrix: number[]) => {

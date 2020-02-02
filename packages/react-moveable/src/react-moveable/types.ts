@@ -803,8 +803,13 @@ export interface SnappableProps {
 }
 export interface SnappableState {
     guidelines: any[];
-    snapDirection: number[] | true | null;
+    snapRenderInfo?: SnapRenderInfo | null;
     enableSnap: boolean;
+}
+export interface SnapRenderInfo {
+    direction?: number[];
+    snap?: boolean;
+    center?: boolean;
 }
 
 export interface ScrollableProps {

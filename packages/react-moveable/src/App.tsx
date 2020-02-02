@@ -57,6 +57,7 @@ class App extends React.Component {
                     // scalable={true}
                     ref={ref(this, "ab")}
                     // keepRatio={false}
+                    bounds={{ left: 20 }}
                     target={this.state.targets}
                     defaultGroupRotate={0}
                     origin={true}
@@ -89,8 +90,8 @@ class App extends React.Component {
                             ev.target.style.cssText += groupItem.toCSS();
                         });
 
-                        (this as any).ab.updateTarget();
-                        (this as any).ab.updateRect();
+                        // (this as any).ab.updateTarget();
+                        // (this as any).ab.updateRect();
                     }}
                     onRotateGroupStart={e => {
                         console.log("rgs", e);

@@ -69,7 +69,9 @@ export default {
             able[controlEventName]!(moveable, ableEvent);
         });
 
-        moveable.state.snapDirection = [0, 0];
+        moveable.state.snapRenderInfo = {
+            direction: [0, 0],
+        };
         return isPinch;
     },
     pinch(

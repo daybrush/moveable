@@ -73,6 +73,23 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .line.dashed.vertical {
     border-left: 1px dashed #4af;
 }
+.line.dashed:before {
+    position: absolute;
+    content: attr(data-size);
+    color: #4af;
+    font-size: 12px;
+    font-weight: bold;
+}
+.line.dashed.horizontal:before {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 5px;
+}
+.line.dashed.vertical:before {
+    top: 50%;
+    transform: translateY(-50%);
+    left: 5px;
+}
 .line.rotation-line {
 	height: 40px;
 	width: 1px;
