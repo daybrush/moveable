@@ -1290,6 +1290,7 @@ export default {
     dragStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
         moveable.state.snapRenderInfo = {
             snap: true,
+            center: true,
         };
         snapStart(moveable);
     },

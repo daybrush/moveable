@@ -9,6 +9,7 @@ import {
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
+import { TINY_NUM } from "../consts";
 
 export default {
     name: "draggable",
@@ -38,9 +39,8 @@ export default {
         return <div className={prefix(
             "line",
             "horizontal",
-            "guideline",
+            "dragline",
             "dashed",
-            "bold",
         )} key={`dragRotateGuideline`} style={{
             width: `${width}px`,
             transform: `translate(${beforeOrigin[0]}px, ${beforeOrigin[1]}px) rotate(${rad}rad)`,
@@ -129,10 +129,66 @@ export default {
 
         if (!isPinch && !parentEvent && !parentFlag && distX && distY) {
             const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
+            const {
+                isSnap: isVerticalSnap,
+                isBound: isVerticalBound,
+                offset: verticalOffset,
+            } = verticalInfo;
+            const {
+                isSnap: isHorizontalSnap,
+                isBound: isHorizontalBound,
+                offset: horizontalOffset,
+            } = horizontalInfo;
+            isSnap = isVerticalSnap || isHorizontalSnap;
 
-            isSnap = verticalInfo.isSnap || horizontalInfo.isSnap;
-            distX -= verticalInfo.offset;
-            distY -= horizontalInfo.offset;
+            if (throttleDragRotate) {
+                const adjustPoses = [];
+                if (isVerticalBound && isHorizontalBound) {
+                    adjustPoses.push(
+                        [0, horizontalOffset],
+                        [verticalOffset, 0],
+                    );
+                } else if (isVerticalBound) {
+                    adjustPoses.push(
+                        [verticalOffset, 0],
+                    );
+                } else if (isHorizontalBound) {
+                    adjustPoses.push(
+                        [0, horizontalOffset],
+                    );
+                } else if (isVerticalSnap && isHorizontalSnap) {
+                    adjustPoses.push(
+                        [0, horizontalOffset],
+                        [verticalOffset, 0],
+                    );
+                } else if (isVerticalSnap) {
+                    adjustPoses.push(
+                        [verticalOffset, 0],
+                    );
+                } else if (isHorizontalSnap) {
+                    adjustPoses.push(
+                        [0, horizontalOffset],
+                    );
+                }
+                if (adjustPoses.length) {
+                    adjustPoses.sort((a, b) => {
+                        return getDistSize(minus([distX, distY], a)) - getDistSize(minus([distX, distY], b));
+                    });
+                    const adjustPos = adjustPoses[0];
+                    if (adjustPos[0] && Math.abs(distX) > TINY_NUM) {
+                        const prevDistX = distX;
+                        distX -= adjustPos[0];
+                        distY = distY * Math.abs(distX) / Math.abs(prevDistX);
+                    } else if (adjustPos[1] && Math.abs(distY) > TINY_NUM) {
+                        const prevDistY = distY;
+                        distY -= adjustPos[1];
+                        distX = distX * Math.abs(distY) / Math.abs(prevDistY);
+                    }
+                }
+            } else {
+                distX -= verticalOffset;
+                distY -= horizontalOffset;
+            }
         }
         datas.passDistX = distX;
         datas.passDistY = distY;
