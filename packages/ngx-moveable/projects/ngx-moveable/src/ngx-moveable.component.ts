@@ -31,6 +31,7 @@ export class NgxMoveableComponent
   @Input() public target!: SVGElement | HTMLElement | Array<SVGElement | HTMLElement>;
   @Input() public container!: SVGElement | HTMLElement | null;
   @Input() public throttleDrag!: number;
+  @Input() public throttleDragRotate!: number;
   @Input() public throttleResize!: number;
   @Input() public throttleScale!: number;
   @Input() public throttleRotate!: number;

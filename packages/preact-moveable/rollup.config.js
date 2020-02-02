@@ -16,6 +16,7 @@ const defaultOptions = {
         "@egjs/agent": "eg.Agent",
         "@egjs/children-differ": "eg.ChildrenDiffer",
         "@moveable/matrix": "@moveable/matrix",
+        "@scena/dragscroll": "@scena/dragscroll",
     },
     exports: "named",
     plugins: [

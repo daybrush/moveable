@@ -13,6 +13,7 @@ const external = {
     "@egjs/agent": "eg.Agent",
     "@egjs/children-differ": "eg.ChildrenDiffer",
     "@moveable/matrix": "@moveable/matrix",
+    "@scena/dragscroll": "@scena/dragscroll",
 };
 
 

@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.14.0] - 2020-02-03
+* `moveable` 0.14.0
+* `react-moveable` 0.17.0
+* `preact-moveable` 0.16.0
+* `ngx-moveable` 0.10.0
+* `svelte-moveable` 0.5.0
+
+### Added
+* Add `throttleDragRotate` #145
+* Support for displaying snap distances in elementGuidelines #142
+* Support bounds for a rotated system #106 #163
+
+### Fixed
+* Change `preact` to `react-simple-compat` #129
+* Change Rotation handle CSS #167
+* Fixed an issue where the origin was reset when the `resizable` option was toggled #168
+* Change the scrollable behavior to `@scnea/dragscroll`
+
 ## [0.13.4] - 2020-01-12
 * `moveable` 0.13.4
 * `react-moveable` 0.16.6
