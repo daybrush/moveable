@@ -100,6 +100,7 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 
 ### Options
 * [throttleDrag](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleDrag): throttle of x, y when drag. (default: 0)
+* [throttleDrag](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleDragRotate): throttle of angle of x, y when drag. (default: 0)
 * [dragArea](https://daybrush.com/moveable/release/latest/doc/Moveable.html#dragArea): Add an event to the moveable area instead of the target for stopPropagation. (default: false)
 
 ### Vanilla Exmaple
@@ -112,6 +113,7 @@ const moveable = new Moveable(document.body, {
     target: targets,
     draggable: true,
     throttleDrag: 0,
+    throttleDragRotate: 0,
 });
 
 const frame = {
@@ -2255,111 +2257,73 @@ moveable.classname = "moveable2";
 
 ### Default CSS
 
-* `rCS1cac4f3` is The hash value of the class name, which can be changed at any time.
-
+* `rCS1es39fm` is The hash value of the class name, which can be changed at any time.
+* All classes have a prefix of `moveable-`.
 ```css
-.rCS1cac4f3 {
-	position: fixed;
-	width: 0;
-	height: 0;
-	left: 0;
-	top: 0;
-	z-index: 3000;
+.rCS1es39fm {
+    position: relative;
 }
-.rCS1cac4f3 .moveable-control-box{
-    z-index: 0;
+.rCS1es39fm canvas{
+    position: relative;
 }
-.rCS1cac4f3 .moveable-line, .rCS1cac4f3 .moveable-control{
-	left: 0;
-	top: 0;
-}
-.rCS1cac4f3 .moveable-control{
-	position: absolute;
-	width: 14px;
-	height: 14px;
-	border-radius: 50%;
-	border: 2px solid #fff;
-	box-sizing: border-box;
-	background: #4af;
-	margin-top: -7px;
-    margin-left: -7px;
-    z-index: 10;
-}
-.rCS1cac4f3 .moveable-line{
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	background: #4af;
-	transform-origin: 0px 0.5px;
-}
-.rCS1cac4f3 .moveable-line.moveable-rotation-line{
-	height: 40px;
-	width: 1px;
-	transform-origin: 0.5px 39.5px;
-}
-.rCS1cac4f3 .moveable-line.moveable-rotation-line .moveable-control{
-	border-color: #4af;
-	background:#fff;
-	cursor: alias;
-}
-.rCS1cac4f3 .moveable-line.moveable-vertical.moveable-bold{
-    width: 2px;
-    margin-left: -1px;
-}
-.rCS1cac4f3 .moveable-line.moveable-horizontal.moveable-bold{
-    height: 2px;
-    margin-top: -1px;
-}
-.rCS1cac4f3 .moveable-control.moveable-origin{
-	border-color: #f55;
-	background: #fff;
-	width: 12px;
-	height: 12px;
-	margin-top: -6px;
-	margin-left: -6px;
-	pointer-events: none;
-}
-.rCS1cac4f3 .moveable-direction.moveable-e,
-.rCS1cac4f3 .moveable-direction.moveable-w{
-	cursor: ew-resize;
-}
-.rCS1cac4f3 .moveable-direction.moveable-s,
-.rCS1cac4f3 .moveable-direction.moveable-n{
-	cursor: ns-resize;
-}
-.rCS1cac4f3 .moveable-direction.moveable-nw,
-.rCS1cac4f3 .moveable-direction.moveable-se,
-.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-ne,
-.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-sw {
-	cursor: nwse-resize;
-}
-.rCS1cac4f3 .moveable-direction.moveable-ne,
-.rCS1cac4f3 .moveable-direction.moveable-sw,
-.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-nw,
-.rCS1cac4f3.moveable-reverse .moveable-direction.moveable-se {
-	cursor: nesw-resize;
-}
-.rCS1cac4f3 .moveable-group{
-    z-index: -1;
-}
-.rCS1cac4f3 .moveable-area{
-    position: absolute;
-}
-.rCS1cac4f3 .moveable-area-pieces{
+.rCS1es39fm .scena-guides{
     position: absolute;
     top: 0;
     left: 0;
+    will-change: transform;
+    z-index: 2000;
+}
+.rCS1es39fm.scena-horizontal .scena-guides{
+    width: 100%;
+    height: 0;
+    top: 30px;
+}
+.rCS1es39fm.scena-vertical .scena-guides{
+    height: 100%;
+    width: 0;
+    left: 30px;
+}
+.rCS1es39fm .scena-guide{
+    position: absolute;
+    background: #f33;
+    z-index: 2;
+}
+.rCS1es39fm .scena-guide.scena-dragging:before{
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.rCS1es39fm.scena-horizontal .scena-guide{
+    width: 100%;
+    height: 1px;
+    cursor: row-resize;
+}
+.rCS1es39fm.scena-vertical .scena-guide{
+    width: 1px;
+    height: 100%;
+    cursor: col-resize;
+}
+.scena-mobile .rCS1es39fm.scena-horizontal .scena-guide{
+    transform: scale(1, 2);
+}
+.scena-mobile .rCS1es39fm.scena-vertical .scena-guide{
+    transform: scale(2, 1);
+}
+.rCS1es39fm.scena-horizontal .scena-guide:before{
+    height: 20px;
+}
+.rCS1es39fm.scena-vertical .scena-guide:before{
+    width: 20px;
+}
+.rCS1es39fm .scena-adder{
     display: none;
 }
-.rCS1cac4f3 .moveable-area.moveable-avoid{
-    pointer-events: none;
-}
-.rCS1cac4f3 .moveable-area.moveable-avoid+.moveable-area-pieces {
+.rCS1es39fm .scena-adder.scena-dragging{
     display: block;
 }
-.rCS1cac4f3 .moveable-area-piece{
-    position: absolute;
-}
-
 
 ```
