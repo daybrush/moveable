@@ -172,9 +172,11 @@ function refreshGuidelines() {
 function toggleShift(shiftKey) {
     if (shiftKey) {
         moveable.throttleRotate = 30;
+        moveable.throttleDragRotate = 45;
         moveable.keepRatio = true;
     } else {
         moveable.throttleRotate = 1;
+        moveable.throttleDragRotate = 0;
         moveable.keepRatio = false;
     }
 }

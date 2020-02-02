@@ -4,7 +4,7 @@ import { MoveableInterface } from "react-moveable/declaration/types";
 export const PROPERTIES: Array<keyof MoveableOptions> = [
     "draggable", "resizable", "scalable", "rotatable",
     "warpable", "pinchable", "snappable", "origin", "target", "edge",
-    "throttleDrag", "throttleResize",
+    "throttleDrag", "throttleDragRotate", "throttleResize",
     "throttleScale", "throttleRotate", "keepRatio",
     "dragArea",
     "pinchThreshold",

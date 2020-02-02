@@ -305,6 +305,16 @@ class Moveable extends EgComponent {
  * moveable.throttleDrag = 1;
  */
 /**
+ * throttle of angle of x, y when drag.
+ * @name Moveable#throttleDragRotate
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleDragRotate = 45;
+ */
+/**
  * throttle of width, height when resize.
  * @name Moveable#throttleResize
  * @example

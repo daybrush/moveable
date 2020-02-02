@@ -30,6 +30,7 @@ import {
  * @property - The target(s) to indicate Moveable Control Box. (default: true)
  * @property - Moveable Container. (default: parentElement)
  * @property - throttle of x, y when drag. (default: 0)
+ * @property - throttle of angle(degree) of x,y when drag. (default: 0)
  * @property - throttle of width, height when resize. (default: 0)
  * @property - throttle of scaleX, scaleY when scale. (default: 0)
  * @property - throttle of angle(degree) when rotate. (default: 0)
@@ -74,6 +75,7 @@ export interface MoveableOptions {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement>;
     container?: SVGElement | HTMLElement | null;
     throttleDrag?: number;
+    throttleDragRotate?: number;
     throttleResize?: number;
     throttleScale?: number;
     throttleRotate?: number;
