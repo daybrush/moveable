@@ -876,7 +876,7 @@ export function selectValue<T = any>(...values: any[]): T {
     return values[length];
 }
 
-export function groupBy<T>(arr: T[], func: (el: T, index: number, arr: T[]) => number) {
+export function groupBy<T>(arr: T[], func: (el: T, index: number, arr: T[]) => number | string) {
     const group: T[][] = [];
     const groupMap: IObject<T[]> = {};
 
