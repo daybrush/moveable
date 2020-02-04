@@ -310,6 +310,13 @@ export default {
 
         return isDrag;
     },
+    request(moveable: MoveableManager<DraggableProps, DraggableState>, pararms: { distX: number, distY: number }) {
+        const { distX, distY } = pararms;
+        const datas = {};
+        this.dragStart(moveable, { datas });
+        this.drag(moveable, { datas, distX, distY });
+        this.dragEnd(moveable, { datas, isDrag: true });
+    },
     unset(moveable: any) {
         moveable.state.dragInfo = null;
     },
