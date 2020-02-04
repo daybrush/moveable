@@ -803,6 +803,7 @@ export interface SnappableProps {
     snapVertical?: boolean;
     snapElement?: boolean;
     snapThreshold?: number;
+    snapDigit?: number;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
     elementGuidelines?: Element[];

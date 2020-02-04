@@ -172,6 +172,7 @@ class App extends React.Component {
                     snappable={true}
                     scrollable={true}
                     transformOrigin="% %"
+                    snapDigit={0}
                     bounds={{ left: 30, top: 20 }}
                     verticalGuidelines={[100, 200, 400, 500.5, 1100.321]}
                     horizontalGuidelines={[100.5, 200.5, 500.35]}

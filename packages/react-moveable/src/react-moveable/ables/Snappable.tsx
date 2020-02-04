@@ -1117,15 +1117,13 @@ function groupByElementGuidelines(
 }
 function renderElementGroup(
     group: Guideline[][],
-    directionName: string,
-    posName1: string,
-    posName2: string,
-    sizeName: string,
+    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
     minPos: number,
     clientPos: number,
     clientSize: number,
     targetPos: number,
     snapThreshold: number,
+    snapDigit: number,
     index: number,
     React: Renderer,
 ) {
@@ -1150,7 +1148,7 @@ function renderElementGroup(
                 "guideline",
                 "dashed",
             )}
-                data-size={isRenderSize ? parseFloat(lineSize.toFixed(4)) : ""}
+                data-size={isRenderSize ? parseFloat(lineSize.toFixed(snapDigit)) : ""}
                 key={`${directionName}LinkGuidline${i}-${j}`} style={{
                     [posName1]: `${minPos + linePos}px`,
                     [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
@@ -1158,6 +1156,52 @@ function renderElementGroup(
                 }} />;
         });
     }));
+}
+function renderSnapPoses(
+    snapPoses: number[],
+    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    minPos: number,
+    targetPos: number,
+    size: number,
+    React: Renderer,
+) {
+    return snapPoses.map((pos, i) => {
+        return <div className={prefix(
+            "line",
+            directionName,
+            "guideline",
+            "target",
+            "bold",
+        )} key={`${directionName}TargetGuidline${i}`} style={{
+            [posName1]: `${minPos}px`,
+            [posName2]: `${-targetPos + pos}px`,
+            [sizeName]: `${size}px`,
+        }} />;
+    });
+}
+function renderGuidelines(
+    guidelines: Guideline[],
+    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    minPos: number,
+    clientPos: number,
+    targetPos: number,
+    index: number,
+    React: Renderer,
+) {
+    return guidelines.map((guideline, i) => {
+        const { pos, size, element } = guideline;
+
+        return <div className={prefix(
+            "line",
+            directionName,
+            "guideline",
+            element ? "bold" : "",
+        )} key={`${directionName}Guidline${i}`} style={{
+            [posName1]: `${minPos - clientPos + pos[index]}px`,
+            [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
+            [sizeName]: `${size}px`,
+        }} />;
+    });
 }
 export default {
     name: "snappable",
@@ -1167,6 +1211,7 @@ export default {
         snapHorizontal: Boolean,
         snapVertical: Boolean,
         snapElement: Boolean,
+        snapDigit: Number,
         snapThreshold: Number,
         horizontalGuidelines: Array,
         verticalGuidelines: Array,
@@ -1193,6 +1238,7 @@ export default {
         }
         const {
             snapThreshold = 5,
+            snapDigit = 4,
         } = moveable.props;
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
@@ -1258,90 +1304,67 @@ export default {
             height,
             1,
         );
-
+        const horizontalNames = ["horizontal", "left", "top", "width"] as const;
+        const verticalNames = ["vertical", "top", "left", "height"] as const;
         return [
             ...renderElementGroup(
                 elementHorizontalGroup,
-                "horizontal",
-                "left",
-                "top",
-                "width",
+                horizontalNames,
                 minLeft,
                 clientLeft,
                 width,
                 targetTop,
                 snapThreshold,
+                snapDigit,
                 0,
                 React,
             ),
             ...renderElementGroup(
                 elementVerticalGroup,
-                "vertical",
-                "top",
-                "left",
-                "height",
+                verticalNames,
                 minTop,
                 clientTop,
                 height,
                 targetLeft,
                 snapThreshold,
+                snapDigit,
                 1,
                 React,
             ),
-            ...verticalSnapPoses.map((pos, i) => {
-                return <div className={prefix(
-                    "line",
-                    "vertical",
-                    "guideline",
-                    "target",
-                    "bold",
-                )} key={`verticalTargetGuidline${i}`} style={{
-                    top: `${minTop}px`,
-                    left: `${-targetLeft + pos}px`,
-                    height: `${height}px`,
-                }} />;
-            }),
-            ...horizontalSnapPoses.map((pos, i) => {
-                return <div className={prefix(
-                    "line",
-                    "horizontal",
-                    "guideline",
-                    "target",
-                    "bold",
-                )} key={`horizontalTargetGuidline${i}`} style={{
-                    top: `${-targetTop + pos}px`,
-                    left: `${minLeft}px`,
-                    width: `${width}px`,
-                }} />;
-            }),
-            ...verticalGuildelines.map((guideline, i) => {
-                const { pos, size, element } = guideline;
-
-                return <div className={prefix(
-                    "line",
-                    "vertical",
-                    "guideline",
-                    element ? "bold" : "",
-                )} key={`verticalGuidline${i}`} style={{
-                    top: `${minTop - clientTop + pos[1]}px`,
-                    left: `${-targetLeft + pos[0]}px`,
-                    height: `${size}px`,
-                }} />;
-            }),
-            ...horizontalGuidelines.map((guideline, i) => {
-                const { pos, size, element } = guideline;
-
-                return <div className={prefix(
-                    "line",
-                    "horizontal",
-                    "guideline",
-                    element ? "bold" : "",
-                )} key={`horizontalGuidline${i}`} style={{
-                    top: `${-targetTop + pos[1]}px`,
-                    left: `${minLeft - clientLeft + pos[0]}px`,
-                    width: `${size}px`,
-                }} />;
-            }),
+            ...renderSnapPoses(
+                horizontalSnapPoses,
+                horizontalNames,
+                minLeft,
+                targetTop,
+                width,
+                React,
+            ),
+            ...renderSnapPoses(
+                verticalSnapPoses,
+                verticalNames,
+                minTop,
+                targetLeft,
+                height,
+                React,
+            ),
+            ...renderGuidelines(
+                horizontalGuidelines,
+                horizontalNames,
+                minLeft,
+                clientLeft,
+                targetTop,
+                0,
+                React,
+            ),
+            ...renderGuidelines(
+                verticalGuildelines,
+                verticalNames,
+                minTop,
+                clientTop,
+                targetLeft,
+                1,
+                React,
+            ),
         ];
     },
     dragStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
