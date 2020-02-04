@@ -1403,6 +1403,28 @@ export default {
     dragGroupControlEnd(moveable: any) {
         this.unset(moveable);
     },
+    request(moveable: MoveableManager<any, any>, startParam: IObject<any>) {
+        const self = this;
+
+        const {
+            type = "drag",
+        } = startParam;
+
+        if (type === "drag") {
+            this.dragStart(moveable, {});
+        } else if (type === "dragControl") {
+            this.dragControlStart(moveable, {});
+        }
+        return {
+            request(param: IObject<any>) {
+                return this;
+            },
+            requestEnd() {
+                self.dragEnd(moveable);
+                return this;
+            },
+        };
+    },
     unset(moveable: any) {
         const state = moveable.state;
 

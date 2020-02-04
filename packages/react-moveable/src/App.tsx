@@ -383,18 +383,42 @@ class App extends React.Component {
     public componentDidMount() {
         const keycon = new KeyController(window);
 
+        let requester: any;
+        let snapRequester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", () => {
-            this.moveable.request("draggable", { distX: 10, distY: 0});
+            if (!requester) {
+                snapRequester = this.moveable.request("snappable")!;
+                requester = this.moveable.request("draggable")!;
+            }
+            requester.request({ deltaX: 10, deltaY: 0});
         }).keydown("left", () => {
-            this.moveable.request("draggable", { distX: -10, distY: 0});
+            if (!requester) {
+                requester = this.moveable.request("draggable")!;
+                snapRequester = this.moveable.request("snappable")!;
+            }
+            requester.request({ deltaX: -10, deltaY: 0});
+        }).keyup("left", () => {
+            if (requester) {
+                requester.requestEnd();
+                snapRequester.requestEnd();
+                requester = null;
+                snapRequester = null;
+            }
+        }).keyup("right", () => {
+            if (requester) {
+                requester.requestEnd();
+                snapRequester.requestEnd();
+                requester = null;
+                snapRequester = null;
+            }
         }).keydown("up", e => {
-            this.moveable.request("draggable", { distX: 0, distY: -10});
+            this.moveable.request("draggable", { deltaX: 0, deltaY: -10});
 
             e.inputEvent.preventDefault();
         }).keydown("down", e => {
-            this.moveable.request("draggable", { distX: 0, distY: 10});
+            this.moveable.request("draggable", { deltaX: 0, deltaY: 10});
 
             e.inputEvent.preventDefault();
         }).keyup("shift", () => {

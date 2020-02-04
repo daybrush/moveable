@@ -17,7 +17,7 @@ import {
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./types";
+import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, AbleRequester } from "./types";
 import { getAbleDragger } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
 import { getRad } from "@moveable/matrix";
@@ -226,15 +226,28 @@ export default class MoveableManager<T = {}, U = {}>
             offsetHeight,
         };
     }
-    public request(ableName: string, params: IObject<any>) {
+    public request(ableName: string, param: IObject<any> = {}): AbleRequester | undefined {
         const requsetAble = this.props.ables!.filter(able => able.name === ableName)[0];
 
         if (!requsetAble || !requsetAble.request) {
             return;
         }
+        const self = this;
+        const ableRequester = requsetAble.request(this, param);
 
-        requsetAble.request(this, params);
-        this.updateTarget("End");
+        const requester = {
+            request(ableParam: IObject<any>, isInstant?: boolean) {
+                ableRequester.request(ableParam);
+                !isInstant && self.updateTarget("");
+                return this;
+            },
+            requestEnd() {
+                ableRequester.requestEnd();
+                self.updateTarget("End");
+                return this;
+            },
+        };
+        return param.isInstant ? requester.request(param, true).requestEnd() : requester;
     }
     public checkUpdate() {
         const { target, container, parentMoveable } = this.props;

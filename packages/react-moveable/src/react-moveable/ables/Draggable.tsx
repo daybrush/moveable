@@ -129,6 +129,7 @@ export default {
         }
 
         if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
+            console.log("??");
             const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
             const {
                 isSnap: isVerticalSnap,
@@ -142,7 +143,7 @@ export default {
             } = horizontalInfo;
             isSnap = isVerticalSnap || isHorizontalSnap;
 
-            if (throttleDragRotate) {
+            if (throttleDragRotate && distX && distY) {
                 const adjustPoses = [];
                 if (isVerticalBound && isHorizontalBound) {
                     adjustPoses.push(
@@ -311,19 +312,26 @@ export default {
 
         return isDrag;
     },
-    request(moveable: MoveableManager<any, any>, params: IObject<any>) {
-        const {
-            distX = 0,
-            distY = 0,
-        } = params;
-
-        if (!distX && !distY) {
-            return;
-        }
+    request(moveable: MoveableManager<any, any>, startParam: IObject<any>) {
         const datas = {};
+        const self = this;
+
         this.dragStart(moveable, { datas });
-        this.drag(moveable, { datas, distX, distY });
-        this.dragEnd(moveable, { datas, isDrag: true });
+        let distX = 0;
+        let distY = 0;
+        return {
+            request({ deltaX, deltaY }: IObject<any>) {
+                distX += deltaX;
+                distY += deltaY;
+                self.drag(moveable, { datas, distX, distY });
+
+                return this;
+            },
+            requestEnd() {
+                self.dragEnd(moveable, { datas, isDrag: true });
+                return this;
+            },
+        };
     },
     unset(moveable: any) {
         moveable.state.dragInfo = null;
