@@ -1301,9 +1301,9 @@ import {
 <ngx-moveable
     [target]="targets"
     [draggable]="true"
-    (onDragGroupStart)="onDragGroupStart($event)"
-    (onDragGroup)="onDragGroup($event)"
-    (onDragGroupEnd)="onDragGroupEnd($event)"
+    (dragGroupStart)="onDragGroupStart($event)"
+    (dragGroup)="onDragGroup($event)"
+    (dragGroupEnd)="onDragGroupEnd($event)"
     />
 `,
 })
@@ -1502,9 +1502,9 @@ import {
 <ngx-moveable
     [target]="targets"
     [resizable]="true"
-    (onResizeGroupStart)="onResizeGroupStart($event)"
-    (onResizeGroup)="onResizeGroup($event)"
-    (onResizeGroupEnd)="onResizeGroupEnd($event)"
+    (resizeGroupStart)="onResizeGroupStart($event)"
+    (resizeGroup)="onResizeGroup($event)"
+    (resizeGroupEnd)="onResizeGroupEnd($event)"
     />
 `,
 })
@@ -1721,9 +1721,9 @@ import {
 <ngx-moveable
     [target]="targets"
     [scalable]="true"
-    (onScaleGroupStart)="onScaleGroupStart($event)"
-    (onScaleGroup)="onScaleGroup($event)"
-    (onScaleGroupEnd)="onScaleGroupEnd($event)"
+    (scaleGroupStart)="onScaleGroupStart($event)"
+    (scaleGroup)="onScaleGroup($event)"
+    (scaleGroupEnd)="onScaleGroupEnd($event)"
     />
 `,
 })
@@ -1926,9 +1926,9 @@ import {
 <ngx-moveable
     [target]="targets"
     [rotatable]="true"
-    (onRotateGroupStart)="onRotateGroupStart($event)"
-    (onRotateGroup)="onRotateGroup($event)"
-    (onRotateroupEnd)="onRotateGroupEnd($event)"
+    (rotateGroupStart)="onRotateGroupStart($event)"
+    (rotateGroup)="onRotateGroup($event)"
+    (rotateroupEnd)="onRotateGroupEnd($event)"
     />
 `,
 })
