@@ -192,7 +192,7 @@ class App extends React.Component {
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
-                    throttleDragRotate={isResizable ? 30 : 0}
+                    throttleDragRotate={isResizable ? 0 : 30}
                     throttleScale={0}
                     throttleResize={0}
                     throttleRotate={10}
@@ -385,6 +385,18 @@ class App extends React.Component {
 
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
+        }).keydown("right", () => {
+            this.moveable.request("draggable", { distX: 10, distY: 0});
+        }).keydown("left", () => {
+            this.moveable.request("draggable", { distX: -10, distY: 0});
+        }).keydown("up", e => {
+            this.moveable.request("draggable", { distX: 0, distY: -10});
+
+            e.inputEvent.preventDefault();
+        }).keydown("down", e => {
+            this.moveable.request("draggable", { distX: 0, distY: 10});
+
+            e.inputEvent.preventDefault();
         }).keyup("shift", () => {
             this.setState({ isResizable: true, isShift: false });
         });

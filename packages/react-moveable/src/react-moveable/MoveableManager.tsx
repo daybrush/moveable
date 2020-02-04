@@ -21,6 +21,7 @@ import { MoveableManagerProps, MoveableManagerState, Able, RectInfo } from "./ty
 import { getAbleDragger } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
 import { getRad } from "@moveable/matrix";
+import { IObject } from "@daybrush/utils";
 
 const ControlBoxElement = styled("div", MOVEABLE_CSS);
 
@@ -224,6 +225,16 @@ export default class MoveableManager<T = {}, U = {}>
             offsetWidth,
             offsetHeight,
         };
+    }
+    public request(ableName: string, params: IObject<any>) {
+        const requsetAble = this.props.ables!.filter(able => able.name === ableName)[0];
+
+        if (!requsetAble || !requsetAble.request) {
+            return;
+        }
+
+        requsetAble.request(this, params);
+        this.updateTarget("End");
     }
     public checkUpdate() {
         const { target, container, parentMoveable } = this.props;

@@ -4,7 +4,7 @@ import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./ables/consts";
 import MoveableGroup from "./MoveableGroup";
 import { ref } from "framework-utils";
-import { isArray } from "@daybrush/utils";
+import { isArray, IObject } from "@daybrush/utils";
 import Groupable from "./ables/Groupable";
 
 export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & T> implements MoveableInterface {
@@ -49,6 +49,9 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
     }
     public getRect(): RectInfo {
         return this.moveable.getRect();
+    }
+    public request(ableName: string, params: IObject<any>) {
+        this.moveable.request(ableName, params);
     }
     public destroy() {
         this.moveable.componentWillUnmount();

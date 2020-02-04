@@ -136,6 +136,8 @@ export interface Able<T = any> {
     dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+
+    request?: (moveable: MoveableManagerProps<any>, params: IObject<any>) => any;
 }
 
 /**
@@ -881,6 +883,7 @@ export interface MoveableInterface {
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(isNotSetState?: boolean): void;
     updateTarget(): void;
+    request(ableName: string, params: IObject<any>): void;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;

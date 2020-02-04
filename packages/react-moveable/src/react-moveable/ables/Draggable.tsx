@@ -10,6 +10,7 @@ import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 import { TINY_NUM } from "../consts";
+import { IObject } from "@daybrush/utils";
 
 export default {
     name: "draggable",
@@ -127,7 +128,7 @@ export default {
             distY = r * Math.sin(dragRotateRad);
         }
 
-        if (!isPinch && !parentEvent && !parentFlag && distX && distY) {
+        if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
             const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
             const {
                 isSnap: isVerticalSnap,
@@ -310,8 +311,15 @@ export default {
 
         return isDrag;
     },
-    request(moveable: MoveableManager<DraggableProps, DraggableState>, pararms: { distX: number, distY: number }) {
-        const { distX, distY } = pararms;
+    request(moveable: MoveableManager<any, any>, params: IObject<any>) {
+        const {
+            distX = 0,
+            distY = 0,
+        } = params;
+
+        if (!distX && !distY) {
+            return;
+        }
         const datas = {};
         this.dragStart(moveable, { datas });
         this.drag(moveable, { datas, distX, distY });
