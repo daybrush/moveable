@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.14.1] - 2020-02-05
+* `moveable` 0.14.1
+* `ngx-moveable` 0.10.1
+* `svelte-moveable` 0.5.1
+
+### Fixed
+* Update `react-simple-compat` 0.1.2.
+* When I set the property target of moveable to array, it will not work！ #171
+
 ## [0.14.0] - 2020-02-03
 * `moveable` 0.14.0
 * `react-moveable` 0.17.0
