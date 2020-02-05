@@ -1142,13 +1142,15 @@ function renderElementGroup(
             const isRenderSize = isFirstRenderSize;
 
             isFirstRenderSize = false;
+            const snapSize = isRenderSize ? parseFloat(lineSize.toFixed(snapDigit)) : 0;
+
             return <div className={prefix(
                 "line",
                 directionName,
                 "guideline",
                 "dashed",
             )}
-                data-size={isRenderSize ? parseFloat(lineSize.toFixed(snapDigit)) : ""}
+                data-size={snapSize > 0 ? snapSize : ""}
                 key={`${directionName}LinkGuidline${i}-${j}`} style={{
                     [posName1]: `${minPos + linePos}px`,
                     [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
