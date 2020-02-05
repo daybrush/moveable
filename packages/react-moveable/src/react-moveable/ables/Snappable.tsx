@@ -1382,8 +1382,8 @@ export default {
     dragEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
-    dragControlCondition(target: HTMLElement | SVGElement) {
-        return directionCondition(target) || rotatableDragControlCondtion(target);
+    dragControlCondition(e: any) {
+        return directionCondition(e) || rotatableDragControlCondtion(e);
     },
     dragControlStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
         moveable.state.snapRenderInfo = null;

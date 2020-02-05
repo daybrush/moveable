@@ -79,8 +79,11 @@ export default {
             ...renderAllDirections(moveable, React),
         ];
     },
-    dragControlCondition(target: HTMLElement | SVGElement) {
-        return hasClass(target, prefix("direction"));
+    dragControlCondition(e: any) {
+        if (e.isRequest) {
+            return false;
+        }
+        return hasClass(e.inputEvent.target, prefix("direction"));
     },
     dragControlStart(
         moveable: MoveableManager<WarpableProps, SnappableState>,

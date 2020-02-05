@@ -123,7 +123,7 @@ export interface Able<T = any> {
     dragControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
     dragControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 
-    dragGroupCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragGroupCondition?: (e: any) => boolean;
     dragGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
     dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
@@ -132,7 +132,7 @@ export interface Able<T = any> {
     pinchGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
     pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
 
-    dragGroupControlCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragGroupControlCondition?: (e: any) => boolean;
     dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;

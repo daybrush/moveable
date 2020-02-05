@@ -31,6 +31,9 @@ export function triggerChildAble<T extends Able>(
 
     return childs;
 }
-export function directionCondition(target: HTMLElement | SVGElement) {
-    return hasClass(target, prefix("direction"));
+export function directionCondition(e: any) {
+    if (e.isRequest) {
+        return e.parentDirection!!;
+    }
+    return hasClass(e.inputEvent.target, prefix("direction"));
 }

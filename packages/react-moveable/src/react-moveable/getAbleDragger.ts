@@ -16,7 +16,7 @@ export function triggerAble<T extends IObject<any>>(
 ) {
     const isStart = eventType === "Start";
 
-    if (isStart && eventAffix.indexOf("Control") > -1 && moveable.areaElement === e.inputEvent.target) {
+    if (isStart && eventAffix.indexOf("Control") > -1 && !e.isRequest && moveable.areaElement === e.inputEvent.target) {
         return false;
     }
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
@@ -33,7 +33,7 @@ export function triggerAble<T extends IObject<any>>(
     const results = events.filter((able: any) => {
         const condition = isStart && able[conditionName];
 
-        if (!condition || condition(e.inputEvent.target, moveable)) {
+        if (!condition || condition(e, moveable)) {
             return able[eventName](moveable, e);
         }
         return false;

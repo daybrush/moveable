@@ -25,6 +25,7 @@ import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapSize } from "./Snappable";
+import { IObject } from "@daybrush/utils";
 
 export default {
     name: "resizable",
@@ -58,11 +59,9 @@ export default {
             parentDirection,
             datas,
         } = e;
-        const {
-            target: inputTarget,
-        } = inputEvent;
 
-        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputTarget));
+        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputEvent.target));
+
         const { target, width, height } = moveable.state;
 
         if (!direction || !target) {
@@ -445,5 +444,26 @@ export default {
 
         triggerEvent(moveable, "onResizeGroupEnd", nextParams);
         return isDrag;
+    },
+    request() {
+        const datas = {};
+        let distX = 0;
+        let distY = 0;
+
+        return {
+            isControl: true,
+            requestStart(e: IObject<any>) {
+                return { datas, parentDirection: e.direction };
+            },
+            request(e: IObject<any>) {
+                distX += e.deltaX;
+                distY += e.deltaY;
+
+                return { datas, distX, distY };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
     },
 };

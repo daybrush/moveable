@@ -102,8 +102,11 @@ export function getPositions(
     return [pos1, pos2];
 }
 
-export function dragControlCondition(target: HTMLElement | SVGElement) {
-    return hasClass(target, prefix("rotation"));
+export function dragControlCondition(e: any) {
+    if (e.isRequest) {
+        return false;
+    }
+    return hasClass(e.inputEvent.target, prefix("rotation"));
 }
 
 export default {

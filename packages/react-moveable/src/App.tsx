@@ -382,19 +382,19 @@ class App extends React.Component {
     }
     public componentDidMount() {
         const keycon = new KeyController(window);
-        const mvb = (this as any).ab;
+        const mvb = (this as any).moveable;
         let requester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", e => {
             if (!requester) {
-                requester = mvb.request("draggable")!;
+                requester = mvb.request("resizable", { direction: [1, 0] })!;
             }
             requester.request({ deltaX: 10, deltaY: 0});
             e.inputEvent.preventDefault();
         }).keydown("left", e => {
             if (!requester) {
-                requester = mvb.request("draggable")!;
+                requester = mvb.request("resizable", { direction: [1, 0]})!;
             }
             requester.request({ deltaX: -10, deltaY: 0});
             e.inputEvent.preventDefault();
