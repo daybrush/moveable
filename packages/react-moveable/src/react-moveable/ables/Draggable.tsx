@@ -129,7 +129,6 @@ export default {
         }
 
         if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
-            console.log("??");
             const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
             const {
                 isSnap: isVerticalSnap,
@@ -312,24 +311,23 @@ export default {
 
         return isDrag;
     },
-    request(moveable: MoveableManager<any, any>, startParam: IObject<any>) {
+    request() {
         const datas = {};
-        const self = this;
-
-        this.dragStart(moveable, { datas });
         let distX = 0;
         let distY = 0;
-        return {
-            request({ deltaX, deltaY }: IObject<any>) {
-                distX += deltaX;
-                distY += deltaY;
-                self.drag(moveable, { datas, distX, distY });
 
-                return this;
+        return {
+            requestStart(e: IObject<any>) {
+                return { datas };
+            },
+            request(e: IObject<any>) {
+                distX += e.deltaX;
+                distY += e.deltaY;
+
+                return { datas, distX, distY };
             },
             requestEnd() {
-                self.dragEnd(moveable, { datas, isDrag: true });
-                return this;
+                return { datas, isDrag: true };
             },
         };
     },

@@ -55,13 +55,14 @@ export default {
         const {
             inputEvent,
             pinchFlag,
+            parentDirection,
             datas,
         } = e;
         const {
             target: inputTarget,
         } = inputEvent;
 
-        const direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
+        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputTarget));
         const { target, width, height } = moveable.state;
 
         if (!direction || !target) {

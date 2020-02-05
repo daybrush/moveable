@@ -17,8 +17,8 @@ import {
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, AbleRequester } from "./types";
-import { getAbleDragger } from "./getAbleDragger";
+import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester } from "./types";
+import { getAbleDragger, triggerAble } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
 import { getRad } from "@moveable/matrix";
 import { IObject } from "@daybrush/utils";
@@ -226,28 +226,28 @@ export default class MoveableManager<T = {}, U = {}>
             offsetHeight,
         };
     }
-    public request(ableName: string, param: IObject<any> = {}): AbleRequester | undefined {
+    public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester | undefined {
         const requsetAble = this.props.ables!.filter(able => able.name === ableName)[0];
 
         if (!requsetAble || !requsetAble.request) {
             return;
         }
         const self = this;
-        const ableRequester = requsetAble.request(this, param);
+        const ableRequester = requsetAble.request();
 
         const requester = {
-            request(ableParam: IObject<any>, isInstant?: boolean) {
-                ableRequester.request(ableParam);
-                !isInstant && self.updateTarget("");
+            request(ableParam: IObject<any>) {
+                triggerAble(self, "targetAbles", "drag", "", "", ableRequester.request(ableParam), isInstant);
                 return this;
             },
             requestEnd() {
-                ableRequester.requestEnd();
-                self.updateTarget("End");
+                triggerAble(self, "targetAbles", "drag", "", "End", ableRequester.requestEnd());
                 return this;
             },
         };
-        return param.isInstant ? requester.request(param, true).requestEnd() : requester;
+        triggerAble(self, "targetAbles", "drag", "", "Start", ableRequester.requestStart(param), isInstant);
+
+        return param.isInstant ? requester.request(param).requestEnd() : requester;
     }
     public checkUpdate() {
         const { target, container, parentMoveable } = this.props;

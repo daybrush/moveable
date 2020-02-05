@@ -384,34 +384,27 @@ class App extends React.Component {
         const keycon = new KeyController(window);
 
         let requester: any;
-        let snapRequester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", () => {
             if (!requester) {
-                snapRequester = this.moveable.request("snappable")!;
                 requester = this.moveable.request("draggable")!;
             }
             requester.request({ deltaX: 10, deltaY: 0});
         }).keydown("left", () => {
             if (!requester) {
                 requester = this.moveable.request("draggable")!;
-                snapRequester = this.moveable.request("snappable")!;
             }
             requester.request({ deltaX: -10, deltaY: 0});
         }).keyup("left", () => {
             if (requester) {
                 requester.requestEnd();
-                snapRequester.requestEnd();
                 requester = null;
-                snapRequester = null;
             }
         }).keyup("right", () => {
             if (requester) {
                 requester.requestEnd();
-                snapRequester.requestEnd();
                 requester = null;
-                snapRequester = null;
             }
         }).keydown("up", e => {
             this.moveable.request("draggable", { deltaX: 0, deltaY: -10});

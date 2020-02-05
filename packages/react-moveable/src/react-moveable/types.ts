@@ -137,7 +137,7 @@ export interface Able<T = any> {
     dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 
-    request?: (moveable: MoveableManagerProps<any>, startParam: AbleRequestParam) => AbleRequester;
+    request?: () => AbleRequester;
 }
 
 /**
@@ -162,9 +162,14 @@ export interface AbleRequestParam {
     isInstant?: boolean;
     [key: string]: any;
 }
+export interface Requester {
+    request(param: IObject<any>): this;
+    requestEnd(param: IObject<any>): this;
+}
 export interface AbleRequester {
-    request(param: IObject<any>, isInstant?: boolean): this;
-    requestEnd(): this;
+    requestStart(param: IObject<any>): IObject<any>;
+    request(param: IObject<any>): IObject<any>;
+    requestEnd(): IObject<any>;
 }
 
 /**
