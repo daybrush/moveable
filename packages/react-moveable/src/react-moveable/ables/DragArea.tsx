@@ -67,6 +67,9 @@ export default {
         ];
     },
     dragStart(moveable: MoveableManager, { datas, clientX, clientY, inputEvent }: any) {
+        if (!inputEvent) {
+            return false;
+        }
         datas.isDragArea = false;
         datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
@@ -96,13 +99,19 @@ export default {
         });
         addClass(areaElement, AVOID);
     },
-    drag(moveable: MoveableManager, { datas }: any) {
+    drag(moveable: MoveableManager, { datas, inputEvent }: any) {
+        if (!inputEvent) {
+            return false;
+        }
         if (!datas.isDragArea) {
             datas.isDragArea = true;
             restoreStyle(moveable);
         }
     },
     dragEnd(moveable: MoveableManager<DragAreaProps>, e: any) {
+        if (!e.inputEvent) {
+            return false;
+        }
         const { inputEvent, isDragArea, datas } = e;
         if (!datas.isDragArea) {
             restoreStyle(moveable);
@@ -123,17 +132,19 @@ export default {
         }));
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
-        this.dragStart(moveable, e);
+        return this.dragStart(moveable, e);
     },
     dragGroup(moveable: MoveableGroup, e: any) {
-        this.drag(moveable, e);
+        return this.drag(moveable, e);
     },
     dragGroupEnd(
         moveable: MoveableGroup,
         e: any,
     ) {
         const { inputEvent, isDragArea, datas } = e;
-
+        if (!inputEvent) {
+            return false;
+        }
         if (!isDragArea) {
             restoreStyle(moveable);
         }

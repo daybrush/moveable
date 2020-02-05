@@ -167,6 +167,7 @@ export interface Requester {
     requestEnd(param: IObject<any>): this;
 }
 export interface AbleRequester {
+    isControl: boolean;
     requestStart(param: IObject<any>): IObject<any>;
     request(param: IObject<any>): IObject<any>;
     requestEnd(): IObject<any>;

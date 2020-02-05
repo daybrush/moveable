@@ -187,8 +187,8 @@ export default {
                     }
                 }
             } else {
-                distX -= verticalOffset;
-                distY -= horizontalOffset;
+                distX -= (distX || isVerticalBound) ? verticalOffset : 0;
+                distY -= (distY || isHorizontalBound) ? horizontalOffset : 0;
             }
         }
         datas.passDistX = distX;
@@ -317,6 +317,7 @@ export default {
         let distY = 0;
 
         return {
+            isControl: false,
             requestStart(e: IObject<any>) {
                 return { datas };
             },

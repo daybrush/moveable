@@ -382,20 +382,35 @@ class App extends React.Component {
     }
     public componentDidMount() {
         const keycon = new KeyController(window);
-
+        const mvb = (this as any).ab;
         let requester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
-        }).keydown("right", () => {
+        }).keydown("right", e => {
             if (!requester) {
-                requester = this.moveable.request("draggable")!;
+                requester = mvb.request("draggable")!;
             }
             requester.request({ deltaX: 10, deltaY: 0});
-        }).keydown("left", () => {
+            e.inputEvent.preventDefault();
+        }).keydown("left", e => {
             if (!requester) {
-                requester = this.moveable.request("draggable")!;
+                requester = mvb.request("draggable")!;
             }
             requester.request({ deltaX: -10, deltaY: 0});
+            e.inputEvent.preventDefault();
+        }).keydown("up", e => {
+            if (!requester) {
+                requester = mvb.request("draggable")!;
+            }
+            requester.request({ deltaX: 0, deltaY: -10 });
+
+            e.inputEvent.preventDefault();
+        }).keydown("down", e => {
+            if (!requester) {
+                requester = mvb.request("draggable")!;
+            }
+            requester.request({ deltaX: 0, deltaY: 10 });
+            e.inputEvent.preventDefault();
         }).keyup("left", () => {
             if (requester) {
                 requester.requestEnd();
@@ -406,14 +421,16 @@ class App extends React.Component {
                 requester.requestEnd();
                 requester = null;
             }
-        }).keydown("up", e => {
-            this.moveable.request("draggable", { deltaX: 0, deltaY: -10});
-
-            e.inputEvent.preventDefault();
-        }).keydown("down", e => {
-            this.moveable.request("draggable", { deltaX: 0, deltaY: 10});
-
-            e.inputEvent.preventDefault();
+        }).keyup("up", () => {
+            if (requester) {
+                requester.requestEnd();
+                requester = null;
+            }
+        }).keyup("down", () => {
+            if (requester) {
+                requester.requestEnd();
+                requester = null;
+            }
         }).keyup("shift", () => {
             this.setState({ isResizable: true, isShift: false });
         });

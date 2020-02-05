@@ -227,7 +227,8 @@ export default class MoveableManager<T = {}, U = {}>
         };
     }
     public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester | undefined {
-        const requsetAble = this.props.ables!.filter(able => able.name === ableName)[0];
+        const { ables, groupable } = this.props as any;
+        const requsetAble: Able = ables!.filter((able: Able) => able.name === ableName)[0];
 
         if (!requsetAble || !requsetAble.request) {
             return;
@@ -235,17 +236,30 @@ export default class MoveableManager<T = {}, U = {}>
         const self = this;
         const ableRequester = requsetAble.request();
 
+        const ableType = ableRequester.isControl ? "controlAbles" : "targetAbles";
+        const eventAffix  = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;
+
         const requester = {
             request(ableParam: IObject<any>) {
-                triggerAble(self, "targetAbles", "drag", "", "", ableRequester.request(ableParam), isInstant);
+                triggerAble(self, ableType, "drag", eventAffix, "", {
+                    ...ableRequester.request(ableParam),
+                    isRequest: true,
+                }, isInstant);
                 return this;
             },
             requestEnd() {
-                triggerAble(self, "targetAbles", "drag", "", "End", ableRequester.requestEnd());
+                triggerAble(self, ableType, "drag", eventAffix, "End", {
+                    ...ableRequester.requestEnd(),
+                    isRequest: true,
+                });
                 return this;
             },
         };
-        triggerAble(self, "targetAbles", "drag", "", "Start", ableRequester.requestStart(param), isInstant);
+
+        triggerAble(self, ableType, "drag", eventAffix, "Start", {
+            ...ableRequester.requestStart(param),
+            isRequest: true,
+        }, isInstant);
 
         return param.isInstant ? requester.request(param).requestEnd() : requester;
     }
