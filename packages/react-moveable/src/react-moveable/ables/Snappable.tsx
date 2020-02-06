@@ -600,6 +600,17 @@ export function checkTwoWayDist(
     fixedPos: number[],
     is3d: boolean,
 ) {
+
+    const fixedDirection = [-direction[0], -direction[1]];
+
+    const directions = [
+        direction,
+        [direction[0], -direction[1]],
+        [-direction[0], direction[1]],
+    ].map(dir => {
+        const isCheckVertical = dir[0] !== fixedDirection[0];
+        const isCheckHorizontal = dir[1] !== fixedDirection[1];
+    });
     const directionPoses = getPosesByDirection(poses, direction);
     const verticalDirection = [direction[0], direction[1] * -1];
     const horizontalDirection = [direction[0] * -1, direction[1]];
