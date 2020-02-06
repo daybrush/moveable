@@ -1,8 +1,7 @@
 import MoveableGroup from "./MoveableGroup";
 import { Able } from "./types";
 import MoveableManager from "./MoveableManager";
-import { hasClass, IObject, isFunction } from "@daybrush/utils";
-import { prefix } from "./utils";
+import { IObject, isFunction } from "@daybrush/utils";
 
 export function triggerChildAble<T extends Able>(
     moveable: MoveableGroup,
@@ -30,10 +29,4 @@ export function triggerChildAble<T extends Able>(
     });
 
     return childs;
-}
-export function directionCondition(e: any) {
-    if (e.isRequest) {
-        return e.parentDirection!!;
-    }
-    return hasClass(e.inputEvent.target, prefix("direction"));
 }

@@ -19,12 +19,15 @@ import MoveableManager from "../MoveableManager";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import MoveableGroup from "../MoveableGroup";
 import {
-    triggerChildAble, directionCondition,
+    triggerChildAble,
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapSize } from "./Snappable";
+import {
+    directionCondition,
+} from "./utils";
 import { IObject } from "@daybrush/utils";
 
 export default {
@@ -118,6 +121,7 @@ export default {
             parentDistance, parentScale, inputEvent,
             parentKeepRatio,
             dragClient,
+            parentDist,
         } = e;
         const {
             direction,
@@ -140,13 +144,21 @@ export default {
             throttleResize = 0,
             parentMoveable,
         } = moveable.props;
+        let sizeDirection = direction;
+
+        if (!direction[0] && !direction[1]) {
+            sizeDirection = [1, 1];
+        }
         const keepRatio = moveable.props.keepRatio || parentKeepRatio;
-        const isWidth = direction[0] || !direction[1];
+        const isWidth = sizeDirection[0] || !sizeDirection[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
         let distWidth: number = 0;
         let distHeight: number = 0;
 
-        if (parentScale) {
+        if (parentDist) {
+            distWidth = parentDist[0];
+            distHeight = parentDist[1];
+        } else if (parentScale) {
             distWidth = (parentScale[0] - 1) * startOffsetWidth;
             distHeight = (parentScale[1] - 1) * startOffsetHeight;
 
@@ -158,21 +170,21 @@ export default {
         } else {
             const dist = getDragDist({ datas, distX, distY });
 
-            distWidth = direction[0] * dist[0];
-            distHeight = direction[1] * dist[1];
+            distWidth = sizeDirection[0] * dist[0];
+            distHeight = sizeDirection[1] * dist[1];
 
             if (keepRatio && startOffsetWidth && startOffsetHeight) {
                 const rad = getRad([0, 0], dist);
-                const standardRad = getRad([0, 0], direction);
+                const standardRad = getRad([0, 0], sizeDirection);
                 const ratioRad = getRad([0, 0], [startOffsetWidth, startOffsetHeight]);
                 const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
-                if (!direction[0]) {
+                if (!sizeDirection[0]) {
                     // top, bottom
                     distHeight = signSize;
                     distWidth = getKeepRatioWidth(distHeight, isWidth, ratio);
-                } else if (!direction[1]) {
+                } else if (!sizeDirection[1]) {
                     // left, right
                     distWidth = signSize;
                     distHeight = getKeepRatioHeight(distWidth, isWidth, ratio);
@@ -183,8 +195,10 @@ export default {
                 }
             }
         }
-        let nextWidth = direction[0] || keepRatio ? Math.max(startOffsetWidth + distWidth, 0) : startOffsetWidth;
-        let nextHeight = direction[1] || keepRatio ? Math.max(startOffsetHeight + distHeight, 0) : startOffsetHeight;
+        let nextWidth = sizeDirection[0] || keepRatio
+            ? Math.max(startOffsetWidth + distWidth, 0) : startOffsetWidth;
+        let nextHeight = sizeDirection[1] || keepRatio
+            ? Math.max(startOffsetHeight + distHeight, 0) : startOffsetHeight;
 
         let snapDist = [0, 0];
 
@@ -192,7 +206,7 @@ export default {
             snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
         }
         if (keepRatio) {
-            if (direction[0] && direction[1] && snapDist[0] && snapDist[1]) {
+            if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
                 if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
                     snapDist[1] = 0;
                 } else {
@@ -210,14 +224,14 @@ export default {
                 }
             }
             if (
-                (direction[0] && !direction[1])
+                (sizeDirection[0] && !sizeDirection[1])
                 || (snapDist[0] && !snapDist[1])
                 || (isNoSnap && isWidth)
             ) {
                 nextWidth += snapDist[0];
                 nextHeight = getKeepRatioHeight(nextWidth, isWidth, ratio);
             } else if (
-                (!direction[0] && direction[1])
+                (!sizeDirection[0] && sizeDirection[1])
                 || (!snapDist[0] && snapDist[1])
                 || (isNoSnap && !isWidth)
             ) {
@@ -447,8 +461,8 @@ export default {
     },
     request() {
         const datas = {};
-        let distX = 0;
-        let distY = 0;
+        let distWidth = 0;
+        let distHeight = 0;
 
         return {
             isControl: true,
@@ -456,10 +470,10 @@ export default {
                 return { datas, parentDirection: e.direction };
             },
             request(e: IObject<any>) {
-                distX += e.deltaX;
-                distY += e.deltaY;
+                distWidth += e.deltaWidth;
+                distHeight += e.deltaHeight;
 
-                return { datas, distX, distY };
+                return { datas, parentDist: [distWidth, distHeight] };
             },
             requestEnd() {
                 return { datas, isDrag: true };

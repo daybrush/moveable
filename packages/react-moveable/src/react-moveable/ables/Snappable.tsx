@@ -10,7 +10,6 @@ import {
     prefix, caculatePoses, getRect,
     getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle, roundSign, getDistSize, groupBy, flat
 } from "../utils";
-import { directionCondition } from "../groupUtils";
 import { isUndefined, IObject, find } from "@daybrush/utils";
 import {
     getPosByReverseDirection, getPosesByDirection,
@@ -21,6 +20,7 @@ import {
     dragControlCondition as rotatableDragControlCondtion,
 } from "./Rotatable";
 import { TINY_NUM } from "../consts";
+import { directionCondition } from "./utils";
 
 export function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
@@ -727,7 +727,7 @@ export function checkSizeDist(
     const fixedPos = getPosByReverseDirection(poses, snapDirection);
     const nextPoses = getFixedPoses(matrix, width, height, fixedPos, direction, is3d);
 
-    if (direction[0] && direction[1]) {
+    if ((direction[0] && direction[1]) || (!direction[0] && !direction[1])) {
         return checkTwoWayDist(
             moveable, nextPoses, direction, datas,
             matrix, width, height, fixedPos, is3d,

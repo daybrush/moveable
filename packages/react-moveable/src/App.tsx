@@ -388,15 +388,17 @@ class App extends React.Component {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", e => {
             if (!requester) {
-                requester = mvb.request("resizable", { direction: [1, 0] })!;
+                requester = mvb.request("resizable", { direction: [0, 0] })!;
             }
-            requester.request({ deltaX: 10, deltaY: 0});
+            requester.request({ deltaWidth: 10, deltaHeight: 0});
+            // requester.request({ deltaX: 10, deltaY: 0});
             e.inputEvent.preventDefault();
         }).keydown("left", e => {
             if (!requester) {
-                requester = mvb.request("resizable", { direction: [1, 0]})!;
+                requester = mvb.request("resizable", { direction: [0, 0]})!;
             }
-            requester.request({ deltaX: -10, deltaY: 0});
+            requester.request({ deltaWidth: -10, deltaHeight: 0});
+            // requester.request({ deltaX: -10, deltaY: 0});
             e.inputEvent.preventDefault();
         }).keydown("up", e => {
             if (!requester) {

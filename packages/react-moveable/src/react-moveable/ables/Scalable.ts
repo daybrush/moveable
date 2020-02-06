@@ -12,7 +12,7 @@ import {
     OnDrag, SnappableState, GroupableProps, OnScaleStart, OnScale, OnScaleEnd,
 } from "../types";
 import {
-    directionCondition, triggerChildAble,
+    triggerChildAble,
 } from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
@@ -20,6 +20,9 @@ import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapScale } from "./Snappable";
 import { isArray } from "@daybrush/utils";
+import {
+    directionCondition,
+} from "./utils";
 
 export default {
     name: "scalable",
@@ -45,9 +48,8 @@ export default {
         moveable: MoveableManager<ScalableProps & DraggableProps, SnappableState>,
         e: any) {
 
-        const { datas, pinchFlag, inputEvent } = e;
-        const { target: inputTarget } = inputEvent;
-        const direction = pinchFlag ? [1, 1] : getDirection(inputTarget);
+        const { datas, pinchFlag, inputEvent, parentDirection } = e;
+        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputEvent.target));
         const {
             width,
             height,

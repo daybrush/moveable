@@ -272,6 +272,9 @@ export function getStartDirection(
     moveable: MoveableManager<ResizableProps>,
     direction: number[],
 ) {
+    if (!direction[0] && !direction[1]) {
+        return [0, 0];
+    }
     const {
         baseDirection = [-1, -1],
     } = moveable.props;
