@@ -44,10 +44,16 @@ img {
 }
 #con {
     position: relative;
-    overflow: scroll;
+    /* overflow: scroll; */
     top: 100px;
     height: 800px;
     border: 1px solid #f55;
+}
+.guides {
+    position: absolute;
+    width: 100%;
+    top: -30px;
+    height: 30px;
 }
 .App {
     /* overflow: scroll;

@@ -6,6 +6,7 @@ import { ref } from "framework-utils";
 import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
+import Guides from "@scena/react-guides";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
@@ -34,6 +35,7 @@ class App extends React.Component {
     };
     private itemMap: Map<HTMLElement |SVGElement, Frame> = new Map();
     private items: IObject<Frame> = {};
+    private guides!: Guides;
     public render() {
         const selectedTarget = this.state.target;
         const isResizable = this.state.isResizable;
@@ -42,6 +44,9 @@ class App extends React.Component {
         (window as any).a = this;
         return (
             <div id="con">
+                <div className="guides">
+                    <Guides ref={ref(this, "guides")}/>
+                </div>
                 <div id="test" style={{
                     position: "fixed",
                     height: "69.28203582763672px",
@@ -63,9 +68,9 @@ class App extends React.Component {
                     origin={true}
                     snappable={true}
                     snapCenter={true}
-                    verticalGuidelines={[100, 200, 400, 500.35, 1100.321]}
-                    horizontalGuidelines={[100.5, 200.5, 500.35]}
-                    elementGuidelines={[document.querySelector<HTMLElement>(".box2")!]}
+                    verticalGuidelines={[200, 400, 600]}
+                    horizontalGuidelines={[200, 400, 600]}
+                    // elementGuidelines={[document.querySelector<HTMLElement>(".box2")!]}
                     throttleRotate={0}
                     onDragGroupStart={e => {
                         console.log("start", e);
@@ -166,7 +171,7 @@ class App extends React.Component {
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
                     origin={true}
-                    edge={true}
+                    // edge={true}
                     // dragArea={true}
                     draggable={true}
                     snappable={true}
@@ -174,14 +179,14 @@ class App extends React.Component {
                     transformOrigin="% %"
                     snapDigit={0}
                     bounds={{ left: 30, top: 20 }}
-                    verticalGuidelines={[100, 200, 400, 500.5, 1100.321]}
-                    horizontalGuidelines={[100.5, 200.5, 500.35]}
+                    verticalGuidelines={[200, 400, 600]}
+                    horizontalGuidelines={[200, 400, 600]}
                     // renderDirections={["n", "ne", "nw"]}
-                    elementGuidelines={[
-                        document.querySelector(".box1 span")!,
-                        // document.querySelector(".emo img")!,
-                        document.querySelector<HTMLElement>(".box2")!,
-                    ]}
+                    // elementGuidelines={[
+                    //     document.querySelector(".box1 span")!,
+                    //     // document.querySelector(".emo img")!,
+                    //     document.querySelector<HTMLElement>(".box2")!,
+                    // ]}
                     snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
@@ -447,6 +452,7 @@ class App extends React.Component {
         });
 
         setTimeout(() => {
+            this.guides.loadGuides([200, 400, 600]);
             this.setState({
                 emo: document.querySelector(".emo") as HTMLElement,
             }, () => {
