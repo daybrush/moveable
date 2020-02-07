@@ -589,6 +589,13 @@ export function checkOneWayDist(
     offset[directionIndex] = direction[directionIndex] * posOffset;
     return offset;
 }
+function getSnapOffset(boundInfo: BoundInfo, snapInfo: SnapInfo) {
+    return boundInfo.isBound
+        ? boundInfo.offset
+        : snapInfo.isSnap
+        ? getNearestSnapGuidelineInfo(snapInfo).offset
+        : 0;
+}
 export function checkTwoWayDist(
     moveable: MoveableManager<any, any>,
     poses: number[][],
@@ -603,13 +610,61 @@ export function checkTwoWayDist(
 
     const fixedDirection = [-direction[0], -direction[1]];
 
-    const directions = [
-        direction,
+    const otherDirections = [
         [direction[0], -direction[1]],
         [-direction[0], direction[1]],
     ].map(dir => {
         const isCheckVertical = dir[0] !== fixedDirection[0];
         const isCheckHorizontal = dir[1] !== fixedDirection[1];
+        const pos = getPosByDirection(poses, dir);
+
+        const {
+            horizontal: horizontalBoundInfo,
+            vertical: verticalBoundInfo,
+        } = checkBounds(
+            moveable,
+            [pos[0]],
+            [pos[1]],
+        );
+        const {
+            horizontal: horizontalSnapInfo,
+            vertical: verticalSnapInfo,
+        } = checkSnapPoses(
+            moveable,
+            [pos[0]],
+            [pos[1]],
+        );
+
+        const horizontalOffset = getSnapOffset(horizontalBoundInfo, horizontalSnapInfo);
+        const verticalOffset = getSnapOffset(verticalBoundInfo, verticalSnapInfo);
+
+        if (Math.abs(horizontalOffset) < Math.abs(verticalOffset)) {
+            const [x, y] = solveEquation(
+                fixedPos,
+                pos,
+                verticalOffset,
+                true,
+            );
+            const sizeDist = solveNextDist(
+                fixedPos,
+                pos,
+                verticalOffset,
+                true,
+                isCheckHorizontal,
+                datas,
+            );
+
+            return [
+                sizeDist,
+                0,
+            ];
+        }
+        return {
+            horizontal: {
+
+            },
+        };
+
     });
     const directionPoses = getPosesByDirection(poses, direction);
     const verticalDirection = [direction[0], direction[1] * -1];
@@ -934,14 +989,14 @@ export function solveEquation(
         if (!isVertical) {
             return [0, snapOffset];
         }
-        return;
+        return [0, 0];
     }
     if (!dy) {
         // only vertical
         if (isVertical) {
             return [snapOffset, 0];
         }
-        return;
+        return [0, 0];
     }
     // y = ax + b
     const a = dy / dx;
