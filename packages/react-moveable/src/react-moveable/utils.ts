@@ -897,3 +897,7 @@ export function flat<T>(arr: T[][]): T[] {
         return prev.concat(cur);
     }, []);
 }
+
+export function equalSign(a: number, b: number) {
+    return (a >= 0 && b >= 0) || (a < 0 && b < 0);
+}

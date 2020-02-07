@@ -67,6 +67,11 @@ export interface Guideline {
     pos: number[];
     size: number;
 }
+export interface SnapBoundInfo {
+    isBound: boolean;
+    isSnap: boolean;
+    offset: number;
+}
 export interface BoundInfo {
     isBound: boolean;
     offset: number;

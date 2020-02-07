@@ -8,7 +8,7 @@ import {
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle, roundSign, getDistSize, groupBy, flat
+    getAbsolutePosesByState, getAbsolutePoses, selectValue, throttle, roundSign, getDistSize, groupBy, flat, equalSign
 } from "../utils";
 import { isUndefined, IObject, find } from "@daybrush/utils";
 import {
@@ -377,12 +377,11 @@ function checkBoundOneWayDist(
     }
     return;
 }
-function solveNextDist(
+function solveNextOffset(
     pos1: number[],
     pos2: number[],
     offset: number,
     isVertical: boolean,
-    isDirectionVertical: boolean,
     datas: IObject<any>,
 ) {
     const sizeOffset = solveEquation(
@@ -393,15 +392,15 @@ function solveNextDist(
     );
 
     if (!sizeOffset) {
-        return NaN;
+        return [0, 0];
     }
-    const [widthDist, heightDist] = getDragDist({
+    const [widthOffset, heightOffset] = getDragDist({
         datas,
         distX: sizeOffset[0],
         distY: sizeOffset[1],
     });
 
-    return isDirectionVertical ? heightDist : widthDist;
+    return [widthOffset, heightOffset];
 }
 function getFixedPoses(
     matrix: number[],
@@ -490,14 +489,15 @@ function checkSnapOneWayPos(
     } else {
         isVertical = isVerticalSnap;
     }
-    return solveNextDist(
-        reversePos,
-        pos,
-        (isVertical ? verticalOffset : horizontalOffset),
-        isVertical,
-        isDirectionVertical,
-        datas,
-    );
+    return 0;
+    // return solveNextDist(
+    //     reversePos,
+    //     pos,
+    //     (isVertical ? verticalOffset : horizontalOffset),
+    //     isVertical,
+    //     isDirectionVertical,
+    //     datas,
+    // );
 }
 export function checkOneWayPos(
     moveable: MoveableManager<any, any>,
@@ -526,14 +526,15 @@ export function checkOneWayPos(
     });
 
     if (boundInfo) {
-        const nextDist = solveNextDist(
-            reversePoses[boundIndex],
-            poses[boundIndex],
-            boundInfo.offset,
-            boundInfo.isVertical,
-            isDirectionVertical,
-            datas,
-        );
+        const nextDist = 0;
+        // solveNextDist(
+        //     reversePoses[boundIndex],
+        //     poses[boundIndex],
+        //     boundInfo.offset,
+        //     boundInfo.isVertical,
+        //     isDirectionVertical,
+        //     datas,
+        // );
 
         if (!isNaN(nextDist)) {
             posOffset = nextDist;
@@ -596,6 +597,45 @@ function getSnapOffset(boundInfo: BoundInfo, snapInfo: SnapInfo) {
         ? getNearestSnapGuidelineInfo(snapInfo).offset
         : 0;
 }
+export function checkSnapBounds(moveable: MoveableManager<SnappableProps, SnappableState>, pos: number[]) {
+    const {
+        horizontal: horizontalBoundInfo,
+        vertical: verticalBoundInfo,
+    } = checkBounds(
+        moveable,
+        [pos[0]],
+        [pos[1]],
+    );
+    const {
+        horizontal: horizontalSnapInfo,
+        vertical: verticalSnapInfo,
+    } = checkSnapPoses(
+        moveable,
+        [pos[0]],
+        [pos[1]],
+    );
+
+    const horizontalOffset = getSnapOffset(horizontalBoundInfo, horizontalSnapInfo);
+    const verticalOffset = getSnapOffset(verticalBoundInfo, verticalSnapInfo);
+
+    const horizontalDist = Math.abs(horizontalOffset);
+    const verticalDist = Math.abs(verticalOffset);
+
+    return {
+        horizontal: {
+            isBound: horizontalBoundInfo.isBound,
+            isSnap: horizontalSnapInfo.isSnap,
+            offset: horizontalOffset,
+            dist: horizontalDist,
+        },
+        vertical: {
+            isBound: verticalBoundInfo.isBound,
+            isSnap: verticalSnapInfo.isSnap,
+            offset: verticalOffset,
+            dist: verticalDist,
+        },
+    };
+}
 export function checkTwoWayDist(
     moveable: MoveableManager<any, any>,
     poses: number[][],
@@ -607,176 +647,104 @@ export function checkTwoWayDist(
     fixedPos: number[],
     is3d: boolean,
 ) {
+    let isBoundWidth = false;
+    let isBoundHeight = false;
 
-    const fixedDirection = [-direction[0], -direction[1]];
-
-    const otherDirections = [
+    const offsets = [
         [direction[0], -direction[1]],
         [-direction[0], direction[1]],
     ].map(dir => {
-        const isCheckVertical = dir[0] !== fixedDirection[0];
-        const isCheckHorizontal = dir[1] !== fixedDirection[1];
-        const pos = getPosByDirection(poses, dir);
+        const otherPos = getPosByDirection(poses, dir);
 
         const {
-            horizontal: horizontalBoundInfo,
-            vertical: verticalBoundInfo,
-        } = checkBounds(
-            moveable,
-            [pos[0]],
-            [pos[1]],
-        );
-        const {
-            horizontal: horizontalSnapInfo,
-            vertical: verticalSnapInfo,
-        } = checkSnapPoses(
-            moveable,
-            [pos[0]],
-            [pos[1]],
-        );
-
-        const horizontalOffset = getSnapOffset(horizontalBoundInfo, horizontalSnapInfo);
-        const verticalOffset = getSnapOffset(verticalBoundInfo, verticalSnapInfo);
-
-        if (Math.abs(horizontalOffset) < Math.abs(verticalOffset)) {
-            const [x, y] = solveEquation(
-                fixedPos,
-                pos,
-                verticalOffset,
-                true,
-            );
-            const sizeDist = solveNextDist(
-                fixedPos,
-                pos,
-                verticalOffset,
-                true,
-                isCheckHorizontal,
-                datas,
-            );
-
-            return [
-                sizeDist,
-                0,
-            ];
-        }
-        return {
             horizontal: {
-
+                dist: otherHorizontalDist,
+                offset: otherHorizontalOffset,
+                isBound: isOtherHorizontalBound,
             },
-        };
+            vertical: {
+                dist: otherVerticalDist,
+                offset: otherVerticalOffset,
+                isBound: isOtherVerticalBound,
+            },
+        } = checkSnapBounds(moveable, otherPos);
 
+        if (!otherVerticalOffset && !otherHorizontalOffset) {
+            return [0, 0];
+        }
+
+        const isVertical = otherHorizontalDist < otherVerticalDist;
+        const sizeOffset = solveNextOffset(
+            fixedPos,
+            otherPos,
+            isVertical ? otherVerticalOffset : otherHorizontalOffset,
+            isVertical,
+            datas,
+        );
+        if (isVertical && isOtherVerticalBound) {
+            isBoundWidth = true;
+        }
+        if (!isVertical && isOtherHorizontalBound) {
+            isBoundHeight = true;
+        }
+        return sizeOffset;
     });
-    const directionPoses = getPosesByDirection(poses, direction);
-    const verticalDirection = [direction[0], direction[1] * -1];
-    const horizontalDirection = [direction[0] * -1, direction[1]];
-    const verticalPos = getPosByDirection(poses, verticalDirection);
-    const horizontalPos = getPosByDirection(poses, horizontalDirection);
+    let widthOffset = offsets.slice().sort((a, b) => Math.abs(b[0]) - Math.abs(a[0]))[0][0];
+    let heightOffset = offsets.slice().sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0][1];
+
+    console.log("first", width + direction[0] * widthOffset, height + direction[1] * heightOffset);
+    const nextPoses = getFixedPoses(
+        matrix,
+        width + direction[0] * widthOffset,
+        height + direction[1] * heightOffset,
+        fixedPos,
+        direction,
+        is3d,
+    );
+    const nextPos = getPosByDirection(nextPoses, direction);
+
     const {
         horizontal: {
+            offset: horizontalOffset,
             isBound: isHorizontalBound,
-            offset: horizontalBoundOffset,
         },
         vertical: {
+            offset: verticalOffset,
             isBound: isVerticalBound,
-            offset: verticalBoundOffset,
         },
-    } = checkBounds(
-        moveable,
-        [directionPoses[0][0]],
-        [directionPoses[0][1]],
-    );
+    } = checkSnapBounds(moveable, nextPos);
 
-    // share drag event
-    let widthDist = 0;
-    let heightDist = 0;
+    // if (!otherVerticalOffset && !otherHorizontalOffset) {
+    //     return [0, 0];
+    // }
 
-    const verticalBoundInfo = checkBoundOneWayDist(moveable, verticalPos);
-    const horizontalBoundInfo = checkBoundOneWayDist(moveable, horizontalPos);
-    const isVeritcalDirectionBound = verticalBoundInfo && verticalBoundInfo.dist > Math.abs(verticalBoundOffset);
-    const isHorizontalDirectionBound
-        = horizontalBoundInfo && horizontalBoundInfo.dist > Math.abs(horizontalBoundOffset);
+    // const isVertical = otherHorizontalDist < otherVerticalDist;
+    // const sizeOffset = solveNextOffset(
+    //     fixedPos,
+    //     otherPos,
+    //     isVertical ? otherVerticalOffset : otherHorizontalOffset,
+    //     isVertical,
+    //     datas,
+    // );
+    const [nextWidthOffset, nextHeightOffset] = getDragDist({
+        datas,
+        distX: -verticalOffset,
+        distY: -horizontalOffset,
+    });
 
-    if (!isVeritcalDirectionBound && !isHorizontalDirectionBound) {
-        const {
-            horizontal: horizontalSnapInfo,
-            vertical: verticalSnapInfo,
-        } = checkSnapPoses(
-            moveable,
-            [directionPoses[0][0]],
-            [directionPoses[0][1]],
-        );
 
-        const horizontalOffset = getNearestSnapGuidelineInfo(horizontalSnapInfo).offset;
-        const verticalOffset = getNearestSnapGuidelineInfo(verticalSnapInfo).offset;
-
-        [widthDist, heightDist] = getDragDist({
-            datas,
-            distX: -(isVerticalBound ? verticalBoundOffset : verticalOffset),
-            distY: -(isHorizontalBound ? horizontalBoundOffset : horizontalOffset),
-        });
-    } else if (isVeritcalDirectionBound) {
-        // left to right, right to left
-        const reversePos = getPosByDirection(poses, [
-            verticalDirection[0] * -1,
-            verticalDirection[1],
-        ]);
-        const nextDist = solveNextDist(
-            reversePos, verticalPos,
-            verticalBoundInfo!.offset, verticalBoundInfo!.isVertical,
-            false, datas,
-        );
-        if (!isNaN(nextDist)) {
-            widthDist = nextDist;
-        }
-        const nextPoses = getFixedPoses(
-            matrix,
-            width + direction[0] * widthDist,
-            height + direction[1] * heightDist,
-            fixedPos,
-            direction,
-            is3d,
-        );
-        heightDist = checkOneWayPos(
-            moveable,
-            [getPosByDirection(nextPoses, direction)],
-            [getPosByDirection(nextPoses, verticalDirection)],
-            true,
-            datas,
-        );
-    } else {
-        // top to bottom, bottom to top
-        const reversePos = getPosByDirection(poses, [
-            horizontalDirection[0] * -1,
-            horizontalDirection[1],
-        ]);
-        const nextDist = solveNextDist(
-            reversePos, verticalPos,
-            horizontalBoundInfo!.offset, horizontalBoundInfo!.isVertical,
-            true, datas,
-        );
-        if (!isNaN(nextDist)) {
-            heightDist = nextDist;
-        }
-        const nextPoses = getFixedPoses(
-            matrix,
-            width + direction[0] * widthDist,
-            height + direction[1] * heightDist,
-            fixedPos,
-            direction,
-            is3d,
-        );
-        widthDist = checkOneWayPos(
-            moveable,
-            [getPosByDirection(nextPoses, direction)],
-            [getPosByDirection(nextPoses, horizontalDirection)],
-            false,
-            datas,
-        );
+    if (isBoundWidth && equalSign(widthOffset, nextWidthOffset) || !isBoundWidth) {
+        widthOffset += nextWidthOffset;
     }
 
+    if (isBoundHeight && equalSign(heightOffset, nextHeightOffset) || !isBoundHeight) {
+        heightOffset += nextHeightOffset;
+    }
+    console.log("second", width + direction[0] * widthOffset, height + direction[1] * heightOffset);
+
     return [
-        direction[0] * widthDist,
-        direction[1] * heightDist,
+        direction[0] * widthOffset,
+        direction[1] * heightOffset,
     ];
 }
 export function checkSizeDist(
