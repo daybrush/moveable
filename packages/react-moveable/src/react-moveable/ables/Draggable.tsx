@@ -34,6 +34,7 @@ export default {
         if (!dist[0] && !dist[1]) {
             return;
         }
+
         const width = getDistSize(dist);
         const rad = getRad(dist, [0, 0]);
 
@@ -215,7 +216,7 @@ export default {
         const bottom = datas.bottom - beforeDist[1];
         const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
-        moveable.state.dragInfo.dist = dist;
+        moveable.state.dragInfo.dist = parentEvent ? [0, 0] : dist;
         if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }

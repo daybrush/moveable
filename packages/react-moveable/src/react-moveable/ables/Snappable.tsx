@@ -518,7 +518,7 @@ export function checkMaxBounds(
         maxHeight,
     };
 }
-export function getNearOffset(offsets: Array<{ offset: number[], isBound: boolean }>, index: number) {
+export function getNearOffsetInfo(offsets: Array<{ offset: number[], isBound: boolean }>, index: number) {
     return offsets.slice().sort((a, b) => {
         const aDist = Math.abs(a.offset[index]);
         const bDist = Math.abs(b.offset[index]);
@@ -536,7 +536,7 @@ export function getNearOffset(offsets: Array<{ offset: number[], isBound: boolea
             return -1;
         }
         return aDist - bDist;
-    })[0].offset[index];
+    })[0];
 }
 
 export function checkSizeDist(
@@ -554,26 +554,50 @@ export function checkSizeDist(
     const nextPoses = getFixedPoses(matrix, width, height, fixedPos, direction, is3d);
     const fixedDirection = [-direction[0], -direction[1]];
     const directions: number[][][] = [];
+    const keepRatio = moveable.props.keepRatio;
 
     if (direction[0] && direction[1]) {
         directions.push(
             [fixedDirection, [direction[0], -direction[1]]],
             [fixedDirection, [-direction[0], direction[1]]],
         );
+        if (keepRatio) {
+        }
     } else if (direction[0]) {
         // vertcal
-        directions.push(
-            [[fixedDirection[0], -1], [direction[0], -1]],
-            [[fixedDirection[0], 0], [direction[0], 0]],
-            [[fixedDirection[0], 1], [direction[0], 1]],
-        );
+        if (keepRatio) {
+            directions.push(
+                [fixedDirection, [fixedDirection[0], -1]],
+                [fixedDirection, [fixedDirection[0], 1]],
+                [fixedDirection, [fixedDirection[0] * -1, -1]],
+                [fixedDirection, [fixedDirection[0] * -1, 1]],
+            );
+        } else {
+            directions.push(
+                [[fixedDirection[0], -1], [direction[0], -1]],
+                [[fixedDirection[0], 0], [direction[0], 0]],
+                [[fixedDirection[0], 1], [direction[0], 1]],
+            );
+        }
     } else if (direction[1]) {
         // horizontal
-        directions.push(
-            [[-1, fixedDirection[1]], [-1, direction[1]]],
-            [[0, fixedDirection[1]], [0, direction[1]]],
-            [[1, fixedDirection[1]], [1, direction[1]]],
-        );
+        if (keepRatio) {
+            directions.push(
+                [fixedDirection, [-1, fixedDirection[1]]],
+                [fixedDirection, [1, fixedDirection[1]]],
+                [fixedDirection, [-1, fixedDirection[1] * -1]],
+                [fixedDirection, [1, fixedDirection[1] * -1]],
+            );
+        } else {
+            directions.push(
+                [[-1, fixedDirection[1]], [-1, direction[1]]],
+                [[0, fixedDirection[1]], [0, direction[1]]],
+                [[1, fixedDirection[1]], [1, direction[1]]],
+            );
+        }
+    }
+    if (!directions.length) {
+        return [0, 0];
     }
     const offsets = directions.map(([startDirection, endDirection]) => {
         const otherPos = getPosByDirection(nextPoses, endDirection);
@@ -606,16 +630,40 @@ export function checkSizeDist(
             isVertical ? otherVerticalOffset : otherHorizontalOffset,
             isVertical,
             datas,
-        ).map((size, i) => size * Math.abs(multiple[i]) / 2);
+        ).map((size, i) => size * (multiple[i] ?  2 / multiple[i] : 0));
         return {
             isBound: isVertical ? isOtherVerticalBound : isOtherHorizontalBound,
             offset: sizeOffset,
         };
     });
-    const widthOffset = getNearOffset(offsets, 0);
-    const heightOffset = getNearOffset(offsets, 1);
+    const widthOffsetInfo = getNearOffsetInfo(offsets, 0);
+    const heightOffsetInfo = getNearOffsetInfo(offsets, 1);
+    let widthOffset = widthOffsetInfo.offset[0];
+    let heightOffset = heightOffsetInfo.offset[1];
 
-    if (direction[0] && direction[1]) {
+    if (keepRatio) {
+        const widthDist = Math.abs(widthOffset);
+        const heightDist = Math.abs(heightOffset);
+
+        const isGetWidthOffset
+            = widthOffsetInfo.isBound && heightOffsetInfo.isBound ? widthDist < heightDist
+            : widthOffsetInfo.isBound || (!heightOffsetInfo.isBound && widthDist < heightDist);
+
+        // height * widthOffset = width * heighOffset
+        if (isGetWidthOffset) {
+            // width : height: width + widthOffset : height + heightOffset
+            // width : height = ? : heightOffset
+            widthOffset = width * heightOffset / height;
+        } else {
+            // width : height = widthOffset : ?
+            heightOffset = height * widthOffset / width;
+        }
+
+        return [
+            widthOffset,
+            heightOffset,
+        ];
+    } else if (direction[0] && direction[1]) {
         const snapPoses = getFixedPoses(
             matrix,
             width + direction[0] * widthOffset,
@@ -648,9 +696,9 @@ export function checkSizeDist(
             });
 
             const nextWidth
-                = Math.min(maxWidth || Infinity, width + direction[0] * (widthOffset + nextWidthOffset));
+                = Math.min(maxWidth || Infinity, width + widthOffset + direction[0] * nextWidthOffset);
             const nextHeight
-                = Math.min(maxHeight || Infinity, height + direction[1] * (heightOffset + nextHeightOffset));
+                = Math.min(maxHeight || Infinity, height + heightOffset + direction[1] * nextHeightOffset);
 
             return [
                 nextWidth - width,
@@ -660,8 +708,8 @@ export function checkSizeDist(
     }
 
     return [
-        direction[0] * widthOffset,
-        direction[1] * heightOffset,
+        widthOffset,
+        heightOffset,
     ];
 }
 
@@ -900,7 +948,13 @@ export function getSnapInfosByDirection(
         }
     } else {
         if (moveable.props.keepRatio) {
-            nextPoses = [getPosByDirection(poses, snapDirection)];
+            nextPoses = [
+                [-1, -1],
+                [-1, 1],
+                [1, -1],
+                [1, 1],
+                snapDirection,
+            ].map(dir => getPosByDirection(poses, dir));
         } else {
             nextPoses = getPosesByDirection(poses, snapDirection);
 
