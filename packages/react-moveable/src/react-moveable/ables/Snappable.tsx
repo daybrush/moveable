@@ -573,6 +573,10 @@ export function checkSizeDist(
             [fixedDirection, [-direction[0], direction[1]]],
         );
         if (keepRatio) {
+            // pass two direction condition
+            directions.push(
+                [fixedDirection, direction],
+            );
         }
     } else if (direction[0]) {
         // vertcal
@@ -607,6 +611,7 @@ export function checkSizeDist(
             );
         }
     } else {
+        // [0, 0] to all direction
         directions.push(
             [fixedDirection, [1, 0]],
             [fixedDirection, [-1, 0]],
@@ -684,15 +689,12 @@ export function checkSizeDist(
 
         // height * widthOffset = width * heighOffset
         if (isGetWidthOffset) {
-            // width : height: width + widthOffset : height + heightOffset
             // width : height = ? : heightOffset
             widthOffset = width * heightOffset / height;
         } else {
             // width : height = widthOffset : ?
             heightOffset = height * widthOffset / width;
         }
-
-        console.log(isGetWidthOffset, width, height, widthOffset, heightOffset);
 
         return [
             widthOffset,
@@ -701,8 +703,8 @@ export function checkSizeDist(
     } else if (direction[0] && direction[1]) {
         const snapPoses = getFixedPoses(
             matrix,
-            width + direction[0] * widthOffset,
-            height + direction[1] * heightOffset,
+            width + widthOffset,
+            height + heightOffset,
             fixedPos,
             direction,
             is3d,
