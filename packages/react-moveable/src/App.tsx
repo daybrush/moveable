@@ -410,7 +410,6 @@ class App extends React.Component {
                 requester = mvb.request("draggable")!;
             }
             requester.request({ deltaX: 0, deltaY: -10 });
-
             e.inputEvent.preventDefault();
         }).keydown("down", e => {
             if (!requester) {
