@@ -518,7 +518,10 @@ export function checkMaxBounds(
         maxHeight,
     };
 }
-export function getNearOffsetInfo(offsets: Array<{ offset: number[], isBound: boolean }>, index: number) {
+export function getNearOffsetInfo(
+    offsets: Array<{ offset: number[], isBound: boolean, isSnap: boolean }>,
+    index: number,
+) {
     return offsets.slice().sort((a, b) => {
         const aDist = Math.abs(a.offset[index]);
         const bDist = Math.abs(b.offset[index]);
@@ -529,6 +532,12 @@ export function getNearOffsetInfo(offsets: Array<{ offset: number[], isBound: bo
         } else if (a.isBound) {
             return -1;
         } else if (b.isBound) {
+            return 1;
+        } else if (a.isSnap && b.isSnap) {
+            return bDist - aDist;
+        } else if (a.isSnap) {
+            return -1;
+        } else if (b.isSnap) {
             return 1;
         } else if (aDist < TINY_NUM) {
             return 1;
@@ -551,8 +560,10 @@ export function checkSizeDist(
 ) {
     const poses = getAbsolutePosesByState(moveable.state);
     const fixedPos = getPosByReverseDirection(poses, snapDirection);
+
     const nextPoses = getFixedPoses(matrix, width, height, fixedPos, direction, is3d);
     const fixedDirection = [-direction[0], -direction[1]];
+
     const directions: number[][][] = [];
     const keepRatio = moveable.props.keepRatio;
 
@@ -595,29 +606,50 @@ export function checkSizeDist(
                 [[1, fixedDirection[1]], [1, direction[1]]],
             );
         }
+    } else {
+        directions.push(
+            [fixedDirection, [1, 0]],
+            [fixedDirection, [-1, 0]],
+            [fixedDirection, [0, -1]],
+            [fixedDirection, [0, 1]],
+
+            [[1, 0], [1, -1]],
+            [[1, 0], [1, 1]],
+            [[0, 1], [1, 1]],
+            [[0, 1], [-1, 1]],
+
+            [[-1, 0], [-1, -1]],
+            [[-1, 0], [-1, 1]],
+            [[0, -1], [1, -1]],
+            [[0, -1], [-1, -1]],
+        );
     }
     if (!directions.length) {
         return [0, 0];
     }
     const offsets = directions.map(([startDirection, endDirection]) => {
-        const otherPos = getPosByDirection(nextPoses, endDirection);
+        const otherStartPos = getPosByDirection(nextPoses, startDirection);
+        const otherEndPos = getPosByDirection(nextPoses, endDirection);
 
         const {
             horizontal: {
                 dist: otherHorizontalDist,
                 offset: otherHorizontalOffset,
                 isBound: isOtherHorizontalBound,
+                isSnap: isOtherHorizontalSnap,
             },
             vertical: {
                 dist: otherVerticalDist,
                 offset: otherVerticalOffset,
                 isBound: isOtherVerticalBound,
+                isSnap: isOtherVerticalSnap,
             },
-        } = checkSnapBounds(moveable, otherPos);
+        } = checkSnapBounds(moveable, otherEndPos);
 
         if (!otherVerticalOffset && !otherHorizontalOffset) {
             return {
                 isBound: false,
+                isSnap: false,
                 offset: [0, 0],
             };
         }
@@ -625,14 +657,15 @@ export function checkSizeDist(
         const isVertical = otherHorizontalDist < otherVerticalDist;
         const multiple = minus(endDirection, startDirection);
         const sizeOffset = solveNextOffset(
-            getPosByDirection(nextPoses, startDirection),
-            otherPos,
+            otherStartPos,
+            otherEndPos,
             isVertical ? otherVerticalOffset : otherHorizontalOffset,
             isVertical,
             datas,
         ).map((size, i) => size * (multiple[i] ?  2 / multiple[i] : 0));
         return {
             isBound: isVertical ? isOtherVerticalBound : isOtherHorizontalBound,
+            isSnap: isVertical ? isOtherVerticalSnap : isOtherHorizontalSnap,
             offset: sizeOffset,
         };
     });
@@ -658,6 +691,8 @@ export function checkSizeDist(
             // width : height = widthOffset : ?
             heightOffset = height * widthOffset / width;
         }
+
+        console.log(isGetWidthOffset, width, height, widthOffset, heightOffset);
 
         return [
             widthOffset,

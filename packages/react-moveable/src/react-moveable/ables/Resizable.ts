@@ -205,6 +205,10 @@ export default {
         if (!pinchFlag) {
             snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
         }
+        if (parentDist) {
+            !parentDist[0] && (snapDist[0] = 0);
+            !parentDist[1] && (snapDist[1] = 0);
+        }
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
                 if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
