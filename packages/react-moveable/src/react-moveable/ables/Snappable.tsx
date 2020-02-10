@@ -523,10 +523,12 @@ export function getNearOffsetInfo(
     index: number,
 ) {
     return offsets.slice().sort((a, b) => {
-        const aDist = Math.abs(a.offset[index]);
-        const bDist = Math.abs(b.offset[index]);
-        // -1 a < b
-        // 1 a > b
+        const aOffset = a.offset[index];
+        const bOffset = b.offset[index];
+        const aDist = Math.abs(aOffset);
+        const bDist = Math.abs(bOffset);
+        // -1 The positions of a and b do not change.
+        // 1 The positions of a and b are reversed.
         if (a.isBound && b.isBound) {
             return bDist - aDist;
         } else if (a.isBound) {
@@ -555,7 +557,7 @@ export function checkSizeDist(
     height: number,
     direction: number[],
     snapDirection: number[],
-    requestSigns: number[],
+    isRequest: boolean,
     is3d: boolean,
     datas: any,
 ) {
@@ -677,16 +679,20 @@ export function checkSizeDist(
     });
     const widthOffsetInfo = getNearOffsetInfo(offsets, 0);
     const heightOffsetInfo = getNearOffsetInfo(offsets, 1);
+    const isWidthBound = widthOffsetInfo.isBound;
+    const isHeightBound = heightOffsetInfo.isBound;
     let widthOffset = widthOffsetInfo.offset[0];
     let heightOffset = heightOffsetInfo.offset[1];
 
+    if (!isWidthBound && !isHeightBound) {
+        return [0, 0];
+    }
     if (keepRatio) {
         const widthDist = Math.abs(widthOffset);
         const heightDist = Math.abs(heightOffset);
-
         const isGetWidthOffset
-            = widthOffsetInfo.isBound && heightOffsetInfo.isBound ? widthDist < heightDist
-            : widthOffsetInfo.isBound || (!heightOffsetInfo.isBound && widthDist < heightDist);
+            = isWidthBound && isHeightBound ? widthDist < heightDist
+            : isWidthBound || (!isHeightBound && widthDist < heightDist);
 
         // height * widthOffset = width * heighOffset
         if (isGetWidthOffset) {
@@ -876,7 +882,7 @@ export function checkSnapSize(
     width: number,
     height: number,
     direction: number[],
-    requestSigns: number[],
+    isRequest: boolean,
     datas: any,
 ) {
     if (!hasGuidelines(moveable, "resizable")) {
@@ -886,14 +892,14 @@ export function checkSnapSize(
         matrix,
         is3d,
     } = moveable.state;
-    return checkSizeDist(moveable, matrix, width, height, direction, direction, requestSigns, is3d, datas);
+    return checkSizeDist(moveable, matrix, width, height, direction, direction, isRequest, is3d, datas);
 }
 export function checkSnapScale(
     moveable: MoveableManager<ScalableProps, any>,
     scale: number[],
     direction: number[],
     snapDirection: number[],
-    requestSigns: number[],
+    isRequest: boolean,
     datas: any,
 ) {
     const {
@@ -909,7 +915,7 @@ export function checkSnapScale(
         width, height,
         direction,
         snapDirection,
-        requestSigns,
+        isRequest,
         datas.is3d,
         datas,
     );

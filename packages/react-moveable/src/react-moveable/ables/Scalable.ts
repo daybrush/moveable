@@ -103,7 +103,7 @@ export default {
             parentKeepRatio,
             parentFlag, pinchFlag, inputEvent,
             dragClient,
-            parentDelta,
+            parentDist,
         } = e;
         const {
             prevDist,
@@ -131,11 +131,7 @@ export default {
         const ratio = isWidth ? startHeight / startWidth : startWidth / startHeight;
         let scaleX: number = 1;
         let scaleY: number = 1;
-        let requestSigns = [0, 0];
 
-        if (parentDelta) {
-            requestSigns = parentDelta.map((size: number) => size ? size / Math.abs(size) : 0);
-        }
         if (parentScale) {
             scaleX = parentScale[0];
             scaleY = parentScale[1];
@@ -202,7 +198,7 @@ export default {
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapScale(moveable, nowDist, direction, snapDirection, requestSigns, datas);
+            snapDist = checkSnapScale(moveable, nowDist, direction, snapDirection, parentDist, datas);
         }
 
         if (keepRatio) {
