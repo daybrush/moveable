@@ -906,12 +906,21 @@ export function checkSnapScale(
         width,
         height,
     } = datas;
+    const keepRatio = moveable.props.keepRatio;
+
+    if (keepRatio) {
+        const fixedScale = Math.abs(scale[0]) < Math.abs(scale[1]) ? scale[1] : scale[0];
+
+        scale = [fixedScale, fixedScale];
+    }
 
     if (!hasGuidelines(moveable, "scalable")) {
         return [0, 0];
     }
+
     const sizeDist = checkSizeDist(
-        moveable, scaleMatrix(datas, scale),
+        moveable,
+        scaleMatrix(datas, scale),
         width, height,
         direction,
         snapDirection,
