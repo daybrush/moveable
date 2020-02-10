@@ -684,7 +684,7 @@ export function checkSizeDist(
     let widthOffset = widthOffsetInfo.offset[0];
     let heightOffset = heightOffsetInfo.offset[1];
 
-    if (!isWidthBound && !isHeightBound) {
+    if (isRequest && !isWidthBound && !isHeightBound) {
         return [0, 0];
     }
     if (keepRatio) {
