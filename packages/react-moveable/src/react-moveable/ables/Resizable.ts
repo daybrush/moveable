@@ -121,6 +121,7 @@ export default {
             parentDistance, parentScale, inputEvent,
             parentKeepRatio,
             dragClient,
+            parentDelta,
             parentDist,
         } = e;
         const {
@@ -144,6 +145,7 @@ export default {
             throttleResize = 0,
             parentMoveable,
         } = moveable.props;
+        let requestSigns = [0, 0];
         let sizeDirection = direction;
 
         if (!direction[0] && !direction[1]) {
@@ -155,6 +157,9 @@ export default {
         let distWidth: number = 0;
         let distHeight: number = 0;
 
+        if (parentDelta) {
+            requestSigns = parentDelta.map((size: number) => size ? size / Math.abs(size) : 0);
+        }
         if (parentDist) {
             distWidth = parentDist[0];
             distHeight = parentDist[1];
@@ -203,7 +208,7 @@ export default {
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
+            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, requestSigns, datas);
         }
         if (parentDist) {
             !parentDist[0] && (snapDist[0] = 0);
@@ -477,7 +482,7 @@ export default {
                 distWidth += e.deltaWidth;
                 distHeight += e.deltaHeight;
 
-                return { datas, parentDist: [distWidth, distHeight] };
+                return { datas, parentDist: [distWidth, distHeight], parentDelta: [e.deltaWidth, e.deltaHeight] };
             },
             requestEnd() {
                 return { datas, isDrag: true };

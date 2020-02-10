@@ -555,8 +555,9 @@ export function checkSizeDist(
     height: number,
     direction: number[],
     snapDirection: number[],
-    datas: any,
+    requestSigns: number[],
     is3d: boolean,
+    datas: any,
 ) {
     const poses = getAbsolutePosesByState(moveable.state);
     const fixedPos = getPosByReverseDirection(poses, snapDirection);
@@ -875,6 +876,7 @@ export function checkSnapSize(
     width: number,
     height: number,
     direction: number[],
+    requestSigns: number[],
     datas: any,
 ) {
     if (!hasGuidelines(moveable, "resizable")) {
@@ -884,13 +886,14 @@ export function checkSnapSize(
         matrix,
         is3d,
     } = moveable.state;
-    return checkSizeDist(moveable, matrix, width, height, direction, direction, datas, is3d);
+    return checkSizeDist(moveable, matrix, width, height, direction, direction, requestSigns, is3d, datas);
 }
 export function checkSnapScale(
     moveable: MoveableManager<ScalableProps, any>,
     scale: number[],
     direction: number[],
     snapDirection: number[],
+    requestSigns: number[],
     datas: any,
 ) {
     const {
@@ -906,7 +909,9 @@ export function checkSnapScale(
         width, height,
         direction,
         snapDirection,
-        datas, datas.is3d,
+        requestSigns,
+        datas.is3d,
+        datas,
     );
 
     return [
