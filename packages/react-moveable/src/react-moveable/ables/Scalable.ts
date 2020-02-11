@@ -19,7 +19,7 @@ import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapScale } from "./Snappable";
-import { isArray } from "@daybrush/utils";
+import { isArray, IObject } from "@daybrush/utils";
 import {
     directionCondition,
 } from "./utils";
@@ -399,5 +399,26 @@ export default {
 
         triggerEvent(moveable, "onScaleGroupEnd", nextParams);
         return isDrag;
+    },
+    request() {
+        const datas = {};
+        let distWidth = 0;
+        let distHeight = 0;
+
+        return {
+            isControl: true,
+            requestStart(e: IObject<any>) {
+                return { datas, parentDirection: e.direction };
+            },
+            request(e: IObject<any>) {
+                distWidth += e.deltaWidth;
+                distHeight += e.deltaHeight;
+
+                return { datas, parentDist: [distWidth, distHeight], parentDelta: [e.deltaWidth, e.deltaHeight] };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
     },
 };

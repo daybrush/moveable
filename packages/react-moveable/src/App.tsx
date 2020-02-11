@@ -58,11 +58,11 @@ class App extends React.Component {
                     pinchable={true}
                     draggable={true}
                     rotatable={isResizable}
-                    resizable={true}
-                    // scalable={true}
+                    // resizable={true}
+                    scalable={true}
                     ref={ref(this, "ab")}
                     // keepRatio={false}
-                    bounds={{ left: 20 }}
+                    bounds={{ left: 30 }}
                     target={this.state.targets}
                     defaultGroupRotate={0}
                     origin={true}
@@ -190,8 +190,8 @@ class App extends React.Component {
                     snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
-                    scalable={true}
-                    // resizable={true}
+                    // scalable={true}
+                    resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
                     // resizable={isResizable}

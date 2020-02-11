@@ -519,24 +519,30 @@ export function checkMaxBounds(
     };
 }
 export function getNearOffsetInfo(
-    offsets: Array<{ offset: number[], isBound: boolean, isSnap: boolean }>,
+    offsets: Array<{ offset: number[], isBound: boolean, isSnap: boolean, sign: number[] }>,
     index: number,
 ) {
     return offsets.slice().sort((a, b) => {
+        const aSign = a.sign[index];
+        const bSign = b.sign[index];
         const aOffset = a.offset[index];
         const bOffset = b.offset[index];
         const aDist = Math.abs(aOffset);
         const bDist = Math.abs(bOffset);
         // -1 The positions of a and b do not change.
         // 1 The positions of a and b are reversed.
-        if (a.isBound && b.isBound) {
+        if (!aSign) {
+            return 1;
+        } else if (!bSign) {
+            return -1;
+        } else if (a.isBound && b.isBound) {
             return bDist - aDist;
         } else if (a.isBound) {
             return -1;
         } else if (b.isBound) {
             return 1;
         } else if (a.isSnap && b.isSnap) {
-            return bDist - aDist;
+            return aDist - bDist;
         } else if (a.isSnap) {
             return -1;
         } else if (b.isSnap) {
@@ -583,34 +589,32 @@ export function checkSizeDist(
         }
     } else if (direction[0]) {
         // vertcal
+        directions.push(
+            [[fixedDirection[0], -1], [direction[0], -1]],
+            [[fixedDirection[0], 0], [direction[0], 0]],
+            [[fixedDirection[0], 1], [direction[0], 1]],
+        );
         if (keepRatio) {
             directions.push(
                 [fixedDirection, [fixedDirection[0], -1]],
                 [fixedDirection, [fixedDirection[0], 1]],
-                [fixedDirection, [fixedDirection[0] * -1, -1]],
-                [fixedDirection, [fixedDirection[0] * -1, 1]],
-            );
-        } else {
-            directions.push(
-                [[fixedDirection[0], -1], [direction[0], -1]],
-                [[fixedDirection[0], 0], [direction[0], 0]],
-                [[fixedDirection[0], 1], [direction[0], 1]],
+                [direction, [direction[0], -1]],
+                [direction, [direction[0], 1]],
             );
         }
     } else if (direction[1]) {
         // horizontal
+        directions.push(
+            [[-1, fixedDirection[1]], [-1, direction[1]]],
+            [[0, fixedDirection[1]], [0, direction[1]]],
+            [[1, fixedDirection[1]], [1, direction[1]]],
+        );
         if (keepRatio) {
             directions.push(
                 [fixedDirection, [-1, fixedDirection[1]]],
                 [fixedDirection, [1, fixedDirection[1]]],
-                [fixedDirection, [-1, fixedDirection[1] * -1]],
-                [fixedDirection, [1, fixedDirection[1] * -1]],
-            );
-        } else {
-            directions.push(
-                [[-1, fixedDirection[1]], [-1, direction[1]]],
-                [[0, fixedDirection[1]], [0, direction[1]]],
-                [[1, fixedDirection[1]], [1, direction[1]]],
+                [direction, [-1, direction[1]]],
+                [direction, [1, direction[1]]],
             );
         }
     } else {
@@ -653,17 +657,17 @@ export function checkSizeDist(
                 isSnap: isOtherVerticalSnap,
             },
         } = checkSnapBounds(moveable, otherEndPos);
+        const multiple = minus(endDirection, startDirection);
 
         if (!otherVerticalOffset && !otherHorizontalOffset) {
             return {
-                isBound: false,
-                isSnap: false,
+                isBound: isOtherVerticalBound || isOtherHorizontalBound,
+                isSnap: isOtherVerticalSnap || isOtherHorizontalSnap,
+                sign: multiple,
                 offset: [0, 0],
             };
         }
-
         const isVertical = otherHorizontalDist < otherVerticalDist;
-        const multiple = minus(endDirection, startDirection);
         const sizeOffset = solveNextOffset(
             otherStartPos,
             otherEndPos,
@@ -671,7 +675,9 @@ export function checkSizeDist(
             isVertical,
             datas,
         ).map((size, i) => size * (multiple[i] ?  2 / multiple[i] : 0));
+
         return {
+            sign: multiple,
             isBound: isVertical ? isOtherVerticalBound : isOtherHorizontalBound,
             isSnap: isVertical ? isOtherVerticalSnap : isOtherHorizontalSnap,
             offset: sizeOffset,
@@ -688,13 +694,14 @@ export function checkSizeDist(
         return [0, 0];
     }
     if (keepRatio) {
-        const widthDist = Math.abs(widthOffset);
-        const heightDist = Math.abs(heightOffset);
+        const widthDist = Math.abs(widthOffset) * (width ? 1 / width : 1);
+        const heightDist = Math.abs(heightOffset) * (height ? 1 / height : 1);
         const isGetWidthOffset
             = isWidthBound && isHeightBound ? widthDist < heightDist
             : isWidthBound || (!isHeightBound && widthDist < heightDist);
 
         // height * widthOffset = width * heighOffset
+        // console.log(widthDist < heightDist);
         if (isGetWidthOffset) {
             // width : height = ? : heightOffset
             widthOffset = width * heightOffset / height;
