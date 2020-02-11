@@ -829,7 +829,14 @@ export interface SnappableProps {
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
     elementGuidelines?: Element[];
-    bounds?: { left?: number, top?: number, right?: number, bottom?: number };
+    bounds?: BoundType;
+    innerBounds?: BoundType;
+}
+export interface BoundType {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
 }
 export interface SnappableState {
     guidelines: any[];

@@ -4,7 +4,7 @@ import {
     SnappableProps,
     SnappableState, Guideline,
     SnapInfo, BoundInfo,
-    ScalableProps, ResizableProps, SnapPosInfo, RotatableProps, RectInfo,
+    ScalableProps, ResizableProps, SnapPosInfo, RotatableProps, RectInfo, BoundType,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
@@ -122,19 +122,49 @@ function checkBounds(
     horizontalPoses: number[],
     snapThreshold?: number,
 ) {
+    const {
+        left = -Infinity,
+        top = -Infinity,
+        right = Infinity,
+        bottom = Infinity,
+    } = moveable.props.bounds || {};
+    const bounds = { left, top, right, bottom };
+
     return {
-        vertical: checkBound(moveable, verticalPoses, true, snapThreshold),
-        horizontal: checkBound(moveable, horizontalPoses, false, snapThreshold),
+        vertical: checkBound(bounds, verticalPoses, true, snapThreshold),
+        horizontal: checkBound(bounds, horizontalPoses, false, snapThreshold),
+    };
+}
+function checkInnerBounds(
+    moveable: MoveableManager<SnappableProps>,
+    verticalPoses: number[],
+    horizontalPoses: number[],
+    snapThreshold?: number,
+) {
+    const {
+        left = -Infinity,
+        top = -Infinity,
+        right = Infinity,
+        bottom = Infinity,
+    } = moveable.props.innerBounds || {};
+    const bounds = {
+        left: right,
+        top: bottom,
+        right: left,
+        bottom: top,
+    };
+
+    return {
+        vertical: checkBound(bounds, verticalPoses, true, snapThreshold),
+        horizontal: checkBound(bounds, horizontalPoses, false, snapThreshold),
     };
 }
 function checkBound(
-    moveable: MoveableManager<SnappableProps>,
+    bounds: Required<BoundType>,
     poses: number[],
     isVertical: boolean,
     snapThreshold: number = 0,
 ): BoundInfo {
-    const bounds = moveable.props.bounds;
-
     if (bounds) {
         const startPos = bounds[isVertical ? "left" : "top"];
         const endPos = bounds[isVertical ? "right" : "bottom"];
@@ -142,14 +172,14 @@ function checkBound(
         const minPos = Math.min(...poses);
         const maxPos = Math.max(...poses);
 
-        if (!isUndefined(startPos) && startPos + snapThreshold > minPos) {
+        if (startPos + snapThreshold > minPos) {
             return {
                 isBound: true,
                 offset: minPos - startPos,
                 pos: startPos,
             };
         }
-        if (!isUndefined(endPos) && endPos - snapThreshold < maxPos) {
+        if (endPos - snapThreshold < maxPos) {
             return {
                 isBound: true,
                 offset: maxPos - endPos,
@@ -408,18 +438,29 @@ export function getNearestSnapGuidelineInfo(
         guideline,
     };
 }
-function getSnapOffset(boundInfo: BoundInfo, snapInfo: SnapInfo) {
-    return boundInfo.isBound
-        ? boundInfo.offset
-        : snapInfo.isSnap
-        ? getNearestSnapGuidelineInfo(snapInfo).offset
-        : 0;
+function getSnapOffset(boundInfo: BoundInfo, boundInnerInfo: BoundInfo, snapInfo: SnapInfo) {
+    if (boundInfo.isBound) {
+        return boundInfo.offset;
+    } else if (boundInnerInfo.isBound) {
+        return boundInnerInfo.offset;
+    } else if (snapInfo.isSnap) {
+        return getNearestSnapGuidelineInfo(snapInfo).offset;
+    }
+    return 0;
 }
 export function checkSnapBounds(moveable: MoveableManager<SnappableProps, SnappableState>, pos: number[]) {
     const {
         horizontal: horizontalBoundInfo,
         vertical: verticalBoundInfo,
     } = checkBounds(
+        moveable,
+        [pos[0]],
+        [pos[1]],
+    );
+    const {
+        horizontal: horizontalInnerBoundInfo,
+        vertical: verticalInnerBoundInfo,
+    } = checkInnerBounds(
         moveable,
         [pos[0]],
         [pos[1]],
@@ -433,21 +474,21 @@ export function checkSnapBounds(moveable: MoveableManager<SnappableProps, Snappa
         [pos[1]],
     );
 
-    const horizontalOffset = getSnapOffset(horizontalBoundInfo, horizontalSnapInfo);
-    const verticalOffset = getSnapOffset(verticalBoundInfo, verticalSnapInfo);
+    const horizontalOffset = getSnapOffset(horizontalBoundInfo, horizontalInnerBoundInfo, horizontalSnapInfo);
+    const verticalOffset = getSnapOffset(verticalBoundInfo, verticalInnerBoundInfo, verticalSnapInfo);
 
     const horizontalDist = Math.abs(horizontalOffset);
     const verticalDist = Math.abs(verticalOffset);
 
     return {
         horizontal: {
-            isBound: horizontalBoundInfo.isBound,
+            isBound: horizontalBoundInfo.isBound || horizontalInnerBoundInfo.isBound,
             isSnap: horizontalSnapInfo.isSnap,
             offset: horizontalOffset,
             dist: horizontalDist,
         },
         vertical: {
-            isBound: verticalBoundInfo.isBound,
+            isBound: verticalBoundInfo.isBound || verticalInnerBoundInfo.isBound,
             isSnap: verticalSnapInfo.isSnap,
             offset: verticalOffset,
             dist: verticalDist,
@@ -1269,6 +1310,7 @@ export default {
         verticalGuidelines: Array,
         elementGuidelines: Array,
         bounds: Object,
+        innerBounds: Object,
     } as const,
     render(moveable: MoveableManager<SnappableProps, SnappableState>, React: Renderer): any[] {
         const {
