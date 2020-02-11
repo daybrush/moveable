@@ -1171,6 +1171,7 @@ function renderElementGroup(
     clientSize: number,
     targetPos: number,
     snapThreshold: number,
+    isDisplaySnapDigit: boolean,
     snapDigit: number,
     index: number,
     React: Renderer,
@@ -1190,7 +1191,7 @@ function renderElementGroup(
             const isRenderSize = isFirstRenderSize;
 
             isFirstRenderSize = false;
-            const snapSize = isRenderSize ? parseFloat(lineSize.toFixed(snapDigit)) : 0;
+            const snapSize = isDisplaySnapDigit && isRenderSize ? parseFloat(lineSize.toFixed(snapDigit)) : 0;
 
             return <div className={prefix(
                 "line",
@@ -1261,6 +1262,7 @@ export default {
         snapHorizontal: Boolean,
         snapVertical: Boolean,
         snapElement: Boolean,
+        isDisplaySnapDigit: Boolean,
         snapDigit: Number,
         snapThreshold: Number,
         horizontalGuidelines: Array,
@@ -1288,7 +1290,8 @@ export default {
         }
         const {
             snapThreshold = 5,
-            snapDigit = 4,
+            snapDigit = 0,
+            isDisplaySnapDigit = true,
         } = moveable.props;
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
@@ -1365,6 +1368,7 @@ export default {
                 width,
                 targetTop,
                 snapThreshold,
+                isDisplaySnapDigit,
                 snapDigit,
                 0,
                 React,
@@ -1377,6 +1381,7 @@ export default {
                 height,
                 targetLeft,
                 snapThreshold,
+                isDisplaySnapDigit,
                 snapDigit,
                 1,
                 React,
