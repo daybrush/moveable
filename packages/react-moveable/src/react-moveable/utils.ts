@@ -901,3 +901,14 @@ export function flat<T>(arr: T[][]): T[] {
 export function equalSign(a: number, b: number) {
     return (a >= 0 && b >= 0) || (a < 0 && b < 0);
 }
+
+export function maxOffset(...args: number[]) {
+    args.sort((a, b) => Math.abs(b) - Math.abs(a));
+
+    return args[0];
+}
+export function miinOffset(...args: number[]) {
+    args.sort((a, b) => Math.abs(a) - Math.abs(b));
+
+    return args[0];
+}
