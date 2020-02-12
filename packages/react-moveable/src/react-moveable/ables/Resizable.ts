@@ -29,6 +29,7 @@ import {
     directionCondition,
 } from "./utils";
 import { IObject } from "@daybrush/utils";
+import { TINY_NUM } from "../consts";
 
 export default {
     name: "resizable",
@@ -196,9 +197,9 @@ export default {
             }
         }
         let nextWidth = sizeDirection[0] || keepRatio
-            ? Math.max(startOffsetWidth + distWidth, 0) : startOffsetWidth;
+            ? Math.max(startOffsetWidth + distWidth, TINY_NUM) : startOffsetWidth;
         let nextHeight = sizeDirection[1] || keepRatio
-            ? Math.max(startOffsetHeight + distHeight, 0) : startOffsetHeight;
+            ? Math.max(startOffsetHeight + distHeight, TINY_NUM) : startOffsetHeight;
 
         let snapDist = [0, 0];
 

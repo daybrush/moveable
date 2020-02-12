@@ -35,7 +35,8 @@ class App extends React.Component {
     };
     private itemMap: Map<HTMLElement |SVGElement, Frame> = new Map();
     private items: IObject<Frame> = {};
-    private guides!: Guides;
+    private guides1!: Guides;
+    private guides2!: Guides;
     public render() {
         const selectedTarget = this.state.target;
         const isResizable = this.state.isResizable;
@@ -44,8 +45,11 @@ class App extends React.Component {
         (window as any).a = this;
         return (
             <div id="con">
-                <div className="guides">
-                    <Guides ref={ref(this, "guides")}/>
+                <div className="guides horizontal">
+                    <Guides ref={ref(this, "guides1")}/>
+                </div>
+                <div className="guides vertical">
+                    <Guides ref={ref(this, "guides2")} type="vertical"/>
                 </div>
                 <div id="test" style={{
                     position: "fixed",
@@ -179,6 +183,7 @@ class App extends React.Component {
                     transformOrigin="% %"
                     snapDigit={0}
                     bounds={{ left: 30, top: 20 }}
+                    innerBounds={{ left: 450, top: 400, width: 200, height: 200 }}
                     verticalGuidelines={[200, 400, 600]}
                     horizontalGuidelines={[200, 400, 600]}
                     // renderDirections={["n", "ne", "nw"]}
@@ -451,7 +456,8 @@ class App extends React.Component {
         });
 
         setTimeout(() => {
-            this.guides.loadGuides([200, 400, 600]);
+            this.guides1.loadGuides([200, 400, 600]);
+            this.guides2.loadGuides([200, 400, 600]);
             this.setState({
                 emo: document.querySelector(".emo") as HTMLElement,
             }, () => {
