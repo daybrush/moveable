@@ -91,8 +91,8 @@ export default {
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
             set: ([startWidth, startHeight]: number[]) => {
-                datas.startWidth = startWidth;
-                datas.startHeight = startHeight;
+                datas.startWidth = Math.round(startWidth);
+                datas.startHeight = Math.round(startHeight);
             },
             setOrigin: (origin: Array<string | number>) => {
                 datas.transformOrigin = origin;
@@ -153,6 +153,8 @@ export default {
         const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const isWidth = sizeDirection[0] || !sizeDirection[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
+        const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
+        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
         let distWidth: number = 0;
         let distHeight: number = 0;
 
@@ -208,7 +210,7 @@ export default {
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, parentDist, datas);
+            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, fixedPosition, parentDist, datas);
         }
         if (parentDist) {
             !parentDist[0] && (snapDist[0] = 0);
@@ -270,9 +272,6 @@ export default {
         if (!parentMoveable && delta.every(num => !num)) {
             return;
         }
-
-        const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
-        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
 
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
