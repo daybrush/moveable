@@ -201,6 +201,10 @@ export default {
         let nextHeight = sizeDirection[1] || keepRatio
             ? Math.max(startOffsetHeight + distHeight, TINY_NUM) : startOffsetHeight;
 
+        if (keepRatio && startOffsetWidth && startOffsetHeight) {
+            // startOffsetWidth : startOffsetHeight = nextWidth : nextHeight
+            nextHeight = nextWidth * startOffsetHeight / startOffsetWidth;
+        }
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
@@ -218,7 +222,6 @@ export default {
                     snapDist[0] = 0;
                 }
             }
-
             const isNoSnap = !snapDist[0] && !snapDist[1];
 
             if (isNoSnap) {
