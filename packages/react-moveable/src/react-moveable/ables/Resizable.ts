@@ -91,8 +91,8 @@ export default {
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
             set: ([startWidth, startHeight]: number[]) => {
-                datas.startWidth = Math.round(startWidth);
-                datas.startHeight = Math.round(startHeight);
+                datas.startWidth = startWidth;
+                datas.startHeight = startHeight;
             },
             setOrigin: (origin: Array<string | number>) => {
                 datas.transformOrigin = origin;

@@ -528,8 +528,8 @@ export function getCSSSize(target: SVGElement | HTMLElement) {
     const style = window.getComputedStyle(target);
 
     return [
-        parseInt(style.width!, 10),
-        parseInt(style.height!, 10),
+        parseFloat(style.width!),
+        parseFloat(style.height!),
     ];
 }
 export function getSize(
