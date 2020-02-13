@@ -181,9 +181,12 @@ function isStartLine(dot: number[], line: number[][]) {
 }
 function checkInnerBoundDot(pos: number, start: number, end: number, isStart: boolean) {
     if ((isStart && start <= pos) || (!isStart && pos <= end)) {
+        // false 402 565 602 => 37 ([0, 37])
+        // true 400 524.9712603540036 600 => 124 ([124, 0])
+        // true 400 410 600 => 10 ([10, 0])
         return {
             isBound: true,
-            offset: isStart ? pos - start : end - pos,
+            offset: isStart ? start - pos : end - pos,
         };
     }
     return {
@@ -215,8 +218,10 @@ function checkLineBoundCollision(line: number[][], boundLine: number[][], isStar
         // horizontal
 
         if (dy1) {
-            // x = y /a + x1 -y1
-            const x = dx1 ? dx1 / dy1 * boundDot1[1] + dot1[0] - dot1[1] : dot1[0];
+            // y = a * (x - x1) + y1
+            // x = (y - y1) / a + x1
+            const a = dy1 / dx1;
+            const x = dx1 ? (boundDot1[1] - dot1[1]) / a + dot1[0] : dot1[0];
 
             // boundDot1[0] <= x && x <= boundDot2[0]
             return checkInnerBoundDot(x, boundDot1[0], boundDot2[0], isStart);
@@ -237,14 +242,8 @@ function checkInnerBounds(
 
     if (!bounds) {
         return {
-            vertical: {
-                isBound: false,
-                offset: [0, 0],
-            },
-            horizontal: {
-                isBound: false,
-                offset: [0, 0],
-            },
+            isBound: false,
+            offset: [0, 0],
         };
     }
     const { left, top, width, height } = bounds;
@@ -277,15 +276,21 @@ function checkInnerBounds(
             },
         };
     });
+    const isBound = boundInfos.some(({ vertical }) => vertical.isBound)
+        || boundInfos.some(({ horizontal }) => horizontal.isBound);
+    const horizontalOffset = maxOffset(...boundInfos.map(({ horizontal }) => horizontal.offset));
+    const verticalOffset = maxOffset(...boundInfos.map(({ vertical }) => vertical.offset));
+
+    let offset = [0, 0];
+    if (Math.abs(horizontalOffset) < Math.abs(verticalOffset)) {
+        offset = [verticalOffset, 0];
+    } else {
+        offset = [0, horizontalOffset];
+    }
+
     return {
-        vertical: {
-            isBound: boundInfos.some(({ vertical }) => vertical.isBound),
-            offset: [maxOffset(...boundInfos.map(({ vertical }) => vertical.offset)), 0],
-        },
-        horizontal: {
-            isBound: boundInfos.some(({ horizontal }) => horizontal.isBound),
-            offset: [0, maxOffset(...boundInfos.map(({ horizontal }) => horizontal.offset))],
-        },
+        isBound,
+        offset,
     };
 }
 
@@ -653,23 +658,25 @@ function getInnerBoundInfo(
     center: number[],
     datas: any,
 ) {
-    const {
-        horizontal,
-        vertical,
-    } = checkInnerBounds(moveable, lines, center);
+    return lines.map(([sign, pos1, pos2]) => {
+        const {
+            isBound,
+            offset,
+        } = checkInnerBounds(moveable, [[pos1, pos2]], center);
 
-    const offset = getDragDist({
-        datas,
-        distX: vertical.offset[0],
-        distY: horizontal.offset[1],
+        const sizeOffset = getDragDist({
+            datas,
+            distX: offset[0],
+            distY: offset[1],
+        }).map((size, i) => size * sign[i]);
+
+        return {
+            sign: [1, 1],
+            isBound,
+            isSnap: false,
+            offset: sizeOffset,
+        };
     });
-    console.log(vertical.offset, horizontal.offset);
-    return {
-        sign: [1, 1],
-        isBound: horizontal.isBound || vertical.isBound,
-        isSnap: false,
-        offset,
-    };
 }
 export function getNearOffsetInfo(
     offsets: Array<{ offset: number[], isBound: boolean, isSnap: boolean, sign: number[] }>,
@@ -839,10 +846,11 @@ export function checkSizeDist(
     const nextPoses = getFixedPoses(matrix, width, height, fixedPos, direction, is3d);
     const keepRatio = moveable.props.keepRatio;
     const directions = getCheckSnapDirections(direction, keepRatio);
-    const lines = getCheckSnapLineDirections(direction, keepRatio).map(([pos1, pos2]) => {
+    const lines = getCheckSnapLineDirections(direction, keepRatio).map(([dir1, dir2]) => {
         return [
-            getPosByDirection(nextPoses, pos1),
-            getPosByDirection(nextPoses, pos2),
+            [average(dir1[0], dir2[0]), average(dir1[1], dir2[1])],
+            getPosByDirection(nextPoses, dir1),
+            getPosByDirection(nextPoses, dir2),
         ];
     });
     const offsets = [
@@ -890,7 +898,7 @@ export function checkSizeDist(
                 offset: sizeOffset,
             };
         }),
-        getInnerBoundInfo(moveable, lines, getPosByDirection(nextPoses, [0, 0]), datas),
+        ...getInnerBoundInfo(moveable, lines, getPosByDirection(nextPoses, [0, 0]), datas),
     ];
 
     const widthOffsetInfo = getNearOffsetInfo(offsets, 0);
