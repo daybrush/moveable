@@ -4,7 +4,7 @@ import {
     SnappableProps,
     SnappableState, Guideline,
     SnapInfo, BoundInfo,
-    ScalableProps, ResizableProps, SnapPosInfo, RotatableProps, RectInfo, BoundType,
+    ScalableProps, ResizableProps, SnapPosInfo, RotatableProps, RectInfo, BoundType, DraggableProps,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
@@ -237,13 +237,54 @@ function checkInnerBounds(
     lines: number[][][],
     center: number[],
 ) {
+    const innerBoundInfos = lines.map(([pos1, pos2]) => {
+        return checkInnerBound(moveable, [pos1, pos2], center);
+    });
+
+    const horizontalBoundInfo = innerBoundInfos.map(info => info.horizontal).sort((a, b) => {
+        if (a.isBound && b.isBound) {
+            return Math.abs(b.offset) - Math.abs(a.offset);
+        } else if (a.isBound) {
+            return -1;
+        } else if (b.isBound) {
+            return 1;
+        }
+        return 0;
+    })[0];
+    const verticalBoundInfo = innerBoundInfos.map(info => info.vertical).sort((a, b) => {
+        if (a.isBound && b.isBound) {
+            return Math.abs(b.offset) - Math.abs(a.offset);
+        } else if (a.isBound) {
+            return -1;
+        } else if (b.isBound) {
+            return 1;
+        }
+        return 0;
+    })[0];
+
+    return {
+        horizontal: horizontalBoundInfo,
+        vertical: verticalBoundInfo,
+    };
+}
+function checkInnerBound(
+    moveable: MoveableManager<SnappableProps>,
+    line: number[][],
+    center: number[],
+) {
 
     const bounds = moveable.props.innerBounds;
 
     if (!bounds) {
         return {
-            isBound: false,
-            offset: [0, 0],
+            horizontal: {
+                isBound: false,
+                offset: 0,
+            },
+            vertical: {
+                isBound: false,
+                offset: 0,
+            },
         };
     }
     const { left, top, width, height } = bounds;
@@ -251,50 +292,34 @@ function checkInnerBounds(
     const topLine = [[left, top], [left + width, top]];
     const rightLine = [[left + width, top], [left + width, top + height]];
     const bottomLine = [[left, top + height], [left + width, top + height]];
-    const boundInfos = lines.map(line => {
-        const {
-            horizontal: isHorizontalStart,
-            vertical: isVerticalStart,
-        } = isStartLine(center, line);
 
-        // test vertical
-        const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart);
-        const bottomBoundInfo = checkLineBoundCollision(line, bottomLine, isVerticalStart);
+    const {
+        horizontal: isHorizontalStart,
+        vertical: isVerticalStart,
+    } = isStartLine(center, line);
 
-        // test horizontal
-        const leftBoundInfo = checkLineBoundCollision(line, leftLine, isHorizontalStart);
-        const rightBoundInfo = checkLineBoundCollision(line, rightLine, isHorizontalStart);
+    // test vertical
+    const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart);
+    const bottomBoundInfo = checkLineBoundCollision(line, bottomLine, isVerticalStart);
 
-        return {
-            vertical: {
-                isBound: topBoundInfo.isBound || bottomBoundInfo.isBound,
-                offset: maxOffset(topBoundInfo.offset, bottomBoundInfo.offset),
-            },
-            horizontal: {
-                isBound: leftBoundInfo.isBound || rightBoundInfo.isBound,
-                offset: maxOffset(leftBoundInfo.offset, rightBoundInfo.offset),
-            },
-        };
-    });
-    const isVerticalBound = boundInfos.some(({ vertical }) => vertical.isBound);
-    const isHorizontalBound = boundInfos.some(({ horizontal }) => horizontal.isBound);
-    const horizontalOffset = maxOffset(...boundInfos.map(({ horizontal }) => horizontal.offset));
-    const verticalOffset = maxOffset(...boundInfos.map(({ vertical }) => vertical.offset));
+    // test horizontal
+    const leftBoundInfo = checkLineBoundCollision(line, leftLine, isHorizontalStart);
+    const rightBoundInfo = checkLineBoundCollision(line, rightLine, isHorizontalStart);
 
-    let offset = [0, 0];
-    let isBound = false;
-
-    if (Math.abs(horizontalOffset) < Math.abs(verticalOffset)) {
-        offset = [verticalOffset, 0];
-        isBound = isVerticalBound;
-    } else {
-        offset = [0, horizontalOffset];
-        isBound = isHorizontalBound;
-    }
+    const isVerticalBound = topBoundInfo.isBound || bottomBoundInfo.isBound;
+    const verticalOffset = maxOffset(topBoundInfo.offset, bottomBoundInfo.offset);
+    const isHorizontalBound = leftBoundInfo.isBound || rightBoundInfo.isBound;
+    const horizontalOffset = maxOffset(leftBoundInfo.offset, rightBoundInfo.offset);
 
     return {
-        isBound,
-        offset,
+        horizontal: {
+            isBound: isHorizontalBound,
+            offset: horizontalOffset,
+        },
+        vertical: {
+            isBound: isVerticalBound,
+            offset: verticalOffset,
+        },
     };
 }
 
@@ -550,25 +575,26 @@ function getSnapOffset(boundInfo: BoundInfo, snapInfo: SnapInfo) {
     }
     return 0;
 }
+
 export function checkSnapBounds(
     moveable: MoveableManager<SnappableProps, SnappableState>,
-    pos: number[],
+    poses: number[][],
 ) {
     const {
         horizontal: horizontalBoundInfo,
         vertical: verticalBoundInfo,
     } = checkBounds(
         moveable,
-        [pos[0]],
-        [pos[1]],
+        poses.map(pos => pos[0]),
+        poses.map(pos => pos[1]),
     );
     const {
         horizontal: horizontalSnapInfo,
         vertical: verticalSnapInfo,
     } = checkSnapPoses(
         moveable,
-        [pos[0]],
-        [pos[1]],
+        poses.map(pos => pos[0]),
+        poses.map(pos => pos[1]),
     );
 
     const horizontalOffset = getSnapOffset(horizontalBoundInfo, horizontalSnapInfo);
@@ -679,7 +705,7 @@ function getSnapBoundInfo(
                 isBound: isOtherVerticalBound,
                 isSnap: isOtherVerticalSnap,
             },
-        } = checkSnapBounds(moveable, otherEndPos);
+        } = checkSnapBounds(moveable, [otherEndPos]);
         const multiple = minus(endDirection, startDirection);
 
         if (!otherVerticalOffset && !otherHorizontalOffset) {
@@ -715,9 +741,26 @@ function getInnerBoundInfo(
 ) {
     return lines.map(([multiple, pos1, pos2]) => {
         const {
-            isBound,
-            offset,
-        } = checkInnerBounds(moveable, [[pos1, pos2]], center);
+            vertical: {
+                offset: verticalOffset,
+                isBound: isVerticalBound,
+            },
+            horizontal: {
+                offset: horizontalOffset,
+                isBound: isHorizontalBound,
+            },
+        } = checkInnerBound(moveable, [pos1, pos2], center);
+
+        let offset = [0, 0];
+        let isBound = false;
+
+        if (Math.abs(horizontalOffset) < Math.abs(verticalOffset)) {
+            offset = [verticalOffset, 0];
+            isBound = isVerticalBound;
+        } else {
+            offset = [0, horizontalOffset];
+            isBound = isHorizontalBound;
+        }
 
         const sizeOffset = getDragDist({
             datas,
@@ -816,6 +859,19 @@ export function getCheckSnapLineDirections(
 
     return lineDirections;
 }
+export function getCheckSnapLines(
+    poses: number[][],
+    direction: number[],
+    keepRatio: boolean,
+) {
+    return getCheckSnapLineDirections(direction, keepRatio).map(([sign, dir1, dir2]) => {
+        return [
+            sign,
+            getPosByDirection(poses, dir1),
+            getPosByDirection(poses, dir2),
+        ];
+    });
+}
 export function getCheckSnapDirections(
     direction: number[],
     keepRatio: boolean,
@@ -894,13 +950,7 @@ export function getSizeOffsetInfo(
     datas: any,
 ) {
     const directions = getCheckSnapDirections(direction, keepRatio);
-    const lines = getCheckSnapLineDirections(direction, keepRatio).map(([sign, dir1, dir2]) => {
-        return [
-            sign,
-            getPosByDirection(poses, dir1),
-            getPosByDirection(poses, dir2),
-        ];
-    });
+    const lines = getCheckSnapLines(poses, direction, keepRatio);
     const offsets = [
         ...getSnapBoundInfo(moveable, poses, directions, datas),
         ...getInnerBoundInfo(moveable, lines, getPosByDirection(poses, [0, 0]), datas),
@@ -949,7 +999,7 @@ export function recheckSizeByTwoDirection(
         vertical: {
             offset: verticalOffset,
         },
-    } = checkSnapBounds(moveable, snapPos);
+    } = checkSnapBounds(moveable, [snapPos]);
 
     if (verticalOffset || horizontalOffset) {
         const [nextWidthOffset, nextHeightOffset] = getDragDist({
@@ -1353,63 +1403,60 @@ export function startCheckSnapDrag(
     datas.absolutePoses = getAbsolutePosesByState(moveable.state);
 }
 export function checkSnapDrag(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManager<SnappableProps & DraggableProps, any>,
     distX: number,
     distY: number,
     datas: any,
 ) {
-    const snapVerticalInfo = {
-        isSnap: false,
-        isBound: false,
-        offset: 0,
-    };
-    const snapHorizontalInfo = {
-        isSnap: false,
-        isBound: false,
-        offset: 0,
-    };
 
     if (!hasGuidelines(moveable, "draggable")) {
-        return [snapVerticalInfo, snapHorizontalInfo];
+        return [
+            {
+                isSnap: false,
+                isBound: false,
+                offset: 0,
+            },
+            {
+                isSnap: false,
+                isBound: false,
+                offset: 0,
+            },
+        ];
     }
     const poses = getAbsolutePoses(
         datas.absolutePoses,
         [distX, distY],
     );
     const { left, right, top, bottom } = getRect(poses);
+    const snapCenter = moveable.props.snapCenter;
+    const snapPoses = [...poses];
 
-    const snapInfos = checkSnaps(moveable, {
-        left,
-        right,
-        top,
-        bottom,
-        center: (left + right) / 2,
-        middle: (top + bottom) / 2,
-    }, true);
-    const boundInfos = checkBounds(moveable, [left, right], [top, bottom]);
-
-    if (boundInfos.vertical.isBound) {
-        snapVerticalInfo.offset = boundInfos.vertical.offset;
-        snapVerticalInfo.isSnap = true;
-        snapVerticalInfo.isBound = true;
-    } else if (snapInfos.vertical.isSnap) {
-        // has vertical guidelines
-        snapVerticalInfo.offset = snapInfos.vertical.posInfos[0].guidelineInfos[0].offset;
-        snapVerticalInfo.isSnap = true;
+    if (snapCenter) {
+        snapPoses.push([(left + right) / 2, (top + bottom) / 2]);
     }
-    if (boundInfos.horizontal.isBound) {
-        snapHorizontalInfo.offset = boundInfos.horizontal.offset;
-        snapHorizontalInfo.isSnap = true;
-        snapHorizontalInfo.isBound = true;
-    } else if (snapInfos.horizontal.isSnap) {
-        // has horizontal guidelines
-        snapHorizontalInfo.offset = snapInfos.horizontal.posInfos[0].guidelineInfos[0].offset;
-        snapHorizontalInfo.isSnap = true;
+    const snapBoundInfos = checkSnapBounds(moveable, snapPoses);
+    const lines = getCheckSnapLines(poses, [0, 0], false).map(([, pos1, pos2]) => [pos1, pos2]);
+    const innerBoundInfo = checkInnerBounds(moveable, lines, getPosByDirection(poses, [0, 0]));
+
+    if (innerBoundInfo.vertical.isBound) {
+        const offset = innerBoundInfo.vertical.offset;
+
+        if (!snapBoundInfos.vertical.isBound || Math.abs(offset) > snapBoundInfos.vertical.dist) {
+            snapBoundInfos.vertical.isBound = true;
+            snapBoundInfos.vertical.offset = -offset;
+        }
+    }
+    if (innerBoundInfo.horizontal.isBound) {
+        const offset = innerBoundInfo.horizontal.offset;
+        if (!snapBoundInfos.horizontal.isBound || Math.abs(offset) > snapBoundInfos.horizontal.dist) {
+            snapBoundInfos.horizontal.isBound = true;
+            snapBoundInfos.horizontal.offset = -offset;
+        }
     }
 
     return [
-        snapVerticalInfo,
-        snapHorizontalInfo,
+        snapBoundInfos.vertical,
+        snapBoundInfos.horizontal,
     ];
 }
 
