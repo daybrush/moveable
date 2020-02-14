@@ -37,7 +37,8 @@ export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
 export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
     const {
         inverseBeforeMatrix,
-        inverseMatrix, is3d,
+        inverseMatrix,
+        is3d,
         startDragBeforeDist,
         startDragDist,
         absoluteOrigin,
@@ -51,6 +52,26 @@ export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
             n,
         ),
         isBefore ? startDragBeforeDist : startDragDist,
+    );
+}
+export function getInverseDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
+    const {
+        beforeMatrix,
+        matrix,
+        is3d,
+        startDragBeforeDist,
+        startDragDist,
+        absoluteOrigin,
+    } = datas;
+    const n = is3d ? 4 : 3;
+
+    return minus(
+        caculate(
+            isBefore ? beforeMatrix : matrix,
+            plus(isBefore ? startDragBeforeDist : startDragDist, [distX, distY]),
+            n,
+        ),
+        absoluteOrigin,
     );
 }
 export function caculateTransformOrigin(
@@ -112,7 +133,7 @@ export function getPosesByDirection(
     [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
     [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
     */
-   return getPosIndexesByDirection(direction).map(index => poses[index]);
+    return getPosIndexesByDirection(direction).map(index => poses[index]);
 }
 export function getPosByDirection(
     poses: number[][],
@@ -123,12 +144,12 @@ export function getPosByDirection(
     [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
     [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
     */
-   const nextPoses = getPosesByDirection(poses, direction);
+    const nextPoses = getPosesByDirection(poses, direction);
 
-   return [
-       average(...nextPoses.map(pos => pos[0])),
-       average(...nextPoses.map(pos => pos[1])),
-   ];
+    return [
+        average(...nextPoses.map(pos => pos[0])),
+        average(...nextPoses.map(pos => pos[1])),
+    ];
 }
 export function getPosByReverseDirection(
     [pos1, pos2, pos3, pos4]: number[][],
