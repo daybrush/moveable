@@ -4,7 +4,7 @@ import {
     createScaleMatrix, multiply,
 } from "@moveable/matrix";
 import MoveableManager from "./MoveableManager";
-import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
+import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState, getRect } from "./utils";
 import { splitUnit } from "@daybrush/utils";
 import { MoveableManagerState, GroupableProps, ResizableProps } from "./types";
 
@@ -304,7 +304,7 @@ export function getStartDirection(
         direction[1] ? direction[1] : baseDirection[1] * -1,
     ];
 }
-export function getFixedPosition(
+export function getAbsoluteFixedPosition(
     moveable: MoveableManager<ResizableProps>,
     direction: number[],
 ) {

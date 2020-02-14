@@ -1007,11 +1007,14 @@ export function checkSizeDist(
             keepRatio,
             datas,
         );
+
         const isWidthBound = widthOffsetInfo.isBound;
         const isHeightBound = heightOffsetInfo.isBound;
         let nextWidthOffset = widthOffsetInfo.offset;
         let nextHeightOffset = heightOffsetInfo.offset;
 
+        console.log("w", isWidthBound, nextWidthOffset);
+        console.log("h", isHeightBound, nextHeightOffset);
         if (i === 1) {
             if (!isWidthBound) {
                 nextWidthOffset = 0;
@@ -1381,7 +1384,10 @@ export function checkSnapDrag(
     if (snapCenter) {
         snapPoses.push([(left + right) / 2, (top + bottom) / 2]);
     }
-    const snapBoundInfos = checkSnapBounds(moveable, snapPoses);
+    const {
+        vertical: verticalSnapBoundInfo,
+        horizontal: horizontalSnapBoundInfo,
+    } = checkSnapBounds(moveable, snapPoses);
     const lines = getCheckSnapLines(poses, [0, 0], false).map(([sign, pos1, pos2]) => {
         return [
             sign.map(dir => Math.abs(dir) * 2),
@@ -1394,11 +1400,15 @@ export function checkSnapDrag(
     const heightOffsetInfo = getNearOffsetInfo(innerBoundInfo, 1);
 
     if (widthOffsetInfo.isBound || heightOffsetInfo.isBound) {
-        const [nextX, nextY] = getInverseDragDist({
+        let [nextX, nextY] = getInverseDragDist({
             datas,
             distX: -widthOffsetInfo.offset[0],
             distY: -heightOffsetInfo.offset[1],
         });
+
+        nextX = maxOffset(verticalSnapBoundInfo.isBound ? verticalSnapBoundInfo.offset : 0, nextX);
+        nextY = maxOffset(horizontalSnapBoundInfo.isBound ? horizontalSnapBoundInfo.offset : 0, nextY);
+
         return [
             {
                 isBound: true,
@@ -1415,16 +1425,9 @@ export function checkSnapDrag(
         ];
     }
 
-    // if (innerBoundInfo.isBound) {
-    //     snapBoundInfos.vertical.isBound = true;
-    //     snapBoundInfos.vertical.offset = -innerBoundInfo.offset[0];
-    //     snapBoundInfos.horizontal.isBound = true;
-    //     snapBoundInfos.horizontal.offset = -innerBoundInfo.offset[1];
-    // }
-
     return [
-        snapBoundInfos.vertical,
-        snapBoundInfos.horizontal,
+        verticalSnapBoundInfo,
+        horizontalSnapBoundInfo,
     ];
 }
 

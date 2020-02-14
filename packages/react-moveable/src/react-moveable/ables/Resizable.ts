@@ -7,8 +7,8 @@ import {
     getDragDist,
     getResizeDist,
     getPosByReverseDirection,
-    getFixedPosition,
     getStartDirection,
+    getAbsoluteFixedPosition,
 } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -85,8 +85,8 @@ export default {
         ] = getCSSSize(target);
         datas.transformOrigin = moveable.props.transformOrigin;
         datas.startDirection = getStartDirection(moveable, direction);
-        datas.fixedPosition = getFixedPosition(moveable, datas.startDirection);
-        datas.fixedOriginalPosition = getFixedPosition(moveable, direction);
+        datas.fixedPosition = getAbsoluteFixedPosition(moveable, datas.startDirection);
+        datas.fixedOriginalPosition = getAbsoluteFixedPosition(moveable, direction);
 
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
@@ -210,7 +210,13 @@ export default {
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, fixedPosition, parentDist, datas);
+            snapDist = checkSnapSize(
+                moveable, nextWidth,
+                nextHeight, direction,
+                datas.fixedOriginalPosition,
+                parentDist,
+                datas,
+            );
         }
         if (parentDist) {
             !parentDist[0] && (snapDist[0] = 0);

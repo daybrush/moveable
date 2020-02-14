@@ -3,7 +3,11 @@ import {
     fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
-import { setDragStart, getDragDist, getScaleDist, getPosByReverseDirection, getFixedPosition, getStartDirection } from "../DraggerUtils";
+import {
+    setDragStart, getDragDist,
+    getScaleDist, getPosByReverseDirection,
+    getAbsoluteFixedPosition,
+} from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
@@ -71,9 +75,7 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startScale = [1, 1];
-        datas.startDirection = getStartDirection(moveable, direction);
-        datas.fixedPosition = getFixedPosition(moveable, datas.startDirection);
-        datas.fixedOriginalPosition = getFixedPosition(moveable, direction);
+        datas.fixedPosition = getAbsoluteFixedPosition(moveable, direction);
 
         const params = fillParams<OnScaleStart>(moveable, e, {
             direction,
@@ -198,11 +200,18 @@ export default {
                 state.snapRenderInfo = { direction };
             }
         }
-        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapScale(moveable, nowDist, direction, snapDirection, fixedPosition, parentDist, datas);
+            snapDist = checkSnapScale(
+                moveable,
+                nowDist,
+                direction,
+                snapDirection,
+                datas.fixedPosition,
+                parentDist,
+                datas,
+            );
         }
 
         if (keepRatio) {
