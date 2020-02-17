@@ -293,6 +293,9 @@ class App extends React.Component {
                 warpable={true}
                 target={this.state.emo}
                 // container={document.querySelector<HTMLElement>(".App")}
+                snappable={true}
+                verticalGuidelines={[200, 400, 600]}
+                horizontalGuidelines={[200, 400, 600]}
                 onWarp={e => {
                     e.target.style.transform = e.transform;
                 }} />}
