@@ -592,8 +592,6 @@ export function checkSizeDist(
         let nextWidthOffset = widthOffsetInfo.offset;
         let nextHeightOffset = heightOffsetInfo.offset;
 
-        console.log("w", isWidthBound, nextWidthOffset);
-        console.log("h", isHeightBound, nextHeightOffset);
         if (i === 1) {
             if (!isWidthBound) {
                 nextWidthOffset = 0;

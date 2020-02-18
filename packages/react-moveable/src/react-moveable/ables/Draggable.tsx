@@ -1,5 +1,5 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix } from "../utils";
+import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, maxOffset } from "../utils";
 import { minus, plus, getRad } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
 import {
@@ -143,6 +143,8 @@ export default {
             } = horizontalInfo;
             isSnap = isVerticalSnap || isHorizontalSnap;
 
+            // console.log(isVerticalBound, isHorizontalBound, verticalOffset, horizontalOffset);
+
             if (throttleDragRotate && distX && distY) {
                 const adjustPoses = [];
                 if (isVerticalBound && isHorizontalBound) {
@@ -177,15 +179,36 @@ export default {
                         return getDistSize(minus([distX, distY], a)) - getDistSize(minus([distX, distY], b));
                     });
                     const adjustPos = adjustPoses[0];
+                    let offsetX = 0;
+                    let offsetY = 0;
+
                     if (adjustPos[0] && Math.abs(distX) > TINY_NUM) {
                         const prevDistX = distX;
-                        distX -= adjustPos[0];
-                        distY = distY * Math.abs(distX) / Math.abs(prevDistX);
+                        offsetX = -adjustPos[0];
+                        offsetY = distY * Math.abs(distX) / Math.abs(prevDistX) - distY;
                     } else if (adjustPos[1] && Math.abs(distY) > TINY_NUM) {
                         const prevDistY = distY;
-                        distY -= adjustPos[1];
-                        distX = distX * Math.abs(distY) / Math.abs(prevDistY);
+                        offsetY = -adjustPos[1];
+                        offsetX = distX * Math.abs(distY) / Math.abs(prevDistY) - distX;
                     }
+                    if (isHorizontalBound && isVerticalBound) {
+                        if (Math.abs(offsetX) > TINY_NUM && Math.abs(offsetX) < Math.abs(verticalOffset)) {
+                            const scale = Math.abs(verticalOffset) / Math.abs(offsetX);
+
+                            offsetX *= scale;
+                            offsetY *= scale;
+                        } else if (Math.abs(offsetY) > TINY_NUM && Math.abs(offsetY) < Math.abs(horizontalOffset)) {
+
+                            const scale = Math.abs(horizontalOffset) / Math.abs(offsetY);
+
+                            offsetX *= scale;
+                            offsetY *= scale;
+                        }
+                        // offsetX = -maxOffset(verticalOffset, offsetX);
+                        // offsetY = -maxOffset(horizontalOffset, offsetY);
+                    }
+                    distX += offsetX;
+                    distY += offsetY;
                 }
             } else {
                 distX -= (distX || isVerticalBound) ? verticalOffset : 0;

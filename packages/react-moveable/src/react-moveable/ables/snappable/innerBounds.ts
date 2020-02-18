@@ -15,6 +15,15 @@ function isStartLine(dot: number[], line: number[][]) {
         horizontal: cy <= dot[1],
     };
 }
+function isSameStartLine(dots: number[][], line: number[][], ) {
+    const cx = average(line[0][0], line[1][0]);
+    const cy = average(line[0][1], line[1][1]);
+
+    const vertical = cx <= dots[0][0];
+    const horizontal = cy <= dots[0][1];
+
+    return dots.slice(1).every(dot => (cx <= dot[0]) === vertical && (cy <= dot[1]) === horizontal);
+}
 function checkInnerBoundDot(pos: number, start: number, end: number, isStart: boolean) {
     if ((isStart && start <= pos) || (!isStart && pos <= end)) {
         // false 402 565 602 => 37 ([0, 37])
@@ -54,6 +63,20 @@ function checkInnerBound(
         horizontal: isHorizontalStart,
         vertical: isVerticalStart,
     } = isStartLine(center, line);
+
+    if (isSameStartLine([
+        center,
+        [left, top],
+        [left + width, top],
+        [left, top + height],
+        [left + width, top + height],
+    ], line)) {
+        return {
+            isAllBound: false,
+            isBound: false,
+            offset: [0, 0],
+        };
+    }
 
     // test vertical
     const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart);
@@ -152,7 +175,6 @@ export function getInnerBoundDragInfo(
             offset,
         } = checkInnerBound(moveable, [pos1, pos2], center);
 
-        console.log(offset);
         if (!isBound) {
             return;
         }
@@ -190,8 +212,6 @@ export function getInnerBoundInfo(
             distX: offset[0],
             distY: offset[1],
         }).map((size, i) => size * (multiple[i] ?  2 / multiple[i] : 0));
-
-        console.log(offset, sizeOffset);
 
         return {
             sign: multiple,
