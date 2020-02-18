@@ -211,14 +211,15 @@ function getSnapBoundOffset(boundInfo: BoundInfo, snapInfo: SnapInfo) {
 export function checkSnapBounds(
     moveable: MoveableManager<SnappableProps, SnappableState>,
     poses: number[][],
+    boundPoses: number[][] = poses,
 ) {
     const {
         horizontal: horizontalBoundInfo,
         vertical: verticalBoundInfo,
     } = checkBounds(
         moveable,
-        poses.map(pos => pos[0]),
-        poses.map(pos => pos[1]),
+        boundPoses.map(pos => pos[0]),
+        boundPoses.map(pos => pos[1]),
     );
     const {
         horizontal: horizontalSnapInfo,
@@ -959,7 +960,12 @@ export function checkSnapDrag(
     );
     const { left, right, top, bottom } = getRect(poses);
     const snapCenter = moveable.props.snapCenter;
-    const snapPoses = [...poses];
+    const snapPoses = [
+        [left, top],
+        [right, top],
+        [left, bottom],
+        [right, bottom],
+    ];
 
     if (snapCenter) {
         snapPoses.push([(left + right) / 2, (top + bottom) / 2]);
@@ -967,7 +973,7 @@ export function checkSnapDrag(
     const {
         vertical: verticalSnapBoundInfo,
         horizontal: horizontalSnapBoundInfo,
-    } = checkSnapBounds(moveable, snapPoses);
+    } = checkSnapBounds(moveable, snapPoses, poses);
     const {
         vertical: verticalInnerBoundInfo,
         horizontal: horizontalInnerBoundInfo,
