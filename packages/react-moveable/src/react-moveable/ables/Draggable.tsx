@@ -1,5 +1,5 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, maxOffset } from "../utils";
+import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix } from "../utils";
 import { minus, plus, getRad } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
 import {
@@ -9,7 +9,6 @@ import {
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
-import { TINY_NUM } from "../consts";
 import { IObject } from "@daybrush/utils";
 
 export default {

@@ -356,7 +356,7 @@ function getSnapBoundInfo(
             isVertical ? otherVerticalOffset : otherHorizontalOffset,
             isVertical,
             datas,
-        ).map((size, i) => size * (multiple[i] ?  2 / multiple[i] : 0));
+        ).map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
 
         return {
             sign: multiple,
@@ -576,7 +576,7 @@ export function checkSizeDist(
             const heightDist = Math.abs(nextHeightOffset) * (height ? 1 / height : 1);
             const isGetWidthOffset
                 = isWidthBound && isHeightBound ? widthDist < heightDist
-                : isHeightBound || (!isWidthBound && widthDist < heightDist);
+                    : isHeightBound || (!isWidthBound && widthDist < heightDist);
 
             // height * widthOffset = width * heighOffset
             if (isGetWidthOffset) {
@@ -628,10 +628,10 @@ export function isBoundRotate(
     const nextPoses = rad ? relativePoses.map(pos => rotate(pos, rad)) : relativePoses;
 
     return nextPoses.some(pos => {
-        return (pos[0] < boundRect.left && Math.abs(pos[0] - boundRect.left) > TINY_NUM)
-            || (pos[0] > boundRect.right && Math.abs(pos[0] - boundRect.right) > TINY_NUM)
-            || (pos[1] < boundRect.top && Math.abs(pos[1] - boundRect.top) > TINY_NUM)
-            || (pos[1] > boundRect.bottom && Math.abs(pos[1] - boundRect.bottom) > TINY_NUM);
+        return (pos[0] < boundRect.left && Math.abs(pos[0] - boundRect.left) > 0.1)
+            || (pos[0] > boundRect.right && Math.abs(pos[0] - boundRect.right) > 0.1)
+            || (pos[1] < boundRect.top && Math.abs(pos[1] - boundRect.top) > 0.1)
+            || (pos[1] > boundRect.bottom && Math.abs(pos[1] - boundRect.bottom) > 0.1);
     });
 }
 export function boundRotate(
@@ -640,7 +640,7 @@ export function boundRotate(
     index: number,
 ) {
     const r = getDistSize(vec);
-    const nextPos = Math.sqrt(r * r - boundPos * boundPos);
+    const nextPos = Math.sqrt(r * r - boundPos * boundPos) || 0;
 
     return [nextPos, -nextPos].sort((a, b) => {
         return Math.abs(a - vec[index ? 0 : 1]) - Math.abs(b - vec[index ? 0 : 1]);
@@ -691,30 +691,28 @@ export function checkSnapRotate(
     }
     const canBounds: Array<[number[], number, number]> = [];
     nextPoses.forEach(nextPos => {
-        if (nextPos[0] < relativeLeft) {
-            canBounds.push([nextPos, relativeLeft, 0]);
-        }
-        if (nextPos[0] > relativeRight) {
-            canBounds.push([nextPos, relativeRight, 0]);
-        }
-        if (nextPos[1] < relativeTop) {
-            canBounds.push([nextPos, relativeTop, 1]);
-        }
-        if (nextPos[1] > relativeBottom) {
-            canBounds.push([nextPos, relativeBottom, 1]);
-        }
+        canBounds.push([nextPos, relativeLeft, 0]);
+        canBounds.push([nextPos, relativeRight, 0]);
+        canBounds.push([nextPos, relativeTop, 1]);
+        canBounds.push([nextPos, relativeBottom, 1]);
     });
     const length = canBounds.length;
+    const relativeRotation = rotation % 360;
 
+    const result: number[] = [];
     for (let i = 0; i < length; ++i) {
         const [vec, boundPos, index] = canBounds[i];
         const relativeRad1 = getRad([0, 0], vec);
-        const result = boundRotate(vec, boundPos, index).filter(relativeRad2 => {
-            return !isBoundRotate(relativePoses, boundRect, rad + relativeRad2 - relativeRad1);
-        });
-        if (result.length) {
-            return throttle((rad + result[0] - relativeRad1) * 180 / Math.PI, TINY_NUM);
-        }
+
+        result.push(...boundRotate(vec, boundPos, index)
+            .map(relativeRad2 => rad + relativeRad2 - relativeRad1)
+            .filter(nextRad => !isBoundRotate(relativePoses, boundRect, nextRad))
+            .map(nextRad => throttle(nextRad * 180 / Math.PI, TINY_NUM)));
+    }
+    if (result.length) {
+        result.sort((a, b) => Math.abs(a - rotation) - Math.abs(b - rotation));
+
+        return result[0];
     }
     return rotation;
 }
