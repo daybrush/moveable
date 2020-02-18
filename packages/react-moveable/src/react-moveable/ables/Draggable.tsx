@@ -120,7 +120,7 @@ export default {
         let isSnap = false;
         let dragRotateRad = 0;
 
-        if (throttleDragRotate > 0 && distX && distY) {
+        if (throttleDragRotate > 0 && (distX || distY)) {
             const deg = throttle(getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate);
             const r = getDistSize([distX, distY]);
             dragRotateRad = deg * Math.PI / 180;
@@ -130,7 +130,9 @@ export default {
         }
 
         if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
-            const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
+            const [verticalInfo, horizontalInfo] = checkSnapDrag(
+                moveable, distX, distY, throttleDragRotate, datas,
+            );
             const {
                 isSnap: isVerticalSnap,
                 isBound: isVerticalBound,
@@ -141,79 +143,10 @@ export default {
                 isBound: isHorizontalBound,
                 offset: horizontalOffset,
             } = horizontalInfo;
-            isSnap = isVerticalSnap || isHorizontalSnap;
+            isSnap = isVerticalSnap || isHorizontalSnap || isVerticalBound || isHorizontalBound;
 
-            // console.log(isVerticalBound, isHorizontalBound, verticalOffset, horizontalOffset);
-
-            if (throttleDragRotate && distX && distY) {
-                const adjustPoses = [];
-                if (isVerticalBound && isHorizontalBound) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                        [verticalOffset, 0],
-                    );
-                } else if (isVerticalBound) {
-                    adjustPoses.push(
-                        [verticalOffset, 0],
-                    );
-                } else if (isHorizontalBound) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                    );
-                } else if (isVerticalSnap && isHorizontalSnap) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                        [verticalOffset, 0],
-                    );
-                } else if (isVerticalSnap) {
-                    adjustPoses.push(
-                        [verticalOffset, 0],
-                    );
-                } else if (isHorizontalSnap) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                    );
-                }
-                if (adjustPoses.length) {
-                    adjustPoses.sort((a, b) => {
-                        return getDistSize(minus([distX, distY], a)) - getDistSize(minus([distX, distY], b));
-                    });
-                    const adjustPos = adjustPoses[0];
-                    let offsetX = 0;
-                    let offsetY = 0;
-
-                    if (adjustPos[0] && Math.abs(distX) > TINY_NUM) {
-                        const prevDistX = distX;
-                        offsetX = -adjustPos[0];
-                        offsetY = distY * Math.abs(distX) / Math.abs(prevDistX) - distY;
-                    } else if (adjustPos[1] && Math.abs(distY) > TINY_NUM) {
-                        const prevDistY = distY;
-                        offsetY = -adjustPos[1];
-                        offsetX = distX * Math.abs(distY) / Math.abs(prevDistY) - distX;
-                    }
-                    if (isHorizontalBound && isVerticalBound) {
-                        if (Math.abs(offsetX) > TINY_NUM && Math.abs(offsetX) < Math.abs(verticalOffset)) {
-                            const scale = Math.abs(verticalOffset) / Math.abs(offsetX);
-
-                            offsetX *= scale;
-                            offsetY *= scale;
-                        } else if (Math.abs(offsetY) > TINY_NUM && Math.abs(offsetY) < Math.abs(horizontalOffset)) {
-
-                            const scale = Math.abs(horizontalOffset) / Math.abs(offsetY);
-
-                            offsetX *= scale;
-                            offsetY *= scale;
-                        }
-                        // offsetX = -maxOffset(verticalOffset, offsetX);
-                        // offsetY = -maxOffset(horizontalOffset, offsetY);
-                    }
-                    distX += offsetX;
-                    distY += offsetY;
-                }
-            } else {
-                distX -= (distX || isVerticalBound) ? verticalOffset : 0;
-                distY -= (distY || isHorizontalBound) ? horizontalOffset : 0;
-            }
+            distX += verticalOffset;
+            distY += horizontalOffset;
         }
         datas.passDistX = distX;
         datas.passDistY = distY;

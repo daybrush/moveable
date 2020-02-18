@@ -1,8 +1,9 @@
 import { maxOffset } from "../../utils";
 import { average } from "@moveable/matrix";
 import MoveableManager from "../../MoveableManager";
-import { SnappableProps } from "../..";
-import { getDragDist, getPosByDirection } from "../../DraggerUtils";
+import { SnappableProps, DraggableProps } from "../../types";
+import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";
+import { getNearOffsetInfo } from "./snap";
 
 function isStartLine(dot: number[], line: number[][]) {
     // l    o     => true
@@ -51,6 +52,8 @@ function checkInnerBound(
         return {
             isAllBound: false,
             isBound: false,
+            isVerticalBound: false,
+            isHorizontalBound: false,
             offset: [0, 0],
         };
     }
@@ -74,6 +77,8 @@ function checkInnerBound(
         return {
             isAllBound: false,
             isBound: false,
+            isVerticalBound: false,
+            isHorizontalBound: false,
             offset: [0, 0],
         };
     }
@@ -108,6 +113,8 @@ function checkInnerBound(
     }
     return {
         isAllBound,
+        isVerticalBound,
+        isHorizontalBound,
         isBound,
         offset,
     };
@@ -151,51 +158,6 @@ function checkLineBoundCollision(line: number[][], boundLine: number[][], isStar
         offset: 0,
     };
 }
-export function getInnerBoundDragInfo(
-    moveable: MoveableManager<SnappableProps>,
-    lines: number[][][],
-    center: number[],
-    datas: any,
-) {
-    const verticalInfo = {
-        offset: 0,
-        isAllBound: false,
-        isBound: false,
-    };
-    const horizontalInfo = {
-        offset: 0,
-        isAllBound: false,
-        isBound: false,
-    };
-    // console.log(...lines);
-    lines.forEach(([multiple, pos1, pos2]) => {
-        const {
-            isBound,
-            isAllBound,
-            offset,
-        } = checkInnerBound(moveable, [pos1, pos2], center);
-
-        if (!isBound) {
-            return;
-        }
-        if (offset[0]) {
-            verticalInfo.offset = maxOffset(offset[0], verticalInfo.offset);
-            verticalInfo.isBound = true;
-            verticalInfo.isAllBound = isAllBound;
-        }
-        if (offset[1]) {
-            horizontalInfo.offset = maxOffset(offset[1], horizontalInfo.offset);
-            horizontalInfo.isBound = true;
-            horizontalInfo.isAllBound = isAllBound;
-        }
-    });
-
-    return [
-        verticalInfo,
-        horizontalInfo,
-    ];
-
-}
 export function getInnerBoundInfo(
     moveable: MoveableManager<SnappableProps>,
     lines: number[][][],
@@ -206,7 +168,10 @@ export function getInnerBoundInfo(
         const {
             isBound,
             offset,
+            isVerticalBound,
+            isHorizontalBound,
         } = checkInnerBound(moveable, [pos1, pos2], center);
+
         const sizeOffset = getDragDist({
             datas,
             distX: offset[0],
@@ -216,12 +181,53 @@ export function getInnerBoundInfo(
         return {
             sign: multiple,
             isBound,
+            isVerticalBound,
+            isHorizontalBound,
             isSnap: false,
             offset: sizeOffset,
         };
     });
 }
 
+export function getInnerBoundDragInfo(
+    moveable: MoveableManager<SnappableProps & DraggableProps, any>,
+    poses: number[][],
+    datas: any,
+) {
+    const lines = getCheckSnapLines(poses, [0, 0], false).map(([sign, pos1, pos2]) => {
+        return [
+            sign.map(dir => Math.abs(dir) * 2),
+            pos1,
+            pos2,
+        ];
+    });
+    const innerBoundInfo = getInnerBoundInfo(moveable, lines, getPosByDirection(poses, [0, 0]), datas);
+    const widthOffsetInfo = getNearOffsetInfo(innerBoundInfo, 0);
+    const heightOffsetInfo = getNearOffsetInfo(innerBoundInfo, 1);
+    let verticalOffset = 0;
+    let horizontalOffset = 0;
+    const isVerticalBound = widthOffsetInfo.isVerticalBound || heightOffsetInfo.isVerticalBound;
+    const isHorizontalBound = widthOffsetInfo.isHorizontalBound || heightOffsetInfo.isHorizontalBound;
+
+    if (isVerticalBound || isHorizontalBound) {
+        [verticalOffset, horizontalOffset] = getInverseDragDist({
+            datas,
+            distX: -widthOffsetInfo.offset[0],
+            distY: -heightOffsetInfo.offset[1],
+        });
+    }
+
+    return {
+        vertical: {
+            isBound: isVerticalBound,
+            offset: verticalOffset,
+        },
+        horizontal: {
+            isBound: isHorizontalBound,
+            offset: horizontalOffset,
+        },
+    };
+}
 export function getCheckSnapLineDirections(
     direction: number[],
     keepRatio: boolean,

@@ -2,6 +2,7 @@ import { SnapInfo, SnappableProps, SnappableState, Guideline, ResizableProps, Sc
 import MoveableManager from "../../MoveableManager";
 import { selectValue, throttle } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
+import { TINY_NUM } from "../../consts";
 
 export function checkSnapPoses(
     moveable: MoveableManager<SnappableProps, SnappableState>,
@@ -220,4 +221,42 @@ export function getSnapInfosByDirection(
         }
     }
     return checkSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), true, 1);
+}
+
+export function getNearOffsetInfo<T extends { offset: number[], isBound: boolean, isSnap: boolean, sign: number[] }>(
+    offsets: T[],
+    index: number,
+) {
+    return offsets.slice().sort((a, b) => {
+        const aSign = a.sign[index];
+        const bSign = b.sign[index];
+        const aOffset = a.offset[index];
+        const bOffset = b.offset[index];
+        const aDist = Math.abs(aOffset);
+        const bDist = Math.abs(bOffset);
+        // -1 The positions of a and b do not change.
+        // 1 The positions of a and b are reversed.
+        if (!aSign) {
+            return 1;
+        } else if (!bSign) {
+            return -1;
+        } else if (a.isBound && b.isBound) {
+            return bDist - aDist;
+        } else if (a.isBound) {
+            return -1;
+        } else if (b.isBound) {
+            return 1;
+        } else if (a.isSnap && b.isSnap) {
+            return aDist - bDist;
+        } else if (a.isSnap) {
+            return -1;
+        } else if (b.isSnap) {
+            return 1;
+        } else if (aDist < TINY_NUM) {
+            return 1;
+        } else if (bDist < TINY_NUM) {
+            return -1;
+        }
+        return aDist - bDist;
+    })[0];
 }
