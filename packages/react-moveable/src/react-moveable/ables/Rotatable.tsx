@@ -50,7 +50,7 @@ function getDeg(
         --datas.loop;
     }
     const loop = datas.loop;
-    const absolutePrevDeg = prevLoop * 360 + prevDeg - startDeg + startRotate;
+    const absolutePrevSnapDeg = prevLoop * 360 + prevSnapDeg - startDeg + startRotate;
     let absoluteDeg = loop * 360 + deg - startDeg + startRotate;
 
     datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
@@ -63,7 +63,7 @@ function getDeg(
     }
     datas.prevSnapDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
 
-    const delta = direction * (absoluteDeg - prevSnapDeg);
+    const delta = direction * (absoluteDeg - absolutePrevSnapDeg);
 
     return [delta, dist, absoluteDeg];
 }

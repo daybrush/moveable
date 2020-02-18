@@ -697,9 +697,8 @@ export function checkSnapRotate(
         canBounds.push([nextPos, relativeBottom, 1]);
     });
     const length = canBounds.length;
-    const relativeRotation = rotation % 360;
-
     const result: number[] = [];
+
     for (let i = 0; i < length; ++i) {
         const [vec, boundPos, index] = canBounds[i];
         const relativeRad1 = getRad([0, 0], vec);
