@@ -625,18 +625,9 @@ export function isBoundRotate(
     boundRect: { left: number, top: number, right: number, bottom: number },
     rad: number,
 ) {
-    const [
-        pos1,
-        pos2,
-        pos3,
-        pos4,
-    ] = relativePoses;
-    const nextPos1 = rotate(pos1, rad);
-    const nextPos2 = rotate(pos2, rad);
-    const nextPos3 = rotate(pos3, rad);
-    const nextPos4 = rotate(pos4, rad);
+    const nextPoses = rad ? relativePoses.map(pos => rotate(pos, rad)) : relativePoses;
 
-    return [nextPos1, nextPos2, nextPos3, nextPos4].some(pos => {
+    return nextPoses.some(pos => {
         return (pos[0] < boundRect.left && Math.abs(pos[0] - boundRect.left) > TINY_NUM)
             || (pos[0] > boundRect.right && Math.abs(pos[0] - boundRect.right) > TINY_NUM)
             || (pos[1] < boundRect.top && Math.abs(pos[1] - boundRect.top) > TINY_NUM)
@@ -692,21 +683,9 @@ export function checkSnapRotate(
         right: relativeRight,
         bottom: relativeBottom,
     };
-    const relativePos1 = minus(pos1, origin);
-    const relativePos2 = minus(pos2, origin);
-    const relativePos3 = minus(pos3, origin);
-    const relativePos4 = minus(pos4, origin);
-    const relativePoses = [
-        relativePos1,
-        relativePos2,
-        relativePos3,
-        relativePos4,
-    ];
-    const nextPos1 = rotate(relativePos1, rad);
-    const nextPos2 = rotate(relativePos2, rad);
-    const nextPos3 = rotate(relativePos3, rad);
-    const nextPos4 = rotate(relativePos4, rad);
-    const nextPoses = [nextPos1, nextPos2, nextPos3, nextPos4];
+    const relativePoses = [pos1, pos2, pos3, pos4].map(pos => minus(pos, origin));
+    const nextPoses = relativePoses.map(pos => rotate(pos, rad));
+
     if (!isBoundRotate(nextPoses, boundRect, 0)) {
         return rotation;
     }
@@ -733,7 +712,6 @@ export function checkSnapRotate(
         const result = boundRotate(vec, boundPos, index).filter(relativeRad2 => {
             return !isBoundRotate(relativePoses, boundRect, rad + relativeRad2 - relativeRad1);
         });
-
         if (result.length) {
             return throttle((rad + result[0] - relativeRad1) * 180 / Math.PI, TINY_NUM);
         }
