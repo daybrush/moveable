@@ -24,7 +24,7 @@ import { TINY_NUM } from "../consts";
 import { directionCondition } from "./utils";
 import {
     getInnerBoundInfo, getCheckSnapLines,
-    getInnerBoundDragInfo, checkRotateInnerBounds,
+    getInnerBoundDragInfo, checkRotateInnerBounds, checkInnerBoundPoses,
 } from "./snappable/innerBounds";
 import { checkBounds, checkRotateBounds } from "./snappable/bounds";
 import {
@@ -1080,6 +1080,43 @@ function renderGuidelines(
         }} />;
     });
 }
+
+function addBoundGuidelines(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    verticalPoses: number[],
+    horizontalPoses: number[],
+    verticalSnapPoses: number[],
+    horizontalSnapPoses: number[],
+) {
+    const {
+        vertical: {
+            isBound: isVerticalBound,
+            pos: verticalBoundPos,
+        },
+        horizontal: {
+            isBound: isHorizontalBound,
+            pos: horizontalBoundPos,
+        },
+    } = checkBounds(moveable, verticalPoses, horizontalPoses);
+
+    if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
+        verticalSnapPoses.push(verticalBoundPos);
+    }
+    if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
+        horizontalSnapPoses.push(horizontalBoundPos);
+    }
+    const {
+        vertical: verticalInnerBoundPoses,
+        horizontal: horizontalInnerBoundPoses,
+    } = checkInnerBoundPoses(moveable);
+
+    verticalSnapPoses.push(
+        ...verticalInnerBoundPoses.filter(pos => verticalSnapPoses.indexOf(pos) < 0),
+    );
+    horizontalSnapPoses.push(
+        ...horizontalInnerBoundPoses.filter(pos => horizontalSnapPoses.indexOf(pos) < 0),
+    );
+}
 export default {
     name: "snappable",
     props: {
@@ -1154,24 +1191,14 @@ export default {
             verticalGuildelines.push(...getSnapGuidelines(verticalPosInfos));
             horizontalGuidelines.push(...getSnapGuidelines(horizontalPosInfos));
         });
-        const {
-            vertical: {
-                isBound: isVerticalBound,
-                pos: verticalBoundPos,
-            },
-            horizontal: {
-                isBound: isHorizontalBound,
-                pos: horizontalBoundPos,
-            },
-        } = checkBounds(moveable, [left, right], [top, bottom]);
 
-        if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
-            verticalSnapPoses.push(verticalBoundPos);
-        }
-        if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
-            horizontalSnapPoses.push(horizontalBoundPos);
-        }
-
+        addBoundGuidelines(
+            moveable,
+            [left, right],
+            [top, bottom],
+            verticalSnapPoses,
+            horizontalSnapPoses,
+        );
         const elementHorizontalGroup = groupByElementGuidelines(
             horizontalGuidelines,
             clientLeft,
