@@ -3,7 +3,11 @@ import {
     fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
-import { setDragStart, getDragDist, getScaleDist, getPosByReverseDirection } from "../DraggerUtils";
+import {
+    setDragStart, getDragDist,
+    getScaleDist, getPosByReverseDirection,
+    getAbsoluteFixedPosition,
+} from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
@@ -19,7 +23,7 @@ import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapScale } from "./Snappable";
-import { isArray } from "@daybrush/utils";
+import { isArray, IObject } from "@daybrush/utils";
 import {
     directionCondition,
 } from "./utils";
@@ -71,6 +75,7 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startScale = [1, 1];
+        datas.fixedPosition = getAbsoluteFixedPosition(moveable, direction);
 
         const params = fillParams<OnScaleStart>(moveable, e, {
             direction,
@@ -103,6 +108,7 @@ export default {
             parentKeepRatio,
             parentFlag, pinchFlag, inputEvent,
             dragClient,
+            parentDist,
         } = e;
         const {
             prevDist,
@@ -125,11 +131,11 @@ export default {
         const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const state = moveable.state;
         const isWidth = direction[0] || !direction[1];
-        let scaleX: number = 1;
-        let scaleY: number = 1;
         const startWidth = width * startScale[0];
         const startHeight = height * startScale[1];
         const ratio = isWidth ? startHeight / startWidth : startWidth / startHeight;
+        let scaleX: number = 1;
+        let scaleY: number = 1;
 
         if (parentScale) {
             scaleX = parentScale[0];
@@ -197,7 +203,15 @@ export default {
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapScale(moveable, nowDist, direction, snapDirection, datas);
+            snapDist = checkSnapScale(
+                moveable,
+                nowDist,
+                direction,
+                snapDirection,
+                datas.fixedPosition,
+                parentDist,
+                datas,
+            );
         }
 
         if (keepRatio) {
@@ -398,5 +412,26 @@ export default {
 
         triggerEvent(moveable, "onScaleGroupEnd", nextParams);
         return isDrag;
+    },
+    request() {
+        const datas = {};
+        let distWidth = 0;
+        let distHeight = 0;
+
+        return {
+            isControl: true,
+            requestStart(e: IObject<any>) {
+                return { datas, parentDirection: e.direction };
+            },
+            request(e: IObject<any>) {
+                distWidth += e.deltaWidth;
+                distHeight += e.deltaHeight;
+
+                return { datas, parentDist: [distWidth, distHeight], parentDelta: [e.deltaWidth, e.deltaHeight] };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
     },
 };

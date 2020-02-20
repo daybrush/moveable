@@ -195,6 +195,10 @@ export default class MoveableManager<T = {}, U = {}>
             this.unsetAbles();
         }
     }
+    public isDragging() {
+        return (this.targetDragger ? this.targetDragger.isFlag() : false)
+        || (this.controlDragger ? this.controlDragger.isFlag() : false);
+    }
     public updateTarget(type?: "Start" | "" | "End") {
         this.updateRect(type, true);
     }
@@ -226,12 +230,19 @@ export default class MoveableManager<T = {}, U = {}>
             offsetHeight,
         };
     }
-    public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester | undefined {
+    public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {
         const { ables, groupable } = this.props as any;
         const requsetAble: Able = ables!.filter((able: Able) => able.name === ableName)[0];
 
-        if (!requsetAble || !requsetAble.request) {
-            return;
+        if (this.isDragging() || !requsetAble || !requsetAble.request) {
+            return {
+                request() {
+                    return this;
+                },
+                requestEnd() {
+                    return this;
+                },
+            };
         }
         const self = this;
         const ableRequester = requsetAble.request();

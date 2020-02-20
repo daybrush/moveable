@@ -9,7 +9,6 @@ import {
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
-import { TINY_NUM } from "../consts";
 import { IObject } from "@daybrush/utils";
 
 export default {
@@ -34,6 +33,7 @@ export default {
         if (!dist[0] && !dist[1]) {
             return;
         }
+
         const width = getDistSize(dist);
         const rad = getRad(dist, [0, 0]);
 
@@ -119,7 +119,7 @@ export default {
         let isSnap = false;
         let dragRotateRad = 0;
 
-        if (throttleDragRotate > 0 && distX && distY) {
+        if (throttleDragRotate > 0 && (distX || distY)) {
             const deg = throttle(getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate);
             const r = getDistSize([distX, distY]);
             dragRotateRad = deg * Math.PI / 180;
@@ -129,7 +129,9 @@ export default {
         }
 
         if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
-            const [verticalInfo, horizontalInfo] = checkSnapDrag(moveable, distX, distY, datas);
+            const [verticalInfo, horizontalInfo] = checkSnapDrag(
+                moveable, distX, distY, throttleDragRotate, datas,
+            );
             const {
                 isSnap: isVerticalSnap,
                 isBound: isVerticalBound,
@@ -140,56 +142,10 @@ export default {
                 isBound: isHorizontalBound,
                 offset: horizontalOffset,
             } = horizontalInfo;
-            isSnap = isVerticalSnap || isHorizontalSnap;
+            isSnap = isVerticalSnap || isHorizontalSnap || isVerticalBound || isHorizontalBound;
 
-            if (throttleDragRotate && distX && distY) {
-                const adjustPoses = [];
-                if (isVerticalBound && isHorizontalBound) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                        [verticalOffset, 0],
-                    );
-                } else if (isVerticalBound) {
-                    adjustPoses.push(
-                        [verticalOffset, 0],
-                    );
-                } else if (isHorizontalBound) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                    );
-                } else if (isVerticalSnap && isHorizontalSnap) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                        [verticalOffset, 0],
-                    );
-                } else if (isVerticalSnap) {
-                    adjustPoses.push(
-                        [verticalOffset, 0],
-                    );
-                } else if (isHorizontalSnap) {
-                    adjustPoses.push(
-                        [0, horizontalOffset],
-                    );
-                }
-                if (adjustPoses.length) {
-                    adjustPoses.sort((a, b) => {
-                        return getDistSize(minus([distX, distY], a)) - getDistSize(minus([distX, distY], b));
-                    });
-                    const adjustPos = adjustPoses[0];
-                    if (adjustPos[0] && Math.abs(distX) > TINY_NUM) {
-                        const prevDistX = distX;
-                        distX -= adjustPos[0];
-                        distY = distY * Math.abs(distX) / Math.abs(prevDistX);
-                    } else if (adjustPos[1] && Math.abs(distY) > TINY_NUM) {
-                        const prevDistY = distY;
-                        distY -= adjustPos[1];
-                        distX = distX * Math.abs(distY) / Math.abs(prevDistY);
-                    }
-                }
-            } else {
-                distX -= (distX || isVerticalBound) ? verticalOffset : 0;
-                distY -= (distY || isHorizontalBound) ? horizontalOffset : 0;
-            }
+            distX += verticalOffset;
+            distY += horizontalOffset;
         }
         datas.passDistX = distX;
         datas.passDistY = distY;
@@ -215,7 +171,7 @@ export default {
         const bottom = datas.bottom - beforeDist[1];
         const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
-        moveable.state.dragInfo.dist = dist;
+        moveable.state.dragInfo.dist = parentEvent ? [0, 0] : dist;
         if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }

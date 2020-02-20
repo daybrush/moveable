@@ -21,6 +21,7 @@ function setRotateStartInfo(
     ];
 
     datas.prevDeg = getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
+    datas.prevSnapDeg = datas.prevDeg;
     datas.startDeg = datas.prevDeg;
     datas.loop = 0;
 }
@@ -36,6 +37,7 @@ function getDeg(
 ) {
     const {
         prevDeg,
+        prevSnapDeg,
         startDeg,
         loop: prevLoop,
     } = datas;
@@ -48,19 +50,20 @@ function getDeg(
         --datas.loop;
     }
     const loop = datas.loop;
-    const absolutePrevDeg = prevLoop * 360 + prevDeg - startDeg + startRotate;
+    const absolutePrevSnapDeg = prevLoop * 360 + prevSnapDeg - startDeg + startRotate;
     let absoluteDeg = loop * 360 + deg - startDeg + startRotate;
 
-    absoluteDeg = throttle(absoluteDeg, throttleRotate);
+    datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
 
+    absoluteDeg = throttle(absoluteDeg, throttleRotate);
     let dist = direction * (absoluteDeg - startRotate);
     if (isSnap) {
         dist = checkSnapRotate(moveable, moveableRect, datas.origin, dist);
         absoluteDeg = dist / direction + startRotate;
     }
-    const delta = direction * (absoluteDeg - absolutePrevDeg);
+    datas.prevSnapDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
 
-    datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
+    const delta = direction * (absoluteDeg - absolutePrevSnapDeg);
 
     return [delta, dist, absoluteDeg];
 }

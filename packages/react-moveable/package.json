@@ -59,6 +59,7 @@
   "devDependencies": {
     "@daybrush/builder": "^0.1.0",
     "@daybrush/tester": "^0.1.3",
+    "@scena/react-guides": "^0.4.1",
     "@scenejs/effects": "^1.0.1",
     "@types/karma-chai": "^0.1.2",
     "@types/mocha": "^5.2.7",

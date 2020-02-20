@@ -67,6 +67,11 @@ export interface Guideline {
     pos: number[];
     size: number;
 }
+export interface SnapBoundInfo {
+    isBound: boolean;
+    isSnap: boolean;
+    offset: number;
+}
 export interface BoundInfo {
     isBound: boolean;
     offset: number;
@@ -820,10 +825,24 @@ export interface SnappableProps {
     snapElement?: boolean;
     snapThreshold?: number;
     snapDigit?: number;
+    isDisplaySnapDigit?: boolean;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
     elementGuidelines?: Element[];
-    bounds?: { left?: number, top?: number, right?: number, bottom?: number };
+    bounds?: BoundType;
+    innerBounds?: InnerBoundType;
+}
+export interface InnerBoundType {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+}
+export interface BoundType {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
 }
 export interface SnappableState {
     guidelines: any[];

@@ -22,11 +22,11 @@
 }
 
 .App-logo {
-    position: relative;
+    position: absolute;
     /* animation: App-logo-spin infinite 20s linear; */
     /* transform: rotate(18deg); */
-    left: calc(50% - 150px);
-    top: calc(50% - 100px);
+    left: 300px;
+    top: 300px;
     width: 300px;
     height: 200px;
     border: 2px solid black;
@@ -44,10 +44,26 @@ img {
 }
 #con {
     position: relative;
-    overflow: scroll;
+    /* overflow: scroll; */
     top: 100px;
     height: 800px;
     border: 1px solid #f55;
+}
+.guides {
+    position: absolute;
+    width: 100%;
+    top: -30px;
+    height: 30px;
+}
+.guides.horizontal {
+    width: 100%;
+    top: -30px;
+    height: 30px;
+}
+.guides.vertical {
+    width: 30px;
+    height: 100%;
+    left: -30px;
 }
 .App {
     /* overflow: scroll;

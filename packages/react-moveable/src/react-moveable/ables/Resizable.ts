@@ -7,8 +7,8 @@ import {
     getDragDist,
     getResizeDist,
     getPosByReverseDirection,
-    getFixedPosition,
     getStartDirection,
+    getAbsoluteFixedPosition,
 } from "../DraggerUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -29,6 +29,7 @@ import {
     directionCondition,
 } from "./utils";
 import { IObject } from "@daybrush/utils";
+import { TINY_NUM } from "../consts";
 
 export default {
     name: "resizable",
@@ -84,8 +85,8 @@ export default {
         ] = getCSSSize(target);
         datas.transformOrigin = moveable.props.transformOrigin;
         datas.startDirection = getStartDirection(moveable, direction);
-        datas.fixedPosition = getFixedPosition(moveable, datas.startDirection);
-        datas.fixedOriginalPosition = getFixedPosition(moveable, direction);
+        datas.fixedPosition = getAbsoluteFixedPosition(moveable, datas.startDirection);
+        datas.fixedOriginalPosition = getAbsoluteFixedPosition(moveable, direction);
 
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
@@ -152,6 +153,8 @@ export default {
         const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const isWidth = sizeDirection[0] || !sizeDirection[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
+        const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
+        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
         let distWidth: number = 0;
         let distHeight: number = 0;
 
@@ -196,14 +199,28 @@ export default {
             }
         }
         let nextWidth = sizeDirection[0] || keepRatio
-            ? Math.max(startOffsetWidth + distWidth, 0) : startOffsetWidth;
+            ? Math.max(startOffsetWidth + distWidth, TINY_NUM) : startOffsetWidth;
         let nextHeight = sizeDirection[1] || keepRatio
-            ? Math.max(startOffsetHeight + distHeight, 0) : startOffsetHeight;
+            ? Math.max(startOffsetHeight + distHeight, TINY_NUM) : startOffsetHeight;
 
+        if (keepRatio && startOffsetWidth && startOffsetHeight) {
+            // startOffsetWidth : startOffsetHeight = nextWidth : nextHeight
+            nextHeight = nextWidth * startOffsetHeight / startOffsetWidth;
+        }
         let snapDist = [0, 0];
 
         if (!pinchFlag) {
-            snapDist = checkSnapSize(moveable, nextWidth, nextHeight, direction, datas);
+            snapDist = checkSnapSize(
+                moveable, nextWidth,
+                nextHeight, direction,
+                datas.fixedOriginalPosition,
+                parentDist,
+                datas,
+            );
+        }
+        if (parentDist) {
+            !parentDist[0] && (snapDist[0] = 0);
+            !parentDist[1] && (snapDist[1] = 0);
         }
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
@@ -213,7 +230,6 @@ export default {
                     snapDist[0] = 0;
                 }
             }
-
             const isNoSnap = !snapDist[0] && !snapDist[1];
 
             if (isNoSnap) {
@@ -262,9 +278,6 @@ export default {
         if (!parentMoveable && delta.every(num => !num)) {
             return;
         }
-
-        const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
-        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
 
         const inverseDelta = !parentFlag && pinchFlag
             ? [0, 0]
@@ -473,7 +486,7 @@ export default {
                 distWidth += e.deltaWidth;
                 distHeight += e.deltaHeight;
 
-                return { datas, parentDist: [distWidth, distHeight] };
+                return { datas, parentDist: [distWidth, distHeight], parentDelta: [e.deltaWidth, e.deltaHeight] };
             },
             requestEnd() {
                 return { datas, isDrag: true };
