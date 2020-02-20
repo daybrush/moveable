@@ -1,7 +1,7 @@
 import { maxOffset, getDistSize, throttle } from "../../utils";
 import { average, rotate, getRad } from "@moveable/matrix";
 import MoveableManager from "../../MoveableManager";
-import { SnappableProps, DraggableProps, RotatableProps, InnerBoundType, BoundType } from "../../types";
+import { SnappableProps, DraggableProps, RotatableProps } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";
 import { getNearOffsetInfo } from "./snap";
 import { TINY_NUM } from "../../consts";
