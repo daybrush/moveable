@@ -183,7 +183,7 @@ class App extends React.Component {
                     transformOrigin="% %"
                     snapDigit={0}
                     bounds={{ left: 30, top: 20 }}
-                    // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
+                    innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
                     verticalGuidelines={[200, 400, 600]}
                     horizontalGuidelines={[200, 400, 600]}
                     // renderDirections={["n", "ne", "nw"]}
@@ -205,7 +205,7 @@ class App extends React.Component {
                     throttleDragRotate={isResizable ? 0 : 30}
                     throttleScale={0}
                     throttleResize={0}
-                    throttleRotate={10}
+                    // throttleRotate={10}
 
                     pinchable={true}
                     onScroll={({ scrollContainer, direction }) => {

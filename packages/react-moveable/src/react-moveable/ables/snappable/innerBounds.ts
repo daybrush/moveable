@@ -1,9 +1,10 @@
-import { maxOffset } from "../../utils";
-import { average } from "@moveable/matrix";
+import { maxOffset, getDistSize, throttle } from "../../utils";
+import { average, rotate, getRad } from "@moveable/matrix";
 import MoveableManager from "../../MoveableManager";
-import { SnappableProps, DraggableProps } from "../../types";
+import { SnappableProps, DraggableProps, RotatableProps, InnerBoundType, BoundType } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";
 import { getNearOffsetInfo } from "./snap";
+import { TINY_NUM } from "../../consts";
 
 function isStartLine(dot: number[], line: number[][]) {
     // l    o     => true
@@ -16,14 +17,38 @@ function isStartLine(dot: number[], line: number[][]) {
         horizontal: cy <= dot[1],
     };
 }
-function isSameStartLine(dots: number[][], line: number[][], ) {
-    const cx = average(line[0][0], line[1][0]);
-    const cy = average(line[0][1], line[1][1]);
+function hitTestLine(
+    dot: number[],
+    [pos1, pos2]: number[][],
+) {
+    const dx = pos2[0] - pos1[0];
+    const dy = pos2[1] - pos1[1];
 
-    const vertical = cx <= dots[0][0];
-    const horizontal = cy <= dots[0][1];
+    let test1: number;
+    let test2: number;
+    if (!dx) {
+        test1 = pos1[0];
+        test2 = dot[0];
+    } else if (!dy) {
+        test1 = pos1[1];
+        test2 = dot[1];
+    } else {
+        const a = dy / dx;
 
-    return dots.slice(1).every(dot => (cx <= dot[0]) === vertical && (cy <= dot[1]) === horizontal);
+        // y = a * (x - pos1) + pos1
+        test1 = a * (dot[0] - pos1[0]) + pos1[1];
+        test2 = dot[1];
+    }
+    return test1 - test2;
+}
+function isSameStartLine(dots: number[][], line: number[][], error: number = TINY_NUM) {
+    const centerSign = hitTestLine(dots[0], line) <= 0;
+
+    return dots.slice(1).every(dot => {
+        const value = hitTestLine(dot, line);
+        const sign = value <= 0;
+        return sign === centerSign || Math.abs(value) <= error;
+    });
 }
 function checkInnerBoundDot(pos: number, start: number, end: number, isStart: boolean) {
     if ((isStart && start <= pos) || (!isStart && pos <= end)) {
@@ -286,4 +311,146 @@ export function getCheckSnapLines(
             getPosByDirection(poses, dir2),
         ];
     });
+}
+
+function isBoundRotate(
+    relativePoses: number[][],
+    boundDots: number[][],
+    center: number[],
+    rad: number,
+) {
+    const nextPoses = rad ? relativePoses.map(pos => rotate(pos, rad)) : relativePoses;
+    const dots = [
+        center,
+        ...boundDots,
+    ];
+    return [
+        [nextPoses[0], nextPoses[1]],
+        [nextPoses[1], nextPoses[3]],
+        [nextPoses[3], nextPoses[2]],
+        [nextPoses[2], nextPoses[0]],
+    ].some((line, i) => !isSameStartLine(dots, line));
+}
+function getDistPointLine([pos1, pos2]: number[][]) {
+    // x = 0, y = 0
+    // d = (ax + by + c) / root(a2 + b2)
+
+    const dx = pos2[0] - pos1[0];
+    const dy = pos2[1] - pos1[1];
+
+    if (!dx) {
+        return Math.abs(pos1[0]);
+    }
+    if (!dy) {
+        return Math.abs(pos1[1]);
+    }
+    // y - y1 = a(x - x1)
+    // 0 = ax -y + -a * x1 + y1
+
+    const a = dy / dx;
+
+    return Math.abs((-a * pos1[0] + pos1[1]) / Math.sqrt(Math.pow(a, 2) + 1));
+}
+function solveReverseLine([pos1, pos2]: number[][]) {
+    const dx = pos2[0] - pos1[0];
+    const dy = pos2[1] - pos1[1];
+
+    if (!dx) {
+        return [pos1[0], 0];
+    }
+    if (!dy) {
+        return [0, pos1[1]];
+    }
+    const a = dy / dx;
+    // y - y1 = a (x  - x1)
+    // y = ax - a * x1 + y1
+    const b = -a * pos1[0] + pos1[1];
+    // y = ax + b = -1/a x
+    // x = -b / (a + 1 / a)
+    // y = b / (1 + 1 / a^2)
+
+    return [
+        -b / (a + 1 / a),
+        b / ((a * a) + 1),
+    ];
+}
+export function checkRotateInnerBounds(
+    moveable: MoveableManager<SnappableProps & RotatableProps, any>,
+    prevPoses: number[][],
+    nextPoses: number[][],
+    origin: number[],
+    rotation: number,
+) {
+    const bounds = moveable.props.innerBounds;
+    const rad = rotation * Math.PI / 180;
+
+    if (!bounds) {
+        return [];
+    }
+    const {
+        left,
+        top,
+        width,
+        height,
+    } = bounds;
+
+    const relativeLeft = left - origin[0];
+    const relativeRight = left + width - origin[0];
+    const relativeTop = top - origin[1];
+    const relativeBottom = top + height - origin[1];
+    const dots = [
+        [relativeLeft, relativeTop],
+        [relativeRight, relativeTop],
+        [relativeLeft, relativeBottom],
+        [relativeRight, relativeBottom],
+    ];
+    const center = getPosByDirection(nextPoses, [0, 0]);
+
+    if (!isBoundRotate(nextPoses, dots, center, 0)) {
+        return [];
+    }
+    const result: number[] = [];
+    const dotInfos = dots.map(dot => [
+        dot,
+        getRad([0, 0], dot),
+        getDistSize(dot),
+    ] as [number[], number, number]);
+    [
+        [nextPoses[0], nextPoses[1]],
+        [nextPoses[1], nextPoses[3]],
+        [nextPoses[3], nextPoses[2]],
+        [nextPoses[2], nextPoses[0]],
+    ].forEach((line, i) => {
+        const lineRad = getRad([0, 0], solveReverseLine(line));
+        const lineDist = getDistPointLine(line);
+
+        result.push(...dotInfos
+            .filter(([, , dotDist]) => {
+                return dotDist && lineDist <= dotDist;
+            })
+            .map(([dot, dotRad, dotDist]) => {
+                const distRad = Math.acos(dotDist ? lineDist / dotDist : 0);
+                const nextRad1 = dotRad + distRad;
+                const nextRad2 = dotRad - distRad;
+
+                if (dot[0] < 0 && dot[1] > 0 && i === 2) {
+                    console.log(
+                        (nextRad1 - lineRad) / Math.PI * 180,
+                        (nextRad2 - lineRad) / Math.PI * 180,
+                    );
+                }
+
+                return [
+                    rad + nextRad1 - lineRad,
+                    rad + nextRad2 - lineRad,
+                ];
+            })
+            .reduce<number[]>((prev, cur) => {
+                prev.push(...cur);
+                return prev;
+            }, [])
+            .filter(nextRad => !isBoundRotate(prevPoses, dots, center, nextRad))
+            .map(nextRad => throttle(nextRad * 180 / Math.PI, TINY_NUM)));
+    });
+    return result;
 }

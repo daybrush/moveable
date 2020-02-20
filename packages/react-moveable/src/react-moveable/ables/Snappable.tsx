@@ -22,8 +22,11 @@ import {
 } from "./Rotatable";
 import { TINY_NUM } from "../consts";
 import { directionCondition } from "./utils";
-import { getInnerBoundInfo, getCheckSnapLines, getInnerBoundDragInfo } from "./snappable/innerBounds";
-import { checkBounds } from "./snappable/bounds";
+import {
+    getInnerBoundInfo, getCheckSnapLines,
+    getInnerBoundDragInfo, checkRotateInnerBounds,
+} from "./snappable/innerBounds";
+import { checkBounds, checkRotateBounds } from "./snappable/bounds";
 import {
     checkSnaps, getSnapInfosByDirection,
     checkSnapPoses, getNearestSnapGuidelineInfo,
@@ -620,100 +623,37 @@ export function checkSizeDist(
     ];
 }
 
-export function isBoundRotate(
-    relativePoses: number[][],
-    boundRect: { left: number, top: number, right: number, bottom: number },
-    rad: number,
-) {
-    const nextPoses = rad ? relativePoses.map(pos => rotate(pos, rad)) : relativePoses;
-
-    return nextPoses.some(pos => {
-        return (pos[0] < boundRect.left && Math.abs(pos[0] - boundRect.left) > 0.1)
-            || (pos[0] > boundRect.right && Math.abs(pos[0] - boundRect.right) > 0.1)
-            || (pos[1] < boundRect.top && Math.abs(pos[1] - boundRect.top) > 0.1)
-            || (pos[1] > boundRect.bottom && Math.abs(pos[1] - boundRect.bottom) > 0.1);
-    });
-}
-export function boundRotate(
-    vec: number[],
-    boundPos: number,
-    index: number,
-) {
-    const r = getDistSize(vec);
-    const nextPos = Math.sqrt(r * r - boundPos * boundPos) || 0;
-
-    return [nextPos, -nextPos].sort((a, b) => {
-        return Math.abs(a - vec[index ? 0 : 1]) - Math.abs(b - vec[index ? 0 : 1]);
-    }).map(pos => {
-        return getRad([0, 0], index ? [pos, boundPos] : [boundPos, pos]);
-    });
-}
 export function checkSnapRotate(
     moveable: MoveableManager<SnappableProps & RotatableProps, any>,
     rect: RectInfo,
     origin: number[],
     rotation: number,
 ) {
-    const bounds = moveable.props.bounds;
-
-    if (!bounds || !hasGuidelines(moveable, "resizable")) {
+    if (!hasGuidelines(moveable, "rotatable")) {
         return rotation;
     }
-    const {
-        left = -Infinity,
-        top = -Infinity,
-        right = Infinity,
-        bottom = Infinity,
-    } = bounds;
+
     const {
         pos1,
         pos2,
         pos3,
         pos4,
     } = rect;
-
     const rad = rotation * Math.PI / 180;
-    const relativeLeft = left - origin[0];
-    const relativeRight = right - origin[0];
-    const relativeTop = top - origin[1];
-    const relativeBottom = bottom - origin[1];
-    const boundRect = {
-        left: relativeLeft,
-        top: relativeTop,
-        right: relativeRight,
-        bottom: relativeBottom,
-    };
-    const relativePoses = [pos1, pos2, pos3, pos4].map(pos => minus(pos, origin));
-    const nextPoses = relativePoses.map(pos => rotate(pos, rad));
+    const prevPoses = [pos1, pos2, pos3, pos4].map(pos => minus(pos, origin));
+    const nextPoses = prevPoses.map(pos => rotate(pos, rad));
 
-    if (!isBoundRotate(nextPoses, boundRect, 0)) {
+    const result = [
+        ...checkRotateBounds(moveable, prevPoses, nextPoses, origin, rotation),
+        ...checkRotateInnerBounds(moveable, prevPoses, nextPoses, origin, rotation),
+    ];
+    result.sort((a, b) => Math.abs(a - rotation) - Math.abs(b - rotation));
+
+    if (result.length) {
+        return result[0];
+    } else {
         return rotation;
     }
-    const canBounds: Array<[number[], number, number]> = [];
-    nextPoses.forEach(nextPos => {
-        canBounds.push([nextPos, relativeLeft, 0]);
-        canBounds.push([nextPos, relativeRight, 0]);
-        canBounds.push([nextPos, relativeTop, 1]);
-        canBounds.push([nextPos, relativeBottom, 1]);
-    });
-    const length = canBounds.length;
-    const result: number[] = [];
-
-    for (let i = 0; i < length; ++i) {
-        const [vec, boundPos, index] = canBounds[i];
-        const relativeRad1 = getRad([0, 0], vec);
-
-        result.push(...boundRotate(vec, boundPos, index)
-            .map(relativeRad2 => rad + relativeRad2 - relativeRad1)
-            .filter(nextRad => !isBoundRotate(relativePoses, boundRect, nextRad))
-            .map(nextRad => throttle(nextRad * 180 / Math.PI, TINY_NUM)));
-    }
-    if (result.length) {
-        result.sort((a, b) => Math.abs(a - rotation) - Math.abs(b - rotation));
-
-        return result[0];
-    }
-    return rotation;
 }
 export function checkSnapSize(
     moveable: MoveableManager<any, any>,
