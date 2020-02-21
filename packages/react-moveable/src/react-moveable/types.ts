@@ -665,7 +665,7 @@ export interface OnRenderEnd extends OnEvent {
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
- * @property - The container corresponding to scrolling area
+ * @property - The container corresponding to scrolling area (scrollContainer >= rootContainer >= container)
  * @property - The direction of scrolling [left, top]
  */
 export interface OnScroll extends OnEvent {
