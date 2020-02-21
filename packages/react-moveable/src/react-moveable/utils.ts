@@ -269,7 +269,7 @@ export function getMatrixStackInfo(
         is3d,
     };
 }
-function caculateMatrixStack(
+export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
     prevMatrix?: number[],
