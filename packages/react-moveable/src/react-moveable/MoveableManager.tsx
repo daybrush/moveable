@@ -38,6 +38,7 @@ export default class MoveableManager<T = {}, U = {}>
     public static defaultProps: Required<MoveableManagerProps> = {
         target: null,
         container: null,
+        rootContainer: null,
         origin: true,
         edge: false,
         parentMoveable: null,

@@ -19,6 +19,7 @@ export type MoveableManagerProps<T = {}> = {
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
+    rootContainer?: HTMLElement | null;
     dragArea?: boolean;
     origin?: boolean;
     transformOrigin?: Array<string | number> | "";
