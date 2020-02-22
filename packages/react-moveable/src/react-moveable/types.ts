@@ -40,6 +40,7 @@ export type MoveableManagerState<T = {}> = {
     beforeMatrix: number[];
     matrix: number[];
     targetTransform: string;
+    rootMatrix: number[];
     targetMatrix: number[];
     offsetMatrix: number[];
     is3d: boolean;

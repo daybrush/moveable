@@ -1,8 +1,9 @@
 import { MoveableManagerState, OnCustomDrag } from "./types";
+import { convertDragDist } from "./utils";
 
-export function setCustomDrag(state: Partial<MoveableManagerState<any>>, delta: number[], inputEvent: any) {
+export function setCustomDrag(state: MoveableManagerState<any>, delta: number[], inputEvent: any) {
     return {
-        ...state.dragger!.move(delta, inputEvent),
+        ...convertDragDist(state, state.dragger!.move(delta, inputEvent)),
         parentEvent: true,
     };
 }

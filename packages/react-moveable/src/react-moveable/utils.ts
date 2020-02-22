@@ -12,6 +12,7 @@ import {
     createScaleMatrix,
     plus,
     getRad,
+    ignoreDimension,
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
@@ -263,6 +264,7 @@ export function getMatrixStackInfo(
         }
     }
     return {
+        offsetContainer,
         matrixes,
         targetMatrix,
         transformOrigin,
@@ -273,28 +275,52 @@ export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
     prevMatrix?: number[],
+    // prevRootMatrix?: number[],
     prevN?: number,
-): [number[], number[], number[], number[], string, number[], boolean] {
+): [number[], number[], number[], number[], number[], string, number[], boolean] {
     const {
         matrixes,
         is3d,
         targetMatrix,
         transformOrigin,
+        offsetContainer,
     } = getMatrixStackInfo(target, container, prevMatrix);
+    const {
+        matrixes: rootMatrixes,
+        is3d: isRoot3d,
+    } = getMatrixStackInfo(offsetContainer, document.body);
 
-    const n = is3d ? 4 : 3;
+    const n = isRoot3d || is3d ? 4 : 3;
     const isSVGGraphicElement = target.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in target;
     const originalContainer = container || document.body;
     let allMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
+    let rootMatrix = createIdentityMatrix(n);
     let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
     const endContainer = getOffsetInfo(originalContainer, originalContainer, true).offsetParent;
 
+    rootMatrixes.reverse();
     matrixes.reverse();
 
-    // beforeMatrix = (... -> offset -> absolute) -> offset -> absolute(targetMatrix)
-    // offsetMatrix = (... -> offset -> absolute -> offset) -> absolute(targetMatrix)
+    if (!is3d && isRoot3d) {
+        matrixes.forEach((matrix, i) => {
+            matrixes[i] = convertDimension(matrix, 3, 4);
+        });
+    }
+    if (is3d && !isRoot3d) {
+        rootMatrixes.forEach((matrix, i) => {
+            rootMatrixes[i] = convertDimension(matrix, 3, 4);
+        });
+    }
+
+    // rootMatrix = (...) -> container -> offset -> absolute -> offset -> absolute(targetMatrix)
+    // beforeMatrix = (... -> container -> offset -> absolute) -> offset -> absolute(targetMatrix)
+    // offsetMatrix = (... -> container -> offset -> absolute -> offset) -> absolute(targetMatrix)
+
+    rootMatrixes.forEach(matrix => {
+        rootMatrix = multiply(rootMatrix, matrix, n);
+    });
     matrixes.forEach((matrix, i) => {
         if (length - 2 === i) {
             // length - 3
@@ -325,14 +351,16 @@ export function caculateMatrixStack(
             ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
         })`;
 
+    rootMatrix = ignoreDimension(rootMatrix, n, n);
     return [
+        rootMatrix,
         beforeMatrix,
         offsetMatrix,
         allMatrix,
         targetMatrix,
         transform,
         transformOrigin,
-        is3d,
+        is3d || isRoot3d,
     ];
 }
 export function getSVGMatrix(
@@ -651,6 +679,7 @@ export function getTargetInfo(
     let pos2 = [0, 0];
     let pos3 = [0, 0];
     let pos4 = [0, 0];
+    let rootMatrix = createIdentityMatrix3();
     let offsetMatrix = createIdentityMatrix3();
     let beforeMatrix = createIdentityMatrix3();
     let matrix = createIdentityMatrix3();
@@ -685,7 +714,10 @@ export function getTargetInfo(
             }
         }
         [
-            beforeMatrix, offsetMatrix, matrix,
+            rootMatrix,
+            beforeMatrix,
+            offsetMatrix,
+            matrix,
             targetMatrix,
             targetTransform, transformOrigin, is3d,
         ] = caculateMatrixStack(target, container!, prevMatrix, prevN);
@@ -736,11 +768,12 @@ export function getTargetInfo(
         pos4,
         width,
         height,
+        rootMatrix,
         beforeMatrix,
-        matrix,
-        targetTransform,
         offsetMatrix,
         targetMatrix,
+        matrix,
+        targetTransform,
         is3d,
         beforeOrigin,
         origin,
@@ -966,4 +999,21 @@ export function miinOffset(...args: number[]) {
     args.sort((a, b) => Math.abs(a) - Math.abs(b));
 
     return args[0];
+}
+
+export function convertDragDist(state: MoveableManagerState, e: any) {
+    const {
+        is3d,
+        rootMatrix,
+    } = state;
+    const n = is3d ? 4 : 3;
+    [
+        e.distX, e.distY,
+    ] = caculate(
+        invert(rootMatrix, 4),
+        convertPositionMatrix([e.distX, e.distY], n),
+        n,
+    );
+
+    return e;
 }

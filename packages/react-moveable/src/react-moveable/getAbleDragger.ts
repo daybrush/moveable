@@ -4,6 +4,7 @@ import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
 import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
 import MoveableGroup from "./MoveableGroup";
+import { convertDragDist } from "./utils";
 
 export function triggerAble<T extends IObject<any>>(
     moveable: MoveableManager<any>,
@@ -26,6 +27,9 @@ export function triggerAble<T extends IObject<any>>(
 
     if (isStart) {
         moveable.updateRect(eventType, true, false);
+    }
+    if (eventType === "" && !isAfter) {
+       convertDragDist(moveable.state, e);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
