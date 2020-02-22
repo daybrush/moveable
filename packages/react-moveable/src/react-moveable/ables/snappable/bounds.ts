@@ -117,29 +117,25 @@ export function checkRotateBounds(
         bottom: relativeBottom,
     };
 
-    if (!isBoundRotate(nextPoses, boundRect, rad)) {
+    if (!isBoundRotate(nextPoses, boundRect, 0)) {
         return [];
     }
-
-    const canBounds: Array<[number[], number, number]> = [];
-    nextPoses.forEach(nextPos => {
-        canBounds.push([nextPos, relativeLeft, 0]);
-        canBounds.push([nextPos, relativeRight, 0]);
-        canBounds.push([nextPos, relativeTop, 1]);
-        canBounds.push([nextPos, relativeBottom, 1]);
-    });
-    const length = canBounds.length;
     const result: number[] = [];
+    [
+        [relativeLeft, 0],
+        [relativeRight, 0],
+        [relativeTop, 1],
+        [relativeBottom, 1],
+    ].forEach(([boundPos, index], i) => {
+        nextPoses.forEach(nextPos => {
+            const relativeRad1 = getRad([0, 0], nextPos);
 
-    for (let i = 0; i < length; ++i) {
-        const [vec, boundPos, index] = canBounds[i];
-        const relativeRad1 = getRad([0, 0], vec);
-
-        result.push(...boundRotate(vec, boundPos, index)
-            .map(relativeRad2 => rad + relativeRad2 - relativeRad1)
-            .filter(nextRad => !isBoundRotate(prevPoses, boundRect, nextRad))
-            .map(nextRad => throttle(nextRad * 180 / Math.PI, TINY_NUM)));
-    }
+            result.push(...boundRotate(nextPos, boundPos, index)
+                .map(relativeRad2 => rad + relativeRad2 - relativeRad1)
+                .filter(nextRad => !isBoundRotate(prevPoses, boundRect, nextRad))
+                .map(nextRad => throttle(nextRad * 180 / Math.PI, TINY_NUM)));
+        });
+    });
 
     return result;
 }
