@@ -900,6 +900,8 @@ export interface OnCustomDrag extends Position {
  * @property - The height of moveable element
  * @property - The offset width of the target
  * @property - The offset height of the target
+ * @property - The absolute transform origin
+ * @property - the absolute transform origin before transformation
  */
 export interface RectInfo {
     pos1: number[];
@@ -912,6 +914,8 @@ export interface RectInfo {
     height: number;
     offsetWidth: number;
     offsetHeight: number;
+    origin: number[];
+    beforeOrigin: number[];
 }
 export interface MoveableInterface {
     getRect(): RectInfo;

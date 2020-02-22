@@ -154,7 +154,8 @@ export default {
         if (!target) {
             return false;
         }
-        datas.rect = moveable.getRect();
+        const rect = moveable.getRect();
+        datas.rect = rect;
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
@@ -163,12 +164,12 @@ export default {
             datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, prevSnapDeg: parentRotate, loop: 0 };
             datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, prevSnapDeg: parentRotate, loop: 0 };
         } else {
-            datas.beforeInfo = { origin: plus([left, top], beforeOrigin) };
-            datas.afterInfo = { origin: plus([left, top], origin) };
+            datas.beforeInfo = { origin: rect.beforeOrigin };
+            datas.afterInfo = { origin: rect.origin };
 
-            const rect = getClientRect(moveable.controlBox.getElement());
-            setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, rect);
-            setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, rect);
+            const controlRect = getClientRect(moveable.controlBox.getElement());
+            setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, controlRect);
+            setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, controlRect);
         }
 
         datas.direction = direction;

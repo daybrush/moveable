@@ -66,7 +66,7 @@ class App extends React.Component {
                     scalable={true}
                     ref={ref(this, "ab")}
                     // keepRatio={false}
-                    bounds={{ left: 30 }}
+                    bounds={{ left: 30, top: 30 }}
                     target={this.state.targets}
                     defaultGroupRotate={0}
                     origin={true}

@@ -20,7 +20,7 @@ import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester } from "./types";
 import { getAbleDragger, triggerAble } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
-import { getRad } from "@moveable/matrix";
+import { getRad, plus } from "@moveable/matrix";
 import { IObject } from "@daybrush/utils";
 
 const ControlBoxElement = styled("div", MOVEABLE_CSS);
@@ -218,6 +218,9 @@ export default class MoveableManager<T = {}, U = {}>
             left,
             top,
         } = rect;
+        const statePos = [state.left, state.top];
+        const origin = plus(statePos, state.origin);
+        const beforeOrigin = plus(statePos, state.beforeOrigin);
         return {
             width,
             height,
@@ -229,6 +232,8 @@ export default class MoveableManager<T = {}, U = {}>
             pos4,
             offsetWidth,
             offsetHeight,
+            beforeOrigin,
+            origin,
         };
     }
     public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {
