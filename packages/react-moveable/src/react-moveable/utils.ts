@@ -281,7 +281,7 @@ export function caculateMatrixStack(
     const {
         matrixes,
         is3d,
-        targetMatrix,
+        targetMatrix: prevTargetMatrix,
         transformOrigin,
         offsetContainer,
     } = getMatrixStackInfo(target, container, prevMatrix);
@@ -294,6 +294,7 @@ export function caculateMatrixStack(
     const isSVGGraphicElement = target.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in target;
     const originalContainer = container || document.body;
     let allMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
+    let targetMatrix = prevTargetMatrix;
     let rootMatrix = createIdentityMatrix(n);
     let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
@@ -304,6 +305,7 @@ export function caculateMatrixStack(
     matrixes.reverse();
 
     if (!is3d && isRoot3d) {
+        targetMatrix = convertDimension(targetMatrix, 3, 4);
         matrixes.forEach((matrix, i) => {
             matrixes[i] = convertDimension(matrix, 3, 4);
         });
