@@ -185,13 +185,21 @@ describe("test utils", () => {
         const stack7 = caculateMatrixStack(c6, null);
 
         // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [1, 0, 0, 0, 1, 0, 0, 0, 1], 'matrix(1,0,0,1,0,0)', [50, 50], false
-        const [beforeMatrix1, offsetMatrix1, matrix1, targetMatrix1, transform1, transformOrigin1, is3d1] = stack1;
+        const [
+            rootMatrix1, beforeMatrix1, offsetMatrix1, matrix1, targetMatrix1, transform1, transformOrigin1, is3d1,
+        ] = stack1;
         // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, 152, 0, 0, 1], [2, 0, 152, 0, 2, 232, 0, 0, 1], [1, 0, 100, 0, 1, 40, 0, 0, 1], 'matrix(1,0,0,1,100,40)', [50, 50], false
-        const [beforeMatrix2, offsetMatrix2, matrix2, targetMatrix2, transform2, transformOrigin2, is3d2] = stack2;
+        const [
+            rootMatrix2, beforeMatrix2, offsetMatrix2, matrix2, targetMatrix2, transform2, transformOrigin2, is3d2,
+        ] = stack2;
         // [[2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -48, 0, 2, 0, 448, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -48, 0, 2, 0, 448, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
-        const [beforeMatrix3, offsetMatrix3, matrix3, targetMatrix3, transform3, transformOrigin3, is3d3] = stack3;
+        const [
+            rootMatrix3, beforeMatrix3, offsetMatrix3, matrix3, targetMatrix3, transform3, transformOrigin3, is3d3,
+        ] = stack3;
         // [[2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1], [1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 0, 0, 0, 0, 1], [1, 0, 0, 100, 0, 1, 0, 350, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
-        const [beforeMatrix4, offsetMatrix4, matrix4, targetMatrix4, transform4, transformOrigin4, is3d4] = stack4;
+        const [
+            rootMatrix4, beforeMatrix4, offsetMatrix4, matrix4, targetMatrix4, transform4, transformOrigin4, is3d4,
+        ] = stack4;
 
         // Then
         expect(beforeMatrix1).to.be.deep.equals([2, 0, -252, 0, 2, -252, 0, 0, 1]);
