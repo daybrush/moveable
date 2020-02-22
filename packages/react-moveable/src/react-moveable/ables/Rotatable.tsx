@@ -160,8 +160,8 @@ export default {
         datas.top = top;
 
         if (pinchFlag || parentFlag) {
-            datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
-            datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, loop: 0 };
+            datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, prevSnapDeg: parentRotate, loop: 0 };
+            datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, prevSnapDeg: parentRotate, loop: 0 };
         } else {
             datas.beforeInfo = { origin: plus([left, top], beforeOrigin) };
             datas.afterInfo = { origin: plus([left, top], origin) };
@@ -339,9 +339,8 @@ export default {
 
                 const dragResult = Draggable.drag(
                     child,
-                    setCustomDrag(child.state, delta, inputEvent),
+                    setCustomDrag(child.state, delta, inputEvent, false),
                 );
-
                 result.drag = dragResult;
             },
         );

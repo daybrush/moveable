@@ -1,9 +1,14 @@
 import { MoveableManagerState, OnCustomDrag } from "./types";
 import { convertDragDist } from "./utils";
 
-export function setCustomDrag(state: MoveableManagerState<any>, delta: number[], inputEvent: any) {
+export function setCustomDrag(
+    state: MoveableManagerState<any>,
+    delta: number[], inputEvent: any,
+    isConvert: boolean = true,
+) {
+    const result = state.dragger!.move(delta, inputEvent);
     return {
-        ...convertDragDist(state, state.dragger!.move(delta, inputEvent)),
+        ...(isConvert ? convertDragDist(state, result) : result),
         parentEvent: true,
     };
 }
