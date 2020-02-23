@@ -16,7 +16,7 @@ import {
     getPosByReverseDirection,
     getDragDist, scaleMatrix, getPosByDirection,
 } from "../DraggerUtils";
-import { minus, rotate } from "@moveable/matrix";
+import { minus, rotate, plus } from "@moveable/matrix";
 import {
     dragControlCondition as rotatableDragControlCondtion,
 } from "./Rotatable";
@@ -468,25 +468,14 @@ export function getSizeOffsetInfo(
 }
 export function recheckSizeByTwoDirection(
     moveable: MoveableManager<SnappableProps, SnappableState>,
-    matrix: number[],
+    poses: number[][],
     width: number,
     height: number,
     maxWidth: number,
     maxHeight: number,
-    fixedPos: number[],
     direction: number[],
-    is3d: boolean,
     datas: any,
 ) {
-    const poses = getNextFixedPoses(
-        matrix,
-        width,
-        height,
-        fixedPos,
-        direction,
-        is3d,
-    );
-
     const snapPos = getPosByDirection(poses, direction);
 
     const {
@@ -522,6 +511,7 @@ export function recheckSizeByTwoDirection(
 }
 export function checkSizeDist(
     moveable: MoveableManager<any, any>,
+    getNextPoses: (widthOffset: number, heightOffset: number) => number[][],
     matrix: number[],
     width: number,
     height: number,
@@ -539,14 +529,7 @@ export function checkSizeDist(
     let heightOffset = 0;
 
     for (let i = 0; i < 2; ++i) {
-        const nextPoses = getNextFixedPoses(
-            matrix,
-            width + widthOffset,
-            height + heightOffset,
-            fixedPos,
-            direction,
-            is3d,
-        );
+        const nextPoses = getNextPoses(widthOffset, heightOffset);
         const {
             width: widthOffsetInfo,
             height: heightOffsetInfo,
@@ -592,6 +575,11 @@ export function checkSizeDist(
         }
         widthOffset += nextWidthOffset;
         heightOffset += nextHeightOffset;
+
+        return [
+            widthOffset,
+            heightOffset,
+        ];
     }
 
     if (direction[0] && direction[1]) {
@@ -602,14 +590,12 @@ export function checkSizeDist(
 
         const [nextWidthOffset, nextHeightOffset] = recheckSizeByTwoDirection(
             moveable,
-            matrix,
+            getNextPoses(widthOffset, heightOffset),
             width + widthOffset,
             height + heightOffset,
             maxWidth,
             maxHeight,
-            fixedPos,
             direction,
-            is3d,
             datas,
         );
 
@@ -671,7 +657,19 @@ export function checkSnapSize(
         matrix,
         is3d,
     } = moveable.state;
-    return checkSizeDist(moveable, matrix, width, height, direction, direction, fixedPos, isRequest, is3d, datas);
+    return checkSizeDist(
+        moveable,
+        (widthOffset: number, heightOffset: number) => {
+            return getNextFixedPoses(
+                matrix,
+                width + widthOffset,
+                height + heightOffset,
+                fixedPos,
+                direction,
+                is3d,
+            );
+        }, matrix, width, height, direction, direction, fixedPos, isRequest, is3d, datas,
+    );
 }
 export function checkSnapScale(
     moveable: MoveableManager<ScalableProps, any>,
@@ -694,16 +692,26 @@ export function checkSnapScale(
 
         scale = [fixedScale, fixedScale];
     }
-
+    const is3d = datas.is3d;
     const sizeDist = checkSizeDist(
         moveable,
+        (widthOffset: number, heightOffset: number) => {
+            return getNextFixedPoses(
+                scaleMatrix(datas, plus(scale, [widthOffset / width, heightOffset / height])),
+                width,
+                height,
+                fixedPos,
+                direction,
+                is3d,
+            );
+        },
         scaleMatrix(datas, scale),
         width, height,
         direction,
         snapDirection,
         fixedPos,
         isRequest,
-        datas.is3d,
+        is3d,
         datas,
     );
 

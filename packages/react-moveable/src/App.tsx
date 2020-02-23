@@ -196,8 +196,8 @@ class App extends React.Component {
                     // snapThreshold={10}
                     // scalable={!isResizable}
                     // scalable={true}
-                    scalable={true}
-                    // resizable={true}
+                    // scalable={true}
+                    resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
                     // resizable={isResizable}
