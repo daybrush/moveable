@@ -79,6 +79,11 @@ export interface BoundInfo {
     offset: number;
     pos: number;
 }
+export interface SnapOffsetInfo {
+    isSnap: boolean;
+    offset: number;
+    pos: number;
+}
 export interface SnapInfo {
     isSnap: boolean;
     posInfos: SnapPosInfo[];

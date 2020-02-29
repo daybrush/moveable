@@ -1,15 +1,15 @@
-import { SnapInfo, SnappableProps, SnappableState, Guideline, ResizableProps, ScalableProps } from "../../types";
+import {
+    SnapInfo, SnappableProps, SnappableState,
+    Guideline, ResizableProps, ScalableProps, SnapOffsetInfo
+} from "../../types";
 import MoveableManager from "../../MoveableManager";
 import { selectValue, throttle } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
 import { TINY_NUM } from "../../consts";
+import { minus } from "@moveable/matrix";
 
-export function checkSnapPoses(
+export function getTotalGuidelines(
     moveable: MoveableManager<SnappableProps, SnappableState>,
-    posesX: number[],
-    posesY: number[],
-    snapCenter?: boolean,
-    customSnapThreshold?: number,
 ) {
     const {
         guidelines,
@@ -19,9 +19,7 @@ export function checkSnapPoses(
         },
     } = moveable.state;
     const props = moveable.props;
-    const snapThreshold = selectValue<number>(customSnapThreshold, props.snapThreshold, 5);
     const {
-        snapElement = true,
         snapHorizontal = true,
         snapVertical = true,
         verticalGuidelines,
@@ -40,6 +38,22 @@ export function checkSnapPoses(
             totalGuidelines.push({ type: "vertical", pos: [throttle(pos, 0.1), 0], size: containerHeight });
         });
     }
+    return totalGuidelines;
+}
+export function checkSnapPoses(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    posesX: number[],
+    posesY: number[],
+    snapCenter?: boolean,
+    customSnapThreshold?: number,
+) {
+    const totalGuidelines = getTotalGuidelines(moveable);
+    const props = moveable.props;
+    const {
+        snapElement = true,
+    } = props;
+    const snapThreshold = selectValue<number>(customSnapThreshold, props.snapThreshold, 5);
+
     return {
         vertical: checkSnap(
             totalGuidelines,
@@ -53,6 +67,107 @@ export function checkSnapPoses(
             snapCenter!,
             snapElement,
         ),
+    };
+}
+
+export function checkSnapKeepRatio(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    startPos: number[],
+    endPos: number[],
+): {
+    vertical: SnapOffsetInfo,
+    horizontal: SnapOffsetInfo,
+} {
+    const [endX, endY] = endPos;
+    const [startX, startY] = startPos;
+    const [dx, dy] = minus(endPos, startPos);
+    const isBottom = dy > 0;
+    const isRight = dx > 0;
+
+    const verticalInfo: SnapOffsetInfo = {
+        isSnap: false,
+        offset: 0,
+        pos: 0,
+    };
+    const horizontalInfo: SnapOffsetInfo = {
+        isSnap: false,
+        offset: 0,
+        pos: 0,
+    };
+
+    if (dx === 0 && dy === 0) {
+        return {
+            vertical: verticalInfo,
+            horizontal: horizontalInfo,
+        };
+    }
+    const {
+        vertical: verticalSnapInfo,
+        horizontal: horizontalSnapInfo,
+    } = checkSnapPoses(moveable, dx ? [endX] : [], dy ? [endY] : []);
+
+    verticalSnapInfo.posInfos.filter(({ pos }) => {
+        return isRight ? pos >= startX : pos <= startX;
+    });
+    horizontalSnapInfo.posInfos.filter(({ pos }) => {
+        return isBottom ? pos >= startY : pos <= startY;
+    });
+    verticalSnapInfo.isSnap = verticalSnapInfo.posInfos.length > 0;
+    horizontalSnapInfo.isSnap = horizontalSnapInfo.posInfos.length > 0;
+
+    const {
+        isSnap: isVerticalSnap,
+        guideline: verticalGuideline,
+    } = getNearestSnapGuidelineInfo(verticalSnapInfo);
+    const {
+        isSnap: isHorizontalSnap,
+        guideline: horizontalGuideline,
+    } = getNearestSnapGuidelineInfo(horizontalSnapInfo);
+    const horizontalPos = isHorizontalSnap ? horizontalGuideline!.pos[1] : 0;
+    const verticalPos = isVerticalSnap ? verticalGuideline!.pos[0] : 0;
+
+    if (dx === 0) {
+        if (isHorizontalSnap) {
+            horizontalInfo.isSnap = true;
+            horizontalInfo.pos = horizontalGuideline!.pos[1];
+            horizontalInfo.offset = endY - horizontalInfo.pos;
+        }
+    } else if (dy === 0) {
+        if (isVerticalSnap) {
+            verticalInfo.isSnap = true;
+            verticalInfo.pos = verticalPos;
+            verticalInfo.offset = endX - verticalPos;
+        }
+    } else {
+        // y - y1 = a * (x - x1)
+        const a = dy / dx;
+        const b = endPos[1] - a * endX;
+        let y = 0;
+        let x = 0;
+        let isSnap = false;
+
+        if (isVerticalSnap) {
+            x = verticalPos;
+            y = a * x + b;
+            isSnap = true;
+        } else if (isHorizontalSnap) {
+            y = horizontalPos;
+            x = (y - b) / a;
+            isSnap = true;
+        }
+        if (isSnap) {
+            verticalInfo.isSnap = true;
+            verticalInfo.pos = x;
+            verticalInfo.offset = endX - x;
+
+            horizontalInfo.isSnap = true;
+            horizontalInfo.pos = y;
+            horizontalInfo.offset = endY - y;
+        }
+    }
+    return {
+        vertical: verticalInfo,
+        horizontal: horizontalInfo,
     };
 }
 

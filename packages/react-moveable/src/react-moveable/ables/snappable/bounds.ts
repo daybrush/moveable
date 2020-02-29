@@ -1,10 +1,10 @@
 import MoveableManager from "../../MoveableManager";
 import { BoundInfo, SnappableProps, BoundType, RotatableProps } from "../../types";
-import { rotate, getRad } from "@moveable/matrix";
+import { rotate, getRad, minus } from "@moveable/matrix";
 import { getDistSize, throttle } from "../../utils";
 import { TINY_NUM } from "../../consts";
 
-export function checkBounds(
+export function checkBoundPoses(
     moveable: MoveableManager<SnappableProps>,
     verticalPoses: number[],
     horizontalPoses: number[],
@@ -23,6 +23,103 @@ export function checkBounds(
     };
 }
 
+export function checkBoundKeepRatio(
+    moveable: MoveableManager<SnappableProps>,
+    startPos: number[],
+    endPos: number[],
+) {
+    const {
+        left = -Infinity,
+        top = -Infinity,
+        right = Infinity,
+        bottom = Infinity,
+    } = moveable.props.bounds || {};
+
+    const [endX, endY] = endPos;
+    const [dx, dy] = minus(endPos, startPos);
+    const isBottom = dy > 0;
+    const isRight = dx > 0;
+
+    const verticalInfo = {
+        isBound: false,
+        offset: 0,
+        pos: 0,
+    };
+    const horizontalInfo = {
+        isBound: false,
+        offset: 0,
+        pos: 0,
+    };
+    if (dx === 0 && dy === 0) {
+        return {
+            vertical: verticalInfo,
+            horizontal: horizontalInfo,
+        };
+    } else if (dx === 0) {
+        if (isBottom) {
+            if (bottom < endY) {
+                horizontalInfo.pos = bottom;
+                horizontalInfo.offset = endY - bottom;
+            }
+        } else {
+            if (top > endY) {
+                horizontalInfo.pos = top;
+                horizontalInfo.offset = endY - top;
+            }
+        }
+    } else if (dy === 0) {
+        if (isRight) {
+            if (right < endX) {
+                verticalInfo.pos = right;
+                verticalInfo.offset = endX - right;
+            }
+        } else {
+            if (left > endX) {
+                verticalInfo.pos = left;
+                verticalInfo.offset = endX - left;
+            }
+        }
+    } else {
+        // y - y1 = a * (x - x1)
+        const a = dy / dx;
+        const b = endPos[1] - a * endX;
+        let y = 0;
+        let x = 0;
+        let isBound = false;
+
+        if (isRight && right <= endX) {
+            y = a * right + b;
+            x = right;
+            isBound = true;
+        } else if (!isRight && endX <= left) {
+            y = a * left + b;
+            x = left;
+            isBound = true;
+        } else if (isBottom && bottom <= endY) {
+            y = bottom;
+            x = (y - b) / a;
+            isBound = true;
+        } else if (!isBottom &&  endY <= top) {
+            y = top;
+            x = (y - b) / a;
+            isBound = true;
+        }
+        if (isBound) {
+            verticalInfo.isBound = true;
+            verticalInfo.pos = x;
+            verticalInfo.offset = endX - x;
+
+            horizontalInfo.isBound = true;
+            horizontalInfo.pos = y;
+            horizontalInfo.offset = endY - y;
+        }
+    }
+
+    return {
+        vertical: verticalInfo,
+        horizontal: horizontalInfo,
+    };
+}
 function checkBound(
     bounds: Required<BoundType>,
     poses: number[],
