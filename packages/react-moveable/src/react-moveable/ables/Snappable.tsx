@@ -748,11 +748,6 @@ export function checkSnapScale(
     if (!hasGuidelines(moveable, "scalable")) {
         return [0, 0];
     }
-    if (moveable.props.keepRatio) {
-        const fixedScale = Math.abs(scale[0]) < Math.abs(scale[1]) ? scale[1] : scale[0];
-
-        scale = [fixedScale, fixedScale];
-    }
     const is3d = datas.is3d;
     const sizeDist = checkSizeDist(
         moveable,
