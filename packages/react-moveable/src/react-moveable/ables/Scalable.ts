@@ -1,11 +1,11 @@
 import {
-    throttle, getDirection, triggerEvent, multiply2, getAbsolutePosesByState,
+    throttle, getDirection, triggerEvent, multiply2,
     fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
     setDragStart, getDragDist,
-    getScaleDist, getPosByReverseDirection,
+    getScaleDist,
     getAbsoluteFixedPosition,
 } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
@@ -174,8 +174,8 @@ export default {
             scaleX = (width + distWidth) / width;
             scaleY = (height + distHeight) / height;
         }
-        scaleX = direction[0] ? scaleX * startScale[0] : startScale[0];
-        scaleY = direction[1] ? scaleY * startScale[1] : startScale[1];
+        scaleX = direction[0] || keepRatio ? scaleX * startScale[0] : startScale[0];
+        scaleY = direction[1] || keepRatio ? scaleY * startScale[1] : startScale[1];
 
         if (scaleX === 0) {
             scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -319,7 +319,9 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+        const startPos = getAbsoluteFixedPosition(moveable, direction);
+
+        datas.startPos = startPos;
 
         const events = triggerChildAble(
             moveable,
@@ -327,7 +329,7 @@ export default {
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const pos = getPosByReverseDirection(getAbsolutePosesByState(child.state), direction);
+                const pos = getAbsoluteFixedPosition(child, direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - startPos[0], pos[1] - startPos[1], 1],
@@ -360,8 +362,8 @@ export default {
             return;
         }
         const keepRatio = moveable.props.keepRatio;
-        const { scale, direction, dist } = params;
-        const prevPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), multiply2(direction, dist));
+        const { scale } = params;
+        const startPos = datas.startPos;
 
         const events = triggerChildAble(
             moveable,
@@ -383,7 +385,7 @@ export default {
                     ...e,
                     parentScale: scale,
                     parentKeepRatio: keepRatio,
-                    dragClient: plus(prevPos, [clientX, clientY]),
+                    dragClient: plus(startPos, [clientX, clientY]),
                 };
             },
         );
