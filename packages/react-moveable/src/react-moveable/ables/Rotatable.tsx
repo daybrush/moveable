@@ -1,4 +1,4 @@
-import { throttle, prefix, triggerEvent, fillParams, getRotationRad, getClientRect } from "../utils";
+import { throttle, prefix, triggerEvent, fillParams, getRotationRad, getClientRect, caculatePosition } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import {
@@ -14,13 +14,15 @@ import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapRotate } from "./Snappable";
 
 function setRotateStartInfo(
+    moveable: MoveableManager<any, any>,
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
-    datas.startAbsoluteOrigin = [
-        rect.left + origin[0],
-        rect.top + origin[1],
-    ];
 
-    datas.prevDeg = getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
+    const n = moveable.state.is3d ? 4 : 3;
+    const nextOrigin = caculatePosition(moveable.state.rootMatrix, origin, n);
+    const startAbsoluteOrigin = plus([rect.left, rect.top], nextOrigin);
+
+    datas.startAbsoluteOrigin = startAbsoluteOrigin;
+    datas.prevDeg = getRad(startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
     datas.prevSnapDeg = datas.prevDeg;
     datas.startDeg = datas.prevDeg;
     datas.loop = 0;
@@ -168,8 +170,9 @@ export default {
             datas.afterInfo = { origin: rect.origin };
 
             const controlRect = getClientRect(moveable.controlBox.getElement());
-            setRotateStartInfo(datas.afterInfo, clientX, clientY, origin, controlRect);
-            setRotateStartInfo(datas.beforeInfo, clientX, clientY, beforeOrigin, controlRect);
+
+            setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, beforeOrigin, controlRect);
+            setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, origin, controlRect);
         }
 
         datas.direction = direction;
