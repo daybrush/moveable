@@ -153,7 +153,14 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         state.width = width;
         state.height = height;
 
-        const info = getTargetInfo(target, this.controlBox.getElement(), this.getContainer(), state);
+        const container = this.getContainer();
+        const info = getTargetInfo(
+            target,
+            this.controlBox.getElement(),
+            this.getContainer(),
+            this.props.rootContainer || container,
+            state,
+        );
         const pos = [info.left!, info.top!];
         [
             info.pos1,

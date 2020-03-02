@@ -68,6 +68,7 @@ class App extends React.Component {
                     // keepRatio={false}
                     bounds={{ left: 30, top: 30 }}
                     target={this.state.targets}
+                    rootContainer={document.body}
                     defaultGroupRotate={0}
                     origin={true}
                     snappable={true}
@@ -170,6 +171,7 @@ class App extends React.Component {
                     />
                 <Moveable
                     target={selectedTarget}
+                    rootContainer={document.body}
                     className="no-radius"
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}

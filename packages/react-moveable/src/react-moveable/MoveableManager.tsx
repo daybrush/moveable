@@ -152,12 +152,17 @@ export default class MoveableManager<T = {}, U = {}>
         return isInside(pos, pos1, pos2, pos4, pos3);
     }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
-        const parentMoveable = this.props.parentMoveable;
+        const props = this.props;
+        const parentMoveable = props.parentMoveable;
         const state = this.state;
         const target = (state.target || this.props.target) as HTMLElement | SVGElement;
         const container = this.getContainer();
+        const rootContainer = parentMoveable
+            ? parentMoveable.props.rootContainer
+            : props.rootContainer;
         this.updateState(
-            getTargetInfo(target, container, container, isTarget ? state : undefined),
+            getTargetInfo(target, container, container, rootContainer || container,
+                isTarget ? state : undefined),
             parentMoveable ? false : isSetState,
         );
     }

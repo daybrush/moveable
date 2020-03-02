@@ -171,7 +171,7 @@ export function getMatrixStackInfo(
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
-    let isEnd = false;
+    let isEnd = target === container;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -274,8 +274,9 @@ export function getMatrixStackInfo(
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
+    rootContainer: SVGElement | HTMLElement | null,
     prevMatrix?: number[],
-    // prevRootMatrix?: number[],
+    prevRootMatrix?: number[],
     prevN?: number,
 ): [number[], number[], number[], number[], number[], string, number[], boolean] {
     const {
@@ -288,14 +289,14 @@ export function caculateMatrixStack(
     const {
         matrixes: rootMatrixes,
         is3d: isRoot3d,
-    } = getMatrixStackInfo(offsetContainer, document.body);
+    } = getMatrixStackInfo(offsetContainer, rootContainer, prevRootMatrix);
 
     const n = isRoot3d || is3d ? 4 : 3;
     const isSVGGraphicElement = target.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in target;
     const originalContainer = container || document.body;
     let allMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let targetMatrix = prevTargetMatrix;
-    let rootMatrix = createIdentityMatrix(n);
+    let rootMatrix = prevRootMatrix ? convertDimension(prevRootMatrix, prevN!, n) : createIdentityMatrix(n);
     let beforeMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
@@ -320,9 +321,11 @@ export function caculateMatrixStack(
     // beforeMatrix = (... -> container -> offset -> absolute) -> offset -> absolute(targetMatrix)
     // offsetMatrix = (... -> container -> offset -> absolute -> offset) -> absolute(targetMatrix)
 
-    rootMatrixes.forEach(matrix => {
-        rootMatrix = multiply(rootMatrix, matrix, n);
-    });
+    if (!prevRootMatrix) {
+        rootMatrixes.forEach(matrix => {
+            rootMatrix = multiply(rootMatrix, matrix, n);
+        });
+    }
     matrixes.forEach((matrix, i) => {
         if (length - 2 === i) {
             // length - 3
@@ -670,6 +673,7 @@ export function getTargetInfo(
     target?: HTMLElement | SVGElement,
     container?: HTMLElement | SVGElement | null,
     parentContainer?: HTMLElement | SVGElement | null,
+    rootContainer?: HTMLElement | SVGElement | null,
     state?: Partial<MoveableManagerState> | false | undefined,
 ): Partial<MoveableManagerState> {
     let left = 0;
@@ -699,6 +703,7 @@ export function getTargetInfo(
     let rotation = 0;
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
+    const prevRootMatrix = state ? state.rootMatrix : undefined;
     const prevN = state ? (state.is3d ? 4 : 3) : undefined;
 
     if (target) {
@@ -722,7 +727,10 @@ export function getTargetInfo(
             matrix,
             targetMatrix,
             targetTransform, transformOrigin, is3d,
-        ] = caculateMatrixStack(target, container!, prevMatrix, prevN);
+        ] = caculateMatrixStack(
+            target, container!, rootContainer!,
+            prevMatrix, prevRootMatrix, prevN,
+        );
 
         [
             [left, top, right, bottom],
