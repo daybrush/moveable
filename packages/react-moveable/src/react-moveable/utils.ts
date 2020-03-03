@@ -263,6 +263,12 @@ export function getMatrixStackInfo(
             isEnd = isOffsetEnd;
         }
     }
+    if (!targetMatrix) {
+        targetMatrix = createIdentityMatrix(n);
+    }
+    if (!transformOrigin) {
+        transformOrigin = [0, 0];
+    }
     return {
         offsetContainer,
         matrixes,
@@ -351,6 +357,10 @@ export function caculateMatrixStack(
         allMatrix = multiply(allMatrix, matrix, n);
     });
     const isMatrix3d = !isSVGGraphicElement && is3d;
+
+    if (!targetMatrix) {
+        targetMatrix = createIdentityMatrix(isMatrix3d ? 4 : 3);
+    }
     const transform = `${isMatrix3d ? "matrix3d" : "matrix"}(${
         convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16
             ? convertDimension(targetMatrix, 4, 3) : targetMatrix)

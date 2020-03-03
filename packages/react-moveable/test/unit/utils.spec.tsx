@@ -176,13 +176,13 @@ describe("test utils", () => {
         const c6 = document.querySelector(".c6") as HTMLElement;
 
         // When
-        const stack1 = caculateMatrixStack(c2, document.body);
-        const stack2 = caculateMatrixStack(c3, document.body);
-        const stack3 = caculateMatrixStack(c4, document.body);
-        const stack4 = caculateMatrixStack(c4, c4);
-        const stack5 = caculateMatrixStack(c6, c5);
-        const stack6 = caculateMatrixStack(c6, c4);
-        const stack7 = caculateMatrixStack(c6, null);
+        const stack1 = caculateMatrixStack(c2, document.body, document.body);
+        const stack2 = caculateMatrixStack(c3, document.body, document.body);
+        const stack3 = caculateMatrixStack(c4, document.body, document.body);
+        const stack4 = caculateMatrixStack(c4, c4, c4);
+        const stack5 = caculateMatrixStack(c6, c5, c5);
+        const stack6 = caculateMatrixStack(c6, c4, c4);
+        const stack7 = caculateMatrixStack(c6, null, null);
 
         // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [1, 0, 0, 0, 1, 0, 0, 0, 1], 'matrix(1,0,0,1,0,0)', [50, 50], false
         const [
@@ -226,13 +226,13 @@ describe("test utils", () => {
         expect(transformOrigin3).to.be.deep.equals([50, 50]);
         expect(is3d3).to.be.true;
 
-        expect(beforeMatrix4).to.be.deep.equals([2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1]);
-        expect(offsetMatrix4).to.be.deep.equals([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 0, 0, 0, 0, 1]);
-        expect(matrix4).to.be.deep.equals([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 100, 0, 0, 0, 1]);
-        expect(targetMatrix4).to.be.deep.equals([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1]);
-        expect(transform4).to.be.equals("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)");
-        expect(transformOrigin4).to.be.deep.equals([50, 50]);
-        expect(is3d4).to.be.true;
+        expect(beforeMatrix4).to.be.deep.equals([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        expect(offsetMatrix4).to.be.deep.equals([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        expect(matrix4).to.be.deep.equals([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        expect(targetMatrix4).to.be.deep.equals([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        expect(transform4).to.be.equals("matrix(1,0,0,1,0,0)");
+        expect(transformOrigin4).to.be.deep.equals([0, 0]);
+        expect(is3d4).to.be.false;
     });
 
     it("test throttle", () => {
