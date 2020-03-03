@@ -1,7 +1,10 @@
 import MoveableManager from "../MoveableManager";
-import { createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
+import {
+    createWarpMatrix, convertMatrixtoCSS,
+    caculate, convertPositionMatrix, invert, minus, plus,
+} from "@moveable/matrix";
 import { ref } from "framework-utils";
-import { triggerEvent, fillParams, getRect } from "../utils";
+import { triggerEvent, fillParams, getRect, caculatePoses } from "../utils";
 import { Renderer, GroupableProps, DragAreaProps, OnClick } from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
 import MoveableGroup from "../MoveableGroup";
@@ -76,14 +79,32 @@ export default {
         const {
             targetClientRect,
             pos1, pos2, pos3, pos4,
+            width, height,
+            rootMatrix,
+            is3d,
         } = moveable.state;
-        const { left, top, width, height } = targetClientRect;
+        const { left, top } = targetClientRect;
         const {
             left: relativeLeft,
             top: relativeTop,
         } = getRect([pos1, pos2, pos3, pos4]);
-        const posX = clientX - left;
-        const posY = clientY - top;
+        const n = is3d ? 4 : 3;
+        const poses = caculatePoses(rootMatrix, width, height, n);
+        const {
+            left: rootLeft,
+            top: rootTop,
+        } = getRect(poses);
+
+        const rootRelativePos = minus(
+            [clientX, clientY],
+            plus([left - rootLeft, top - rootTop], poses[0]),
+        );
+
+        const [posX, posY] = caculate(
+            invert(rootMatrix, n),
+            convertPositionMatrix(rootRelativePos, n),
+            n,
+        );
 
         const rects = [
             { left: relativeLeft, top: relativeTop, width, height: posY - 10 },

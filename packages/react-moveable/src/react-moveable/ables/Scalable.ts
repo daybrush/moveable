@@ -429,7 +429,7 @@ export default {
                 distWidth += e.deltaWidth;
                 distHeight += e.deltaHeight;
 
-                return { datas, parentDist: [distWidth, distHeight], parentDelta: [e.deltaWidth, e.deltaHeight] };
+                return { datas, parentDist: [distWidth, distHeight] };
             },
             requestEnd() {
                 return { datas, isDrag: true };
