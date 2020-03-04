@@ -13,6 +13,11 @@ import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapRotate } from "./Snappable";
 
+/**
+ * @namespace Rotatable
+ * @memberof Moveable
+ */
+
 function setRotateStartInfo(
     moveable: MoveableManager<any, any>,
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
@@ -26,6 +31,31 @@ function setRotateStartInfo(
     datas.prevSnapDeg = datas.prevDeg;
     datas.startDeg = datas.prevDeg;
     datas.loop = 0;
+}
+function getParentDeg(
+    moveable: MoveableManager<any, any>,
+    moveableRect: any,
+    datas: IObject<any>,
+    parentDist: number,
+    direction: number,
+    startRotate: number,
+) {
+    const {
+        prevDeg,
+    } = datas;
+
+    const absoluteDeg = startRotate + parentDist;
+    const dist = checkSnapRotate(
+        moveable,
+        moveableRect,
+        datas.origin,
+        parentDist,
+    );
+    datas.prevDeg = dist;
+
+    const delta = direction * (dist - prevDeg);
+
+    return [delta, dist, absoluteDeg];
 }
 function getDeg(
     moveable: MoveableManager<any, any>,
@@ -109,7 +139,7 @@ export function getPositions(
 
 export function dragControlCondition(e: any) {
     if (e.isRequest) {
-        return false;
+        return true;
     }
     return hasClass(e.inputEvent.target, prefix("rotation"));
 }
@@ -147,24 +177,41 @@ export default {
     dragControlStart(
         moveable: MoveableManager<RotatableProps & SnappableProps, SnappableState>,
         e: any) {
-        const { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag } = e;
+        const {
+            datas,
+            clientX, clientY,
+            parentRotate, parentFlag, pinchFlag,
+            isRequest,
+        } = e;
         const {
             target, left, top, origin, beforeOrigin,
             direction, beforeDirection, targetTransform,
         } = moveable.state;
 
-        if (!target) {
+        if (!isRequest && !target) {
             return false;
         }
+
         const rect = moveable.getRect();
         datas.rect = rect;
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
 
-        if (pinchFlag || parentFlag) {
-            datas.beforeInfo = { prevDeg: parentRotate, startDeg: parentRotate, prevSnapDeg: parentRotate, loop: 0 };
-            datas.afterInfo = { prevDeg: parentRotate, startDeg: parentRotate, prevSnapDeg: parentRotate, loop: 0 };
+        if (isRequest || pinchFlag || parentFlag) {
+            const externalRotate = parentRotate || 0;
+
+            datas.beforeInfo = {
+                origin: rect.beforeOrigin,
+                prevDeg: externalRotate,
+                startDeg: externalRotate,
+                prevSnapDeg: externalRotate, loop: 0,
+            };
+            datas.afterInfo = {
+                origin: rect.origin,
+                prevDeg: externalRotate, startDeg: externalRotate,
+                prevSnapDeg: externalRotate, loop: 0,
+            };
         } else {
             datas.beforeInfo = { origin: rect.beforeOrigin };
             datas.afterInfo = { origin: rect.origin };
@@ -221,7 +268,14 @@ export default {
         let beforeDist: number;
         let beforeRotate: number;
 
-        if (pinchFlag || parentFlag) {
+        if ("parentDist" in e) {
+            const parentDist = e.parentDist;
+
+            [delta, dist, rotate]
+                = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startRotate);
+            [beforeDelta, beforeDist, beforeRotate]
+                = getParentDeg(moveable, rect, beforeInfo, parentDist, direction, startRotate);
+        } else if (pinchFlag || parentFlag) {
             [delta, dist, rotate]
                 = getDeg(moveable, rect, afterInfo, parentRotate, direction, startRotate, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate]
@@ -379,5 +433,46 @@ export default {
 
         triggerEvent(moveable, "onRotateGroupEnd", nextParams);
         return isDrag;
+    },
+    /**
+     * @method Moveable.Rotatable#request
+     * @param {object} [e] - the Resizable's request parameter
+     * @param {number} [e.deltaRotate=0] -  delta number of rotation
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("rotatable", { deltaRotate: 10, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("rotatable");
+     *
+     * // request
+     * requester.request({ deltaRotate: 10 });
+     * requester.request({ deltaRotate: 10 });
+     * requester.request({ deltaRotate: 10 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
+    request() {
+        const datas = {};
+        let distRotate = 0;
+
+        return {
+            isControl: true,
+            requestStart(e: IObject<any>) {
+                return { datas };
+            },
+            request(e: IObject<any>) {
+                distRotate += e.deltaRotate;
+
+                return { datas, parentDist: distRotate };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
     },
 };
