@@ -488,23 +488,34 @@ export default {
      * @example
 
      * // Instantly Request (requestStart - request - requestEnd)
+     * // Use Relative Value
      * moveable.request("resizable", { deltaWidth: 10, deltaHeight: 10, isInstant: true });
+     *
+     * // Use Absolute Value
+     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100, isInstant: true });
      *
      * // requestStart
      * const requester = moveable.request("resizable");
      *
      * // request
+     * // Use Relative Value
      * requester.request({ deltaWidth: 10, deltaHeight: 10 });
      * requester.request({ deltaWidth: 10, deltaHeight: 10 });
      * requester.request({ deltaWidth: 10, deltaHeight: 10 });
      *
+     * // Use Absolute Value
+     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100, isInstant: true });
+     * moveable.request("resizable", { offsetWidth: 110, offsetHeight: 100, isInstant: true });
+     * moveable.request("resizable", { offsetWidth: 120, offsetHeight: 100, isInstant: true });
+     *
      * // requestEnd
      * requester.requestEnd();
      */
-    request() {
+    request(moveable: MoveableManager<any>) {
         const datas = {};
         let distWidth = 0;
         let distHeight = 0;
+        const rect = moveable.getRect();
 
         return {
             isControl: true,
@@ -512,8 +523,16 @@ export default {
                 return { datas, parentDirection: e.direction || [1, 1] };
             },
             request(e: IObject<any>) {
-                distWidth += e.deltaWidth;
-                distHeight += e.deltaHeight;
+                if ("offsetWidth" in e) {
+                    distWidth = e.offsetWidth - rect.offsetWidth;
+                } else if ("deltaWidth" in e) {
+                    distWidth += e.deltaWidth;
+                }
+                if ("offsetHeight" in e) {
+                    distHeight = e.offsetHeight - rect.offsetHeight;
+                } else if ("deltaHeight" in e) {
+                    distHeight += e.deltaHeight;
+                }
 
                 return { datas, parentDist: [distWidth, distHeight] };
             },

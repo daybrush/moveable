@@ -154,7 +154,7 @@ export interface Able<T = any> {
     dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
     dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
 
-    request?: () => AbleRequester;
+    request?: (moveable: MoveableManagerProps<any>) => AbleRequester;
 }
 
 /**

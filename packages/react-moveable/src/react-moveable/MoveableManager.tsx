@@ -260,7 +260,7 @@ export default class MoveableManager<T = {}, U = {}>
             };
         }
         const self = this;
-        const ableRequester = requsetAble.request();
+        const ableRequester = requsetAble.request(this);
 
         const ableType = ableRequester.isControl ? "controlAbles" : "targetAbles";
         const eventAffix  = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;

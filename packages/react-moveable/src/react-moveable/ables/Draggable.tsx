@@ -274,6 +274,8 @@ export default {
     /**
      * @method Moveable.Draggable#request
      * @param {object} [e] - the draggable's request parameter
+     * @param {number} [e.x] - x position
+     * @param {number} [e.y] - y position
      * @param {number} [e.deltaX] - X number to move
      * @param {number} [e.deltaY] - Y number to move
      * @param {number} [e.isInstant] - Whether to execute the request instantly
@@ -281,21 +283,30 @@ export default {
      * @example
 
      * // Instantly Request (requestStart - request - requestEnd)
+     * // Use Relative Value
      * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     * // Use Absolute Value
+     * moveable.request("draggable", { x: 200, y: 100, isInstant: true });
      *
      * // requestStart
      * const requester = moveable.request("draggable");
      *
      * // request
+     * // Use Relative Value
      * requester.request({ deltaX: 10, deltaY: 10 });
      * requester.request({ deltaX: 10, deltaY: 10 });
      * requester.request({ deltaX: 10, deltaY: 10 });
+     * // Use Absolute Value
+     * moveable.request("draggable", { x: 200, y: 100, isInstant: true });
+     * moveable.request("draggable", { x: 220, y: 100, isInstant: true });
+     * moveable.request("draggable", { x: 240, y: 100, isInstant: true });
      *
      * // requestEnd
      * requester.requestEnd();
      */
-    request() {
+    request(moveable: MoveableManager<any, any>) {
         const datas = {};
+        const rect = moveable.getRect();
         let distX = 0;
         let distY = 0;
 
@@ -305,8 +316,16 @@ export default {
                 return { datas };
             },
             request(e: IObject<any>) {
-                distX += e.deltaX;
-                distY += e.deltaY;
+                if ("x" in e) {
+                    distX = e.x - rect.left;
+                } else if ("deltaX" in e) {
+                    distX += e.deltaX;
+                }
+                if ("y" in e) {
+                    distY = e.y - rect.top;
+                } else if ("deltaY" in e) {
+                    distY += e.deltaY;
+                }
 
                 return { datas, distX, distY };
             },
