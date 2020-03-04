@@ -10,6 +10,10 @@ export interface MoveableClientRect {
     bottom: number;
     width: number;
     height: number;
+    clientWidth?: number;
+    clientHeight?: number;
+    scrollWidth?: number;
+    scrollHeight?: number;
 }
 export type MoveableManagerProps<T = {}> = {
     parentMoveable?: any;
@@ -22,6 +26,7 @@ export interface MoveableDefaultProps {
     rootContainer?: HTMLElement | null;
     dragArea?: boolean;
     origin?: boolean;
+    zoom?: number;
     transformOrigin?: Array<string | number> | "";
     edge?: boolean;
     ables?: Able[];

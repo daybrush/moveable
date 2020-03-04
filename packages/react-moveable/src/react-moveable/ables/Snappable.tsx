@@ -1120,9 +1120,8 @@ function renderSnapPoses(
 function renderGuidelines(
     guidelines: Guideline[],
     [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
-    minPos: number,
-    clientPos: number,
-    targetPos: number,
+    targetPos1: number,
+    targetPos2: number,
     index: number,
     React: Renderer,
 ) {
@@ -1135,8 +1134,8 @@ function renderGuidelines(
             "guideline",
             element ? "bold" : "",
         )} key={`${directionName}Guidline${i}`} style={{
-            [posName1]: `${minPos - clientPos + pos[index]}px`,
-            [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
+            [posName1]: `${-targetPos1 + pos[index]}px`,
+            [posName2]: `${-targetPos2 + pos[index ? 0 : 1]}px`,
             [sizeName]: `${size}px`,
         }} />;
     });
@@ -1204,9 +1203,9 @@ export default {
             targetClientRect,
             containerClientRect,
         } = moveable.state;
-
         const clientLeft = targetClientRect.left - containerClientRect.left;
         const clientTop = targetClientRect.top - containerClientRect.top;
+
         const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
         const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
 
@@ -1320,8 +1319,7 @@ export default {
             ...renderGuidelines(
                 horizontalGuidelines,
                 horizontalNames,
-                minLeft,
-                clientLeft,
+                targetLeft,
                 targetTop,
                 0,
                 React,
@@ -1329,8 +1327,7 @@ export default {
             ...renderGuidelines(
                 verticalGuildelines,
                 verticalNames,
-                minTop,
-                clientTop,
+                targetTop,
                 targetLeft,
                 1,
                 React,

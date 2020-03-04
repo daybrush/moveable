@@ -609,7 +609,7 @@ export function getLineStyle(pos1: number[], pos2: number[], rad: number = getRa
     const width = getDiagonalSize(pos1, pos2);
 
     return {
-        transform: `translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad)`,
+        transform: `translateY(-50%) translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad)`,
         width: `${width}px`,
     };
 }
@@ -767,6 +767,7 @@ export function getTargetInfo(
         targetClientRect = getClientRect(target);
         containerClientRect = getClientRect(
             getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
+            true,
         );
         rotation = getRotationRad([pos1, pos2], direction);
     }
@@ -801,12 +802,18 @@ export function getTargetInfo(
     };
 }
 export function resetClientRect(): MoveableClientRect {
-    return { left: 0, right: 0, top: 0, width: 0, height: 0, bottom: 0 };
+    return {
+        left: 0, right: 0,
+        top: 0, bottom: 0,
+        width: 0, height: 0,
+        clientWidth: 0, clientHeight: 0,
+        scrollWidth: 0, scrollHeight: 0,
+    };
 }
-export function getClientRect(el: HTMLElement | SVGElement) {
+export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean) {
     const { left, width, top, bottom, right, height } = el.getBoundingClientRect();
 
-    return {
+    const rect: MoveableClientRect = {
         left,
         right,
         top,
@@ -814,6 +821,14 @@ export function getClientRect(el: HTMLElement | SVGElement) {
         width,
         height,
     };
+
+    if (isExtends) {
+        rect.clientWidth = el.clientWidth;
+        rect.clientHeight = el.clientHeight;
+        rect.scrollWidth = el.scrollWidth;
+        rect.scrollHeight = el.scrollHeight;
+    }
+    return rect;
 }
 export function getDirection(target: SVGElement | HTMLElement) {
     if (!target) {

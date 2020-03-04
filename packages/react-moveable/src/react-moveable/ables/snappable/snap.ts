@@ -14,8 +14,8 @@ export function getTotalGuidelines(
     const {
         guidelines,
         containerClientRect: {
-            height: containerHeight,
-            width: containerWidth,
+            scrollHeight: containerHeight,
+            scrollWidth: containerWidth,
         },
     } = moveable.state;
     const props = moveable.props;
