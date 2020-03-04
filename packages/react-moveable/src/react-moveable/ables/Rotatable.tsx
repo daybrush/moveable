@@ -167,7 +167,7 @@ export default {
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) rotate(${rotationRad}rad)`,
+                transform: `translate(-50%) translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) rotate(${rotationRad}rad)`,
             }}>
                 <div className={prefix("control", "rotation")}></div>
             </div>

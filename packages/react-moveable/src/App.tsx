@@ -188,12 +188,13 @@ class App extends React.Component {
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
                     verticalGuidelines={[200, 400, 600]}
                     horizontalGuidelines={[200, 400, 600]}
+                    // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
-                    // elementGuidelines={[
-                    //     document.querySelector(".box1 span")!,
-                    //     // document.querySelector(".emo img")!,
-                    //     document.querySelector<HTMLElement>(".box2")!,
-                    // ]}
+                    elementGuidelines={[
+                        document.querySelector(".box1 span")!,
+                        // document.querySelector(".emo img")!,
+                        document.querySelector<HTMLElement>(".box2")!,
+                    ]}
                     snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}

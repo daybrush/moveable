@@ -34,7 +34,9 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	height: 0;
 	left: 0;
 	top: 0;
-	z-index: 3000;
+    z-index: 3000;
+    --zoom: 1;
+    --zoompx: 1px;
 }
 .control-box {
     z-index: 0;
@@ -54,14 +56,21 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	background: #4af;
 	margin-top: -7px;
     margin-left: -7px;
+    width: calc(14 * var(--zoompx));
+    height: calc(14 * var(--zoompx));
+    margin-top: calc(-7 * var(--zoompx));
+    margin-left: calc(-7 * var(--zoompx));
+    border: calc(2 * var(--zoompx)) solid #fff;
     z-index: 10;
 }
 .line {
 	position: absolute;
 	width: 1px;
-	height: 1px;
+    height: 1px;
+    width: var(--zoompx);
+    height: var(--zoompx);
 	background: #4af;
-	transform-origin: 0px 0.5px;
+	transform-origin: 0px 50%;
 }
 .line.dashed {
     box-sizing: border-box;
@@ -69,9 +78,11 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 }
 .line.dashed.horizontal {
     border-top: 1px dashed #4af;
+    border-top: var(--zoompx) dashed #4af;
 }
 .line.dashed.vertical {
     border-left: 1px dashed #4af;
+    border-left: var(--zoompx) dashed #4af;
 }
 .line.dashed:before {
     position: absolute;
@@ -92,14 +103,19 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 }
 .line.rotation-line {
 	height: 40px;
-	width: 1px;
-    transform-origin: 0.5px 39.5px;
+    width: 1px;
+    transform-origin: 50% calc(100% - 0.5px);
     top: -40px;
+    width: var(--zoompx);
+    height: calc(40 * var(--zoompx));
+    top: calc(-40 * var(--zoompx));
+    transform-origin: 50% calc(100% - 0.5 * var(--zoompx));
 }
 .line.rotation-line .control {
 	border-color: #4af;
 	background:#fff;
-	cursor: alias;
+    cursor: alias;
+    left: 50%;
 }
 .line.vertical {
     transform: translateX(-50%);
@@ -109,9 +125,11 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 }
 .line.vertical.bold {
     width: 2px;
+    width: calc(2 * var(--zoompx));
 }
 .line.horizontal.bold {
     height: 2px;
+    height: calc(2 * var(--zoompx));
 }
 .control.origin {
 	border-color: #f55;
@@ -119,7 +137,11 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 	width: 12px;
 	height: 12px;
 	margin-top: -6px;
-	margin-left: -6px;
+    margin-left: -6px;
+    width: calc(12 * var(--zoompx));
+    height: calc(12 * var(--zoompx));
+    margin-top: calc(-6 * var(--zoompx));
+    margin-left: calc(-6 * var(--zoompx));
 	pointer-events: none;
 }
 ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `

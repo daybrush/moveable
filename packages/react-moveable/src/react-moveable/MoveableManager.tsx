@@ -48,6 +48,7 @@ export default class MoveableManager<T = {}, U = {}>
         dragArea: false,
         transformOrigin: "",
         className: "",
+        zoom: 1,
     };
     public state: MoveableManagerState<U> = {
         conatainer: null,
@@ -84,7 +85,7 @@ export default class MoveableManager<T = {}, U = {}>
 
     public render() {
         const props = this.props;
-        const { edge, parentPosition, className, target: propsTarget } = this.props;
+        const { edge, parentPosition, className, target: propsTarget, zoom } = this.props;
 
         this.checkUpdate();
 
@@ -92,13 +93,16 @@ export default class MoveableManager<T = {}, U = {}>
         const { left, top, pos1, pos2, pos3, pos4, target: stateTarget, direction } = this.state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
+
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
                 className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`} style={{
-                    position: "absolute",
-                    display: isDisplay ? "block" : "none",
-                    transform: `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
+                    "position": "absolute",
+                    "display": isDisplay ? "block" : "none",
+                    "transform": `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
+                    "--zoom": zoom,
+                    "--zoompx": `${zoom}px`,
                 }}>
                 {this.renderAbles()}
                 {renderLine(edge ? "n" : "", pos1, pos2, 0)}

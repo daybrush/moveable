@@ -77,4 +77,5 @@ export const METHODS: Array<keyof MoveableInterface> = [
     "dragStart",
     "isInside",
     "setState",
+    "getRect",
 ];
