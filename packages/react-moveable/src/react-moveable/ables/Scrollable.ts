@@ -30,6 +30,8 @@ export default {
         const dragScroll = new DragScroll();
 
         e.datas.dragScroll = dragScroll;
+
+        const draggerName = e.isControl ? "controlDragger" : "targetDragger";
         const targets = e.targets;
 
         dragScroll.on("scroll", ({ container, direction }) => {
@@ -44,7 +46,7 @@ export default {
             }
             triggerEvent(moveable, eventName, params);
         }).on("move", ({ offsetX, offsetY }) => {
-            moveable.targetDragger.scrollBy(offsetX, offsetY, e.inputEvent, false);
+            moveable[draggerName].scrollBy(offsetX, offsetY, e.inputEvent, false);
         });
         dragScroll.dragStart(e, {
             container: scrollContainer as HTMLElement,
@@ -80,13 +82,31 @@ export default {
         e.datas.dragScroll.dragEnd();
         e.datas.dragScroll = null;
     },
+    dragControlStart(moveable: MoveableManager<ScrollableProps>, e: any) {
+        return this.dragStart(moveable, { ...e, isControl: true });
+    },
+    dragControl(moveable: MoveableManager<ScrollableProps>, e: any) {
+        return this.drag(moveable, e);
+    },
+    dragControlEnd(moveable: MoveableManager<ScrollableProps>, e: any) {
+        return this.dragEnd(moveable, e);
+    },
     dragGroupStart(moveable: MoveableGroup, e: any) {
-        this.dragStart(moveable, e);
+        return this.dragStart(moveable, e);
     },
     dragGroup(moveable: MoveableGroup, e: any) {
-        return this.drag(moveable, {...e, targets: moveable.props.targets });
+        return this.drag(moveable, { ...e, targets: moveable.props.targets });
     },
     dragGroupEnd(moveable: MoveableGroup, e: any) {
-        this.dragEnd(moveable, e);
+        return this.dragEnd(moveable, e);
+    },
+    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+        return this.dragStart(moveable, e);
+    },
+    dragGroupContro(moveable: MoveableGroup, e: any) {
+        return this.drag(moveable, { ...e, targets: moveable.props.targets });
+    },
+    dragGroupControEnd(moveable: MoveableGroup, e: any) {
+        return this.dragEnd(moveable, e);
     },
 };
