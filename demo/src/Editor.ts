@@ -9,7 +9,7 @@ const uaInfo = agent();
 const isMobile = uaInfo.isMobile || uaInfo.os.name.indexOf("ios") > -1 || uaInfo.browser.name.indexOf("safari") > -1;
 
 isMobile && addClass(document.body, "mobile");
-const editorElement: HTMLElement = document.querySelector(".editor");
+const editorElement: HTMLElement = document.querySelector(".editor .view");
 const labelElement: HTMLElement = document.querySelector(".label");
 const rulersElement = document.querySelector(".rulers");
 const horizontalRulerElement: HTMLElement = rulersElement.querySelector(".ruler.horizontal");
@@ -38,8 +38,6 @@ const frame = new Frame({
 function addControlEvent(el: HTMLInputElement, callback: (value: any) => void) {
     function eventCallback() {
         callback(el.value);
-        applyCSS();
-        moveable.updateRect();
     }
     new KeyContoller(el).keyup("enter", eventCallback);
     el.addEventListener("blur", eventCallback);
@@ -48,27 +46,34 @@ function addControlEvent(el: HTMLInputElement, callback: (value: any) => void) {
 function move(translate: number[]) {
     frame.set("transform", "translateX", `${translate[0]}px`);
     frame.set("transform", "translateY", `${translate[1]}px`);
-    controlXElement.value = `${translate[0]}`;
-    controlYElement.value = `${translate[1]}`;
+
+    setTimeout(() => {
+        const rect = moveable.getRect();
+        controlXElement.value = `${Math.round(rect.left * 10) / 10}`;
+        controlYElement.value = `${Math.round(rect.top * 10) / 10}`;
+    });
 }
 function applyCSS() {
     moveableTarget.style.cssText += frame.toCSS();
 }
 
 addControlEvent(controlXElement, value => {
-    frame.set("transform", "translateX", `${parseFloat(value)}px`);
+    moveable.request("draggable", { x: parseFloat(value), isInstant: true });
 });
 addControlEvent(controlYElement, value => {
-    frame.set("transform", "translateY", `${parseFloat(value)}px`);
+    moveable.request("draggable", { y: parseFloat(value), isInstant: true });
 });
 addControlEvent(controlWElement, value => {
-    frame.set("width", `${parseFloat(value)}px`);
+    moveable.request("resizable", { offsetWidth: parseFloat(value), isInstant: true });
 });
 addControlEvent(controlHElement, value => {
-    frame.set("height", `${parseFloat(value)}px`);
+    moveable.request("resizable", { offsetHeight: parseFloat(value), isInstant: true });
 });
 addControlEvent(controlRElement, value => {
-    frame.set("transform", "rotate", `${parseFloat(value)}deg`);
+    moveable.request("rotatable", {
+        deltaRotate: parseFloat(value) - parseFloat(frame.get("transform", "rotate")),
+        isInstant: true,
+    });
 });
 
 controlXElement.value = `${parseFloat(frame.get("transform", "translateX"))}`;
@@ -91,8 +96,8 @@ const moveable = new Moveable(editorElement, {
     keepRatio: false,
     origin: false,
     bounds: {
-        left: 30,
-        top: 30,
+        left: 0,
+        top: 0,
     },
 }).on("dragStart", ({ set }) => {
     set([
@@ -166,8 +171,8 @@ function refreshGuidelines() {
     const centerX = window.innerWidth / 2 + 15;
     const centerY = window.innerHeight / 2;
 
-    moveable.verticalGuidelines = [...guides2.getGuides().map(pos => pos + 30), centerX];
-    moveable.horizontalGuidelines = [...guides1.getGuides().map(pos => pos + 30), centerY];
+    moveable.verticalGuidelines = [...guides2.getGuides(), centerX];
+    moveable.horizontalGuidelines = [...guides1.getGuides(), centerY];
 }
 function toggleShift(shiftKey) {
     if (shiftKey) {
