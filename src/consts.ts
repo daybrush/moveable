@@ -11,7 +11,7 @@ export const PROPERTIES: Array<keyof MoveableOptions> = [
     "snapCenter", "snapThreshold",
     "horizontalGuidelines", "verticalGuidelines", "elementGuidelines",
     "bounds",
-
+    "innerBounds",
     "className",
     "renderDirections",
     "scrollable",
@@ -22,6 +22,9 @@ export const PROPERTIES: Array<keyof MoveableOptions> = [
     "snapElement",
     "snapVertical",
     "snapHorizontal",
+    "isDisplaySnapDigit",
+    "snapDigit",
+    "zoom",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",
@@ -78,4 +81,5 @@ export const METHODS: Array<keyof MoveableInterface> = [
     "isInside",
     "setState",
     "getRect",
+    "request",
 ];
