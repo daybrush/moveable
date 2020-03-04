@@ -23,7 +23,7 @@ export type MoveableManagerProps<T = {}> = {
 /**
  * @typedef
  * @memberof Moveable
- * @property - The target(s) to indicate Moveable Control Box. (default: true)
+ * @property - The target(s) to indicate Moveable Control Box. (default: null)
  * @property - Moveable Container. (default: parentElement)
  * @property - Moveable Root Container (No Transform Container). (default: container)
  * @property - You can specify the position of the rotation. (default: "top")

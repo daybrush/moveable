@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.15.0] - 2020-03-05
+https://github.com/daybrush/moveable/milestone/8
+
+* `moveable` 0.15.1
+* `react-moveable` 0.18.0
+* `preact-moveable` 0.17.0
+* `ngx-moveable` 0.11.0
+* `svelte-moveable` 0.6.0
+
+### Added
+* Support `scrollable`, `onScroll` for resizable, scalable #180
+* Add `zoom` props #158
+* Add `rootContainer` props with Absolute Container Matrix(SVG, elementGuidelines is not supported) #137 #163
+* Add `snapDigit` props #173
+* Add `isDisplaySnapDigit` props #186
+* Add `innerBounds` props #172
+* Add `request` method (Draggable, Resizable, Rotatable, Scalable) #141
+
+### Fixed
+* Fix Portal issue #187
 
 ## [0.14.1] - 2020-02-05
 * `moveable` 0.14.1

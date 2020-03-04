@@ -20,11 +20,11 @@ import { NgxMoveableInterface } from './ngx-moveable.interface';
 export class NgxMoveableComponent
   extends NgxMoveableInterface
   implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableEvents {
-  @Input() public draggable!: boolean;
-  @Input() public resizable!: boolean;
-  @Input() public scalable!: boolean;
-  @Input() public rotatable!: boolean;
-  @Input() public warpable!: boolean;
+  @Input() public draggable!: MoveableOptions['draggable'];
+  @Input() public resizable!: MoveableOptions['resizable'];
+  @Input() public scalable!: MoveableOptions['scalable'];
+  @Input() public rotatable!: MoveableOptions['rotatable'];
+  @Input() public warpable!: MoveableOptions['warpable'];
   @Input() public pinchable!: boolean | Array<'rotatable' | 'resizable' | 'scalable'>;
   @Input() public snappable!: boolean | string[];
   @Input() public origin!: boolean;
@@ -50,7 +50,7 @@ export class NgxMoveableComponent
   @Input() public dragArea!: boolean;
   @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
   @Input() public baseDirection!: number[];
-  @Input() public defaultGroupRotate!: boolean;
+  @Input() public defaultGroupRotate!: number;
   @Input() public ables!: Able[];
 
   @Input() public className!: string;
@@ -59,6 +59,13 @@ export class NgxMoveableComponent
   @Input() public scrollContainer!: HTMLElement;
   @Input() public scrollThreshold!: number;
   @Input() public getScrollPosition!: MoveableOptions['getScrollPosition'];
+
+  @Input() public rootContainer!: MoveableOptions['rootContainer'];
+  @Input() public zoom!: MoveableOptions['zoom'];
+  @Input() public transformOrigin!: MoveableOptions['transformOrigin'];
+  @Input() public snapDigit!: MoveableOptions['snapDigit'];
+  @Input() public isDisplaySnapDigit!: MoveableOptions['isDisplaySnapDigit'];
+  @Input() public innerBounds!: MoveableOptions['innerBounds'];
 
   @Output() public dragStart!: EventEmitter<MoveableEvents['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEvents['drag']>;
