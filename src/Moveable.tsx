@@ -109,6 +109,15 @@ class Moveable extends EgComponent {
  * moveable.target = document.querySelector(".target");
  */
 /**
+ * Zooms in the elements of a moveable. (default: 1)
+ * @name Moveable#zoom
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.zoom = 2;
+ */
+/**
  * Whether or not target can be dragged. (default: false)
  * @name Moveable#draggable
  * @example
@@ -351,7 +360,7 @@ class Moveable extends EgComponent {
  * ];
  */
 /**
- * You can set up boundaries. (default: [])
+ * You can set up boundaries. (default: null)
  * @name Moveable#bounds
  * @example
  * import Moveable from "moveable";
@@ -359,6 +368,36 @@ class Moveable extends EgComponent {
  * const moveable = new Moveable(document.body);
  *
  * moveable.bounds = { left: 0, right: 1000, top: 0, bottom: 1000};
+ */
+/**
+ * You can set up inner boundaries. (default: null)
+ * @name Moveable#innerBounds
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.innerBounds = { left: 500, top: 500, width: 100, height: 100};
+ */
+/**
+ * snap distance digits (default: 0)
+ * @name Moveable#snapDigit
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snapDigit = 0
+ */
+/**
+ * Whether to show snap distance (default: true)
+ * @name Moveable#isDisplaySnapDigit
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.isDisplaySnapDigit = true;
  */
 /**
  * Add an event to the moveable area instead of the target for stopPropagation. (default: false)

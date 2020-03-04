@@ -20,6 +20,21 @@ export type MoveableManagerProps<T = {}> = {
     parentPosition?: { left: number, top: number } | null;
 } & MoveableDefaultProps & T;
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - The target(s) to indicate Moveable Control Box. (default: true)
+ * @property - Moveable Container. (default: parentElement)
+ * @property - Moveable Root Container (No Transform Container). (default: container)
+ * @property - You can specify the position of the rotation. (default: "top")
+ * @property - Whether or not the origin control box will be visible or not (default: false)
+ * @property - Zooms in the elements of a moveable. (default: 1)
+ * @property - The default transformOrigin of the target can be set in advance. (default: "")
+ * @property - Whether to scale and resize through edge lines. (default: false)
+ * @property - You can add your custom able. (default: [])
+ * @property - You can specify the className of the moveable controlbox. (default: "")
+ * @property - Minimum distance to pinch. (default: 20)
+ */
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
@@ -389,7 +404,6 @@ export interface OnRotateStart extends OnEvent {
  * @property - a target's transform
  */
 export interface OnRotate extends OnEvent {
-
     beforeDist: number;
     beforeDelta: number;
     beforeRotate: number;
@@ -741,13 +755,19 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
     targets: Array<HTMLElement | SVGElement>;
 }
 
-export interface OriginProps {
-    origin: boolean;
-}
-export interface DraggableProps {
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be dragged. (default: false)
+ * @property - throttle of x, y when drag. (default: 0)
+ * @property - throttle of angle(degree) of x,y when drag. (default: 0)
+ */
+export interface DraggableOptions {
     draggable?: boolean;
     throttleDrag?: number;
     throttleDragRotate?: number;
+}
+export interface DraggableProps extends DraggableOptions {
 
     onDragStart?: (e: OnDragStart) => any;
     onDrag?: (e: OnDrag) => any;
@@ -763,13 +783,24 @@ export interface DraggableState {
         dist: number[];
     } | null;
 }
-export interface ResizableProps {
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be resized. (default: false)
+ * @property - throttle of width, height when resize. (default: 0)
+ * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * @property - Target's base direcition using top, left, right, bottom (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
+ * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
+ */
+export interface ResizableOptions {
     resizable?: boolean;
     throttleResize?: number;
     renderDirections?: string[];
     baseDirection?: number[];
     keepRatio?: boolean;
-
+}
+export interface ResizableProps extends ResizableOptions {
     onResizeStart?: (e: OnResizeStart) => any;
     onResize?: (e: OnResize) => any;
     onResizeEnd?: (e: OnResizeEnd) => any;
@@ -778,12 +809,21 @@ export interface ResizableProps {
     onResizeGroup?: (e: OnResizeGroup) => any;
     onResizeGroupEnd?: (e: OnResizeGroupEnd) => any;
 }
-export interface ScalableProps {
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be scaled. (default: false)
+ * @property - throttle of scaleX, scaleY when scale. (default: 0)
+ * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
+ */
+export interface ScalableOptions {
     scalable?: boolean;
     throttleScale?: number;
     renderDirections?: string[];
     keepRatio?: boolean;
-
+}
+export interface ScalableProps extends ScalableOptions {
     onScaleStart?: (e: OnScaleStart) => any;
     onScale?: (e: OnScale) => any;
     onScaleEnd?: (e: OnScaleEnd) => any;
@@ -793,11 +833,19 @@ export interface ScalableProps {
     onScaleGroupEnd?: (e: OnScaleGroupEnd) => any;
 }
 
-export interface RotatableProps {
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be rotated. (default: false)
+ * @property - You can specify the position of the rotation. (default: "top")
+ * @property - throttle of angle(degree) when rotate. (default: 0)
+ */
+export interface RotatableOptions {
     rotatable?: boolean;
     rotationPosition?: "top" | "bottom" | "left" | "right";
     throttleRotate?: number;
-
+}
+export interface RotatableProps extends RotatableOptions {
     onRotateStart?: (e: OnRotateStart) => any;
     onRotate?: (e: OnRotate) => any;
     onRotateEnd?: (e: OnRotateEnd) => any;
@@ -806,20 +854,32 @@ export interface RotatableProps {
     onRotateGroup?: (e: OnRotateGroup) => any;
     onRotateGroupEnd?: (e: OnRotateGroupEnd) => any;
 }
-
-export interface WarpableProps {
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be warped. (default: false)
+ * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ */
+export interface WarpableOptions {
     warpable?: boolean;
     renderDirections?: string[];
-
+}
+export interface WarpableProps extends WarpableOptions {
     onWarpStart?: (e: OnWarpStart) => any;
     onWarp?: (e: OnWarp) => any;
     onWarpEnd?: (e: OnWarpEnd) => any;
 }
 
-export interface PinchableProps extends ResizableProps, ScalableProps, RotatableProps {
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be pinched with draggable, resizable, scalable, rotatable. (default: false)
+ */
+export interface PinchableOptions {
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
-    pinchThreshold?: number;
+}
 
+export interface PinchableProps extends PinchableOptions, ResizableProps, ScalableProps, RotatableProps {
     onPinchStart?: (e: OnPinchStart) => any;
     onPinch?: (e: OnPinch) => any;
     onPinchEnd?: (e: OnPinchEnd) => any;
@@ -829,6 +889,14 @@ export interface PinchableProps extends ResizableProps, ScalableProps, Rotatable
     onPinchGroupEnd?: (e: OnPinchGroupEnd) => any;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Sets the initial rotation of the group. (default 0)
+ */
+export interface GroupableOptions {
+    defaultGroupRotate?: number;
+}
 export interface GroupableProps extends
     PinchableProps,
     DraggableProps,
@@ -838,13 +906,30 @@ export interface GroupableProps extends
     SnappableProps,
     RenderProps,
     DragAreaProps,
-    ScrollableProps {
+    ScrollableProps,
+    GroupableOptions {
     groupable?: boolean;
-    defaultGroupRotate?: number;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be snapped to the guideline. (default: false)
+ * @property - When you drag, make the snap in the center of the target. (default: false)
+ * @property - When you drag, make the snap in the horizontal guidelines. (default: true)
+ * @property - When you drag, make the snap in the vertical guidelines. (default: true)
+ * @property - When you drag, make the snap in the element guidelines. (default: true)
+ * @property - Distance value that can snap to guidelines. (default: 5)
+ * @property snapDigit - snap distance digits (default: 0)
+ * @property isDisplaySnapDigit - Whether to show snap distance (default: true)
+ * @property - Add guidelines in the horizontal direction. (default: [])
+ * @property - Add guidelines in the vertical direction. (default: [])
+ * @property - Add guidelines for the element. (default: [])
+ * @property - You can set up boundaries. (default: null)
+ * @property - You can set up inner boundaries. (default: null)
+ */
 export interface SnappableProps {
     snappable?: boolean | string[];
     snapCenter?: boolean;
@@ -860,12 +945,20 @@ export interface SnappableProps {
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface InnerBoundType {
     left: number;
     top: number;
     width: number;
     height: number;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface BoundType {
     left?: number;
     top?: number;
@@ -883,16 +976,25 @@ export interface SnapRenderInfo {
     center?: boolean;
 }
 
-export interface ScrollableProps {
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be scrolled to the scroll container (default: false)
+ * @property - The container to which scroll is applied (default: container)
+ * @property - Expand the range of the scroll check area. (default: 0)
+ * @property - Sets a function to get the scroll position. (default: Function)
+ */
+export interface ScrollableOptions {
     scrollable?: boolean;
     scrollContainer?: HTMLElement;
     scrollThreshold?: number;
     getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
+}
+export interface ScrollableProps extends ScrollableOptions {
     onScroll?: (e: OnScroll) => any;
     onScrollGroup?: (e: OnScrollGroup) => any;
 }
 export interface DragAreaProps {
-    dragArea?: boolean;
     onClick?: (e: OnClick) => any;
     onClickGroup?: (e: OnClickGroup) => any;
 }
@@ -943,12 +1045,13 @@ export interface RectInfo {
     origin: number[];
     beforeOrigin: number[];
 }
+
 export interface MoveableInterface {
     getRect(): RectInfo;
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(isNotSetState?: boolean): void;
     updateTarget(): void;
-    request(ableName: string, params: IObject<any>): void;
+    request(ableName: string, params: IObject<any>): Requester;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
