@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>node_modules/@egjs/component/src/Component.js - Documentation</title>
+    <title>packages/react-moveable/src/react-moveable/Moveable.tsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
     <link type="text/css" rel="stylesheet" href="styles/custom.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <meta name="description" content="node_modules/@egjs/component/src/Component.js - Documentation"/>
+    <meta name="description" content="packages/react-moveable/src/react-moveable/Moveable.tsx - Documentation"/>
 
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">node_modules/@egjs/component/src/Component.js</h1>
+    <h1 class="page-title">packages/react-moveable/src/react-moveable/Moveable.tsx</h1>
     
 
     
@@ -42,257 +42,187 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
+            <pre class="prettyprint source linenums"><code>import * as React from "react";
+import { MoveableProps, Able, MoveableInterface, RectInfo, AbleRequestParam, Requester } from "./types";
+import MoveableManager from "./MoveableManager";
+import { MOVEABLE_ABLES } from "./ables/consts";
+import MoveableGroup from "./MoveableGroup";
+import { ref } from "framework-utils";
+import { isArray } from "@daybrush/utils";
+import Groupable from "./ables/Groupable";
 
+export default class Moveable&lt;T = {}> extends React.PureComponent&lt;MoveableProps &amp; T> implements MoveableInterface {
+    public moveable!: MoveableManager&lt;MoveableProps> | MoveableGroup;
+    public render() {
+        const props = this.props;
+        const ables: Able[] = props.ables as Able[] || [];
+        const target = this.props.target || this.props.targets;
+        const isArr = isArray(target);
+        const isGroup = isArr &amp;&amp; (target as any[]).length > 1;
 
-function isUndefined(value) {
-	return typeof value === "undefined";
+        if (isGroup) {
+            const nextProps = {
+                ...this.props,
+                target: null,
+                targets: target as any[],
+                ables: [...MOVEABLE_ABLES, Groupable, ...ables],
+            };
+            return &lt;MoveableGroup key="group" ref={ref(this, "moveable")}
+                {...nextProps} />;
+        } else {
+            const moveableTarget = isArr ? (target as any[])[0] : target;
+
+            return &lt;MoveableManager&lt;MoveableProps> key="single" ref={ref(this, "moveable")}
+                {...{ ...this.props, target: moveableTarget, ables: [...MOVEABLE_ABLES, ...ables] }} />;
+        }
+    }
+    /**
+     * Check if the target is an element included in the moveable.
+     * @method Moveable#isMoveableElement
+     * @param - the target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("click", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *         moveable.target = e.target;
+     *     }
+     * });
+     */
+    public isMoveableElement(target: HTMLElement | SVGElement): boolean {
+        return this.moveable.isMoveableElement(target);
+    }
+    /**
+     * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
+     * @method Moveable#dragStart
+     * @param - external `MouseEvent`or `TouchEvent`
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *          moveable.dragStart(e);
+     *     }
+     * });
+     */
+    public dragStart(e: MouseEvent | TouchEvent): void {
+        this.moveable.dragStart(e);
+    }
+
+    /**
+     * Whether the coordinates are inside Moveable
+     * @method Moveable#isInside
+     * @param - x coordinate
+     * @param - y coordinate
+     * @return - True if the coordinate is in moveable or false
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.isInside(e.clientX, e.clientY)) {
+     *          console.log("inside");
+     *     }
+     * });
+     */
+    public isInside(clientX: number, clientY: number): boolean {
+        return this.moveable.isInside(clientX, clientY);
+    }
+
+    /**
+     * If the width, height, left, and top of all elements change, update the shape of the moveable.
+     * @method Moveable#updateRect
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("resize", e => {
+     *     moveable.updateRect();
+     * });
+     */
+    public updateRect(): void {
+        this.moveable.updateRect();
+    }
+
+    /**
+     * If the width, height, left, and top of the only target change, update the shape of the moveable.
+     * @method Moveable#updateTarget
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.updateTarget();
+     */
+    public updateTarget(): void {
+        this.moveable.updateTarget();
+    }
+
+    /**
+     * You can get the vertex information, position and offset size information of the target based on the container.
+     * @method Moveable#getRect
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const rectInfo = moveable.getRect();
+     */
+    public getRect(): RectInfo {
+        return this.moveable.getRect();
+    }
+
+    /**
+     * Request able through a method rather than an event.
+     * At the moment of execution, requestStart is executed,
+     * and then request and requestEnd can be executed through Requester.
+     * @method Moveable#request
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html#request|Draggable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request|Resizable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request|Scalable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request|Rotatable Requester}
+     * @param - ableName
+     * @param - request to be able params. If isInstant is true, request and requestEnd are executed immediately.
+     * @return - Able Requester. If there is no request in able, nothing will work.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     *
+     * // Start move
+     * const requester = moveable.request("draggable");
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.requestEnd();
+     */
+    public request(ableName: string, params?: AbleRequestParam): Requester {
+        return this.moveable.request(ableName, params);
+    }
+    /**
+     * Remove the Moveable object and the events.
+     * @method Moveable#destroy
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.destroy();
+     */
+    public destroy(): void {
+        this.moveable.componentWillUnmount();
+    }
 }
-/**
- * A class used to manage events in a component
- * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
- * @alias eg.Component
- */
-class Component {
-	/**
- * Version info string
- * @ko 버전정보 문자열
- * @name VERSION
- * @static
- * @type {String}
- * @example
- * eg.Component.VERSION;  // ex) 2.0.0
- * @memberof eg.Component
- */
-	static VERSION = "#__VERSION__#";
-	/**
-	 * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
-	 */
-	constructor() {
-		this._eventHandler = {};
-		this.options = {};
-	}
-	/**
-	 * Triggers a custom event.
-	 * @ko 커스텀 이벤트를 발생시킨다
-	 * @param {String} eventName The name of the custom event to be triggered &lt;ko>발생할 커스텀 이벤트의 이름&lt;/ko>
-	 * @param {Object} customEvent Event data to be sent when triggering a custom event &lt;ko>커스텀 이벤트가 발생할 때 전달할 데이터&lt;/ko>
-	 * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref&lt;/a> &lt;ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고&lt;/a>&lt;/ko>
-	 * @example
-
-class Some extends eg.Component {
-  some(){
-  	if(this.trigger("beforeHi")){ // When event call to stop return false.
-		this.trigger("hi");// fire hi event.
-  	}
-  }
-}
-
-const some = new Some();
-some.on("beforeHi", (e) => {
-	if(condition){
-		e.stop(); // When event call to stop, `hi` event not call.
-	}
-});
-some.on("hi", (e) => {
-	// `currentTarget` is component instance.
-	console.log(some === e.currentTarget); // true
-});
-// If you want to more know event design. You can see article.
-// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
-	 */
-	trigger(eventName, customEvent = {}, ...restParam) {
-		let handlerList = this._eventHandler[eventName] || [];
-		const hasHandlerList = handlerList.length > 0;
-
-		if (!hasHandlerList) {
-			return true;
-		}
-
-		// If detach method call in handler in first time then handler list calls.
-		handlerList = handlerList.concat();
-
-		customEvent.eventType = eventName;
-
-		let isCanceled = false;
-		let arg = [customEvent];
-		let i = 0;
-
-		customEvent.stop = () => { isCanceled = true; };
-		customEvent.currentTarget = this;
-
-		if (restParam.length >= 1) {
-			arg = arg.concat(restParam);
-		}
-
-		for (i = 0; handlerList[i]; i++) {
-			handlerList[i].apply(this, arg);
-		}
-
-		return !isCanceled;
-	}
-	/**
-	 * Executed event just one time.
-	 * @ko 이벤트가 한번만 실행된다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    alert("hi");
-  }
-  thing() {
-    this.once("hi", this.hi);
-  }
-}
-
-var some = new Some();
-some.thing();
-some.trigger("hi");
-// fire alert("hi");
-some.trigger("hi");
-// Nothing happens
-	 */
-	once(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let i;
-
-			for (i in eventHash) {
-				this.once(i, eventHash[i]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			const self = this;
-
-			this.on(eventName, function listener(...arg) {
-				handlerToAttach.apply(self, arg);
-				self.off(eventName, listener);
-			});
-		}
-
-		return this;
-	}
-
-	/**
-	 * Checks whether an event has been attached to a component.
-	 * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
-	 * @param {String} eventName The name of the event to be attached &lt;ko>등록 여부를 확인할 이벤트의 이름&lt;/ko>
-	 * @return {Boolean} Indicates whether the event is attached. &lt;ko>이벤트 등록 여부&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  some() {
-    this.hasOn("hi");// check hi event.
-  }
-}
-	 */
-	hasOn(eventName) {
-		return !!this._eventHandler[eventName];
-	}
-
-	/**
-	 * Attaches an event to a component.
-	 * @ko 컴포넌트에 이벤트를 등록한다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.on("hi",this.hi); //attach event
-  }
-}
-*/
-	on(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let name;
-
-			for (name in eventHash) {
-				this.on(name, eventHash[name]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			let handlerList = this._eventHandler[eventName];
-
-			if (isUndefined(handlerList)) {
-				this._eventHandler[eventName] = [];
-				handlerList = this._eventHandler[eventName];
-			}
-
-			handlerList.push(handlerToAttach);
-		}
-
-		return this;
-	}
-	/**
-	 * Detaches an event from the component.
-	 * @ko 컴포넌트에 등록된 이벤트를 해제한다
-	 * @param {eventName} eventName The name of the event to be detached &lt;ko>해제할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToDetach The handler function of the event to be detached &lt;ko>해제할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself &lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.off("hi",this.hi); //detach event
-  }
-}
-	 */
-	off(eventName, handlerToDetach) {
-		// All event detach.
-		if (isUndefined(eventName)) {
-			this._eventHandler = {};
-			return this;
-		}
-
-		// All handler of specific event detach.
-		if (isUndefined(handlerToDetach)) {
-			if (typeof eventName === "string") {
-				this._eventHandler[eventName] = undefined;
-				return this;
-			} else {
-				const eventHash = eventName;
-				let name;
-
-				for (name in eventHash) {
-					this.off(name, eventHash[name]);
-				}
-				return this;
-			}
-		}
-
-		// The handler of specific event detach.
-		let handlerList = this._eventHandler[eventName];
-
-		if (handlerList) {
-			let k;
-			let handlerFunction;
-
-			for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
-				if (handlerFunction === handlerToDetach) {
-					handlerList = handlerList.splice(k, 1);
-					break;
-				}
-			}
-		}
-
-		return this;
-	}
-}
-
-export default Component;
 </code></pre>
         </article>
     </section>
@@ -304,10 +234,10 @@ export default Component;
 <style>
 
 
-nav li[file="node_modules/@egjs/component/src/component"]:after {
+nav li[file="packages/react-moveable/src/react-moveable/moveable"]:after {
     display: none;
 }
-nav li[file="node_modules/@egjs/component/src/component"] h4, nav li[file="node_modules/@egjs/component/src/component"] ul {
+nav li[file="packages/react-moveable/src/react-moveable/moveable"] h4, nav li[file="packages/react-moveable/src/react-moveable/moveable"] ul {
     display: block;
 }
 </style>

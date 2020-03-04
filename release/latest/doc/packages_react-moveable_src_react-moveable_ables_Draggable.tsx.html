@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>node_modules/@egjs/component/src/Component.js - Documentation</title>
+    <title>packages/react-moveable/src/react-moveable/ables/Draggable.tsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
     <link type="text/css" rel="stylesheet" href="styles/custom.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <meta name="description" content="node_modules/@egjs/component/src/Component.js - Documentation"/>
+    <meta name="description" content="packages/react-moveable/src/react-moveable/ables/Draggable.tsx - Documentation"/>
 
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">node_modules/@egjs/component/src/Component.js</h1>
+    <h1 class="page-title">packages/react-moveable/src/react-moveable/ables/Draggable.tsx</h1>
     
 
     
@@ -42,257 +42,346 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
+            <pre class="prettyprint source linenums"><code>import { getDragDist, setDragStart } from "../DraggerUtils";
+import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix } from "../utils";
+import { minus, plus, getRad } from "@moveable/matrix";
+import MoveableManager from "../MoveableManager";
+import {
+    DraggableProps, OnDrag, OnDragGroup,
+    OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState, Renderer,
+} from "../types";
+import MoveableGroup from "../MoveableGroup";
+import { triggerChildAble } from "../groupUtils";
+import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
+import { IObject } from "@daybrush/utils";
 
-
-function isUndefined(value) {
-	return typeof value === "undefined";
-}
 /**
- * A class used to manage events in a component
- * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
- * @alias eg.Component
+ * @namespace Draggable
+ * @memberof Moveable
  */
-class Component {
-	/**
- * Version info string
- * @ko 버전정보 문자열
- * @name VERSION
- * @static
- * @type {String}
- * @example
- * eg.Component.VERSION;  // ex) 2.0.0
- * @memberof eg.Component
- */
-	static VERSION = "#__VERSION__#";
-	/**
-	 * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
-	 */
-	constructor() {
-		this._eventHandler = {};
-		this.options = {};
-	}
-	/**
-	 * Triggers a custom event.
-	 * @ko 커스텀 이벤트를 발생시킨다
-	 * @param {String} eventName The name of the custom event to be triggered &lt;ko>발생할 커스텀 이벤트의 이름&lt;/ko>
-	 * @param {Object} customEvent Event data to be sent when triggering a custom event &lt;ko>커스텀 이벤트가 발생할 때 전달할 데이터&lt;/ko>
-	 * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref&lt;/a> &lt;ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고&lt;/a>&lt;/ko>
-	 * @example
+export default {
+    name: "draggable",
+    props: {
+        draggable: Boolean,
+        throttleDrag: Number,
+        throttleDragRotate: Number,
+    },
+    render(
+        moveable: MoveableManager&lt;DraggableProps, DraggableState>,
+        React: Renderer,
+    ) {
+        const throttleDragRotate = moveable.props.throttleDragRotate;
+        const { dragInfo, beforeOrigin } = moveable.state;
 
-class Some extends eg.Component {
-  some(){
-  	if(this.trigger("beforeHi")){ // When event call to stop return false.
-		this.trigger("hi");// fire hi event.
-  	}
-  }
-}
+        if (!throttleDragRotate || !dragInfo) {
+            return;
+        }
+        const dist = dragInfo.dist;
 
-const some = new Some();
-some.on("beforeHi", (e) => {
-	if(condition){
-		e.stop(); // When event call to stop, `hi` event not call.
-	}
-});
-some.on("hi", (e) => {
-	// `currentTarget` is component instance.
-	console.log(some === e.currentTarget); // true
-});
-// If you want to more know event design. You can see article.
-// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
-	 */
-	trigger(eventName, customEvent = {}, ...restParam) {
-		let handlerList = this._eventHandler[eventName] || [];
-		const hasHandlerList = handlerList.length > 0;
+        if (!dist[0] &amp;&amp; !dist[1]) {
+            return;
+        }
 
-		if (!hasHandlerList) {
-			return true;
-		}
+        const width = getDistSize(dist);
+        const rad = getRad(dist, [0, 0]);
 
-		// If detach method call in handler in first time then handler list calls.
-		handlerList = handlerList.concat();
+        return &lt;div className={prefix(
+            "line",
+            "horizontal",
+            "dragline",
+            "dashed",
+        )} key={`dragRotateGuideline`} style={{
+            width: `${width}px`,
+            transform: `translate(${beforeOrigin[0]}px, ${beforeOrigin[1]}px) rotate(${rad}rad)`,
+        }} />;
+    },
+    dragStart(
+        moveable: MoveableManager&lt;DraggableProps, any>,
+        e: any,
+    ) {
+        const { datas, parentEvent, parentDragger } = e;
+        const state = moveable.state;
+        const {
+            targetTransform,
+            target,
+            dragger,
+        } = state;
 
-		customEvent.eventType = eventName;
+        if (dragger) {
+            return false;
+        }
+        state.dragger = parentDragger || moveable.targetDragger;
+        const style = window.getComputedStyle(target!);
 
-		let isCanceled = false;
-		let arg = [customEvent];
-		let i = 0;
+        datas.datas = {};
+        datas.left = parseFloat(style.left || "") || 0;
+        datas.top = parseFloat(style.top || "") || 0;
+        datas.bottom = parseFloat(style.bottom || "") || 0;
+        datas.right = parseFloat(style.right || "") || 0;
+        datas.transform = targetTransform;
+        datas.startTranslate = [0, 0];
 
-		customEvent.stop = () => { isCanceled = true; };
-		customEvent.currentTarget = this;
+        setDragStart(moveable, { datas });
 
-		if (restParam.length >= 1) {
-			arg = arg.concat(restParam);
-		}
+        datas.prevDist = [0, 0];
+        datas.prevBeforeDist = [0, 0];
+        datas.isDrag = false;
 
-		for (i = 0; handlerList[i]; i++) {
-			handlerList[i].apply(this, arg);
-		}
+        startCheckSnapDrag(moveable, datas);
+        const params = fillParams&lt;OnDragStart>(moveable, e, {
+            set: (translate: number[]) => {
+                datas.startTranslate = translate;
+            },
+        });
+        const result = parentEvent || triggerEvent(moveable, "onDragStart", params);
 
-		return !isCanceled;
-	}
-	/**
-	 * Executed event just one time.
-	 * @ko 이벤트가 한번만 실행된다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    alert("hi");
-  }
-  thing() {
-    this.once("hi", this.hi);
-  }
-}
+        if (result !== false) {
+            datas.isDrag = true;
+            moveable.state.dragInfo = {
+                startRect: moveable.getRect(),
+                dist: [0, 0],
+            };
+        } else {
+            state.dragger = null;
+            datas.isPinch = false;
+        }
+        return datas.isDrag ? params : false;
+    },
+    drag(
+        moveable: MoveableManager&lt;DraggableProps, any>,
+        e: any,
+    ): OnDrag | undefined {
+        const { datas, parentEvent, parentFlag } = e;
+        let { distX, distY } = e;
+        const { isPinch, isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
 
-var some = new Some();
-some.thing();
-some.trigger("hi");
-// fire alert("hi");
-some.trigger("hi");
-// Nothing happens
-	 */
-	once(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let i;
+        if (!isDrag) {
+            return;
+        }
+        const props = moveable.props;
 
-			for (i in eventHash) {
-				this.once(i, eventHash[i]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			const self = this;
+        const parentMoveable = props.parentMoveable;
+        const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
+        const throttleDragRotate = parentEvent ? 0 : (props.throttleDragRotate || 0);
 
-			this.on(eventName, function listener(...arg) {
-				handlerToAttach.apply(self, arg);
-				self.off(eventName, listener);
-			});
-		}
+        let isSnap = false;
+        let dragRotateRad = 0;
 
-		return this;
-	}
+        if (throttleDragRotate > 0 &amp;&amp; (distX || distY)) {
+            const deg = throttle(getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate);
+            const r = getDistSize([distX, distY]);
+            dragRotateRad = deg * Math.PI / 180;
 
-	/**
-	 * Checks whether an event has been attached to a component.
-	 * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
-	 * @param {String} eventName The name of the event to be attached &lt;ko>등록 여부를 확인할 이벤트의 이름&lt;/ko>
-	 * @return {Boolean} Indicates whether the event is attached. &lt;ko>이벤트 등록 여부&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  some() {
-    this.hasOn("hi");// check hi event.
-  }
-}
-	 */
-	hasOn(eventName) {
-		return !!this._eventHandler[eventName];
-	}
+            distX = r * Math.cos(dragRotateRad);
+            distY = r * Math.sin(dragRotateRad);
+        }
 
-	/**
-	 * Attaches an event to a component.
-	 * @ko 컴포넌트에 이벤트를 등록한다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.on("hi",this.hi); //attach event
-  }
-}
-*/
-	on(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let name;
+        if (!isPinch &amp;&amp; !parentEvent &amp;&amp; !parentFlag &amp;&amp; (distX || distY)) {
+            const [verticalInfo, horizontalInfo] = checkSnapDrag(
+                moveable, distX, distY, throttleDragRotate, datas,
+            );
+            const {
+                isSnap: isVerticalSnap,
+                isBound: isVerticalBound,
+                offset: verticalOffset,
+            } = verticalInfo;
+            const {
+                isSnap: isHorizontalSnap,
+                isBound: isHorizontalBound,
+                offset: horizontalOffset,
+            } = horizontalInfo;
+            isSnap = isVerticalSnap || isHorizontalSnap || isVerticalBound || isHorizontalBound;
 
-			for (name in eventHash) {
-				this.on(name, eventHash[name]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			let handlerList = this._eventHandler[eventName];
+            distX += verticalOffset;
+            distY += horizontalOffset;
+        }
+        datas.passDistX = distX;
+        datas.passDistY = distY;
+        const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
+        const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
 
-			if (isUndefined(handlerList)) {
-				this._eventHandler[eventName] = [];
-				handlerList = this._eventHandler[eventName];
-			}
+        if (!throttleDragRotate &amp;&amp; !isSnap) {
+            throttleArray(translate, throttleDrag);
+            throttleArray(beforeTranslate, throttleDrag);
+        }
 
-			handlerList.push(handlerToAttach);
-		}
+        const beforeDist = minus(beforeTranslate, startTranslate);
+        const dist = minus(translate, startTranslate);
+        const delta = minus(dist, prevDist);
+        const beforeDelta = minus(beforeDist, prevBeforeDist);
 
-		return this;
-	}
-	/**
-	 * Detaches an event from the component.
-	 * @ko 컴포넌트에 등록된 이벤트를 해제한다
-	 * @param {eventName} eventName The name of the event to be detached &lt;ko>해제할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToDetach The handler function of the event to be detached &lt;ko>해제할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself &lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.off("hi",this.hi); //detach event
-  }
-}
-	 */
-	off(eventName, handlerToDetach) {
-		// All event detach.
-		if (isUndefined(eventName)) {
-			this._eventHandler = {};
-			return this;
-		}
+        datas.prevDist = dist;
+        datas.prevBeforeDist = beforeDist;
 
-		// All handler of specific event detach.
-		if (isUndefined(handlerToDetach)) {
-			if (typeof eventName === "string") {
-				this._eventHandler[eventName] = undefined;
-				return this;
-			} else {
-				const eventHash = eventName;
-				let name;
+        const left = datas.left + beforeDist[0];
+        const top = datas.top + beforeDist[1];
+        const right = datas.right - beforeDist[0];
+        const bottom = datas.bottom - beforeDist[1];
+        const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
 
-				for (name in eventHash) {
-					this.off(name, eventHash[name]);
-				}
-				return this;
-			}
-		}
+        moveable.state.dragInfo.dist = parentEvent ? [0, 0] : dist;
+        if (!parentEvent &amp;&amp; !parentMoveable &amp;&amp; delta.every(num => !num) &amp;&amp; beforeDelta.some(num => !num)) {
+            return;
+        }
+        const params = fillParams&lt;OnDrag>(moveable, e, {
+            transform: nextTransform,
+            dist,
+            delta,
+            translate,
+            beforeDist,
+            beforeDelta,
+            beforeTranslate,
+            left,
+            top,
+            right,
+            bottom,
+            isPinch,
+        });
 
-		// The handler of specific event detach.
-		let handlerList = this._eventHandler[eventName];
+        !parentEvent &amp;&amp; triggerEvent(moveable, "onDrag", params);
+        return params;
+    },
+    dragEnd(
+        moveable: MoveableManager&lt;DraggableProps, DraggableState>,
+        e: any,
+    ) {
+        const { parentEvent, datas, isDrag } = e;
 
-		if (handlerList) {
-			let k;
-			let handlerFunction;
+        moveable.state.dragger = null;
+        moveable.state.dragInfo = null;
+        if (!datas.isDrag) {
+            return;
+        }
+        datas.isDrag = false;
+        !parentEvent &amp;&amp; triggerEvent(moveable, "onDragEnd", fillParams&lt;OnDragEnd>(moveable, e, {
+            isDrag,
+        }));
+        return isDrag;
+    },
+    dragGroupStart(moveable: MoveableGroup, e: any) {
+        const datas = e.datas;
 
-			for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
-				if (handlerFunction === handlerToDetach) {
-					handlerList = handlerList.splice(k, 1);
-					break;
-				}
-			}
-		}
+        const params = this.dragStart(moveable, e);
 
-		return this;
-	}
-}
+        if (!params) {
+            return false;
+        }
+        const events = triggerChildAble(moveable, this, "dragStart", datas, e);
+        const nextParams: OnDragGroupStart = {
+            ...params,
+            targets: moveable.props.targets!,
+            events,
+        };
+        const result = triggerEvent(moveable, "onDragGroupStart", nextParams);
 
-export default Component;
+        datas.isDrag = result !== false;
+
+        return datas.isDrag ? params : false;
+    },
+    dragGroup(moveable: MoveableGroup, e: any) {
+        const datas = e.datas;
+
+        if (!datas.isDrag) {
+            return;
+        }
+        const params = this.drag(moveable, e);
+        const { passDistX, passDistY } = e.datas;
+        const events = triggerChildAble(moveable, this, "drag", datas, { ...e, distX: passDistX, distY: passDistY });
+
+        if (!params) {
+            return;
+        }
+        const nextParams: OnDragGroup = {
+            targets: moveable.props.targets!,
+            events,
+            ...params,
+        };
+
+        triggerEvent(moveable, "onDragGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupEnd(moveable: MoveableGroup, e: any) {
+        const { isDrag, datas } = e;
+
+        if (!datas.isDrag) {
+            return;
+        }
+        this.dragEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragEnd", datas, e);
+        triggerEvent(moveable, "onDragGroupEnd", fillParams(moveable, e, {
+            targets: moveable.props.targets!,
+            isDrag,
+        }));
+
+        return isDrag;
+    },
+    /**
+     * @method Moveable.Draggable#request
+     * @param {object} [e] - the draggable's request parameter
+     * @param {number} [e.x] - x position
+     * @param {number} [e.y] - y position
+     * @param {number} [e.deltaX] - X number to move
+     * @param {number} [e.deltaY] - Y number to move
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * // Use Relative Value
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     * // Use Absolute Value
+     * moveable.request("draggable", { x: 200, y: 100, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("draggable");
+     *
+     * // request
+     * // Use Relative Value
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * // Use Absolute Value
+     * moveable.request("draggable", { x: 200, y: 100, isInstant: true });
+     * moveable.request("draggable", { x: 220, y: 100, isInstant: true });
+     * moveable.request("draggable", { x: 240, y: 100, isInstant: true });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
+    request(moveable: MoveableManager&lt;any, any>) {
+        const datas = {};
+        const rect = moveable.getRect();
+        let distX = 0;
+        let distY = 0;
+
+        return {
+            isControl: false,
+            requestStart(e: IObject&lt;any>) {
+                return { datas };
+            },
+            request(e: IObject&lt;any>) {
+                if ("x" in e) {
+                    distX = e.x - rect.left;
+                } else if ("deltaX" in e) {
+                    distX += e.deltaX;
+                }
+                if ("y" in e) {
+                    distY = e.y - rect.top;
+                } else if ("deltaY" in e) {
+                    distY += e.deltaY;
+                }
+
+                return { datas, distX, distY };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
+    },
+    unset(moveable: any) {
+        moveable.state.dragInfo = null;
+    },
+};
 </code></pre>
         </article>
     </section>
@@ -304,10 +393,10 @@ export default Component;
 <style>
 
 
-nav li[file="node_modules/@egjs/component/src/component"]:after {
+nav li[file="packages/react-moveable/src/react-moveable/ables/draggable"]:after {
     display: none;
 }
-nav li[file="node_modules/@egjs/component/src/component"] h4, nav li[file="node_modules/@egjs/component/src/component"] ul {
+nav li[file="packages/react-moveable/src/react-moveable/ables/draggable"] h4, nav li[file="packages/react-moveable/src/react-moveable/ables/draggable"] ul {
     display: block;
 }
 </style>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>node_modules/@egjs/component/src/Component.js - Documentation</title>
+    <title>Draggable - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
     <link type="text/css" rel="stylesheet" href="styles/custom.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <meta name="description" content="node_modules/@egjs/component/src/Component.js - Documentation"/>
+    <meta name="description" content="Draggable - Documentation"/>
 
 </head>
 <body>
@@ -32,270 +32,424 @@
 
 <div id="main">
     
-    <h1 class="page-title">node_modules/@egjs/component/src/Component.js</h1>
+    <h1 class="page-title">Draggable</h1>
     
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
+        <h2>
+            <span class="ancestors"><a href="Moveable.html">Moveable</a>.</span>
+        
+        Draggable
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="packages_react-moveable_src_react-moveable_ables_Draggable.tsx.html">packages/react-moveable/src/react-moveable/ables/Draggable.tsx</a>, <a href="packages_react-moveable_src_react-moveable_ables_Draggable.tsx.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
 
 
-function isUndefined(value) {
-	return typeof value === "undefined";
-}
-/**
- * A class used to manage events in a component
- * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
- * @alias eg.Component
- */
-class Component {
-	/**
- * Version info string
- * @ko 버전정보 문자열
- * @name VERSION
- * @static
- * @type {String}
- * @example
- * eg.Component.VERSION;  // ex) 2.0.0
- * @memberof eg.Component
- */
-	static VERSION = "#__VERSION__#";
-	/**
-	 * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
-	 */
-	constructor() {
-		this._eventHandler = {};
-		this.options = {};
-	}
-	/**
-	 * Triggers a custom event.
-	 * @ko 커스텀 이벤트를 발생시킨다
-	 * @param {String} eventName The name of the custom event to be triggered &lt;ko>발생할 커스텀 이벤트의 이름&lt;/ko>
-	 * @param {Object} customEvent Event data to be sent when triggering a custom event &lt;ko>커스텀 이벤트가 발생할 때 전달할 데이터&lt;/ko>
-	 * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref&lt;/a> &lt;ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고&lt;/a>&lt;/ko>
-	 * @example
 
-class Some extends eg.Component {
-  some(){
-  	if(this.trigger("beforeHi")){ // When event call to stop return false.
-		this.trigger("hi");// fire hi event.
-  	}
-  }
-}
 
-const some = new Some();
-some.on("beforeHi", (e) => {
-	if(condition){
-		e.stop(); // When event call to stop, `hi` event not call.
-	}
-});
-some.on("hi", (e) => {
-	// `currentTarget` is component instance.
-	console.log(some === e.currentTarget); // true
-});
-// If you want to more know event design. You can see article.
-// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
-	 */
-	trigger(eventName, customEvent = {}, ...restParam) {
-		let handlerList = this._eventHandler[eventName] || [];
-		const hasHandlerList = handlerList.length > 0;
+        
 
-		if (!hasHandlerList) {
-			return true;
-		}
+        
+    
+    </div>
 
-		// If detach method call in handler in first time then handler list calls.
-		handlerList = handlerList.concat();
+    
 
-		customEvent.eventType = eventName;
+    
 
-		let isCanceled = false;
-		let arg = [customEvent];
-		let i = 0;
+    
 
-		customEvent.stop = () => { isCanceled = true; };
-		customEvent.currentTarget = this;
+     
 
-		if (restParam.length >= 1) {
-			arg = arg.concat(restParam);
-		}
+    
 
-		for (i = 0; handlerList[i]; i++) {
-			handlerList[i].apply(this, arg);
-		}
+    
 
-		return !isCanceled;
-	}
-	/**
-	 * Executed event just one time.
-	 * @ko 이벤트가 한번만 실행된다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    alert("hi");
-  }
-  thing() {
-    this.once("hi", this.hi);
-  }
-}
+    
+        <h3 class="subsection-title" id="methods">Methods</h3>
 
-var some = new Some();
-some.thing();
-some.trigger("hi");
-// fire alert("hi");
-some.trigger("hi");
-// Nothing happens
-	 */
-	once(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let i;
+        
+            
 
-			for (i in eventHash) {
-				this.once(i, eventHash[i]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			const self = this;
+    
 
-			this.on(eventName, function listener(...arg) {
-				handlerToAttach.apply(self, arg);
-				self.off(eventName, listener);
-			});
-		}
+    <h4 class="name" id="request"><span class="type-signature"></span>request<span class="signature">(e<span class="signature-attributes">opt</span>, e.x<span class="signature-attributes">opt</span>, e.y<span class="signature-attributes">opt</span>, e.deltaX<span class="signature-attributes">opt</span>, e.deltaY<span class="signature-attributes">opt</span>, e.isInstant<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="Moveable.html#.Requester">Moveable.Requester</a>}</span></h4>
 
-		return this;
-	}
+    
 
-	/**
-	 * Checks whether an event has been attached to a component.
-	 * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
-	 * @param {String} eventName The name of the event to be attached &lt;ko>등록 여부를 확인할 이벤트의 이름&lt;/ko>
-	 * @return {Boolean} Indicates whether the event is attached. &lt;ko>이벤트 등록 여부&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  some() {
-    this.hasOn("hi");// check hi event.
-  }
-}
-	 */
-	hasOn(eventName) {
-		return !!this._eventHandler[eventName];
-	}
 
-	/**
-	 * Attaches an event to a component.
-	 * @ko 컴포넌트에 이벤트를 등록한다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.on("hi",this.hi); //attach event
-  }
-}
-*/
-	on(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let name;
 
-			for (name in eventHash) {
-				this.on(name, eventHash[name]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			let handlerList = this._eventHandler[eventName];
 
-			if (isUndefined(handlerList)) {
-				this._eventHandler[eventName] = [];
-				handlerList = this._eventHandler[eventName];
-			}
+<dl class="details">
 
-			handlerList.push(handlerToAttach);
-		}
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="packages_react-moveable_src_react-moveable_ables_Draggable.tsx.html">packages/react-moveable/src/react-moveable/ables/Draggable.tsx</a>, <a href="packages_react-moveable_src_react-moveable_ables_Draggable.tsx.html#line274">line 274</a>
+    </li></ul></dd>
+    
 
-		return this;
-	}
-	/**
-	 * Detaches an event from the component.
-	 * @ko 컴포넌트에 등록된 이벤트를 해제한다
-	 * @param {eventName} eventName The name of the event to be detached &lt;ko>해제할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToDetach The handler function of the event to be detached &lt;ko>해제할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself &lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.off("hi",this.hi); //detach event
-  }
-}
-	 */
-	off(eventName, handlerToDetach) {
-		// All event detach.
-		if (isUndefined(eventName)) {
-			this._eventHandler = {};
-			return this;
-		}
+    
 
-		// All handler of specific event detach.
-		if (isUndefined(handlerToDetach)) {
-			if (typeof eventName === "string") {
-				this._eventHandler[eventName] = undefined;
-				return this;
-			} else {
-				const eventHash = eventName;
-				let name;
+    
 
-				for (name in eventHash) {
-					this.off(name, eventHash[name]);
-				}
-				return this;
-			}
-		}
+    
 
-		// The handler of specific event detach.
-		let handlerList = this._eventHandler[eventName];
+    
 
-		if (handlerList) {
-			let k;
-			let handlerFunction;
+    
 
-			for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
-				if (handlerFunction === handlerToDetach) {
-					handlerList = handlerList.splice(k, 1);
-					break;
-				}
-			}
-		}
+    
 
-		return this;
-	}
-}
+    
 
-export default Component;
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code>?</td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the draggable's request parameter
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code>?</td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">x position</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code>?</td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">y position</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deltaX</code>?</td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">X number to move</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deltaY</code>?</td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Y number to move</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isInstant</code>?</td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Whether to execute the request instantly</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Instantly Request (requestStart - request - requestEnd)
+// Use Relative Value
+moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+// Use Absolute Value
+moveable.request("draggable", { x: 200, y: 100, isInstant: true });
+
+// requestStart
+const requester = moveable.request("draggable");
+
+// request
+// Use Relative Value
+requester.request({ deltaX: 10, deltaY: 10 });
+requester.request({ deltaX: 10, deltaY: 10 });
+requester.request({ deltaX: 10, deltaY: 10 });
+// Use Absolute Value
+moveable.request("draggable", { x: 200, y: 100, isInstant: true });
+moveable.request("draggable", { x: 220, y: 100, isInstant: true });
+moveable.request("draggable", { x: 240, y: 100, isInstant: true });
+
+// requestEnd
+requester.requestEnd();</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Moveable Requester
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Moveable.html#.Requester">Moveable.Requester</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
@@ -304,10 +458,10 @@ export default Component;
 <style>
 
 
-nav li[file="node_modules/@egjs/component/src/component"]:after {
+nav li[file="draggable"]:after {
     display: none;
 }
-nav li[file="node_modules/@egjs/component/src/component"] h4, nav li[file="node_modules/@egjs/component/src/component"] ul {
+nav li[file="draggable"] h4, nav li[file="draggable"] ul {
     display: block;
 }
 </style>
@@ -317,7 +471,7 @@ nav li[file="node_modules/@egjs/component/src/component"] h4, nav li[file="node_
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.3.7</a> on Thu Mar 05 2020 03:58:50 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.3.7</a> on Thu Mar 05 2020 03:58:51 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

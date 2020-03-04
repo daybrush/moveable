@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>node_modules/@egjs/component/src/Component.js - Documentation</title>
+    <title>packages/react-moveable/src/react-moveable/ables/Rotatable.tsx - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
     <link type="text/css" rel="stylesheet" href="styles/custom.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <meta name="description" content="node_modules/@egjs/component/src/Component.js - Documentation"/>
+    <meta name="description" content="packages/react-moveable/src/react-moveable/ables/Rotatable.tsx - Documentation"/>
 
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">node_modules/@egjs/component/src/Component.js</h1>
+    <h1 class="page-title">packages/react-moveable/src/react-moveable/ables/Rotatable.tsx</h1>
     
 
     
@@ -42,257 +42,484 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
+            <pre class="prettyprint source linenums"><code>import { throttle, prefix, triggerEvent, fillParams, getRotationRad, getClientRect, caculatePosition } from "../utils";
+import { IObject, hasClass } from "@daybrush/utils";
+import MoveableManager from "../MoveableManager";
+import {
+    RotatableProps, OnRotateGroup, OnRotateGroupEnd,
+    Renderer, OnRotateGroupStart, OnRotateStart, OnRotate,
+    OnRotateEnd, MoveableClientRect, SnappableProps, SnappableState,
+} from "../types";
+import MoveableGroup from "../MoveableGroup";
+import { triggerChildAble } from "../groupUtils";
+import Draggable from "./Draggable";
+import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
+import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import { checkSnapRotate } from "./Snappable";
 
-
-function isUndefined(value) {
-	return typeof value === "undefined";
-}
 /**
- * A class used to manage events in a component
- * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
- * @alias eg.Component
+ * @namespace Rotatable
+ * @memberof Moveable
  */
-class Component {
-	/**
- * Version info string
- * @ko 버전정보 문자열
- * @name VERSION
- * @static
- * @type {String}
- * @example
- * eg.Component.VERSION;  // ex) 2.0.0
- * @memberof eg.Component
- */
-	static VERSION = "#__VERSION__#";
-	/**
-	 * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
-	 */
-	constructor() {
-		this._eventHandler = {};
-		this.options = {};
-	}
-	/**
-	 * Triggers a custom event.
-	 * @ko 커스텀 이벤트를 발생시킨다
-	 * @param {String} eventName The name of the custom event to be triggered &lt;ko>발생할 커스텀 이벤트의 이름&lt;/ko>
-	 * @param {Object} customEvent Event data to be sent when triggering a custom event &lt;ko>커스텀 이벤트가 발생할 때 전달할 데이터&lt;/ko>
-	 * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref&lt;/a> &lt;ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고&lt;/a>&lt;/ko>
-	 * @example
 
-class Some extends eg.Component {
-  some(){
-  	if(this.trigger("beforeHi")){ // When event call to stop return false.
-		this.trigger("hi");// fire hi event.
-  	}
-  }
+function setRotateStartInfo(
+    moveable: MoveableManager&lt;any, any>,
+    datas: IObject&lt;any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
+
+    const n = moveable.state.is3d ? 4 : 3;
+    const nextOrigin = caculatePosition(moveable.state.rootMatrix, origin, n);
+    const startAbsoluteOrigin = plus([rect.left, rect.top], nextOrigin);
+
+    datas.startAbsoluteOrigin = startAbsoluteOrigin;
+    datas.prevDeg = getRad(startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
+    datas.prevSnapDeg = datas.prevDeg;
+    datas.startDeg = datas.prevDeg;
+    datas.loop = 0;
+}
+function getParentDeg(
+    moveable: MoveableManager&lt;any, any>,
+    moveableRect: any,
+    datas: IObject&lt;any>,
+    parentDist: number,
+    direction: number,
+    startRotate: number,
+) {
+    const {
+        prevDeg,
+    } = datas;
+
+    const absoluteDeg = startRotate + parentDist;
+    const dist = checkSnapRotate(
+        moveable,
+        moveableRect,
+        datas.origin,
+        parentDist,
+    );
+    datas.prevDeg = dist;
+
+    const delta = direction * (dist - prevDeg);
+
+    return [delta, dist, absoluteDeg];
+}
+function getDeg(
+    moveable: MoveableManager&lt;any, any>,
+    moveableRect: any,
+    datas: IObject&lt;any>,
+    deg: number,
+    direction: number,
+    startRotate: number,
+    throttleRotate: number,
+    isSnap?: boolean,
+) {
+    const {
+        prevDeg,
+        prevSnapDeg,
+        startDeg,
+        loop: prevLoop,
+    } = datas;
+
+    if (prevDeg > deg &amp;&amp; prevDeg > 270 &amp;&amp; deg &lt; 90) {
+        // 360 => 0
+        ++datas.loop;
+    } else if (prevDeg &lt; deg &amp;&amp; prevDeg &lt; 90 &amp;&amp; deg > 270) {
+        // 0 => 360
+        --datas.loop;
+    }
+    const loop = datas.loop;
+    const absolutePrevSnapDeg = prevLoop * 360 + prevSnapDeg - startDeg + startRotate;
+    let absoluteDeg = loop * 360 + deg - startDeg + startRotate;
+
+    datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
+
+    absoluteDeg = throttle(absoluteDeg, throttleRotate);
+    let dist = direction * (absoluteDeg - startRotate);
+    if (isSnap) {
+        dist = checkSnapRotate(moveable, moveableRect, datas.origin, dist);
+        absoluteDeg = dist / direction + startRotate;
+    }
+    datas.prevSnapDeg = absoluteDeg - loop * 360 + startDeg - startRotate;
+
+    const delta = direction * (absoluteDeg - absolutePrevSnapDeg);
+
+    return [delta, dist, absoluteDeg];
+}
+function getRotateInfo(
+    moveable: MoveableManager&lt;any, any>,
+    moveableRect: any,
+    datas: IObject&lt;any>,
+    direction: number,
+    clientX: number, clientY: number,
+    startRotate: number,
+    throttleRotate: number,
+) {
+    return getDeg(
+        moveable,
+        moveableRect,
+        datas,
+        getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
+        direction,
+        startRotate,
+        throttleRotate,
+        true,
+    );
 }
 
-const some = new Some();
-some.on("beforeHi", (e) => {
-	if(condition){
-		e.stop(); // When event call to stop, `hi` event not call.
-	}
-});
-some.on("hi", (e) => {
-	// `currentTarget` is component instance.
-	console.log(some === e.currentTarget); // true
-});
-// If you want to more know event design. You can see article.
-// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
-	 */
-	trigger(eventName, customEvent = {}, ...restParam) {
-		let handlerList = this._eventHandler[eventName] || [];
-		const hasHandlerList = handlerList.length > 0;
-
-		if (!hasHandlerList) {
-			return true;
-		}
-
-		// If detach method call in handler in first time then handler list calls.
-		handlerList = handlerList.concat();
-
-		customEvent.eventType = eventName;
-
-		let isCanceled = false;
-		let arg = [customEvent];
-		let i = 0;
-
-		customEvent.stop = () => { isCanceled = true; };
-		customEvent.currentTarget = this;
-
-		if (restParam.length >= 1) {
-			arg = arg.concat(restParam);
-		}
-
-		for (i = 0; handlerList[i]; i++) {
-			handlerList[i].apply(this, arg);
-		}
-
-		return !isCanceled;
-	}
-	/**
-	 * Executed event just one time.
-	 * @ko 이벤트가 한번만 실행된다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    alert("hi");
-  }
-  thing() {
-    this.once("hi", this.hi);
-  }
+export function getPositions(
+    rotationPosition: "top" | "bottom" | "left" | "right",
+    pos1: number[],
+    pos2: number[],
+    pos3: number[],
+    pos4: number[],
+) {
+    if (rotationPosition === "left") {
+        return [pos3, pos1];
+    } else if (rotationPosition === "right") {
+        return [pos2, pos4];
+    } else if (rotationPosition === "bottom") {
+        return [pos4, pos3];
+    }
+    return [pos1, pos2];
 }
 
-var some = new Some();
-some.thing();
-some.trigger("hi");
-// fire alert("hi");
-some.trigger("hi");
-// Nothing happens
-	 */
-	once(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let i;
-
-			for (i in eventHash) {
-				this.once(i, eventHash[i]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			const self = this;
-
-			this.on(eventName, function listener(...arg) {
-				handlerToAttach.apply(self, arg);
-				self.off(eventName, listener);
-			});
-		}
-
-		return this;
-	}
-
-	/**
-	 * Checks whether an event has been attached to a component.
-	 * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
-	 * @param {String} eventName The name of the event to be attached &lt;ko>등록 여부를 확인할 이벤트의 이름&lt;/ko>
-	 * @return {Boolean} Indicates whether the event is attached. &lt;ko>이벤트 등록 여부&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  some() {
-    this.hasOn("hi");// check hi event.
-  }
-}
-	 */
-	hasOn(eventName) {
-		return !!this._eventHandler[eventName];
-	}
-
-	/**
-	 * Attaches an event to a component.
-	 * @ko 컴포넌트에 이벤트를 등록한다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.on("hi",this.hi); //attach event
-  }
-}
-*/
-	on(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let name;
-
-			for (name in eventHash) {
-				this.on(name, eventHash[name]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			let handlerList = this._eventHandler[eventName];
-
-			if (isUndefined(handlerList)) {
-				this._eventHandler[eventName] = [];
-				handlerList = this._eventHandler[eventName];
-			}
-
-			handlerList.push(handlerToAttach);
-		}
-
-		return this;
-	}
-	/**
-	 * Detaches an event from the component.
-	 * @ko 컴포넌트에 등록된 이벤트를 해제한다
-	 * @param {eventName} eventName The name of the event to be detached &lt;ko>해제할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToDetach The handler function of the event to be detached &lt;ko>해제할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself &lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.off("hi",this.hi); //detach event
-  }
-}
-	 */
-	off(eventName, handlerToDetach) {
-		// All event detach.
-		if (isUndefined(eventName)) {
-			this._eventHandler = {};
-			return this;
-		}
-
-		// All handler of specific event detach.
-		if (isUndefined(handlerToDetach)) {
-			if (typeof eventName === "string") {
-				this._eventHandler[eventName] = undefined;
-				return this;
-			} else {
-				const eventHash = eventName;
-				let name;
-
-				for (name in eventHash) {
-					this.off(name, eventHash[name]);
-				}
-				return this;
-			}
-		}
-
-		// The handler of specific event detach.
-		let handlerList = this._eventHandler[eventName];
-
-		if (handlerList) {
-			let k;
-			let handlerFunction;
-
-			for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
-				if (handlerFunction === handlerToDetach) {
-					handlerList = handlerList.splice(k, 1);
-					break;
-				}
-			}
-		}
-
-		return this;
-	}
+export function dragControlCondition(e: any) {
+    if (e.isRequest) {
+        return true;
+    }
+    return hasClass(e.inputEvent.target, prefix("rotation"));
 }
 
-export default Component;
+export default {
+    name: "rotatable",
+    canPinch: true,
+    props: {
+        rotatable: Boolean,
+        rotationPosition: String,
+        throttleRotate: Number,
+    },
+    render(moveable: MoveableManager&lt;RotatableProps>, React: Renderer): any {
+        const {
+            rotatable,
+            rotationPosition,
+        } = moveable.props;
+        if (!rotatable) {
+            return null;
+        }
+        const { pos1, pos2, pos3, pos4, direction } = moveable.state;
+        const poses = getPositions(rotationPosition!, pos1, pos2, pos3, pos4);
+        const rotationRad = getRotationRad(poses, direction);
+
+        return (
+            &lt;div key="rotation" className={prefix("line rotation-line")} style={{
+                // tslint:disable-next-line: max-line-length
+                transform: `translate(-50%) translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) rotate(${rotationRad}rad)`,
+            }}>
+                &lt;div className={prefix("control", "rotation")}>&lt;/div>
+            &lt;/div>
+        );
+    },
+    dragControlCondition,
+    dragControlStart(
+        moveable: MoveableManager&lt;RotatableProps &amp; SnappableProps, SnappableState>,
+        e: any) {
+        const {
+            datas,
+            clientX, clientY,
+            parentRotate, parentFlag, pinchFlag,
+            isRequest,
+        } = e;
+        const {
+            target, left, top, origin, beforeOrigin,
+            direction, beforeDirection, targetTransform,
+        } = moveable.state;
+
+        if (!isRequest &amp;&amp; !target) {
+            return false;
+        }
+
+        const rect = moveable.getRect();
+        datas.rect = rect;
+        datas.transform = targetTransform;
+        datas.left = left;
+        datas.top = top;
+
+        if (isRequest || pinchFlag || parentFlag) {
+            const externalRotate = parentRotate || 0;
+
+            datas.beforeInfo = {
+                origin: rect.beforeOrigin,
+                prevDeg: externalRotate,
+                startDeg: externalRotate,
+                prevSnapDeg: externalRotate, loop: 0,
+            };
+            datas.afterInfo = {
+                origin: rect.origin,
+                prevDeg: externalRotate, startDeg: externalRotate,
+                prevSnapDeg: externalRotate, loop: 0,
+            };
+        } else {
+            datas.beforeInfo = { origin: rect.beforeOrigin };
+            datas.afterInfo = { origin: rect.origin };
+
+            const controlRect = getClientRect(moveable.controlBox.getElement());
+
+            setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, beforeOrigin, controlRect);
+            setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, origin, controlRect);
+        }
+
+        datas.direction = direction;
+        datas.beforeDirection = beforeDirection;
+        datas.startRotate = 0;
+        datas.datas = {};
+
+        const params = fillParams&lt;OnRotateStart>(moveable, e, {
+            set: (rotatation: number) => {
+                datas.startRotate = rotatation;
+            },
+        });
+        const result = triggerEvent(moveable, "onRotateStart", params);
+        datas.isRotate = result !== false;
+        moveable.state.snapRenderInfo = {};
+
+        return datas.isRotate ? params : false;
+    },
+    dragControl(
+        moveable: MoveableManager&lt;RotatableProps>,
+        e: any,
+    ) {
+        const { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag } = e;
+        const {
+            direction,
+            beforeDirection,
+            beforeInfo,
+            afterInfo,
+            isRotate,
+            startRotate,
+            rect,
+        } = datas;
+
+        if (!isRotate) {
+            return;
+        }
+        const {
+            throttleRotate = 0,
+            parentMoveable,
+        } = moveable.props;
+
+        let delta: number;
+        let dist: number;
+        let rotate: number;
+        let beforeDelta: number;
+        let beforeDist: number;
+        let beforeRotate: number;
+
+        if ("parentDist" in e) {
+            const parentDist = e.parentDist;
+
+            [delta, dist, rotate]
+                = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startRotate);
+            [beforeDelta, beforeDist, beforeRotate]
+                = getParentDeg(moveable, rect, beforeInfo, parentDist, direction, startRotate);
+        } else if (pinchFlag || parentFlag) {
+            [delta, dist, rotate]
+                = getDeg(moveable, rect, afterInfo, parentRotate, direction, startRotate, throttleRotate);
+            [beforeDelta, beforeDist, beforeRotate]
+                = getDeg(moveable, rect, beforeInfo, parentRotate, direction, startRotate, throttleRotate);
+        } else {
+            [delta, dist, rotate]
+                = getRotateInfo(moveable, rect, afterInfo, direction, clientX, clientY, startRotate, throttleRotate);
+            [beforeDelta, beforeDist, beforeRotate] = getRotateInfo(
+                moveable, rect, beforeInfo, beforeDirection, clientX, clientY, startRotate, throttleRotate,
+            );
+        }
+
+        if (!delta &amp;&amp; !beforeDelta &amp;&amp; !parentMoveable) {
+            return;
+        }
+        const params = fillParams&lt;OnRotate>(moveable, e, {
+            delta,
+            dist,
+            rotate,
+            beforeDist,
+            beforeDelta,
+            beforeRotate,
+            transform: `${datas.transform} rotate(${dist}deg)`,
+            isPinch: !!pinchFlag,
+        });
+        triggerEvent(moveable, "onRotate", params);
+
+        return params;
+    },
+    dragControlEnd(moveable: MoveableManager&lt;RotatableProps>, e: any) {
+        const { datas, isDrag } = e;
+
+        if (!datas.isRotate) {
+            return false;
+        }
+        datas.isRotate = false;
+
+        triggerEvent(moveable, "onRotateEnd", fillParams&lt;OnRotateEnd>(moveable, e, {
+            isDrag,
+        }));
+        return isDrag;
+    },
+    dragGroupControlCondition: dragControlCondition,
+    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+        const { datas, inputEvent } = e;
+        const {
+            left: parentLeft,
+            top: parentTop,
+            beforeOrigin: parentBeforeOrigin,
+        } = moveable.state;
+
+        const params = this.dragControlStart(moveable, e);
+
+        if (!params) {
+            return false;
+        }
+
+        params.set(moveable.rotation);
+
+        const events = triggerChildAble(
+            moveable,
+            this,
+            "dragControlStart",
+            datas,
+            { ...e, parentRotate: 0 },
+            (child, childDatas, eventParams) => {
+                const { left, top, beforeOrigin } = child.state;
+                const childClient = plus(
+                    minus([left, top], [parentLeft, parentTop]),
+                    minus(beforeOrigin, parentBeforeOrigin),
+                );
+
+                childDatas.prevClient = childClient;
+                eventParams.dragStart = Draggable.dragStart(
+                    child,
+                    new CustomDragger().dragStart(childClient, inputEvent),
+                );
+            },
+        );
+
+        const nextParams: OnRotateGroupStart = {
+            ...params,
+            targets: moveable.props.targets!,
+            events,
+        };
+        const result = triggerEvent(moveable, "onRotateGroupStart", nextParams);
+
+        datas.isRotate = result !== false;
+
+        return datas.isRotate ? params : false;
+    },
+    dragGroupControl(moveable: MoveableGroup, e: any) {
+        const { inputEvent, datas } = e;
+
+        if (!datas.isRotate) {
+            return;
+        }
+        const params = this.dragControl(moveable, e);
+
+        if (!params) {
+            return;
+        }
+        const parentRotate = params.beforeDist;
+        const deg = params.beforeDelta;
+        const rad = deg / 180 * Math.PI;
+
+        const events = triggerChildAble(
+            moveable,
+            this,
+            "dragControl",
+            datas,
+            { ...e, parentRotate },
+            (child, childDatas, result, i) => {
+                const [prevX, prevY] = childDatas.prevClient;
+                const [clientX, clientY] = rotateMatrix([prevX, prevY], rad);
+                const delta = [clientX - prevX, clientY - prevY];
+
+                childDatas.prevClient = [clientX, clientY];
+
+                const dragResult = Draggable.drag(
+                    child,
+                    setCustomDrag(child.state, delta, inputEvent, false),
+                );
+                result.drag = dragResult;
+            },
+        );
+        moveable.rotation = params.beforeRotate;
+
+        const nextParams: OnRotateGroup = {
+            targets: moveable.props.targets!,
+            events,
+            set: (rotation: number) => {
+                moveable.rotation = rotation;
+            },
+            ...params,
+        };
+
+        triggerEvent(moveable, "onRotateGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+        const { isDrag, datas } = e;
+
+        if (!datas.isRotate) {
+            return;
+        }
+
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
+
+        const nextParams: OnRotateGroupEnd = fillParams(moveable, e, {
+            targets: moveable.props.targets!,
+            isDrag,
+        });
+
+        triggerEvent(moveable, "onRotateGroupEnd", nextParams);
+        return isDrag;
+    },
+    /**
+     * @method Moveable.Rotatable#request
+     * @param {object} [e] - the Resizable's request parameter
+     * @param {number} [e.deltaRotate=0] -  delta number of rotation
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("rotatable", { deltaRotate: 10, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("rotatable");
+     *
+     * // request
+     * requester.request({ deltaRotate: 10 });
+     * requester.request({ deltaRotate: 10 });
+     * requester.request({ deltaRotate: 10 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
+    request() {
+        const datas = {};
+        let distRotate = 0;
+
+        return {
+            isControl: true,
+            requestStart(e: IObject&lt;any>) {
+                return { datas };
+            },
+            request(e: IObject&lt;any>) {
+                distRotate += e.deltaRotate;
+
+                return { datas, parentDist: distRotate };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
+    },
+};
 </code></pre>
         </article>
     </section>
@@ -304,10 +531,10 @@ export default Component;
 <style>
 
 
-nav li[file="node_modules/@egjs/component/src/component"]:after {
+nav li[file="packages/react-moveable/src/react-moveable/ables/rotatable"]:after {
     display: none;
 }
-nav li[file="node_modules/@egjs/component/src/component"] h4, nav li[file="node_modules/@egjs/component/src/component"] ul {
+nav li[file="packages/react-moveable/src/react-moveable/ables/rotatable"] h4, nav li[file="packages/react-moveable/src/react-moveable/ables/rotatable"] ul {
     display: block;
 }
 </style>

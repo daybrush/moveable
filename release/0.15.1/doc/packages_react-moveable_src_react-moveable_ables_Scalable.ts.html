@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>node_modules/@egjs/component/src/Component.js - Documentation</title>
+    <title>packages/react-moveable/src/react-moveable/ables/Scalable.ts - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
     <link type="text/css" rel="stylesheet" href="styles/custom.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <meta name="description" content="node_modules/@egjs/component/src/Component.js - Documentation"/>
+    <meta name="description" content="packages/react-moveable/src/react-moveable/ables/Scalable.ts - Documentation"/>
 
 </head>
 <body>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">node_modules/@egjs/component/src/Component.js</h1>
+    <h1 class="page-title">packages/react-moveable/src/react-moveable/ables/Scalable.ts</h1>
     
 
     
@@ -42,257 +42,473 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Copyright (c) 2015 NAVER Corp.
- * egjs projects are licensed under the MIT license
- */
+            <pre class="prettyprint source linenums"><code>import {
+    throttle, getDirection, triggerEvent, multiply2,
+    fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize,
+} from "../utils";
+import { MIN_SCALE } from "../consts";
+import {
+    setDragStart, getDragDist,
+    getScaleDist,
+    getAbsoluteFixedPosition,
+} from "../DraggerUtils";
+import MoveableManager from "../MoveableManager";
+import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
+import {
+    ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
+    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart,
+    OnDrag, SnappableState, GroupableProps, OnScaleStart, OnScale, OnScaleEnd,
+} from "../types";
+import {
+    triggerChildAble,
+} from "../groupUtils";
+import MoveableGroup from "../MoveableGroup";
+import Draggable from "./Draggable";
+import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
+import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import { checkSnapScale } from "./Snappable";
+import { isArray, IObject } from "@daybrush/utils";
+import {
+    directionCondition,
+} from "./utils";
 
-
-function isUndefined(value) {
-	return typeof value === "undefined";
-}
 /**
- * A class used to manage events in a component
- * @ko 컴포넌트의 이벤트을 관리할 수 있게 하는 클래스
- * @alias eg.Component
+ * @namespace Scalable
+ * @memberof Moveable
  */
-class Component {
-	/**
- * Version info string
- * @ko 버전정보 문자열
- * @name VERSION
- * @static
- * @type {String}
- * @example
- * eg.Component.VERSION;  // ex) 2.0.0
- * @memberof eg.Component
- */
-	static VERSION = "#__VERSION__#";
-	/**
-	 * @support {"ie": "7+", "ch" : "latest", "ff" : "latest",  "sf" : "latest", "edge" : "latest", "ios" : "7+", "an" : "2.1+ (except 3.x)"}
-	 */
-	constructor() {
-		this._eventHandler = {};
-		this.options = {};
-	}
-	/**
-	 * Triggers a custom event.
-	 * @ko 커스텀 이벤트를 발생시킨다
-	 * @param {String} eventName The name of the custom event to be triggered &lt;ko>발생할 커스텀 이벤트의 이름&lt;/ko>
-	 * @param {Object} customEvent Event data to be sent when triggering a custom event &lt;ko>커스텀 이벤트가 발생할 때 전달할 데이터&lt;/ko>
-	 * @return {Boolean} Indicates whether the event has occurred. If the stop() method is called by a custom event handler, it will return false and prevent the event from occurring. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">Ref&lt;/a> &lt;ko>이벤트 발생 여부. 커스텀 이벤트 핸들러에서 stop() 메서드를 호출하면 'false'를 반환하고 이벤트 발생을 중단한다. &lt;a href="https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F">참고&lt;/a>&lt;/ko>
-	 * @example
+export default {
+    name: "scalable",
+    ableGroup: "size",
+    canPinch: true,
+    props: {
+        scalable: Boolean,
+        throttleScale: Number,
+        renderDirections: String,
+        keepRatio: Boolean,
+    },
+    render(moveable: MoveableManager&lt;Partial&lt;ResizableProps &amp; ScalableProps>>, React: Renderer): any[] | undefined {
+        const { resizable, scalable, edge } = moveable.props;
+        if (!resizable &amp;&amp; scalable) {
+            if (edge) {
+                return renderDiagonalDirections(moveable, React);
+            }
+            return renderAllDirections(moveable, React);
+        }
+    },
+    dragControlCondition: directionCondition,
+    dragControlStart(
+        moveable: MoveableManager&lt;ScalableProps &amp; DraggableProps, SnappableState>,
+        e: any) {
 
-class Some extends eg.Component {
-  some(){
-  	if(this.trigger("beforeHi")){ // When event call to stop return false.
-		this.trigger("hi");// fire hi event.
-  	}
-  }
-}
+        const { datas, pinchFlag, inputEvent, parentDirection } = e;
+        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputEvent.target));
+        const {
+            width,
+            height,
+            targetTransform,
+            target,
+        } = moveable.state;
 
-const some = new Some();
-some.on("beforeHi", (e) => {
-	if(condition){
-		e.stop(); // When event call to stop, `hi` event not call.
-	}
-});
-some.on("hi", (e) => {
-	// `currentTarget` is component instance.
-	console.log(some === e.currentTarget); // true
-});
-// If you want to more know event design. You can see article.
-// https://github.com/naver/egjs-component/wiki/How-to-make-Component-event-design%3F
-	 */
-	trigger(eventName, customEvent = {}, ...restParam) {
-		let handlerList = this._eventHandler[eventName] || [];
-		const hasHandlerList = handlerList.length > 0;
+        if (!direction || !target) {
+            return false;
+        }
+        if (!pinchFlag) {
+            setDragStart(moveable, { datas });
+        }
 
-		if (!hasHandlerList) {
-			return true;
-		}
+        datas.datas = {};
+        datas.transform = targetTransform;
+        datas.prevDist = [1, 1];
+        datas.direction = direction;
+        datas.width = width;
+        datas.height = height;
+        datas.startScale = [1, 1];
+        datas.fixedPosition = getAbsoluteFixedPosition(moveable, direction);
 
-		// If detach method call in handler in first time then handler list calls.
-		handlerList = handlerList.concat();
+        const params = fillParams&lt;OnScaleStart>(moveable, e, {
+            direction,
+            set: (scale: number[]) => {
+                datas.startScale = scale;
+            },
+            dragStart: Draggable.dragStart(
+                moveable,
+                new CustomDragger().dragStart([0, 0], inputEvent),
+            ) as OnDragStart,
+        });
+        const result = triggerEvent(moveable, "onScaleStart", params);
 
-		customEvent.eventType = eventName;
+        if (result !== false) {
+            datas.isScale = true;
+            moveable.state.snapRenderInfo = {
+                direction,
+            };
 
-		let isCanceled = false;
-		let arg = [customEvent];
-		let i = 0;
+        }
+        return datas.isScale ? params : false;
+    },
+    dragControl(
+        moveable: MoveableManager&lt;ScalableProps &amp; DraggableProps &amp; GroupableProps, SnappableState>,
+        e: any) {
+        const {
+            datas, distX, distY,
+            parentScale,
+            parentDistance,
+            parentKeepRatio,
+            parentFlag, pinchFlag, inputEvent,
+            dragClient,
+            parentDist,
+        } = e;
+        const {
+            prevDist,
+            direction,
+            width,
+            height,
+            transform,
+            isScale,
+            startScale,
+        } = datas;
 
-		customEvent.stop = () => { isCanceled = true; };
-		customEvent.currentTarget = this;
+        if (!isScale) {
+            return false;
+        }
 
-		if (restParam.length >= 1) {
-			arg = arg.concat(restParam);
-		}
+        const {
+            throttleScale,
+            parentMoveable,
+        } = moveable.props;
+        const keepRatio = moveable.props.keepRatio || parentKeepRatio;
+        const state = moveable.state;
+        const isWidth = direction[0] || !direction[1];
+        const startWidth = width * startScale[0];
+        const startHeight = height * startScale[1];
+        const ratio = isWidth ? startHeight / startWidth : startWidth / startHeight;
+        let scaleX: number = 1;
+        let scaleY: number = 1;
 
-		for (i = 0; handlerList[i]; i++) {
-			handlerList[i].apply(this, arg);
-		}
+        if (parentScale) {
+            scaleX = parentScale[0];
+            scaleY = parentScale[1];
+        } else if (pinchFlag) {
+            if (parentDistance) {
+                scaleX = (width + parentDistance) / width;
+                scaleY = (height + parentDistance * height / width) / height;
+            }
+        } else {
+            const dist = getDragDist({ datas, distX, distY });
+            let distWidth = direction[0] * dist[0];
+            let distHeight = direction[1] * dist[1];
 
-		return !isCanceled;
-	}
-	/**
-	 * Executed event just one time.
-	 * @ko 이벤트가 한번만 실행된다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    alert("hi");
-  }
-  thing() {
-    this.once("hi", this.hi);
-  }
-}
+            if (keepRatio &amp;&amp; width &amp;&amp; height) {
+                const rad = getRad([0, 0], dist);
+                const standardRad = getRad([0, 0], direction);
+                const ratioRad = getRad([0, 0], [startWidth, startHeight]);
+                const size = getDistSize([distWidth, distHeight]);
+                const signSize = Math.cos(rad - standardRad) * size;
 
-var some = new Some();
-some.thing();
-some.trigger("hi");
-// fire alert("hi");
-some.trigger("hi");
-// Nothing happens
-	 */
-	once(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let i;
+                if (!direction[0]) {
+                    // top, bottom
+                    distHeight = signSize;
+                    distWidth = getKeepRatioWidth(distHeight, isWidth, ratio);
+                } else if (!direction[1]) {
+                    // left, right
+                    distWidth = signSize;
+                    distHeight = getKeepRatioHeight(distWidth, isWidth, ratio);
+                } else {
+                    // two-way
+                    distWidth = Math.cos(ratioRad) * signSize;
+                    distHeight = Math.sin(ratioRad) * signSize;
+                }
+            }
+            scaleX = (width + distWidth) / width;
+            scaleY = (height + distHeight) / height;
+        }
+        scaleX = direction[0] || keepRatio ? scaleX * startScale[0] : startScale[0];
+        scaleY = direction[1] || keepRatio ? scaleY * startScale[1] : startScale[1];
 
-			for (i in eventHash) {
-				this.once(i, eventHash[i]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			const self = this;
+        if (scaleX === 0) {
+            scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+        }
+        if (scaleY === 0) {
+            scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+        }
 
-			this.on(eventName, function listener(...arg) {
-				handlerToAttach.apply(self, arg);
-				self.off(eventName, listener);
-			});
-		}
+        const nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
+        let scale = [scaleX, scaleY];
+        let snapDirection = direction;
 
-		return this;
-	}
+        if (moveable.props.groupable) {
+            snapDirection = [
+                (nowDist[0] >= 0 ? 1 : -1) * direction[0],
+                (nowDist[1] >= 0 ? 1 : -1) * direction[1],
+            ];
+            const snapRenderInfo = state.snapRenderInfo || {};
+            const stateDirection = snapRenderInfo.direction;
 
-	/**
-	 * Checks whether an event has been attached to a component.
-	 * @ko 컴포넌트에 이벤트가 등록됐는지 확인한다.
-	 * @param {String} eventName The name of the event to be attached &lt;ko>등록 여부를 확인할 이벤트의 이름&lt;/ko>
-	 * @return {Boolean} Indicates whether the event is attached. &lt;ko>이벤트 등록 여부&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  some() {
-    this.hasOn("hi");// check hi event.
-  }
-}
-	 */
-	hasOn(eventName) {
-		return !!this._eventHandler[eventName];
-	}
+            if (isArray(stateDirection) &amp;&amp; (stateDirection[0] || stateDirection[1])) {
+                state.snapRenderInfo = { direction };
+            }
+        }
+        let snapDist = [0, 0];
 
-	/**
-	 * Attaches an event to a component.
-	 * @ko 컴포넌트에 이벤트를 등록한다.
-	 * @param {eventName} eventName The name of the event to be attached &lt;ko>등록할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToAttach The handler function of the event to be attached &lt;ko>등록할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself&lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.on("hi",this.hi); //attach event
-  }
-}
-*/
-	on(eventName, handlerToAttach) {
-		if (typeof eventName === "object" &amp;&amp; isUndefined(handlerToAttach)) {
-			const eventHash = eventName;
-			let name;
+        if (!pinchFlag) {
+            snapDist = checkSnapScale(
+                moveable,
+                nowDist,
+                direction,
+                snapDirection,
+                datas.fixedPosition,
+                parentDist,
+                datas,
+            );
+        }
 
-			for (name in eventHash) {
-				this.on(name, eventHash[name]);
-			}
-			return this;
-		} else if (typeof eventName === "string" &amp;&amp;
-			typeof handlerToAttach === "function") {
-			let handlerList = this._eventHandler[eventName];
+        if (keepRatio) {
+            if (direction[0] &amp;&amp; direction[1] &amp;&amp; snapDist[0] &amp;&amp; snapDist[1]) {
+                if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
+                    snapDist[1] = 0;
+                } else {
+                    snapDist[0] = 0;
+                }
+            }
 
-			if (isUndefined(handlerList)) {
-				this._eventHandler[eventName] = [];
-				handlerList = this._eventHandler[eventName];
-			}
+            const isNoSnap = !snapDist[0] &amp;&amp; !snapDist[1];
 
-			handlerList.push(handlerToAttach);
-		}
+            if (isNoSnap) {
+                if (isWidth) {
+                    nowDist[0] = throttle(nowDist[0] * startScale[0], throttleScale!) / startScale[0];
+                } else {
+                    nowDist[1] = throttle(nowDist[1] * startScale[1], throttleScale!) / startScale[1];
+                }
+            }
 
-		return this;
-	}
-	/**
-	 * Detaches an event from the component.
-	 * @ko 컴포넌트에 등록된 이벤트를 해제한다
-	 * @param {eventName} eventName The name of the event to be detached &lt;ko>해제할 이벤트의 이름&lt;/ko>
-	 * @param {Function} handlerToDetach The handler function of the event to be detached &lt;ko>해제할 이벤트의 핸들러 함수&lt;/ko>
-	 * @return {eg.Component} An instance of a component itself &lt;ko>컴포넌트 자신의 인스턴스&lt;/ko>
-	 * @example
-class Some extends eg.Component {
-  hi() {
-    console.log("hi");
-  }
-  some() {
-    this.off("hi",this.hi); //detach event
-  }
-}
-	 */
-	off(eventName, handlerToDetach) {
-		// All event detach.
-		if (isUndefined(eventName)) {
-			this._eventHandler = {};
-			return this;
-		}
+            if (
+                (direction[0] &amp;&amp; !direction[1])
+                || (snapDist[0] &amp;&amp; !snapDist[1])
+                || (isNoSnap &amp;&amp; isWidth)
+            ) {
+                nowDist[0] += snapDist[0];
+                const snapHeight = getKeepRatioHeight(width * nowDist[0] * startScale[0], isWidth, ratio);
 
-		// All handler of specific event detach.
-		if (isUndefined(handlerToDetach)) {
-			if (typeof eventName === "string") {
-				this._eventHandler[eventName] = undefined;
-				return this;
-			} else {
-				const eventHash = eventName;
-				let name;
+                nowDist[1] = snapHeight / height / startScale[1];
+            } else if (
+                (!direction[0] &amp;&amp; direction[1])
+                || (!snapDist[0] &amp;&amp; snapDist[1])
+                || (isNoSnap &amp;&amp; !isWidth)
+            ) {
+                nowDist[1] += snapDist[1];
+                const snapWidth = getKeepRatioWidth(height * nowDist[1] * startScale[1], isWidth, ratio);
 
-				for (name in eventHash) {
-					this.off(name, eventHash[name]);
-				}
-				return this;
-			}
-		}
+                nowDist[0] = snapWidth / width / startScale[0];
+            }
+        } else {
+            nowDist[0] += snapDist[0];
+            nowDist[1] += snapDist[1];
+            if (!snapDist[0]) {
+                nowDist[0] = throttle(nowDist[0] * startScale[0], throttleScale!) / startScale[0];
+            }
+            if (!snapDist[1]) {
+                nowDist[1] = throttle(nowDist[1] * startScale[1], throttleScale!) / startScale[1];
+            }
+        }
+        if (nowDist[0] === 0) {
+            nowDist[0] = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+        }
+        if (nowDist[1] === 0) {
+            nowDist[1] = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+        }
+        const delta = [nowDist[0] / prevDist[0], nowDist[1] / prevDist[1]];
+        scale = multiply2(nowDist, startScale);
 
-		// The handler of specific event detach.
-		let handlerList = this._eventHandler[eventName];
+        datas.prevDist = nowDist;
 
-		if (handlerList) {
-			let k;
-			let handlerFunction;
+        if (scaleX === prevDist[0] &amp;&amp; scaleY === prevDist[1] &amp;&amp; !parentMoveable) {
+            return false;
+        }
+        const inverseDelta = !parentFlag &amp;&amp; pinchFlag
+            ? [0, 0]
+            : getScaleDist(moveable, delta, direction, dragClient);
 
-			for (k = 0; (handlerFunction = handlerList[k]) !== undefined; k++) {
-				if (handlerFunction === handlerToDetach) {
-					handlerList = handlerList.splice(k, 1);
-					break;
-				}
-			}
-		}
+        const params = fillParams&lt;OnScale>(moveable, e, {
+            scale,
+            direction,
+            dist: nowDist,
+            delta,
+            transform: `${transform} scale(${scaleX}, ${scaleY})`,
+            isPinch: !!pinchFlag,
+            drag: Draggable.drag(
+                moveable,
+                setCustomDrag(moveable.state, inverseDelta, inputEvent, false),
+            ) as OnDrag,
+        });
+        triggerEvent(moveable, "onScale", params);
 
-		return this;
-	}
-}
+        return params;
+    },
+    dragControlEnd(moveable: MoveableManager&lt;ScalableProps>, e: any) {
+        const { datas, isDrag } = e;
+        if (!datas.isScale) {
+            return false;
+        }
 
-export default Component;
+        datas.isScale = false;
+
+        triggerEvent(moveable, "onScaleEnd", fillParams&lt;OnScaleEnd>(moveable, e, {
+            isDrag,
+        }));
+        return isDrag;
+    },
+    dragGroupControlCondition: directionCondition,
+    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+        const { datas } = e;
+
+        const params = this.dragControlStart(moveable, e);
+
+        if (!params) {
+            return false;
+        }
+        const direction = params.direction;
+        const startPos = getAbsoluteFixedPosition(moveable, direction);
+
+        datas.startPos = startPos;
+
+        const events = triggerChildAble(
+            moveable,
+            this,
+            "dragControlStart",
+            datas,
+            (child, childDatas) => {
+                const pos = getAbsoluteFixedPosition(child, direction);
+                const [originalX, originalY] = caculate(
+                    createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
+                    [pos[0] - startPos[0], pos[1] - startPos[1], 1],
+                    3,
+                );
+                childDatas.originalX = originalX;
+                childDatas.originalY = originalY;
+
+                return e;
+            },
+        );
+
+        const nextParams: OnScaleGroupStart = {
+            ...params,
+            targets: moveable.props.targets!,
+            events,
+        };
+        const result = triggerEvent(moveable, "onScaleGroupStart", nextParams);
+
+        datas.isScale = result !== false;
+        return datas.isScale ? nextParams : false;
+    },
+    dragGroupControl(moveable: MoveableGroup, e: any) {
+        const { datas } = e;
+        if (!datas.isScale) {
+            return;
+        }
+        const params = this.dragControl(moveable, e);
+        if (!params) {
+            return;
+        }
+        const keepRatio = moveable.props.keepRatio;
+        const { scale } = params;
+        const startPos = datas.startPos;
+
+        const events = triggerChildAble(
+            moveable,
+            this,
+            "dragControl",
+            datas,
+            (_, childDatas) => {
+                const [clientX, clientY] = caculate(
+                    createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
+                    [
+                        childDatas.originalX * scale[0],
+                        childDatas.originalY * scale[1],
+                        1,
+                    ],
+                    3,
+                );
+
+                return {
+                    ...e,
+                    parentScale: scale,
+                    parentKeepRatio: keepRatio,
+                    dragClient: plus(startPos, [clientX, clientY]),
+                };
+            },
+        );
+        const nextParams: OnScaleGroup = {
+            targets: moveable.props.targets!,
+            events,
+            ...params,
+        };
+
+        triggerEvent(moveable, "onScaleGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+        const { isDrag, datas } = e;
+
+        if (!datas.isScale) {
+            return;
+        }
+        this.dragControlEnd(moveable, e);
+        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
+
+        const nextParams = fillParams&lt;OnScaleGroupEnd>(moveable, e, {
+            targets: moveable.props.targets!,
+            isDrag,
+        });
+
+        triggerEvent(moveable, "onScaleGroupEnd", nextParams);
+        return isDrag;
+    },
+    /**
+     * @method Moveable.Scalable#request
+     * @param {object} [e] - the Resizable's request parameter
+     * @param {number} [e.direction=[1, 1]] - Direction to scale
+     * @param {number} [e.deltaWidth] - delta number of width
+     * @param {number} [e.deltaHeight] - delta number of height
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("scalable", { deltaWidth: 10, deltaHeight: 10, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("scalable");
+     *
+     * // request
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
+    request() {
+        const datas = {};
+        let distWidth = 0;
+        let distHeight = 0;
+
+        return {
+            isControl: true,
+            requestStart(e: IObject&lt;any>) {
+                return { datas, parentDirection: e.direction || [1, 1] };
+            },
+            request(e: IObject&lt;any>) {
+                distWidth += e.deltaWidth;
+                distHeight += e.deltaHeight;
+
+                return { datas, parentDist: [distWidth, distHeight] };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
+    },
+};
 </code></pre>
         </article>
     </section>
@@ -304,10 +520,10 @@ export default Component;
 <style>
 
 
-nav li[file="node_modules/@egjs/component/src/component"]:after {
+nav li[file="packages/react-moveable/src/react-moveable/ables/scalable"]:after {
     display: none;
 }
-nav li[file="node_modules/@egjs/component/src/component"] h4, nav li[file="node_modules/@egjs/component/src/component"] ul {
+nav li[file="packages/react-moveable/src/react-moveable/ables/scalable"] h4, nav li[file="packages/react-moveable/src/react-moveable/ables/scalable"] ul {
     display: block;
 }
 </style>

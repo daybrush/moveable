@@ -2,11 +2,11 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     z-index: 1;
 }
 .view {
     width: calc(100% - 30px);
+    height: calc(100% - 30px);
 }
 .view {
     left: 30px;
@@ -44,9 +44,11 @@
     padding-left: 8px;
 }
 .rulers {
-    position: relative;
+    position: absolute;
     width: 30px;
     height: 30px;
+    left: -30px;
+    top: -30px;
     background: #444;
     box-sizing: border-box;
     /* border-bottom: 1px solid #777;
