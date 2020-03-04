@@ -9,7 +9,12 @@
         "include": [
             "./src",
             "README.md",
-            "node_modules/react-moveable/src/react-moveable/types.ts",
+            "packages/react-moveable/src/react-moveable/ables/Draggable.tsx",
+            "packages/react-moveable/src/react-moveable/ables/Resizable.ts",
+            "packages/react-moveable/src/react-moveable/ables/Scalable.ts",
+            "packages/react-moveable/src/react-moveable/ables/Rotatable.tsx",
+            "packages/react-moveable/src/react-moveable/Moveable.tsx",
+            "packages/react-moveable/src/react-moveable/types.ts",
             "node_modules/@egjs/component/src/Component.js"
         ],
         "includePattern": "(.+\\.js(doc|x)?|.+\\.ts(doc|x)?)$",

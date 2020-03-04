@@ -170,10 +170,26 @@ export interface OnEvent {
     datas: IObject<any>;
     inputEvent: any;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Run the request instantly. (requestStart, request, requestEnd happen at the same time)
+ */
 export interface AbleRequestParam {
     isInstant?: boolean;
     [key: string]: any;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.html#request|Request Method}
+ * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html#request|Draggable Requester}
+ * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request|Resizable Requester}
+ * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request|Scalable Requester}
+ * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request|Rotatable Requester}
+ * @property - Continue executing the request.
+ * @property - End the request.
+ */
 export interface Requester {
     request(param: IObject<any>): this;
     requestEnd(param: IObject<any>): this;

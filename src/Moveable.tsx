@@ -77,15 +77,6 @@ class Moveable extends EgComponent {
     public setState(state: Partial<MoveableOptions>, callback?: () => any) {
         this.innerMoveable.setState(state, callback);
     }
-    /**
-     * Remove the Moveable object and the events.
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * moveable.destroy();
-     */
     public destroy() {
         render(null, this.tempElement);
         this.off();
@@ -98,105 +89,6 @@ class Moveable extends EgComponent {
 }
 
 /**
- * Check if the target is an element included in the moveable.
- * @method Moveable#isMoveableElement
- * @param {HTMLElement | SVGElement} target - the target
- * @returns {boolean}
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * window.addEventListener("click", e => {
- *     if (!moveable.isMoveableElement(e.target)) {
- *         moveable.target = e.target;
- *     }
- * });
- */
-/**
- * If the width, height, left, and top of all elements change, update the shape of the moveable.
- * @method Moveable#updateRect
- * @return {void}
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * window.addEventListener("resize", e => {
- *     moveable.updateRect();
- * });
- */
-/**
- * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
- * @method Moveable#dragStart
- * @param {MouseEvent | TouchEvent} e - external `MouseEvent`or `TouchEvent`
- * @return {void}
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * document.body.addEventListener("mousedown", e => {
- *     if (!moveable.isMoveableElement(e.target)) {
- *          moveable.dragStart(e);
- *     }
- * });
- */
-
-/**
- * Whether the coordinates are inside Moveable
- * @method Moveable#isInside
- * @param {number} clientX - x coordinate
- * @param {number} clientY - y coordinate
- * @return {boolean} - True if the coordinate is in moveable or false
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * document.body.addEventListener("mousedown", e => {
- *     if (moveable.isInside(e.clientX, e.clientY)) {
- *          console.log("inside");
- *     }
- * });
- */
-/**
- * You can get the vertex information, position and offset size information of the target based on the container.
- * @method Moveable#getRect
- * @return {Moveable.RectInfo}- The Rect Info
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * const rectInfo = moveable.getRect();
- */
-/**
- * You can change options or properties dynamically.
- * @param - options or properties
- * @param - After the change, the callback function is executed when the update is completed.
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * moveable.setState({
- *   target: document.querySelector(".target"),
- * }, () => {
- *   moveable.dragStart(e);
- * })
- */
-/**
- * If the width, height, left, and top of the only target change, update the shape of the moveable.
- * @param - the values of x and y to move moveable.
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * moveable.updateTarget();
- */
-/**
  * Whether or not the origin controlbox will be visible or not (default: true)
  * @name Moveable#origin
  * @example
@@ -206,6 +98,7 @@ class Moveable extends EgComponent {
  *
  * moveable.origin = true;
  */
+
 /**
  * The target to indicate Moveable Control Box.
  * @name Moveable#target
@@ -437,8 +330,7 @@ class Moveable extends EgComponent {
 
 /**
  * Add guidelines in the vertical direction. (default: [])
- * @name Moveable#
- * moveable.verticalGuidlines
+ * @name Moveable#verticalGuidlines
  * @example
  * import Moveable from "moveable";
  *

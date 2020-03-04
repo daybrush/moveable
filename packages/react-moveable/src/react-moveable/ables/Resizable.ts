@@ -31,6 +31,11 @@ import {
 import { IObject } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
+/**
+ * @namespace Resizable
+ * @memberof Moveable
+ */
+
 export default {
     name: "resizable",
     ableGroup: "size",
@@ -472,6 +477,30 @@ export default {
         triggerEvent(moveable, "onResizeGroupEnd", nextParams);
         return isDrag;
     },
+    /**
+     * @method Moveable.Resizable#request
+     * @param {object} [e] - the Resizable's request parameter
+     * @param {number} [e.direction=[1, 1]] - Direction to resize
+     * @param {number} [e.deltaWidth] - delta number of width
+     * @param {number} [e.deltaHeight] - delta number of height
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("resizable", { deltaWidth: 10, deltaHeight: 10, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("resizable");
+     *
+     * // request
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
     request() {
         const datas = {};
         let distWidth = 0;
@@ -480,13 +509,13 @@ export default {
         return {
             isControl: true,
             requestStart(e: IObject<any>) {
-                return { datas, parentDirection: e.direction };
+                return { datas, parentDirection: e.direction || [1, 1] };
             },
             request(e: IObject<any>) {
                 distWidth += e.deltaWidth;
                 distHeight += e.deltaHeight;
 
-                return { datas, parentDist: [distWidth, distHeight], parentDelta: [e.deltaWidth, e.deltaHeight] };
+                return { datas, parentDist: [distWidth, distHeight] };
             },
             requestEnd() {
                 return { datas, isDrag: true };

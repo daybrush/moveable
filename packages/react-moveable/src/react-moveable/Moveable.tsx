@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MoveableProps, Able, MoveableInterface, RectInfo, AbleRequestParam } from "./types";
+import { MoveableProps, Able, MoveableInterface, RectInfo, AbleRequestParam, Requester } from "./types";
 import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./ables/consts";
 import MoveableGroup from "./MoveableGroup";
@@ -32,28 +32,150 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
                 {...{ ...this.props, target: moveableTarget, ables: [...MOVEABLE_ABLES, ...ables] }} />;
         }
     }
-    public isMoveableElement(target: HTMLElement) {
+    /**
+     * Check if the target is an element included in the moveable.
+     * @method Moveable#isMoveableElement
+     * @param - the target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("click", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *         moveable.target = e.target;
+     *     }
+     * });
+     */
+    public isMoveableElement(target: HTMLElement | SVGElement): boolean {
         return this.moveable.isMoveableElement(target);
     }
-    public dragStart(e: MouseEvent | TouchEvent) {
+    /**
+     * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
+     * @method Moveable#dragStart
+     * @param - external `MouseEvent`or `TouchEvent`
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *          moveable.dragStart(e);
+     *     }
+     * });
+     */
+    public dragStart(e: MouseEvent | TouchEvent): void {
         this.moveable.dragStart(e);
     }
-    public isInside(clientX: number, clientY: number) {
+
+    /**
+     * Whether the coordinates are inside Moveable
+     * @method Moveable#isInside
+     * @param - x coordinate
+     * @param - y coordinate
+     * @return - True if the coordinate is in moveable or false
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.isInside(e.clientX, e.clientY)) {
+     *          console.log("inside");
+     *     }
+     * });
+     */
+    public isInside(clientX: number, clientY: number): boolean {
         return this.moveable.isInside(clientX, clientY);
     }
-    public updateRect() {
+
+    /**
+     * If the width, height, left, and top of all elements change, update the shape of the moveable.
+     * @method Moveable#updateRect
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("resize", e => {
+     *     moveable.updateRect();
+     * });
+     */
+    public updateRect(): void {
         this.moveable.updateRect();
     }
-    public updateTarget() {
+
+    /**
+     * If the width, height, left, and top of the only target change, update the shape of the moveable.
+     * @method Moveable#updateTarget
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.updateTarget();
+     */
+    public updateTarget(): void {
         this.moveable.updateTarget();
     }
+
+    /**
+     * You can get the vertex information, position and offset size information of the target based on the container.
+     * @method Moveable#getRect
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const rectInfo = moveable.getRect();
+     */
     public getRect(): RectInfo {
         return this.moveable.getRect();
     }
-    public request(ableName: string, params?: AbleRequestParam) {
+
+    /**
+     * Request able through a method rather than an event.
+     * At the moment of execution, requestStart is executed,
+     * and then request and requestEnd can be executed through Requester.
+     * @method Moveable#request
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html#request|Draggable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request|Resizable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request|Scalable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request|Rotatable Requester}
+     * @param - ableName
+     * @param - request to be able params. If isInstant is true, request and requestEnd are executed immediately.
+     * @return - Able Requester. If there is no request in able, nothing will work.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     *
+     * // Start move
+     * const requester = moveable.request("draggable");
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.requestEnd();
+     */
+    public request(ableName: string, params?: AbleRequestParam): Requester {
         return this.moveable.request(ableName, params);
     }
-    public destroy() {
+    /**
+     * Remove the Moveable object and the events.
+     * @method Moveable#destroy
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.destroy();
+     */
+    public destroy(): void {
         this.moveable.componentWillUnmount();
     }
 }

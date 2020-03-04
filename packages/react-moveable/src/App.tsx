@@ -450,6 +450,17 @@ class App extends React.Component {
             }
         }).keyup("shift", () => {
             this.setState({ isResizable: true, isShift: false });
+        }).keydown("r", e => {
+            if (!requester) {
+                requester = mvb.request("rotatable");
+            }
+            requester.request({ deltaRotate: 10 });
+            e.inputEvent.preventDefault();
+        }).keyup("r", e => {
+            if (requester) {
+                requester.requestEnd();
+                requester = null;
+            }
         });
 
         const targets: any[] = [].slice.call(document.querySelectorAll(`[data-target="box"] span`));

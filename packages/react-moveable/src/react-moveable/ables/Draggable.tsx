@@ -11,6 +11,10 @@ import { triggerChildAble } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 import { IObject } from "@daybrush/utils";
 
+/**
+ * @namespace Draggable
+ * @memberof Moveable
+ */
 export default {
     name: "draggable",
     props: {
@@ -267,6 +271,29 @@ export default {
 
         return isDrag;
     },
+    /**
+     * @method Moveable.Draggable#request
+     * @param {object} [e] - the draggable's request parameter
+     * @param {number} [e.deltaX] - X number to move
+     * @param {number} [e.deltaY] - Y number to move
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("draggable");
+     *
+     * // request
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
     request() {
         const datas = {};
         let distX = 0;

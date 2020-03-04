@@ -28,6 +28,10 @@ import {
     directionCondition,
 } from "./utils";
 
+/**
+ * @namespace Scalable
+ * @memberof Moveable
+ */
 export default {
     name: "scalable",
     ableGroup: "size",
@@ -415,6 +419,30 @@ export default {
         triggerEvent(moveable, "onScaleGroupEnd", nextParams);
         return isDrag;
     },
+    /**
+     * @method Moveable.Scalable#request
+     * @param {object} [e] - the Resizable's request parameter
+     * @param {number} [e.direction=[1, 1]] - Direction to scale
+     * @param {number} [e.deltaWidth] - delta number of width
+     * @param {number} [e.deltaHeight] - delta number of height
+     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("scalable", { deltaWidth: 10, deltaHeight: 10, isInstant: true });
+     *
+     * // requestStart
+     * const requester = moveable.request("scalable");
+     *
+     * // request
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
     request() {
         const datas = {};
         let distWidth = 0;
@@ -423,7 +451,7 @@ export default {
         return {
             isControl: true,
             requestStart(e: IObject<any>) {
-                return { datas, parentDirection: e.direction };
+                return { datas, parentDirection: e.direction || [1, 1] };
             },
             request(e: IObject<any>) {
                 distWidth += e.deltaWidth;
