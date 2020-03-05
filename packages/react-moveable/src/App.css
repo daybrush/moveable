@@ -48,7 +48,7 @@ img {
     top: 100px;
     height: 800px;
     border: 1px solid #f55;
-    /* transform: scale(0.7) rotate(30deg); */
+    transform: scale(0.5);
 }
 .guides {
     position: absolute;
@@ -80,7 +80,7 @@ img {
     align-items: center;
     justify-content: center; */
     font-size: calc(10px + 2vmin);
-    /* transform: rotate(-9deg); */
+    /* transform: scale(0.5); */
     color: white;
 }
 

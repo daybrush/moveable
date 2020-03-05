@@ -171,7 +171,7 @@ export function getMatrixStackInfo(
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: number[][] = [];
-    let isEnd = target === container;
+    let isEnd = false;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -180,6 +180,11 @@ export function getMatrixStackInfo(
     const offsetContainer = getOffsetInfo(container, container, true).offsetParent;
 
     if (prevMatrix) {
+        isEnd = target === container;
+        if (prevMatrix.length > 10) {
+            is3d = true;
+            n = 4;
+        }
         container = target.parentElement;
     }
 
@@ -1045,7 +1050,7 @@ export function convertDragDist(state: MoveableManagerState, e: any) {
     [
         e.distX, e.distY,
     ] = caculate(
-        invert(rootMatrix, 4),
+        invert(rootMatrix, n),
         convertPositionMatrix([e.distX, e.distY], n),
         n,
     );

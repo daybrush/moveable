@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.15.2] - 2020-03-05
+* `moveable` 0.15.2
+* `react-moveable` 0.18.1
+* `preact-moveable` 0.17.1
+* `ngx-moveable` 0.11.1
+* `svelte-moveable` 0.6.1
+
+
+### Fixed
+* Fix rootContainer for 2d transform #137
+
 ## [0.15.1] - 2020-03-05
 https://github.com/daybrush/moveable/milestone/8
 

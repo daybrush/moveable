@@ -51,7 +51,7 @@ export default class MoveableManager<T = {}, U = {}>
         zoom: 1,
     };
     public state: MoveableManagerState<U> = {
-        conatainer: null,
+        container: null,
         target: null,
         beforeMatrix: createIdentityMatrix3(),
         matrix: createIdentityMatrix3(),

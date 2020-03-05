@@ -171,7 +171,7 @@ class App extends React.Component {
                     />
                 <Moveable
                     target={selectedTarget}
-                    rootContainer={document.body}
+                    // rootContainer={document.body}
                     className="no-radius"
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
