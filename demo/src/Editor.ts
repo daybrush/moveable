@@ -2,8 +2,8 @@ import { Frame } from "scenejs";
 import Moveable from "../../src/Moveable";
 import Guides from "@scena/guides";
 import agent from "@egjs/agent";
-import KeyContoller from "keycon";
 import { addClass } from "@daybrush/utils";
+import KeyController from "keycon";
 
 const uaInfo = agent();
 const isMobile = uaInfo.isMobile || uaInfo.os.name.indexOf("ios") > -1 || uaInfo.browser.name.indexOf("safari") > -1;
@@ -39,7 +39,7 @@ function addControlEvent(el: HTMLInputElement, callback: (value: any) => void) {
     function eventCallback() {
         callback(el.value);
     }
-    new KeyContoller(el).keyup("enter", eventCallback);
+    new KeyController(el).keyup("enter", eventCallback);
     el.addEventListener("blur", eventCallback);
 }
 
@@ -144,6 +144,34 @@ const moveable = new Moveable(editorElement, {
     isPinchStart = false;
     hideLabel();
 });
+function isDragging() {
+    return (moveable as any).innerMoveable.moveable.moveable.isDragging();
+}
+KeyController.global
+    .keydown("left", ({ inputEvent }) => {
+        if (!isDragging()) {
+            moveable.request("draggable", { deltaX: -10, isInstant: true });
+            inputEvent.preventDefault();
+        }
+    })
+    .keydown("up", ({ inputEvent }) => {
+        if (!isDragging()) {
+            moveable.request("draggable", { deltaY: -10, isInstant: true });
+            inputEvent.preventDefault();
+        }
+    })
+    .keydown("right", ({ inputEvent }) => {
+        if (!isDragging()) {
+            moveable.request("draggable", { deltaX: 10, isInstant: true });
+            inputEvent.preventDefault();
+        }
+    })
+    .keydown("down", ({ inputEvent }) => {
+        if (!isDragging()) {
+            moveable.request("draggable", { deltaY: 10, isInstant: true });
+            inputEvent.preventDefault();
+        }
+    });
 
 const guides1 = new Guides(horizontalRulerElement, {
     type: "horizontal",
@@ -185,7 +213,7 @@ function toggleShift(shiftKey) {
         moveable.keepRatio = false;
     }
 }
-KeyContoller.global.on("keydown", ({ shiftKey }) => {
+KeyController.global.on("keydown", ({ shiftKey }) => {
     toggleShift(shiftKey);
 }).on("keyup", ({ shiftKey }) => {
     toggleShift(shiftKey);
