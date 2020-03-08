@@ -1,6 +1,9 @@
 import * as React from "react";
 import Moveable from "react-moveable";
-import { previewTemplate, CODE_TYPE, codeIndent } from "storybook-addon-preview";
+import {
+    previewTemplate, CODE_TYPE, codeIndent,
+    DEFAULT_PROPS_TEMPLATE, JSX_PROPS_TEMPLATE, ANGULAR_PROPS_TEMPLATE,
+} from "storybook-addon-preview";
 import { DRAG_START_TEMPLATE, DRAG_TEMPLATE } from "./events.template";
 import { BASIC_CSS_TEMPLATE } from "./template";
 
@@ -13,12 +16,17 @@ export default function App(props: any) {
         setTarget(document.querySelector<HTMLElement>(".target")!);
     }, []);
 
-    return (<div className="container">
-        <div className="target">Target</div>
+    const {
+        rootChildren = d => d,
+        children = <div className="target">Target</div>,
+        ...moveableProps
+    } = props;
+    return rootChildren(<div className="container">
+        {children}
         <Moveable
             target={target}
             draggable={true}
-            {...props}
+            {...moveableProps}
             onDragStart={e => {
                 e.set(frame.translate);
             }}
@@ -31,6 +39,8 @@ export default function App(props: any) {
     </div>);
 }
 
+const DRAGGABLE_PROPS = ["throttleDrag", "throttleDragRotate", "zoom", "origin"];
+
 export const BASIC_DRAGGABLE_VANILLA_TEMPLATE = previewTemplate`
 import Moveable from "moveable";
 
@@ -38,7 +48,7 @@ const moveable = new Moveable(document.body, {
     // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
     target: document.querySelector(".target"),
     draggable: true,
-    throttleDrag: ${"throttleDrag"},
+${DEFAULT_PROPS_TEMPLATE(DRAGGABLE_PROPS)}
 });
 
 const frame = {
@@ -64,7 +74,7 @@ export default function App() {
         <Moveable
             target={target}
             draggable={true}
-            throttleDrag={${"throttleDrag"}}
+${JSX_PROPS_TEMPLATE(DRAGGABLE_PROPS, 12)}
             onDragStart={${codeIndent(DRAG_START_TEMPLATE(CODE_TYPE.ARROW, "react"), { indent: 12 })}}
             onDrag={${codeIndent(DRAG_TEMPLATE(CODE_TYPE.ARROW), { indent: 12 })}}
         />
@@ -77,7 +87,7 @@ export const BASIC_DRAGGABLE_ANGULAR_HTML_TEMPLATE = previewTemplate`
 <ngx-moveable
     [target]="target"
     [draggable]="true"
-    [throttleDrag]="${"throttleDrag"}"
+${ANGULAR_PROPS_TEMPLATE(DRAGGABLE_PROPS, 4)}
     (dragStart)="onDragStart($event)"
     (drag)="onDrag($event)"
     ></ngx-moveable>
@@ -119,7 +129,7 @@ export const BASIC_DRAGGABLE_SVELTE_JSX_TEMPLATE = previewTemplate`
 <Moveable
     draggable={true}
     target={target}
-    throttleDrag={${"throttleDrag"}}
+${JSX_PROPS_TEMPLATE(DRAGGABLE_PROPS, 4)}
     on:dragStart={${codeIndent(DRAG_START_TEMPLATE(CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}
     on:drag={${codeIndent(DRAG_TEMPLATE(CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}
 />

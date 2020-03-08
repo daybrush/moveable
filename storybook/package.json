@@ -12,26 +12,26 @@
   "license": "MIT",
   "dependencies": {
     "react-moveable": "^0.18.1",
-    "storybook-addon-preview": "^1.0.1"
+    "storybook-addon-preview": "^1.1.0-beta3"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@storybook/addon-actions": "^5.2.6",
-    "@storybook/addon-info": "^5.2.6",
-    "@storybook/addon-knobs": "^5.2.6",
-    "@storybook/addon-links": "^5.2.6",
-    "@storybook/addon-storysource": "^5.2.6",
-    "@storybook/addon-viewport": "^5.2.6",
-    "@storybook/addons": "^5.2.6",
-    "@storybook/react": "^5.2.6",
-    "@types/node": "^12.12.7",
+    "@babel/core": "^7.8.7",
+    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-info": "^5.3.14",
+    "@storybook/addon-knobs": "^5.3.14",
+    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addon-storysource": "^5.3.14",
+    "@storybook/addon-viewport": "^5.3.14",
+    "@storybook/addons": "^5.3.14",
+    "@storybook/react": "^5.3.14",
+    "@types/node": "^12.12.29",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "raw-loader": "^4.0.0",
-    "react-docgen-typescript-loader": "^3.3.0",
-    "ts-node": "^8.5.0",
-    "typescript": "^3.7.2"
+    "react-docgen-typescript-loader": "^3.6.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
   }
 }

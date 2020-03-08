@@ -1,21 +1,29 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, number, boolean } from "@storybook/addon-knobs";
+import { withKnobs, number, boolean, array } from "@storybook/addon-knobs";
 import { withPreview } from "storybook-addon-preview";
-import DraggableApp, { BASIC_DRAGGABLE_VANILLA_TEMPLATE, BASIC_DRAGGABLE_REACT_TEMPLATE, BASIC_DRAGGABLE_ANGULAR_HTML_TEMPLATE, BASIC_DRAGGABLE_ANGULAR_COMPONENT_TEMPLATE, BASIC_DRAGGABLE_SVELTE_TEMPLATE, BASIC_DRAGGABLE_SVELTE_JSX_TEMPLATE } from "../template/basic/Draggable.template";
-import { BASIC_HTML_TEMPLATE, BASIC_CSS_TEMPLATE } from "../template/basic/template";
-import "../template/basic/basic.css";
-import { REACT_CODESANDBOX, VANILLA_CODESANDBOX, ANGULAR_CODESANDBOX, SVELTE_CODESANDBOX } from "../template/codesandbox";
-import { DEFAULT_ANGULAR_MODULE_TEMPLATE } from "../template/default";
+import { BASIC_HTML_TEMPLATE, BASIC_CSS_TEMPLATE } from "../../template/basic/template";
+import "../../template/basic/basic.css";
+import { REACT_CODESANDBOX, VANILLA_CODESANDBOX, ANGULAR_CODESANDBOX, SVELTE_CODESANDBOX } from "../../template/codesandbox";
+import { DEFAULT_ANGULAR_MODULE_TEMPLATE } from "../../template/default";
+import ResizableApp, {
+    BASIC_RESIZABLE_VANILLA_TEMPLATE, BASIC_RESIZABLE_REACT_TEMPLATE,
+    BASIC_RESIZABLE_ANGULAR_HTML_TEMPLATE, BASIC_RESIZABLE_ANGULAR_COMPONENT_TEMPLATE,
+    BASIC_RESIZABLE_SVELTE_TEMPLATE, BASIC_RESIZABLE_SVELTE_JSX_TEMPLATE,
+} from "../../template/basic/Resizable.template";
 
-const story = storiesOf("Draggable", module);
+const story = storiesOf("Basic", module);
 
 story.addDecorator(withKnobs).addDecorator(withPreview);
 
-story.add("Drag & Drop", () => {
-    return <DraggableApp
-        throttleDrag={number("throttleDrag", 0)}
-        throttleDragRotate={number("throttleDragRotate", 0)}
+story.add("Resizable", () => {
+    return <ResizableApp
+        keepRatio={boolean("keepRatio", false)}
+        throttleResize={number("throttleResize", 0)}
+        renderDirections={array("renderDirections", [
+            "nw", "n", "ne", "w", "e", "sw", "s", "se",
+        ])}
+        edge={boolean("edge", false)}
         zoom={number("zoom", 1)}
         origin={boolean("origin", true)}
     />;
@@ -33,26 +41,26 @@ story.add("Drag & Drop", () => {
         },
         {
             tab: "Vanilla",
-            template: BASIC_DRAGGABLE_VANILLA_TEMPLATE,
+            template: BASIC_RESIZABLE_VANILLA_TEMPLATE,
             codesandbox: VANILLA_CODESANDBOX,
         },
         {
             tab: "React",
-            template: BASIC_DRAGGABLE_REACT_TEMPLATE,
+            template: BASIC_RESIZABLE_REACT_TEMPLATE,
             language: "tsx",
             codesandbox: REACT_CODESANDBOX,
         },
         {
             tab: "Angular",
             description: "app.component.html",
-            template: BASIC_DRAGGABLE_ANGULAR_HTML_TEMPLATE,
+            template: BASIC_RESIZABLE_ANGULAR_HTML_TEMPLATE,
             language: "markup",
             codesandbox: ANGULAR_CODESANDBOX,
         },
         {
             tab: "Angular",
             description: "app.component.ts",
-            template: BASIC_DRAGGABLE_ANGULAR_COMPONENT_TEMPLATE,
+            template: BASIC_RESIZABLE_ANGULAR_COMPONENT_TEMPLATE,
             language: "typescript",
             codesandbox: ANGULAR_CODESANDBOX,
         },
@@ -65,17 +73,17 @@ story.add("Drag & Drop", () => {
         },
         {
             tab: "Svelte",
-            template: BASIC_DRAGGABLE_SVELTE_TEMPLATE,
+            template: BASIC_RESIZABLE_SVELTE_TEMPLATE,
             language: "html",
             continue: true,
             codesandbox: SVELTE_CODESANDBOX,
         },
         {
             tab: "Svelte",
-            template: BASIC_DRAGGABLE_SVELTE_JSX_TEMPLATE,
+            template: BASIC_RESIZABLE_SVELTE_JSX_TEMPLATE,
             language: "tsx",
             continue: true,
             codesandbox: SVELTE_CODESANDBOX,
-        }
+        },
     ],
 });

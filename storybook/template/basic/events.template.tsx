@@ -21,9 +21,22 @@ export const RESIZE_TEMPLATE = previewFunction(`function onResize({ target, widt
     target.style.transform = ${"`"}translate(${"$"}{beforeTranslate[0]}px, ${"$"}{beforeTranslate[1]}px)${"`"};
 }`);
 
+export const SCALE_START_TEMPLATE = previewFunction(`function onScaleStart({ set, dragStart }) {
+    set(this.frame.scale);
+    dragStart && dragStart.set(this.frame.translate);
+}`);
+export const SCALE_TEMPLATE = previewFunction(`function onScale({ target, scale, drag }) {
+    const beforeTranslate = drag.beforeTranslate;
+
+    this.frame.translate = beforeTranslate;
+    this.frame.scale = scale;
+    target.style.transform = ${"`"}translate(${"$"}{beforeTranslate[0]}px, ${"$"}{beforeTranslate[1]}px) scale(${"$"}{scale[0]}, ${"$"}{scale[1]})${"`"};
+}`);
+
 export const ROTATE_START_TEMPLATE = previewFunction(`function onRotateStart({ set }) {
     set(this.frame.rotate);
 }`);
 export const ROTATE_TEMPLATE = previewFunction(`function onRotate({ beforeRotate }) {
     this.frame.rotate = beforeRotate;
+    target.style.transform = ${"`"}rotate(${"$"}{beforeRotate}deg)${"`"};
 }`);
