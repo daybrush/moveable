@@ -40,3 +40,11 @@ export const ROTATE_TEMPLATE = previewFunction(`function onRotate({ beforeRotate
     this.frame.rotate = beforeRotate;
     target.style.transform = ${"`"}rotate(${"$"}{beforeRotate}deg)${"`"};
 }`);
+
+export const WARP_START_TEMPLATE = previewFunction(`function onWarpStart({ set }) {
+    set(this.frame.matrix);
+}`);
+export const WARP_TEMPLATE = previewFunction(`function onWarp({ matrix }) {
+    this.frame.matrix = matrix;
+    target.style.transform = ${"`"}matrix3d(${"$"}{matrix.join(",")})${"`"};
+}`);

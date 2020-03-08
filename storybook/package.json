@@ -6,13 +6,13 @@
   "main": "index.js",
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build": "build-storybook -o ../demo/storybook"
   },
   "author": "Daybrush",
   "license": "MIT",
   "dependencies": {
     "react-moveable": "^0.18.1",
-    "storybook-addon-preview": "^1.1.0-beta3"
+    "storybook-addon-preview": "^1.1.0-beta5"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
