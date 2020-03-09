@@ -10,7 +10,12 @@ This Storybook document explains how to use [moveable](https://github.com/daybru
     * [Scalable (Scale)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--scalable)
     * [Rotatable (Rotate)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--rotatable)
     * [Waprable (Warp)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--warpable)
-* Nested Transform (Soon)
+* Nested Transform
+    * [Drggable (Drag)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--draggable)
+    * [Resizable (Resize)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--resizable)
+    * [Scalable (Scale)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--scalable)
+    * [Rotatable (Rotate)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--rotatable)
+    * [Waprable (Warp)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--warpable)
 * How to use Scrollable (Soon)
     * Scroll with Draggable (Soon)
     * Scroll with Resizable (Soon)

@@ -30,7 +30,9 @@ export const SCALE_TEMPLATE = previewFunction(`function onScale({ target, scale,
 
     this.frame.translate = beforeTranslate;
     this.frame.scale = scale;
-    target.style.transform = ${"`"}translate(${"$"}{beforeTranslate[0]}px, ${"$"}{beforeTranslate[1]}px) scale(${"$"}{scale[0]}, ${"$"}{scale[1]})${"`"};
+    target.style.transform
+        = ${"`"}translate(${"$"}{beforeTranslate[0]}px, ${"$"}{beforeTranslate[1]}px)${"`"}
+        + ${"`"} scale(${"$"}{scale[0]}, ${"$"}{scale[1]})${"`"};
 }`);
 
 export const ROTATE_START_TEMPLATE = previewFunction(`function onRotateStart({ set }) {
