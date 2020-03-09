@@ -11,7 +11,7 @@ import { BASIC_WARPABLE_ANGULAR_HTML_TEMPLATE, BASIC_WARPABLE_ANGULAR_COMPONENT_
 import { BASIC_WARPABLE_SVELTE_TEMPLATE, BASIC_WARPABLE_SVELTE_JSX_TEMPLATE } from "../../template/basic/frameworks/Svelte";
 import {
     NESTED_HTML_TEMPLATE, NESTED_CSS_TEMPLATE, NESTED_REACT_MARKUP_TEMPLATE,
-    NESTED_ANGULAR_MARKUP_TEMPLATE, NESTED_SVELTE_MARKUP_TEMPLATE
+    NESTED_ANGULAR_MARKUP_TEMPLATE, NESTED_SVELTE_MARKUP_TEMPLATE, NESTED_JSX
 } from "../../template/nested/template";
 
 const story = storiesOf("Nested Transform", module);
@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Warpable", () => {
     return <WarpableApp
+        children={NESTED_JSX}
         renderDirections={array("renderDirections", [
             "nw", "n", "ne", "w", "e", "sw", "s", "se",
         ])}

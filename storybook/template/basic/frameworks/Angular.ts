@@ -53,7 +53,7 @@ ${markup}
 <ngx-moveable
     [target]="target"
     [${ableName}]="true"
-${ANGULAR_PROPS_TEMPLATE(props, 4)}
+${ANGULAR_PROPS_TEMPLATE(props, 4, true)}
     (${eventName}Start)="${camelize(`on ${eventName}`)}Start($event)"
     (${eventName})="onDrag($event)"
     ></ngx-moveable>

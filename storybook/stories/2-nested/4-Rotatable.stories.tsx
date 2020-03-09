@@ -11,7 +11,7 @@ import { BASIC_ROTATABLE_ANGULAR_HTML_TEMPLATE, BASIC_ROTATABLE_ANGULAR_COMPONEN
 import { BASIC_ROTATABLE_SVELTE_TEMPLATE, BASIC_ROTATABLE_SVELTE_JSX_TEMPLATE } from "../../template/basic/frameworks/Svelte";
 import {
     NESTED_REACT_MARKUP_TEMPLATE, NESTED_HTML_TEMPLATE,
-    NESTED_CSS_TEMPLATE, NESTED_ANGULAR_MARKUP_TEMPLATE, NESTED_SVELTE_MARKUP_TEMPLATE,
+    NESTED_CSS_TEMPLATE, NESTED_ANGULAR_MARKUP_TEMPLATE, NESTED_SVELTE_MARKUP_TEMPLATE, NESTED_JSX,
 } from "../../template/nested/template";
 
 const story = storiesOf("Nested Transform", module);
@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Rotatable", () => {
     return <RotatableApp
+        children={NESTED_JSX}
         throttleRotate={number("throttleRotate", 0)}
         rotationPosition={radios("rotationPosition", { top: "top", left: "left", right: "right", bottom: "bottom" }, "top")}
         zoom={number("zoom", 1)}

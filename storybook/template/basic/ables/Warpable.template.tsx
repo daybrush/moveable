@@ -1,11 +1,5 @@
 import * as React from "react";
 import Moveable from "react-moveable";
-import {
-    CODE_TYPE, codeIndent, previewTemplate,
-    DEFAULT_PROPS_TEMPLATE, JSX_PROPS_TEMPLATE, ANGULAR_PROPS_TEMPLATE,
-} from "storybook-addon-preview";
-import { WARP_START_TEMPLATE, WARP_TEMPLATE } from "../events.template";
-import { BASIC_CSS_TEMPLATE } from "../template";
 
 export default function RotatableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();

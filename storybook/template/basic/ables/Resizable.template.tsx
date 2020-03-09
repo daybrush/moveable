@@ -1,11 +1,6 @@
 import * as React from "react";
 import Moveable from "react-moveable";
-import {
-    CODE_TYPE, codeIndent, previewTemplate,
-    JSX_PROPS_TEMPLATE, ANGULAR_PROPS_TEMPLATE,
-} from "storybook-addon-preview";
-import { RESIZE_START_TEMPLATE, RESIZE_TEMPLATE } from "../events.template";
-import { BASIC_CSS_TEMPLATE } from "../template";
+
 
 export default function ResizableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
