@@ -5,13 +5,13 @@ This Storybook document explains how to use [moveable](https://github.com/daybru
 ## Table of Contents
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 * Basic
-    * [Drggable (Drag)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--draggable)
+    * [Draggable (Drag)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--draggable)
     * [Resizable (Resize)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--resizable)
     * [Scalable (Scale)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--scalable)
     * [Rotatable (Rotate)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--rotatable)
     * [Waprable (Warp)](https://daybrush.com/moveable/storybook/index.html?path=/story/basic--warpable)
 * Nested Transform
-    * [Drggable (Drag)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--draggable)
+    * [Draggable (Drag)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--draggable)
     * [Resizable (Resize)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--resizable)
     * [Scalable (Scale)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--scalable)
     * [Rotatable (Rotate)](https://daybrush.com/moveable/storybook/index.html?path=/story/nested-transform--rotatable)
