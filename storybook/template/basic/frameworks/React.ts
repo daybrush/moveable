@@ -26,7 +26,7 @@ import Moveable from "react-moveable";
 export default function App() {
     const [target, setTarget] = React.useState();
     const [frame] = React.useState({
-${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
+${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     });
     React.useEffect(() => {
         setTarget(document.querySelector(".target")!);
@@ -35,7 +35,7 @@ ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
         <Moveable
             target={target}
             ${ableName}={true}
-${JSX_PROPS_TEMPLATE(props, 12)}
+${JSX_PROPS_TEMPLATE(props, { indent: 12 })}
             on${eventName}Start={${codeIndent(startTemplate(CODE_TYPE.ARROW, "react"), { indent: 12 })}}
             on${eventName}={${codeIndent(ingTemplate(CODE_TYPE.ARROW), { indent: 12 })}}
         />

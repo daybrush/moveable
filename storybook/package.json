@@ -13,7 +13,7 @@
   "dependencies": {
     "@daybrush/utils": "^0.10.1",
     "react-moveable": "^0.18.1",
-    "storybook-addon-preview": "^1.1.0-beta8"
+    "storybook-addon-preview": "^1.1.0-beta11"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

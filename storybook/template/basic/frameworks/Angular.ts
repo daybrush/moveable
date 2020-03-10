@@ -27,7 +27,7 @@ import Moveable from "react-moveable";
 export default function App() {
     const [target, setTarget] = React.useState();
     const [frame] = React.useState({
-${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
+${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     });
     React.useEffect(() => {
         setTarget(document.querySelector(".target")!);
@@ -36,7 +36,7 @@ ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
         <Moveable
             target={target}
             ${ableName}={true}
-${JSX_PROPS_TEMPLATE(props, 12)}
+${JSX_PROPS_TEMPLATE(props, { indent: 12 })}
             on${eventName}Start={${codeIndent(startTemplate(CODE_TYPE.ARROW, "react"), { indent: 12 })}}
             on${eventName}={${codeIndent(ingTemplate(CODE_TYPE.ARROW), { indent: 12 })}}
         />
@@ -53,7 +53,7 @@ ${markup}
 <ngx-moveable
     [target]="target"
     [${ableName}]="true"
-${ANGULAR_PROPS_TEMPLATE(props, 4, true)}
+${ANGULAR_PROPS_TEMPLATE(props, { wrap: "'" })}
     (${eventName}Start)="${camelize(`on ${eventName}`)}Start($event)"
     (${eventName})="onDrag($event)"
     ></ngx-moveable>
@@ -72,7 +72,7 @@ import { Component } from "@angular/core";
 })
 export class AppComponent {
     frame = {
-${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
+${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     };
     ${codeIndent(startTemplate(CODE_TYPE.METHOD, "angular"), { indent: 4 })}
     ${codeIndent(ingTemplate(CODE_TYPE.METHOD), { indent: 4 })}

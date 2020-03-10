@@ -11,38 +11,6 @@ import { RESIZABLE_PROPS, RESIZABLE_FRAME } from "../ables/Resizable.template";
 import { SCALABLE_PROPS, SCALABLE_FRAME } from "../ables/Scalable.template";
 import { ROTATABLE_PROPS, ROTATABLE_FRAME } from "../ables/Rotatable.template";
 import { WARPABLE_PROPS, WARPABLE_FRAME } from "../ables/Warpable.template";
-import { camelize } from "@daybrush/utils";
-
-export const BASIC_REACT_TEMPLATE = (
-    ableName: string,
-    props: any,
-    frame: any,
-    eventName: any,
-    startTemplate: any,
-    ingTemplate: any,
-) => markup => previewTemplate`
-import * as React from "react";
-import Moveable from "react-moveable";
-
-export default function App() {
-    const [target, setTarget] = React.useState();
-    const [frame] = React.useState({
-${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
-    });
-    React.useEffect(() => {
-        setTarget(document.querySelector(".target")!);
-    }, []);
-    return <div className="container">${markup}
-        <Moveable
-            target={target}
-            ${ableName}={true}
-${JSX_PROPS_TEMPLATE(props, 12)}
-            on${eventName}Start={${codeIndent(startTemplate(CODE_TYPE.ARROW, "react"), { indent: 12 })}}
-            on${eventName}={${codeIndent(ingTemplate(CODE_TYPE.ARROW), { indent: 12 })}}
-        />
-    </div>;
-}
-`;
 
 export const BASIC_SVELTE_TEMPLATE = (
     frame: any,
@@ -51,7 +19,7 @@ export const BASIC_SVELTE_TEMPLATE = (
     import Moveable from "svelte-moveable";
 
     const frame = {
-${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), 8)}
+${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     };
     let target;
 </script>
@@ -71,7 +39,7 @@ ${markup}
 <Moveable
     ${ableName}={true}
     target={target}
-${JSX_PROPS_TEMPLATE(props, 4)}
+${JSX_PROPS_TEMPLATE(props)}
     on:${eventName}Start={${codeIndent(startTemplate(CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}
     on:${eventName}={${codeIndent(ingTemplate(CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}
 />
