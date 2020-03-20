@@ -14,6 +14,7 @@
     alt="Vue"
     src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
 <a href="https://github.com/daybrush/moveable/tree/master/packages/svelte-moveable" target="_blank"><img alt="Svelte" src="https://img.shields.io/static/v1.svg?label=&message=Svelte&style=flat-square&color=C82B38"></a>
+<a href="https://gitpod.io/#https://github.com/daybrush/moveable"><img alt="Gitpod Ready-to-Code" src="https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod"></a>
 </p>
 <p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable</p>
 <p align="middle">
@@ -228,6 +229,17 @@ Please give a ⭐️ if this project helped you!
 ## 👏 Contributing
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
+
+## Contribute using the one-click online setup
+
+You can use Gitpod (a free online VS Code-like IDE) for contributing. With a single click, it'll launch a workspace and automatically:
+
+- clone the moveable repo.
+- install the dependencies in `/` and `/storybook`.
+- run `npm run storybook` in `/storybook`.
+- run `npm run start`.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
 
 ## 🐞 Bug Report
 

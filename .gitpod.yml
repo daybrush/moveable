@@ -1,0 +1,9 @@
+tasks:
+  - before: cd storybook
+    init: npm install
+    command: npm run storybook
+  - init: npm install
+    command: npm run start
+ports:
+  - port: 6006
+    onOpen: open-preview
