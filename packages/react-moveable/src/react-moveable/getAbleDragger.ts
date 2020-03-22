@@ -64,6 +64,9 @@ export function triggerAble<T extends IObject<any>>(
     if (isEnd) {
         moveable.state.dragger = null;
     }
+    if (!moveable.isMounted) {
+        return;
+    }
     if (!isStart && isUpdate) {
         if (results.some(able => able.updateRect) && !isGroup) {
             moveable.updateRect(eventType, false, false);
