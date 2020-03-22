@@ -82,7 +82,7 @@ export default class MoveableManager<T = {}, U = {}>
     public targetDragger!: Dragger;
     public controlDragger!: Dragger;
     public customDragger!: CustomDragger;
-    public isMounted = true;
+    public isUnmounted = false;
 
     public render() {
         const props = this.props;
@@ -127,7 +127,7 @@ export default class MoveableManager<T = {}, U = {}>
         this.updateEvent(prevProps);
     }
     public componentWillUnmount() {
-        this.isMounted = false;
+        this.isUnmounted = true;
         unset(this, "targetDragger");
         unset(this, "controlDragger");
     }

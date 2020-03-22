@@ -64,7 +64,7 @@ export function triggerAble<T extends IObject<any>>(
     if (isEnd) {
         moveable.state.dragger = null;
     }
-    if (!moveable.isMounted) {
+    if (moveable.isUnmounted) {
         return;
     }
     if (!isStart && isUpdate) {
