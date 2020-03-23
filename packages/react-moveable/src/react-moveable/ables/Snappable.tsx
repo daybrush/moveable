@@ -53,15 +53,16 @@ export function snapStart(moveable: MoveableManager<SnappableProps, SnappableSta
     }
 
     const {
-        containerClientRect: {
-            top: containerTop,
-            left: containerLeft,
-        },
+        containerClientRect,
         targetClientRect: {
             top: clientTop,
             left: clientLeft,
         },
     } = state;
+
+    const containerLeft = containerClientRect.left + containerClientRect.clientLeft!;
+    const containerTop = containerClientRect.top + containerClientRect.clientTop!;
+
     const poses = getAbsolutePosesByState(state);
     const targetLeft = Math.min(...poses.map(pos => pos[0]));
     const targetTop = Math.min(...poses.map(pos => pos[1]));
@@ -76,29 +77,34 @@ export function snapStart(moveable: MoveableManager<SnappableProps, SnappableSta
         const elementBottom = elementTop + height;
         const elementLeft = left - containerLeft;
         const elementRight = elementLeft + width;
+        const sizes = [width, height];
         guidelines.push({
             type: "vertical", element: el, pos: [
                 throttle(elementLeft + distLeft, 0.1),
                 elementTop,
             ], size: height,
+            sizes,
         });
         guidelines.push({
             type: "vertical", element: el, pos: [
                 throttle(elementRight + distLeft, 0.1),
                 elementTop,
             ], size: height,
+            sizes,
         });
         guidelines.push({
             type: "horizontal", element: el, pos: [
                 elementLeft,
                 throttle(elementTop + distTop, 0.1),
             ], size: width,
+            sizes,
         });
         guidelines.push({
             type: "horizontal", element: el, pos: [
                 elementLeft,
                 throttle(elementBottom + distTop, 0.1),
             ], size: width,
+            sizes,
         });
 
         if (snapCenter) {
@@ -110,6 +116,7 @@ export function snapStart(moveable: MoveableManager<SnappableProps, SnappableSta
                     elementTop,
                 ],
                 size: height,
+                sizes,
                 center: true,
             });
             guidelines.push({
@@ -120,6 +127,7 @@ export function snapStart(moveable: MoveableManager<SnappableProps, SnappableSta
                     throttle((elementTop + elementBottom) / 2 + distTop, 0.1),
                 ],
                 size: width,
+                sizes,
                 center: true,
             });
         }
@@ -1027,7 +1035,7 @@ function groupByElementGuidelines(
 ) {
     const groupInfos: Array<[Element, number, any]> = [];
 
-    const group = groupBy(guidelines.filter(({ element }) => element), ({ element, pos, size: size2 }) => {
+    const group = groupBy(guidelines.filter(({ element }) => element), ({ element, pos }) => {
         const elementPos = pos[index];
         const sign = Math.min(0, elementPos - clientPos) < 0 ? -1 : 1;
         const groupKey = `${sign}_${pos[index ? 0 : 1]}`;
@@ -1203,8 +1211,8 @@ export default {
             targetClientRect,
             containerClientRect,
         } = moveable.state;
-        const clientLeft = targetClientRect.left - containerClientRect.left;
-        const clientTop = targetClientRect.top - containerClientRect.top;
+        const clientLeft = targetClientRect.left - containerClientRect.left - containerClientRect.clientLeft!;
+        const clientTop = targetClientRect.top - containerClientRect.top - containerClientRect.clientTop!;
 
         const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
         const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);

@@ -811,6 +811,7 @@ export function resetClientRect(): MoveableClientRect {
         left: 0, right: 0,
         top: 0, bottom: 0,
         width: 0, height: 0,
+        clientLeft: 0, clientTop: 0,
         clientWidth: 0, clientHeight: 0,
         scrollWidth: 0, scrollHeight: 0,
     };
@@ -828,6 +829,8 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     };
 
     if (isExtends) {
+        rect.clientLeft = el.clientLeft;
+        rect.clientTop = el.clientTop;
         rect.clientWidth = el.clientWidth;
         rect.clientHeight = el.clientHeight;
         rect.scrollWidth = el.scrollWidth;
@@ -1004,20 +1007,22 @@ export function selectValue<T = any>(...values: any[]): T {
     return values[length];
 }
 
-export function groupBy<T>(arr: T[], func: (el: T, index: number, arr: T[]) => number | string) {
-    const group: T[][] = [];
-    const groupMap: IObject<T[]> = {};
+export function groupBy<T>(arr: T[], func: (el: T, index: number, arr: T[]) => any) {
+    const groups: T[][] = [];
+    const groupKeys: any[] = [];
 
     arr.forEach((el, index) => {
         const groupKey = func(el, index, arr);
+        const keyIndex = groupKeys.indexOf(groupKey);
+        const group = groups[keyIndex] || [];
 
-        if (!groupMap[groupKey]) {
-            groupMap[groupKey] = [];
-            group.push(groupMap[groupKey]);
+        if (keyIndex === -1) {
+            groupKeys.push(groupKey);
+            groups.push(group);
         }
-        groupMap[groupKey].push(el);
+        group.push(el);
     });
-    return group;
+    return groups;
 }
 
 export function flat<T>(arr: T[][]): T[] {

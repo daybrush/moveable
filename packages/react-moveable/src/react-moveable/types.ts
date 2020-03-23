@@ -10,6 +10,8 @@ export interface MoveableClientRect {
     bottom: number;
     width: number;
     height: number;
+    clientLeft?: number;
+    clientTop?: number;
     clientWidth?: number;
     clientHeight?: number;
     scrollWidth?: number;
@@ -88,6 +90,8 @@ export interface Guideline {
     center?: boolean;
     pos: number[];
     size: number;
+    sizes?: number[];
+    gap?: boolean;
 }
 export interface SnapBoundInfo {
     isBound: boolean;
