@@ -5,11 +5,11 @@ import {
     SnappableState, Guideline,
     SnapInfo, BoundInfo,
     ScalableProps, SnapPosInfo, RotatableProps,
-    RectInfo, DraggableProps, SnapOffsetInfo,
+    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign, getDistSize, groupBy, flat, maxOffset,
+    getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign, getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent,
 } from "../utils";
 import { IObject, find } from "@daybrush/utils";
 import {
@@ -33,6 +33,7 @@ import {
     getNearOffsetInfo,
     checkSnapKeepRatio,
 } from "./snappable/snap";
+import { triggerAble } from "../getAbleDragger";
 
 export function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
@@ -1035,7 +1036,7 @@ function groupByElementGuidelines(
 ) {
     const groupInfos: Array<[Element, number, any]> = [];
 
-    const group = groupBy(guidelines.filter(({ element }) => element), ({ element, pos }) => {
+    const group = groupBy(guidelines.filter(({ element, gap }) => element && !gap), ({ element, pos }) => {
         const elementPos = pos[index];
         const sign = Math.min(0, elementPos - clientPos) < 0 ? -1 : 1;
         const groupKey = `${sign}_${pos[index ? 0 : 1]}`;
@@ -1149,6 +1150,139 @@ function renderGuidelines(
     });
 }
 
+function getGapGuidelinesToStart(
+    guidelines: Guideline[],
+    index: number,
+    targetPos: number[],
+    targetSizes: number[],
+    guidelinePos: number[],
+    gap: number,
+    otherPos: number,
+): GapGuideline[] {
+    const absGap = Math.abs(gap);
+    let start = guidelinePos[index] + (gap > 0 ? targetSizes[0] : 0);
+
+    return guidelines.filter(({ pos: gapPos }) => gapPos[index] <= targetPos[index])
+        .sort(({ pos: aPos }, { pos: bPos }) =>  bPos[index] - aPos[index])
+        .filter(({ pos: gapPos, sizes: gapSizes }) => {
+            const nextPos = gapPos[index];
+
+            if (throttle(nextPos + gapSizes![index], 0.0001) === throttle(start - absGap, 0.0001)) {
+                start = nextPos;
+                return true;
+            }
+            return false;
+        }).map(gapGuideline => {
+            const renderPos = -targetPos[index] + gapGuideline.pos[index] + gapGuideline.sizes![index];
+
+            return {
+                ...gapGuideline,
+                gap,
+                renderPos: index ? [otherPos, renderPos] : [renderPos, otherPos],
+            };
+        });
+}
+function getGapGuidelinesToEnd(
+    guidelines: Guideline[],
+    index: number,
+    targetPos: number[],
+    targetSizes: number[],
+    guidelinePos: number[],
+    gap: number,
+    otherPos: number,
+): GapGuideline[] {
+    const absGap = Math.abs(gap);
+    let start = guidelinePos[index] + (gap < 0 ? targetSizes[index] : 0);
+
+    return guidelines.filter(({ pos: gapPos }) => gapPos[index] > targetPos[index])
+        .sort(({ pos: aPos }, { pos: bPos }) => aPos[index] - bPos[index])
+        .filter(({ pos: gapPos, sizes: gapSizes }) => {
+            const nextPos = gapPos[index];
+
+            if (throttle(nextPos, 0.0001) === throttle(start + absGap, 0.0001)) {
+                start = nextPos + gapSizes![index];
+                return true;
+            }
+            return false;
+        }).map(gapGuideline => {
+            const renderPos = -targetPos[index] + gapGuideline.pos[index] - absGap;
+
+            return {
+                ...gapGuideline,
+                gap,
+                renderPos: index ? [otherPos, renderPos] : [renderPos, otherPos],
+            };
+        });
+}
+function getGapGuidelines(
+    guidelines: Guideline[],
+    type: "vertical" | "horizontal",
+    targetPos: number[],
+    targetSizes: number[],
+): GapGuideline[] {
+    const elementGuidelines = guidelines.filter(
+        ({ element, gap, type: guidelineType }) => element && gap && guidelineType === type);
+    const [index, otherIndex] = type === "vertical" ? [0, 1] : [1, 0];
+
+    return flat(elementGuidelines.map((guideline, i) => {
+        const pos = guideline.pos;
+        const gap = guideline.gap!;
+        const gapGuidelines = guideline.gapGuidelines!;
+        const sizes = guideline.sizes!;
+
+        let offset = minOffset(
+            pos[otherIndex] + sizes[otherIndex] - targetPos[otherIndex],
+            pos[otherIndex] - targetPos[otherIndex] - targetSizes[otherIndex],
+        );
+        const minSize =  Math.min(sizes[otherIndex], targetSizes[otherIndex]);
+
+        if (offset > 0 && offset > minSize) {
+            offset = (offset - minSize / 2) * 2;
+        } else if (offset < 0 && offset < -minSize) {
+            offset = (offset + minSize / 2) * 2;
+        }
+
+        const otherPos = (offset > 0 ? 0 : targetSizes[otherIndex]) +  offset / 2;
+        return [
+            ...getGapGuidelinesToStart(gapGuidelines, index, targetPos, targetSizes, pos, gap, otherPos),
+            ...getGapGuidelinesToEnd(gapGuidelines, index, targetPos, targetSizes, pos, gap, otherPos),
+        ];
+    }));
+}
+function renderGapGuidelines(
+    moveable: MoveableManager<SnappableProps, SnappableState>,
+    gapGuidelines: GapGuideline[],
+    type: "vertical" | "horizontal",
+    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    React: any,
+) {
+    const {
+        snapDigit = 0,
+        isDisplaySnapDigit = true,
+    } = moveable.props;
+
+    const otherType = type === "vertical" ? "horizontal" : "vertical";
+    const [index, otherIndex] = type === "vertical" ? [0, 1] : [1, 0];
+
+    return gapGuidelines.map(({ renderPos, gap }, i) => {
+        const absGap = Math.abs(gap!);
+        const snapSize = isDisplaySnapDigit ? parseFloat(absGap.toFixed(snapDigit)) : 0;
+
+        return <div className={prefix(
+                "line",
+                directionName,
+                "guideline",
+                "gap",
+            )}
+            data-size={snapSize}
+            key={`${otherType}GapGuideline${i}`} style={{
+                [posName1]: `${renderPos[index]}px`,
+                [posName2]: `${renderPos[otherIndex]}px`,
+                [sizeName]: `${absGap}px`,
+            }} />;
+    });
+}
+
 function addBoundGuidelines(
     moveable: MoveableManager<SnappableProps, SnappableState>,
     verticalPoses: number[],
@@ -1193,6 +1327,7 @@ export default {
         snapHorizontal: Boolean,
         snapVertical: Boolean,
         snapElement: Boolean,
+        snapGap: Boolean,
         isDisplaySnapDigit: Boolean,
         snapDigit: Number,
         snapThreshold: Number,
@@ -1281,7 +1416,33 @@ export default {
         );
         const horizontalNames = ["horizontal", "left", "top", "width"] as const;
         const verticalNames = ["vertical", "top", "left", "height"] as const;
+
+        const gapVerticalGuidelines = getGapGuidelines(
+            verticalGuildelines, "vertical",
+            [targetLeft, targetTop],
+            [width, height],
+        );
+        const gapHorizontalGuidelines = getGapGuidelines(
+            horizontalGuidelines, "horizontal",
+            [targetLeft, targetTop],
+            [width, height],
+        );
+
         return [
+            ...renderGapGuidelines(
+                moveable,
+                gapVerticalGuidelines,
+                "vertical",
+                horizontalNames,
+                React,
+            ),
+            ...renderGapGuidelines(
+                moveable,
+                gapHorizontalGuidelines,
+                "horizontal",
+                verticalNames,
+                React,
+            ),
             ...renderElementGroup(
                 elementHorizontalGroup,
                 horizontalNames,

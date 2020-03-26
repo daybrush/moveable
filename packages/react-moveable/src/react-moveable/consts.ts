@@ -91,12 +91,12 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     font-size: 12px;
     font-weight: bold;
 }
-.line.dashed.horizontal:before {
+.line.dashed.horizontal:before, .line.gap.horizontal:before {
     left: 50%;
     transform: translateX(-50%);
     bottom: 5px;
 }
-.line.dashed.vertical:before {
+.line.dashed.vertical:before, .line.gap.vertical:before {
     top: 50%;
     transform: translateY(-50%);
     left: 5px;
@@ -130,6 +130,17 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 .line.horizontal.bold {
     height: 2px;
     height: calc(2 * var(--zoompx));
+}
+
+.line.gap {
+    background: #f55;
+}
+.line.gap:before {
+    position: absolute;
+    content: attr(data-size);
+    color: #f55;
+    font-size: 12px;
+    font-weight: bold;
 }
 .control.origin {
 	border-color: #f55;

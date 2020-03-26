@@ -3,11 +3,95 @@ import {
     Guideline, ResizableProps, ScalableProps, SnapOffsetInfo
 } from "../../types";
 import MoveableManager from "../../MoveableManager";
-import { selectValue, throttle } from "../../utils";
+import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "@moveable/matrix";
 
+export function getGapGuidelines(
+    guidelines: Guideline[],
+    type: "vertical" | "horizontal",
+    snapThreshold: number,
+    index: number,
+    [start, end]: number[],
+    [otherStart, otherEnd]: number[],
+) {
+    const totalGuidelines: Guideline[] = [];
+    const otherIndex = index ? 0 : 1;
+    const otherType = type === "vertical" ? "horizontal" : "vertical";
+
+    const elementGuidelines
+        = groupBy(guidelines.filter(({ type: guidelineType }) => guidelineType === type), ({ element }) => element)
+        .map(group => group[0])
+        .filter(({ pos, sizes }) => pos[otherIndex] <= otherEnd && otherStart <= pos[otherIndex] + sizes![otherIndex]);
+
+    elementGuidelines.forEach(guideline1 => {
+        const elementStart = guideline1.pos[index];
+        const elementEnd = elementStart + guideline1.sizes![index];
+
+        elementGuidelines.forEach(({
+            pos: guideline2Pos,
+            sizes: guideline2Sizes,
+            element: guideline2Element,
+        }) => {
+            const targetStart = guideline2Pos[index];
+            const targetEnd = targetStart + guideline2Sizes![index];
+            let pos = 0;
+            let gap = 0;
+            let canSnap = true;
+
+            if (elementEnd <= targetStart) {
+                // gap -
+                gap = elementEnd - targetStart;
+                pos = targetEnd - gap;
+
+                if (start < pos - snapThreshold) {
+                    canSnap = false;
+                }
+                // element target moveable
+            } else if (targetEnd <= elementStart) {
+                // gap +
+                gap = elementStart - targetEnd;
+                pos = targetStart - gap;
+
+                if (end > pos + snapThreshold) {
+                    canSnap = false;
+                }
+                // moveable target element
+            } else {
+                return;
+            }
+            if (canSnap) {
+                totalGuidelines.push({
+                    pos: otherType === "vertical" ? [pos, guideline2Pos[1]] : [guideline2Pos[0], pos],
+                    element: guideline2Element,
+                    sizes: guideline2Sizes,
+                    size: 0,
+                    type: otherType,
+                    gap,
+                    gapGuidelines: elementGuidelines,
+                });
+            }
+            if (elementEnd <= start && end <= targetStart) {
+                // elementEnd   moveable   target
+                const centerPos = ((targetStart + elementEnd) - (end - start)) / 2;
+
+                if (throttle(start - (centerPos - snapThreshold), 0.1) >= 0) {
+                    totalGuidelines.push({
+                        pos: otherType === "vertical" ? [centerPos, guideline2Pos[1]] : [guideline2Pos[0], centerPos],
+                        element: guideline2Element,
+                        sizes: guideline2Sizes,
+                        size: 0,
+                        type: otherType,
+                        gap: elementEnd - start,
+                        gapGuidelines: elementGuidelines,
+                    });
+                }
+            }
+        });
+    });
+    return totalGuidelines;
+}
 export function getTotalGuidelines(
     moveable: MoveableManager<SnappableProps, SnappableState>,
 ) {
@@ -22,22 +106,45 @@ export function getTotalGuidelines(
     const {
         snapHorizontal = true,
         snapVertical = true,
+        snapGap = true,
         verticalGuidelines,
         horizontalGuidelines,
+        snapThreshold = 5,
     } = props;
+    const totalGuidelines: Guideline[] = [...guidelines];
 
-    const totalGuidelines = [...guidelines];
+    if (snapGap) {
+        const { top, left, bottom, right } = getRect(getAbsolutePosesByState(moveable.state));
+        const elementGuidelines = (guidelines as Guideline[]).filter(({ element }) => element);
+
+        totalGuidelines.push(...getGapGuidelines(
+            elementGuidelines,
+            "horizontal",
+            snapThreshold,
+            0,
+            [left, right],
+            [top, bottom],
+        ), ...getGapGuidelines(
+            elementGuidelines,
+            "vertical",
+            snapThreshold,
+            1,
+            [top, bottom],
+            [left, right],
+        ));
+    }
 
     if (snapHorizontal && horizontalGuidelines) {
         horizontalGuidelines!.forEach(pos => {
-            totalGuidelines.push({ type: "horizontal", pos: [0, throttle(pos, 0.1)], size: containerWidth });
+            totalGuidelines.push({ type: "horizontal", pos: [0, throttle(pos, 0.1)], size: containerWidth! });
         });
     }
     if (snapVertical && verticalGuidelines) {
         verticalGuidelines!.forEach(pos => {
-            totalGuidelines.push({ type: "vertical", pos: [throttle(pos, 0.1), 0], size: containerHeight });
+            totalGuidelines.push({ type: "vertical", pos: [throttle(pos, 0.1), 0], size: containerHeight! });
         });
     }
+
     return totalGuidelines;
 }
 export function checkSnapPoses(

@@ -48,7 +48,7 @@ img {
     top: 100px;
     height: 800px;
     border: 1px solid #f55;
-    transform: scale(0.5);
+    /* transform: scale(0.5); */
 }
 .guides {
     position: absolute;
@@ -91,6 +91,7 @@ img {
     position: absolute;
     top: 100px;
     left: 100px;
+    display: none;
 }
 .App svg * {
     transform-origin: 20% 50%;
@@ -105,12 +106,24 @@ img {
     }
 }
 .box.box2 {
+    position: absolute;
     width: 120px;
     height: 120px;
+    top: 200px;
+    left: 0;
 }
 .box.box23 {
     position: absolute;
-    top: 150px;
+    width: 120px;
+    height: 120px;
+    top: 200px;
+    left: 200px;
+}
+.box.box24 {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    top: 200px;
     left: 450px;
 }
 .box2 span {

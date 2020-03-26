@@ -1040,7 +1040,7 @@ export function maxOffset(...args: number[]) {
 
     return args[0];
 }
-export function miinOffset(...args: number[]) {
+export function minOffset(...args: number[]) {
     args.sort((a, b) => Math.abs(a) - Math.abs(b));
 
     return args[0];

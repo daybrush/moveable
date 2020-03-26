@@ -16,7 +16,7 @@ setAlias("sx", ["transform", "scaleX"]);
 setAlias("sy", ["transform", "scaleY"]);
 setAlias("matrix3d", ["transform", "matrix3d"]);
 
-class App extends React.Component {
+class App extends React.Component<any, any> {
     public moveable!: Moveable;
     public state: {
         container: any,
@@ -25,12 +25,14 @@ class App extends React.Component {
         isShift: boolean,
         targets: Array<HTMLElement | SVGElement>,
         isResizable: boolean,
+        isUnmount: boolean,
     } = {
         target: null,
         container: null,
         targets: [],
         isResizable: true,
         isShift: false,
+        isUnmount: false,
         emo: null,
     };
     private itemMap: Map<HTMLElement |SVGElement, Frame> = new Map();
@@ -38,6 +40,9 @@ class App extends React.Component {
     private guides1!: Guides;
     private guides2!: Guides;
     public render() {
+        if (this.state.isUnmount) {
+            return (<div></div>);
+        }
         const selectedTarget = this.state.target;
         const isResizable = this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
@@ -186,16 +191,18 @@ class App extends React.Component {
                     snapDigit={0}
                     bounds={{ left: 30, top: 20 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
-                    verticalGuidelines={[200, 400, 600]}
-                    horizontalGuidelines={[200, 400, 600]}
+                    // verticalGuidelines={[150]}
+                    // horizontalGuidelines={[150]}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
                     elementGuidelines={[
-                        document.querySelector(".box1 span")!,
+                        // document.querySelector(".box1 span")!,
                         // document.querySelector(".emo img")!,
                         document.querySelector<HTMLElement>(".box2")!,
+                        document.querySelector<HTMLElement>(".box23")!,
+                        document.querySelector<HTMLElement>(".box24")!,
                     ]}
-                    snapCenter={true}
+                    // snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
                     // scalable={true}
@@ -321,6 +328,7 @@ class App extends React.Component {
                         <div className="box box2" data-target="box2"><span>A</span></div>
 
                         <div className="box box23" data-target="box23"><span>AA</span></div>
+                        <div className="box box24" data-target="box24"><span>BB</span></div>
 
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" />
                         <p data-target="p">
@@ -462,6 +470,10 @@ class App extends React.Component {
                 requester.requestEnd();
                 requester = null;
             }
+        }).keydown("e", () => {
+            this.setState({
+                isUnmount: true,
+            });
         });
 
         const targets: any[] = [].slice.call(document.querySelectorAll(`[data-target="box"] span`));

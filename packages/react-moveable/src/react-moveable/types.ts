@@ -91,7 +91,8 @@ export interface Guideline {
     pos: number[];
     size: number;
     sizes?: number[];
-    gap?: boolean;
+    gap?: number;
+    gapGuidelines?: Guideline[];
 }
 export interface SnapBoundInfo {
     isBound: boolean;
@@ -837,6 +838,9 @@ export interface ScalableProps extends ScalableOptions {
     onScaleGroupEnd?: (e: OnScaleGroupEnd) => any;
 }
 
+export interface GapGuideline extends Guideline {
+    renderPos: number[];
+}
 /**
  * @typedef
  * @memberof Moveable
@@ -925,6 +929,7 @@ export interface GroupableProps extends
  * @property - When you drag, make the snap in the horizontal guidelines. (default: true)
  * @property - When you drag, make the snap in the vertical guidelines. (default: true)
  * @property - When you drag, make the snap in the element guidelines. (default: true)
+ * @property - When you drag, make the gap snap in the element guidelines. (default: true)
  * @property - Distance value that can snap to guidelines. (default: 5)
  * @property snapDigit - snap distance digits (default: 0)
  * @property isDisplaySnapDigit - Whether to show snap distance (default: true)
@@ -940,6 +945,7 @@ export interface SnappableProps {
     snapHorizontal?: boolean;
     snapVertical?: boolean;
     snapElement?: boolean;
+    snapGap?: boolean;
     snapThreshold?: number;
     snapDigit?: number;
     isDisplaySnapDigit?: boolean;
