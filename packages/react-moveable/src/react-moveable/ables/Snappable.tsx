@@ -34,7 +34,6 @@ import {
     getNearOffsetInfo,
     checkSnapKeepRatio,
 } from "./snappable/snap";
-import { triggerAble } from "../getAbleDragger";
 
 export function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
@@ -646,11 +645,6 @@ export function checkSizeDist(
         }
         widthOffset += nextWidthOffset;
         heightOffset += nextHeightOffset;
-
-        return [
-            widthOffset,
-            heightOffset,
-        ];
     }
 
     if (direction[0] && direction[1]) {
