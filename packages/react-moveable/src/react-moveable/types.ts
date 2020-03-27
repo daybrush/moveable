@@ -939,7 +939,7 @@ export interface GroupableProps extends
  * @property - You can set up boundaries. (default: null)
  * @property - You can set up inner boundaries. (default: null)
  */
-export interface SnappableProps {
+export interface SnappableOptions {
     snappable?: boolean | string[];
     snapCenter?: boolean;
     snapHorizontal?: boolean;
@@ -954,6 +954,16 @@ export interface SnappableProps {
     elementGuidelines?: Element[];
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
+}
+
+export interface SnappableProps extends SnappableOptions {
+    onSnap?: (e: OnSnap) => any;
+}
+
+export interface OnSnap {
+    guidelines: Guideline[];
+    elements: Guideline[][];
+    gaps: GapGuideline[];
 }
 /**
  * @typedef

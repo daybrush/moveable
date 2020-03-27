@@ -954,7 +954,11 @@ export function triggerEvent<T extends IObject<any>, U extends keyof T>(
     moveable: MoveableManager<T>,
     name: U & string,
     params: T[U] extends ((e: infer P) => any) | undefined ? P : {},
+    isManager?: boolean,
 ): any {
+    if (isManager) {
+        MoveableManager.prototype.triggerEvent.call(moveable, name, params);
+    }
     return moveable.triggerEvent(name, params);
 }
 

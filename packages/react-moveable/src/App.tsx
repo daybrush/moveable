@@ -155,6 +155,9 @@ class App extends React.Component<any, any> {
                             ev.target.style.cssText += groupItem.toCSS();
                         });
                     }}
+                    onSnap={e => {
+                        console.log(e);
+                    }}
                     onScaleGroupStart={e => {
                         console.log("scs", e);
                     }}
@@ -221,6 +224,9 @@ class App extends React.Component<any, any> {
                     pinchable={true}
                     onScroll={({ scrollContainer, direction }) => {
                         scrollContainer.scrollBy(direction[0] * 10, direction[1] * 10);
+                    }}
+                    onSnap={e => {
+                        console.log(e);
                     }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;

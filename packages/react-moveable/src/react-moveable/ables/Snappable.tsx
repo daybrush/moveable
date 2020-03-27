@@ -9,7 +9,8 @@ import {
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign, getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent,
+    getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign,
+    getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent,
 } from "../utils";
 import { IObject, find } from "@daybrush/utils";
 import {
@@ -1364,7 +1365,7 @@ export default {
         const { width, height, top, left, bottom, right } = getRect(poses);
         const verticalSnapPoses: number[] = [];
         const horizontalSnapPoses: number[] = [];
-        const verticalGuildelines: Guideline[] = [];
+        const verticalGuidelines: Guideline[] = [];
         const horizontalGuidelines: Guideline[] = [];
         const snapInfos: Array<{ vertical: SnapInfo, horizontal: SnapInfo }> = [];
 
@@ -1391,7 +1392,7 @@ export default {
             } = snapInfo;
             verticalSnapPoses.push(...verticalPosInfos.map(posInfo => posInfo.pos));
             horizontalSnapPoses.push(...horizontalPosInfos.map(posInfo => posInfo.pos));
-            verticalGuildelines.push(...getSnapGuidelines(verticalPosInfos));
+            verticalGuidelines.push(...getSnapGuidelines(verticalPosInfos));
             horizontalGuidelines.push(...getSnapGuidelines(horizontalPosInfos));
         });
 
@@ -1409,7 +1410,7 @@ export default {
             0,
         );
         const elementVerticalGroup = groupByElementGuidelines(
-            verticalGuildelines,
+            verticalGuidelines,
             clientTop,
             height,
             1,
@@ -1418,7 +1419,7 @@ export default {
         const verticalNames = ["vertical", "top", "left", "height"] as const;
 
         const gapVerticalGuidelines = getGapGuidelines(
-            verticalGuildelines, "vertical",
+            verticalGuidelines, "vertical",
             [targetLeft, targetTop],
             [width, height],
         );
@@ -1427,6 +1428,19 @@ export default {
             [targetLeft, targetTop],
             [width, height],
         );
+
+        const allGuidelines = [
+            ...verticalGuidelines,
+            ...horizontalGuidelines,
+        ];
+        triggerEvent(moveable, "onSnap", {
+            guidelines: allGuidelines.filter(({ element }) => !element),
+            elements: groupBy(allGuidelines.filter(({ element }) => element), ({ element }) => element),
+            gaps: [
+                ...gapVerticalGuidelines,
+                ...gapHorizontalGuidelines,
+            ],
+        }, true);
 
         return [
             ...renderGapGuidelines(
@@ -1494,7 +1508,7 @@ export default {
                 React,
             ),
             ...renderGuidelines(
-                verticalGuildelines,
+                verticalGuidelines,
                 verticalNames,
                 targetTop,
                 targetLeft,
