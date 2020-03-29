@@ -50,7 +50,7 @@ export default class MoveableManager<T = {}, U = {}>
         transformOrigin: "",
         className: "",
         zoom: 1,
-        triggerAblesSimulately: false,
+        triggerAblesSimultaneously: false,
     };
     public state: MoveableManagerState<U> = {
         container: null,
@@ -338,15 +338,15 @@ export default class MoveableManager<T = {}, U = {}>
         eventAffix: string = "",
     ) {
         const props = this.props as any;
-        const triggerAblesSimulately = props.triggerAblesSimulately;
+        const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
         const enabledAbles = ables!.filter(able => able && props[able.name]);
 
         const dragStart = `drag${eventAffix}Start` as "dragStart";
         const pinchStart = `pinch${eventAffix}Start` as "pinchStart";
         const dragControlStart = `drag${eventAffix}ControlStart` as "dragControlStart";
 
-        const targetAbles = filterAbles(enabledAbles, [dragStart, pinchStart], triggerAblesSimulately);
-        const controlAbles = filterAbles(enabledAbles, [dragControlStart], triggerAblesSimulately);
+        const targetAbles = filterAbles(enabledAbles, [dragStart, pinchStart], triggerAblesSimultaneously);
+        const controlAbles = filterAbles(enabledAbles, [dragControlStart], triggerAblesSimultaneously);
 
         this.targetAbles = targetAbles;
         this.controlAbles = controlAbles;
@@ -365,11 +365,11 @@ export default class MoveableManager<T = {}, U = {}>
     protected renderAbles() {
         const props = this.props as any;
         const ables: Able[] = props.ables!;
-        const triggerAblesSimulately = props.triggerAblesSimulately;
+        const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
         const enabledAbles = ables.filter(able => able && props[able.name]);
         const Renderer = { createElement: React.createElement };
 
-        return groupByMap(flat<any>(filterAbles(enabledAbles, ["render"], triggerAblesSimulately).map(({ render }) => {
+        return groupByMap(flat<any>(filterAbles(enabledAbles, ["render"], triggerAblesSimultaneously).map(({ render }) => {
             return render!(this, Renderer) || [];
         })).filter(el => el), ({ key }) => key).map(group => group[0]);
     }

@@ -50,7 +50,7 @@ export interface MoveableDefaultProps {
     ables?: Able[];
     className?: string;
     pinchThreshold?: number;
-    triggerAblesSimulately?: boolean;
+    triggerAblesSimultaneously?: boolean;
 }
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;

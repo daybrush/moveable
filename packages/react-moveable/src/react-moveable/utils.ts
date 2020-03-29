@@ -968,7 +968,7 @@ export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: strin
 
 export function filterAbles(
     ables: Able[], methods: Array<keyof Able>,
-    triggerAblesSimulately?: boolean,
+    triggerAblesSimultaneously?: boolean,
 ) {
     const enabledAbles: IObject<boolean> = {};
     const ableGroups: IObject<boolean> = {};
@@ -979,7 +979,7 @@ export function filterAbles(
         if (enabledAbles[name] || !methods.some(method => able[method])) {
             return false;
         }
-        if (!triggerAblesSimulately && able.ableGroup) {
+        if (!triggerAblesSimultaneously && able.ableGroup) {
             if (ableGroups[able.ableGroup]) {
                 return false;
             }
