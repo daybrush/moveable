@@ -34,11 +34,17 @@ export function triggerAble<T extends IObject<any>>(
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
     const events = ables.filter((able: any) => able[eventName]);
+    const datas = e.datas;
+    const renderDatas = datas.render || (datas.render = {});
+    const renderEvent = {...e, datas: renderDatas };
+
     const results = events.filter((able: any) => {
         const condition = isStart && able[conditionName];
+        const ableName = able.name;
+        const nextDatas = datas[ableName] || (datas[ableName] = {});
 
         if (!condition || condition(e, moveable)) {
-            return able[eventName](moveable, e);
+            return able[eventName](moveable, {...e, datas: nextDatas });
         }
         return false;
     });
@@ -55,11 +61,11 @@ export function triggerAble<T extends IObject<any>>(
             }
             return false;
         }
-        triggerRenderStart(moveable, isGroup, e);
+        triggerRenderStart(moveable, isGroup, renderEvent);
     } else if (isEnd) {
-        triggerRenderEnd(moveable, isGroup, e);
+        triggerRenderEnd(moveable, isGroup, renderEvent);
     } else if (isUpdate) {
-        triggerRender(moveable, isGroup, e);
+        triggerRender(moveable, isGroup, renderEvent);
     }
     if (isEnd) {
         moveable.state.dragger = null;

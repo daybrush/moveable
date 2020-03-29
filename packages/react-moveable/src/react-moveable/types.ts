@@ -36,6 +36,7 @@ export type MoveableManagerProps<T = {}> = {
  * @property - You can add your custom able. (default: [])
  * @property - You can specify the className of the moveable controlbox. (default: "")
  * @property - Minimum distance to pinch. (default: 20)
+ * @property - Lets generate events of ables at the same time. (like Resizable, Scalable)
  */
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
@@ -49,6 +50,7 @@ export interface MoveableDefaultProps {
     ables?: Able[];
     className?: string;
     pinchThreshold?: number;
+    triggerAblesSimulately?: boolean;
 }
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;

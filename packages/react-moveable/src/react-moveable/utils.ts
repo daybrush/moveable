@@ -966,7 +966,10 @@ export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: strin
     return window.getComputedStyle(el, pseudoElt);
 }
 
-export function filterAbles(ables: Able[], methods: Array<keyof Able>) {
+export function filterAbles(
+    ables: Able[], methods: Array<keyof Able>,
+    triggerAblesSimulately?: boolean,
+) {
     const enabledAbles: IObject<boolean> = {};
     const ableGroups: IObject<boolean> = {};
 
@@ -976,7 +979,7 @@ export function filterAbles(ables: Able[], methods: Array<keyof Able>) {
         if (enabledAbles[name] || !methods.some(method => able[method])) {
             return false;
         }
-        if (able.ableGroup) {
+        if (!triggerAblesSimulately && able.ableGroup) {
             if (ableGroups[able.ableGroup]) {
                 return false;
             }
@@ -1028,7 +1031,23 @@ export function groupBy<T>(arr: T[], func: (el: T, index: number, arr: T[]) => a
     });
     return groups;
 }
+export function groupByMap<T>(arr: T[], func: (el: T, index: number, arr: T[]) => string | number) {
+    const groups: T[][] = [];
+    const groupKeys: IObject<T[]> = {};
 
+    arr.forEach((el, index) => {
+        const groupKey = func(el, index, arr);
+        let group = groupKeys[groupKey];
+
+        if (!group) {
+            group = [];
+            groupKeys[groupKey] = group;
+            groups.push(group);
+        }
+        group.push(el);
+    });
+    return groups;
+}
 export function flat<T>(arr: T[][]): T[] {
     return arr.reduce((prev, cur) => {
         return prev.concat(cur);

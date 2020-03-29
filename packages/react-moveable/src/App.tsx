@@ -80,7 +80,11 @@ class App extends React.Component<any, any> {
                     snapCenter={true}
                     verticalGuidelines={[200, 400, 600]}
                     horizontalGuidelines={[200, 400, 600]}
+                    scrollable={true}
                     // elementGuidelines={[document.querySelector<HTMLElement>(".box2")!]}
+                    onScrollGroup={({ scrollContainer, direction }) => {
+                        scrollContainer.scrollBy(direction[0] * 10, direction[1] * 10);
+                    }}
                     throttleRotate={0}
                     onDragGroupStart={e => {
                         console.log("start", e);
@@ -226,7 +230,7 @@ class App extends React.Component<any, any> {
                         scrollContainer.scrollBy(direction[0] * 10, direction[1] * 10);
                     }}
                     onSnap={e => {
-                        console.log(e);
+                        // console.log(e);
                     }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;
