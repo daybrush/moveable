@@ -92,21 +92,21 @@ export default {
         return this.dragEnd(moveable, e);
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
-        return this.dragStart(moveable, e);
+        return this.dragStart(moveable, { ...e, targets: moveable.props.targets });
     },
     dragGroup(moveable: MoveableGroup, e: any) {
         return this.drag(moveable, { ...e, targets: moveable.props.targets });
     },
     dragGroupEnd(moveable: MoveableGroup, e: any) {
-        return this.dragEnd(moveable, e);
+        return this.dragEnd(moveable, { ...e, targets: moveable.props.targets });
     },
     dragGroupControlStart(moveable: MoveableGroup, e: any) {
-        return this.dragStart(moveable, e);
+        return this.dragStart(moveable, { ...e, targets: moveable.props.targets, isControl: true });
     },
     dragGroupContro(moveable: MoveableGroup, e: any) {
         return this.drag(moveable, { ...e, targets: moveable.props.targets });
     },
     dragGroupControEnd(moveable: MoveableGroup, e: any) {
-        return this.dragEnd(moveable, e);
+        return this.dragEnd(moveable, { ...e, targets: moveable.props.targets });
     },
 };
