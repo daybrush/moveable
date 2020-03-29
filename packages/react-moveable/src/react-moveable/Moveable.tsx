@@ -119,7 +119,25 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
     public updateTarget(): void {
         this.moveable.updateTarget();
     }
-
+    /**
+     * Check if the moveable state is being dragged.
+     * @method Moveable#isDragging
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // false
+     * console.log(moveable.isDragging());
+     *
+     * moveable.on("drag", () => {
+     *   // true
+     *   console.log(moveable.isDragging());
+     * });
+     */
+    public isDragging(): boolean {
+        return this.moveable.isDragging();
+    }
     /**
      * You can get the vertex information, position and offset size information of the target based on the container.
      * @method Moveable#getRect
