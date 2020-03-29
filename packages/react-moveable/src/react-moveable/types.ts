@@ -36,7 +36,7 @@ export type MoveableManagerProps<T = {}> = {
  * @property - You can add your custom able. (default: [])
  * @property - You can specify the className of the moveable controlbox. (default: "")
  * @property - Minimum distance to pinch. (default: 20)
- * @property - Lets generate events of ables at the same time. (like Resizable, Scalable)
+ * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
  */
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
@@ -86,6 +86,10 @@ export type MoveableManagerState<T = {}> = {
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface Guideline {
     type: "horizontal" | "vertical";
     element?: Element | null;
@@ -840,6 +844,10 @@ export interface ScalableProps extends ScalableOptions {
     onScaleGroupEnd?: (e: OnScaleGroupEnd) => any;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface GapGuideline extends Guideline {
     renderPos: number[];
 }
@@ -962,6 +970,15 @@ export interface SnappableProps extends SnappableOptions {
     onSnap?: (e: OnSnap) => any;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - a target's transform
+ * @property - The delta of warp matrix
+ * @property - The dist of warp matrix
+ * @property - The caculated warp matrix
+ * @property - Multiply function that can multiply previous matrix by warp matrix
+ */
 export interface OnSnap {
     guidelines: Guideline[];
     elements: Guideline[][];
@@ -1077,5 +1094,6 @@ export interface MoveableInterface {
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
+    isDragging(): boolean;
     setState(state: any, callback?: () => any): any;
 }
