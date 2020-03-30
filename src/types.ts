@@ -13,7 +13,7 @@ import {
     OnRender, OnRenderEnd, OnScroll, OnScrollGroup, OnRenderGroupStart,
     OnRenderGroup, OnRenderGroupEnd, OnClick, MoveableDefaultProps, DraggableOptions,
     ResizableOptions, ScalableOptions, RotatableOptions,
-    WarpableOptions, ScrollableOptions, GroupableOptions, SnappableProps, PinchableOptions,
+    WarpableOptions, ScrollableOptions, GroupableOptions, SnappableOptions, PinchableOptions, OnSnap,
 } from "react-moveable/declaration/types";
 
 /**
@@ -28,7 +28,7 @@ import {
  * @extends Moveable.WarpableOptions
  * @extends Moveable.ScrollableOptions
  * @extends Moveable.GroupableOptions
- * @extends Moveable.SnappableProps
+ * @extends Moveable.SnappableOptions
  */
 export interface MoveableOptions extends
     Pick<MoveableDefaultProps, Exclude<keyof MoveableDefaultProps, "target">>,
@@ -40,7 +40,7 @@ export interface MoveableOptions extends
     PinchableOptions,
     ScrollableOptions,
     GroupableOptions,
-    SnappableProps {
+    SnappableOptions {
     target?: HTMLElement | SVGElement | Array<SVGElement | HTMLElement>;
 }
 
@@ -100,6 +100,8 @@ export interface MoveableEvents {
 
     scroll: OnScroll;
     scrollGroup: OnScrollGroup;
+
+    snap: OnSnap;
 }
 
 export interface WithEventStop {

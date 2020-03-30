@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import Moveable, {
   PROPERTIES, EVENTS, MoveableOptions,
-  OnScrollGroup, OnScroll, MoveableEvents,
+  OnScrollGroup, OnScroll, MoveableEvents, OnSnap,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
 import { NgxMoveableEvents } from './types';
@@ -67,6 +67,9 @@ export class NgxMoveableComponent
   @Input() public isDisplaySnapDigit!: MoveableOptions['isDisplaySnapDigit'];
   @Input() public innerBounds!: MoveableOptions['innerBounds'];
 
+  @Input() public triggerAblesSimultaneously!: MoveableOptions['triggerAblesSimultaneously'];
+  @Input() public snapGap!: MoveableOptions['snapGap'];
+
   @Output() public dragStart!: EventEmitter<MoveableEvents['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEvents['drag']>;
   @Output() public dragEnd!: EventEmitter<MoveableEvents['dragEnd']>;
@@ -118,6 +121,8 @@ export class NgxMoveableComponent
 
   @Output() public scroll!: EventEmitter<OnScroll>;
   @Output() public scrollGroup!: EventEmitter<OnScrollGroup>;
+
+  @Output() public snap!: EventEmitter<OnSnap>;
 
   constructor() {
     super();

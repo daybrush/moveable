@@ -973,11 +973,9 @@ export interface SnappableProps extends SnappableOptions {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target's transform
- * @property - The delta of warp matrix
- * @property - The dist of warp matrix
- * @property - The caculated warp matrix
- * @property - Multiply function that can multiply previous matrix by warp matrix
+ * @property - snapped verticalGuidelines, horizontalGuidelines,
+ * @property - snapped elements (group by element)
+ * @property - gaps is snapped guidelines that became gap snap between elements.
  */
 export interface OnSnap {
     guidelines: Guideline[];

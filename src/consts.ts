@@ -22,9 +22,11 @@ export const PROPERTIES: Array<keyof MoveableOptions> = [
     "snapElement",
     "snapVertical",
     "snapHorizontal",
+    "snapGap",
     "isDisplaySnapDigit",
     "snapDigit",
     "zoom",
+    "triggerAblesSimultaneously",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",
@@ -71,6 +73,8 @@ export const EVENTS: Array<keyof MoveableEvents> = [
     "renderGroupStart",
     "renderGroup",
     "renderGroupEnd",
+
+    "snap",
 ];
 export const METHODS: Array<keyof MoveableInterface> = [
     "isMoveableElement",
@@ -82,4 +86,5 @@ export const METHODS: Array<keyof MoveableInterface> = [
     "setState",
     "getRect",
     "request",
+    "isDragging",
 ];

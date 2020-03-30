@@ -369,7 +369,8 @@ export default class MoveableManager<T = {}, U = {}>
         const enabledAbles = ables.filter(able => able && props[able.name]);
         const Renderer = { createElement: React.createElement };
 
-        return groupByMap(flat<any>(filterAbles(enabledAbles, ["render"], triggerAblesSimultaneously).map(({ render }) => {
+        return groupByMap(flat<any>(
+            filterAbles(enabledAbles, ["render"], triggerAblesSimultaneously).map(({ render }) => {
             return render!(this, Renderer) || [];
         })).filter(el => el), ({ key }) => key).map(group => group[0]);
     }

@@ -285,7 +285,7 @@ class Moveable extends EgComponent {
  *
  * moveable.snapVertical = false;
  */
- /**
+/**
  * When you drag, make the snap in the horizontal guidelines. (default: true)
  * @name Moveable#snapHorizontal
  * @example
@@ -299,6 +299,22 @@ class Moveable extends EgComponent {
  * });
  *
  * moveable.snapHorizontal = false;
+ */
+/**
+ * When you drag, make the gap snap in the element guidelines. (default: true)
+ * @name Moveable#snapGap
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ *   snapGap: true,
+ * });
+ *
+ * moveable.snapGap = false;
  */
 /**
  * When you drag, make the snap in the element guidelines. (default: true)
@@ -1257,6 +1273,22 @@ class Moveable extends EgComponent {
  * moveable.on("scroll", ({ scrollContainer, direction }) => {
  *   scrollContainer.scrollLeft += direction[0] * 10;
  *   scrollContainer.scrollTop += direction[1] * 10;
+ * });
+ */
+
+/**
+ * When you drag or dragControl, the `snap` event is called.
+ * @memberof Moveable
+ * @event snap
+ * @param {Moveable.OnSnap} - Parameters for the `snap` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     snappable: true
+ * });
+ * moveable.on("snap", e => {
+ *     console.log("onSnap", e);
  * });
  */
 

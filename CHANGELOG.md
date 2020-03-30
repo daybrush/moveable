@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.16.1] - 2020-03-31
+* `moveable` 0.16.1
+* `react-moveable` 0.19.0
+* `preact-moveable` 0.18.0
+* `ngx-moveable` 0.12.0
+* `svelte-moveable` 0.7.0
+
+### Added
+* Add `snapGap` props #200
+* Add `onSnap` event #204
+* Add `triggerAblesSimultaneously` props #207
+* Add `isDragging` method
+
+### Fixed
+* scrollGroup is not working #208
+* Race condition when react-moveable is unmounted bug #197
+* Resizing diagonal corners didn't snap.
+
 ## [0.15.2] - 2020-03-05
 * `moveable` 0.15.2
 * `react-moveable` 0.18.1
