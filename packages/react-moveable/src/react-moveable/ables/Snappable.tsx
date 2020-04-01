@@ -1269,7 +1269,7 @@ function renderGapGuidelines(
                 "guideline",
                 "gap",
             )}
-            data-size={snapSize}
+            data-size={snapSize > 0 ? snapSize : ""}
             key={`${otherType}GapGuideline${i}`} style={{
                 [posName1]: `${renderPos[index]}px`,
                 [posName2]: `${renderPos[otherIndex]}px`,

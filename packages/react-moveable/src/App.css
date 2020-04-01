@@ -91,7 +91,7 @@ img {
     position: absolute;
     top: 100px;
     left: 100px;
-    display: none;
+    /* display: none; */
 }
 .App svg * {
     transform-origin: 20% 50%;
