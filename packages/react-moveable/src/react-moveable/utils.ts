@@ -68,7 +68,7 @@ export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[])
 }
 export function measureSVGSize(el: SVGElement, unit: string, isHorizontal: boolean) {
     if (unit === "%") {
-        const viewBox = el.ownerSVGElement!.viewBox.baseVal;
+        const viewBox = getSVGViewBox(el.ownerSVGElement!);
         return viewBox[isHorizontal ? "width" : "height"] / 100;
     }
     return 1;
@@ -383,19 +383,33 @@ export function caculateMatrixStack(
         is3d || isRoot3d,
     ];
 }
+export function getSVGViewBox(el: SVGSVGElement) {
+    const clientWidth = el.clientWidth;
+    const clientHeight = el.clientHeight;
+    const viewBox = el.viewBox;
+    const baseVal = viewBox && viewBox.baseVal || { x: 0, y: 0, width: 0, height: 0 };
+
+    return {
+        x: baseVal.x,
+        y: baseVal.y,
+        width: baseVal.width || clientWidth,
+        height: baseVal.height || clientHeight,
+    };
+}
 export function getSVGMatrix(
     el: SVGSVGElement,
     n: number,
 ) {
     const clientWidth = el.clientWidth;
     const clientHeight = el.clientHeight;
-    const viewBox = (el as SVGSVGElement).viewBox.baseVal;
-    const viewBoxWidth = viewBox.width || clientWidth;
-    const viewBoxHeight = viewBox.height || clientHeight;
+    const {
+        width: viewBoxWidth,
+        height: viewBoxHeight,
+    } = getSVGViewBox(el);
     const scaleX = clientWidth / viewBoxWidth;
     const scaleY = clientHeight / viewBoxHeight;
 
-    const preserveAspectRatio = (el as SVGSVGElement).preserveAspectRatio.baseVal;
+    const preserveAspectRatio = el.preserveAspectRatio.baseVal;
     // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
     const align = preserveAspectRatio.align;
     // 1 : meet 2: slice
@@ -440,8 +454,7 @@ export function getSVGGraphicsOffset(
         return [0, 0];
     }
     const bbox = el.getBBox();
-    const svgElement = el.ownerSVGElement!;
-    const viewBox = svgElement.viewBox.baseVal;
+    const viewBox = getSVGViewBox(el.ownerSVGElement!);
     const left = bbox.x - viewBox.x;
     const top = bbox.y - viewBox.y;
 
