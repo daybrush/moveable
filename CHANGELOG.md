@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.2] - 2020-04-01
+* `moveable` 0.16.2
+* `react-moveable` 0.19.1
+* `preact-moveable` 0.18.1
+* `ngx-moveable` 0.12.1
+* `svelte-moveable` 0.7.1
+
+### Fixed
+* Fix SVG Firefox Issue #211
+* when isDisplaySnapDigit={false} the number is displayed but set to 0 #200
+
 
 ## [0.16.1] - 2020-03-31
 * `moveable` 0.16.1

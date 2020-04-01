@@ -387,7 +387,7 @@ export function getSVGViewBox(el: SVGSVGElement) {
     const clientWidth = el.clientWidth;
     const clientHeight = el.clientHeight;
     const viewBox = el.viewBox;
-    const baseVal = viewBox && viewBox.baseVal || { x: 0, y: 0, width: 0, height: 0 };
+    const baseVal = (viewBox && viewBox.baseVal) || { x: 0, y: 0, width: 0, height: 0 };
 
     return {
         x: baseVal.x,
