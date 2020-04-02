@@ -64,19 +64,19 @@ export default {
     ) {
         const {
             inputEvent,
-            pinchFlag,
+            isPinch,
             parentDirection,
             datas,
         } = e;
 
-        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputEvent.target));
+        const direction = parentDirection || (isPinch ? [1, 1] : getDirection(inputEvent.target));
 
         const { target, width, height } = moveable.state;
 
         if (!direction || !target) {
             return false;
         }
-        !pinchFlag && setDragStart(moveable, { datas });
+        !isPinch && setDragStart(moveable, { datas });
 
         datas.datas = {};
         datas.direction = direction;
@@ -123,12 +123,13 @@ export default {
         const {
             datas,
             distX, distY,
-            parentFlag, pinchFlag,
+            parentFlag, isPinch,
             parentDistance, parentScale, inputEvent,
             parentKeepRatio,
             dragClient,
             parentDist,
         } = e;
+
         const {
             direction,
             isResize,
@@ -170,7 +171,7 @@ export default {
             distWidth = (parentScale[0] - 1) * startOffsetWidth;
             distHeight = (parentScale[1] - 1) * startOffsetHeight;
 
-        } else if (pinchFlag) {
+        } else if (isPinch) {
             if (parentDistance) {
                 distWidth = parentDistance;
                 distHeight = parentDistance * startOffsetHeight / startOffsetWidth;
@@ -214,7 +215,7 @@ export default {
         }
         let snapDist = [0, 0];
 
-        if (!pinchFlag) {
+        if (!isPinch) {
             snapDist = checkSnapSize(
                 moveable, nextWidth,
                 nextHeight, direction,
@@ -284,7 +285,7 @@ export default {
             return;
         }
 
-        const inverseDelta = !parentFlag && pinchFlag
+        const inverseDelta = !parentFlag && isPinch
             ? [0, 0]
             : getResizeDist(
                 moveable,
@@ -299,10 +300,10 @@ export default {
             direction,
             dist: [distWidth, distHeight],
             delta,
-            isPinch: !!pinchFlag,
+            isPinch: !!isPinch,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable.state, inverseDelta, inputEvent, false),
+                setCustomDrag(moveable.state, inverseDelta, inputEvent, !!isPinch, false),
             ) as OnDrag,
         });
         triggerEvent(moveable, "onResize", params);

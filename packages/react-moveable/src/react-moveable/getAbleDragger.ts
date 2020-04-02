@@ -36,7 +36,7 @@ export function triggerAble<T extends IObject<any>>(
     const events = ables.filter((able: any) => able[eventName]);
     const datas = e.datas;
     const renderDatas = datas.render || (datas.render = {});
-    const renderEvent = {...e, datas: renderDatas };
+    const renderEvent = {...e, datas: renderDatas, originalDatas: datas };
 
     const results = events.filter((able: any) => {
         const condition = isStart && able[conditionName];
@@ -44,7 +44,7 @@ export function triggerAble<T extends IObject<any>>(
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
         if (!condition || condition(e, moveable)) {
-            return able[eventName](moveable, {...e, datas: nextDatas });
+            return able[eventName](moveable, {...e, datas: nextDatas, originalDatas: datas });
         }
         return false;
     });

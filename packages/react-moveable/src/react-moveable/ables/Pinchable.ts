@@ -26,7 +26,7 @@ export default {
         moveable: MoveableManager<PinchableProps, SnappableState>,
         e: any,
     ) {
-        const { datas, clientX, clientY, touches, inputEvent, targets } = e;
+        const { datas, touches, targets } = e;
         const { pinchable, ables } = moveable.props;
 
         if (!pinchable) {
@@ -59,12 +59,10 @@ export default {
         pinchAbles.forEach(able => {
             datas[able.name + "Datas"] = {};
             const ableEvent: any = {
+                ...e,
                 datas: datas[able.name + "Datas"],
-                clientX,
-                clientY,
-                inputEvent,
                 parentRotate,
-                pinchFlag: true,
+                isPinch: true,
             };
             able[controlEventName]!(moveable, ableEvent);
         });
@@ -78,7 +76,7 @@ export default {
         moveable: MoveableManager<PinchableProps>,
         e: any,
     ) {
-        const { datas, clientX, clientY, scale: pinchScale, distance, touches, inputEvent, targets } = e;
+        const { datas, scale: pinchScale, distance, touches, inputEvent, targets } = e;
         if (!datas.isPinch) {
             return;
         }
@@ -97,13 +95,12 @@ export default {
 
         ables.forEach(able => {
             able[controlEventName]!(moveable, {
-                clientX,
-                clientY,
+                ...e,
                 datas: datas[able.name + "Datas"],
                 inputEvent,
                 parentDistance,
                 parentRotate,
-                pinchFlag: true,
+                isPinch: true,
             } as any);
         });
         return params;
@@ -112,7 +109,7 @@ export default {
         moveable: MoveableManager<PinchableProps>,
         e: any,
     ) {
-        const { datas, clientX, clientY, isPinch, inputEvent, targets } = e;
+        const { datas, isPinch, inputEvent, targets } = e;
         if (!datas.isPinch) {
             return;
         }
@@ -129,12 +126,11 @@ export default {
 
         ables.forEach(able => {
             able[controlEventName]!(moveable, {
-                clientX,
-                clientY,
+                ...e,
                 isDrag: isPinch,
                 datas: datas[able.name + "Datas"],
                 inputEvent,
-                pinchFlag: true,
+                isPinch: true,
             } as any);
         });
         return isPinch;

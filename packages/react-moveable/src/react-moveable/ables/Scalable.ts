@@ -56,8 +56,8 @@ export default {
         moveable: MoveableManager<ScalableProps & DraggableProps, SnappableState>,
         e: any) {
 
-        const { datas, pinchFlag, inputEvent, parentDirection } = e;
-        const direction = parentDirection || (pinchFlag ? [1, 1] : getDirection(inputEvent.target));
+        const { datas, isPinch, inputEvent, parentDirection } = e;
+        const direction = parentDirection || (isPinch ? [1, 1] : getDirection(inputEvent.target));
         const {
             width,
             height,
@@ -68,7 +68,7 @@ export default {
         if (!direction || !target) {
             return false;
         }
-        if (!pinchFlag) {
+        if (!isPinch) {
             setDragStart(moveable, { datas });
         }
 
@@ -110,7 +110,7 @@ export default {
             parentScale,
             parentDistance,
             parentKeepRatio,
-            parentFlag, pinchFlag, inputEvent,
+            parentFlag, isPinch, inputEvent,
             dragClient,
             parentDist,
         } = e;
@@ -144,7 +144,7 @@ export default {
         if (parentScale) {
             scaleX = parentScale[0];
             scaleY = parentScale[1];
-        } else if (pinchFlag) {
+        } else if (isPinch) {
             if (parentDistance) {
                 scaleX = (width + parentDistance) / width;
                 scaleY = (height + parentDistance * height / width) / height;
@@ -206,7 +206,7 @@ export default {
         }
         let snapDist = [0, 0];
 
-        if (!pinchFlag) {
+        if (!isPinch) {
             snapDist = checkSnapScale(
                 moveable,
                 nowDist,
@@ -280,7 +280,7 @@ export default {
         if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
             return false;
         }
-        const inverseDelta = !parentFlag && pinchFlag
+        const inverseDelta = !parentFlag && isPinch
             ? [0, 0]
             : getScaleDist(moveable, delta, direction, dragClient);
 
@@ -290,10 +290,10 @@ export default {
             dist: nowDist,
             delta,
             transform: `${transform} scale(${scaleX}, ${scaleY})`,
-            isPinch: !!pinchFlag,
+            isPinch: !!isPinch,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable.state, inverseDelta, inputEvent, false),
+                setCustomDrag(moveable.state, inverseDelta, inputEvent, isPinch, false),
             ) as OnDrag,
         });
         triggerEvent(moveable, "onScale", params);

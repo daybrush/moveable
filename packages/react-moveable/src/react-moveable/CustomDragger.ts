@@ -3,13 +3,23 @@ import { convertDragDist } from "./utils";
 
 export function setCustomDrag(
     state: MoveableManagerState<any>,
-    delta: number[], inputEvent: any,
-    isConvert: boolean = true,
+    delta: number[],
+    inputEvent: any,
+    isPinch: boolean,
+    isConvert: boolean,
 ) {
     const result = state.dragger!.move(delta, inputEvent);
+
+    const datas = result.datas;
+    const draggableDatas = datas.draggable  || (datas.draggable = {});
+
     return {
         ...(isConvert ? convertDragDist(state, result) : result),
+        isDrag: true,
+        isPinch: !!isPinch,
         parentEvent: true,
+        datas: draggableDatas,
+        originalDatas: datas,
     };
 }
 

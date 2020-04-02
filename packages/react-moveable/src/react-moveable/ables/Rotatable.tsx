@@ -180,7 +180,7 @@ export default {
         const {
             datas,
             clientX, clientY,
-            parentRotate, parentFlag, pinchFlag,
+            parentRotate, parentFlag, isPinch,
             isRequest,
         } = e;
         const {
@@ -198,7 +198,7 @@ export default {
         datas.left = left;
         datas.top = top;
 
-        if (isRequest || pinchFlag || parentFlag) {
+        if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
 
             datas.beforeInfo = {
@@ -242,7 +242,7 @@ export default {
         moveable: MoveableManager<RotatableProps>,
         e: any,
     ) {
-        const { datas, clientX, clientY, parentRotate, parentFlag, pinchFlag } = e;
+        const { datas, clientX, clientY, parentRotate, parentFlag, isPinch } = e;
         const {
             direction,
             beforeDirection,
@@ -275,7 +275,7 @@ export default {
                 = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startRotate);
             [beforeDelta, beforeDist, beforeRotate]
                 = getParentDeg(moveable, rect, beforeInfo, parentDist, direction, startRotate);
-        } else if (pinchFlag || parentFlag) {
+        } else if (isPinch || parentFlag) {
             [delta, dist, rotate]
                 = getDeg(moveable, rect, afterInfo, parentRotate, direction, startRotate, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate]
@@ -299,7 +299,7 @@ export default {
             beforeDelta,
             beforeRotate,
             transform: `${datas.transform} rotate(${dist}deg)`,
-            isPinch: !!pinchFlag,
+            isPinch: !!isPinch,
         });
         triggerEvent(moveable, "onRotate", params);
 
@@ -397,7 +397,7 @@ export default {
 
                 const dragResult = Draggable.drag(
                     child,
-                    setCustomDrag(child.state, delta, inputEvent, false),
+                    setCustomDrag(child.state, delta, inputEvent, !!e.isPinch, false),
                 );
                 result.drag = dragResult;
             },
