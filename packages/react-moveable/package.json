@@ -87,7 +87,7 @@
     "react-css-styled": "^0.1.4"
   },
   "peerDependencies": {
-    "@daybrush/drag": ">=0.12.0",
+    "@daybrush/drag": ">=0.13.1",
     "@daybrush/utils": ">=0.10.1",
     "framework-utils": ">=0.3.4",
     "react-css-styled": ">=0.1.3",

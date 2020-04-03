@@ -3,6 +3,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.16.3] - 2020-04-02
+* `moveable` 0.16.3
+* `react-moveable` 0.19.2
+* `preact-moveable` 0.18.2
+* `ngx-moveable` 0.12.2
+* `svelte-moveable` 0.7.2
+
+### Fixed
+* isPinch is undefined during onDrag (when actually pinching on mobile) #212, #213
+* Pinch Central Problem #139
+
+
 ## [0.16.2] - 2020-04-01
 * `moveable` 0.16.2
 * `react-moveable` 0.19.1
