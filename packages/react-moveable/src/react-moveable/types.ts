@@ -1048,6 +1048,7 @@ export interface OnCustomDrag extends Position {
     inputEvent: any;
     isDrag: boolean;
     datas: IObject<any>;
+    originalDatas: IObject<any>;
     parentEvent: boolean;
     parentDragger: CustomDragger;
 }

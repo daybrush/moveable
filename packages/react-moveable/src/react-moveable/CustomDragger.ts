@@ -9,8 +9,7 @@ export function setCustomDrag(
     isConvert: boolean,
 ) {
     const result = state.dragger!.move(delta, inputEvent);
-
-    const datas = result.datas;
+    const datas = result.originalDatas || result.datas;
     const draggableDatas = datas.draggable  || (datas.draggable = {});
 
     return {
@@ -19,7 +18,6 @@ export function setCustomDrag(
         isPinch: !!isPinch,
         parentEvent: true,
         datas: draggableDatas,
-        originalDatas: datas,
     };
 }
 
@@ -30,13 +28,16 @@ export default class CustomDragger {
     private startY = 0;
     private isDrag = false;
     private isFlag = false;
-    private datas = {};
+    private datas: any = {
+        draggable: {},
+    };
 
     public dragStart(client: number[], inputEvent: any)  {
         this.isDrag = false;
         this.isFlag = false;
-        this.datas = {};
-
+        this.datas = {
+            draggable: {},
+        };
         return this.move(client, inputEvent);
     }
     public drag(client: number[], inputEvent: any) {
@@ -77,7 +78,8 @@ export default class CustomDragger {
             distY: clientY - this.startY,
             deltaX: delta[0],
             deltaY: delta[1],
-            datas: this.datas,
+            datas: this.datas.draggable,
+            originalDatas: this.datas,
             parentEvent: true,
             parentDragger: this,
         };

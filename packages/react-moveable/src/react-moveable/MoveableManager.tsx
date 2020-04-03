@@ -19,7 +19,7 @@ import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester } from "./types";
-import { getAbleDragger, triggerAble } from "./getAbleDragger";
+import { getAbleDragger, triggerAble, getAreaAbleDragger } from "./getAbleDragger";
 import CustomDragger from "./CustomDragger";
 import { getRad, plus } from "@moveable/matrix";
 import { IObject } from "@daybrush/utils";
@@ -197,7 +197,7 @@ export default class MoveableManager<T = {}, U = {}>
 
         if (target && hasTargetAble && !this.targetDragger) {
             if (dragArea) {
-                this.targetDragger = getAbleDragger(this, this.areaElement!, "targetAbles", "");
+                this.targetDragger = getAreaAbleDragger(this, "targetAbles", "");
             } else {
                 this.targetDragger = getAbleDragger(this, target!, "targetAbles", "");
             }

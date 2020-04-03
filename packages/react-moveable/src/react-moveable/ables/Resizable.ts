@@ -1,12 +1,11 @@
 import {
     throttle, getDirection, triggerEvent,
-    getAbsolutePosesByState, fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize,
+    fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize,
 } from "../utils";
 import {
     setDragStart,
     getDragDist,
     getResizeDist,
-    getPosByReverseDirection,
     getStartDirection,
     getAbsoluteFixedPosition,
 } from "../DraggerUtils";
@@ -69,7 +68,7 @@ export default {
             datas,
         } = e;
 
-        const direction = parentDirection || (isPinch ? [1, 1] : getDirection(inputEvent.target));
+        const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
 
         const { target, width, height } = moveable.state;
 
@@ -160,9 +159,17 @@ export default {
         const isWidth = sizeDirection[0] || !sizeDirection[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
         const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
-        const fixedPosition = dragClient || (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
+        let fixedPosition = dragClient;
         let distWidth: number = 0;
         let distHeight: number = 0;
+
+        if (!dragClient) {
+            if (!parentFlag && isPinch) {
+                fixedPosition = getAbsoluteFixedPosition(moveable, [0, 0]);
+            } else {
+                fixedPosition = (keepRatio ? datas.fixedOriginalPosition : datas.fixedPosition);
+            }
+        }
 
         if (parentDist) {
             distWidth = parentDist[0];
@@ -170,7 +177,6 @@ export default {
         } else if (parentScale) {
             distWidth = (parentScale[0] - 1) * startOffsetWidth;
             distHeight = (parentScale[1] - 1) * startOffsetHeight;
-
         } else if (isPinch) {
             if (parentDistance) {
                 distWidth = parentDistance;
@@ -285,9 +291,7 @@ export default {
             return;
         }
 
-        const inverseDelta = !parentFlag && isPinch
-            ? [0, 0]
-            : getResizeDist(
+        const inverseDelta = getResizeDist(
                 moveable,
                 nextWidth, nextHeight,
                 startDirection, fixedPosition, transformOrigin);
@@ -374,7 +378,7 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+        const startPos = getAbsoluteFixedPosition(moveable, direction);
 
         const events = triggerChildAble(
             moveable,
@@ -382,7 +386,7 @@ export default {
             "dragControlStart",
             datas,
             (child, childDatas) => {
-                const pos = getPosByReverseDirection(getAbsolutePosesByState(child.state), direction);
+                const pos = getAbsoluteFixedPosition(child, direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - startPos[0], pos[1] - startPos[1], 1],
@@ -425,7 +429,7 @@ export default {
             offsetWidth / (offsetWidth - dist[0]),
             offsetHeight / (offsetHeight - dist[1]),
         ];
-        const fixedPosition = datas.fixedOriginalPosition;
+        const fixedPosition = getAbsoluteFixedPosition(moveable, datas.direction);
 
         const events = triggerChildAble(
             moveable,

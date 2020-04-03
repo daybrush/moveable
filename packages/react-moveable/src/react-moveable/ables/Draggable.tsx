@@ -7,7 +7,7 @@ import {
     OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState, Renderer,
 } from "../types";
 import MoveableGroup from "../MoveableGroup";
-import { triggerChildAble } from "../groupUtils";
+import { triggerChildDragger } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 import { IObject } from "@daybrush/utils";
 
@@ -107,9 +107,9 @@ export default {
         moveable: MoveableManager<DraggableProps, any>,
         e: any,
     ): OnDrag | undefined {
-        const { datas, parentEvent, parentFlag } = e;
+        const { datas, parentEvent, parentFlag, isPinch } = e;
         let { distX, distY } = e;
-        const { isPinch, isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
+        const { isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
 
         if (!isDrag) {
             return;
@@ -151,6 +151,8 @@ export default {
             distX += verticalOffset;
             distY += horizontalOffset;
         }
+        datas.passDeltaX = distX - (datas.passDistX || 0);
+        datas.passDeltaY = distY - (datas.passDistY || 0);
         datas.passDistX = distX;
         datas.passDistY = distY;
         const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
@@ -215,14 +217,15 @@ export default {
         return isDrag;
     },
     dragGroupStart(moveable: MoveableGroup, e: any) {
-        const datas = e.datas;
+        const { datas, clientX, clientY } = e;
 
         const params = this.dragStart(moveable, e);
 
         if (!params) {
             return false;
         }
-        const events = triggerChildAble(moveable, this, "dragStart", datas, e);
+        const events = triggerChildDragger(moveable, this, "dragStart", [clientX, clientY], e, false);
+
         const nextParams: OnDragGroupStart = {
             ...params,
             targets: moveable.props.targets!,
@@ -235,14 +238,15 @@ export default {
         return datas.isDrag ? params : false;
     },
     dragGroup(moveable: MoveableGroup, e: any) {
-        const datas = e.datas;
+        const { datas } = e;
 
         if (!datas.isDrag) {
             return;
         }
         const params = this.drag(moveable, e);
-        const { passDistX, passDistY } = e.datas;
-        const events = triggerChildAble(moveable, this, "drag", datas, { ...e, distX: passDistX, distY: passDistY });
+        const { passDeltaX, passDeltaY } = e.datas;
+
+        const events = triggerChildDragger(moveable, this, "drag", [passDeltaX, passDeltaY], e, false);
 
         if (!params) {
             return;
@@ -263,7 +267,11 @@ export default {
             return;
         }
         this.dragEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragEnd", datas, e);
+
+        datas.childDraggers.forEach(() => {
+
+        })
+        triggerChildDragger(moveable, this, "dragEnd", [0, 0], e, false);
         triggerEvent(moveable, "onDragGroupEnd", fillParams(moveable, e, {
             targets: moveable.props.targets!,
             isDrag,

@@ -87,11 +87,40 @@ export function triggerAble<T extends IObject<any>>(
         triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
     }
 }
+export function getAreaAbleDragger<T>(
+    moveable: MoveableManager<T>,
+    ableType: string,
+    eventAffix: string,
+) {
+    const controlBox = moveable.controlBox.getElement();
+
+    return getAbleDragger(moveable, controlBox, ableType, eventAffix, {
+        dragstart: (e: any) => {
+            const eventTarget = e.inputEvent.target;
+            const areaElement = moveable.areaElement;
+
+            if (eventTarget === areaElement || eventTarget.className.indexOf("moveable-area") > -1) {
+                return true;
+            }
+            return false;
+        },
+        pinchstart: (e: any) => {
+            const eventTarget = e.inputEvent.target;
+            const areaElement = moveable.areaElement;
+
+            if (eventTarget === areaElement || eventTarget.className.indexOf("moveable-area") > -1) {
+                return true;
+            }
+            return false;
+        },
+    });
+}
 export function getAbleDragger<T>(
     moveable: MoveableManager<T>,
     target: HTMLElement | SVGElement,
     ableType: string,
     eventAffix: string,
+    conditionFunctions: IObject<any> = {},
 ) {
     const options: IObject<any> = {
         container: window,
@@ -99,8 +128,14 @@ export function getAbleDragger<T>(
     };
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
-            options[`${eventOperation}${eventType.toLowerCase()}`]
-                = (e: any) => triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
+            const eventName = `${eventOperation}${eventType.toLowerCase()}`;
+            options[eventName]
+                = (e: any) => {
+                    if (conditionFunctions[eventName] && !conditionFunctions[eventName](e)) {
+                        return false;
+                    }
+                    return triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
+                };
         });
     });
 

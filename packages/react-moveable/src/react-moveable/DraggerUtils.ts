@@ -222,7 +222,7 @@ export function getScaleDist(
     moveable: MoveableManager<any>,
     scale: number[],
     direction: number[],
-    dragClient?: number[],
+    fixedPosition: number[],
 ) {
     const state = moveable.state;
     const {
@@ -239,12 +239,7 @@ export function getScaleDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
 
-    const startPos = dragClient ? dragClient : getStartPos(getAbsolutePosesByState(moveable.state), direction);
-
-    const dist = getDist(
-        startPos, nextMatrix, width, height, n,
-        direction,
-    );
+    const dist = getDist(fixedPosition, nextMatrix, width, height, n, direction);
 
     return minus(dist, [groupLeft, groupTop]);
 }
@@ -253,8 +248,6 @@ export function getResizeDist(
     moveable: MoveableManager<GroupableProps>,
     width: number,
     height: number,
-    // prevWidth: number,
-    // prevHeight: number,
     direction: number[],
     fixedPosition: number[],
     transformOrigin: string[],

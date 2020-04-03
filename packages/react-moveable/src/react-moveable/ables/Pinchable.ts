@@ -58,6 +58,10 @@ export default {
 
         pinchAbles.forEach(able => {
             datas[able.name + "Datas"] = {};
+
+            if (!able[controlEventName]) {
+                return;
+            }
             const ableEvent: any = {
                 ...e,
                 datas: datas[able.name + "Datas"],
@@ -94,6 +98,9 @@ export default {
         const controlEventName = `drag${targets ? "Group" : ""}Control` as "dragControl";
 
         ables.forEach(able => {
+            if (!able[controlEventName]) {
+                return;
+            }
             able[controlEventName]!(moveable, {
                 ...e,
                 datas: datas[able.name + "Datas"],
@@ -125,6 +132,9 @@ export default {
         const controlEventName = `drag${targets ? "Group" : ""}ControlEnd` as "dragControlEnd";
 
         ables.forEach(able => {
+            if (!able[controlEventName]) {
+                return;
+            }
             able[controlEventName]!(moveable, {
                 ...e,
                 isDrag: isPinch,

@@ -582,14 +582,11 @@ export function recheckSizeByTwoDirection(
 export function checkSizeDist(
     moveable: MoveableManager<any, any>,
     getNextPoses: (widthOffset: number, heightOffset: number) => number[][],
-    matrix: number[],
     width: number,
     height: number,
     direction: number[],
-    snapDirection: number[],
     fixedPos: number[],
     isRequest: boolean,
-    is3d: boolean,
     datas: any,
 ) {
     const poses = getAbsolutePosesByState(moveable.state);
@@ -733,14 +730,13 @@ export function checkSnapSize(
                 direction,
                 is3d,
             );
-        }, matrix, width, height, direction, direction, fixedPos, isRequest, is3d, datas,
+        }, width, height, direction, fixedPos, isRequest, datas,
     );
 }
 export function checkSnapScale(
     moveable: MoveableManager<ScalableProps, any>,
     scale: number[],
     direction: number[],
-    snapDirection: number[],
     fixedPos: number[],
     isRequest: boolean,
     datas: any,
@@ -765,13 +761,10 @@ export function checkSnapScale(
                 is3d,
             );
         },
-        scaleMatrix(datas, scale),
         width, height,
         direction,
-        snapDirection,
         fixedPos,
         isRequest,
-        is3d,
         datas,
     );
 

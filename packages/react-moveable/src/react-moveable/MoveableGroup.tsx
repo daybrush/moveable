@@ -1,7 +1,7 @@
 import MoveableManager from "./MoveableManager";
 import { GroupableProps, MoveableManagerProps } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
-import { getAbleDragger } from "./getAbleDragger";
+import { getAbleDragger, getAreaAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getTargetInfo, throttle, getAbsolutePosesByState, equals } from "./utils";
@@ -111,7 +111,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
             state.target = this.areaElement;
 
             this.controlBox.getElement().style.display = "block";
-            this.targetDragger = getAbleDragger(this, state.target!, "targetAbles", "Group");
+            this.targetDragger = getAreaAbleDragger(this, "targetAbles", "Group");
             this.controlDragger = getAbleDragger(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
         }
         const isContainerChanged = !equals(prevProps.container, props.container);

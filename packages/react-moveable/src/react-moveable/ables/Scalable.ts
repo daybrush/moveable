@@ -57,7 +57,7 @@ export default {
         e: any) {
 
         const { datas, isPinch, inputEvent, parentDirection } = e;
-        const direction = parentDirection || (isPinch ? [1, 1] : getDirection(inputEvent.target));
+        const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
         const {
             width,
             height,
@@ -132,14 +132,28 @@ export default {
             throttleScale,
             parentMoveable,
         } = moveable.props;
+        let sizeDirection = direction;
+
+        if (!direction[0] && !direction[1]) {
+            sizeDirection = [1, 1];
+        }
         const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const state = moveable.state;
-        const isWidth = direction[0] || !direction[1];
+        const isWidth = sizeDirection[0] || !sizeDirection[1];
         const startWidth = width * startScale[0];
         const startHeight = height * startScale[1];
         const ratio = isWidth ? startHeight / startWidth : startWidth / startHeight;
         let scaleX: number = 1;
         let scaleY: number = 1;
+        let fixedPosition = dragClient;
+
+        if (!dragClient) {
+            if (!parentFlag && isPinch) {
+                fixedPosition = getAbsoluteFixedPosition(moveable, [0, 0]);
+            } else {
+                fixedPosition = datas.fixedPosition;
+            }
+        }
 
         if (parentScale) {
             scaleX = parentScale[0];
@@ -151,21 +165,21 @@ export default {
             }
         } else {
             const dist = getDragDist({ datas, distX, distY });
-            let distWidth = direction[0] * dist[0];
-            let distHeight = direction[1] * dist[1];
+            let distWidth = sizeDirection[0] * dist[0];
+            let distHeight = sizeDirection[1] * dist[1];
 
             if (keepRatio && width && height) {
                 const rad = getRad([0, 0], dist);
-                const standardRad = getRad([0, 0], direction);
+                const standardRad = getRad([0, 0], sizeDirection);
                 const ratioRad = getRad([0, 0], [startWidth, startHeight]);
                 const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
-                if (!direction[0]) {
+                if (!sizeDirection[0]) {
                     // top, bottom
                     distHeight = signSize;
                     distWidth = getKeepRatioWidth(distHeight, isWidth, ratio);
-                } else if (!direction[1]) {
+                } else if (!sizeDirection[1]) {
                     // left, right
                     distWidth = signSize;
                     distHeight = getKeepRatioHeight(distWidth, isWidth, ratio);
@@ -178,8 +192,9 @@ export default {
             scaleX = (width + distWidth) / width;
             scaleY = (height + distHeight) / height;
         }
-        scaleX = direction[0] || keepRatio ? scaleX * startScale[0] : startScale[0];
-        scaleY = direction[1] || keepRatio ? scaleY * startScale[1] : startScale[1];
+
+        scaleX = sizeDirection[0] || keepRatio ? scaleX * startScale[0] : startScale[0];
+        scaleY = sizeDirection[1] || keepRatio ? scaleY * startScale[1] : startScale[1];
 
         if (scaleX === 0) {
             scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -190,13 +205,8 @@ export default {
 
         const nowDist = [scaleX / startScale[0], scaleY / startScale[1]];
         let scale = [scaleX, scaleY];
-        let snapDirection = direction;
 
-        if (moveable.props.groupable) {
-            snapDirection = [
-                (nowDist[0] >= 0 ? 1 : -1) * direction[0],
-                (nowDist[1] >= 0 ? 1 : -1) * direction[1],
-            ];
+        if (!isPinch && moveable.props.groupable) {
             const snapRenderInfo = state.snapRenderInfo || {};
             const stateDirection = snapRenderInfo.direction;
 
@@ -211,7 +221,6 @@ export default {
                 moveable,
                 nowDist,
                 direction,
-                snapDirection,
                 datas.fixedPosition,
                 parentDist,
                 datas,
@@ -219,7 +228,7 @@ export default {
         }
 
         if (keepRatio) {
-            if (direction[0] && direction[1] && snapDist[0] && snapDist[1]) {
+            if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
                 if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
                     snapDist[1] = 0;
                 } else {
@@ -238,7 +247,7 @@ export default {
             }
 
             if (
-                (direction[0] && !direction[1])
+                (sizeDirection[0] && !sizeDirection[1])
                 || (snapDist[0] && !snapDist[1])
                 || (isNoSnap && isWidth)
             ) {
@@ -247,7 +256,7 @@ export default {
 
                 nowDist[1] = snapHeight / height / startScale[1];
             } else if (
-                (!direction[0] && direction[1])
+                (!sizeDirection[0] && sizeDirection[1])
                 || (!snapDist[0] && snapDist[1])
                 || (isNoSnap && !isWidth)
             ) {
@@ -280,10 +289,7 @@ export default {
         if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
             return false;
         }
-        const inverseDelta = !parentFlag && isPinch
-            ? [0, 0]
-            : getScaleDist(moveable, delta, direction, dragClient);
-
+        const inverseDelta = getScaleDist(moveable, delta, direction, fixedPosition);
         const params = fillParams<OnScale>(moveable, e, {
             scale,
             direction,
@@ -324,9 +330,6 @@ export default {
         }
         const direction = params.direction;
         const startPos = getAbsoluteFixedPosition(moveable, direction);
-
-        datas.startPos = startPos;
-
         const events = triggerChildAble(
             moveable,
             this,
@@ -367,7 +370,7 @@ export default {
         }
         const keepRatio = moveable.props.keepRatio;
         const { scale } = params;
-        const startPos = datas.startPos;
+        const startPos = getAbsoluteFixedPosition(moveable, datas.direction);
 
         const events = triggerChildAble(
             moveable,

@@ -129,6 +129,7 @@ class App extends React.Component<any, any> {
                             ev.target.style.cssText += groupItem.toCSS();
                         });
                     }}
+
                     onResizeGroupStart={e => {
                         console.log("rgs", e);
 
@@ -160,7 +161,7 @@ class App extends React.Component<any, any> {
                         });
                     }}
                     onSnap={e => {
-                        console.log(e);
+                        // console.log(e);
                     }}
                     onScaleGroupStart={e => {
                         console.log("scs", e);
@@ -212,9 +213,9 @@ class App extends React.Component<any, any> {
                     // snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
+                    scalable={true}
                     // scalable={true}
-                    // scalable={true}
-                    resizable={true}
+                    // resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
                     // resizable={isResizable}
@@ -300,6 +301,9 @@ class App extends React.Component<any, any> {
                         target.style.cssText += item.toCSS();
                     }}
                     onClick={e => {
+                        console.log(e);
+                    }}
+                    onPinchEnd={e => {
                         console.log(e);
                     }}
                 />
