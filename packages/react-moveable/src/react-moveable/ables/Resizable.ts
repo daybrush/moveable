@@ -449,6 +449,7 @@ export default {
 
                 return {
                     ...e,
+                    parentDist: null,
                     parentScale,
                     dragClient: plus(fixedPosition, [clientX, clientY]),
                     parentKeepRatio: keepRatio,

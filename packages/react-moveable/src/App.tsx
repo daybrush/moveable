@@ -114,6 +114,14 @@ class App extends React.Component<any, any> {
                     }}
                     onRotateGroupStart={e => {
                         console.log("rgs", e);
+                        e.events.forEach(ev => {
+                            const groupItem = this.itemMap.get(ev.target)!;
+
+                            ev.dragStart && ev.dragStart.set([
+                                parseFloat(groupItem.get("tx")),
+                                parseFloat(groupItem.get("ty")),
+                            ]);
+                        });
                     }}
                     onRotateGroup={e => {
                         e.events.forEach(ev => {
@@ -131,12 +139,13 @@ class App extends React.Component<any, any> {
                     }}
 
                     onResizeGroupStart={e => {
-                        console.log("rgs", e);
+                        console.log("regs", e);
 
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
 
                             ev.setOrigin(["%", "%"]);
+                            console.log(ev.dragStart);
                             ev.dragStart && ev.dragStart.set([
                                 parseFloat(groupItem.get("tx")),
                                 parseFloat(groupItem.get("ty")),
@@ -144,7 +153,7 @@ class App extends React.Component<any, any> {
                         });
                     }}
                     onResizeGroup={e => {
-
+                        console.log(e.events.map(e => e.drag.beforeTranslate));
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
 
@@ -167,6 +176,7 @@ class App extends React.Component<any, any> {
                         console.log("scs", e);
                     }}
                     onScaleGroup={e => {
+                        console.log(e);
                         e.events.forEach(ev => {
                             // console.log("sca", ev.drag.dist);
                             const groupItem = this.itemMap.get(ev.target)!;
@@ -421,7 +431,7 @@ class App extends React.Component<any, any> {
     }
     public componentDidMount() {
         const keycon = new KeyController(window);
-        const mvb = (this as any).moveable;
+        const mvb = (this as any).ab;
         let requester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });

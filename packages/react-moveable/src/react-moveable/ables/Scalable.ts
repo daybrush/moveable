@@ -155,7 +155,10 @@ export default {
             }
         }
 
-        if (parentScale) {
+        if (parentDist) {
+            scaleX = (width + parentDist[0]) / width;
+            scaleY = (height + parentDist[1]) / height;
+        } else if (parentScale) {
             scaleX = parentScale[0];
             scaleY = parentScale[1];
         } else if (isPinch) {
@@ -390,6 +393,7 @@ export default {
 
                 return {
                     ...e,
+                    parentDist: null,
                     parentScale: scale,
                     parentKeepRatio: keepRatio,
                     dragClient: plus(startPos, [clientX, clientY]),
