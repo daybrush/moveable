@@ -96,6 +96,7 @@ export default {
         if (result !== false) {
             datas.isScale = true;
             moveable.state.snapRenderInfo = {
+                request: e.isRequest,
                 direction,
             };
 
@@ -113,6 +114,7 @@ export default {
             parentFlag, isPinch, inputEvent,
             dragClient,
             parentDist,
+            isRequest,
         } = e;
         const {
             prevDist,
@@ -214,7 +216,7 @@ export default {
             const stateDirection = snapRenderInfo.direction;
 
             if (isArray(stateDirection) && (stateDirection[0] || stateDirection[1])) {
-                state.snapRenderInfo = { direction };
+                state.snapRenderInfo = { direction, request: e.isRequest, };
             }
         }
         let snapDist = [0, 0];
@@ -225,7 +227,7 @@ export default {
                 nowDist,
                 direction,
                 datas.fixedPosition,
-                parentDist,
+                isRequest,
                 datas,
             );
         }

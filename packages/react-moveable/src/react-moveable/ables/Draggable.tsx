@@ -107,7 +107,7 @@ export default {
         moveable: MoveableManager<DraggableProps, any>,
         e: any,
     ): OnDrag | undefined {
-        const { datas, parentEvent, parentFlag, isPinch } = e;
+        const { datas, parentEvent, parentFlag, isPinch, isRequest } = e;
         let { distX, distY } = e;
         const { isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
 
@@ -134,7 +134,7 @@ export default {
 
         if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
             const [verticalInfo, horizontalInfo] = checkSnapDrag(
-                moveable, distX, distY, throttleDragRotate, datas,
+                moveable, distX, distY, throttleDragRotate, isRequest, datas,
             );
             const {
                 isSnap: isVerticalSnap,
@@ -267,10 +267,6 @@ export default {
             return;
         }
         this.dragEnd(moveable, e);
-
-        datas.childDraggers.forEach(() => {
-
-        })
         triggerChildDragger(moveable, this, "dragEnd", [0, 0], e, false);
         triggerEvent(moveable, "onDragGroupEnd", fillParams(moveable, e, {
             targets: moveable.props.targets!,

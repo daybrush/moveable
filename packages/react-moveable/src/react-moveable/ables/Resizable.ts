@@ -110,6 +110,7 @@ export default {
         if (result !== false) {
             datas.isResize = true;
             moveable.state.snapRenderInfo = {
+                request: e.isRequest,
                 direction,
             };
         }
@@ -127,6 +128,7 @@ export default {
             parentKeepRatio,
             dragClient,
             parentDist,
+            isRequest,
         } = e;
 
         const {
@@ -226,7 +228,7 @@ export default {
                 moveable, nextWidth,
                 nextHeight, direction,
                 datas.fixedOriginalPosition,
-                parentDist,
+                isRequest,
                 datas,
             );
         }

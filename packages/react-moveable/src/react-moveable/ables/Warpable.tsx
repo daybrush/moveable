@@ -119,7 +119,7 @@ export default {
             [width, 0],
             [0, height],
             [width, height],
-        ].map((p, i) => minus(p, transformOrigin));
+        ].map(p => minus(p, transformOrigin));
 
         datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.warpTargetMatrix, [x, y, 0, 1], 4));
         datas.startMatrix = createIdentityMatrix(4);
@@ -127,6 +127,7 @@ export default {
         datas.absolutePoses = getAbsolutePosesByState(state);
         datas.posIndexes = getPosIndexesByDirection(direction);
         state.snapRenderInfo = {
+            request: e.isRequest,
             direction,
         };
 
@@ -145,7 +146,7 @@ export default {
         moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
         e: any,
     ) {
-        const { datas } = e;
+        const { datas, isRequest } = e;
         let { distX, distY } = e;
         const {
             targetInverseMatrix, prevMatrix, isWarp, startMatrix,
@@ -173,6 +174,7 @@ export default {
                 vertical: verticalSnapInfo,
             } = checkSnapBounds(
                 moveable,
+                isRequest,
                 selectedPoses.map(pos => [pos[0] + distX, pos[1] + distY]),
             );
 

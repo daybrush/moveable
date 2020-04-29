@@ -1011,6 +1011,7 @@ export interface SnapRenderInfo {
     direction?: number[];
     snap?: boolean;
     center?: boolean;
+    request?: boolean;
 }
 
 /**

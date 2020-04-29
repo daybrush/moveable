@@ -234,7 +234,9 @@ export default {
         });
         const result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
-        moveable.state.snapRenderInfo = {};
+        moveable.state.snapRenderInfo = {
+            request: e.isRequest,
+        };
 
         return datas.isRotate ? params : false;
     },

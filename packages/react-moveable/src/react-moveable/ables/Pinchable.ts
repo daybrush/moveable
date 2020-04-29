@@ -72,6 +72,7 @@ export default {
         });
 
         moveable.state.snapRenderInfo = {
+            request: e.isRequest,
             direction: [0, 0],
         };
         return isPinch;
