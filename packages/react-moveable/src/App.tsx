@@ -200,6 +200,7 @@ class App extends React.Component<any, any> {
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
                     origin={true}
+                    // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
                     // dragArea={true}
                     draggable={true}

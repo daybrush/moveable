@@ -47,7 +47,7 @@ export interface MoveableDefaultProps {
     dragArea?: boolean;
     origin?: boolean;
     zoom?: number;
-    transformOrigin?: Array<string | number> | "";
+    transformOrigin?: Array<string | number> | string | "";
     edge?: boolean;
     ables?: Able[];
     className?: string;
@@ -130,8 +130,9 @@ export interface SnapGuidelineInfo {
     offset: number;
     guideline: Guideline;
 }
+export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, "target">>;
 export interface MoveableProps extends
-    MoveableManagerProps<any>,
+    ExcludeKey<MoveableManagerProps, "target">,
     DraggableProps,
     RotatableProps,
     ResizableProps,
@@ -144,6 +145,7 @@ export interface MoveableProps extends
     RenderProps {
         target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
+
 export type MoveableState = MoveableManagerState;
 
 export interface Able<T = any> {
