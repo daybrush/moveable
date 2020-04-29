@@ -26,6 +26,7 @@ export type MoveableManagerProps<T = {}> = {
  * @typedef
  * @memberof Moveable
  * @property - The target(s) to indicate Moveable Control Box. (default: null)
+ * @property - The target(s) to drag Moveable target(s) (default: target)
  * @property - Moveable Container. (default: parentElement)
  * @property - Moveable Root Container (No Transform Container). (default: container)
  * @property - You can specify the position of the rotation. (default: "top")
@@ -40,6 +41,7 @@ export type MoveableManagerProps<T = {}> = {
  */
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
+    dragTarget?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
     rootContainer?: HTMLElement | null;
     dragArea?: boolean;

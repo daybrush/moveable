@@ -38,6 +38,7 @@ export default class MoveableManager<T = {}, U = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState<U>> {
     public static defaultProps: Required<MoveableManagerProps> = {
         target: null,
+        dragTarget: null,
         container: null,
         rootContainer: null,
         origin: true,
@@ -178,9 +179,10 @@ export default class MoveableManager<T = {}, U = {}>
         const controlBoxElement = this.controlBox.getElement();
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
-        const target = this.props.target;
-        const prevTarget = prevProps.target;
-        const dragArea = this.props.dragArea;
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const prevTarget = prevProps.dragTarget || prevProps.target;
+        const dragArea = props.dragArea;
         const prevDragArea = prevProps.dragArea;
         const isTargetChanged = !dragArea && prevTarget !== target;
         const isUnset = (!hasTargetAble && this.targetDragger)
