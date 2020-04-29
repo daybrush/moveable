@@ -5,7 +5,7 @@ import {
     SnappableState, Guideline,
     SnapInfo, BoundInfo,
     ScalableProps, SnapPosInfo, RotatableProps,
-    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline,
+    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline, SnappableOptions,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
@@ -1072,6 +1072,7 @@ function renderElementGroup(
     isDisplaySnapDigit: boolean,
     snapDigit: number,
     index: number,
+    snapDistForamt: Required<SnappableOptions>["snapDistForamt"],
     React: Renderer,
 ) {
     return flat(group.map((elementGuidelines, i) => {
@@ -1097,7 +1098,7 @@ function renderElementGroup(
                 "guideline",
                 "dashed",
             )}
-                data-size={snapSize > 0 ? snapSize : ""}
+                data-size={snapSize > 0 ? snapDistForamt(snapSize) : ""}
                 key={`${directionName}LinkGuidline${i}-${j}`} style={{
                     [posName1]: `${minPos + linePos}px`,
                     [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
@@ -1256,6 +1257,7 @@ function renderGapGuidelines(
     gapGuidelines: GapGuideline[],
     type: "vertical" | "horizontal",
     [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    snapDistForamt: Required<SnappableOptions>["snapDistForamt"],
     React: any,
 ) {
     const {
@@ -1276,7 +1278,7 @@ function renderGapGuidelines(
                 "guideline",
                 "gap",
             )}
-            data-size={snapSize > 0 ? snapSize : ""}
+            data-size={snapSize > 0 ? snapDistForamt(snapSize) : ""}
             key={`${otherType}GapGuideline${i}`} style={{
                 [posName1]: `${renderPos[index]}px`,
                 [posName2]: `${renderPos[otherIndex]}px`,
@@ -1361,6 +1363,7 @@ export default {
             snapThreshold = 5,
             snapDigit = 0,
             isDisplaySnapDigit = true,
+            snapDistForamt = (v: number) => v,
         } = moveable.props;
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
@@ -1450,6 +1453,7 @@ export default {
                 gapVerticalGuidelines,
                 "vertical",
                 horizontalNames,
+                snapDistForamt,
                 React,
             ),
             ...renderGapGuidelines(
@@ -1457,6 +1461,7 @@ export default {
                 gapHorizontalGuidelines,
                 "horizontal",
                 verticalNames,
+                snapDistForamt,
                 React,
             ),
             ...renderElementGroup(
@@ -1470,6 +1475,7 @@ export default {
                 isDisplaySnapDigit,
                 snapDigit,
                 0,
+                snapDistForamt,
                 React,
             ),
             ...renderElementGroup(
@@ -1483,6 +1489,7 @@ export default {
                 isDisplaySnapDigit,
                 snapDigit,
                 1,
+                snapDistForamt,
                 React,
             ),
             ...renderSnapPoses(

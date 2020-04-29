@@ -209,10 +209,11 @@ class App extends React.Component<any, any> {
                     snapDigit={0}
                     bounds={{ left: 30, top: 20 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
-                    // verticalGuidelines={[150]}
-                    // horizontalGuidelines={[150]}
+                    verticalGuidelines={[150, 200]}
+                    horizontalGuidelines={[150, 200]}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
+                    snapDistForamt={d => `${d}px`}
                     elementGuidelines={[
                         // document.querySelector(".box1 span")!,
                         // document.querySelector(".emo img")!,
@@ -223,9 +224,9 @@ class App extends React.Component<any, any> {
                     // snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
-                    scalable={true}
                     // scalable={true}
-                    // resizable={true}
+                    // scalable={true}
+                    resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
                     // resizable={isResizable}
@@ -339,14 +340,14 @@ class App extends React.Component<any, any> {
                                 <img src="./emo.png" />
                             </div>
                         </div>
-                        <input type="text" style={{
+                        <div id="contented" contentEditable={true} style={{
                             position: "absolute",
                             left: "700px",
-                        }}/>
-                        <Moveable target={document.querySelector("input")}
+                        }}>AAA</div>
+                        <Moveable target={document.querySelector<HTMLElement>("#contented")}
                         draggable={true}
                             onDragStart={e => {
-                                return false;
+                                // return false;
                             }}
                         />
                         <div className="box box2" data-target="box2"><span>A</span></div>
@@ -431,23 +432,25 @@ class App extends React.Component<any, any> {
     }
     public componentDidMount() {
         const keycon = new KeyController(window);
-        const mvb = (this as any).ab;
+        const mvb = (this as any).moveable;
         let requester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", e => {
             if (!requester) {
-                requester = mvb.request("resizable", { direction: [0, 0] })!;
+                requester = mvb.request("draggable")!;
+                // requester = mvb.request("resizable", { direction: [0, 0] })!;
             }
-            requester.request({ deltaWidth: 10, deltaHeight: 0});
-            // requester.request({ deltaX: 10, deltaY: 0});
+            // requester.request({ deltaWidth: 10, deltaHeight: 0});
+            requester.request({ deltaX: 10, deltaY: 0 });
             e.inputEvent.preventDefault();
         }).keydown("left", e => {
             if (!requester) {
-                requester = mvb.request("resizable", { direction: [0, 0]})!;
+                requester = mvb.request("draggable")!;
+                // requester = mvb.request("resizable", { direction: [0, 0]})!;
             }
-            requester.request({ deltaWidth: -10, deltaHeight: 0});
-            // requester.request({ deltaX: -10, deltaY: 0});
+            // requester.request({ deltaWidth: -10, deltaHeight: 0});
+            requester.request({ deltaX: -10, deltaY: 0});
             e.inputEvent.preventDefault();
         }).keydown("up", e => {
             if (!requester) {

@@ -950,6 +950,7 @@ export interface GroupableProps extends
  * @property - Add guidelines for the element. (default: [])
  * @property - You can set up boundaries. (default: null)
  * @property - You can set up inner boundaries. (default: null)
+ * @property - You can set the text format of the distance shown in the guidelines. (default: self)
  */
 export interface SnappableOptions {
     snappable?: boolean | string[];
@@ -966,6 +967,7 @@ export interface SnappableOptions {
     elementGuidelines?: Element[];
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
+    snapDistForamt?: (distance: number) => number | string;
 }
 
 export interface SnappableProps extends SnappableOptions {
