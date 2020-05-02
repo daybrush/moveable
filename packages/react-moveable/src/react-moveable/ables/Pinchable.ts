@@ -20,6 +20,7 @@ export default {
     updateRect: true,
     props: {
         pinchable: Boolean,
+        pinchOutside: Boolean,
         pinchThreshold: Number,
     },
     pinchStart(
