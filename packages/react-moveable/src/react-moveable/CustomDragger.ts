@@ -10,7 +10,7 @@ export function setCustomDrag(
 ) {
     const result = state.dragger!.move(delta, inputEvent);
     const datas = result.originalDatas || result.datas;
-    const draggableDatas = datas.draggable  || (datas.draggable = {});
+    const draggableDatas = datas.draggable || (datas.draggable = {});
 
     return {
         ...(isConvert ? convertDragDist(state, result) : result),
@@ -32,13 +32,16 @@ export default class CustomDragger {
         draggable: {},
     };
 
-    public dragStart(client: number[], inputEvent: any)  {
+    public dragStart(client: number[], inputEvent: any) {
         this.isDrag = false;
         this.isFlag = false;
         this.datas = {
             draggable: {},
         };
-        return this.move(client, inputEvent);
+        return {
+            ...this.move(client, inputEvent),
+            type: "dragstart",
+        };
     }
     public drag(client: number[], inputEvent: any) {
         return this.move([
@@ -70,6 +73,7 @@ export default class CustomDragger {
         this.prevY = clientY;
 
         return {
+            type: "drag",
             clientX,
             clientY,
             inputEvent,

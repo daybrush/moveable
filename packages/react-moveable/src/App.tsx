@@ -73,6 +73,7 @@ class App extends React.Component<any, any> {
                     // keepRatio={false}
                     bounds={{ left: 30, top: 30 }}
                     target={this.state.targets}
+                    padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
                     rootContainer={document.body}
                     defaultGroupRotate={0}
                     origin={true}
@@ -215,6 +216,7 @@ class App extends React.Component<any, any> {
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
                     snapDistForamt={d => `${d}px`}
+                    padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
                     elementGuidelines={[
                         // document.querySelector(".box1 span")!,
                         // document.querySelector(".emo img")!,

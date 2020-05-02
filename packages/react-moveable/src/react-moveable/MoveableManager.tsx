@@ -14,13 +14,13 @@ import {
     throttle,
     flat,
     groupByMap,
+    caculatePadding,
 } from "./utils";
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester } from "./types";
-import { getAbleDragger, triggerAble, getAreaAbleDragger } from "./getAbleDragger";
-import CustomDragger from "./CustomDragger";
+import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox } from "./types";
+import { triggerAble, getTargetAbleDragger, getAbleDragger } from "./getAbleDragger";
 import { getRad, plus } from "@moveable/matrix";
 import { IObject } from "@daybrush/utils";
 
@@ -52,6 +52,7 @@ export default class MoveableManager<T = {}, U = {}>
         className: "",
         zoom: 1,
         triggerAblesSimultaneously: false,
+        padding: {},
     };
     public state: MoveableManagerState<U> = {
         container: null,
@@ -59,6 +60,7 @@ export default class MoveableManager<T = {}, U = {}>
         beforeMatrix: createIdentityMatrix3(),
         matrix: createIdentityMatrix3(),
         targetMatrix: createIdentityMatrix3(),
+        offsetMatrix: createIdentityMatrix3(),
         targetTransform: "",
         is3d: false,
         left: 0,
@@ -74,6 +76,7 @@ export default class MoveableManager<T = {}, U = {}>
         pos2: [0, 0],
         pos3: [0, 0],
         pos4: [0, 0],
+        renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         targetClientRect: resetClientRect(),
         containerClientRect: resetClientRect(),
         rotation: 0,
@@ -84,17 +87,17 @@ export default class MoveableManager<T = {}, U = {}>
     public areaElement!: HTMLElement;
     public targetDragger!: Dragger;
     public controlDragger!: Dragger;
-    public customDragger!: CustomDragger;
     public isUnmounted = false;
 
     public render() {
         const props = this.props;
-        const { edge, parentPosition, className, target: propsTarget, zoom } = this.props;
+        const state = this.state;
+        const { edge, parentPosition, className, target: propsTarget, zoom } = props;
 
         this.checkUpdate();
 
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
-        const { left, top, pos1, pos2, pos3, pos4, target: stateTarget, direction } = this.state;
+        const { left, top, target: stateTarget, direction, renderPoses } = state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
 
@@ -109,10 +112,10 @@ export default class MoveableManager<T = {}, U = {}>
                     "--zoompx": `${zoom}px`,
                 }}>
                 {this.renderAbles()}
-                {renderLine(edge ? "n" : "", pos1, pos2, 0)}
-                {renderLine(edge ? "e" : "", pos2, pos4, 1)}
-                {renderLine(edge ? "w" : "", pos1, pos3, 2)}
-                {renderLine(edge ? "s" : "", pos3, pos4, 3)}
+                {renderLine(edge ? "n" : "", renderPoses[0], renderPoses[1], 0)}
+                {renderLine(edge ? "e" : "", renderPoses[1], renderPoses[3], 1)}
+                {renderLine(edge ? "w" : "", renderPoses[0], renderPoses[2], 2)}
+                {renderLine(edge ? "s" : "", renderPoses[2], renderPoses[3], 3)}
             </ControlBoxElement>
         );
     }
@@ -148,6 +151,7 @@ export default class MoveableManager<T = {}, U = {}>
         if (this.targetDragger) {
             this.targetDragger.onDragStart(e);
         }
+        return this;
     }
     public isInside(clientX: number, clientY: number) {
         const { pos1, pos2, pos3, pos4, target, targetClientRect } = this.state;
@@ -158,7 +162,7 @@ export default class MoveableManager<T = {}, U = {}>
         const { left, top } = targetClientRect;
         const pos = [clientX - left, clientY - top];
 
-        return isInside(pos, pos1, pos2, pos4, pos3);
+        return isInside(pos, pos1, pos2, pos3, pos4);
     }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         const props = this.props;
@@ -198,11 +202,7 @@ export default class MoveableManager<T = {}, U = {}>
         }
 
         if (target && hasTargetAble && !this.targetDragger) {
-            if (dragArea) {
-                this.targetDragger = getAreaAbleDragger(this, "targetAbles", "");
-            } else {
-                this.targetDragger = getAbleDragger(this, target!, "targetAbles", "");
-            }
+            this.targetDragger = getTargetAbleDragger(this, target!, "");
         }
         if (!this.controlDragger && hasControlAble) {
             this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
@@ -269,7 +269,7 @@ export default class MoveableManager<T = {}, U = {}>
         const ableRequester = requsetAble.request(this);
 
         const ableType = ableRequester.isControl ? "controlAbles" : "targetAbles";
-        const eventAffix  = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;
+        const eventAffix = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;
 
         const requester = {
             request(ableParam: IObject<any>) {
@@ -295,6 +295,28 @@ export default class MoveableManager<T = {}, U = {}>
 
         return param.isInstant ? requester.request(param).requestEnd() : requester;
     }
+    public updateRenderPoses() {
+        const state = this.state;
+        const props = this.props;
+        const {
+            beforeOrigin, transformOrigin,
+            matrix, is3d, pos1, pos2, pos3, pos4, left: stateLeft, top: stateTop } = state;
+        const {
+            left = 0,
+            top = 0,
+            bottom = 0,
+            right = 0,
+        } = (props.padding || {}) as PaddingBox;
+        const n = is3d ? 4 : 3;
+
+        const absoluteOrigin = (props as any).groupable ? beforeOrigin : plus(beforeOrigin, [stateLeft, stateTop]);
+        state.renderPoses = [
+            plus(pos1, caculatePadding(matrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos2, caculatePadding(matrix, [right, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos3, caculatePadding(matrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
+            plus(pos4, caculatePadding(matrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
+        ];
+    }
     public checkUpdate() {
         const { target, container, parentMoveable } = this.props;
         const {
@@ -306,6 +328,7 @@ export default class MoveableManager<T = {}, U = {}>
             return;
         }
         this.updateAbles();
+        this.updateRenderPoses();
 
         const isChanged = !equals(stateTarget, target) || !equals(stateContainer, container);
 
@@ -373,7 +396,7 @@ export default class MoveableManager<T = {}, U = {}>
 
         return groupByMap(flat<any>(
             filterAbles(enabledAbles, ["render"], triggerAblesSimultaneously).map(({ render }) => {
-            return render!(this, Renderer) || [];
-        })).filter(el => el), ({ key }) => key).map(group => group[0]);
+                return render!(this, Renderer) || [];
+            })).filter(el => el), ({ key }) => key).map(group => group[0]);
     }
 }

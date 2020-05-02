@@ -469,12 +469,7 @@ export function caculatePosition(matrix: number[], pos: number[], n: number) {
     return caculate(matrix, convertPositionMatrix(pos, n), n);
 }
 export function caculatePoses(matrix: number[], width: number, height: number, n: number) {
-    const pos1 = caculatePosition(matrix, [0, 0], n);
-    const pos2 = caculatePosition(matrix, [width, 0], n);
-    const pos3 = caculatePosition(matrix, [0, height], n);
-    const pos4 = caculatePosition(matrix, [width, height], n);
-
-    return [pos1, pos2, pos3, pos4];
+    return [[0, 0], [width, 0], [0, height], [width, height]].map(pos => caculatePosition(matrix, pos, n));
 }
 export function getRect(poses: number[][]) {
     const posesX = poses.map(pos => pos[0]);
@@ -560,10 +555,7 @@ export function getSVGOffset(
 export function caculateMoveablePosition(matrix: number[], origin: number[], width: number, height: number): [
     number[],
     number[],
-    number[],
-    number[],
-    number[],
-    number[],
+    number[][],
     1 | -1,
 ] {
     const is3d = matrix.length === 16;
@@ -607,10 +599,7 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
     return [
         [left, top, right, bottom],
         [originX, originY],
-        [x1, y1],
-        [x2, y2],
-        [x3, y3],
-        [x4, y4],
+        [[x1, y1], [x2, y2], [x3, y3], [x4, y4]],
         direction,
     ];
 }
@@ -709,10 +698,7 @@ export function getTargetInfo(
     let right = 0;
     let bottom = 0;
     let origin = [0, 0];
-    let pos1 = [0, 0];
-    let pos2 = [0, 0];
-    let pos3 = [0, 0];
-    let pos4 = [0, 0];
+    let poses = [[0, 0], [0, 0], [0, 0], [0, 0]];
     let rootMatrix = createIdentityMatrix3();
     let offsetMatrix = createIdentityMatrix3();
     let beforeMatrix = createIdentityMatrix3();
@@ -763,10 +749,7 @@ export function getTargetInfo(
         [
             [left, top, right, bottom],
             origin,
-            pos1,
-            pos2,
-            pos3,
-            pos4,
+            poses,
             direction,
         ] = caculateMoveablePosition(matrix, transformOrigin, width, height);
 
@@ -774,7 +757,7 @@ export function getTargetInfo(
         let beforePos = [0, 0];
 
         [
-            beforePos, beforeOrigin, , , , , beforeDirection,
+            beforePos, beforeOrigin, , beforeDirection,
         ] = caculateMoveablePosition(offsetMatrix, plus(transformOrigin, getOrigin(targetMatrix, n)), width, height);
 
         beforeOrigin = [
@@ -787,7 +770,7 @@ export function getTargetInfo(
             getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
             true,
         );
-        rotation = getRotationRad([pos1, pos2], direction);
+        rotation = getRotationRad([poses[0], poses[1]], direction);
     }
 
     return {
@@ -801,10 +784,10 @@ export function getTargetInfo(
         top,
         right,
         bottom,
-        pos1,
-        pos2,
-        pos3,
-        pos4,
+        pos1: poses[0],
+        pos2: poses[1],
+        pos3: poses[2],
+        pos4: poses[3],
         width,
         height,
         rootMatrix,
@@ -922,12 +905,12 @@ export function getOrientationDirection(pos: number[], pos1: number[], pos2: num
 }
 export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: number[], pos4: number[]) {
     const k1 = getOrientationDirection(pos, pos1, pos2);
-    const k2 = getOrientationDirection(pos, pos2, pos4);
-    const k3 = getOrientationDirection(pos, pos4, pos1);
+    const k2 = getOrientationDirection(pos, pos2, pos3);
+    const k3 = getOrientationDirection(pos, pos3, pos1);
 
-    const k4 = getOrientationDirection(pos, pos2, pos4);
-    const k5 = getOrientationDirection(pos, pos4, pos3);
-    const k6 = getOrientationDirection(pos, pos3, pos2);
+    const k4 = getOrientationDirection(pos, pos2, pos3);
+    const k5 = getOrientationDirection(pos, pos3, pos4);
+    const k6 = getOrientationDirection(pos, pos4, pos2);
     const signs1 = [k1, k2, k3];
     const signs2 = [k4, k5, k6];
 
@@ -1097,4 +1080,11 @@ export function convertDragDist(state: MoveableManagerState, e: any) {
     );
 
     return e;
+}
+
+export function caculatePadding(
+    matrix: number[], pos: number[],
+    transformOrigin: number[], origin: number[], n: number,
+) {
+    return minus(caculatePosition(matrix, plus(transformOrigin, pos),  n), origin);
 }

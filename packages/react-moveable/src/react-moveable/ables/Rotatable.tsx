@@ -122,10 +122,7 @@ function getRotateInfo(
 
 export function getPositions(
     rotationPosition: "top" | "bottom" | "left" | "right",
-    pos1: number[],
-    pos2: number[],
-    pos3: number[],
-    pos4: number[],
+    [pos1, pos2, pos3, pos4]: number[][],
 ) {
     if (rotationPosition === "left") {
         return [pos3, pos1];
@@ -160,8 +157,8 @@ export default {
         if (!rotatable) {
             return null;
         }
-        const { pos1, pos2, pos3, pos4, direction } = moveable.state;
-        const poses = getPositions(rotationPosition!, pos1, pos2, pos3, pos4);
+        const { renderPoses, direction } = moveable.state;
+        const poses = getPositions(rotationPosition!, renderPoses);
         const rotationRad = getRotationRad(poses, direction);
 
         return (

@@ -10,13 +10,12 @@ export function renderControls(
     React: Renderer,
 ): any[] {
     const {
-        pos1, pos2, pos3, pos4,
+        renderPoses,
         rotation,
     } = moveable.state;
     const {
         renderDirections: directions = defaultDirections,
     } = moveable.props;
-    const poses = [pos1, pos2, pos3, pos4];
 
     const directionMap: IObject<boolean> = {};
     directions.forEach(direction => {
@@ -33,7 +32,7 @@ export function renderControls(
         return (
             <div className={prefix("control", "direction", direction)}
                 data-rotation={directionRotation} data-direction={direction} key={`direction-${direction}`}
-                style={getControlTransform(rotation, ...indexes.map(index => poses[index]))}></div>
+                style={getControlTransform(rotation, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });
 }

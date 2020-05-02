@@ -9,7 +9,9 @@ import DragArea from "./DragArea";
 import Origin from "./Origin";
 import Scrollable from "./Scrollable";
 import Default from "./Default";
+import Padding from "./Padding";
 
 export const MOVEABLE_ABLES = [
-    Default, Snappable, Pinchable, Draggable, Rotatable, Resizable, Scalable, Warpable, Scrollable, DragArea, Origin,
+    Default, Snappable, Pinchable, Draggable, Rotatable,
+    Resizable, Scalable, Warpable, Scrollable, DragArea, Padding, Origin,
 ] as const;

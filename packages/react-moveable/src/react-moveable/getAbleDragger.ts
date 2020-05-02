@@ -1,10 +1,10 @@
 import MoveableManager from "./MoveableManager";
-import Dragger from "@daybrush/drag";
 import { Able } from "./types";
 import { IObject } from "@daybrush/utils";
 import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
 import MoveableGroup from "./MoveableGroup";
 import { convertDragDist } from "./utils";
+import Dragger from "@daybrush/drag";
 
 export function triggerAble<T extends IObject<any>>(
     moveable: MoveableManager<any>,
@@ -29,14 +29,18 @@ export function triggerAble<T extends IObject<any>>(
         moveable.updateRect(eventType, true, false);
     }
     if (eventType === "" && !isAfter) {
-       convertDragDist(moveable.state, e);
+        convertDragDist(moveable.state, e);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Array<Able<T>> = (moveable as any)[ableType];
+
+    if (!ables.length) {
+        return false;
+    }
     const events = ables.filter((able: any) => able[eventName]);
     const datas = e.datas;
     const renderDatas = datas.render || (datas.render = {});
-    const renderEvent = {...e, datas: renderDatas, originalDatas: datas };
+    const renderEvent = { ...e, datas: renderDatas, originalDatas: datas };
 
     const results = events.filter((able: any) => {
         const condition = isStart && able[conditionName];
@@ -44,7 +48,7 @@ export function triggerAble<T extends IObject<any>>(
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
         if (!condition || condition(e, moveable)) {
-            return able[eventName](moveable, {...e, datas: nextDatas, originalDatas: datas });
+            return able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas });
         }
         return false;
     });
@@ -71,7 +75,7 @@ export function triggerAble<T extends IObject<any>>(
         moveable.state.dragger = null;
     }
     if (moveable.isUnmounted) {
-        return;
+        return false;
     }
     if (!isStart && isUpdate) {
         if (results.some(able => able.updateRect) && !isGroup) {
@@ -87,37 +91,39 @@ export function triggerAble<T extends IObject<any>>(
         triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
     }
 }
-export function getAreaAbleDragger<T>(
+
+export function getTargetAbleDragger<T>(
     moveable: MoveableManager<T>,
-    ableType: string,
+    moveableTarget: HTMLElement | SVGElement,
     eventAffix: string,
 ) {
     const controlBox = moveable.controlBox.getElement();
+    const targets: Array<HTMLElement | SVGElement> = [];
 
-    return getAbleDragger(moveable, controlBox, ableType, eventAffix, {
-        dragstart: (e: any) => {
-            const eventTarget = e.inputEvent.target;
-            const areaElement = moveable.areaElement;
+    targets.push(controlBox);
 
-            if (eventTarget === areaElement || eventTarget.className.indexOf("moveable-area") > -1) {
-                return true;
-            }
-            return false;
-        },
-        pinchstart: (e: any) => {
-            const eventTarget = e.inputEvent.target;
-            const areaElement = moveable.areaElement;
+    if (!moveable.props.dragArea) {
+        targets.push(moveableTarget);
+    }
 
-            if (eventTarget === areaElement || eventTarget.className.indexOf("moveable-area") > -1) {
-                return true;
-            }
-            return false;
-        },
+    const startFunc = (e: any) => {
+        const eventTarget = e.inputEvent.target;
+        const areaElement = moveable.areaElement;
+
+        return eventTarget === areaElement
+            || !moveable.isMoveableElement(eventTarget)
+            || eventTarget.className.indexOf("moveable-area") > -1
+            || eventTarget.className.indexOf("moveable-padding") > -1;
+    };
+
+    return getAbleDragger(moveable, targets, "targetAbles", eventAffix, {
+        dragstart: startFunc,
+        pinchstart: startFunc,
     });
 }
 export function getAbleDragger<T>(
     moveable: MoveableManager<T>,
-    target: HTMLElement | SVGElement,
+    target: HTMLElement | SVGElement | Array<HTMLElement | SVGElement>,
     ableType: string,
     eventAffix: string,
     conditionFunctions: IObject<any> = {},

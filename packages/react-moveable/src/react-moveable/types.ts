@@ -53,6 +53,7 @@ export interface MoveableDefaultProps {
     className?: string;
     pinchThreshold?: number;
     triggerAblesSimultaneously?: boolean;
+    padding?: PaddingBox;
 }
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
@@ -75,6 +76,7 @@ export type MoveableManagerState<T = {}> = {
     origin: number[];
     beforeDirection: 1 | -1;
     direction: 1 | -1;
+    renderPoses: number[][];
     pos1: number[];
     pos2: number[];
     pos3: number[];
@@ -85,6 +87,12 @@ export type MoveableManagerState<T = {}> = {
     rotation: number;
 } & T;
 
+export interface PaddingBox {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+}
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }
@@ -1052,6 +1060,7 @@ export interface RenderProps {
 }
 
 export interface OnCustomDrag extends Position {
+    type: string;
     inputEvent: any;
     isDrag: boolean;
     datas: IObject<any>;

@@ -63,6 +63,15 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     border: calc(2 * var(--zoompx)) solid #fff;
     z-index: 10;
 }
+.padding {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100px;
+    height: 100px;
+    transform-origin: 0 0;
+    background: rgba(255, 100, 100, 0.3);
+}
 .line {
 	position: absolute;
 	width: 1px;
