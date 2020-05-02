@@ -39,7 +39,7 @@ export type MoveableManagerProps<T = {}> = {
  * @property - Minimum distance to pinch. (default: 20)
  * @property - Whether the container containing the target becomes a pinch. (default: true)
  * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
- * @property - Add padding around the target to increase the drag area. (default: { left: 0, top: 0, right: 0, bottom: 0 })
+ * @property - Add padding around the target to increase the drag area. (default: null)
  */
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
@@ -90,6 +90,14 @@ export type MoveableManagerState<T = {}> = {
     rotation: number;
 } & T;
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - left padding
+ * @property - top padding
+ * @property - right padding
+ * @property - bottom padding
+ */
 export interface PaddingBox {
     left?: number;
     top?: number;
@@ -980,7 +988,7 @@ export interface SnappableOptions {
     elementGuidelines?: Element[];
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
-    snapDistForamt?: (distance: number) => number | string;
+    snapDistFormat?: (distance: number) => number | string;
 }
 
 export interface SnappableProps extends SnappableOptions {
@@ -1102,6 +1110,14 @@ export interface RectInfo {
     origin: number[];
     beforeOrigin: number[];
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - top position
+ * @property - left position
+ * @property - target's width
+ * @property - target's height
+ */
 export interface HitRect {
     top: number;
     left: number;

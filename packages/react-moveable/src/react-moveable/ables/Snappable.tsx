@@ -1092,7 +1092,7 @@ function renderElementGroup(
     isDisplaySnapDigit: boolean,
     snapDigit: number,
     index: number,
-    snapDistForamt: Required<SnappableOptions>["snapDistForamt"],
+    snapDistFormat: Required<SnappableOptions>["snapDistFormat"],
     React: Renderer,
 ) {
     return flat(group.map((elementGuidelines, i) => {
@@ -1118,7 +1118,7 @@ function renderElementGroup(
                 "guideline",
                 "dashed",
             )}
-                data-size={snapSize > 0 ? snapDistForamt(snapSize) : ""}
+                data-size={snapSize > 0 ? snapDistFormat(snapSize) : ""}
                 key={`${directionName}LinkGuidline${i}-${j}`} style={{
                     [posName1]: `${minPos + linePos}px`,
                     [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
@@ -1277,7 +1277,7 @@ function renderGapGuidelines(
     gapGuidelines: GapGuideline[],
     type: "vertical" | "horizontal",
     [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
-    snapDistForamt: Required<SnappableOptions>["snapDistForamt"],
+    snapDistFormat: Required<SnappableOptions>["snapDistFormat"],
     React: any,
 ) {
     const {
@@ -1298,7 +1298,7 @@ function renderGapGuidelines(
             "guideline",
             "gap",
         )}
-            data-size={snapSize > 0 ? snapDistForamt(snapSize) : ""}
+            data-size={snapSize > 0 ? snapDistFormat(snapSize) : ""}
             key={`${otherType}GapGuideline${i}`} style={{
                 [posName1]: `${renderPos[index]}px`,
                 [posName2]: `${renderPos[otherIndex]}px`,
@@ -1390,7 +1390,7 @@ export default {
             snapThreshold = 5,
             snapDigit = 0,
             isDisplaySnapDigit = true,
-            snapDistForamt = (v: number) => v,
+            snapDistFormat = (v: number) => v,
         } = moveable.props;
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
@@ -1480,7 +1480,7 @@ export default {
                 gapVerticalGuidelines,
                 "vertical",
                 horizontalNames,
-                snapDistForamt,
+                snapDistFormat,
                 React,
             ),
             ...renderGapGuidelines(
@@ -1488,7 +1488,7 @@ export default {
                 gapHorizontalGuidelines,
                 "horizontal",
                 verticalNames,
-                snapDistForamt,
+                snapDistFormat,
                 React,
             ),
             ...renderElementGroup(
@@ -1502,7 +1502,7 @@ export default {
                 isDisplaySnapDigit,
                 snapDigit,
                 0,
-                snapDistForamt,
+                snapDistFormat,
                 React,
             ),
             ...renderElementGroup(
@@ -1516,7 +1516,7 @@ export default {
                 isDisplaySnapDigit,
                 snapDigit,
                 1,
-                snapDistForamt,
+                snapDistFormat,
                 React,
             ),
             ...renderSnapPoses(

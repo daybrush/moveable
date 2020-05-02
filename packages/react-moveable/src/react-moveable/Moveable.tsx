@@ -89,6 +89,22 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
     public isInside(clientX: number, clientY: number): boolean {
         return this.moveable.isInside(clientX, clientY);
     }
+    /**
+     * Hit test an element or rect on a moveable target.
+     * @method Moveable#hitTest
+     * @param - element or rect to test
+     * @return - Get hit test rate (rate > 0 is hitted)
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.hitTest(e.target) > 0) {
+     *          console.log("hiited");
+     *     }
+     * });
+     */
     public hitTest(el: Element | HitRect): number {
         return this.moveable.hitTest(el);
     }
