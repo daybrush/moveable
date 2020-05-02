@@ -126,7 +126,6 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         }
     }
     public checkUpdate() {
-        this.updateRenderPoses();
         this.updateAbles();
     }
 

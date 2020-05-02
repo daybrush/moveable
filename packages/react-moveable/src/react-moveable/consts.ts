@@ -70,7 +70,6 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     width: 100px;
     height: 100px;
     transform-origin: 0 0;
-    background: rgba(255, 100, 100, 0.3);
 }
 .line {
 	position: absolute;

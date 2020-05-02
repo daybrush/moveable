@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.17.2] - 2020-05-03
+* `moveable` 0.17.2
+* `react-moveable` 0.20.3
+* `preact-moveable` 0.19.3
+* `ngx-moveable` 0.13.2
+* `svelte-moveable` 0.8.2
+
+### Fixed
+* Fix padding's background color
+* Fix first rendering issue
+
 ## [0.17.1] - 2020-05-03
 * `moveable` 0.17.1
 * `react-moveable` 0.20.1

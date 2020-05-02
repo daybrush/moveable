@@ -96,6 +96,7 @@ export default class MoveableManager<T = {}, U = {}>
         const { edge, parentPosition, className, target: propsTarget, zoom } = props;
 
         this.checkUpdate();
+        this.updateRenderPoses();
 
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
         const { left, top, target: stateTarget, direction, renderPoses } = state;
@@ -374,7 +375,6 @@ export default class MoveableManager<T = {}, U = {}>
             return;
         }
         this.updateAbles();
-        this.updateRenderPoses();
 
         const isChanged = !equals(stateTarget, target) || !equals(stateContainer, container);
 
