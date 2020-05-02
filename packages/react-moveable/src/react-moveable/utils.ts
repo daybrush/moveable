@@ -1065,6 +1065,13 @@ export function minOffset(...args: number[]) {
     return args[0];
 }
 
+export function caculateInversePosition(matrix: number[], pos: number[], n: number) {
+    return caculate(
+        invert(matrix, n),
+        convertPositionMatrix(pos, n),
+        n,
+    );
+}
 export function convertDragDist(state: MoveableManagerState, e: any) {
     const {
         is3d,
@@ -1073,11 +1080,7 @@ export function convertDragDist(state: MoveableManagerState, e: any) {
     const n = is3d ? 4 : 3;
     [
         e.distX, e.distY,
-    ] = caculate(
-        invert(rootMatrix, n),
-        convertPositionMatrix([e.distX, e.distY], n),
-        n,
-    );
+    ] = caculateInversePosition(rootMatrix, [e.distX, e.distY], n);
 
     return e;
 }

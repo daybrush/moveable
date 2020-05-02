@@ -5,12 +5,12 @@ import {
     SnappableState, Guideline,
     SnapInfo, BoundInfo,
     ScalableProps, SnapPosInfo, RotatableProps,
-    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline, SnappableOptions,
+    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline, SnappableOptions, MoveableClientRect,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
     getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign,
-    getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent,
+    getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent, caculateInversePosition, caculatePosition,
 } from "../utils";
 import { IObject, find } from "@daybrush/utils";
 import {
@@ -35,6 +35,19 @@ import {
     checkSnapKeepRatio,
 } from "./snappable/snap";
 
+export function caculateContainerPos(
+    rootMatrix: number[],
+    containerRect: MoveableClientRect,
+    n: number,
+) {
+    const clientPos = caculatePosition(
+        rootMatrix, [containerRect.clientLeft!, containerRect.clientTop!], n);
+
+    return [
+        containerRect.left + clientPos[0],
+        containerRect.top + clientPos[1],
+    ];
+}
 export function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
     const state = moveable.state;
     if (state.guidelines && state.guidelines.length) {
@@ -59,26 +72,33 @@ export function snapStart(moveable: MoveableManager<SnappableProps, SnappableSta
             top: clientTop,
             left: clientLeft,
         },
+        rootMatrix,
+        is3d,
     } = state;
-
-    const containerLeft = containerClientRect.left + containerClientRect.clientLeft!;
-    const containerTop = containerClientRect.top + containerClientRect.clientTop!;
-
+    const n = is3d ? 4 : 3;
+    const [containerLeft, containerTop] = caculateContainerPos(rootMatrix, containerClientRect, n);
     const poses = getAbsolutePosesByState(state);
     const targetLeft = Math.min(...poses.map(pos => pos[0]));
     const targetTop = Math.min(...poses.map(pos => pos[1]));
-    const distLeft = roundSign(targetLeft - (clientLeft - containerLeft));
-    const distTop = roundSign(targetTop - (clientTop - containerTop));
+    const [distLeft, distTop] = minus([targetLeft, targetTop], caculateInversePosition(rootMatrix, [
+        clientLeft - containerLeft,
+        clientTop - containerTop,
+    ], n)).map(pos => roundSign(pos));
+
     const guidelines: Guideline[] = [];
 
     elementGuidelines!.forEach(el => {
         const rect = el.getBoundingClientRect();
-        const { top, left, width, height } = rect;
-        const elementTop = top - containerTop;
-        const elementBottom = elementTop + height;
-        const elementLeft = left - containerLeft;
-        const elementRight = elementLeft + width;
+        const left = rect.left - containerLeft;
+        const top = rect.top - containerTop;
+        const bottom = top + rect.height;
+        const right = left + rect.width;
+        const [elementLeft, elementTop] = caculateInversePosition(rootMatrix, [left, top], n);
+        const [elementRight, elementBottom] = caculateInversePosition(rootMatrix, [right, bottom], n);
+        const width = elementRight - elementLeft;
+        const height = elementBottom - elementTop;
         const sizes = [width, height];
+
         guidelines.push({
             type: "vertical", element: el, pos: [
                 throttle(elementLeft + distLeft, 0.1),
@@ -399,8 +419,8 @@ function getSnapBoundInfo(
 
         const snapBoundInfo
             = keepRatio
-            ? checkSnapBoundsKeepRatio(moveable, otherStartPos, otherEndPos, isRequest)
-            : checkSnapBounds(moveable, isRequest, [otherEndPos]);
+                ? checkSnapBoundsKeepRatio(moveable, otherStartPos, otherEndPos, isRequest)
+                : checkSnapBounds(moveable, isRequest, [otherEndPos]);
 
         const {
             horizontal: {
@@ -1166,7 +1186,7 @@ function getGapGuidelinesToStart(
     let start = guidelinePos[index] + (gap > 0 ? targetSizes[0] : 0);
 
     return guidelines.filter(({ pos: gapPos }) => gapPos[index] <= targetPos[index])
-        .sort(({ pos: aPos }, { pos: bPos }) =>  bPos[index] - aPos[index])
+        .sort(({ pos: aPos }, { pos: bPos }) => bPos[index] - aPos[index])
         .filter(({ pos: gapPos, sizes: gapSizes }) => {
             const nextPos = gapPos[index];
 
@@ -1237,7 +1257,7 @@ function getGapGuidelines(
             pos[otherIndex] + sizes[otherIndex] - targetPos[otherIndex],
             pos[otherIndex] - targetPos[otherIndex] - targetSizes[otherIndex],
         );
-        const minSize =  Math.min(sizes[otherIndex], targetSizes[otherIndex]);
+        const minSize = Math.min(sizes[otherIndex], targetSizes[otherIndex]);
 
         if (offset > 0 && offset > minSize) {
             offset = (offset - minSize / 2) * 2;
@@ -1245,7 +1265,7 @@ function getGapGuidelines(
             offset = (offset + minSize / 2) * 2;
         }
 
-        const otherPos = (offset > 0 ? 0 : targetSizes[otherIndex]) +  offset / 2;
+        const otherPos = (offset > 0 ? 0 : targetSizes[otherIndex]) + offset / 2;
         return [
             ...getGapGuidelinesToStart(gapGuidelines, index, targetPos, targetSizes, pos, gap, otherPos),
             ...getGapGuidelinesToEnd(gapGuidelines, index, targetPos, targetSizes, pos, gap, otherPos),
@@ -1273,11 +1293,11 @@ function renderGapGuidelines(
         const snapSize = isDisplaySnapDigit ? parseFloat(absGap.toFixed(snapDigit)) : 0;
 
         return <div className={prefix(
-                "line",
-                directionName,
-                "guideline",
-                "gap",
-            )}
+            "line",
+            directionName,
+            "guideline",
+            "gap",
+        )}
             data-size={snapSize > 0 ? snapDistForamt(snapSize) : ""}
             key={`${otherType}GapGuideline${i}`} style={{
                 [posName1]: `${renderPos[index]}px`,
@@ -1349,16 +1369,23 @@ export default {
             snapRenderInfo,
             targetClientRect,
             containerClientRect,
+            is3d,
+            rootMatrix,
         } = moveable.state;
-        const clientLeft = targetClientRect.left - containerClientRect.left - containerClientRect.clientLeft!;
-        const clientTop = targetClientRect.top - containerClientRect.top - containerClientRect.clientTop!;
-
-        const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
-        const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
 
         if (!snapRenderInfo || !hasGuidelines(moveable, "")) {
             return [];
         }
+
+        const n = is3d ? 4 : 3;
+        const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
+        const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
+        const containerPos = caculateContainerPos(rootMatrix, containerClientRect, n);
+        const [clientLeft, clientTop] = caculateInversePosition(rootMatrix, [
+            targetClientRect.left - containerPos[0],
+            targetClientRect.top - containerPos[1],
+        ], n);
+
         const {
             snapThreshold = 5,
             snapDigit = 0,

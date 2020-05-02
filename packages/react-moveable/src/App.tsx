@@ -195,7 +195,7 @@ class App extends React.Component<any, any> {
                     />
                 <Moveable
                     target={selectedTarget}
-                    // rootContainer={document.body}
+                    rootContainer={document.body}
                     className="no-radius"
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
@@ -213,6 +213,7 @@ class App extends React.Component<any, any> {
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
                     verticalGuidelines={[150, 200]}
                     horizontalGuidelines={[150, 200]}
+                    // snapCenter={true}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
                     snapDistForamt={d => `${d}px`}
@@ -224,6 +225,7 @@ class App extends React.Component<any, any> {
                         document.querySelector<HTMLElement>(".box23")!,
                         document.querySelector<HTMLElement>(".box24")!,
                     ]}
+                    snapGap={false}
                     // snapCenter={true}
                     // snapThreshold={10}
                     // scalable={!isResizable}
