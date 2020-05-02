@@ -62,6 +62,8 @@ export const EVENTS: Array<keyof MoveableEvents> = [
     "pinchGroupStart",
     "pinchGroup",
     "pinchGroupEnd",
+
+    "click",
     "clickGroup",
 
     "scroll",
