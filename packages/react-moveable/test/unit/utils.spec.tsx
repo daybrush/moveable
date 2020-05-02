@@ -264,8 +264,8 @@ describe("test utils", () => {
     it("test isInside", () => {
         const pos1 = [0, 0];
         const pos2 = [302, 0];
-        const pos3 = [302, 222];
-        const pos4 = [0, 222];
+        const pos3 = [0, 222];
+        const pos4 = [302, 222];
 
         expect(isInside([30, 30], pos1, pos2, pos3, pos4)).to.be.true;
     });
