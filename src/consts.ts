@@ -27,6 +27,9 @@ export const PROPERTIES: Array<keyof MoveableOptions> = [
     "snapDigit",
     "zoom",
     "triggerAblesSimultaneously",
+    "padding",
+    "snapDistFormat",
+    "dragTarget",
 ];
 export const EVENTS: Array<keyof MoveableEvents> = [
     "dragStart",
@@ -85,6 +88,7 @@ export const METHODS: Array<keyof MoveableInterface> = [
     "destroy",
     "dragStart",
     "isInside",
+    "hitTest",
     "setState",
     "getRect",
     "request",

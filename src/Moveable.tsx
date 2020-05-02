@@ -549,6 +549,44 @@ class Moveable extends EgComponent {
  */
 
 /**
+ * The target(s) to drag Moveable target(s) (default: target)
+ * @name Moveable#dragTarget
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.target = document.querySelector(".target");
+ * moveable.dragTarget = document.querySelector(".dragTarget");
+ */
+
+/**
+ * You can set the text format of the distance shown in the guidelines. (default: self)
+ * @name Moveable#snapDistFormat
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  snappable: true,
+ *  snapDistFormat: v => v,
+ * });
+ * moveable.snapDistFormat = v => `${v}px`;
+ */
+
+/**
+ * Add padding around the target to increase the drag area. (default: null)
+ * @name Moveable#padding
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  target: document.querySelector(".target"),
+ *  padding: { left: 0, top: 0, right: 0, bottom: 0 },
+ * });
+ * moveable.padding = { left: 10, top: 10, right: 10, bottom: 10 },
+ * moveable.updateRect();
+ */
+
+/**
  * When the drag starts, the dragStart event is called.
  * @memberof Moveable
  * @event dragStart
@@ -609,7 +647,7 @@ class Moveable extends EgComponent {
  * When the group drag, the `dragGroup` event is called.
  * @memberof Moveable
  * @event dragGroup
- * @param {Moveable.onDragGroup} - Parameters for the `dragGroup` event
+ * @param {Moveable.OnDragGroup} - Parameters for the `dragGroup` event
  * @example
  * import Moveable from "moveable";
  *

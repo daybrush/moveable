@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [0.17.1] - 2020-05-03
+* `moveable` 0.17.1
+* `react-moveable` 0.20.1
+* `preact-moveable` 0.19.1
+* `ngx-moveable` 0.13.1
+* `svelte-moveable` 0.8.1
+
+### Added
+* Add `padding`, `dragTarget` props #148 #127 #156 #217
+* Add `snapDistFormat` props #222 #209 #229
+* Add `pinchOutside` props  #139
+* Add `hitTest` method #226
+
+### Fixed
+* Error: @Output click not initialized in 'NgxMoveableComponent' #228
+* In main demo, if the keyboard arrow is held down, drag feature eventually breaks #225
+* Moveable.request does not work in groupable #220
+* Element Guidelines when parent is scaled #219
+
+
 ## [0.16.3] - 2020-04-04
 * `moveable` 0.16.3
 * `react-moveable` 0.19.2

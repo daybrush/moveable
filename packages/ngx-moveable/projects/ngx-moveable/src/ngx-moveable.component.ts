@@ -70,6 +70,11 @@ export class NgxMoveableComponent
   @Input() public triggerAblesSimultaneously!: MoveableOptions['triggerAblesSimultaneously'];
   @Input() public snapGap!: MoveableOptions['snapGap'];
 
+  @Input() public pinchOutside!: MoveableOptions['pinchOutside'];
+  @Input() public padding!: MoveableOptions['padding'];
+  @Input() public snapDistFormat!: MoveableOptions['snapDistFormat'];
+  @Input() public dragTarget!: MoveableOptions['dragTarget'];
+
   @Output() public dragStart!: EventEmitter<MoveableEvents['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEvents['drag']>;
   @Output() public dragEnd!: EventEmitter<MoveableEvents['dragEnd']>;

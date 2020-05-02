@@ -216,7 +216,7 @@ class App extends React.Component<any, any> {
                     // snapCenter={true}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
-                    snapDistForamt={d => `${d}px`}
+                    snapDistFormat={d => `${d}px`}
                     padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
                     elementGuidelines={[
                         // document.querySelector(".box1 span")!,
