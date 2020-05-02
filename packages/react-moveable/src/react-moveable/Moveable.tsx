@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MoveableProps, Able, MoveableInterface, RectInfo, AbleRequestParam, Requester } from "./types";
+import { MoveableProps, Able, MoveableInterface, RectInfo, AbleRequestParam, Requester, HitRect } from "./types";
 import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./ables/consts";
 import MoveableGroup from "./MoveableGroup";
@@ -89,7 +89,9 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
     public isInside(clientX: number, clientY: number): boolean {
         return this.moveable.isInside(clientX, clientY);
     }
-
+    public hitTest(el: Element | HitRect): number {
+        return this.moveable.hitTest(el);
+    }
     /**
      * If the width, height, left, and top of all elements change, update the shape of the moveable.
      * @method Moveable#updateRect

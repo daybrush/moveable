@@ -1102,7 +1102,12 @@ export interface RectInfo {
     origin: number[];
     beforeOrigin: number[];
 }
-
+export interface HitRect {
+    top: number;
+    left: number;
+    width?: number;
+    height?: number;
+}
 export interface MoveableInterface {
     getRect(): RectInfo;
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
@@ -1113,5 +1118,6 @@ export interface MoveableInterface {
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
     isDragging(): boolean;
+    hitTest(el: Element | HitRect): number;
     setState(state: any, callback?: () => any): any;
 }

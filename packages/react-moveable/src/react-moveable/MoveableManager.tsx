@@ -19,7 +19,7 @@ import {
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox } from "./types";
+import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
 import { triggerAble, getTargetAbleDragger, getAbleDragger } from "./getAbleDragger";
 import { getRad, plus } from "@moveable/matrix";
 import { IObject } from "@daybrush/utils";
@@ -153,6 +153,51 @@ export default class MoveableManager<T = {}, U = {}>
             this.targetDragger.onDragStart(e);
         }
         return this;
+    }
+    public hitTest(el: Element | HitRect): number {
+        let rect: Required<HitRect>;
+
+        if (el instanceof Element) {
+            const clientRect = el.getBoundingClientRect();
+
+            rect = {
+                left: clientRect.left,
+                top: clientRect.top,
+                width: clientRect.width,
+                height: clientRect.height,
+            };
+        } else {
+            rect = { width: 0, height: 0, ...el };
+        }
+        const {
+            left: rectLeft,
+            top: rectTop,
+            width: rectWidth,
+            height: rectHeight,
+        } = this.state.targetClientRect;
+        const {
+            left,
+            top,
+            width,
+            height,
+        } = rect;
+        const right = left + width;
+        const bottom = top + height;
+        const rectRight = rectLeft + rectWidth;
+        const rectBottom = rectTop + rectHeight;
+        const testLeft = Math.max(rectLeft, left);
+        const testRight = Math.min(rectRight, right);
+        const testTop = Math.max(rectTop, top);
+        const testBottom = Math.min(rectBottom, bottom);
+
+        if (testRight < testLeft || testBottom < testTop) {
+            return 0;
+        }
+
+        const rectSize = (Math.min(rectRight, right) - Math.max(left, rectLeft))
+        * (Math.min(rectBottom, bottom) - Math.max(rectTop, top));
+
+        return Math.min(100, (testRight - testLeft) * (testBottom - testTop) / rectSize * 100);
     }
     public isInside(clientX: number, clientY: number) {
         const { pos1, pos2, pos3, pos4, target, targetClientRect } = this.state;
