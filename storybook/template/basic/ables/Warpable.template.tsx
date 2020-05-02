@@ -38,7 +38,7 @@ export default function RotatableApp(props: any) {
     </div>);
 }
 
-export const WARPABLE_PROPS = ["renderDirections", "edge", "zoom", "origin"];
+export const WARPABLE_PROPS = ["renderDirections", "edge", "zoom", "origin", "padding"];
 export const WARPABLE_FRAME = {
     matrix: [
         1, 0, 0, 0,

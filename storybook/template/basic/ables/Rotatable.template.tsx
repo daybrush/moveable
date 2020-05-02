@@ -33,7 +33,7 @@ export default function RotatableApp(props: any) {
     </div>);
 }
 
-export const ROTATABLE_PROPS = ["throttleRotate", "rotationPosition", "zoom", "origin"];
+export const ROTATABLE_PROPS = ["throttleRotate", "rotationPosition", "zoom", "origin", "padding"];
 export const ROTATABLE_FRAME = {
     rotate: 0,
 };

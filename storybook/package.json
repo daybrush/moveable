@@ -6,14 +6,14 @@
   "main": "index.js",
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "build": "build-storybook -o ../demo/storybook"
+    "build": "build-storybook -o ../demo/storybook",
+    "refresh": "npm i react-moveable@latest && npm run storybook"
   },
   "author": "Daybrush",
   "license": "MIT",
   "dependencies": {
-    "@daybrush/utils": "^0.10.1",
-    "react-moveable": "^0.18.1",
-    "storybook-addon-preview": "^1.1.0-beta11"
+    "react-moveable": "^0.20.3",
+    "storybook-addon-preview": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",

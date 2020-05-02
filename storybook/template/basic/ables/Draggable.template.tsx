@@ -33,7 +33,7 @@ export default function DraggableApp(props: any) {
     </div>);
 }
 
-export const DRAGGABLE_PROPS = ["throttleDrag", "throttleDragRotate", "zoom", "origin"];
+export const DRAGGABLE_PROPS = ["throttleDrag", "throttleDragRotate", "zoom", "origin", "padding"];
 export const DRAGGABLE_FRAME = {
     translate: [0, 0],
 };

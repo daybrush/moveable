@@ -38,7 +38,7 @@ export default function ScalableApp(props: any) {
     </div>);
 }
 
-export const SCALABLE_PROPS = ["keepRatio", "throttleScale", "renderDirections", "edge", "zoom", "origin"];
+export const SCALABLE_PROPS = ["keepRatio", "throttleScale", "renderDirections", "edge", "zoom", "origin", "padding"];
 export const SCALABLE_FRAME = {
     translate: [0, 0],
     scale: [1, 1],

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, number, boolean } from "@storybook/addon-knobs";
+import { withKnobs, number, boolean, object } from "@storybook/addon-knobs";
 import { withPreview } from "storybook-addon-preview";
 import DraggableApp, {
     DRAGGABLE_FRAME,
@@ -22,10 +22,12 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Draggable", () => {
     return <DraggableApp
+        // key={Math.random()}
         throttleDrag={number("throttleDrag", 0)}
         throttleDragRotate={number("throttleDragRotate", 0)}
         zoom={number("zoom", 1)}
         origin={boolean("origin", true)}
+        padding={object("padding", { left: 0, top: 0, right: 0, bottom: 0 })}
     />;
 }, {
     preview: previewCollection(

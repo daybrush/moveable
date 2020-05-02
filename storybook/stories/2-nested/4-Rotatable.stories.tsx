@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, number, boolean, radios } from "@storybook/addon-knobs";
+import { withKnobs, number, boolean, radios, object } from "@storybook/addon-knobs";
 import { withPreview } from "storybook-addon-preview";
 import "../../template/nested/nested.css";
 import RotatableApp, { ROTATABLE_FRAME } from "../../template/basic/ables/Rotatable.template";
@@ -25,6 +25,7 @@ story.add("Rotatable", () => {
         rotationPosition={radios("rotationPosition", { top: "top", left: "left", right: "right", bottom: "bottom" }, "top")}
         zoom={number("zoom", 1)}
         origin={boolean("origin", true)}
+        padding={object("padding", { left: 0, top: 0, right: 0, bottom: 0 })}
     />;
 }, {
     preview: previewCollection(

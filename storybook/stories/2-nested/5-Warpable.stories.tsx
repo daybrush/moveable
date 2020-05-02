@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, number, boolean, array } from "@storybook/addon-knobs";
+import { withKnobs, number, boolean, array, object } from "@storybook/addon-knobs";
 import { withPreview } from "storybook-addon-preview";
 import "../../template/nested/nested.css";
 import WarpableApp, { WARPABLE_FRAME } from "../../template/basic/ables/Warpable.template";
@@ -27,6 +27,7 @@ story.add("Warpable", () => {
         edge={boolean("edge", false)}
         zoom={number("zoom", 1)}
         origin={boolean("origin", true)}
+        padding={object("padding", { left: 0, top: 0, right: 0, bottom: 0 })}
     />;
 }, {
     preview: previewCollection(

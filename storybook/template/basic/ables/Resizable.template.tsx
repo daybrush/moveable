@@ -1,7 +1,6 @@
 import * as React from "react";
 import Moveable from "react-moveable";
 
-
 export default function ResizableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
     const [frame] = React.useState({
@@ -42,7 +41,7 @@ export default function ResizableApp(props: any) {
     </div>);
 }
 
-export const RESIZABLE_PROPS = ["keepRatio", "throttleResize", "renderDirections", "edge", "zoom", "origin"];
+export const RESIZABLE_PROPS = ["keepRatio", "throttleResize", "renderDirections", "edge", "zoom", "origin", "padding"];
 export const RESIZABLE_FRAME = {
     translate: [0, 0],
     width: 100,
