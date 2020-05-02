@@ -53,6 +53,7 @@ export default class MoveableManager<T = {}, U = {}>
         zoom: 1,
         triggerAblesSimultaneously: false,
         padding: {},
+        pinchOutside: true,
     };
     public state: MoveableManagerState<U> = {
         container: null,

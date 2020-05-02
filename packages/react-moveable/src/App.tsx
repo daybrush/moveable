@@ -403,6 +403,10 @@ class App extends React.Component<any, any> {
         if (e.target.nodeName === "INPUT") {
             return;
         }
+        if (this.moveable.isDragging()) {
+            return;
+        }
+        console.log("nop");
         const target = e.target;
 
         const id = target.getAttribute("data-target");
