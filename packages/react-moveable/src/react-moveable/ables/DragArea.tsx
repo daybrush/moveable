@@ -33,7 +33,7 @@ export default {
     },
     render(moveable: MoveableManager<GroupableProps>, React: Renderer): any[] {
         const { target, dragArea, groupable } = moveable.props;
-        const { width, height, pos1, pos2, pos3, pos4 } = moveable.state;
+        const { width, height, renderPoses } = moveable.state;
 
         if (groupable) {
             return [
@@ -49,10 +49,10 @@ export default {
             [width, 0],
             [0, height],
             [width, height],
-            pos1,
-            pos2,
-            pos3,
-            pos4,
+            renderPoses[0],
+            renderPoses[1],
+            renderPoses[2],
+            renderPoses[3],
         );
         const transform = h.length ? `matrix3d(${convertMatrixtoCSS(h).join(",")})` : "none";
 
@@ -77,7 +77,7 @@ export default {
         const areaElement = moveable.areaElement;
         const {
             moveableClientRect,
-            pos1, pos2, pos3, pos4,
+            renderPoses,
             rootMatrix,
             is3d,
         } = moveable.state;
@@ -87,7 +87,7 @@ export default {
             top: relativeTop,
             width,
             height,
-        } = getRect([pos1, pos2, pos3, pos4]);
+        } = getRect(renderPoses);
         const n = is3d ? 4 : 3;
         let [posX, posY] = caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n);
 

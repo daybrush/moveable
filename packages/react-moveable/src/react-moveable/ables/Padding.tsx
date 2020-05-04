@@ -9,7 +9,11 @@ export default {
         padding: Object,
     },
     render(moveable: MoveableManager, React: Renderer): any {
-        const padding = moveable.props.padding || {};
+        const props = moveable.props;
+        if (props.dragArea) {
+            return [];
+        }
+        const padding = props.padding || {};
         const {
             left = 0,
             top = 0,
