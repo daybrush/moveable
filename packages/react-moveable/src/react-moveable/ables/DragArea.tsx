@@ -1,10 +1,9 @@
 import MoveableManager from "../MoveableManager";
 import {
     createWarpMatrix, convertMatrixtoCSS,
-    caculate, convertPositionMatrix, invert, minus, plus,
 } from "@moveable/matrix";
 import { ref } from "framework-utils";
-import { triggerEvent, fillParams, getRect, caculatePoses } from "../utils";
+import { triggerEvent, fillParams, getRect, caculateInversePosition } from "../utils";
 import { Renderer, GroupableProps, DragAreaProps, OnClick } from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
 import MoveableGroup from "../MoveableGroup";
@@ -77,35 +76,23 @@ export default {
         datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
         const {
-            targetClientRect,
+            moveableClientRect,
             pos1, pos2, pos3, pos4,
-            width, height,
             rootMatrix,
             is3d,
         } = moveable.state;
-        const { left, top } = targetClientRect;
+        const { left, top } = moveableClientRect;
         const {
             left: relativeLeft,
             top: relativeTop,
+            width,
+            height,
         } = getRect([pos1, pos2, pos3, pos4]);
         const n = is3d ? 4 : 3;
-        const poses = caculatePoses(rootMatrix, width, height, n);
-        const {
-            left: rootLeft,
-            top: rootTop,
-        } = getRect(poses);
+        let [posX, posY] = caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n);
 
-        const rootRelativePos = minus(
-            [clientX, clientY],
-            plus([left - rootLeft, top - rootTop], poses[0]),
-        );
-
-        const [posX, posY] = caculate(
-            invert(rootMatrix, n),
-            convertPositionMatrix(rootRelativePos, n),
-            n,
-        );
-
+        posX -= relativeLeft;
+        posY -= relativeTop;
         const rects = [
             { left: relativeLeft, top: relativeTop, width, height: posY - 10 },
             { left: relativeLeft, top: relativeTop, width: posX - 10, height },
@@ -119,6 +106,7 @@ export default {
                 = `left: ${rect.left}px;top: ${rect.top}px; width: ${rect.width}px; height: ${rect.height}px;`;
         });
         addClass(areaElement, AVOID);
+        return true;
     },
     drag(moveable: MoveableManager, { datas, inputEvent }: any) {
         if (!inputEvent) {

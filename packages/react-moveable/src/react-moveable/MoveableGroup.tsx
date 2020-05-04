@@ -155,6 +155,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
 
         const container = this.getContainer();
         const info = getTargetInfo(
+            this.controlBox.getElement(),
             target,
             this.controlBox.getElement(),
             this.getContainer(),

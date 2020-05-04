@@ -203,7 +203,7 @@ class App extends React.Component<any, any> {
                     origin={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
-                    // dragArea={true}
+                    dragArea={true}
                     draggable={true}
                     snappable={true}
                     scrollable={true}
@@ -317,7 +317,7 @@ class App extends React.Component<any, any> {
                         target.style.cssText += item.toCSS();
                     }}
                     onClick={e => {
-                        console.log(e);
+                        console.log("CL", e);
                     }}
                     onPinchEnd={e => {
                         console.log(e);

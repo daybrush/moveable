@@ -687,6 +687,7 @@ export function getRotationRad(
     return getRad(direction > 0 ? poses[0] : poses[1], direction > 0 ? poses[1] : poses[0]);
 }
 export function getTargetInfo(
+    moveableElement: HTMLElement,
     target?: HTMLElement | SVGElement,
     container?: HTMLElement | SVGElement | null,
     parentContainer?: HTMLElement | SVGElement | null,
@@ -714,6 +715,7 @@ export function getTargetInfo(
     let beforeOrigin = [0, 0];
     let targetClientRect = resetClientRect();
     let containerClientRect = resetClientRect();
+    let moveableClientRect = resetClientRect();
     let rotation = 0;
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
@@ -770,6 +772,7 @@ export function getTargetInfo(
             getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
             true,
         );
+        moveableClientRect = getClientRect(moveableElement);
         rotation = getRotationRad([poses[0], poses[1]], direction);
     }
 
@@ -777,6 +780,7 @@ export function getTargetInfo(
         rotation,
         targetClientRect,
         containerClientRect,
+        moveableClientRect,
         beforeDirection,
         direction,
         target,

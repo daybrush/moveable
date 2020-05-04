@@ -87,6 +87,7 @@ export type MoveableManagerState<T = {}> = {
     dragger: Dragger | CustomDragger | null;
     targetClientRect: MoveableClientRect;
     containerClientRect: MoveableClientRect;
+    moveableClientRect: MoveableClientRect;
     rotation: number;
 } & T;
 

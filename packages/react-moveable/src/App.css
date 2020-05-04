@@ -48,7 +48,7 @@ img {
     top: 100px;
     height: 800px;
     border: 1px solid #f55;
-    /* transform: scale(0.5); */
+    transform: scale(0.7) rotate(30deg);
 }
 .guides {
     position: absolute;
@@ -192,5 +192,9 @@ img {
     position: relative;
 }
 .moveable-area-pieces .moveable-area-piece {
-    background: #f55;
+    background: rgba(255, 150, 150, 0.5);
+}
+
+.moveable-area-pieces .moveable-area-piece:nth-child(2) {
+    background: rgba(150, 250, 150, 0.5);
 }

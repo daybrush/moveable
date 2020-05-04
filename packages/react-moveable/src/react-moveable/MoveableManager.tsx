@@ -80,6 +80,7 @@ export default class MoveableManager<T = {}, U = {}>
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         targetClientRect: resetClientRect(),
         containerClientRect: resetClientRect(),
+        moveableClientRect: resetClientRect(),
         rotation: 0,
     } as any;
     public targetAbles: Array<Able<T>> = [];
@@ -221,8 +222,9 @@ export default class MoveableManager<T = {}, U = {}>
             ? parentMoveable.props.rootContainer
             : props.rootContainer;
         this.updateState(
-            getTargetInfo(target, container, container, rootContainer || container,
-                isTarget ? state : undefined),
+            getTargetInfo(this.controlBox.getElement(),
+                target, container, container,
+                rootContainer || container, isTarget ? state : undefined),
             parentMoveable ? false : isSetState,
         );
     }
