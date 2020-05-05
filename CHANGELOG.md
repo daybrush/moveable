@@ -8,8 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `moveable` 0.17.3
 * `react-moveable` 0.20.4
 * `preact-moveable` 0.19.4
-* `ngx-moveable` 0.13.3
-* `svelte-moveable` 0.8.3
+* `ngx-moveable` 0.13.4
+* `svelte-moveable` 0.8.4
 
 ### Fixed
 * Fix duplicated drag are and padding area.
