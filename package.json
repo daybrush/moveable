@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.17.3",
+  "version": "0.17.4",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -61,7 +61,7 @@
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
     "@egjs/component": "^2.1.2",
-    "react-compat-moveable": "^0.5.4"
+    "react-compat-moveable": "^0.5.5"
   },
   "peerDependencies": {
     "react-compat-moveable": ">=0.5.4"

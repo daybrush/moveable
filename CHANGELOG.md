@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.4] - 2020-05-05
+* `moveable` 0.17.4
+* `react-moveable` 0.20.5
+* `preact-moveable` 0.19.5
+* `ngx-moveable` 0.13.5
+* `svelte-moveable` 0.8.5
+
+### Fixed
+* Fix that getElement() is not a function #228
 
 ## [0.17.3] - 2020-05-05
 * `moveable` 0.17.3
