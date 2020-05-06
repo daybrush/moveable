@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import {
     getTransformMatrix, getAbsoluteMatrix,
     getSize, caculateMatrixStack,
-    throttle, throttleArray, getTransform, isInside,
+    throttle, throttleArray, getTransform, isInside, caculateBoundSize,
 } from "../../src/react-moveable/utils";
 import { getRad } from "@moveable/matrix";
 
@@ -268,5 +268,18 @@ describe("test utils", () => {
         const pos4 = [302, 222];
 
         expect(isInside([30, 30], pos1, pos2, pos3, pos4)).to.be.true;
+    });
+    it ("test caculateBoundSize", () => {
+        const size1 = caculateBoundSize([100, 100], [0, 0], [100, 50]);
+        const size2 = caculateBoundSize([-10, 100], [0, 0], [100, 50]);
+        const size3 = caculateBoundSize([100, 100], [0, 0], [100, 50], true);
+        const size4 = caculateBoundSize([100, 100], [50, 40], [100, 50], true);
+        const size5 = caculateBoundSize([40, 100], [50, 40], [Infinity, 150], true);
+
+        expect(size1).to.be.deep.equals([100, 50]);
+        expect(size2).to.be.deep.equals([0, 50]);
+        expect(size3).to.be.deep.equals([50, 50]);
+        expect(size4).to.be.deep.equals([50, 50]);
+        expect(size5).to.be.deep.equals([50, 125]);
     });
 });

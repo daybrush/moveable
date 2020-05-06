@@ -1097,3 +1097,32 @@ export function caculatePadding(
 ) {
     return minus(caculatePosition(matrix, plus(transformOrigin, pos),  n), origin);
 }
+export function checkSize(targetSize: number[], compareSize: number[], isMax: boolean) {
+    return [
+        [compareSize[0], compareSize[0] * targetSize[1] / targetSize[0]],
+        [compareSize[1] * targetSize[0] / targetSize[1], compareSize[1]],
+    ].filter(size => size.every((value, i) => {
+        return isMax ? value <= compareSize[i] : value >= compareSize[i];
+    }))[0] || targetSize;
+}
+export function caculateBoundSize(
+    size: number[], minSize: number[],
+    maxSize: number[], keepRatio?: boolean,
+) {
+    if (!keepRatio) {
+        return size.map((value, i) => Math.min(maxSize[i], Math.max(value, minSize[i])));
+    }
+    let [width, height] = size;
+    // width : height = minWidth : minHeight;
+    const [minWidth, minHeight] = checkSize(size, minSize, false);
+    const [maxWidth, maxHeight] = checkSize(size, maxSize, true);
+
+    if (width < minWidth || height < minHeight) {
+        width = minWidth;
+        height = minHeight;
+    } else if (width > maxWidth || height > maxHeight) {
+        width = maxWidth;
+        height = maxHeight;
+    }
+    return [width, height];
+}

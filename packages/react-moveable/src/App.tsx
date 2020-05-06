@@ -67,8 +67,8 @@ class App extends React.Component<any, any> {
                     pinchable={true}
                     draggable={true}
                     rotatable={isResizable}
-                    // resizable={true}
-                    scalable={true}
+                    resizable={true}
+                    // scalable={true}
                     ref={ref(this, "ab")}
                     // keepRatio={false}
                     bounds={{ left: 30, top: 30 }}

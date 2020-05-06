@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent,
-    fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize,
+    fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize, caculateBoundSize,
 } from "../utils";
 import {
     setDragStart,
@@ -66,6 +66,7 @@ export default {
             isPinch,
             parentDirection,
             datas,
+            parentFlag,
         } = e;
 
         const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
@@ -87,6 +88,22 @@ export default {
             datas.startWidth,
             datas.startHeight,
         ] = getCSSSize(target);
+        const padding = [Math.max(0, width - datas.startWidth), Math.max(0, height - datas.startHeight)];
+        datas.minSize = padding;
+        datas.maxSize = [Infinity, Infinity];
+
+        if (!parentFlag) {
+            const style = window.getComputedStyle(target);
+
+            datas.minSize = plus([
+                parseFloat(style.minWidth!) || 0,
+                parseFloat(style.minHeight!) || 0,
+            ], padding);
+            datas.maxSize = plus([
+                parseFloat(style.maxWidth!) || Infinity,
+                parseFloat(style.maxHeight!) || Infinity,
+            ], padding);
+        }
         datas.transformOrigin = moveable.props.transformOrigin;
         datas.startDirection = getStartDirection(moveable, direction);
         datas.fixedPosition = getAbsoluteFixedPosition(moveable, datas.startDirection);
@@ -147,6 +164,8 @@ export default {
             startOffsetHeight,
             prevWidth,
             prevHeight,
+            minSize,
+            maxSize,
         } = datas;
         const {
             throttleResize = 0,
@@ -278,9 +297,14 @@ export default {
                 nextHeight = throttle(nextHeight, throttleResize!);
             }
         }
+        [nextWidth, nextHeight] = caculateBoundSize(
+            [nextWidth, nextHeight],
+            minSize,
+            maxSize,
+            keepRatio,
+        );
         nextWidth = Math.round(nextWidth);
         nextHeight = Math.round(nextHeight);
-
         distWidth = nextWidth - startOffsetWidth;
         distHeight = nextHeight - startOffsetHeight;
 

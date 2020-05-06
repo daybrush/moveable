@@ -32,6 +32,7 @@
     border: 2px solid black;
     box-sizing: content-box;
     /* transform-origin: 0% 0%!important; */
+    min-width: 100px;
 }
 
 .App code {
@@ -48,7 +49,7 @@ img {
     top: 100px;
     height: 800px;
     border: 1px solid #f55;
-    transform: scale(0.7) rotate(30deg);
+    /* transform: scale(0.7) rotate(30deg); */
 }
 .guides {
     position: absolute;
