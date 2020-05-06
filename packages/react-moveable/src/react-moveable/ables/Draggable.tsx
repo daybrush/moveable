@@ -224,7 +224,10 @@ export default {
         if (!params) {
             return false;
         }
-        const events = triggerChildDragger(moveable, this, "dragStart", [clientX, clientY], e, false);
+        const events = triggerChildDragger(moveable, this, "dragStart", [
+            clientX || 0,
+            clientY || 0,
+        ], e, false);
 
         const nextParams: OnDragGroupStart = {
             ...params,
@@ -245,7 +248,6 @@ export default {
         }
         const params = this.drag(moveable, e);
         const { passDeltaX, passDeltaY } = e.datas;
-
         const events = triggerChildDragger(moveable, this, "drag", [passDeltaX, passDeltaY], e, false);
 
         if (!params) {
