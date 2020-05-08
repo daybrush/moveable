@@ -245,7 +245,6 @@ export class AppComponent {
 * [throttleResize](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleResize): throttle of width, height when resize. (default: 0)
 * [keepRatio](https://daybrush.com/moveable/release/latest/doc/Moveable.html#keepRatio): When resize or scale, keeps a ratio of the width, height. (default: false)
 * [baseDirection](https://daybrush.com/moveable/release/latest/doc/Moveable.html#baseDirection): Target's base direcition using top, left, right, bottom (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
-* [keepRatio](https://daybrush.com/moveable/release/latest/doc/Moveable.html#keepRatio): When resize or scale, keeps a ratio of the width, height. (default: false)
 
 
 ### Vanilla Example
