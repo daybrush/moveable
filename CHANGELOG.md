@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.17.6] - 2020-05-08
+## [0.17.6] - 2020-05-18
 * `moveable` 0.17.6
 * `react-moveable` 0.20.7
 * `preact-moveable` 0.19.7
