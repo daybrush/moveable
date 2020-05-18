@@ -30,8 +30,8 @@ export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = prefixCSS(PREFIX, `
 {
 	position: fixed;
-	width: 0;
-	height: 0;
+	width: 1px;
+	height: 1px;
 	left: 0;
 	top: 0;
     z-index: 3000;
