@@ -13,18 +13,18 @@ version: 0.17.6
 }(this, (function () { 'use strict';
 
     /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
+    Copyright (c) Microsoft Corporation.
 
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
 
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
     /* global Reflect, Promise */
 
@@ -797,7 +797,7 @@ version: 0.17.6
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/utils
-    @version 0.10.3
+    @version 0.10.4
     */
     /**
     * get string "function"
@@ -978,7 +978,9 @@ version: 0.17.6
     }
 
     function splitText(text, separator) {
-      var texts = text.split(/(\s*,\s*|\(|\)|"|'|\\"|\\'|\s+)/g).filter(Boolean);
+      var regexText = "(\\s*" + (separator || ",") + "\\s*|\\(|\\)|\"|'|\\\\\"|\\\\'|\\s+)";
+      var regex = new RegExp(regexText, "g");
+      var texts = text.split(regex).filter(Boolean);
       var length = texts.length;
       var values = [];
       var tempValues = [];
@@ -1273,7 +1275,7 @@ version: 0.17.6
     license: MIT
     author: Daybrush
     repository: git+https://github.com/daybrush/react-simple-compat.git
-    version: 0.1.4
+    version: 0.1.6
     */
 
     /*! *****************************************************************************
@@ -1472,7 +1474,7 @@ version: 0.17.6
         ref: ref,
         props: __assign$1(__assign$1({}, otherProps), {
           children: flat(children).filter(function (child) {
-            return child != null;
+            return child != null && child !== false;
           })
         })
       };
@@ -1597,15 +1599,27 @@ version: 0.17.6
           changed = _a.changed;
 
       for (var name in added) {
-        style[name] = added[name];
+        if (style.setProperty) {
+          style.setProperty(name, added[name]);
+        } else {
+          style[name] = added[name];
+        }
       }
 
       for (var name in changed) {
-        style[name] = changed[name][1];
+        if (style.setProperty) {
+          style.setProperty(name, changed[name][1]);
+        } else {
+          style[name] = changed[name][1];
+        }
       }
 
       for (var name in removed) {
-        style[name] = "";
+        if (style.removeProperty) {
+          style.removeProperty(name);
+        } else {
+          style[name] = "";
+        }
       }
     }
 
