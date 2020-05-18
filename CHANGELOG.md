@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.6] - 2020-05-08
+* `moveable` 0.17.6
+* `react-moveable` 0.20.7
+* `preact-moveable` 0.19.7
+* `ngx-moveable` 0.13.7
+* `svelte-moveable` 0.8.7
+
+### Fixed
+* Fix firefox's getBoundingClientRect issue #234
+* Fix that zoom is not working
+
 ## [0.17.5] - 2020-05-07
 * `moveable` 0.17.5
 * `react-moveable` 0.20.6
