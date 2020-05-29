@@ -71,7 +71,7 @@ class App extends React.Component<any, any> {
                     // scalable={true}
                     ref={ref(this, "ab")}
                     // keepRatio={false}
-                    bounds={{ left: 30, top: 30 }}
+                    bounds={{ left: 50, top: 30 }}
                     target={this.state.targets}
                     padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
                     rootContainer={document.body}
@@ -209,10 +209,10 @@ class App extends React.Component<any, any> {
                     scrollable={true}
                     transformOrigin="% %"
                     snapDigit={0}
-                    bounds={{ left: 30, top: 20 }}
+                    bounds={{ left: 50, top: 30, bottom: 600, right: 900 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
-                    verticalGuidelines={[150, 200]}
-                    horizontalGuidelines={[150, 200]}
+                    verticalGuidelines={[150, 200, 400, 600]}
+                    horizontalGuidelines={[150, 200, 400, 600]}
                     // snapCenter={true}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
@@ -300,8 +300,12 @@ class App extends React.Component<any, any> {
                         // console.log(width, height);
                         item.set("width", `${width}px`);
                         item.set("height", `${height}px`);
-                        item.set("tx", `${drag.beforeTranslate[0]}px`);
-                        item.set("ty", `${drag.beforeTranslate[1]}px`);
+                        item.set("left", `${drag.left}px`);
+                        item.set("top", `${drag.top}px`);
+
+                        // console.log("set", width, height);
+                        // item.set("tx", `${drag.beforeTranslate[0]}px`);
+                        // item.set("ty", `${drag.beforeTranslate[1]}px`);
 
                         target.style.cssText += item.toCSS();
                     }}

@@ -203,7 +203,7 @@ function solveNextOffset(
     const sizeOffset = solveEquation(
         pos1,
         pos2,
-        -offset,
+        offset,
         isVertical,
     );
 
@@ -341,16 +341,21 @@ export function checkSnapBounds(
         },
     };
 }
+export function normalized(value: number) {
+    return value ? value / Math.abs(value) : 0;
+}
 export function checkMaxBounds(
     moveable: MoveableManager<SnappableProps>,
-    width: number,
-    height: number,
     poses: number[][],
     direction: number[],
     fixedPos: number[],
     datas: any,
 ) {
     const fixedDirection = [-direction[0], -direction[1]];
+    const {
+        width,
+        height,
+    } = moveable.state;
     const bounds = moveable.props.bounds;
     let maxWidth = Infinity;
     let maxHeight = Infinity;
@@ -372,6 +377,9 @@ export function checkMaxBounds(
             const isCheckHorizontal = otherDirection[1] !== fixedDirection[1];
             const otherPos = getPosByDirection(poses, otherDirection);
 
+            const verticalDirection = normalized(otherDirection[1] - fixedDirection[1]);
+            const horizontalDirection = normalized(otherDirection[0] - fixedDirection[0]);
+
             if (isCheckHorizontal) {
                 const [
                     ,
@@ -383,7 +391,7 @@ export function checkMaxBounds(
                 );
 
                 if (!isNaN(heightOffset)) {
-                    maxHeight = height + heightOffset;
+                    maxHeight = height + verticalDirection * heightOffset;
                 }
             }
             if (isCheckVertical) {
@@ -395,7 +403,7 @@ export function checkMaxBounds(
                     true, datas,
                 );
                 if (!isNaN(widthOffset)) {
-                    maxWidth = width + widthOffset;
+                    maxWidth = width + horizontalDirection * widthOffset;
                 }
             }
         });
@@ -416,7 +424,6 @@ function getSnapBoundInfo(
     return directions.map(([startDirection, endDirection]) => {
         const otherStartPos = getPosByDirection(poses, startDirection);
         const otherEndPos = getPosByDirection(poses, endDirection);
-
         const snapBoundInfo
             = keepRatio
                 ? checkSnapBoundsKeepRatio(moveable, otherStartPos, otherEndPos, isRequest)
@@ -451,7 +458,7 @@ function getSnapBoundInfo(
         const sizeOffset = solveNextOffset(
             otherStartPos,
             otherEndPos,
-            isVertical ? otherVerticalOffset : otherHorizontalOffset,
+            -(isVertical ? otherVerticalOffset : otherHorizontalOffset),
             isVertical,
             datas,
         ).map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
@@ -680,7 +687,7 @@ export function checkSizeDist(
         const {
             maxWidth,
             maxHeight,
-        } = checkMaxBounds(moveable, width, height, poses, direction, fixedPos, datas);
+        } = checkMaxBounds(moveable, poses, direction, fixedPos, datas);
 
         const [nextWidthOffset, nextHeightOffset] = recheckSizeByTwoDirection(
             moveable,
@@ -693,7 +700,6 @@ export function checkSizeDist(
             isRequest,
             datas,
         );
-
         widthOffset += nextWidthOffset;
         heightOffset += nextHeightOffset;
     }
