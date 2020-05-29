@@ -4,7 +4,7 @@ import {
 } from "@moveable/matrix";
 import { ref } from "framework-utils";
 import { triggerEvent, fillParams, getRect, caculateInversePosition } from "../utils";
-import { Renderer, GroupableProps, DragAreaProps, OnClick } from "../types";
+import { Renderer, GroupableProps, DragAreaProps, OnClick, OnClickGroup } from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
 import MoveableGroup from "../MoveableGroup";
 import { addClass, findIndex, removeClass } from "@daybrush/utils";
@@ -173,7 +173,7 @@ export default {
             containsTarget = targetIndex > -1;
         }
 
-        triggerEvent(moveable, "onClickGroup", fillParams(moveable, e, {
+        triggerEvent(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
             targets,
             inputTarget,
             targetIndex,

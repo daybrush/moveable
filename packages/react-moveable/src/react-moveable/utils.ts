@@ -16,7 +16,7 @@ import {
 } from "@moveable/matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState, Able, MoveableClientRect } from "./types";
+import { MoveableManagerState, Able, MoveableClientRect, MoveableProps } from "./types";
 
 export function round(num: number) {
     return Math.round(num);
@@ -932,7 +932,7 @@ export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: nu
 }
 
 export function fillParams<T extends IObject<any>>(
-    moveable: MoveableManager,
+    moveable: any,
     e: any,
     params: Pick<T, Exclude<keyof T, "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">>,
 ): T {
@@ -952,10 +952,10 @@ export function fillParams<T extends IObject<any>>(
     } as any;
 }
 
-export function triggerEvent<T extends IObject<any>, U extends keyof T>(
-    moveable: MoveableManager<T>,
+export function triggerEvent<T extends IObject<any> = MoveableProps, U extends keyof T = string>(
+    moveable: any,
     name: U & string,
-    params: T[U] extends ((e: infer P) => any) | undefined ? P : {},
+    params: T[U] extends ((e: infer P) => any) | undefined ? P : IObject<any>,
     isManager?: boolean,
 ): any {
     if (isManager) {

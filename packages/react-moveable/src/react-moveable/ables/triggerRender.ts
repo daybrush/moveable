@@ -16,7 +16,7 @@ export function triggerRenderStart(
     if (isGroup) {
         params.targets = moveable.props.targets;
     }
-    triggerEvent(moveable, `onRender${eventAffix}Start`, params);
+    triggerEvent<any>(moveable, `onRender${eventAffix}Start`, params);
 }
 export function triggerRender(
     moveable: MoveableManager<any>,
@@ -32,7 +32,7 @@ export function triggerRender(
     if (isGroup) {
         params.targets = moveable.props.targets;
     }
-    triggerEvent(moveable, `onRender${eventAffix}`, params);
+    triggerEvent<any>(moveable, `onRender${eventAffix}`, params);
 }
 export function triggerRenderEnd(
     moveable: MoveableManager<any>,
@@ -49,5 +49,5 @@ export function triggerRenderEnd(
     if (isGroup) {
         params.targets = moveable.props.targets;
     }
-    triggerEvent(moveable, `onRender${eventAffix}End`, params);
+    triggerEvent<any>(moveable, `onRender${eventAffix}End`, params);
 }

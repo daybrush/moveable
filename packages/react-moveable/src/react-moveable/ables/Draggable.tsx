@@ -4,7 +4,7 @@ import { minus, plus, getRad } from "@moveable/matrix";
 import MoveableManager from "../MoveableManager";
 import {
     DraggableProps, OnDrag, OnDragGroup,
-    OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState, Renderer,
+    OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState, Renderer, OnDragGroupEnd,
 } from "../types";
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildDragger } from "../groupUtils";
@@ -270,7 +270,7 @@ export default {
         }
         this.dragEnd(moveable, e);
         triggerChildDragger(moveable, this, "dragEnd", [0, 0], e, false);
-        triggerEvent(moveable, "onDragGroupEnd", fillParams(moveable, e, {
+        triggerEvent(moveable, "onDragGroupEnd", fillParams<OnDragGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
             isDrag,
         }));

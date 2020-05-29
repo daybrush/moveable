@@ -32,7 +32,7 @@ export function triggerAble<T extends IObject<any>>(
         convertDragDist(moveable.state, e);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
-    const ables: Array<Able<T>> = (moveable as any)[ableType];
+    const ables: Able[] = (moveable as any)[ableType];
 
     if (!ables.length) {
         return false;

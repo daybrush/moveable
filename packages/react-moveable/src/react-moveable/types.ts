@@ -168,8 +168,8 @@ export interface MoveableProps extends
 
 export type MoveableState = MoveableManagerState;
 
-export interface Able<T = any> {
-    name: string & keyof MoveableManagerProps<T>;
+export interface Able {
+    name: string;
     props: IObject<any>;
     ableGroup?: string;
     updateRect?: boolean;

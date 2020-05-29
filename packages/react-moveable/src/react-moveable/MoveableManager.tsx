@@ -83,8 +83,8 @@ export default class MoveableManager<T = {}, U = {}>
         moveableClientRect: resetClientRect(),
         rotation: 0,
     } as any;
-    public targetAbles: Array<Able<T>> = [];
-    public controlAbles: Array<Able<T>> = [];
+    public targetAbles: Able[] = [];
+    public controlAbles: Able[] = [];
     public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer K ? K : never;
     public areaElement!: HTMLElement;
     public targetDragger!: Dragger;
