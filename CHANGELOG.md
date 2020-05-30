@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.7] - 2020-05-30
+* `moveable` 0.17.7
+* `react-moveable` 0.20.8
+* `preact-moveable` 0.19.8
+* `ngx-moveable` 0.13.8
+* `svelte-moveable` 0.8.8
+
+### Fixed
+* Fix CSS's camelized name issue #243
+* Fix wrong maxWidth, maxHeight caculation issue for `innerBounds` and `bounds`  #221 #245 #241 #235
+* Remove `@types/react` , `@types/react-dom` #240
+* Fix `@daybrush/drag`'s version issue #239
+
+
 ## [0.17.6] - 2020-05-18
 * `moveable` 0.17.6
 * `react-moveable` 0.20.7
