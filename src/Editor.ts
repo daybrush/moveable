@@ -84,6 +84,7 @@ let isPinchStart = false;
 
 const moveable = new Moveable(editorElement, {
     target: moveableTarget,
+    dragArea: true,
     draggable: true,
     resizable: true,
     rotatable: true,

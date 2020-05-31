@@ -1119,6 +1119,28 @@ version: 0.17.8
       });
     }
     /**
+    * transform a camelized string into a lowercased string.
+    * @memberof Utils
+    * @param {string} text - a camel-cased string
+    * @param {string} [separator="-"] - a separator
+    * @return {string}  a lowercased string
+    * @example
+    import {decamelize} from "@daybrush/utils";
+
+    console.log(decamelize("transformOrigin")); // transform-origin
+    console.log(decamelize("abcdEfg", "_")); // abcd_efg
+    */
+
+    function decamelize(str, separator) {
+      if (separator === void 0) {
+        separator = "-";
+      }
+
+      return str.replace(/([a-z])([A-Z])/g, function (all, letter, letter2) {
+        return "" + letter + separator + letter2.toLowerCase();
+      });
+    }
+    /**
     * Date.now() method
     * @memberof CrossBrowser
     * @return {number} milliseconds
@@ -1275,7 +1297,7 @@ version: 0.17.8
     license: MIT
     author: Daybrush
     repository: git+https://github.com/daybrush/react-simple-compat.git
-    version: 0.1.6
+    version: 0.1.8
     */
 
     /*! *****************************************************************************
@@ -1598,23 +1620,29 @@ version: 0.17.8
           removed = _a.removed,
           changed = _a.changed;
 
-      for (var name in added) {
+      for (var beforeName in added) {
+        var name = decamelize(beforeName, "-");
+
         if (style.setProperty) {
-          style.setProperty(name, added[name]);
+          style.setProperty(name, added[beforeName]);
         } else {
-          style[name] = added[name];
+          style[name] = added[beforeName];
         }
       }
 
-      for (var name in changed) {
+      for (var beforeName in changed) {
+        var name = decamelize(beforeName, "-");
+
         if (style.setProperty) {
-          style.setProperty(name, changed[name][1]);
+          style.setProperty(name, changed[beforeName][1]);
         } else {
-          style[name] = changed[name][1];
+          style[name] = changed[beforeName][1];
         }
       }
 
-      for (var name in removed) {
+      for (var beforeName in removed) {
+        var name = decamelize(beforeName, "-");
+
         if (style.removeProperty) {
           style.removeProperty(name);
         } else {
