@@ -121,8 +121,10 @@ export default {
         if (!e.inputEvent) {
             return false;
         }
-        const { inputEvent, isDragArea, datas } = e;
-        if (!datas.isDragArea) {
+        const { inputEvent, datas } = e;
+        const isDragArea = datas.isDragArea;
+
+        if (!isDragArea) {
             restoreStyle(moveable);
         }
 
@@ -135,6 +137,7 @@ export default {
         const containsTarget = target.contains(inputTarget);
 
         triggerEvent(moveable, "onClick", fillParams<OnClick>(moveable, e, {
+            isDouble: e.isDouble,
             inputTarget,
             isTarget: target === inputTarget,
             containsTarget,
@@ -174,6 +177,7 @@ export default {
         }
 
         triggerEvent(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
+            isDouble: e.isDouble,
             targets,
             inputTarget,
             targetIndex,
