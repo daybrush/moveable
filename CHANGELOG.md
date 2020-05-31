@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.17.8] - 2020-05-31
+* `moveable` 0.17.8
+* `ngx-moveable` 0.13.9
+* `svelte-moveable` 0.8.9
+
+### Fixed
+* Fix CSS's camelized name issue #243
+
+
+
 ## [0.17.7] - 2020-05-30
 * `moveable` 0.17.7
 * `react-moveable` 0.20.8
