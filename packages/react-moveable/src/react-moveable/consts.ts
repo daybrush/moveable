@@ -189,6 +189,14 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
 .area-piece {
     position: absolute;
 }
+.control.clip-control {
+    background: #6d6;
+    cursor: pointer;
+}
+.line.clip-line {
+    background: #6e6;
+    cursor: pointer;
+}
 ${IS_WEBKIT ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;

@@ -162,6 +162,7 @@ export interface MoveableProps extends
     GroupableProps,
     SnappableProps,
     ScrollableProps,
+    ClippableProps,
     RenderProps {
         target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
@@ -678,11 +679,13 @@ export interface OnPinchGroupEnd extends OnPinchEnd {
  * @property - Clicked target.
  * @property - Whether the clicked target is moveable target.
  * @property - Whether the clicked target is a child of moveable target.
+ * @property - Whether it is double-click
  */
 export interface OnClick extends OnEvent {
     inputTarget: HTMLElement | SVGElement;
     isTarget: boolean;
     containsTarget: boolean;
+    isDouble: boolean;
 }
 
 /**
@@ -694,6 +697,7 @@ export interface OnClick extends OnEvent {
  * @property - Whether the clicked target is on the targets set in the group.
  * @property - Whether the clicked target is a child of the targets set in the group.
  * @property - The corresponding index among the targets set as a group.
+ * @property - Whether it is double-click
  */
 export interface OnClickGroup extends OnEvent {
     targets: Array<HTMLElement | SVGElement>;
@@ -701,6 +705,7 @@ export interface OnClickGroup extends OnEvent {
     isTarget: boolean;
     containsTarget: boolean;
     targetIndex: number;
+    isDouble: boolean;
 }
 
 // `renderStart` event occurs at the first start of all events.
@@ -1071,6 +1076,22 @@ export interface RenderProps {
     onRenderGroupEnd?: (e: OnRenderGroupEnd) => any;
 }
 
+export interface ClippableOptions {
+    clippable?: boolean;
+}
+export interface ClippableProps extends ClippableOptions {
+    onClip?: (e: OnClip) => any;
+}
+export interface OnClip extends OnEvent {
+    clipType: "polygon" | "circle" | "ellipsis";
+    poses: number[][];
+    addedIndex: number;
+    removedIndex: number;
+    changedIndex: number;
+    distX: number;
+    distY: number;
+    clipPath: string;
+}
 export interface OnCustomDrag extends Position {
     type: string;
     inputEvent: any;

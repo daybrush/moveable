@@ -203,6 +203,7 @@ class App extends React.Component<any, any> {
                     origin={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
+                    clippable={true}
                     dragArea={true}
                     draggable={true}
                     snappable={true}
@@ -248,6 +249,9 @@ class App extends React.Component<any, any> {
                     }}
                     onSnap={e => {
                         // console.log(e);
+                    }}
+                    onClip={e => {
+                        e.target.style.clipPath = e.clipPath;
                     }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;
@@ -364,7 +368,9 @@ class App extends React.Component<any, any> {
                         <div className="box box23" data-target="box23"><span>AA</span></div>
                         <div className="box box24" data-target="box24"><span>BB</span></div>
 
-                        <img src={logo} className="App-logo" alt="logo" data-target="logo" />
+                        <img src={logo} className="App-logo" alt="logo" data-target="logo" style={{
+                            clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
+                        }} />
                         <p data-target="p">
                             Edit <code data-target="code">src/App.tsx</code> and save to reload.
                         </p>
