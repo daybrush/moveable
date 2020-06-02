@@ -1077,17 +1077,21 @@ export interface RenderProps {
 }
 
 export interface ClippableOptions {
+    clipType?: "polygon" | "circle" | "ellipsis" | "rect";
+    customClipArea?: { left: number, top: number, width: number, height: number };
+    clipRelative?: boolean;
     clippable?: boolean;
+    dragWithClip?: boolean;
 }
 export interface ClippableProps extends ClippableOptions {
     onClip?: (e: OnClip) => any;
 }
 export interface OnClip extends OnEvent {
-    clipType: "polygon" | "circle" | "ellipsis";
+    clipType: "polygon" | "circle" | "ellipsis" | "rect";
     poses: number[][];
     addedIndex: number;
     removedIndex: number;
-    changedIndex: number;
+    changedIndexes: number[];
     distX: number;
     distY: number;
     clipPath: string;
