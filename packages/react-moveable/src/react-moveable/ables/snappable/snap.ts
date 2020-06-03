@@ -187,9 +187,12 @@ export function checkSnapKeepRatio(
 } {
     const [endX, endY] = endPos;
     const [startX, startY] = startPos;
-    const [dx, dy] = minus(endPos, startPos);
+    let [dx, dy] = minus(endPos, startPos);
     const isBottom = dy > 0;
     const isRight = dx > 0;
+
+    dx = Math.abs(dx) <= TINY_NUM ? 0 : dx;
+    dy = Math.abs(dy) <= TINY_NUM ? 0 : dy;
 
     const verticalInfo: SnapOffsetInfo = {
         isSnap: false,
@@ -232,6 +235,8 @@ export function checkSnapKeepRatio(
     } = getNearestSnapGuidelineInfo(horizontalSnapInfo);
     const horizontalPos = isHorizontalSnap ? horizontalGuideline!.pos[1] : 0;
     const verticalPos = isVerticalSnap ? verticalGuideline!.pos[0] : 0;
+
+    console.log(dx, dy, horizontalPos, verticalPos);
 
     if (dx === 0) {
         if (isHorizontalSnap) {
