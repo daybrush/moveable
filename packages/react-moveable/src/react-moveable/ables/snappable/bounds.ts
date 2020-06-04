@@ -36,7 +36,14 @@ export function checkBoundKeepRatio(
     } = moveable.props.bounds || {};
 
     const [endX, endY] = endPos;
-    const [dx, dy] = minus(endPos, startPos);
+    let [dx, dy] = minus(endPos, startPos);
+
+    if (Math.abs(dx) < TINY_NUM) {
+        dx = 0;
+    }
+    if (Math.abs(dy) < TINY_NUM) {
+        dy = 0;
+    }
     const isBottom = dy > 0;
     const isRight = dx > 0;
 

@@ -236,8 +236,6 @@ export function checkSnapKeepRatio(
     const horizontalPos = isHorizontalSnap ? horizontalGuideline!.pos[1] : 0;
     const verticalPos = isVerticalSnap ? verticalGuideline!.pos[0] : 0;
 
-    console.log(dx, dy, horizontalPos, verticalPos);
-
     if (dx === 0) {
         if (isHorizontalSnap) {
             horizontalInfo.isSnap = true;

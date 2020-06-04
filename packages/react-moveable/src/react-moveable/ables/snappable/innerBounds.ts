@@ -21,9 +21,15 @@ function hitTestLine(
     dot: number[],
     [pos1, pos2]: number[][],
 ) {
-    const dx = pos2[0] - pos1[0];
-    const dy = pos2[1] - pos1[1];
+    let dx = pos2[0] - pos1[0];
+    let dy = pos2[1] - pos1[1];
 
+    if (Math.abs(dx) < TINY_NUM) {
+        dx = 0;
+    }
+    if (Math.abs(dy) < TINY_NUM) {
+        dy = 0;
+    }
     let test1: number;
     let test2: number;
     if (!dx) {
