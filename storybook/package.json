@@ -12,7 +12,7 @@
   "author": "Daybrush",
   "license": "MIT",
   "dependencies": {
-    "react-moveable": "^0.20.8",
+    "react-moveable": "^0.20.9",
     "storybook-addon-preview": "^1.1.0"
   },
   "devDependencies": {
