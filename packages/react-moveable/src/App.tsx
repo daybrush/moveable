@@ -203,7 +203,7 @@ class App extends React.Component<any, any> {
                     origin={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
-                    clippable={true}
+                    // clippable={true}
                     dragArea={true}
                     draggable={true}
                     snappable={true}
@@ -212,13 +212,17 @@ class App extends React.Component<any, any> {
                     snapDigit={0}
                     // bounds={{ left: 50, top: 30, bottom: 600, right: 900 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
-                    verticalGuidelines={[150, 200, 400, 600]}
-                    horizontalGuidelines={[150, 200, 400, 600]}
+                    // verticalGuidelines={[150, 200, 400, 600]}
+                    // horizontalGuidelines={[150, 200, 400, 600]}
+                    snapThreshold={5}
+                    verticalGuidelines={[300, 5, 595, 45, 555, 10, 60, 110]}
+                    horizontalGuidelines={[350, 5, 695, 45, 655, 10, 60, 110]}
                     // snapCenter={true}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
                     snapDistFormat={d => `${d}px`}
-                    padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
+                    // padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
+                    throttleRotate={90}
                     elementGuidelines={[
                         // document.querySelector(".box1 span")!,
                         // document.querySelector(".emo img")!,
@@ -250,9 +254,14 @@ class App extends React.Component<any, any> {
                     onSnap={e => {
                         // console.log(e);
                     }}
-                    onClip={e => {
-                        e.target.style.clipPath = e.clipPath;
-                    }}
+                    // onClip={e => {
+                    //     console.log(e);
+                    //     if (e.clipType === "rect") {
+                    //         e.target.style.clip = e.clipStyle;
+                    //     } else {
+                    //         e.target.style.clipPath = e.clipStyle;
+                    //     }
+                    // }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;
 
@@ -369,7 +378,9 @@ class App extends React.Component<any, any> {
                         <div className="box box24" data-target="box24"><span>BB</span></div>
 
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" style={{
-                            clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
+                            // clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
+                            clip:  "rect(0px,60px,200px,0px)",
+
                         }} />
                         <p data-target="p">
                             Edit <code data-target="code">src/App.tsx</code> and save to reload.

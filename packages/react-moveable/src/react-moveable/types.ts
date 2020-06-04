@@ -162,7 +162,7 @@ export interface MoveableProps extends
     GroupableProps,
     SnappableProps,
     ScrollableProps,
-    ClippableProps,
+    // ClippableProps,
     RenderProps {
         target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
@@ -1094,7 +1094,7 @@ export interface OnClip extends OnEvent {
     changedIndexes: number[];
     distX: number;
     distY: number;
-    clipPath: string;
+    clipStyle: string;
 }
 export interface OnCustomDrag extends Position {
     type: string;

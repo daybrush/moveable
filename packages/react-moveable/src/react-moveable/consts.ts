@@ -216,6 +216,7 @@ export const MIN_SCALE = 0.000000001;
 export const MAX_NUM = Math.pow(10, 10);
 export const MIN_NUM = -MAX_NUM;
 
+export const DIRECTIONS = ["nw", "ne", "sw", "se", "n", "w", "s", "e"];
 export const DIRECTION_INDEXES: IObject<number[]> = {
     n: [0, 1],
     s: [2, 3],
