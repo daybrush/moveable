@@ -27,7 +27,7 @@ import { checkSnapSize } from "./Snappable";
 import {
     directionCondition,
 } from "./utils";
-import { IObject } from "@daybrush/utils";
+import { IObject, isString } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
 /**
@@ -104,7 +104,11 @@ export default {
                 parseFloat(style.maxHeight!) || Infinity,
             ], padding);
         }
-        datas.transformOrigin = moveable.props.transformOrigin;
+        const transformOrigin = moveable.props.transformOrigin || "% %";
+
+        datas.transformOrigin = transformOrigin && isString(transformOrigin)
+            ? transformOrigin.split(" ")
+            : transformOrigin;
         datas.startDirection = getStartDirection(moveable, direction);
         datas.fixedPosition = getAbsoluteFixedPosition(moveable, datas.startDirection);
         datas.fixedOriginalPosition = getAbsoluteFixedPosition(moveable, direction);
@@ -313,15 +317,14 @@ export default {
         datas.prevWidth = distWidth;
         datas.prevHeight = distHeight;
 
-        if (!parentMoveable && delta.every(num => !num)) {
-            return;
-        }
-
         const inverseDelta = getResizeDist(
                 moveable,
                 nextWidth, nextHeight,
                 startDirection, fixedPosition, transformOrigin);
 
+        if (!parentMoveable && delta.every(num => !num) && inverseDelta.every(num => !num)) {
+            return;
+        }
         const params = fillParams<OnResize>(moveable, e, {
             width: startWidth + distWidth,
             height: startHeight + distHeight,

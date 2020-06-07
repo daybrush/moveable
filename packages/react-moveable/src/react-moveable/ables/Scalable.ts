@@ -291,10 +291,15 @@ export default {
 
         datas.prevDist = nowDist;
 
-        if (scaleX === prevDist[0] && scaleY === prevDist[1] && !parentMoveable) {
+        const inverseDelta = getScaleDist(moveable, delta, direction, fixedPosition);
+        if (
+            scaleX === prevDist[0] && scaleY === prevDist[1]
+            && inverseDelta.every(num => !num)
+            && !parentMoveable
+        ) {
             return false;
         }
-        const inverseDelta = getScaleDist(moveable, delta, direction, fixedPosition);
+
         const params = fillParams<OnScale>(moveable, e, {
             scale,
             direction,

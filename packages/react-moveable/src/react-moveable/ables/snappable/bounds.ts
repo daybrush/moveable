@@ -102,14 +102,22 @@ export function checkBoundKeepRatio(
             y = a * left + b;
             x = left;
             isBound = true;
-        } else if (isBottom && bottom <= endY) {
-            y = bottom;
-            x = (y - b) / a;
-            isBound = true;
-        } else if (!isBottom &&  endY <= top) {
-            y = top;
-            x = (y - b) / a;
-            isBound = true;
+        }
+        if (isBound) {
+            if (y < top || y > bottom) {
+                isBound = false;
+            }
+        }
+        if (!isBound) {
+            if (isBottom && bottom <= endY) {
+                y = bottom;
+                x = (y - b) / a;
+                isBound = true;
+            } else if (!isBottom &&  endY <= top) {
+                y = top;
+                x = (y - b) / a;
+                isBound = true;
+            }
         }
         if (isBound) {
             verticalInfo.isBound = true;

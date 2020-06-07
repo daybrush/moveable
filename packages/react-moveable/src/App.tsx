@@ -208,9 +208,9 @@ class App extends React.Component<any, any> {
                     draggable={true}
                     snappable={true}
                     scrollable={true}
-                    transformOrigin="% %"
+                    // transformOrigin="% %"
                     snapDigit={0}
-                    // bounds={{ left: 50, top: 30, bottom: 600, right: 900 }}
+                    bounds={{ left: 200, top: 200, bottom: 600, right: 600 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
                     // verticalGuidelines={[150, 200, 400, 600]}
                     // horizontalGuidelines={[150, 200, 400, 600]}
@@ -307,7 +307,7 @@ class App extends React.Component<any, any> {
                         const ty = parseFloat(item.get("ty")) || 0;
 
                         setOrigin(["%", "%"]);
-                        dragStart && dragStart.set([tx, ty]);
+                        // dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta, dist }) => {
                         // console.log(width, height);

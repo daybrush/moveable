@@ -123,7 +123,7 @@ export default {
         let isSnap = false;
         let dragRotateRad = 0;
 
-        if (throttleDragRotate > 0 && (distX || distY)) {
+        if (!parentEvent && throttleDragRotate > 0 && (distX || distY)) {
             const deg = throttle(getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate);
             const r = getDistSize([distX, distY]);
             dragRotateRad = deg * Math.PI / 180;

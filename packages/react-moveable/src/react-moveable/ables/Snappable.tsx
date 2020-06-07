@@ -17,7 +17,7 @@ import {
     getPosByReverseDirection,
     getDragDist, scaleMatrix, getPosByDirection,
 } from "../DraggerUtils";
-import { minus, rotate, plus } from "@moveable/matrix";
+import { minus, rotate, plus, getRad } from "@moveable/matrix";
 import {
     dragControlCondition as rotatableDragControlCondtion,
 } from "./Rotatable";
@@ -379,26 +379,36 @@ export function checkMaxBounds(
 
             const verticalDirection = normalized(otherDirection[1] - fixedDirection[1]);
             const horizontalDirection = normalized(otherDirection[0] - fixedDirection[0]);
+            const deg = getRad(fixedPos, otherPos) * 360 / Math.PI;
 
             if (isCheckHorizontal) {
+                const nextOtherPos = otherPos.slice();
+
+                if (Math.abs(deg - 360) < 2 || Math.abs(deg - 180) < 2) {
+                    nextOtherPos[1] = fixedPos[1];
+                }
                 const [
                     ,
                     heightOffset,
                 ] = solveNextOffset(
-                    fixedPos, otherPos,
+                    fixedPos, nextOtherPos,
                     (fixedPos[1] < otherPos[1] ? bottom : top) - otherPos[1],
                     false, datas,
                 );
-
                 if (!isNaN(heightOffset)) {
                     maxHeight = height + verticalDirection * heightOffset;
                 }
             }
             if (isCheckVertical) {
+                const nextOtherPos = otherPos.slice();
+
+                if (Math.abs(deg - 90) < 2 || Math.abs(deg - 270) < 2) {
+                    nextOtherPos[0] = fixedPos[0];
+                }
                 const [
                     widthOffset,
                 ] = solveNextOffset(
-                    fixedPos, otherPos,
+                    fixedPos, nextOtherPos,
                     (fixedPos[0] < otherPos[0] ? right : left) - otherPos[0],
                     true, datas,
                 );
