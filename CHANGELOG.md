@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+## [0.17.10] - 2020-06-08
+* `moveable` 0.17.10
+* `react-moveable` 0.20.10
+* `preact-moveable` 0.19.10
+* `ngx-moveable` 0.13.11
+* `svelte-moveable` 0.8.11
+
+
+### Fixed
+* resize could go outside the configured boundaries #253
+
 
 ## [0.17.9] - 2020-06-05
 * `moveable` 0.17.9
