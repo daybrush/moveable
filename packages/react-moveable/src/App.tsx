@@ -1,5 +1,5 @@
 import React from "react";
-import Moveable from "./react-moveable";
+import Moveable, { ClippableProps } from "./react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";
@@ -7,6 +7,7 @@ import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
 import Guides from "@scena/react-guides";
+import Clippable from "./react-moveable/ables/Clippable";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
@@ -193,22 +194,24 @@ class App extends React.Component<any, any> {
                         console.log(e);
                     }}
                     />
-                <Moveable
+                <Moveable<ClippableProps>
                     target={selectedTarget}
                     rootContainer={document.body}
                     className="no-radius"
+                    ables={[Clippable]}
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
                     origin={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
-                    // clippable={true}
+                    clippable={true}
                     dragArea={true}
                     draggable={true}
                     snappable={true}
                     scrollable={true}
                     // transformOrigin="% %"
+                    clipArea={true}
                     snapDigit={0}
                     bounds={{ left: 200, top: 200, bottom: 600, right: 600 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
@@ -254,14 +257,14 @@ class App extends React.Component<any, any> {
                     onSnap={e => {
                         // console.log(e);
                     }}
-                    // onClip={e => {
-                    //     console.log(e);
-                    //     if (e.clipType === "rect") {
-                    //         e.target.style.clip = e.clipStyle;
-                    //     } else {
-                    //         e.target.style.clipPath = e.clipStyle;
-                    //     }
-                    // }}
+                    onClip={e => {
+                        // console.log(e);
+                        if (e.clipType === "rect") {
+                            e.target.style.clip = e.clipStyle;
+                        } else {
+                            e.target.style.clipPath = e.clipStyle;
+                        }
+                    }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;
 

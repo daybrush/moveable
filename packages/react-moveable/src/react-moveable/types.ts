@@ -175,37 +175,37 @@ export interface Able {
     ableGroup?: string;
     updateRect?: boolean;
     canPinch?: boolean;
-    unset?: (moveable: MoveableManagerProps<any>) => any;
-    render?: (moveable: MoveableManagerProps<any>, renderer: Renderer) => any;
+    unset?: (moveable: any) => any;
+    render?: (moveable: any, renderer: Renderer) => any;
 
-    dragStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    drag?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
-    dragEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+    dragStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
+    drag?: (moveable: any, e: DraggerTypes.OnDrag) => any;
+    dragEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
 
-    pinchStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
-    pinch?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
-    pinchEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
+    pinchStart?: (moveable: any, e: DraggerTypes.OnPinchStart) => any;
+    pinch?: (moveable: any, e: DraggerTypes.OnPinch) => any;
+    pinchEnd?: (moveable: any, e: DraggerTypes.OnPinchEnd) => any;
 
     dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
-    dragControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+    dragControlStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
+    dragControl?: (moveable: any, e: DraggerTypes.OnDrag) => any;
+    dragControlEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
 
     dragGroupCondition?: (e: any) => boolean;
-    dragGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDrag) => any;
-    dragGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+    dragGroupStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
+    dragGroup?: (moveable: any, e: DraggerTypes.OnDrag) => any;
+    dragGroupEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
 
-    pinchGroupStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchStart) => any;
-    pinchGroup?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinch) => any;
-    pinchGroupEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnPinchEnd) => any;
+    pinchGroupStart?: (moveable: any, e: DraggerTypes.OnPinchStart) => any;
+    pinchGroup?: (moveable: any, e: DraggerTypes.OnPinch) => any;
+    pinchGroupEnd?: (moveable: any, e: DraggerTypes.OnPinchEnd) => any;
 
     dragGroupControlCondition?: (e: any) => boolean;
-    dragGroupControlStart?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragGroupControl?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragStart) => any;
-    dragGroupControlEnd?: (moveable: MoveableManagerProps<any>, e: DraggerTypes.OnDragEnd) => any;
+    dragGroupControlStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
+    dragGroupControl?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
+    dragGroupControlEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
 
-    request?: (moveable: MoveableManagerProps<any>) => AbleRequester;
+    request?: (moveable: any) => AbleRequester;
 }
 
 /**
@@ -1082,6 +1082,7 @@ export interface ClippableOptions {
     clipRelative?: boolean;
     clippable?: boolean;
     dragWithClip?: boolean;
+    clipArea?: boolean;
 }
 export interface ClippableProps extends ClippableOptions {
     onClip?: (e: OnClip) => any;

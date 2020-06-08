@@ -124,8 +124,16 @@ function removeClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
 }
 export default {
     name: "clippable",
+    props: {
+        clipType: String,
+        customClipArea: Object,
+        clipRelative: Boolean,
+        clippable: Boolean,
+        clipArea: Boolean,
+        dragWithClip: Boolean,
+    },
     render(moveable: MoveableManager<ClippableProps>, React: Renderer) {
-        const { clipType } = moveable.props;
+        const { clipType, clipArea } = moveable.props;
         const { target, width, height, matrix, is3d, left, top } = moveable.state;
 
         if (!target) {
@@ -179,7 +187,13 @@ export default {
                         }}></div>;
                 });
             }
-
+            if (clipArea) {
+                controls.push(<div key="clipArea" className={prefix("clip-area")} style={{
+                    width: `${width}px`,
+                    height: `${height}px`,
+                    clipPath: `polygon(${poses.map(pos => `${pos[0]}px ${pos[1]}px`).join(", ")})`,
+                }}></div>);
+            }
             return [
                 ...controls,
                 ...poses.map((to, i) => {
@@ -231,6 +245,7 @@ export default {
 
         datas.isControl = className.indexOf("clip-control") > -1;
         datas.isLine = className.indexOf("clip-line") > -1;
+        datas.isArea = className.indexOf("clip-area") > -1;
         datas.index = inputTarget.getAttribute("data-clip-index");
         datas.clipPath = getClipPath(clipType, target!, width, height);
 
@@ -247,7 +262,7 @@ export default {
         }
 
         const draggableData = e.originalDatas && e.originalDatas.draggable || {};
-        const { isControl, isLine, index, clipPath } = datas as {
+        const { isControl, isLine, isArea, index, clipPath } = datas as {
             clipPath: ReturnType<typeof getClipPath>,
             [key: string]: any,
         };
@@ -266,7 +281,7 @@ export default {
 
             if (isControl) {
                 indexes.push(index);
-            } else if (isLine) {
+            } else if (isLine || isArea) {
                 indexes.push(...poses.map((_, i) => i));
                 // indexes.push(index, index === 0 ? poses.length - 1 : index - 1);
             } else {
@@ -283,7 +298,7 @@ export default {
             let { top, right, bottom, left } = clipPath as any;
             const direction = isControl ? DIRECTIONS[index] : "nwse";
 
-            if (!isLine && !isControl) {
+            if (!isLine && !isControl && !isArea) {
                 distX = -distX;
                 distY = -distY;
             }
@@ -319,16 +334,16 @@ export default {
     },
     dragControlEnd(moveable: MoveableManager<ClippableProps>, e: any) {
         const target = e.inputEvent.target;
-        const className = target.className;
+        const { isLine, isControl } = e.datas;
 
         if (!e.datas.isClipStart) {
             return false;
         }
 
         if (e.isDouble) {
-            if (className.indexOf("clip-control") > -1) {
+            if (isControl) {
                 removeClipPath(moveable, e);
-            } else if (className.indexOf("clip-line") > -1) {
+            } else if (isLine) {
                 // add
                 addClipPath(moveable, e);
             }

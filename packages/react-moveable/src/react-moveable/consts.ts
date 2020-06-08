@@ -197,6 +197,12 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
     background: #6e6;
     cursor: pointer;
 }
+.clip-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.2);
+}
 ${IS_WEBKIT ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;
