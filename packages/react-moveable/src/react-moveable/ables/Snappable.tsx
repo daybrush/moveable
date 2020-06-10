@@ -889,7 +889,7 @@ export function checkThrottleDragRotate(
     if (throttleDragRotate && distX && distY) {
         offsetX = 0;
         offsetY = 0;
-        const adjustPoses = [];
+        const adjustPoses: number[][] = [];
         if (isVerticalBound && isHorizontalBound) {
             adjustPoses.push(
                 [0, horizontalOffset],

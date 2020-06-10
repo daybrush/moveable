@@ -2,6 +2,7 @@ import MoveableManager from "../../src/react-moveable/MoveableManager";
 import {  createRotateMatrix, caculate, minus, plus } from "@moveable/matrix";
 import { RotatableProps } from "../../src/react-moveable";
 import { getClientRect } from "../../src/react-moveable/utils";
+import Clippable from "../../src/react-moveable/ables/Clippable";
 
 export async function wait(time: number) {
     return new Promise(resolve => {

@@ -367,8 +367,8 @@ export function caculateMatrixStack(
         targetMatrix = createIdentityMatrix(isMatrix3d ? 4 : 3);
     }
     const transform = makeMatrixCSS(
-        convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16
-            ? convertDimension(targetMatrix, 4, 3) : targetMatrix),
+        isSVGGraphicElement && targetMatrix.length === 16
+            ? convertDimension(targetMatrix, 4, 3) : targetMatrix,
         isMatrix3d,
     );
 

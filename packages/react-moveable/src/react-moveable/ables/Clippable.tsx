@@ -251,7 +251,7 @@ export default {
 
             if (clipArea) {
                 const piece = Math.max(10, radiusX! / 5, radiusY! / 5);
-                const areaPoses = [];
+                const areaPoses: number[][] = [];
 
                 for (let i = 0; i <= piece; ++i) {
                     const rad = Math.PI * 2 / piece * i;
@@ -260,12 +260,12 @@ export default {
                         radiusY! + (radiusY! - zoom!) * Math.sin(rad),
                     ]);
                 }
-                areaPoses.push([radiusX, -2]);
+                areaPoses.push([radiusX!, -2]);
                 areaPoses.push([-2, -2]);
                 areaPoses.push([-2, radiusY! * 2 + 2]);
                 areaPoses.push([radiusX! * 2 + 2, radiusY! * 2 + 2]);
                 areaPoses.push([radiusX! * 2 + 2, -2]);
-                areaPoses.push([radiusX, -2]);
+                areaPoses.push([radiusX!, -2]);
 
                 ellipseClipPath = `polygon(${areaPoses.map(pos => `${pos[0]}px ${pos[1]}px`).join(", ")})`;
             }
@@ -337,13 +337,13 @@ export default {
         return true;
     },
     dragControl(moveable: MoveableManager<ClippableProps>, e: any) {
-        const datas = e.datas;
+        const { datas, originalDatas } = e.datas;
 
         if (!datas.isClipStart) {
             return false;
         }
 
-        const draggableData = e.originalDatas && e.originalDatas.draggable || {};
+        const draggableData = (originalDatas && originalDatas.draggable) || {};
         const { isControl, isLine, isArea, index, clipPath } = datas as {
             clipPath: ReturnType<typeof getClipPath>,
             [key: string]: any,

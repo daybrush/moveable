@@ -13,7 +13,9 @@
       "forceConsistentCasingInFileNames": false,
       "resolveJsonModule": false,
       "isolatedModules": false,
-      "noEmit": false
+      "noEmit": false,
+      "allowUnreachableCode": true,
+      "allowUnusedLabels": true
     },
     "include": [
       "./src/**/*.ts",

@@ -408,7 +408,7 @@ export function getSnapInfosByDirection(
     poses: number[][],
     snapDirection: number[],
 ) {
-    let nextPoses = [];
+    let nextPoses: number[][] = [];
     if (snapDirection[0] && snapDirection[1]) {
         nextPoses = [
             snapDirection,

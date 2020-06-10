@@ -29,7 +29,7 @@ export default {
         } = moveable.state;
 
         const poses = [pos1, pos2, pos3, pos4];
-        const paddingDirections = [];
+        const paddingDirections: number[][] = [];
 
         if (left > 0) {
             paddingDirections.push([0, 2]);
