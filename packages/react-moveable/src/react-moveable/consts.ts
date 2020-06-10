@@ -195,13 +195,22 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
 }
 .line.clip-line {
     background: #6e6;
-    cursor: pointer;
+    cursor: move;
 }
 .clip-area {
     position: absolute;
     top: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.2);
+}
+
+.clip-ellipse {
+    position: absolute;
+    cursor: move;
+    border: 1px solid #6d6;
+    border: var(--zoompx) solid #6d6;
+    border-radius: 50%;
+    transform-origin: 0px 0px;
 }
 ${IS_WEBKIT ? `:global svg *:before {
 	content:"";
@@ -243,3 +252,10 @@ export const DIRECTION_ROTATIONS: IObject<number> = {
     sw: 225,
     se: 135,
 };
+
+export const CLIP_DIRECTIONS = [
+    [0, -1],
+    [1, 0],
+    [0, 1],
+    [-1, 0],
+];

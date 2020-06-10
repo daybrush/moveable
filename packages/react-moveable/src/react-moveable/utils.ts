@@ -366,10 +366,11 @@ export function caculateMatrixStack(
     if (!targetMatrix) {
         targetMatrix = createIdentityMatrix(isMatrix3d ? 4 : 3);
     }
-    const transform = `${isMatrix3d ? "matrix3d" : "matrix"}(${
+    const transform = makeMatrixCSS(
         convertMatrixtoCSS(isSVGGraphicElement && targetMatrix.length === 16
-            ? convertDimension(targetMatrix, 4, 3) : targetMatrix)
-        })`;
+            ? convertDimension(targetMatrix, 4, 3) : targetMatrix),
+        isMatrix3d,
+    );
 
     rootMatrix = ignoreDimension(rootMatrix, n, n);
     return [
@@ -382,6 +383,9 @@ export function caculateMatrixStack(
         transformOrigin,
         is3d || isRoot3d,
     ];
+}
+export function makeMatrixCSS(matrix: number[], is3d = matrix.length > 9) {
+    return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix).join(",")})`;
 }
 export function getSVGViewBox(el: SVGSVGElement) {
     const clientWidth = el.clientWidth;

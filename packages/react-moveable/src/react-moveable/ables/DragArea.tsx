@@ -1,9 +1,9 @@
 import MoveableManager from "../MoveableManager";
 import {
-    createWarpMatrix, convertMatrixtoCSS,
+    createWarpMatrix,
 } from "@moveable/matrix";
 import { ref } from "framework-utils";
-import { triggerEvent, fillParams, getRect, caculateInversePosition } from "../utils";
+import { triggerEvent, fillParams, getRect, caculateInversePosition, makeMatrixCSS } from "../utils";
 import { Renderer, GroupableProps, DragAreaProps, OnClick, OnClickGroup } from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
 import MoveableGroup from "../MoveableGroup";
@@ -54,7 +54,7 @@ export default {
             renderPoses[2],
             renderPoses[3],
         );
-        const transform = h.length ? `matrix3d(${convertMatrixtoCSS(h).join(",")})` : "none";
+        const transform = h.length ? makeMatrixCSS(h, true) : "none";
 
         return [
             <div key="area" ref={ref(moveable, "areaElement")} className={AREA} style={{

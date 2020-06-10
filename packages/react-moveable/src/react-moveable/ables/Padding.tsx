@@ -1,7 +1,7 @@
 import MoveableManager from "../MoveableManager";
-import { prefix } from "../utils";
+import { prefix, makeMatrixCSS } from "../utils";
 import { Renderer } from "../types";
-import { createWarpMatrix, convertMatrixtoCSS } from "@moveable/matrix";
+import { createWarpMatrix } from "@moveable/matrix";
 
 export default {
     name: "padding",
@@ -63,7 +63,7 @@ export default {
                 return undefined;
             }
             return (<div key={`padding${i}`} className={prefix("padding")} style={{
-                transform: `matrix3d(${convertMatrixtoCSS(h).join(",")})`,
+                transform: makeMatrixCSS(h, true),
             }}></div>);
         });
     },

@@ -213,7 +213,7 @@ class App extends React.Component<any, any> {
                     // transformOrigin="% %"
                     clipArea={true}
                     snapDigit={0}
-                    bounds={{ left: 200, top: 200, bottom: 600, right: 600 }}
+                    // bounds={{ left: 200, top: 200, bottom: 600, right: 600 }}
                     // innerBounds={{ left: 400, top: 400, width: 200, height: 200 }}
                     // verticalGuidelines={[150, 200, 400, 600]}
                     // horizontalGuidelines={[150, 200, 400, 600]}
@@ -225,7 +225,7 @@ class App extends React.Component<any, any> {
                     // renderDirections={["n", "ne", "nw"]}
                     snapDistFormat={d => `${d}px`}
                     // padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
-                    throttleRotate={90}
+                    // throttleRotate={90}
                     elementGuidelines={[
                         // document.querySelector(".box1 span")!,
                         // document.querySelector(".emo img")!,
@@ -258,7 +258,7 @@ class App extends React.Component<any, any> {
                         // console.log(e);
                     }}
                     onClip={e => {
-                        // console.log(e);
+                        console.log(e);
                         if (e.clipType === "rect") {
                             e.target.style.clip = e.clipStyle;
                         } else {
@@ -381,8 +381,10 @@ class App extends React.Component<any, any> {
                         <div className="box box24" data-target="box24"><span>BB</span></div>
 
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" style={{
+                            // clipPath: `circle(39.7% at 52% 49%)`,
+                            clipPath: `ellipse(39.7% 39.7% at 52% 49%)`,
                             // clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
-                            clip:  "rect(0px,60px,200px,0px)",
+                            // clip:  "rect(0px,60px,200px,0px)",
 
                         }} />
                         <p data-target="p">
