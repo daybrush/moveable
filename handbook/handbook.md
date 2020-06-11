@@ -103,7 +103,7 @@ You can Drag, Resize, Scale, Rotate, Warp, Pinch, Snap.
 * [throttleDrag](https://daybrush.com/moveable/release/latest/doc/Moveable.html#throttleDragRotate): throttle of angle of x, y when drag. (default: 0)
 * [dragArea](https://daybrush.com/moveable/release/latest/doc/Moveable.html#dragArea): Add an event to the moveable area instead of the target for stopPropagation. (default: false)
 
-### Vanilla Exmaple
+### Vanilla Example
 
 ```ts
 import Moveable from "moveable";
