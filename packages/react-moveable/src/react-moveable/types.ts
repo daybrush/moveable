@@ -378,11 +378,16 @@ export interface OnScaleEnd extends OnEvent {
  * @property - The direction of resize.
  * @property - resize causes a `dragStart` event.
  * @property - You can set the css width, height value.
+ * @property - You can set the css min width, min height value. (default: min-width)
+ * @property - You can set the css max width, max height value. (default: max-width)
+ * @property - You can set the css origin (default: % %)
  */
 export interface OnResizeStart extends OnEvent {
     direction: number[];
     dragStart: OnDragStart | false;
-    set: (sizes: number[]) => any;
+    set: (size: number[]) => any;
+    setMin: (minSize: number[]) => any;
+    setMax: (maxSize: number[]) => any;
     setOrigin: (origin: Array<string | number>) => any;
 }
 /**

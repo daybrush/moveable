@@ -119,6 +119,12 @@ export default {
                 datas.startWidth = startWidth;
                 datas.startHeight = startHeight;
             },
+            setMin: (minSize: number[]) => {
+                datas.minSize = minSize;
+            },
+            setMax: (maxSize: number[]) => {
+                datas.maxSize = maxSize;
+            },
             setOrigin: (origin: Array<string | number>) => {
                 datas.transformOrigin = origin;
             },
@@ -127,7 +133,7 @@ export default {
                 new CustomDragger().dragStart([0, 0], inputEvent),
             ),
         });
-        const result = triggerEvent(moveable, "onResizeStart", params);
+        const result = triggerEvent<ResizableProps>(moveable, "onResizeStart", params);
         if (result !== false) {
             datas.isResize = true;
             moveable.state.snapRenderInfo = {
@@ -339,7 +345,7 @@ export default {
                 setCustomDrag(moveable.state, inverseDelta, inputEvent, !!isPinch, false),
             ) as OnDrag,
         });
-        triggerEvent(moveable, "onResize", params);
+        triggerEvent<ResizableProps>(moveable, "onResize", params);
         return params;
     },
     dragControlAfter(
@@ -395,7 +401,7 @@ export default {
         const params = fillParams<OnResizeEnd>(moveable, e, {
             isDrag,
         });
-        triggerEvent(moveable, "onResizeEnd", params);
+        triggerEvent<ResizableProps>(moveable, "onResizeEnd", params);
         return isDrag;
     },
     dragGroupControlCondition: directionCondition,
@@ -433,7 +439,7 @@ export default {
             targets: moveable.props.targets!,
             events,
         };
-        const result = triggerEvent(moveable, "onResizeGroupStart", nextParams);
+        const result = triggerEvent<ResizableProps>(moveable, "onResizeGroupStart", nextParams);
 
         datas.isResize = result !== false;
         return datas.isResize ? params : false;
@@ -491,7 +497,7 @@ export default {
             ...params,
         };
 
-        triggerEvent(moveable, "onResizeGroup", nextParams);
+        triggerEvent<ResizableProps>(moveable, "onResizeGroup", nextParams);
         return nextParams;
     },
     dragGroupControlEnd(moveable: MoveableGroup, e: any) {
@@ -509,7 +515,7 @@ export default {
             isDrag,
         });
 
-        triggerEvent(moveable, "onResizeGroupEnd", nextParams);
+        triggerEvent<ResizableProps>(moveable, "onResizeGroupEnd", nextParams);
         return isDrag;
     },
     /**
