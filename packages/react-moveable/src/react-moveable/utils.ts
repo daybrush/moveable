@@ -336,13 +336,13 @@ export function caculateMatrixStack(
         }
 
         // caculate for SVGElement
-        if (isObject(matrix[n - 1])) {
-            [matrix[n - 1], matrix[2 * n - 1]] =
+        if (isObject(matrix[n * (n - 1)])) {
+            [matrix[n * (n - 1)], matrix[n * (n - 1) + 1]] =
                 getSVGOffset(
-                    matrix[n - 1] as any,
+                    matrix[n * (n - 1)] as any,
                     endContainer,
                     n,
-                    matrix[2 * n - 1] as any,
+                    matrix[n * (n - 1) + 1] as any,
                     allMatrix,
                     matrixes[i + 1],
                 );
@@ -425,11 +425,10 @@ export function getSVGMatrix(
         translate[0] = (clientWidth - viewBoxWidth) / 2 * xAlign;
         translate[1] = (clientHeight - viewBoxHeight) / 2 * yAlign;
     }
-
     const scaleMatrix = createScaleMatrix(scale, n);
     [
-        scaleMatrix[n - 1],
-        scaleMatrix[2 * n - 1],
+        scaleMatrix[n * (n - 1)],
+        scaleMatrix[n * (n - 1) + 1],
     ] = translate;
 
     return getAbsoluteMatrix(

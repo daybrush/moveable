@@ -9,7 +9,7 @@ export default class MoveableExample extends React.Component {
     };
     public render() {
         return (
-            <div className="c1" style={{ position: "relative", left: "0px", top: "0px", width: "500px", height: "500px", border: "2px solid black" }}>
+            <div className="c1" style={{ position: "absolute", left: "0px", top: "0px", width: "500px", height: "500px", border: "2px solid black" }}>
             <Moveable
                 target={this.state.target} ref={ref(this, "innerMoveable")}
                 draggable={true}

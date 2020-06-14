@@ -29,6 +29,8 @@ describe("test Moveable", () => {
         await wait(300);
 
         const state = moveable.innerMoveable.moveable.state;
+        expect(state.left).to.be.equals(5);
+        expect(state.top).to.be.equals(5);
         expect(state.width).to.be.equals(302);
         expect(state.height).to.be.equals(222);
         expect(moveable.innerMoveable.isInside(40, 40)).to.be.true;

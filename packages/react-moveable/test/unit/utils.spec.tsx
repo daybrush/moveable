@@ -8,7 +8,7 @@ import {
 import { getRad, multiply, invert, transpose } from "../../src/react-moveable/matrix";
 import { helperInvert, helperMultiply } from "./TestHelper";
 
-describe.only("test utils", () => {
+describe("test utils", () => {
     beforeEach(() => {
         document.documentElement.style.cssText = "position: relative;height: 100%; width: 100%;";
         document.body.style.cssText = "position: relative;height: 100%; width: 100%;";
@@ -185,26 +185,26 @@ describe.only("test utils", () => {
         ] = stack3;
 
         // Then
-        expect(beforeMatrix1).to.be.deep.equals([2, 0, -252, 0, 2, -252, 0, 0, 1]);
-        expect(offsetMatrix1).to.be.deep.equals([2, 0, -48, 0, 2, -48, 0, 0, 1]);
-        expect(matrix1).to.be.deep.equals([2, 0, -48, 0, 2, -48, 0, 0, 1]);
-        expect(targetMatrix1).to.be.deep.equals([1, 0, 0, 0, 1, 0, 0, 0, 1]);
+        expect(beforeMatrix1).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
+        expect(offsetMatrix1).to.be.deep.equals(transpose([2, 0, -48, 0, 2, -48, 0, 0, 1]));
+        expect(matrix1).to.be.deep.equals(transpose([2, 0, -48, 0, 2, -48, 0, 0, 1]));
+        expect(targetMatrix1).to.be.deep.equals(transpose([1, 0, 0, 0, 1, 0, 0, 0, 1]));
         expect(transform1).to.be.equals("matrix(1,0,0,1,0,0)");
         expect(transformOrigin1).to.be.deep.equals([50, 50]);
         expect(is3d1).to.be.false;
 
-        expect(beforeMatrix2).to.be.deep.equals([2, 0, -252, 0, 2, -252, 0, 0, 1]);
-        expect(offsetMatrix2).to.be.deep.equals([2, 0, -48, 0, 2, 152, 0, 0, 1]);
-        expect(matrix2).to.be.deep.equals([2, 0, 152, 0, 2, 232, 0, 0, 1]);
-        expect(targetMatrix2).to.be.deep.equals([1, 0, 100, 0, 1, 40, 0, 0, 1]);
+        expect(beforeMatrix2).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
+        expect(offsetMatrix2).to.be.deep.equals(transpose([2, 0, -48, 0, 2, 152, 0, 0, 1]));
+        expect(matrix2).to.be.deep.equals(transpose([2, 0, 152, 0, 2, 232, 0, 0, 1]));
+        expect(targetMatrix2).to.be.deep.equals(transpose([1, 0, 100, 0, 1, 40, 0, 0, 1]));
         expect(transform2).to.be.equals("matrix(1,0,0,1,100,40)");
         expect(transformOrigin2).to.be.deep.equals([50, 50]);
         expect(is3d2).to.be.false;
 
-        expect(beforeMatrix3).to.be.deep.equals([2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1]);
-        expect(offsetMatrix3).to.be.deep.equals([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 0, 0, 0, 0, 1]);
-        expect(matrix3).to.be.deep.equals([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 100, 0, 0, 0, 1]);
-        expect(targetMatrix3).to.be.deep.equals([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1]);
+        expect(beforeMatrix3).to.be.deep.equals(transpose([2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1]));
+        expect(offsetMatrix3).to.be.deep.equals(transpose([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 0, 0, 0, 0, 1]));
+        expect(matrix3).to.be.deep.equals(transpose([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 100, 0, 0, 0, 1]));
+        expect(targetMatrix3).to.be.deep.equals(transpose([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1]));
         expect(transform3).to.be.equals("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)");
         expect(transformOrigin3).to.be.deep.equals([50, 50]);
         expect(is3d3).to.be.true;
@@ -258,7 +258,7 @@ describe.only("test utils", () => {
             nextPoses: [[100, 0], [420, 0], [100, 220], [420, 220]],
         },
     ].forEach(({ poses, nextPoses }, i) => {
-        it.only(`test createWarpMatrix${i}`, () => {
+        it(`test createWarpMatrix${i}`, () => {
             // Given
             const [x0, y0] = poses[0];
             const [x1, y1] = poses[1];
@@ -299,7 +299,6 @@ describe.only("test utils", () => {
             const h = multiply(invertMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
             const helperH = helperMultiply(helperInvertMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
 
-            console.log(h, helperH);
             // Then
             expect(h).to.be.deep.equals(helperH);
             expect(invertMatrix).to.be.deep.equals(transpose(helperInvertMatrix));
