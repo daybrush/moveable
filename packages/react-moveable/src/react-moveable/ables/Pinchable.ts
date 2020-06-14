@@ -1,5 +1,5 @@
 import { Client } from "@daybrush/drag";
-import { triggerEvent, fillParams } from "../utils";
+import { triggerEvent, fillParams, fillEndParams } from "../utils";
 import MoveableManager from "../MoveableManager";
 import { PinchableProps, Able, SnappableState, OnPinchStart, OnPinch, OnPinchEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
@@ -124,7 +124,7 @@ export default {
         }
         const eventName = `onPinch${targets ? "Group" : ""}End` as "onPinchEnd";
 
-        const params = fillParams<OnPinchEnd>(moveable, e, { isDrag: isPinch }) as any;
+        const params = fillEndParams<OnPinchEnd>(moveable, e, { isDrag: isPinch }) as any;
 
         if (targets) {
             params.targets = targets;

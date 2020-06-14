@@ -1,6 +1,6 @@
 import {
     prefix, getLineStyle, getDirection, getAbsolutePosesByState,
-    triggerEvent, fillParams, makeMatrixCSS,
+    triggerEvent, fillParams, makeMatrixCSS, fillEndParams,
  } from "../utils";
 import {
     convertDimension, invert, multiply,
@@ -237,9 +237,7 @@ export default {
         }
         datas.isWarp = false;
 
-        triggerEvent(moveable, "onWarpEnd", fillParams<OnWarpEnd>(moveable, e, {
-            isDrag,
-        }));
+        triggerEvent(moveable, "onWarpEnd", fillEndParams<OnWarpEnd>(moveable, e, {}));
         return isDrag;
     },
 };

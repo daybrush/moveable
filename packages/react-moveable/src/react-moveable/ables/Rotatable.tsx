@@ -1,4 +1,7 @@
-import { throttle, prefix, triggerEvent, fillParams, getRotationRad, getClientRect, caculatePosition } from "../utils";
+import {
+    throttle, prefix, triggerEvent, fillParams,
+    getRotationRad, getClientRect, caculatePosition, fillEndParams
+} from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import MoveableManager from "../MoveableManager";
 import {
@@ -312,9 +315,7 @@ export default {
         }
         datas.isRotate = false;
 
-        triggerEvent(moveable, "onRotateEnd", fillParams<OnRotateEnd>(moveable, e, {
-            isDrag,
-        }));
+        triggerEvent(moveable, "onRotateEnd", fillEndParams<OnRotateEnd>(moveable, e, {}));
         return isDrag;
     },
     dragGroupControlCondition: dragControlCondition,
@@ -425,9 +426,8 @@ export default {
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", datas, e);
 
-        const nextParams: OnRotateGroupEnd = fillParams(moveable, e, {
+        const nextParams = fillEndParams<OnRotateGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
-            isDrag,
         });
 
         triggerEvent(moveable, "onRotateGroupEnd", nextParams);

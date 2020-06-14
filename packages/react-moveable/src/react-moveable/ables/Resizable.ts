@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent,
-    fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize, caculateBoundSize,
+    fillParams, getKeepRatioHeight, getKeepRatioWidth, getCSSSize, getDistSize, caculateBoundSize, fillEndParams,
 } from "../utils";
 import {
     setDragStart,
@@ -398,9 +398,7 @@ export default {
         }
         datas.isResize = false;
 
-        const params = fillParams<OnResizeEnd>(moveable, e, {
-            isDrag,
-        });
+        const params = fillEndParams<OnResizeEnd>(moveable, e, {});
         triggerEvent<ResizableProps>(moveable, "onResizeEnd", params);
         return isDrag;
     },
@@ -510,9 +508,8 @@ export default {
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", datas, e);
 
-        const nextParams: OnResizeGroupEnd = fillParams<OnResizeGroupEnd>(moveable, e, {
+        const nextParams: OnResizeGroupEnd = fillEndParams<OnResizeGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
-            isDrag,
         });
 
         triggerEvent<ResizableProps>(moveable, "onResizeGroupEnd", nextParams);

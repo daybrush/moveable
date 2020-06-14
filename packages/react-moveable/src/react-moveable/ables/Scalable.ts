@@ -1,6 +1,6 @@
 import {
     throttle, getDirection, triggerEvent, multiply2,
-    fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize,
+    fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize, fillEndParams,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -324,9 +324,7 @@ export default {
 
         datas.isScale = false;
 
-        triggerEvent(moveable, "onScaleEnd", fillParams<OnScaleEnd>(moveable, e, {
-            isDrag,
-        }));
+        triggerEvent(moveable, "onScaleEnd", fillEndParams<OnScaleEnd>(moveable, e, {}));
         return isDrag;
     },
     dragGroupControlCondition: directionCondition,
@@ -425,9 +423,8 @@ export default {
         this.dragControlEnd(moveable, e);
         triggerChildAble(moveable, this, "dragControlEnd", datas, e);
 
-        const nextParams = fillParams<OnScaleGroupEnd>(moveable, e, {
+        const nextParams = fillEndParams<OnScaleGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
-            isDrag,
         });
 
         triggerEvent(moveable, "onScaleGroupEnd", nextParams);

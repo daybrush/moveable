@@ -195,7 +195,7 @@ export function getMatrixStackInfo(
                 matrixes[i] = convertDimension(matrixes[i], 3, 4);
             }
         }
-        if (is3d &&  length === 9) {
+        if (is3d && length === 9) {
             matrix = convertDimension(matrix, 3, 4);
         }
         const {
@@ -932,13 +932,47 @@ export function fillParams<T extends IObject<any>>(
     if (!datas.datas) {
         datas.datas = {};
     }
-    return {
+    const nextParams = {
         ...params,
         target: moveable.state.target,
         clientX: e.clientX,
         clientY: e.clientY,
         inputEvent: e.inputEvent,
         currentTarget: moveable,
+        datas: datas.datas,
+    } as any;
+
+    if (datas.isStartEvent) {
+        datas.lastEvent = nextParams;
+    } else {
+        datas.isStartEvent = true;
+    }
+    return nextParams;
+}
+export function fillEndParams<T extends IObject<any>>(
+    moveable: any,
+    e: any,
+    params: Pick<T, Exclude<
+        keyof T,
+        "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget" | "lastEvent" | "isDrag">
+    > & { isDrag?: boolean },
+): T {
+    const datas = e.datas;
+    const isDrag = "isDrag" in params ? params.isDrag : e.isDrag;
+
+    if (!datas.datas) {
+        datas.datas = {};
+    }
+
+    return {
+        isDrag,
+        ...params,
+        target: moveable.state.target,
+        clientX: e.clientX,
+        clientY: e.clientY,
+        inputEvent: e.inputEvent,
+        currentTarget: moveable,
+        lastEvent: datas.lastEvent,
         datas: datas.datas,
     } as any;
 }
@@ -1086,7 +1120,7 @@ export function caculatePadding(
     matrix: number[], pos: number[],
     transformOrigin: number[], origin: number[], n: number,
 ) {
-    return minus(caculatePosition(matrix, plus(transformOrigin, pos),  n), origin);
+    return minus(caculatePosition(matrix, plus(transformOrigin, pos), n), origin);
 }
 export function checkSize(targetSize: number[], compareSize: number[], isMax: boolean) {
     return [

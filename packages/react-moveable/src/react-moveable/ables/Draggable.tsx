@@ -1,5 +1,5 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
-import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix } from "../utils";
+import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
 import { minus, plus, getRad } from "../matrix";
 import MoveableManager from "../MoveableManager";
 import {
@@ -211,7 +211,7 @@ export default {
             return;
         }
         datas.isDrag = false;
-        !parentEvent && triggerEvent(moveable, "onDragEnd", fillParams<OnDragEnd>(moveable, e, {
+        !parentEvent && triggerEvent<DraggableProps>(moveable, "onDragEnd", fillEndParams<OnDragEnd>(moveable, e, {
             isDrag,
         }));
         return isDrag;
@@ -270,9 +270,8 @@ export default {
         }
         this.dragEnd(moveable, e);
         triggerChildDragger(moveable, this, "dragEnd", [0, 0], e, false);
-        triggerEvent(moveable, "onDragGroupEnd", fillParams<OnDragGroupEnd>(moveable, e, {
+        triggerEvent(moveable, "onDragGroupEnd", fillEndParams<OnDragGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
-            isDrag,
         }));
 
         return isDrag;
