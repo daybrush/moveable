@@ -1,7 +1,7 @@
 import MoveableManager from "../MoveableManager";
 import {
     createWarpMatrix,
-} from "@moveable/matrix";
+} from "../matrix";
 import { ref } from "framework-utils";
 import { triggerEvent, fillParams, getRect, caculateInversePosition, makeMatrixCSS } from "../utils";
 import { Renderer, GroupableProps, DragAreaProps, OnClick, OnClickGroup } from "../types";

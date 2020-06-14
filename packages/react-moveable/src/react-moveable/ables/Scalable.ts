@@ -20,7 +20,7 @@ import {
 } from "../groupUtils";
 import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
-import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
+import { getRad, caculate, createRotateMatrix, plus } from "../matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapScale } from "./Snappable";
 import { isArray, IObject } from "@daybrush/utils";

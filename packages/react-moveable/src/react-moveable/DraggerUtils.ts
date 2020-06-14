@@ -2,7 +2,7 @@ import {
     invert, caculate, minus, plus,
     convertPositionMatrix, average,
     createScaleMatrix, multiply,
-} from "@moveable/matrix";
+} from "./matrix";
 import MoveableManager from "./MoveableManager";
 import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
 import { splitUnit } from "@daybrush/utils";

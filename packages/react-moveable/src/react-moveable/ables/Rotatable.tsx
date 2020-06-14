@@ -9,7 +9,7 @@ import {
 import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
-import { minus, plus, getRad, rotate as rotateMatrix } from "@moveable/matrix";
+import { minus, plus, getRad, rotate as rotateMatrix } from "../matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapRotate } from "./Snappable";
 

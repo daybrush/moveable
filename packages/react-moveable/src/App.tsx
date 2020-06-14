@@ -205,7 +205,7 @@ class App extends React.Component<any, any> {
                     origin={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
-                    clippable={true}
+                    // clippable={true}
                     dragArea={true}
                     draggable={true}
                     snappable={true}
@@ -382,10 +382,10 @@ class App extends React.Component<any, any> {
 
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" style={{
                             // clipPath: `circle(39.7% at 52% 49%)`,
-                            clipPath: `ellipse(39.7% 39.7% at 52% 49%)`,
+                            // clipPath: `ellipse(39.7% 39.7% at 52% 49%)`,
                             // clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
                             // clip:  "rect(0px,60px,200px,0px)",
-
+                            transform: "translate(100px, 0px)",
                         }} />
                         <p data-target="p">
                             Edit <code data-target="code">src/App.tsx</code> and save to reload.

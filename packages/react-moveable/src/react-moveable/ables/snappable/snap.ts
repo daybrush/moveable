@@ -6,7 +6,7 @@ import MoveableManager from "../../MoveableManager";
 import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
 import { TINY_NUM } from "../../consts";
-import { minus } from "@moveable/matrix";
+import { minus } from "../../matrix";
 
 export function getGapGuidelines(
     guidelines: Guideline[],

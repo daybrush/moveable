@@ -21,7 +21,7 @@ import Dragger from "@daybrush/drag";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
 import { triggerAble, getTargetAbleDragger, getAbleDragger } from "./getAbleDragger";
-import { getRad, plus } from "@moveable/matrix";
+import { getRad, plus } from "./matrix";
 import { IObject } from "@daybrush/utils";
 
 const ControlBoxElement = styled("div", MOVEABLE_CSS);
@@ -357,8 +357,8 @@ export default class MoveableManager<T = {}, U = {}>
             right = 0,
         } = (props.padding || {}) as PaddingBox;
         const n = is3d ? 4 : 3;
-
         const absoluteOrigin = (props as any).groupable ? beforeOrigin : plus(beforeOrigin, [stateLeft, stateTop]);
+
         state.renderPoses = [
             plus(pos1, caculatePadding(matrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
             plus(pos2, caculatePadding(matrix, [right, -top], transformOrigin, absoluteOrigin, n)),

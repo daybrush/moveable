@@ -21,7 +21,7 @@ import {
     triggerChildAble,
 } from "../groupUtils";
 import Draggable from "./Draggable";
-import { getRad, caculate, createRotateMatrix, plus } from "@moveable/matrix";
+import { getRad, caculate, createRotateMatrix, plus } from "../matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
 import { checkSnapSize } from "./Snappable";
 import {

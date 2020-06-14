@@ -17,7 +17,7 @@ import {
     getPosByReverseDirection,
     getDragDist, scaleMatrix, getPosByDirection,
 } from "../DraggerUtils";
-import { minus, rotate, plus, getRad } from "@moveable/matrix";
+import { minus, rotate, plus, getRad } from "../matrix";
 import {
     dragControlCondition as rotatableDragControlCondtion,
 } from "./Rotatable";

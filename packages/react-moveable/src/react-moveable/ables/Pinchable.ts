@@ -3,7 +3,7 @@ import { triggerEvent, fillParams } from "../utils";
 import MoveableManager from "../MoveableManager";
 import { PinchableProps, Able, SnappableState, OnPinchStart, OnPinch, OnPinchEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
-import { getRad } from "@moveable/matrix";
+import { getRad } from "../matrix";
 
 function getRotatiion(touches: Client[]) {
     return getRad([

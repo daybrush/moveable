@@ -3,7 +3,6 @@ import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
 import {
     multiply, invert,
-    convertCSStoMatrix, convertMatrixtoCSS,
     convertDimension, createIdentityMatrix,
     createOriginMatrix, convertPositionMatrix, caculate,
     multiplies,
@@ -13,7 +12,9 @@ import {
     plus,
     getRad,
     ignoreDimension,
-} from "@moveable/matrix";
+    convertCSStoMatrix,
+    convertMatrixtoCSS,
+} from "./matrix";
 
 import MoveableManager from "./MoveableManager";
 import { MoveableManagerState, Able, MoveableClientRect, MoveableProps } from "./types";
@@ -35,17 +36,6 @@ export function createIdentityMatrix3() {
     return createIdentityMatrix(3);
 }
 
-export function getTransform(target: SVGElement | HTMLElement, isInit: true): number[];
-export function getTransform(target: SVGElement | HTMLElement, isInit?: false): "none" | number[];
-export function getTransform(target: SVGElement | HTMLElement, isInit?: boolean) {
-    const transform = getComputedStyle(target).transform!;
-
-    if (!transform || (transform === "none" && !isInit)) {
-        return "none";
-    }
-    return getTransformMatrix(transform);
-}
-
 export function getTransformMatrix(transform: string | number[]) {
     if (!transform || transform === "none") {
         return [1, 0, 0, 1, 0, 0];
@@ -58,7 +48,6 @@ export function getTransformMatrix(transform: string | number[]) {
     return value.split(/s*,\s*/g).map(v => parseFloat(v));
 }
 export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[]) {
-
     return multiplies(
         n,
         createOriginMatrix(origin, n),
@@ -193,8 +182,7 @@ export function getMatrixStackInfo(
         const tagName = el.tagName.toLowerCase();
         const position = style.position;
         const isFixed = position === "fixed";
-        const styleTransform = style.transform!;
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(styleTransform));
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style.transform!));
 
         // convert 3 to 4
         const length = matrix.length;
@@ -384,7 +372,7 @@ export function caculateMatrixStack(
         is3d || isRoot3d,
     ];
 }
-export function makeMatrixCSS(matrix: number[], is3d = matrix.length > 9) {
+export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 9) {
     return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix).join(",")})`;
 }
 export function getSVGViewBox(el: SVGSVGElement) {

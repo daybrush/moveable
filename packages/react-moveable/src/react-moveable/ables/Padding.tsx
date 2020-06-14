@@ -1,7 +1,7 @@
 import MoveableManager from "../MoveableManager";
 import { prefix, makeMatrixCSS } from "../utils";
 import { Renderer } from "../types";
-import { createWarpMatrix } from "@moveable/matrix";
+import { createWarpMatrix } from "../matrix";
 
 export default {
     name: "padding",

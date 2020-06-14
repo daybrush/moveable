@@ -1,15 +1,17 @@
-import { prefix, getLineStyle, getDirection, getAbsolutePosesByState, triggerEvent, fillParams } from "../utils";
+import {
+    prefix, getLineStyle, getDirection, getAbsolutePosesByState,
+    triggerEvent, fillParams, makeMatrixCSS,
+ } from "../utils";
 import {
     convertDimension, invert, multiply,
-    convertMatrixtoCSS, caculate,
+    caculate,
     createIdentityMatrix,
     ignoreDimension,
-    multiplyCSS,
     minus,
     createWarpMatrix,
     getRad,
     plus,
-} from "@moveable/matrix";
+} from "../matrix";
 import { NEARBY_POS } from "../consts";
 import { setDragStart, getDragDist, getPosIndexesByDirection } from "../DraggerUtils";
 import MoveableManager from "../MoveableManager";
@@ -209,17 +211,17 @@ export default {
             return false;
         }
 
-        const matrix = convertMatrixtoCSS(multiply(targetInverseMatrix, h, 4));
-        const transform = `${datas.targetTransform} matrix3d(${matrix.join(",")})`;
+        const matrix = multiply(targetInverseMatrix, h, 4);
+        const transform = `${datas.targetTransform} ${makeMatrixCSS(matrix, true)}`;
 
-        const delta = multiplyCSS(invert(prevMatrix, 4), matrix, 4);
+        const delta = multiply(invert(prevMatrix, 4), matrix, 4);
 
         datas.prevMatrix = matrix;
 
         triggerEvent(moveable, "onWarp", fillParams<OnWarp>(moveable, e, {
             delta,
-            matrix: multiplyCSS(startMatrix, matrix, 4),
-            multiply: multiplyCSS,
+            matrix: multiply(startMatrix, matrix, 4),
+            multiply,
             dist: matrix,
             transform,
         }));

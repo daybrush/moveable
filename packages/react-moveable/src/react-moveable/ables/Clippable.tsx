@@ -5,7 +5,7 @@ import {
     prefix, caculatePosition, getDiagonalSize,
     fillParams, triggerEvent, caculateInversePosition, makeMatrixCSS, getRect
 } from "../utils";
-import { getRad, plus, minus, average } from "@moveable/matrix";
+import { getRad, plus, minus, average } from "../matrix";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import { CLIP_DIRECTIONS, DIRECTIONS, DIRECTION_INDEXES } from "../consts";
 
@@ -337,7 +337,7 @@ export default {
         return true;
     },
     dragControl(moveable: MoveableManager<ClippableProps>, e: any) {
-        const { datas, originalDatas } = e.datas;
+        const { datas, originalDatas } = e;
 
         if (!datas.isClipStart) {
             return false;

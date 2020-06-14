@@ -1,5 +1,5 @@
 import { maxOffset, getDistSize, throttle } from "../../utils";
-import { average, rotate, getRad } from "@moveable/matrix";
+import { average, rotate, getRad } from "../../matrix";
 import MoveableManager from "../../MoveableManager";
 import { SnappableProps, DraggableProps, RotatableProps } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";

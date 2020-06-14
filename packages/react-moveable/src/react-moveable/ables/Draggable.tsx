@@ -1,6 +1,6 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix } from "../utils";
-import { minus, plus, getRad } from "@moveable/matrix";
+import { minus, plus, getRad } from "../matrix";
 import MoveableManager from "../MoveableManager";
 import {
     DraggableProps, OnDrag, OnDragGroup,

@@ -1,6 +1,6 @@
 import MoveableManager from "../../MoveableManager";
 import { BoundInfo, SnappableProps, BoundType, RotatableProps } from "../../types";
-import { rotate, getRad, minus } from "@moveable/matrix";
+import { rotate, getRad, minus } from "../../matrix";
 import { getDistSize, throttle } from "../../utils";
 import { TINY_NUM } from "../../consts";
 

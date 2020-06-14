@@ -5,7 +5,7 @@ import { getAbleDragger, getTargetAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getTargetInfo, throttle, getAbsolutePosesByState, equals } from "./utils";
-import { plus, rotate } from "@moveable/matrix";
+import { plus, rotate } from "./matrix";
 
 function getMaxPos(poses: number[][][], index: number) {
     return Math.max(...poses.map(([pos1, pos2, pos3, pos4]) => {
