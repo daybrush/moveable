@@ -1,19 +1,7 @@
-import { Client } from "@daybrush/drag";
 import { triggerEvent, fillParams, fillEndParams } from "../utils";
 import MoveableManager from "../MoveableManager";
 import { PinchableProps, Able, SnappableState, OnPinchStart, OnPinch, OnPinchEnd } from "../types";
 import MoveableGroup from "../MoveableGroup";
-import { getRad } from "../matrix";
-
-function getRotatiion(touches: Client[]) {
-    return getRad([
-        touches[0].clientX,
-        touches[0].clientY,
-    ], [
-        touches[1].clientX,
-        touches[1].clientY,
-    ]) / Math.PI * 180;
-}
 
 export default {
     name: "pinchable",
@@ -27,7 +15,7 @@ export default {
         moveable: MoveableManager<PinchableProps, SnappableState>,
         e: any,
     ) {
-        const { datas, touches, targets } = e;
+        const { datas, touches, targets, angle } = e;
         const { pinchable, ables } = moveable.props;
 
         if (!pinchable) {
@@ -55,8 +43,6 @@ export default {
         if (!isPinch) {
             return false;
         }
-        const parentRotate = getRotatiion(touches);
-
         pinchAbles.forEach(able => {
             datas[able.name + "Datas"] = {};
 
@@ -66,7 +52,7 @@ export default {
             const ableEvent: any = {
                 ...e,
                 datas: datas[able.name + "Datas"],
-                parentRotate,
+                parentRotate: angle,
                 isPinch: true,
             };
             able[controlEventName]!(moveable, ableEvent);
@@ -82,11 +68,14 @@ export default {
         moveable: MoveableManager<PinchableProps>,
         e: any,
     ) {
-        const { datas, scale: pinchScale, distance, touches, inputEvent, targets } = e;
+        const {
+            datas, scale: pinchScale, distance,
+            touches, inputEvent, targets,
+            angle,
+        } = e;
         if (!datas.isPinch) {
             return;
         }
-        const parentRotate = getRotatiion(touches);
         const parentDistance = distance * (1 - 1 / pinchScale);
         const params = fillParams<OnPinch>(moveable, e, {}) as any;
 
@@ -108,7 +97,7 @@ export default {
                 datas: datas[able.name + "Datas"],
                 inputEvent,
                 parentDistance,
-                parentRotate,
+                parentRotate: angle,
                 isPinch: true,
             } as any);
         });

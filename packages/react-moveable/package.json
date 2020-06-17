@@ -77,7 +77,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@daybrush/drag": "^0.16.1",
+    "@daybrush/drag": "^0.17.0",
     "@daybrush/utils": "^0.10.5",
     "@egjs/agent": "^2.1.5",
     "@egjs/children-differ": "^1.0.0",
@@ -86,7 +86,7 @@
     "react-css-styled": "^0.1.4"
   },
   "peerDependencies": {
-    "@daybrush/drag": ">=0.16.1",
+    "@daybrush/drag": ">=0.17.0",
     "@daybrush/utils": ">=0.10.5",
     "framework-utils": ">=0.3.4",
     "react-css-styled": ">=0.1.3",
