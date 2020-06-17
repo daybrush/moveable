@@ -1151,3 +1151,9 @@ export function caculateBoundSize(
     }
     return [width, height];
 }
+
+export function getUnitSize(pos: string, size: number) {
+    const { value, unit } = splitUnit(pos);
+
+    return unit === "%" ? value * size / 100 : value;
+}

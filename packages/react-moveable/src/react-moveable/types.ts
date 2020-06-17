@@ -229,6 +229,17 @@ export interface OnEvent {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - This is the last dragged event. No, if you haven't dragged.
+ * @property - Whether this moved
+ */
+export interface OnEndEvent extends OnEvent {
+    lastEvent: any | undefined;
+    isDrag: boolean;
+}
+/**
+ * @typedef
+ * @memberof Moveable
  * @property - Run the request instantly. (requestStart, request, requestEnd happen at the same time)
  */
 export interface AbleRequestParam {
@@ -274,11 +285,9 @@ export interface OnPinch extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
+ * @extends Moveable.OnEndEvent
  */
-export interface OnPinchEnd extends OnEvent {
-    isDrag: boolean;
-}
+export interface OnPinchEnd extends OnEndEvent {}
 /**
  * @typedef
  * @memberof Moveable
@@ -322,11 +331,9 @@ export interface OnDrag extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
- * @property - Whether drag called
+ * @extends Moveable.OnEndEvent
  */
-export interface OnDragEnd extends OnEvent {
-    isDrag: boolean;
+export interface OnDragEnd extends OnEndEvent {
 }
 /**
  * @typedef
@@ -364,11 +371,9 @@ export interface OnScale extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
- * @property - Whether scale called
+ * @extends Moveable.OnEndEvent
  */
-export interface OnScaleEnd extends OnEvent {
-    isDrag: boolean;
+export interface OnScaleEnd extends OnEndEvent {
 }
 
 /**
@@ -417,11 +422,9 @@ export interface OnResize extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
- * @property - Whether resize called
+ * @extends Moveable.OnEndEvent
  */
-export interface OnResizeEnd extends OnEvent {
-    isDrag: boolean;
+export interface OnResizeEnd extends OnEndEvent {
 }
 /**
  * @typedef
@@ -459,12 +462,9 @@ export interface OnRotate extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
- * @property - Whether rotate called
+ * @extends Moveable.OnEndEvent
  */
-export interface OnRotateEnd extends OnEvent {
-    isDrag: boolean;
-}
+export interface OnRotateEnd extends OnEndEvent {}
 
 /**
  * @typedef
@@ -495,12 +495,9 @@ export interface OnWarp extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
- * @property - Whether rotate called
+ * @extends Moveable.OnEndEvent
  */
-export interface OnWarpEnd extends OnEvent {
-    isDrag: boolean;
-}
+export interface OnWarpEnd extends OnEndEvent {}
 
 /**
  * @typedef
@@ -530,11 +527,9 @@ export interface OnDragGroup extends OnDrag {
  * @memberof Moveable
  * @extends Moveable.OnDragEnd
  * @property - The drag finished targets
- * @property - Whether `dragGroup` called
  */
 export interface OnDragGroupEnd extends OnDragEnd {
     targets: Array<HTMLElement | SVGElement>;
-    isDrag: boolean;
 }
 
 /**
@@ -568,11 +563,9 @@ export interface OnRotateGroup extends OnRotate {
  * @memberof Moveable
  * @extends Moveable.OnRotateEnd
  * @property - The rotate finished targets
- * @property - Whether `rotateGroup` called
  */
 export interface OnRotateGroupEnd extends OnRotateEnd {
     targets: Array<HTMLElement | SVGElement>;
-    isDrag: boolean;
 }
 
 /**
@@ -604,11 +597,9 @@ export interface OnResizeGroup extends OnResize {
  * @memberof Moveable
  * @extends Moveable.OnResizeEnd
  * @property - The resize finished targets
- * @property - Whether `resizeGroup` called
  */
 export interface OnResizeGroupEnd extends OnResizeEnd {
     targets: Array<HTMLElement | SVGElement>;
-    isDrag: boolean;
 }
 
 /**
@@ -640,11 +631,9 @@ export interface OnScaleGroup extends OnScale {
  * @memberof Moveable
  * @extends Moveable.OnScaleEnd
  * @property - The scale finished targets
- * @property - Whether `scaleGroup` called
  */
 export interface OnScaleGroupEnd extends OnScaleEnd {
     targets: Array<HTMLElement | SVGElement>;
-    isDrag: boolean;
 }
 
 /**
@@ -1081,27 +1070,71 @@ export interface RenderProps {
     onRenderGroupEnd?: (e: OnRenderGroupEnd) => any;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not target can be scrolled to the scroll container (default: false)
+ * @property - The container to which scroll is applied (default: container)
+ * @property - Expand the range of the scroll check area. (default: 0)
+ * @property - Sets a function to get the scroll position. (default: Function)
+ */
 export interface ClippableOptions {
-    clipType?: "polygon" | "circle" | "ellipse" | "rect";
-    customClipArea?: { left: number, top: number, width: number, height: number };
+    defaultClipPath?: string;
     clipRelative?: boolean;
     clippable?: boolean;
     dragWithClip?: boolean;
     clipArea?: boolean;
 }
 export interface ClippableProps extends ClippableOptions {
+    onClipStart?: (e: OnClipStart) => any;
     onClip?: (e: OnClip) => any;
+    onClipEnd?: (e: OnClipEnd) => any;
 }
-export interface OnClip extends OnEvent {
-    clipType: "polygon" | "circle" | "ellipse" | "rect";
+export interface ClippableState {
+    clipPathState?: string;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - The clip type.
+ * @property - The control positions
+ * @property - CSS style of changed clip
+ */
+export interface OnClipStart extends OnEvent {
+    clipType: "polygon" | "circle" | "ellipse" | "inset" | "rect";
     poses: number[][];
-    addedIndex: number;
-    removedIndex: number;
-    changedIndexes: number[];
+    clipStyle: string;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - The clip type.
+ * @property - The clip event type.
+ * @property - The control positions
+ * @property - x position of the distance the control has moved
+ * @property - y position of the distance the control has moved
+ * @property - CSS style of changed clip
+ * @property - Splited CSS styles of changed clip
+ */
+export interface OnClip extends OnEvent {
+    clipType: "polygon" | "circle" | "ellipse" | "inset" | "rect";
+    clipEventType: "added" | "changed" | "removed";
+    poses: number[][];
     distX: number;
     distY: number;
     clipStyle: string;
+    clipStyles: string[];
 }
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEndEvent
+ */
+export interface OnClipEnd extends OnEndEvent {}
+
 export interface OnCustomDrag extends Position {
     type: string;
     inputEvent: any;
@@ -1168,4 +1201,13 @@ export interface MoveableInterface {
     isDragging(): boolean;
     hitTest(el: Element | HitRect): number;
     setState(state: any, callback?: () => any): any;
+}
+
+export interface ClipPose {
+    vertical: number;
+    horizontal: number;
+    pos: number[];
+    sub?: boolean;
+    raw?: number;
+    direction?: "n" | "e" | "s" | "w" | "nw" | "ne" | "sw" | "se" | "nesw";
 }

@@ -205,7 +205,7 @@ class App extends React.Component<any, any> {
                     origin={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
-                    // clippable={true}
+                    clippable={true}
                     dragArea={true}
                     draggable={true}
                     snappable={true}
@@ -262,6 +262,7 @@ class App extends React.Component<any, any> {
                         if (e.clipType === "rect") {
                             e.target.style.clip = e.clipStyle;
                         } else {
+                            console.log(e.clipStyle);
                             e.target.style.clipPath = e.clipStyle;
                         }
                     }}
@@ -286,6 +287,9 @@ class App extends React.Component<any, any> {
                         // target!.style.left = `${left}px`;
                         // target!.style.top = `${top}px`;
                         target.style.cssText += item.toCSS();
+                    }}
+                    onDragEnd={({ lastEvent }) => {
+                        console.log("last", lastEvent);
                     }}
                     onScaleStart={({ set, dragStart }) => {
                         const sx = parseFloat(item.get("sx")) || 0;
@@ -381,11 +385,13 @@ class App extends React.Component<any, any> {
                         <div className="box box24" data-target="box24"><span>BB</span></div>
 
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" style={{
+                            // clipPath: "inset(34px 24px 27px 28px round 80px 20px)",
+                            clipPath: "inset(34px 24px 27px 28px)",
                             // clipPath: `circle(39.7% at 52% 49%)`,
                             // clipPath: `ellipse(39.7% 39.7% at 52% 49%)`,
                             // clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
                             // clip:  "rect(0px,60px,200px,0px)",
-                            transform: "translate(100px, 0px)",
+                            // transform: "translate(100px, 0px)",
                         }} />
                         <p data-target="p">
                             Edit <code data-target="code">src/App.tsx</code> and save to reload.

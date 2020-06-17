@@ -193,6 +193,9 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
     background: #6d6;
     cursor: pointer;
 }
+.control.clip-control.clip-radius {
+    background: #d66;
+}
 .line.clip-line {
     background: #6e6;
     cursor: move;
@@ -232,6 +235,7 @@ export const MAX_NUM = Math.pow(10, 10);
 export const MIN_NUM = -MAX_NUM;
 
 export const DIRECTIONS = ["nw", "ne", "sw", "se", "n", "w", "s", "e"];
+
 export const DIRECTION_INDEXES: IObject<number[]> = {
     n: [0, 1],
     s: [2, 3],
@@ -252,10 +256,3 @@ export const DIRECTION_ROTATIONS: IObject<number> = {
     sw: 225,
     se: 135,
 };
-
-export const CLIP_DIRECTIONS = [
-    [0, -1],
-    [1, 0],
-    [0, 1],
-    [-1, 0],
-];

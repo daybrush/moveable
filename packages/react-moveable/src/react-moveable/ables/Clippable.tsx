@@ -1,20 +1,86 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, ClippableProps, OnClip, ClippableState } from "../types";
+import { Renderer, ClippableProps, OnClip, ClippableState, OnClipEnd, OnClipStart, ClipPose } from "../types";
 import { splitBracket, splitComma, splitUnit, splitSpace } from "@daybrush/utils";
 import {
     prefix, caculatePosition, getDiagonalSize,
-    fillParams, triggerEvent, caculateInversePosition, makeMatrixCSS, getRect
+    fillParams, triggerEvent, caculateInversePosition, makeMatrixCSS, getRect, fillEndParams, getUnitSize
 } from "../utils";
-import { getRad, plus, minus, average } from "../matrix";
+import { getRad, plus, minus } from "../matrix";
 import { setDragStart, getDragDist } from "../DraggerUtils";
-import { CLIP_DIRECTIONS, DIRECTIONS, DIRECTION_INDEXES } from "../consts";
+import {
+    getRadiusValues, getRadiusRange, HORIZONTAL_RADIUS_DIRECTIONS,
+    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, VERTICAL_RADIUS_DIRECTIONS
+} from "./cornerable/borderRadius";
 
-function getSize(pos: string, size: number) {
-    const { value, unit } = splitUnit(pos);
+const CLIP_DIRECTIONS = [
+    [0, -1, "n"],
+    [1, 0, "e"],
+] as const;
+const CLIP_RECT_DIRECTIONS = [
+    [-1, -1, "nw"],
+    [0, -1, "n"],
+    [1, -1, "ne"],
+    [1, 0, "e"],
+    [1, 1, "se"],
+    [0, 1, "s"],
+    [-1, 1, "sw"],
+    [-1, 0, "w"],
+] as const;
 
-    return unit === "%" ? value * size / 100 : value;
+// 1 2 5 6 0 3 4 7
+// 0 1 2 3 4 5 6 7
+
+function getClipStyles(
+    clipPath: ReturnType<typeof getClipPath>,
+    width: number, height: number, poses: number[][],
+) {
+    const {
+        type: clipType,
+        poses: clipPoses,
+    } = clipPath!;
+    if (clipType === "polygon") {
+        return poses.map(pos => `${pos[0]}px ${pos[1]}px`);
+    } else if (clipType === "rect" || clipType === "inset") {
+        const top = poses[1][1];
+        const right = poses[3][0];
+        const left = poses[7][0];
+        const bottom = poses[5][1];
+        const clipStyles = [top, width - right, height - bottom, left].map(pos => `${pos}px`);
+
+        if (poses.length > 8) {
+            let isVertical = false;
+            clipStyles.push("round");
+            poses.slice(8).forEach((pos, i) => {
+                const { horizontal, vertical } = clipPoses[8 + i];
+                if (vertical && !isVertical) {
+                    isVertical = true;
+                    clipStyles.push("/");
+                }
+                if (isVertical) {
+                    clipStyles.push(`${Math.max(0, vertical === 1 ? pos[1] - top : bottom - pos[1])}px`);
+                } else {
+                    clipStyles.push(`${Math.max(0, horizontal === 1 ? pos[0] - left : right - pos[0])}px`);
+                }
+            });
+        }
+        return clipStyles;
+    }
 }
+function getRectPoses(top: number, right: number, bottom: number, left: number): ClipPose[] {
+    const xs = [left, (left + right) / 2, right];
+    const ys = [top, (top + bottom) / 2, bottom];
 
+    return CLIP_RECT_DIRECTIONS.map(([dirx, diry, dir]) => {
+        const x = xs[dirx + 1];
+        const y = ys[diry + 1];
+        return {
+            vertical: Math.abs(diry),
+            horizontal: Math.abs(dirx),
+            direction: dir,
+            pos: [x, y],
+        };
+    });
+}
 function getClipPath(
     target: HTMLElement | SVGElement,
     width: number,
@@ -33,52 +99,71 @@ function getClipPath(
         return;
     }
     const { prefix: clipPrefix, value } = splitBracket(clipText);
-
+    let splitter = " ";
     if (clipPrefix === "polygon") {
-        const poses = splitComma(value!).map((pos, i) => {
+        const values = splitComma(value!);
+        splitter = ",";
+
+        const poses: ClipPose[] = values.map((pos, i) => {
             const [xPos, yPos] = pos.split(" ");
 
-            return [
-                getSize(xPos, width),
-                getSize(yPos, height),
-            ];
+            return {
+                vertical: 1,
+                horizontal: 1,
+                pos: [
+                    getUnitSize(xPos, width),
+                    getUnitSize(yPos, height),
+                ],
+            };
         });
 
         return {
             type: clipPrefix,
             clipText,
             poses,
+            splitter,
         } as const;
     } else if (clipPrefix === "circle" || clipPrefix === "ellipse") {
         let xPos: string = "";
         let yPos: string = "";
         let radiusX = 0;
         let radiusY = 0;
+        const values = splitSpace(value!);
 
         if (clipPrefix === "circle") {
             let radius = "";
-            [radius, , xPos, yPos] = splitSpace(value!);
+            [radius, , xPos, yPos] = values;
 
-            radiusX = getSize(radius, Math.sqrt((width * width + height * height) / 2));
+            radiusX = getUnitSize(radius, Math.sqrt((width * width + height * height) / 2));
             radiusY = radiusX;
         } else {
             let xRadius = "";
             let yRadius = "";
-            [xRadius, yRadius, , xPos, yPos] = splitSpace(value!);
+            [xRadius, yRadius, , xPos, yPos] = values;
 
-            radiusX = getSize(xRadius, width);
-            radiusY = getSize(yRadius, height);
+            radiusX = getUnitSize(xRadius, width);
+            radiusY = getUnitSize(yRadius, height);
         }
         const centerPos = [
-            getSize(xPos, width),
-            getSize(yPos, height),
+            getUnitSize(xPos, width),
+            getUnitSize(yPos, height),
         ];
-        const poses = [
-            centerPos,
-            ...CLIP_DIRECTIONS.map(dir => [
-                centerPos[0] + dir[0] * radiusX,
-                centerPos[1] + dir[1] * radiusY,
-            ]),
+        const poses: ClipPose[] = [
+            {
+                vertical: 1,
+                horizontal: 1,
+                pos: centerPos,
+                direction: "nesw",
+            },
+            ...CLIP_DIRECTIONS.map(dir => ({
+                vertical: Math.abs(dir[1]),
+                horizontal: dir[0],
+                direction: dir[2],
+                pos: [
+                    centerPos[0] + dir[0] * radiusX,
+                    centerPos[1] + dir[1] * radiusY,
+                ],
+            })),
         ];
         return {
             type: clipPrefix,
@@ -88,20 +173,57 @@ function getClipPath(
             left: centerPos[0] - radiusX,
             top: centerPos[1] - radiusY,
             poses,
+            splitter,
+        } as const;
+    } else if (clipPrefix === "inset") {
+        const values = splitSpace(value!);
+        const roundIndex = values.indexOf("round");
+
+        const rectLength = (roundIndex > -1 ? values.slice(0, roundIndex) : values).length;
+        const radiusValues = values.slice(rectLength + 1);
+        const [
+            topValue,
+            rightValue = topValue,
+            bottomValue = topValue,
+            leftValue = rightValue,
+        ] = values;
+        const [top, bottom] = [topValue, bottomValue].map(pos => getUnitSize(pos, height));
+        const [left, right] = [leftValue, rightValue].map(pos => getUnitSize(pos, width));
+        const nextRight = width - right;
+        const nextBottom = height - bottom;
+        const radiusPoses = getRadiusValues(
+            radiusValues,
+            nextRight - left,
+            nextBottom - top,
+            left,
+            top,
+        );
+        const poses: ClipPose[] = [
+            ...getRectPoses(top, nextRight, nextBottom, left),
+            ...radiusPoses,
+        ];
+
+        return {
+            type: "inset",
+            clipText,
+            poses,
+            top,
+            left,
+            right: nextRight,
+            bottom: nextBottom,
+            radius: radiusValues,
+            splitter,
         } as const;
     } else if (clipPrefix === "rect") {
         // top right bottom left
+        const values = splitComma(value!);
+        splitter = ",";
         const [top, right, bottom, left] = splitComma(value!).map((pos, i) => {
             const { value: posValue } = splitUnit(pos);
 
             return posValue;
         });
-        const poses = [
-            [left, top],
-            [right, top],
-            [right, bottom],
-            [left, bottom],
-        ];
+        const poses = getRectPoses(top, right, bottom, left);
         return {
             type: "rect",
             clipText,
@@ -110,6 +232,8 @@ function getClipPath(
             right,
             bottom,
             left,
+            values,
+            splitter,
         } as const;
     }
     return;
@@ -121,57 +245,167 @@ function addClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
         rootMatrix,
         is3d,
         pos1,
+        width,
+        height,
     } = moveable.state;
     const { left, top } = moveableClientRect;
     const n = is3d ? 4 : 3;
     const [posX, posY] = minus(caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
     const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
     const { clipPath, index } = e.datas;
-    if (clipPath.type === "polygon") {
-        const poses: number[][] = clipPath.poses.slice();
-
+    const {
+        type: clipType,
+        poses: clipPoses,
+        splitter,
+    } = (clipPath as ReturnType<typeof getClipPath>)!;
+    const poses = clipPoses.map(pos => pos.pos);
+    if (clipType === "polygon") {
         poses.splice(index, 0, [distX, distY]);
+    } else if (clipType === "inset") {
+        const {
+            horizontalRange,
+            verticalRange,
+        } = getRadiusRange(clipPoses.slice(8));
+        const horizontalIndex = HORIZONTAL_RADIUS_ORDER.indexOf(index);
+        const verticalIndex = VERTICAL_RADIUS_ORDER.indexOf(index);
+        if (horizontalIndex > -1) {
+            const radiusX = HORIZONTAL_RADIUS_DIRECTIONS[horizontalIndex] === 1
+                ? distX - poses[0][0]
+                : poses[2][0] - distX;
+            for (let i = horizontalRange[1]; i <= horizontalIndex; ++i) {
+                const y = VERTICAL_RADIUS_DIRECTIONS[i] === 1 ? poses[0][1] : poses[4][1];
+                let x = 0;
+                if (horizontalIndex === i) {
+                    x = distX;
+                } else if (i === 0) {
+                    x = poses[0][0] + radiusX;
+                } else if (HORIZONTAL_RADIUS_DIRECTIONS[i] === -1) {
+                    x = poses[2][0] - (poses[8][0] - poses[0][0]);
+                }
+                clipPoses.splice(8 + i, 0, {
+                    horizontal: HORIZONTAL_RADIUS_DIRECTIONS[i],
+                    vertical: 0,
+                    pos: [x, y],
+                });
+                poses.splice(8 + i, 0, [x, y]);
 
-        const clipStyles = poses.map(pos => `${pos[0]}px ${pos[1]}px`);
-        triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
-            clipType: "polygon",
-            poses,
-            clipStyles,
-            clipStyle: `polygon(${clipStyles.join(", ")})`,
-            changedIndexes: [],
-            addedIndex: index,
-            removedIndex: -1,
-            distX: 0,
-            distY: 0,
-        }));
+                if (i === 0) {
+                    break;
+                }
+            }
+        } else if (verticalIndex > - 1) {
+            const radiusY = VERTICAL_RADIUS_DIRECTIONS[verticalIndex] === 1
+                ? distY - poses[0][1]
+                : poses[4][1] - distY;
+            if (horizontalRange[1] === 0 && verticalRange[1] === 0) {
+                const pos = [
+                    poses[0][0] + radiusY,
+                    poses[0][1],
+                ];
+                clipPoses.push({
+                    horizontal: HORIZONTAL_RADIUS_DIRECTIONS[0],
+                    vertical: 0,
+                    pos,
+                });
+                poses.push(pos);
+            }
+
+            const startVerticalIndex = verticalRange[0];
+            for (let i = verticalRange[1]; i <= verticalIndex; ++i) {
+                const x = HORIZONTAL_RADIUS_DIRECTIONS[i] === 1 ? poses[0][0] : poses[2][0];
+                let y = 0;
+                if (verticalIndex === i) {
+                    y = distY;
+                } else if (i === 0) {
+                    y = poses[0][1] + radiusY;
+                } else if (VERTICAL_RADIUS_DIRECTIONS[i] === 1) {
+                    y = poses[8 + startVerticalIndex][1];
+                } else if (VERTICAL_RADIUS_DIRECTIONS[i] === -1) {
+                    y = poses[4][1] - (poses[8 + startVerticalIndex][1] - poses[0][1]);
+                }
+                clipPoses.push({
+                    horizontal: 0,
+                    vertical: VERTICAL_RADIUS_DIRECTIONS[i],
+                    pos: [x, y],
+                });
+                poses.push([x, y]);
+                if (i === 0) {
+                    break;
+                }
+            }
+        } else {
+            return;
+        }
+    } else {
+        return;
     }
+    const clipStyles = getClipStyles(clipPath, width, height, poses)!;
+    triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
+        clipEventType: "added",
+        clipType,
+        poses,
+        clipStyles,
+        clipStyle: `${clipType}(${clipStyles.join(splitter)})`,
+        distX: 0,
+        distY: 0,
+    }));
 }
 function removeClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
     const { clipPath, index } = e.datas;
-    if (clipPath.type === "polygon") {
-        const poses: number[][] = clipPath.poses.slice();
-
+    const {
+        width,
+        height,
+    } = moveable.state;
+    const {
+        type: clipType,
+        poses: clipPoses,
+        splitter,
+    } = (clipPath as ReturnType<typeof getClipPath>)!;
+    const poses = clipPoses.map(pos => pos.pos);
+    const length = poses.length;
+    if (clipType === "polygon") {
+        clipPoses.splice(index, 1);
         poses.splice(index, 1);
+    } else if (clipType === "inset") {
+        if (index < 8) {
+            return;
+        }
+        const {
+            horizontalRange,
+            verticalRange,
+        } = getRadiusRange(clipPoses.slice(8));
+        const radiuslIndex = index - 8;
+        let deleteCount = 0;
 
-        const clipStyles = poses.map(pos => `${pos[0]}px ${pos[1]}px`);
-        triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
-            clipType: "polygon",
-            poses,
-            clipStyles,
-            clipStyle: `polygon(${clipStyles.join(", ")})`,
-            changedIndexes: [],
-            addedIndex: -1,
-            removedIndex: index,
-            distX: 0,
-            distY: 0,
-        }));
+        if (radiuslIndex === 0) {
+            deleteCount = length;
+        } else if (radiuslIndex > 0 && radiuslIndex < horizontalRange[1]) {
+            deleteCount = horizontalRange[1] - radiuslIndex;
+        } else if (radiuslIndex >= verticalRange[0]) {
+            deleteCount = verticalRange[0] + verticalRange[1] - radiuslIndex;
+        } else {
+            return;
+        }
+        clipPoses.splice(index, deleteCount);
+        poses.splice(index, deleteCount);
+    } else {
+        return;
     }
+    const clipStyles = getClipStyles(clipPath, width, height, poses)!;
+    triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
+        clipEventType: "removed",
+        clipType,
+        poses,
+        clipStyles,
+        clipStyle: `${clipType}(${clipStyles.join(splitter)})`,
+        distX: 0,
+        distY: 0,
+    }));
 }
 export default {
     name: "clippable",
     props: {
-        clipType: String,
-        customClipArea: Object,
+        defaultClipPath: String,
         clipRelative: Boolean,
         clippable: Boolean,
         clipArea: Boolean,
@@ -196,10 +430,10 @@ export default {
         }
         const n = is3d ? 4 : 3;
         const type = clipPath.type;
-        const clipPoses = clipPath.poses.slice();
+        const clipPoses = clipPath.poses;
         const poses = clipPoses.map(pos => {
             // return [x, y];
-            const caculatedPos = caculatePosition(matrix, pos, n);
+            const caculatedPos = caculatePosition(matrix, pos.pos, n);
 
             return [
                 caculatedPos[0] - left,
@@ -209,11 +443,14 @@ export default {
 
         let controls: any[] = [];
         let lines: any[] = [];
-        let controlPoses: number[][] = [];
 
-        if (type === "rect" || type === "polygon") {
-            lines = poses.map((to, i) => {
-                const from = i === 0 ? poses[poses.length - 1] : poses[i - 1];
+        const isInset = type === "inset";
+
+        if (type === "rect" || isInset || type === "polygon") {
+            const linePoses = isInset ? poses.slice(0, 8) : poses;
+
+            lines = linePoses.map((to, i) => {
+                const from = i === 0 ? linePoses[linePoses.length - 1] : linePoses[i - 1];
 
                 const rad = getRad(from, to);
                 const dist = getDiagonalSize(from, to);
@@ -225,19 +462,7 @@ export default {
                     }}></div>;
             });
         }
-        if (type === "rect") {
-            controlPoses = DIRECTIONS.map((direction, i) => {
-                const indexes = DIRECTION_INDEXES[direction];
-                const directionPoses = indexes.map(index => poses[index >= 2 ? 5 - index : index]);
-                const pos = [0, 1].map(posIndex => average(...directionPoses.map(dPos => dPos[posIndex])));
-
-                return pos;
-            });
-        } else if (type === "polygon" || type === "circle" || type === "ellipse") {
-            controlPoses = poses;
-        }
-
-        controls = controlPoses.map((pos, i) => {
+        controls = poses.map((pos, i) => {
             return <div key={`clipControl${i}`}
                 className={prefix("control", "clip-control")}
                 data-clip-index={i}
@@ -245,6 +470,17 @@ export default {
                     transform: `translate(${pos[0]}px, ${pos[1]}px)`,
                 }}></div>;
         });
+
+        if (isInset) {
+            controls.push(...poses.slice(8).map((pos, i) => {
+                return <div key={`clipRadiusControl${i}`}
+                    className={prefix("control", "clip-control", "clip-radius")}
+                    data-clip-index={8 + i}
+                    style={{
+                        transform: `translate(${pos[0]}px, ${pos[1]}px)`,
+                    }}></div>;
+            }));
+        }
         if (type === "circle" || type === "ellipse") {
             const {
                 left: clipLeft,
@@ -279,7 +515,7 @@ export default {
 
                 ellipseClipPath = `polygon(${areaPoses.map(pos => `${pos[0]}px ${pos[1]}px`).join(", ")})`;
             }
-            controls.push(<div key="clipellipse" className={prefix("clip-ellipse")} style={{
+            controls.push(<div key="clipEllipse" className={prefix("clip-ellipse")} style={{
                 width: `${radiusX! * 2}px`,
                 height: `${radiusY! * 2}px`,
                 clipPath: ellipseClipPath,
@@ -293,12 +529,15 @@ export default {
                 left: allLeft,
                 top: allTop,
             } = getRect([pos1, pos2, pos3, pos4, ...poses]);
-            if (type === "polygon" || type === "rect") {
+            if (type === "polygon" || type === "rect" || isInset) {
+                const areaPoses = isInset ? poses.slice(0, 8) : poses;
                 controls.push(<div key="clipArea" className={prefix("clip-area")} style={{
                     width: `${allWidth}px`,
                     height: `${allHeight}px`,
                     transform: `translate(${allLeft}px, ${allTop}px)`,
-                    clipPath: `polygon(${poses.map(pos => `${pos[0] - allLeft}px ${pos[1] - allTop}px`).join(", ")})`,
+                    clipPath: `polygon(${
+                        areaPoses.map(pos => `${pos[0] - allLeft}px ${pos[1] - allTop}px`).join(", ")
+                    })`,
                 }}></div>);
             }
         }
@@ -308,7 +547,7 @@ export default {
         ];
     },
     dragControlCondition(e: any) {
-        return (e.inputEvent.target.className || "").indexOf("clip") > -1;
+        return e.inputEvent && (e.inputEvent.target.className || "").indexOf("clip") > -1;
     },
     dragStart(moveable: MoveableManager<ClippableProps>, e: any) {
         const props = moveable.props;
@@ -340,16 +579,26 @@ export default {
         if (!clipPath) {
             return false;
         }
+        const { clipText, type, poses } = clipPath;
+        const result = triggerEvent<ClippableProps>(moveable, "onClipStart", fillParams<OnClipStart>(moveable, e, {
+            clipType: type,
+            clipStyle: clipText,
+            poses: poses.map(pos => pos.pos),
+        }));
+
+        if (result === false) {
+            datas.isClipStart = false;
+            return false;
+        }
         datas.isControl = className.indexOf("clip-control") > -1;
         datas.isLine = className.indexOf("clip-line") > -1;
         datas.isArea = className.indexOf("clip-area") > -1 || className.indexOf("clip-ellipse") > -1;
-        datas.index = parseInt(inputTarget ? inputTarget.getAttribute("data-clip-index") : "-1", 10);
+        datas.index = inputTarget ? parseInt(inputTarget.getAttribute("data-clip-index"), 10) : -1;
         datas.clipPath = clipPath;
-
+        datas.isClipStart = true;
+        state.clipPathState = clipText;
         setDragStart(moveable, e);
 
-        state.clipPathState = clipPath.clipText;
-        datas.isClipStart = true;
         return true;
     },
     dragControl(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
@@ -358,7 +607,6 @@ export default {
         if (!datas.isClipStart) {
             return false;
         }
-
         const draggableData = (originalDatas && originalDatas.draggable) || {};
         const { isControl, isLine, isArea, index, clipPath } = datas as {
             clipPath: ReturnType<typeof getClipPath>,
@@ -368,118 +616,87 @@ export default {
             return false;
         }
         let [distX, distY] = draggableData.isDrag ? draggableData.prevDist : getDragDist(e);
-
+        const state = moveable.state;
+        const { width, height } = state;
         const isDragWithTarget = !isArea && !isControl && !isLine;
-        const clipType = clipPath.type;
-        const poses: number[][] = clipPath.poses.slice();
-        let nextPoses: number[][] = poses.slice();
-        let clipStyles: string[] = [];
-        let splitter: string = ",";
+        const {
+            type: clipType,
+            poses: clipPoses,
+            splitter,
+        } = clipPath;
+        const poses = clipPoses.map(pos => pos.pos);
+        const nextPoses: number[][] = poses.map(pos => pos.slice());
 
         if (isDragWithTarget) {
             distX = -distX;
             distY = -distY;
         }
-        const isCircle = clipType === "circle";
-        const isEllipse = clipType === "ellipse";
+        let isAll = !isControl;
 
-        if (clipType === "polygon") {
-            if (isControl) {
-                nextPoses[index] = plus(poses[index], [distX, distY]);
-            } else {
-                poses.forEach((pos, i) => {
-                    nextPoses[i] = plus(pos, [distX, distY]);
-                });
-            }
-            clipStyles = poses.map(pos => `${pos[0]}px ${pos[1]}px`);
-        } else if (clipType === "rect") {
-            let { top, right, bottom, left } = clipPath as any;
-            const direction = isControl ? DIRECTIONS[index] : "nwse";
-
-            (direction.indexOf("n") > -1) && (top += distY);
-            (direction.indexOf("s") > -1) && (bottom += distY);
-            (direction.indexOf("e") > -1) && (right += distX);
-            (direction.indexOf("w") > -1) && (left += distX);
-
-            nextPoses = [
-                [left, top],
-                [right, top],
-                [right, bottom],
-                [left, bottom],
+        if (isControl) {
+            const { direction, pos, horizontal, vertical, sub } = clipPoses[index];
+            const dist = [
+                distX * Math.abs(horizontal),
+                distY * Math.abs(vertical),
             ];
 
-            clipStyles = [top, right, bottom, left].map(pos => `${pos}px`);
-        } else if (isCircle || isEllipse) {
-            let radiusX = clipPath.radiusX!;
-            let radiusY = clipPath.radiusY!;
+            if (direction === "nesw") {
+                isAll = true;
+            } else if (direction && !sub) {
+                direction.split("").forEach(dir => {
+                    const isVertical = dir === "n" || dir === "s";
 
-            if (index === 0 || isArea || isDragWithTarget) {
-                poses.forEach((_, i) => {
-                    nextPoses[i] = plus(poses[i], [distX, distY]);
+                    poses.forEach((dirPos, i) => {
+                        const {
+                            direction: dirDir,
+                            horizontal: dirHorizontal,
+                            vertical: dirVertical,
+                        } = clipPoses[i];
+
+                        if (!dirDir || dirDir.indexOf(dir) === -1) {
+                            return;
+                        }
+                        nextPoses[i] = plus(dirPos, [
+                            isVertical || !dirHorizontal ? 0 : dist[0],
+                            !isVertical || !dirVertical ? 0 : dist[1],
+                        ]);
+                    });
                 });
             } else {
-                nextPoses[index] = plus(poses[index], [distX, distY]);
-                const radius = getDiagonalSize(nextPoses[0], nextPoses[index]);
-
-                if (isCircle) {
-                    radiusX = radius;
-                    radiusY = radius;
-                } else {
-                    if (index === 1 || index === 3) {
-                        radiusY = radius;
-                    } else {
-                        radiusX = radius;
-                    }
-                }
-                const centerPos = poses[0];
-                nextPoses = [
-                    centerPos,
-                    ...CLIP_DIRECTIONS.map(dir => [
-                        centerPos[0] + dir[0] * radiusX,
-                        centerPos[1] + dir[1] * radiusY,
-                    ]),
-                ];
+                nextPoses[index] = plus(pos, dist);
             }
-            if (isCircle) {
-                clipStyles = [`${radiusX}px`, "at", `${nextPoses[0][0]}px`, `${nextPoses[0][1]}px`];
-            } else {
-                clipStyles = [`${radiusX}px`, `${radiusY}px`, "at", `${nextPoses[0][0]}px`, `${nextPoses[0][1]}px`];
-            }
-            splitter = " ";
-        } else {
-            return false;
         }
-        const indexes: number[] = [];
-        const clipStyle = `${clipType}(${clipStyles.join(splitter)})`;
+        if (isAll) {
+            poses.forEach((pos, i) => {
+                nextPoses[i] = plus(pos, [distX, distY]);
+            });
+        }
+        // const indexes: number[] = [];
+        // const clipStyles = getClipStyles(clipPath, width, height, clipPoses.map(pos => pos.pos))!;
+        const nextClipStyles = getClipStyles(clipPath, width, height, nextPoses)!;
+        const clipStyle = `${clipType}(${nextClipStyles.join(splitter)})`;
 
-        nextPoses.forEach((pos, i) => {
-            if (poses[i][0] !== pos[0] || poses[i][1] !== pos[1]) {
-                indexes.push(i);
-            }
-        });
-
-        moveable.state.clipPathState = clipStyle;
+        state.clipPathState = clipStyle;
         triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
+            clipEventType: "changed",
             clipType,
             poses: nextPoses,
             clipStyle,
-            clipStyles,
-            changedIndexes: indexes,
-            addedIndex: -1,
-            removedIndex: -1,
+            clipStyles: nextClipStyles,
             distX,
             distY,
         }));
     },
     dragControlEnd(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
         moveable.state.clipPathState = "";
-        const { isLine, isControl } = e.datas;
+        const { isDrag, datas, isDouble } = e;
+        const { isLine, isClipStart, isControl } = datas;
 
-        if (!e.datas.isClipStart) {
+        if (!isClipStart) {
             return false;
         }
-
-        if (e.isDouble) {
+        triggerEvent<ClippableProps>(moveable, "onClipEnd", fillEndParams<OnClipEnd>(moveable, e, {}));
+        if (isDouble) {
             if (isControl) {
                 removeClipPath(moveable, e);
             } else if (isLine) {
@@ -487,6 +704,7 @@ export default {
                 addClipPath(moveable, e);
             }
         }
+        return isDouble || isDrag;
     },
     unset(moveable: MoveableManager<ClippableProps, ClippableState>) {
         moveable.state.clipPathState = "";
