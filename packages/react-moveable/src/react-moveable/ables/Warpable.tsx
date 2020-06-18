@@ -198,12 +198,12 @@ export default {
         }
         const h = createWarpMatrix(
             poses[0],
-            poses[1],
             poses[2],
+            poses[1],
             poses[3],
             nextPoses[0],
-            nextPoses[1],
             nextPoses[2],
+            nextPoses[1],
             nextPoses[3],
         );
 
@@ -213,7 +213,6 @@ export default {
 
         const matrix = multiply(targetInverseMatrix, h, 4);
         const transform = `${datas.targetTransform} ${makeMatrixCSS(matrix, true)}`;
-
         const delta = multiply(invert(prevMatrix, 4), matrix, 4);
 
         datas.prevMatrix = matrix;

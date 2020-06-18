@@ -373,7 +373,7 @@ export function caculateMatrixStack(
     ];
 }
 export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 9) {
-    return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix).join(",")})`;
+    return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix, !is3d).join(",")})`;
 }
 export function getSVGViewBox(el: SVGSVGElement) {
     const clientWidth = el.clientWidth;

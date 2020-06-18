@@ -329,7 +329,7 @@ class App extends React.Component<any, any> {
 
                         target.style.cssText += item.toCSS();
                     }}
-                    onWarp={({ target, delta, matrix, multiply }) => {
+                    onWarp={({ target, dist, delta, matrix, multiply }) => {
                         const matrix3d = item.get("matrix3d");
 
                         if (!matrix3d) {
@@ -362,6 +362,7 @@ class App extends React.Component<any, any> {
                 verticalGuidelines={[200, 400, 600]}
                 horizontalGuidelines={[200, 400, 600]}
                 onWarp={e => {
+                    // console.log(e.matrix);
                     e.target.style.transform = e.transform;
                 }} />}
                         <div className="staticbox">

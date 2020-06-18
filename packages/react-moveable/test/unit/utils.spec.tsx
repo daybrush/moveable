@@ -5,8 +5,8 @@ import {
     getSize, caculateMatrixStack,
     throttle, throttleArray, isInside, caculateBoundSize,
 } from "../../src/react-moveable/utils";
-import { getRad, multiply, invert, transpose } from "../../src/react-moveable/matrix";
-import { helperInvert, helperMultiply } from "./TestHelper";
+import { getRad, multiply, invert, transpose, createWarpMatrix, caculate } from "../../src/react-moveable/matrix";
+import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCaculate } from "./TestHelper";
 
 describe("test utils", () => {
     beforeEach(() => {
@@ -257,6 +257,20 @@ describe("test utils", () => {
             poses: [[0, 0], [320, 0], [0, 220], [320, 220]],
             nextPoses: [[100, 0], [420, 0], [100, 220], [420, 220]],
         },
+        {
+            poses: [
+                [-100, -101.318],
+                [-100, 101.682],
+                [100, -101.318],
+                [100, 101.682],
+            ],
+            nextPoses: [
+                [-100, -101.318, 0, 1],
+                [-100, 101.682, 0, 1],
+                [289, -104.318, 0, 1],
+                [289, 98.682, 0, 1],
+            ],
+        },
     ].forEach(({ poses, nextPoses }, i) => {
         it(`test createWarpMatrix${i}`, () => {
             // Given
@@ -300,6 +314,13 @@ describe("test utils", () => {
             const helperH = helperMultiply(helperInvertMatrix, [u0, v0, u1, v1, u2, v2, u3, v3], 8);
 
             // Then
+            const pp = [...poses, ...nextPoses];
+            poses.forEach((pos, j) => {
+                const [x, y] = caculate((createWarpMatrix as any)(...pp), [pos[0], pos[1], 0, 1]);
+
+                expect(x).to.be.closeTo(nextPoses[j][0], 0.01);
+                expect(y).to.be.closeTo(nextPoses[j][1], 0.01);
+            });
             expect(h).to.be.deep.equals(helperH);
             expect(invertMatrix).to.be.deep.equals(transpose(helperInvertMatrix));
         });
