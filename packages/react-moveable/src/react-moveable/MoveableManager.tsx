@@ -54,6 +54,7 @@ export default class MoveableManager<T = {}, U = {}>
         triggerAblesSimultaneously: false,
         padding: {},
         pinchOutside: true,
+        checkInput: false,
     };
     public state: MoveableManagerState<U> = {
         container: null,
@@ -131,9 +132,11 @@ export default class MoveableManager<T = {}, U = {}>
         if (!container && !parentMoveable) {
             this.updateRect("End", false, true);
         }
+        this.updateCheckInput();
     }
     public componentDidUpdate(prevProps: MoveableManagerProps<T>) {
         this.updateEvent(prevProps);
+        this.updateCheckInput();
     }
     public componentWillUnmount() {
         this.isUnmounted = true;
@@ -446,5 +449,8 @@ export default class MoveableManager<T = {}, U = {}>
             filterAbles(enabledAbles, ["render"], triggerAblesSimultaneously).map(({ render }) => {
                 return render!(this, Renderer) || [];
             })).filter(el => el), ({ key }) => key).map(group => group[0]);
+    }
+    protected updateCheckInput() {
+        this.targetDragger && (this.targetDragger.options.checkInput = this.props.checkInput);
     }
 }

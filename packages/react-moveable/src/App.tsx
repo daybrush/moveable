@@ -373,10 +373,13 @@ class App extends React.Component<any, any> {
                         <div id="contented" contentEditable={true} style={{
                             position: "absolute",
                             left: "700px",
+                            zIndex: 10,
                         }}>AAA</div>
                         <Moveable target={document.querySelector<HTMLElement>("#contented")}
                         draggable={true}
+                        checkInput={true}
                             onDragStart={e => {
+                                // console.log("H");
                                 // return false;
                             }}
                         />
@@ -435,13 +438,13 @@ class App extends React.Component<any, any> {
         }));
     }
     public onClick = (e: any) => {
-        if (e.target.nodeName === "INPUT") {
+        if (e.target.nodeName === "INPUT" || e.target.isContentEditable) {
             return;
         }
         if (this.moveable.isDragging()) {
             return;
         }
-        console.log("nop");
+        // console.log("nop");
         const target = e.target;
 
         const id = target.getAttribute("data-target");

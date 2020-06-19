@@ -15,7 +15,7 @@ export default {
         moveable: MoveableManager<PinchableProps, SnappableState>,
         e: any,
     ) {
-        const { datas, touches, targets, angle } = e;
+        const { datas, targets, angle } = e;
         const { pinchable, ables } = moveable.props;
 
         if (!pinchable) {
@@ -70,7 +70,7 @@ export default {
     ) {
         const {
             datas, scale: pinchScale, distance,
-            touches, inputEvent, targets,
+            inputEvent, targets,
             angle,
         } = e;
         if (!datas.isPinch) {

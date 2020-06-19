@@ -40,6 +40,7 @@ export type MoveableManagerProps<T = {}> = {
  * @property - Whether the container containing the target becomes a pinch. (default: true)
  * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
  * @property - Add padding around the target to increase the drag area. (default: null)
+ * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
  */
 export interface MoveableDefaultProps {
     target?: SVGElement | HTMLElement | null;
@@ -57,6 +58,7 @@ export interface MoveableDefaultProps {
     pinchOutside?: boolean;
     triggerAblesSimultaneously?: boolean;
     padding?: PaddingBox;
+    checkInput?: boolean;
 }
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
