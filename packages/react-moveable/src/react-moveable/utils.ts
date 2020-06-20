@@ -954,7 +954,8 @@ export function fillEndParams<T extends IObject<any>>(
     e: any,
     params: Pick<T, Exclude<
         keyof T,
-        "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget" | "lastEvent" | "isDrag">
+        "target" | "clientX" | "clientY" | "inputEvent" |
+        "datas" | "currentTarget" | "lastEvent" | "isDrag" | "isDouble">
     > & { isDrag?: boolean },
 ): T {
     const datas = e.datas;
@@ -973,6 +974,7 @@ export function fillEndParams<T extends IObject<any>>(
         inputEvent: e.inputEvent,
         currentTarget: moveable,
         lastEvent: datas.lastEvent,
+        isDouble: e.isDouble,
         datas: datas.datas,
     } as any;
 }
@@ -1156,4 +1158,8 @@ export function getUnitSize(pos: string, size: number) {
     const { value, unit } = splitUnit(pos);
 
     return unit === "%" ? value * size / 100 : value;
+}
+
+export function convertCSSSize(value: number, size: number, isRelative?: boolean) {
+    return isRelative ? `${value / size * 100}%` : `${value}px`;
 }

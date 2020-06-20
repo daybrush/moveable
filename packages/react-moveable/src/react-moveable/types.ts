@@ -234,10 +234,12 @@ export interface OnEvent {
  * @extends Moveable.OnEvent
  * @property - This is the last dragged event. No, if you haven't dragged.
  * @property - Whether this moved
+ * @property - Whether it is double-click
  */
 export interface OnEndEvent extends OnEvent {
     lastEvent: any | undefined;
     isDrag: boolean;
+    isDouble: boolean;
 }
 /**
  * @typedef
