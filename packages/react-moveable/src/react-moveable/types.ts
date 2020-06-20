@@ -164,7 +164,7 @@ export interface MoveableProps extends
     GroupableProps,
     SnappableProps,
     ScrollableProps,
-    // ClippableProps,
+    ClippableProps,
     RenderProps {
         target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
@@ -1077,15 +1077,16 @@ export interface RenderProps {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Whether or not target can be scrolled to the scroll container (default: false)
- * @property - The container to which scroll is applied (default: container)
- * @property - Expand the range of the scroll check area. (default: 0)
- * @property - Sets a function to get the scroll position. (default: Function)
+ * @property - Whether to clip the target.
+ * @property - If clippath is not set, the default value can be set.
+ * @property - % Can be used instead of the absolute px (`rect` not possible) (default: false)
+ * @property - When dragging the target, the clip also moves. (default: true)
+ * @property - You can drag the clip by setting clipArea. (default: false)
  */
 export interface ClippableOptions {
+    clippable?: boolean;
     defaultClipPath?: string;
     clipRelative?: boolean;
-    clippable?: boolean;
     dragWithClip?: boolean;
     clipArea?: boolean;
 }

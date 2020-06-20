@@ -603,7 +603,7 @@ export default {
             dragWithClip = true,
         } = props;
 
-        if (dragWithClip == null) {
+        if (dragWithClip) {
             return false;
         }
 
