@@ -132,7 +132,7 @@ export default {
             distY = r * Math.sin(dragRotateRad);
         }
 
-        if (!isPinch && !parentEvent && !parentFlag && (distX || distY)) {
+        if (!isPinch && !parentEvent && !parentFlag && (!throttleDragRotate || distX || distY)) {
             const [verticalInfo, horizontalInfo] = checkSnapDrag(
                 moveable, distX, distY, throttleDragRotate, isRequest, datas,
             );
