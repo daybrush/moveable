@@ -124,17 +124,35 @@ function getRotateInfo(
 }
 
 export function getPositions(
-    rotationPosition: "top" | "bottom" | "left" | "right",
+    rotationPosition: RotatableProps["rotationPosition"],
     [pos1, pos2, pos3, pos4]: number[][],
+    direction: number,
 ) {
-    if (rotationPosition === "left") {
-        return [pos3, pos1];
-    } else if (rotationPosition === "right") {
-        return [pos2, pos4];
-    } else if (rotationPosition === "bottom") {
-        return [pos4, pos3];
+    let radPoses = [pos1, pos2];
+
+    const [dir1, dir2] = (rotationPosition || "").split("-");
+
+    if (dir1 === "left") {
+        radPoses = [pos3, pos1];
+    } else if (dir1 === "right") {
+        radPoses = [pos2, pos4];
+    } else if (dir1 === "bottom") {
+        radPoses = [pos4, pos3];
     }
-    return [pos1, pos2];
+    let pos = [
+        (radPoses[0][0] + radPoses[1][0]) / 2,
+        (radPoses[0][1] + radPoses[1][1] / 2),
+    ];
+    const rad = getRotationRad(radPoses, direction);
+
+    console.log(dir1, dir2);
+    if (dir2) {
+        const isStart = dir2 === "top" || dir2 === "left";
+        const isReverse = dir1 === "bottom" || dir1 === "left";
+
+        pos = radPoses[(isStart && !isReverse) || (!isStart && isReverse) ? 0 : 1];
+    }
+    return [pos, rad] as const;
 }
 
 export function dragControlCondition(e: any) {
@@ -161,13 +179,12 @@ export default {
             return null;
         }
         const { renderPoses, direction } = moveable.state;
-        const poses = getPositions(rotationPosition!, renderPoses);
-        const rotationRad = getRotationRad(poses, direction);
+        const [pos, rotationRad] = getPositions(rotationPosition!, renderPoses, direction);
 
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(-50%) translate(${(poses[0][0] + poses[1][0]) / 2}px, ${(poses[0][1] + poses[1][1]) / 2}px) rotate(${rotationRad}rad)`,
+                transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rotationRad}rad)`,
             }}>
                 <div className={prefix("control", "rotation")}></div>
             </div>

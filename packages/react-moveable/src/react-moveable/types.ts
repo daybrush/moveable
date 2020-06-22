@@ -887,7 +887,12 @@ export interface GapGuideline extends Guideline {
  */
 export interface RotatableOptions {
     rotatable?: boolean;
-    rotationPosition?: "top" | "bottom" | "left" | "right";
+    rotationPosition?:
+        "top" | "bottom" | "left" | "right"
+        | "top-right" | "top-left"
+        | "bottom-right" | "bottom-left"
+        | "left-top" | "left-bottom"
+        | "right-top" | "right-bottom";
     throttleRotate?: number;
 }
 export interface RotatableProps extends RotatableOptions {
