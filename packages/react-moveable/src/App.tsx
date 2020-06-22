@@ -194,11 +194,10 @@ class App extends React.Component<any, any> {
                         console.log(e);
                     }}
                     />
-                <Moveable<ClippableProps>
+                <Moveable
                     target={selectedTarget}
                     rootContainer={document.body}
                     className="no-radius"
-                    ables={[Clippable]}
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
@@ -206,6 +205,7 @@ class App extends React.Component<any, any> {
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
                     clippable={true}
+                    defaultClipPath={"polygon"}
                     clipRelative={true}
                     dragArea={true}
                     draggable={true}
@@ -243,6 +243,7 @@ class App extends React.Component<any, any> {
                     resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
+                    rotationPosition="left-top"
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
@@ -393,7 +394,7 @@ class App extends React.Component<any, any> {
                             // clipPath: "inset(34px 24px 27px 28px round 80px 20px)",
                             // clipPath: "inset(34px 24px 27px 28px)",
                             // clipPath: `circle(39.7% at 52% 49%)`,
-                            clipPath: `ellipse(39.7% 39.7% at 52% 49%)`,
+                            // clipPath: `ellipse(39.7% 39.7% at 52% 49%)`,
                             // clipPath: "polygon(30% 30%, 60% 20%, 50% 80%, 20% 70%)",
                             // clip:  "rect(0px,60px,200px,0px)",
                             // transform: "translate(100px, 0px)",

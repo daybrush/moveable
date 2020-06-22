@@ -1083,13 +1083,15 @@ export interface RenderProps {
  * @typedef
  * @memberof Moveable
  * @property - Whether to clip the target.
- * @property - If clippath is not set, the default value can be set.
+ * @property - You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
+ * @property - If clippath is not set, the default value can be set. (defaultClipPath < style < customClipPath < dragging clipPath)
  * @property - % Can be used instead of the absolute px (`rect` not possible) (default: false)
  * @property - When dragging the target, the clip also moves. (default: true)
  * @property - You can drag the clip by setting clipArea. (default: false)
  */
 export interface ClippableOptions {
     clippable?: boolean;
+    customClipPath?: string;
     defaultClipPath?: string;
     clipRelative?: boolean;
     dragWithClip?: boolean;

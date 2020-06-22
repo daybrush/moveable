@@ -133,6 +133,7 @@ function getClipPath(
     target: HTMLElement | SVGElement,
     width: number,
     height: number,
+    defaultClip?: string,
     customClip?: string,
 ) {
     let clipText: string | undefined = customClip;
@@ -144,14 +145,21 @@ function getClipPath(
         clipText = clipPath !== "none" ? clipPath : style.clip!;
     }
     if (!clipText || clipText === "none" || clipText === "auto") {
-        return;
+        clipText = defaultClip;
+
+        if (!clipText) {
+            return;
+        }
     }
-    const { prefix: clipPrefix, value } = splitBracket(clipText);
+    const {
+        prefix: clipPrefix = clipText,
+        value = "",
+    } = splitBracket(clipText);
     const isCircle = clipPrefix === "circle";
     let splitter = " ";
 
     if (clipPrefix === "polygon") {
-        const values = splitComma(value!);
+        const values = splitComma(value! || `0% 0%, 100% 0%, 100% 100%, 0% 100%`);
         splitter = ",";
 
         const poses: ClipPose[] = values.map(pos => {
@@ -182,14 +190,14 @@ function getClipPath(
 
         if (isCircle) {
             let radius = "";
-            [radius, , xPos, yPos] = values;
+            [radius = "50%", , xPos = "50%", yPos = "50%"] = values;
 
             radiusX = getUnitSize(radius, Math.sqrt((width * width + height * height) / 2));
             radiusY = radiusX;
         } else {
             let xRadius = "";
             let yRadius = "";
-            [xRadius, yRadius, , xPos, yPos] = values;
+            [xRadius = "50%", yRadius = "50%", , xPos = "50%", yPos = "50%"] = values;
 
             radiusX = getUnitSize(xRadius, width);
             radiusY = getUnitSize(yRadius, height);
@@ -227,7 +235,7 @@ function getClipPath(
             splitter,
         } as const;
     } else if (clipPrefix === "inset") {
-        const values = splitSpace(value!);
+        const values = splitSpace(value! || "0 0 0 0");
         const roundIndex = values.indexOf("round");
 
         const rectLength = (roundIndex > -1 ? values.slice(0, roundIndex) : values).length;
@@ -267,14 +275,16 @@ function getClipPath(
         } as const;
     } else if (clipPrefix === "rect") {
         // top right bottom left
-        const values = splitComma(value!);
+        const values = splitComma(value! || `0px, ${width}px, ${height}px, 0px`);
+
         splitter = ",";
-        const [top, right, bottom, left] = splitComma(value!).map((pos, i) => {
+        const [top, right, bottom, left] = values.map((pos, i) => {
             const { value: posValue } = splitUnit(pos);
 
             return posValue;
         });
         const poses = getRectPoses(top, right, bottom, left);
+
         return {
             type: "rect",
             clipText,
@@ -458,7 +468,10 @@ export default {
         dragWithClip: Boolean,
     },
     render(moveable: MoveableManager<ClippableProps, ClippableState>, React: Renderer) {
-        const { defaultClipPath, clipArea, zoom } = moveable.props;
+        const {
+            customClipPath, defaultClipPath,
+            clipArea, zoom,
+        } = moveable.props;
         const {
             target, width, height, matrix, is3d, left, top,
             pos1, pos2, pos3, pos4,
@@ -469,7 +482,8 @@ export default {
             return [];
         }
 
-        const clipPath = getClipPath(target, width, height, clipPathState || defaultClipPath);
+        const clipPath = getClipPath(
+            target, width, height, defaultClipPath || "inset", clipPathState || customClipPath);
 
         if (!clipPath) {
             return [];
@@ -617,12 +631,12 @@ export default {
     },
     dragControlStart(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
         const state = moveable.state;
-        const { defaultClipPath } = moveable.props;
+        const { defaultClipPath, customClipPath } = moveable.props;
         const { target, width, height } = state;
         const inputTarget = e.inputEvent ? e.inputEvent.target : null;
         const className = inputTarget ? inputTarget.className : "";
         const datas = e.datas;
-        const clipPath = getClipPath(target!, width, height, defaultClipPath);
+        const clipPath = getClipPath(target!, width, height, defaultClipPath || "inset", customClipPath);
 
         if (!clipPath) {
             return false;

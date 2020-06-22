@@ -145,7 +145,6 @@ export function getPositions(
     ];
     const rad = getRotationRad(radPoses, direction);
 
-    console.log(dir1, dir2);
     if (dir2) {
         const isStart = dir2 === "top" || dir2 === "left";
         const isReverse = dir1 === "bottom" || dir1 === "left";
