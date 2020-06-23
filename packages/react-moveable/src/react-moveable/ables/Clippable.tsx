@@ -747,6 +747,8 @@ export default {
             distX,
             distY,
         }));
+
+        return true;
     },
     dragControlEnd(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
         moveable.state.clipPathState = "";

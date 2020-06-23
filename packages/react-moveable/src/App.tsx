@@ -205,7 +205,7 @@ class App extends React.Component<any, any> {
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
                     clippable={true}
-                    defaultClipPath={"polygon"}
+                    // defaultClipPath={"polygon"}
                     clipRelative={true}
                     dragArea={true}
                     draggable={true}
