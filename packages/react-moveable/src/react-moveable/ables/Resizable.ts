@@ -521,6 +521,8 @@ export default {
      * @param {number} [e.direction=[1, 1]] - Direction to resize
      * @param {number} [e.deltaWidth] - delta number of width
      * @param {number} [e.deltaHeight] - delta number of height
+     * @param {number} [e.offsetWidth] - offset number of width
+     * @param {number} [e.offsetHeight] - offset number of height
      * @param {number} [e.isInstant] - Whether to execute the request instantly
      * @return {Moveable.Requester} Moveable Requester
      * @example
