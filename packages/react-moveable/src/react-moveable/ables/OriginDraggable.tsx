@@ -1,7 +1,7 @@
 import MoveableManager from "../MoveableManager";
 import {
     prefix, getControlTransform, triggerEvent,
-    fillParams, caculatePoses, getRect, fillEndParams
+    fillParams, caculatePoses, getRect, fillEndParams, getUnitSize, convertCSSSize
 } from "../utils";
 import { Renderer, OriginProps, OnDragOriginStart, OnDragOrigin, OnDragOriginEnd } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
@@ -14,6 +14,7 @@ export default {
     name: "originDraggable",
     props: {
         originDraggable: Boolean,
+        originRelative: Boolean,
     },
     css: [
 `.control.origin.origin-draggable {
@@ -76,6 +77,9 @@ export default {
             targetMatrix,
             is3d,
         } = state;
+        const {
+            originRelative,
+        } = moveable.props;
         const n = is3d ? 4 : 3;
         let dist = [distX, distY];
 
@@ -104,12 +108,17 @@ export default {
         ];
 
         datas.prevOrigin = dist;
+        const transformOrigin = [
+            convertCSSSize(origin[0], width, originRelative),
+            convertCSSSize(origin[1], height, originRelative),
+        ].join(" ");
         triggerEvent<OriginProps>(moveable, "onDragOrigin", fillParams<OnDragOrigin>(moveable, e, {
             width,
             height,
             origin,
             dist,
             delta,
+            transformOrigin,
             drag: Draggable.drag(
                 moveable,
                 setCustomDrag(moveable.state, dragDelta, inputEvent, !!isPinch, false),

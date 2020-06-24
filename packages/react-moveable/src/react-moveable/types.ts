@@ -362,7 +362,8 @@ export interface OnDragOriginStart extends OnEvent {
  * @property - Offset height of target
  * @property - The delta of [x, y]
  * @property - The distance of [x, y]
- * @property - The target's moved transform-origin
+ * @property - The target's moved transform-origin poses
+ * @property - The target's moved transform-origin css
  * @property - `dragOrigin` causes a `drag` event.
  */
 export interface OnDragOrigin extends OnEvent {
@@ -371,6 +372,7 @@ export interface OnDragOrigin extends OnEvent {
     delta: number[];
     dist: number[];
     origin: number[];
+    transformOrigin: string;
     drag: OnDrag;
 }
 /**
@@ -905,9 +907,11 @@ export interface DraggableState {
  * @typedef
  * @memberof Moveable
  * @property - Whether or not the origin control box will be visible or not (default: false)
+ * @property - % Can be used instead of the absolute px
  */
 export interface OriginOptions {
     originDraggable?: boolean;
+    originRelative?: boolean;
 }
 
 export interface OriginProps extends OriginOptions {
