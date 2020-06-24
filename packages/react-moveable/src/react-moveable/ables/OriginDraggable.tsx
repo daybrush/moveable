@@ -32,8 +32,8 @@ export default {
         ];
     },
     dragControlCondition(e: any) {
-        if (e.isRequest && e.requestAble === "origin") {
-            return true;
+        if (e.isRequest) {
+            return e.requestAble === "origin";
         }
         return hasClass(e.inputEvent.target, prefix("origin"));
     },

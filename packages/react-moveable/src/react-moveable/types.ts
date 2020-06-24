@@ -876,11 +876,13 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
  * @property - Whether or not target can be dragged. (default: false)
  * @property - throttle of x, y when drag. (default: 0)
  * @property - throttle of angle(degree) of x,y when drag. (default: 0)
+ * @property - start angle(degree) of x,y for throttleDragRotate when drag. (default: 0)
  */
 export interface DraggableOptions {
     draggable?: boolean;
     throttleDrag?: number;
     throttleDragRotate?: number;
+    startDragRotate?: number;
 }
 export interface DraggableProps extends DraggableOptions {
 

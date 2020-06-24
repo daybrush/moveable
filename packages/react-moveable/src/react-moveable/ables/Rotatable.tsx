@@ -155,8 +155,8 @@ export function getPositions(
 }
 
 export function dragControlCondition(e: any) {
-    if (e.isRequest && e.requestAble === "rotatable") {
-        return true;
+    if (e.isRequest) {
+        return e.requestAble === "rotatable";
     }
     return hasClass(e.inputEvent.target, prefix("rotation"));
 }
