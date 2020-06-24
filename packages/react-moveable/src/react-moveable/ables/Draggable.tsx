@@ -21,6 +21,7 @@ export default {
         draggable: Boolean,
         throttleDrag: Number,
         throttleDragRotate: Number,
+        startDragRotate: Number,
     },
     render(
         moveable: MoveableManager<DraggableProps, DraggableState>,
@@ -124,8 +125,13 @@ export default {
         let dragRotateRad = 0;
 
         if (!parentEvent && throttleDragRotate > 0 && (distX || distY)) {
-            const deg = throttle(getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate);
-            const r = getDistSize([distX, distY]);
+            const startDragRotate = props.startDragRotate || 0;
+            const deg
+                = throttle(startDragRotate + getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate)
+                - startDragRotate;
+            const ry  = distY * Math.abs(Math.cos((deg - 90) / 180 * Math.PI));
+            const rx  = distX * Math.abs(Math.cos(deg / 180 * Math.PI));
+            const r = getDistSize([rx, ry]);
             dragRotateRad = deg * Math.PI / 180;
 
             distX = r * Math.cos(dragRotateRad);

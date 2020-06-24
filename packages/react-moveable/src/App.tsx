@@ -249,7 +249,8 @@ class App extends React.Component<any, any> {
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
-                    throttleDragRotate={isResizable ? 0 : 30}
+                    startDragRotate={90}
+                    throttleDragRotate={180}
                     throttleScale={0}
                     throttleResize={0}
                     // throttleRotate={10}
