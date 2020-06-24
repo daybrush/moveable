@@ -360,7 +360,7 @@ export default class MoveableManager<T = {}, U = {}>
             isRequest: true,
         }, isInstant);
 
-        return param.isInstant ? requester.request(param).requestEnd() : requester;
+        return isInstant || param.isInstant ? requester.request(param).requestEnd() : requester;
     }
     public updateRenderPoses() {
         const state = this.state;
