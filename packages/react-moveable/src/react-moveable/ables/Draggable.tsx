@@ -287,15 +287,14 @@ export default {
      * @param {number} [e.y] - y position
      * @param {number} [e.deltaX] - X number to move
      * @param {number} [e.deltaY] - Y number to move
-     * @param {number} [e.isInstant] - Whether to execute the request instantly
      * @return {Moveable.Requester} Moveable Requester
      * @example
 
      * // Instantly Request (requestStart - request - requestEnd)
      * // Use Relative Value
-     * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10 }, true);
      * // Use Absolute Value
-     * moveable.request("draggable", { x: 200, y: 100, isInstant: true });
+     * moveable.request("draggable", { x: 200, y: 100 }, true);
      *
      * // requestStart
      * const requester = moveable.request("draggable");
@@ -306,9 +305,9 @@ export default {
      * requester.request({ deltaX: 10, deltaY: 10 });
      * requester.request({ deltaX: 10, deltaY: 10 });
      * // Use Absolute Value
-     * moveable.request("draggable", { x: 200, y: 100, isInstant: true });
-     * moveable.request("draggable", { x: 220, y: 100, isInstant: true });
-     * moveable.request("draggable", { x: 240, y: 100, isInstant: true });
+     * moveable.request("draggable", { x: 200, y: 100 });
+     * moveable.request("draggable", { x: 220, y: 100 });
+     * moveable.request("draggable", { x: 240, y: 100 });
      *
      * // requestEnd
      * requester.requestEnd();
@@ -335,6 +334,8 @@ export default {
                 } else if ("deltaY" in e) {
                     distY += e.deltaY;
                 }
+
+                console.log(distX, distY);
 
                 return { datas, distX, distY };
             },

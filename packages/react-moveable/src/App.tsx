@@ -249,8 +249,8 @@ class App extends React.Component<any, any> {
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
-                    startDragRotate={90}
-                    throttleDragRotate={180}
+                    // startDragRotate={90}
+                    // throttleDragRotate={180}
                     throttleScale={0}
                     throttleResize={0}
                     // throttleRotate={10}
@@ -504,53 +504,17 @@ class App extends React.Component<any, any> {
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", e => {
-            if (!requester) {
-                requester = mvb.request("draggable")!;
-                // requester = mvb.request("resizable", { direction: [0, 0] })!;
-            }
+            mvb.request("draggable", { deltaX: 10, deltaY: 0 }, true);
+            // requester = mvb.request("resizable", { direction: [0, 0] })!;
             // requester.request({ deltaWidth: 10, deltaHeight: 0});
-            requester.request({ deltaX: 10, deltaY: 0 });
+
             e.inputEvent.preventDefault();
         }).keydown("left", e => {
-            if (!requester) {
-                requester = mvb.request("draggable")!;
-                // requester = mvb.request("resizable", { direction: [0, 0]})!;
-            }
-            // requester.request({ deltaWidth: -10, deltaHeight: 0});
-            requester.request({ deltaX: -10, deltaY: 0});
-            e.inputEvent.preventDefault();
-        }).keydown("up", e => {
-            if (!requester) {
-                requester = mvb.request("draggable")!;
-            }
-            requester.request({ deltaX: 0, deltaY: -10 });
+            mvb.request("draggable", { deltaX: -10, deltaY: 0 }, true);
             e.inputEvent.preventDefault();
         }).keydown("down", e => {
-            if (!requester) {
-                requester = mvb.request("draggable")!;
-            }
-            requester.request({ deltaX: 0, deltaY: 10 });
+            mvb.request("draggable", { deltaX: 0, deltaY: 10 }, true);
             e.inputEvent.preventDefault();
-        }).keyup("left", () => {
-            if (requester) {
-                requester.requestEnd();
-                requester = null;
-            }
-        }).keyup("right", () => {
-            if (requester) {
-                requester.requestEnd();
-                requester = null;
-            }
-        }).keyup("up", () => {
-            if (requester) {
-                requester.requestEnd();
-                requester = null;
-            }
-        }).keyup("down", () => {
-            if (requester) {
-                requester.requestEnd();
-                requester = null;
-            }
         }).keyup("shift", () => {
             this.setState({ isResizable: true, isShift: false });
         }).keydown("r", e => {

@@ -529,10 +529,10 @@ export default {
 
      * // Instantly Request (requestStart - request - requestEnd)
      * // Use Relative Value
-     * moveable.request("resizable", { deltaWidth: 10, deltaHeight: 10, isInstant: true });
+     * moveable.request("resizable", { deltaWidth: 10, deltaHeight: 10 }, true);
      *
      * // Use Absolute Value
-     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100, isInstant: true });
+     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100 }, true);
      *
      * // requestStart
      * const requester = moveable.request("resizable");
@@ -544,9 +544,9 @@ export default {
      * requester.request({ deltaWidth: 10, deltaHeight: 10 });
      *
      * // Use Absolute Value
-     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100, isInstant: true });
-     * moveable.request("resizable", { offsetWidth: 110, offsetHeight: 100, isInstant: true });
-     * moveable.request("resizable", { offsetWidth: 120, offsetHeight: 100, isInstant: true });
+     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100 });
+     * moveable.request("resizable", { offsetWidth: 110, offsetHeight: 100 });
+     * moveable.request("resizable", { offsetWidth: 120, offsetHeight: 100 });
      *
      * // requestEnd
      * requester.requestEnd();

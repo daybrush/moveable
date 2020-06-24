@@ -436,12 +436,11 @@ export default {
      * @param {number} [e.direction=[1, 1]] - Direction to scale
      * @param {number} [e.deltaWidth] - delta number of width
      * @param {number} [e.deltaHeight] - delta number of height
-     * @param {number} [e.isInstant] - Whether to execute the request instantly
      * @return {Moveable.Requester} Moveable Requester
      * @example
 
      * // Instantly Request (requestStart - request - requestEnd)
-     * moveable.request("scalable", { deltaWidth: 10, deltaHeight: 10, isInstant: true });
+     * moveable.request("scalable", { deltaWidth: 10, deltaHeight: 10 }, true);
      *
      * // requestStart
      * const requester = moveable.request("scalable");

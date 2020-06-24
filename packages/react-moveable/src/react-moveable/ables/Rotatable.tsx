@@ -453,12 +453,11 @@ export default {
      * @method Moveable.Rotatable#request
      * @param {object} [e] - the Resizable's request parameter
      * @param {number} [e.deltaRotate=0] -  delta number of rotation
-     * @param {number} [e.isInstant] - Whether to execute the request instantly
      * @return {Moveable.Requester} Moveable Requester
      * @example
 
      * // Instantly Request (requestStart - request - requestEnd)
-     * moveable.request("rotatable", { deltaRotate: 10, isInstant: true });
+     * moveable.request("rotatable", { deltaRotate: 10 }, true);
      *
      * // requestStart
      * const requester = moveable.request("rotatable");

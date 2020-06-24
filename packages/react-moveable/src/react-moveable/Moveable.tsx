@@ -180,8 +180,10 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
      * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request|Resizable Requester}
      * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request|Scalable Requester}
      * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request|Rotatable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.OriginDraggable.html#request|OriginDraggable Requester}
      * @param - ableName
-     * @param - request to be able params. If isInstant is true, request and requestEnd are executed immediately.
+     * @param - request to be able params.
+     * @param - If isInstant is true, request and requestEnd are executed immediately.
      * @return - Able Requester. If there is no request in able, nothing will work.
      * @example
      * import Moveable from "moveable";
@@ -189,7 +191,7 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
      * const moveable = new Moveable(document.body);
      *
      * // Instantly Request (requestStart - request - requestEnd)
-     * moveable.request("draggable", { deltaX: 10, deltaY: 10, isInstant: true });
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10 }, true);
      *
      * // Start move
      * const requester = moveable.request("draggable");
@@ -198,8 +200,8 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
      * requester.request({ deltaX: 10, deltaY: 10 });
      * requester.requestEnd();
      */
-    public request(ableName: string, params?: AbleRequestParam): Requester {
-        return this.moveable.request(ableName, params);
+    public request(ableName: string, params?: AbleRequestParam, isInstant?: boolean): Requester {
+        return this.moveable.request(ableName, params, isInstant);
     }
     /**
      * Remove the Moveable object and the events.
