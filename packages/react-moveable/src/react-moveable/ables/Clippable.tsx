@@ -3,14 +3,14 @@ import { Renderer, ClippableProps, OnClip, ClippableState, OnClipEnd, OnClipStar
 import { splitBracket, splitComma, splitUnit, splitSpace } from "@daybrush/utils";
 import {
     prefix, caculatePosition, getDiagonalSize,
-    fillParams, triggerEvent, caculateInversePosition,
+    fillParams, triggerEvent,
     makeMatrixCSS, getRect, fillEndParams, getUnitSize, convertCSSSize, moveControlPos, caculatePointerDist
 } from "../utils";
 import { getRad, plus, minus } from "../matrix";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import {
-    getRadiusValues, getRadiusRange, HORIZONTAL_RADIUS_DIRECTIONS,
-    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, VERTICAL_RADIUS_DIRECTIONS, getRadiusStyles, addRadiusPos, removeRadiusPos
+    getRadiusValues,
+    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos
 } from "./roundable/borderRadius";
 
 const CLIP_DIRECTIONS = [
@@ -381,6 +381,33 @@ export default {
         clipArea: Boolean,
         dragWithClip: Boolean,
     },
+    css: [
+`.control.clip-control {
+    background: #6d6;
+    cursor: pointer;
+}
+.control.clip-control.clip-radius {
+    background: #d66;
+}
+.line.clip-line {
+    background: #6e6;
+    cursor: move;
+    z-index: 1;
+}
+.clip-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.clip-ellipse {
+    position: absolute;
+    cursor: move;
+    border: 1px solid #6d6;
+    border: var(--zoompx) solid #6d6;
+    border-radius: 50%;
+    transform-origin: 0px 0px;
+}`,
+    ],
     render(moveable: MoveableManager<ClippableProps, ClippableState>, React: Renderer) {
         const {
             customClipPath, defaultClipPath,

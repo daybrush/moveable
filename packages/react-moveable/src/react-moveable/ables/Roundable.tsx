@@ -8,8 +8,11 @@ import {
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
-import { minus, plus } from "../matrix";
-import { getRadiusValues, getRadiusStyles, removeRadiusPos, addRadiusPos, splitRadiusPoses } from "./roundable/borderRadius";
+import { minus } from "../matrix";
+import {
+    getRadiusValues, getRadiusStyles, removeRadiusPos,
+    addRadiusPos, splitRadiusPoses
+} from "./roundable/borderRadius";
 
 function getBorderRadius(
     target: HTMLElement | SVGElement, width: number, height: number, state?: string,
@@ -176,11 +179,6 @@ export default {
         if (!datas.isRound || !datas.isControl || !datas.controlPoses.length) {
             return false;
         }
-        const {
-            width,
-            height,
-        } = moveable.state;
-
         const index = datas.controlIndex as number;
         const controlPoses = datas.controlPoses as ControlPose[];
         const nextPoses = controlPoses.map(pos => pos.pos.slice());

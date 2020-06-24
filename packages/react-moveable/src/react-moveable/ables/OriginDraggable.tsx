@@ -15,6 +15,11 @@ export default {
     props: {
         originDraggable: Boolean,
     },
+    css: [
+`.control.origin.origin-draggable {
+    pointer-events: auto;
+}`,
+    ],
     render(moveable: MoveableManager<OriginProps>, React: Renderer): any {
         if (!origin) {
             return null;
