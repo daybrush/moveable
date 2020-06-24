@@ -27,7 +27,7 @@ export const IS_WEBKIT
     = agent.os.name.indexOf("ios") > -1 || agent.browser.name.indexOf("safari") > -1;
 
 export const PREFIX = "moveable-";
-export const MOVEABLE_CSS = prefixCSS(PREFIX, `
+export const MOVEABLE_CSS = `
 {
 	position: fixed;
 	width: 1px;
@@ -202,6 +202,7 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
 .line.clip-line {
     background: #6e6;
     cursor: move;
+    z-index: 1;
 }
 .clip-area {
     position: absolute;
@@ -221,7 +222,7 @@ ${IS_WEBKIT ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;
 }` : ""}
-`);
+`;
 export const DRAGGER_EVENTS = ["dragstart", "drag", "dragend", "pinchstart", "pinch", "pinchend"];
 
 export const NEARBY_POS = [
