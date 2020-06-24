@@ -14,6 +14,71 @@ import {
     addRadiusPos, splitRadiusPoses
 } from "./roundable/borderRadius";
 
+function addBorderRadius(
+    controlPoses: ControlPose[],
+    poses: number[][],
+    lineIndex: number,
+    distX: number,
+    distY: number,
+    width: number,
+    height: number,
+) {
+    const {
+        horizontals,
+        verticals,
+    } = splitRadiusPoses(controlPoses);
+    const horizontalsLength = horizontals.length;
+    const verticalsLength = verticals.length;
+    // lineIndex
+    // 0 top
+    // 1 right
+    // 2 left
+    // 3 bottom
+
+    // 0 top - left
+    // 1 top - right
+    // 2 bottom - right
+    // 3 bottom - left
+    // 0 left - top
+    // 1 right - top
+    // 2 right - bottom
+    // 3 left - bottom
+    let horizontalIndex = -1;
+    let verticalIndex = -1;
+
+    if (lineIndex === 0) {
+        if (horizontalsLength === 0) {
+            horizontalIndex = 0;
+        } else if (horizontalsLength === 1) {
+            horizontalIndex = 1;
+        }
+    } else if (lineIndex === 3) {
+        if (horizontalsLength <= 2) {
+            horizontalIndex = 2;
+        } else if (horizontalsLength <= 3) {
+            horizontalIndex = 3;
+        }
+    }
+    if (lineIndex === 2) {
+        if (verticalsLength === 0) {
+            verticalIndex = 0;
+        } else if (verticalsLength < 4) {
+            verticalIndex = 3;
+        }
+    } else if (lineIndex === 1) {
+        if (verticalsLength <= 1) {
+            verticalIndex = 1;
+        } else if (verticalsLength <= 2) {
+            verticalIndex = 2;
+        }
+    }
+
+    addRadiusPos(
+        controlPoses, poses, 0,
+        horizontalIndex, verticalIndex,
+        distX, distY, width, height,
+    );
+}
 function getBorderRadius(
     target: HTMLElement | SVGElement, width: number, height: number, state?: string,
 ) {
@@ -38,17 +103,18 @@ function getBorderRadius(
 }
 
 function triggerRoundEvent(
-    moveable: MoveableManager<RoundableProps>,
+    moveable: MoveableManager<RoundableProps, RoundableState>,
     e: any,
     dist: number[],
     delta: number[],
     controlPoses: ControlPose[],
     nextPoses: number[][],
 ) {
+    const state = moveable.state;
     const {
         width,
         height,
-    } = moveable.state;
+    } = state;
     const {
         raws,
         styles,
@@ -65,6 +131,7 @@ function triggerRoundEvent(
     } = splitRadiusPoses(controlPoses, raws);
     const borderRadius = styles.join(" ");
 
+    state.borderRadiusState = borderRadius;
     triggerEvent<RoundableProps>(moveable, "onRound", fillParams<OnRound>(moveable, e, {
         horizontals,
         verticals,
@@ -132,7 +199,7 @@ export default {
         return className.indexOf("border-radius") > -1
             || (className.indexOf("moveable-line") > -1 && className.indexOf("moveable-direction") > -1);
     },
-    dragControlStart(moveable: MoveableManager<RoundableProps>, e: any) {
+    dragControlStart(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
         const { inputEvent, datas, } = e;
         const inputTarget = inputEvent.target;
         const className = (inputTarget.className || "");
@@ -159,6 +226,9 @@ export default {
 
         setDragStart(moveable, e);
 
+        const {
+            roundRelative,
+        } = moveable.props;
         const state = moveable.state;
         const {
             target,
@@ -168,14 +238,17 @@ export default {
 
         datas.isRound = true;
         datas.prevDist = [0, 0];
-        datas.controlPoses = getBorderRadius(target!, width, height) || [];
+        const controlPoses = getBorderRadius(target!, width, height) || [];
 
-        console.log(datas.controlPoses);
+        datas.controlPoses = controlPoses;
 
+        state.borderRadiusState = getRadiusStyles(
+            controlPoses.map(pos => pos.pos), controlPoses, roundRelative!, width, height).styles.join(" ");
         return true;
     },
     dragControl(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
         const { datas } = e;
+
         if (!datas.isRound || !datas.isControl || !datas.controlPoses.length) {
             return false;
         }
@@ -200,6 +273,9 @@ export default {
         );
     },
     dragControlEnd(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
+        const state = moveable.state;
+
+        state.borderRadiusState = "";
         const { datas, isDouble } = e;
         if (!datas.isRound) {
             return false;
@@ -207,7 +283,7 @@ export default {
         const {
             width,
             height,
-        } = moveable.state;
+        } = state;
         const {
             isControl,
             controlIndex,
@@ -222,62 +298,9 @@ export default {
             if (isControl) {
                 removeRadiusPos(controlPoses, poses, controlIndex, 0);
             } else if (isLine) {
-                const {
-                    horizontals,
-                    verticals,
-                } = splitRadiusPoses(controlPoses);
-                const horizontalsLength = horizontals.length;
-                const verticalsLength = verticals.length;
-                // lineIndex
-                // 0 top
-                // 1 right
-                // 2 left
-                // 3 bottom
-
-                // 0 top - left
-                // 1 top - right
-                // 2 bottom - right
-                // 3 bottom - left
-                // 0 left - top
-                // 1 right - top
-                // 2 right - bottom
-                // 3 left - bottom
-                let horizontalIndex = -1;
-                let verticalIndex = -1;
-
-                if (lineIndex === 0) {
-                    if (horizontalsLength === 0) {
-                        horizontalIndex = 0;
-                    } else if (horizontalsLength === 1) {
-                        horizontalIndex = 1;
-                    }
-                } else if (lineIndex === 3) {
-                    if (horizontalsLength <= 2) {
-                        horizontalIndex = 2;
-                    } else if (horizontalsLength <= 3) {
-                        horizontalIndex = 3;
-                    }
-                }
-                if (lineIndex === 2) {
-                    if (verticalsLength === 0) {
-                        verticalIndex = 0;
-                    } else if (verticalsLength < 4) {
-                        verticalIndex = 3;
-                    }
-                } else if (lineIndex === 1) {
-                    if (verticalsLength <= 1) {
-                        verticalIndex = 1;
-                    } else if (verticalsLength <= 2) {
-                        verticalIndex = 2;
-                    }
-                }
                 const [distX, distY] = caculatePointerDist(moveable, e);
 
-                addRadiusPos(
-                    controlPoses, poses, 0,
-                    horizontalIndex, verticalIndex,
-                    distX, distY, width, height,
-                );
+                addBorderRadius(controlPoses, poses, lineIndex, distX, distY, width, height);
             }
             if (length !== controlPoses.length) {
                 triggerRoundEvent(
@@ -292,6 +315,10 @@ export default {
             triggerEvent<RoundableProps>(moveable, "onRoundEnd",
                 fillEndParams<OnRoundEnd>(moveable, e, {}));
         }
+        state.borderRadiusState = "";
         return true;
+    },
+    unset(moveable: MoveableManager<RoundableProps, RoundableState>) {
+        moveable.state.borderRadiusState = "";
     },
 };
