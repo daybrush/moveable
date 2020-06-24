@@ -74,6 +74,7 @@ export function getInverseDragDist({ datas, distX, distY }: any, isBefore?: bool
         absoluteOrigin,
     );
 }
+
 export function caculateTransformOrigin(
     transformOrigin: string[],
     width: number,

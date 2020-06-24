@@ -11,7 +11,7 @@ import { setDragStart, getDragDist } from "../DraggerUtils";
 import {
     getRadiusValues, getRadiusRange, HORIZONTAL_RADIUS_DIRECTIONS,
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, VERTICAL_RADIUS_DIRECTIONS
-} from "./cornerable/borderRadius";
+} from "./roundable/borderRadius";
 
 const CLIP_DIRECTIONS = [
     [0, -1, "n"],

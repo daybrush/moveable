@@ -288,6 +288,8 @@ export default class MoveableManager<T = {}, U = {}>
         const statePos = [state.left, state.top];
         const origin = plus(statePos, state.origin);
         const beforeOrigin = plus(statePos, state.beforeOrigin);
+        const transformOrigin = state.transformOrigin;
+
         return {
             width,
             height,
@@ -301,6 +303,7 @@ export default class MoveableManager<T = {}, U = {}>
             offsetHeight,
             beforeOrigin,
             origin,
+            transformOrigin,
         };
     }
     public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {
@@ -327,6 +330,7 @@ export default class MoveableManager<T = {}, U = {}>
             request(ableParam: IObject<any>) {
                 triggerAble(self, ableType, "drag", eventAffix, "", {
                     ...ableRequester.request(ableParam),
+                    requestAble: ableName,
                     isRequest: true,
                 }, isInstant);
                 return this;
@@ -334,6 +338,7 @@ export default class MoveableManager<T = {}, U = {}>
             requestEnd() {
                 triggerAble(self, ableType, "drag", eventAffix, "End", {
                     ...ableRequester.requestEnd(),
+                    requestAble: ableName,
                     isRequest: true,
                 });
                 return this;
@@ -342,6 +347,7 @@ export default class MoveableManager<T = {}, U = {}>
 
         triggerAble(self, ableType, "drag", eventAffix, "Start", {
             ...ableRequester.requestStart(param),
+            requestAble: ableName,
             isRequest: true,
         }, isInstant);
 

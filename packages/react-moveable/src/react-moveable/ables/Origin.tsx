@@ -1,14 +1,14 @@
 import MoveableManager from "../MoveableManager";
 import { prefix, getControlTransform } from "../utils";
-import { Renderer } from "../types";
+import { Renderer, OriginProps } from "../types";
 
 export default {
     name: "origin",
     props: {
         origin: Boolean,
     },
-    render(moveable: MoveableManager, React: Renderer): any {
-        if (!moveable.props.origin) {
+    render(moveable: MoveableManager<OriginProps>, React: Renderer): any {
+        if (moveable.props.originDraggable) {
             return null;
         }
         const { beforeOrigin, rotation } = moveable.state;

@@ -163,6 +163,9 @@ export const MOVEABLE_CSS = prefixCSS(PREFIX, `
     margin-left: calc(-6 * var(--zoompx));
 	pointer-events: none;
 }
+.control.origin.origin-draggable {
+    pointer-events: auto;
+}
 ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
 .direction[data-rotation="${degree}"] {
 	${getCursorCSS(degree)}

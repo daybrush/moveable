@@ -30,7 +30,7 @@ export type MoveableManagerProps<T = {}> = {
  * @property - Moveable Container. (default: parentElement)
  * @property - Moveable Root Container (No Transform Container). (default: container)
  * @property - You can specify the position of the rotation. (default: "top")
- * @property - Whether or not the origin control box will be visible or not (default: false)
+ * @property - Whether or not the origin control box will be visible or not (default: true)
  * @property - Zooms in the elements of a moveable. (default: 1)
  * @property - The default transformOrigin of the target can be set in advance. (default: "")
  * @property - Whether to scale and resize through edge lines. (default: false)
@@ -156,6 +156,7 @@ export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, "ta
 export interface MoveableProps extends
     ExcludeKey<MoveableManagerProps, "target">,
     DraggableProps,
+    OriginProps,
     RotatableProps,
     ResizableProps,
     ScalableProps,
@@ -338,6 +339,37 @@ export interface OnDrag extends OnEvent {
  * @extends Moveable.OnEndEvent
  */
 export interface OnDragEnd extends OnEndEvent {
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - dragOrigin causes a `dragStart` event.
+ */
+export interface OnDragOriginStart extends OnEvent {
+    dragStart: OnDragStart | false;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnDragOrigin extends OnEvent {
+    width: number;
+    height: number;
+    delta: number[];
+    dist: number[];
+    origin: number[];
+    drag: OnDrag;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEndEvent
+ */
+export interface OnDragOriginEnd extends OnEndEvent {
 }
 /**
  * @typedef
@@ -822,6 +854,38 @@ export interface DraggableState {
     } | null;
 }
 
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not the origin control box will be visible or not (default: false)
+ */
+export interface OriginOptions {
+    origin?: boolean;
+    originDraggable?: boolean;
+}
+
+export interface OriginProps extends OriginOptions {
+    onDragOriginStart?: (e: OnDragOriginStart) => any;
+    onDragOrigin?: (e: OnDragOrigin) => any;
+    onDragOriginEnd?: (e: OnDragOriginEnd) => any;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether origin can be dragged
+ */
+export interface OriginOptions {
+    originDraggable?: boolean;
+}
+
+export interface OriginProps extends OriginOptions {
+    onDragOriginStart?: (e: OnDragOriginStart) => any;
+    onDragOrigin?: (e: OnDragOrigin) => any;
+    onDragOriginEnd?: (e: OnDragOriginEnd) => any;
+}
+
 /**
  * @typedef
  * @memberof Moveable
@@ -1172,6 +1236,7 @@ export interface OnCustomDrag extends Position {
  * @property - The offset height of the target
  * @property - The absolute transform origin
  * @property - the absolute transform origin before transformation
+ * @property - the target transform origin
  */
 export interface RectInfo {
     pos1: number[];
@@ -1186,6 +1251,7 @@ export interface RectInfo {
     offsetHeight: number;
     origin: number[];
     beforeOrigin: number[];
+    transformOrigin: number[];
 }
 /**
  * @typedef
