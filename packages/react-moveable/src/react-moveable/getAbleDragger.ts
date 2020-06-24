@@ -7,7 +7,7 @@ import { convertDragDist } from "./utils";
 import Dragger from "@daybrush/drag";
 
 export function triggerAble<T extends IObject<any>>(
-    moveable: MoveableManager<any>,
+    moveable: MoveableManager,
     ableType: string,
     eventOperation: string,
     eventAffix: string,
@@ -32,7 +32,14 @@ export function triggerAble<T extends IObject<any>>(
         convertDragDist(moveable.state, e);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
-    const ables: Able[] = (moveable as any)[ableType];
+    const ables: Able[] = (moveable as any)[ableType].slice();
+
+    if (e.isRequest) {
+        const requestAble = e.requestAble;
+        if (!ables.some(able => able.name === requestAble)) {
+            ables.push(...moveable.props.ables!.filter(able => able.name === requestAble));
+        }
+    }
 
     if (!ables.length) {
         return false;

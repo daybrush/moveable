@@ -201,8 +201,9 @@ class App extends React.Component<any, any> {
                     // container={document.querySelector<HTMLElement>("#con")}
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
-                    origin={true}
-                    originDraggable={true}
+                    origin={false}
+                    // origin={true}
+                    // originDraggable={true}
                     roundable={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
@@ -504,7 +505,8 @@ class App extends React.Component<any, any> {
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
         }).keydown("right", e => {
-            mvb.request("draggable", { deltaX: 10, deltaY: 0 }, true);
+            // mvb.request("draggable", { deltaX: 10, deltaY: 0 }, true);
+            mvb.request("originDraggable", { deltaX: 10, deltaY: 0 }, true);
             // requester = mvb.request("resizable", { direction: [0, 0] })!;
             // requester.request({ deltaWidth: 10, deltaHeight: 0});
 
