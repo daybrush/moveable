@@ -358,6 +358,12 @@ export interface OnDragOriginStart extends OnEvent {
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
+ * @property - Offset width of target
+ * @property - Offset height of target
+ * @property - The delta of [x, y]
+ * @property - The distance of [x, y]
+ * @property - The target's moved transform-origin
+ * @property - `dragOrigin` causes a `drag` event.
  */
 export interface OnDragOrigin extends OnEvent {
     width: number;
@@ -386,6 +392,13 @@ export interface OnRoundStart extends OnEvent {}
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
+ * @property - Offset width of target
+ * @property - Offset height of target
+ * @property - The delta of [x, y]
+ * @property - The distance of [x, y]
+ * @property - The target's moved border-radius's horizontal poses
+ * @property - The target's moved border-radius's vertical poses
+ * @property - The target's moved border-radius
  */
 export interface OnRound extends OnEvent {
     width: number;
@@ -886,7 +899,6 @@ export interface DraggableState {
     } | null;
 }
 
-
 /**
  * @typedef
  * @memberof Moveable
@@ -906,6 +918,7 @@ export interface OriginProps extends OriginOptions {
  * @typedef
  * @memberof Moveable
  * @property - Whether to show and drag border-radius
+ * @property - % Can be used instead of the absolute px
  */
 export interface RoundableOptions {
     roundable?: boolean;
