@@ -17,7 +17,8 @@ import {
 } from "./matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState, Able, MoveableClientRect, MoveableProps } from "./types";
+import { MoveableManagerState, Able, MoveableClientRect, MoveableProps, ControlPose } from "./types";
+import { getDragDist } from "./DraggerUtils";
 
 export function round(num: number) {
     return Math.round(num);
@@ -1162,4 +1163,58 @@ export function getUnitSize(pos: string, size: number) {
 
 export function convertCSSSize(value: number, size: number, isRelative?: boolean) {
     return isRelative ? `${value / size * 100}%` : `${value}px`;
+}
+
+export function moveControlPos(
+    controlPoses: ControlPose[],
+    nextPoses: number[][],
+    index: number,
+    distX: number,
+    distY: number,
+) {
+    const { direction, pos, horizontal, vertical, sub } = controlPoses[index];
+    const dist = [
+        distX * Math.abs(horizontal),
+        distY * Math.abs(vertical),
+    ];
+    if (direction && !sub) {
+        direction.split("").forEach(dir => {
+            const isVertical = dir === "n" || dir === "s";
+
+            controlPoses.forEach((controlPose, i) => {
+                const {
+                    direction: dirDir,
+                    horizontal: dirHorizontal,
+                    vertical: dirVertical,
+                    pos: controlPos,
+                } = controlPose;
+
+                if (!dirDir || dirDir.indexOf(dir) === -1) {
+                    return;
+                }
+                nextPoses[i] = plus(controlPos, [
+                    isVertical || !dirHorizontal ? 0 : dist[0],
+                    !isVertical || !dirVertical ? 0 : dist[1],
+                ]);
+            });
+        });
+    } else {
+        nextPoses[index] = plus(pos, dist);
+    }
+}
+
+export function caculatePointerDist(moveable: MoveableManager, e: any) {
+    const { clientX, clientY, datas } = e;
+    const {
+        moveableClientRect,
+        rootMatrix,
+        is3d,
+        pos1,
+    } = moveable.state;
+    const { left, top } = moveableClientRect;
+    const n = is3d ? 4 : 3;
+    const [posX, posY] = minus(caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
+    const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
+
+    return [distX, distY];
 }

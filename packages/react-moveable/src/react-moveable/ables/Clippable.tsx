@@ -1,16 +1,16 @@
 import MoveableManager from "../MoveableManager";
-import { Renderer, ClippableProps, OnClip, ClippableState, OnClipEnd, OnClipStart, ClipPose } from "../types";
+import { Renderer, ClippableProps, OnClip, ClippableState, OnClipEnd, OnClipStart, ControlPose } from "../types";
 import { splitBracket, splitComma, splitUnit, splitSpace } from "@daybrush/utils";
 import {
     prefix, caculatePosition, getDiagonalSize,
     fillParams, triggerEvent, caculateInversePosition,
-    makeMatrixCSS, getRect, fillEndParams, getUnitSize, convertCSSSize
+    makeMatrixCSS, getRect, fillEndParams, getUnitSize, convertCSSSize, moveControlPos, caculatePointerDist
 } from "../utils";
 import { getRad, plus, minus } from "../matrix";
 import { setDragStart, getDragDist } from "../DraggerUtils";
 import {
     getRadiusValues, getRadiusRange, HORIZONTAL_RADIUS_DIRECTIONS,
-    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, VERTICAL_RADIUS_DIRECTIONS
+    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, VERTICAL_RADIUS_DIRECTIONS, getRadiusStyles, addRadiusPos, removeRadiusPos
 } from "./roundable/borderRadius";
 
 const CLIP_DIRECTIONS = [
@@ -76,24 +76,15 @@ function getClipStyles(
 
         if (poses.length > 8) {
             const [subWidth, subHeight] = minus(poses[4], poses[0]);
-            let isVertical = false;
 
-            clipStyles.push("round");
-            poses.slice(8).forEach((pos, i) => {
-                const { horizontal, vertical } = clipPoses[8 + i];
-                if (vertical && !isVertical) {
-                    isVertical = true;
-                    clipStyles.push("/");
-                }
-
-                if (isVertical) {
-                    clipStyles.push(convertCSSSize(
-                        Math.max(0, vertical === 1 ? pos[1] - top : bottom - pos[1]), subHeight, clipRelative));
-                } else {
-                    clipStyles.push(convertCSSSize(
-                        Math.max(0, horizontal === 1 ? pos[0] - left : right - pos[0]), subWidth, clipRelative));
-                }
-            });
+            clipStyles.push("round", ...getRadiusStyles(
+                poses.slice(8),
+                clipPoses.slice(8),
+                clipRelative!,
+                subWidth,
+                subHeight,
+                left, top, right, bottom,
+            ).styles);
         }
         return clipStyles;
     } else if (isCircle || clipType === "ellipse") {
@@ -114,7 +105,7 @@ function getClipStyles(
         return clipStyles;
     }
 }
-function getRectPoses(top: number, right: number, bottom: number, left: number): ClipPose[] {
+function getRectPoses(top: number, right: number, bottom: number, left: number): ControlPose[] {
     const xs = [left, (left + right) / 2, right];
     const ys = [top, (top + bottom) / 2, bottom];
 
@@ -162,7 +153,7 @@ function getClipPath(
         const values = splitComma(value! || `0% 0%, 100% 0%, 100% 100%, 0% 100%`);
         splitter = ",";
 
-        const poses: ClipPose[] = values.map(pos => {
+        const poses: ControlPose[] = values.map(pos => {
             const [xPos, yPos] = pos.split(" ");
 
             return {
@@ -206,7 +197,7 @@ function getClipPath(
             getUnitSize(xPos, width),
             getUnitSize(yPos, height),
         ];
-        const poses: ClipPose[] = [
+        const poses: ControlPose[] = [
             {
                 vertical: 1,
                 horizontal: 1,
@@ -245,7 +236,7 @@ function getClipPath(
             rightValue = topValue,
             bottomValue = topValue,
             leftValue = rightValue,
-        ] = values;
+        ] = values.slice(0, rectLength);
         const [top, bottom] = [topValue, bottomValue].map(pos => getUnitSize(pos, height));
         const [left, right] = [leftValue, rightValue].map(pos => getUnitSize(pos, width));
         const nextRight = width - right;
@@ -257,7 +248,7 @@ function getClipPath(
             left,
             top,
         );
-        const poses: ClipPose[] = [
+        const poses: ControlPose[] = [
             ...getRectPoses(top, nextRight, nextBottom, left),
             ...radiusPoses,
         ];
@@ -300,18 +291,7 @@ function getClipPath(
     return;
 }
 function addClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
-    const { clientX, clientY, datas } = e;
-    const {
-        moveableClientRect,
-        rootMatrix,
-        is3d,
-        pos1,
-
-    } = moveable.state;
-    const { left, top } = moveableClientRect;
-    const n = is3d ? 4 : 3;
-    const [posX, posY] = minus(caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
-    const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
+    const [distX, distY] = caculatePointerDist(moveable, e);
     const { clipPath, index } = e.datas;
     const {
         type: clipType,
@@ -322,78 +302,25 @@ function addClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
     if (clipType === "polygon") {
         poses.splice(index, 0, [distX, distY]);
     } else if (clipType === "inset") {
-        const {
-            horizontalRange,
-            verticalRange,
-        } = getRadiusRange(clipPoses.slice(8));
         const horizontalIndex = HORIZONTAL_RADIUS_ORDER.indexOf(index);
         const verticalIndex = VERTICAL_RADIUS_ORDER.indexOf(index);
-        if (horizontalIndex > -1) {
-            const radiusX = HORIZONTAL_RADIUS_DIRECTIONS[horizontalIndex] === 1
-                ? distX - poses[0][0]
-                : poses[2][0] - distX;
-            for (let i = horizontalRange[1]; i <= horizontalIndex; ++i) {
-                const y = VERTICAL_RADIUS_DIRECTIONS[i] === 1 ? poses[0][1] : poses[4][1];
-                let x = 0;
-                if (horizontalIndex === i) {
-                    x = distX;
-                } else if (i === 0) {
-                    x = poses[0][0] + radiusX;
-                } else if (HORIZONTAL_RADIUS_DIRECTIONS[i] === -1) {
-                    x = poses[2][0] - (poses[8][0] - poses[0][0]);
-                }
-                clipPoses.splice(8 + i, 0, {
-                    horizontal: HORIZONTAL_RADIUS_DIRECTIONS[i],
-                    vertical: 0,
-                    pos: [x, y],
-                });
-                poses.splice(8 + i, 0, [x, y]);
+        const length = clipPoses.length;
 
-                if (i === 0) {
-                    break;
-                }
-            }
-        } else if (verticalIndex > - 1) {
-            const radiusY = VERTICAL_RADIUS_DIRECTIONS[verticalIndex] === 1
-                ? distY - poses[0][1]
-                : poses[4][1] - distY;
-            if (horizontalRange[1] === 0 && verticalRange[1] === 0) {
-                const pos = [
-                    poses[0][0] + radiusY,
-                    poses[0][1],
-                ];
-                clipPoses.push({
-                    horizontal: HORIZONTAL_RADIUS_DIRECTIONS[0],
-                    vertical: 0,
-                    pos,
-                });
-                poses.push(pos);
-            }
+        addRadiusPos(
+            clipPoses,
+            poses,
+            8,
+            horizontalIndex,
+            verticalIndex,
+            distX,
+            distY,
+            poses[4][0],
+            poses[4][1],
+            poses[0][0],
+            poses[0][1],
+        );
 
-            const startVerticalIndex = verticalRange[0];
-            for (let i = verticalRange[1]; i <= verticalIndex; ++i) {
-                const x = HORIZONTAL_RADIUS_DIRECTIONS[i] === 1 ? poses[0][0] : poses[2][0];
-                let y = 0;
-                if (verticalIndex === i) {
-                    y = distY;
-                } else if (i === 0) {
-                    y = poses[0][1] + radiusY;
-                } else if (VERTICAL_RADIUS_DIRECTIONS[i] === 1) {
-                    y = poses[8 + startVerticalIndex][1];
-                } else if (VERTICAL_RADIUS_DIRECTIONS[i] === -1) {
-                    y = poses[4][1] - (poses[8 + startVerticalIndex][1] - poses[0][1]);
-                }
-                clipPoses.push({
-                    horizontal: 0,
-                    vertical: VERTICAL_RADIUS_DIRECTIONS[i],
-                    pos: [x, y],
-                });
-                poses.push([x, y]);
-                if (i === 0) {
-                    break;
-                }
-            }
-        } else {
+        if (length === clipPoses.length) {
             return;
         }
     } else {
@@ -426,24 +353,11 @@ function removeClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
         if (index < 8) {
             return;
         }
-        const {
-            horizontalRange,
-            verticalRange,
-        } = getRadiusRange(clipPoses.slice(8));
-        const radiuslIndex = index - 8;
-        let deleteCount = 0;
+        removeRadiusPos(clipPoses, poses, index, 8, length);
 
-        if (radiuslIndex === 0) {
-            deleteCount = length;
-        } else if (radiuslIndex > 0 && radiuslIndex < horizontalRange[1]) {
-            deleteCount = horizontalRange[1] - radiuslIndex;
-        } else if (radiuslIndex >= verticalRange[0]) {
-            deleteCount = verticalRange[0] + verticalRange[1] - radiuslIndex;
-        } else {
+        if (length === clipPoses.length) {
             return;
         }
-        clipPoses.splice(index, deleteCount);
-        poses.splice(index, deleteCount);
     } else {
         return;
     }
@@ -692,40 +606,10 @@ export default {
             distX = -distX;
             distY = -distY;
         }
-        let isAll = !isControl;
+        const isAll = !isControl || clipPoses[index].direction === "nesw";
 
-        if (isControl) {
-            const { direction, pos, horizontal, vertical, sub } = clipPoses[index];
-            const dist = [
-                distX * Math.abs(horizontal),
-                distY * Math.abs(vertical),
-            ];
-
-            if (direction === "nesw") {
-                isAll = true;
-            } else if (direction && !sub) {
-                direction.split("").forEach(dir => {
-                    const isVertical = dir === "n" || dir === "s";
-
-                    poses.forEach((dirPos, i) => {
-                        const {
-                            direction: dirDir,
-                            horizontal: dirHorizontal,
-                            vertical: dirVertical,
-                        } = clipPoses[i];
-
-                        if (!dirDir || dirDir.indexOf(dir) === -1) {
-                            return;
-                        }
-                        nextPoses[i] = plus(dirPos, [
-                            isVertical || !dirHorizontal ? 0 : dist[0],
-                            !isVertical || !dirVertical ? 0 : dist[1],
-                        ]);
-                    });
-                });
-            } else {
-                nextPoses[index] = plus(pos, dist);
-            }
+        if (isControl && !isAll) {
+            moveControlPos(clipPoses, nextPoses, index, distX, distY);
         }
         if (isAll) {
             poses.forEach((pos, i) => {

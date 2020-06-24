@@ -18,13 +18,14 @@ import {
 } from "./utils";
 import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
-import { ref } from "framework-utils";
+import { ref, prefixCSS } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
 import { triggerAble, getTargetAbleDragger, getAbleDragger } from "./getAbleDragger";
 import { getRad, plus } from "./matrix";
 import { IObject } from "@daybrush/utils";
+import { ABLE_CSS } from "./ables/consts";
 
-const ControlBoxElement = styled("div", MOVEABLE_CSS);
+const ControlBoxElement = styled("div", prefixCSS(PREFIX, MOVEABLE_CSS + ABLE_CSS));
 
 function renderLine(direction: string, pos1: number[], pos2: number[], index: number) {
     const rad = getRad(pos1, pos2);
@@ -32,6 +33,7 @@ function renderLine(direction: string, pos1: number[], pos2: number[], index: nu
 
     return <div key={`line${index}`} className={prefix("line", "direction", direction)}
         data-rotation={rotation}
+        data-line-index={index}
         data-direction={direction} style={getLineStyle(pos1, pos2, rad)}></div>;
 }
 export default class MoveableManager<T = {}, U = {}>
@@ -55,6 +57,7 @@ export default class MoveableManager<T = {}, U = {}>
         padding: {},
         pinchOutside: true,
         checkInput: false,
+        groupable: false,
     };
     public state: MoveableManagerState<U> = {
         container: null,
@@ -104,11 +107,17 @@ export default class MoveableManager<T = {}, U = {}>
         const { left, top, target: stateTarget, direction, renderPoses } = state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
+        const ableAttributes: IObject<boolean> = {};
 
+        this.getEnabledAbles().forEach(able => {
+            ableAttributes[`data-able-${able.name}`] = true;
+        });
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
-                className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`} style={{
+                className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`}
+                {...ableAttributes}
+                style={{
                     "position": "absolute",
                     "display": isDisplay ? "block" : "none",
                     "transform": `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
@@ -444,15 +453,18 @@ export default class MoveableManager<T = {}, U = {}>
             }
         }
     }
-    protected renderAbles() {
+    protected getEnabledAbles() {
         const props = this.props as any;
         const ables: Able[] = props.ables!;
+        return ables.filter(able => able && props[able.name]);
+    }
+    protected renderAbles() {
+        const props = this.props as any;
         const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
-        const enabledAbles = ables.filter(able => able && props[able.name]);
         const Renderer = { createElement: React.createElement };
 
         return groupByMap(flat<any>(
-            filterAbles(enabledAbles, ["render"], triggerAblesSimultaneously).map(({ render }) => {
+            filterAbles(this.getEnabledAbles(), ["render"], triggerAblesSimultaneously).map(({ render }) => {
                 return render!(this, Renderer) || [];
             })).filter(el => el), ({ key }) => key).map(group => group[0]);
     }

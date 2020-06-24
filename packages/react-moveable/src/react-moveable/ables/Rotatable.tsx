@@ -130,7 +130,7 @@ export function getPositions(
 ) {
     let radPoses = [pos1, pos2];
 
-    const [dir1, dir2] = (rotationPosition || "").split("-");
+    const [dir1, dir2] = (rotationPosition || "top").split("-");
 
     if (dir1 === "left") {
         radPoses = [pos3, pos1];
@@ -141,7 +141,7 @@ export function getPositions(
     }
     let pos = [
         (radPoses[0][0] + radPoses[1][0]) / 2,
-        (radPoses[0][1] + radPoses[1][1] / 2),
+        (radPoses[0][1] + radPoses[1][1]) / 2,
     ];
     const rad = getRotationRad(radPoses, direction);
 
@@ -155,7 +155,7 @@ export function getPositions(
 }
 
 export function dragControlCondition(e: any) {
-    if (e.isRequest) {
+    if (e.isRequest && e.requestAble === "rotatable") {
         return true;
     }
     return hasClass(e.inputEvent.target, prefix("rotation"));

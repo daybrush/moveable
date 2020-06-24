@@ -20,6 +20,7 @@ export interface MoveableClientRect {
 export type MoveableManagerProps<T = {}> = {
     parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
+    groupable?: boolean;
 } & MoveableDefaultProps & T;
 
 /**
@@ -166,6 +167,7 @@ export interface MoveableProps extends
     SnappableProps,
     ScrollableProps,
     ClippableProps,
+    RoundableProps,
     RenderProps {
         target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
@@ -178,6 +180,7 @@ export interface Able {
     ableGroup?: string;
     updateRect?: boolean;
     canPinch?: boolean;
+    css?: string[];
     unset?: (moveable: any) => any;
     render?: (moveable: any, renderer: Renderer) => any;
 
@@ -370,6 +373,35 @@ export interface OnDragOrigin extends OnEvent {
  * @extends Moveable.OnEndEvent
  */
 export interface OnDragOriginEnd extends OnEndEvent {
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnRoundStart extends OnEvent {}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ */
+export interface OnRound extends OnEvent {
+    width: number;
+    height: number;
+    delta: number[];
+    dist: number[];
+    horizontals: number[];
+    verticals: number[];
+    borderRadius: string;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnEndEvent
+ */
+export interface OnRoundEnd extends OnEndEvent {
 }
 /**
  * @typedef
@@ -861,7 +893,6 @@ export interface DraggableState {
  * @property - Whether or not the origin control box will be visible or not (default: false)
  */
 export interface OriginOptions {
-    origin?: boolean;
     originDraggable?: boolean;
 }
 
@@ -874,18 +905,22 @@ export interface OriginProps extends OriginOptions {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Whether origin can be dragged
+ * @property - Whether to show and drag border-radius
  */
-export interface OriginOptions {
-    originDraggable?: boolean;
+export interface RoundableOptions {
+    roundable?: boolean;
+    roundRelative?: boolean;
 }
 
-export interface OriginProps extends OriginOptions {
-    onDragOriginStart?: (e: OnDragOriginStart) => any;
-    onDragOrigin?: (e: OnDragOrigin) => any;
-    onDragOriginEnd?: (e: OnDragOriginEnd) => any;
+export interface RoundableProps extends RoundableOptions {
+    onRoundStart?: (e: OnRoundStart) => any;
+    onRound?: (e: OnRound) => any;
+    onRoundEnd?: (e: OnRoundEnd) => any;
 }
 
+export interface RoundableState {
+    borderRadiusState?: string;
+}
 /**
  * @typedef
  * @memberof Moveable
@@ -1022,7 +1057,6 @@ export interface GroupableProps extends
     DragAreaProps,
     ScrollableProps,
     GroupableOptions {
-    groupable?: boolean;
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
 }
@@ -1281,7 +1315,7 @@ export interface MoveableInterface {
     setState(state: any, callback?: () => any): any;
 }
 
-export interface ClipPose {
+export interface ControlPose {
     vertical: number;
     horizontal: number;
     pos: number[];

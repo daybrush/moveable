@@ -202,6 +202,8 @@ class App extends React.Component<any, any> {
                     ref={ref(this, "moveable")}
                     keepRatio={this.state.isShift}
                     origin={true}
+                    originDraggable={true}
+                    roundable={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
                     clippable={true}
@@ -243,7 +245,7 @@ class App extends React.Component<any, any> {
                     resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
-                    rotationPosition="left-top"
+                    // rotationPosition="left-top"
                     // resizable={isResizable}
                     // warpable={true}
                     throttleDrag={0}
@@ -267,6 +269,9 @@ class App extends React.Component<any, any> {
                             console.log(e.clipStyle);
                             e.target.style.clipPath = e.clipStyle;
                         }
+                    }}
+                    onRound={e => {
+                        e.target.style.borderRadius = e.borderRadius;
                     }}
                     onRotateStart={({ set }) => {
                         const rotate = parseFloat(item.get("rotate")) || 0;
@@ -316,7 +321,7 @@ class App extends React.Component<any, any> {
                         const ty = parseFloat(item.get("ty")) || 0;
 
                         setOrigin(["%", "%"]);
-                        // dragStart && dragStart.set([tx, ty]);
+                        dragStart && dragStart.set([tx, ty]);
                     }}
                     onResize={({ target, width, height, drag, delta, dist }) => {
                         // console.log(width, height);
@@ -329,6 +334,19 @@ class App extends React.Component<any, any> {
                         // item.set("tx", `${drag.beforeTranslate[0]}px`);
                         // item.set("ty", `${drag.beforeTranslate[1]}px`);
 
+                        target.style.cssText += item.toCSS();
+                    }}
+                    onDragOriginStart={e => {
+                        const tx = parseFloat(item.get("tx")) || 0;
+                        const ty = parseFloat(item.get("ty")) || 0;
+
+                        e.dragStart && e.dragStart.set([tx, ty]);
+                    }}
+                    onDragOrigin={({ target, drag, origin }) => {
+                        // console.log(origin);
+                        item.set("tx", `${drag.beforeTranslate[0]}px`);
+                        item.set("ty", `${drag.beforeTranslate[1]}px`);
+                        item.set("transform-origin", `${origin[0]}px ${origin[1]}px`);
                         target.style.cssText += item.toCSS();
                     }}
                     onWarp={({ target, dist, delta, matrix, multiply }) => {
@@ -391,6 +409,7 @@ class App extends React.Component<any, any> {
                         <div className="box box24" data-target="box24"><span>BB</span></div>
 
                         <img src={logo} className="App-logo" alt="logo" data-target="logo" style={{
+                            borderRadius: "5px",
                             // clipPath: "inset(34px 24px 27px 28px round 80px 20px)",
                             // clipPath: "inset(34px 24px 27px 28px)",
                             // clipPath: `circle(39.7% at 52% 49%)`,
