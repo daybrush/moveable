@@ -411,7 +411,7 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getAbsoluteFixedPosition(moveable, direction);
+        const fixedPosition = datas.fixedOriginalPosition;
 
         const events = triggerChildAble(
             moveable,
@@ -422,7 +422,7 @@ export default {
                 const pos = getAbsoluteFixedPosition(child, direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
-                    [pos[0] - startPos[0], pos[1] - startPos[1], 1],
+                    [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
                     3,
                 );
                 childDatas.originalX = originalX;
@@ -462,7 +462,7 @@ export default {
             offsetWidth / (offsetWidth - dist[0]),
             offsetHeight / (offsetHeight - dist[1]),
         ];
-        const fixedPosition = getAbsoluteFixedPosition(moveable, datas.direction);
+        const fixedPosition = datas.fixedOriginalPosition;
 
         const events = triggerChildAble(
             moveable,
