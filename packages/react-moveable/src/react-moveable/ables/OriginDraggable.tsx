@@ -1,7 +1,7 @@
 import MoveableManager from "../MoveableManager";
 import {
     prefix, getControlTransform, triggerEvent,
-    fillParams, caculatePoses, getRect, fillEndParams, getUnitSize, convertCSSSize
+    fillParams, caculatePoses, getRect, fillEndParams, convertCSSSize
 } from "../utils";
 import { Renderer, OriginProps, OnDragOriginStart, OnDragOrigin, OnDragOriginEnd } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";

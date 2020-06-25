@@ -153,7 +153,7 @@ export function getPosByDirection(
     ];
 }
 export function getPosByReverseDirection(
-    [pos1, pos2, pos3, pos4]: number[][],
+    poses: number[][],
     direction: number[],
 ) {
     /*
@@ -162,17 +162,9 @@ export function getPosByReverseDirection(
     [-1, 1](pos2)        [0, 1](pos1, pos2)       [1, 1](pos1)
     */
 
-    return getPosByDirection([pos4, pos3, pos2, pos1], direction);
+    return getPosByDirection(poses, direction.map(dir => -dir));
 }
-function getStartPos(poses: number[][], direction: number[]) {
-    const [
-        startPos1,
-        startPos2,
-        startPos3,
-        startPos4,
-    ] = poses;
-    return getPosByReverseDirection([startPos1, startPos2, startPos3, startPos4], direction);
-}
+
 function getDist(
     startPos: number[],
     matrix: number[],
@@ -302,5 +294,5 @@ export function getAbsoluteFixedPosition(
     moveable: MoveableManager<ResizableProps>,
     direction: number[],
 ) {
-    return getStartPos(getAbsolutePosesByState(moveable.state), direction);
+    return getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
 }

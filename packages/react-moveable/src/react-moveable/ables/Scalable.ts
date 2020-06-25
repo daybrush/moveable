@@ -79,6 +79,7 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startScale = [1, 1];
+        datas.fixedDirection = direction.map((dir: number) => -dir);
         datas.fixedPosition = getAbsoluteFixedPosition(moveable, direction);
 
         const params = fillParams<OnScaleStart>(moveable, e, {
@@ -292,6 +293,7 @@ export default {
         datas.prevDist = nowDist;
 
         const inverseDelta = getScaleDist(moveable, delta, direction, fixedPosition);
+
         if (
             scaleX === prevDist[0] && scaleY === prevDist[1]
             && inverseDelta.every(num => !num)
@@ -337,7 +339,10 @@ export default {
             return false;
         }
         const direction = params.direction;
-        const startPos = getAbsoluteFixedPosition(moveable, direction);
+        const fixedPosition = datas.fixedPosition;
+
+        datas.moveableScale = moveable.scale;
+
         const events = triggerChildAble(
             moveable,
             this,
@@ -345,9 +350,10 @@ export default {
             datas,
             (child, childDatas) => {
                 const pos = getAbsoluteFixedPosition(child, direction);
+
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
-                    [pos[0] - startPos[0], pos[1] - startPos[1], 1],
+                    [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
                     3,
                 );
                 childDatas.originalX = originalX;
@@ -376,9 +382,17 @@ export default {
         if (!params) {
             return;
         }
+
+        const moveableScale = datas.moveableScale;
+        moveable.scale = [
+            params.scale[0] * moveableScale[0],
+            params.scale[1] * moveableScale[1],
+        ];
         const keepRatio = moveable.props.keepRatio;
-        const { scale } = params;
-        const startPos = getAbsoluteFixedPosition(moveable, datas.direction);
+        const { dist, scale } = params;
+
+        // const fixedDirection = datas.fixedDirection;
+        const fixedPosition = datas.fixedPosition;
 
         const events = triggerChildAble(
             moveable,
@@ -389,8 +403,8 @@ export default {
                 const [clientX, clientY] = caculate(
                     createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
                     [
-                        childDatas.originalX * scale[0],
-                        childDatas.originalY * scale[1],
+                        childDatas.originalX * dist[0],
+                        childDatas.originalY * dist[1],
                         1,
                     ],
                     3,
@@ -401,7 +415,7 @@ export default {
                     parentDist: null,
                     parentScale: scale,
                     parentKeepRatio: keepRatio,
-                    dragClient: plus(startPos, [clientX, clientY]),
+                    dragClient: plus(fixedPosition, [clientX, clientY]),
                 };
             },
         );

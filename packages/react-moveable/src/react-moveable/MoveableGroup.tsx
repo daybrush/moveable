@@ -143,8 +143,10 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         if (!isTarget || (type !== "" && props.updateGroup)) {
             // reset rotataion
             this.rotation = props.defaultGroupRotate!;
+            this.scale = [1, 1];
         }
         const rotation = this.rotation;
+        const scale = this.scale;
         const [left, top, width, height] = getGroupRect(this.moveables, rotation);
 
         // tslint:disable-next-line: max-line-length
@@ -179,6 +181,7 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         this.updateState(
             {
                 ...info,
+                direction: scale[0] * scale[1] > 0 ? 1 : -1,
                 left: left - info.left!,
                 top: top - info.top!,
             },
