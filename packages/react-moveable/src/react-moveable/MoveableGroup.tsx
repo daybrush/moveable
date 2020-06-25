@@ -101,7 +101,6 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
     };
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
-    public rotation: number = 0;
 
     public updateEvent(prevProps: MoveableManagerProps<GroupableProps>) {
         const state = this.state;

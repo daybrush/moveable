@@ -93,6 +93,8 @@ export default class MoveableManager<T = {}, U = {}>
     public areaElement!: HTMLElement;
     public targetDragger!: Dragger;
     public controlDragger!: Dragger;
+    public rotation: number = 0;
+    public scale: number[] = [1, 1];
     public isUnmounted = false;
 
     public render() {
@@ -313,6 +315,7 @@ export default class MoveableManager<T = {}, U = {}>
             beforeOrigin,
             origin,
             transformOrigin,
+            rotation: (this.rotation || 0),
         };
     }
     public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {

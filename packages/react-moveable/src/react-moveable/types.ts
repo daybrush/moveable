@@ -1288,8 +1288,9 @@ export interface OnCustomDrag extends Position {
  * @property - The offset width of the target
  * @property - The offset height of the target
  * @property - The absolute transform origin
- * @property - the absolute transform origin before transformation
- * @property - the target transform origin
+ * @property - The absolute transform origin before transformation
+ * @property - The target transform origin
+ * @property - If you use a group, you can get the rotation value of the group.
  */
 export interface RectInfo {
     pos1: number[];
@@ -1305,6 +1306,7 @@ export interface RectInfo {
     origin: number[];
     beforeOrigin: number[];
     transformOrigin: number[];
+    rotation: number;
 }
 /**
  * @typedef
