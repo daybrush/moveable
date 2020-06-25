@@ -123,15 +123,40 @@ function getRotateInfo(
     );
 }
 
+export function getReversePositionX(dir: string) {
+    if (dir === "left") {
+        return "right";
+    } else if (dir === "right") {
+        return "left";
+    }
+    return dir;
+}
+export function getReversePositionY(dir: string) {
+    if (dir === "top") {
+        return "bottom";
+    } else if (dir === "bottom") {
+        return "top";
+    }
+    return dir;
+}
 export function getPositions(
     rotationPosition: RotatableProps["rotationPosition"],
     [pos1, pos2, pos3, pos4]: number[][],
     direction: number,
+    scale: number[] = [1, 1],
 ) {
     let radPoses = [pos1, pos2];
 
-    const [dir1, dir2] = (rotationPosition || "top").split("-");
+    let [dir1, dir2] = (rotationPosition || "top").split("-");
 
+    if (scale[0] < 0) {
+        dir1 = getReversePositionX(dir1);
+        dir2 = getReversePositionX(dir2);
+    }
+    if (scale[1] < 0) {
+        dir1 = getReversePositionY(dir1);
+        dir2 = getReversePositionY(dir2);
+    }
     if (dir1 === "left") {
         radPoses = [pos3, pos1];
     } else if (dir1 === "right") {
@@ -178,7 +203,7 @@ export default {
             return null;
         }
         const { renderPoses, direction } = moveable.state;
-        const [pos, rotationRad] = getPositions(rotationPosition!, renderPoses, direction);
+        const [pos, rotationRad] = getPositions(rotationPosition!, renderPoses, direction, moveable.scale);
 
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
