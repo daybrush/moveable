@@ -70,6 +70,9 @@ export function triggerAble<T extends IObject<any>>(
                     childeMoveable.state.dragger = null;
                 });
             }
+            events.forEach(able => {
+                able.unset && able.unset(moveable);
+            });
             return false;
         }
         triggerRenderStart(moveable, isGroup, renderEvent);
