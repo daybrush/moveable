@@ -21,7 +21,7 @@ function getCursorCSS(degree: number) {
     return `cursor:${defaultCursor};cursor: url('${x1}') 16 16, ${defaultCursor};cursor: -webkit-image-set(url('${x1}') 1x, url('${x2}') 2x) 16 16, ${defaultCursor};`;
 }
 
-export const agent = getAgent();
+export const agent = getAgent((((typeof navigator !== "undefined" && navigator) || {} as any).userAgent) || "");
 export const IS_WEBKIT
     = agent.os.name.indexOf("ios") > -1 || agent.browser.name.indexOf("safari") > -1;
 
