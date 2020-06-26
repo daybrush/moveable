@@ -13,7 +13,7 @@ export function triggerAble<T extends IObject<any>>(
     eventAffix: string,
     eventType: any,
     e: any,
-    isReqeust?: boolean,
+    requestInstant?: boolean,
 ) {
     const isStart = eventType === "Start";
 
@@ -84,14 +84,12 @@ export function triggerAble<T extends IObject<any>>(
     if (moveable.isUnmounted) {
         return false;
     }
-    if (!isStart && isUpdate) {
+    if ((!isStart && isUpdate && !requestInstant) || isEnd) {
         if (results.some(able => able.updateRect) && !isGroup) {
             moveable.updateRect(eventType, false, false);
         } else {
             moveable.updateRect(eventType, true, false);
         }
-    }
-    if (((!isStart && isUpdate) || (isEnd && !isUpdate)) && !isReqeust) {
         moveable.forceUpdate();
     }
     if (!isStart && !isEnd && !isAfter && isUpdate) {

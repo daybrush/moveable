@@ -335,6 +335,7 @@ export default class MoveableManager<T = {}, U = {}>
         const self = this;
         const ableRequester = requsetAble.request(this);
 
+        const requestInstant = isInstant || param.isInstant;
         const ableType = ableRequester.isControl ? "controlAbles" : "targetAbles";
         const eventAffix = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;
 
@@ -344,7 +345,7 @@ export default class MoveableManager<T = {}, U = {}>
                     ...ableRequester.request(ableParam),
                     requestAble: ableName,
                     isRequest: true,
-                }, isInstant);
+                }, requestInstant);
                 return this;
             },
             requestEnd() {
@@ -352,7 +353,7 @@ export default class MoveableManager<T = {}, U = {}>
                     ...ableRequester.requestEnd(),
                     requestAble: ableName,
                     isRequest: true,
-                });
+                }, requestInstant);
                 return this;
             },
         };
@@ -361,9 +362,9 @@ export default class MoveableManager<T = {}, U = {}>
             ...ableRequester.requestStart(param),
             requestAble: ableName,
             isRequest: true,
-        }, isInstant);
+        }, requestInstant);
 
-        return isInstant || param.isInstant ? requester.request(param).requestEnd() : requester;
+        return requestInstant ? requester.request(param).requestEnd() : requester;
     }
     public updateRenderPoses() {
         const state = this.state;

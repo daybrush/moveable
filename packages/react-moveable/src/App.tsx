@@ -67,7 +67,7 @@ class App extends React.Component<any, any> {
                     // edge={true}
                     pinchable={true}
                     draggable={true}
-                    rotatable={isResizable}
+                    rotatable={true}
                     resizable={true}
                     // scalable={true}
                     ref={ref(this, "ab")}
@@ -126,6 +126,7 @@ class App extends React.Component<any, any> {
                         });
                     }}
                     onRotateGroup={e => {
+                        console.log((this as any).ab.getRect().rotation);
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
 
@@ -178,7 +179,7 @@ class App extends React.Component<any, any> {
                         console.log("scs", e);
                     }}
                     onScaleGroup={e => {
-                        console.log(e);
+                        console.log(e.scale);
                         e.events.forEach(ev => {
                             // console.log("sca", ev.drag.dist);
                             const groupItem = this.itemMap.get(ev.target)!;
@@ -207,7 +208,7 @@ class App extends React.Component<any, any> {
                     roundable={true}
                     // dragTarget={document.querySelector<HTMLElement>("#test")}
                     // edge={true}
-                    clippable={true}
+                    // clippable={true}
                     // defaultClipPath={"polygon"}
                     clipRelative={true}
                     dragArea={true}
@@ -242,8 +243,8 @@ class App extends React.Component<any, any> {
                     // snapThreshold={10}
                     // scalable={!isResizable}
                     // scalable={true}
-                    // scalable={true}
-                    resizable={true}
+                    scalable={true}
+                    // resizable={true}
                     // resizable={isResizable}
                     rotatable={true}
                     // rotationPosition="left-top"
