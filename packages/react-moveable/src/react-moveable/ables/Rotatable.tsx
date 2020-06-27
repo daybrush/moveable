@@ -47,7 +47,7 @@ function getParentDeg(
         prevDeg,
     } = datas;
 
-    const absoluteDeg = startRotate + parentDist;
+    // const absoluteDeg = startRotate + parentDist;
     const dist = checkSnapRotate(
         moveable,
         moveableRect,
@@ -56,9 +56,9 @@ function getParentDeg(
     );
     datas.prevDeg = dist;
 
-    const delta = direction * (dist - prevDeg);
+    const delta = dist - prevDeg;
 
-    return [delta, dist, absoluteDeg];
+    return [delta, dist, startRotate + dist];
 }
 function getDeg(
     moveable: MoveableManager<any, any>,
@@ -100,7 +100,7 @@ function getDeg(
 
     const delta = direction * (absoluteDeg - absolutePrevSnapDeg);
 
-    return [delta, dist, absoluteDeg];
+    return [delta, dist, startRotate + dist];
 }
 function getRotateInfo(
     moveable: MoveableManager<any, any>,
@@ -198,12 +198,14 @@ export default {
         const {
             rotatable,
             rotationPosition,
+            groupable,
         } = moveable.props;
         if (!rotatable) {
             return null;
         }
         const { renderPoses, direction } = moveable.state;
-        const [pos, rotationRad] = getPositions(rotationPosition!, renderPoses, direction, moveable.scale);
+        const [pos, rotationRad] = getPositions(
+            rotationPosition!, renderPoses, groupable ? 1 : direction, moveable.scale);
 
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
@@ -311,13 +313,14 @@ export default {
         let beforeDist: number;
         let beforeRotate: number;
 
-        if ("parentDist" in e) {
+        if (!parentFlag && "parentDist" in e) {
             const parentDist = e.parentDist;
 
             [delta, dist, rotate]
                 = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startRotate);
             [beforeDelta, beforeDist, beforeRotate]
                 = getParentDeg(moveable, rect, beforeInfo, parentDist, direction, startRotate);
+
         } else if (isPinch || parentFlag) {
             [delta, dist, rotate]
                 = getDeg(moveable, rect, afterInfo, parentRotate, direction, startRotate, throttleRotate);
@@ -374,7 +377,7 @@ export default {
             return false;
         }
 
-        params.set(moveable.rotation);
+        params.set(datas.beforeDirection * moveable.rotation);
 
         const events = triggerChildAble(
             moveable,
@@ -419,6 +422,7 @@ export default {
         if (!params) {
             return;
         }
+        const direction = datas.beforeDirection;
         const parentRotate = params.beforeDist;
         const deg = params.beforeDelta;
         const rad = deg / 180 * Math.PI;
@@ -431,7 +435,7 @@ export default {
             { ...e, parentRotate },
             (child, childDatas, result, i) => {
                 const [prevX, prevY] = childDatas.prevClient;
-                const [clientX, clientY] = rotateMatrix([prevX, prevY], rad);
+                const [clientX, clientY] = rotateMatrix([prevX, prevY], rad * direction);
                 const delta = [clientX - prevX, clientY - prevY];
 
                 childDatas.prevClient = [clientX, clientY];
@@ -443,7 +447,7 @@ export default {
                 result.drag = dragResult;
             },
         );
-        moveable.rotation = params.beforeRotate;
+        moveable.rotation = direction * params.beforeRotate;
 
         const nextParams: OnRotateGroup = {
             targets: moveable.props.targets!,
@@ -478,11 +482,14 @@ export default {
      * @method Moveable.Rotatable#request
      * @param {object} [e] - the Resizable's request parameter
      * @param {number} [e.deltaRotate=0] -  delta number of rotation
+     * @param {number} [e.rotate=0] - absolute number of moveable's rotation
      * @return {Moveable.Requester} Moveable Requester
      * @example
 
      * // Instantly Request (requestStart - request - requestEnd)
      * moveable.request("rotatable", { deltaRotate: 10 }, true);
+     *
+     * * moveable.request("rotatable", { rotate: 10 }, true);
      *
      * // requestStart
      * const requester = moveable.request("rotatable");
@@ -492,20 +499,29 @@ export default {
      * requester.request({ deltaRotate: 10 });
      * requester.request({ deltaRotate: 10 });
      *
+     * requester.request({ rotate: 10 });
+     * requester.request({ rotate: 20 });
+     * requester.request({ rotate: 30 });
+     *
      * // requestEnd
      * requester.requestEnd();
      */
-    request() {
+    request(moveable: MoveableManager<RotatableProps>) {
         const datas = {};
         let distRotate = 0;
 
+        const startRotation = moveable.getRotation();
         return {
             isControl: true,
             requestStart(e: IObject<any>) {
                 return { datas };
             },
             request(e: IObject<any>) {
-                distRotate += e.deltaRotate;
+                if ("deltaRotate" in e) {
+                    distRotate += e.deltaRotate;
+                } else if ("rotate" in e) {
+                    distRotate = e.rotate - startRotation;
+                }
 
                 return { datas, parentDist: distRotate };
             },

@@ -178,10 +178,12 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         clientRect.top += (top - info.top!) - state.top;
         clientRect.left += (left - info.left!) - state.left;
 
+        const direction = scale[0] * scale[1] > 0 ? 1 : -1;
         this.updateState(
             {
                 ...info,
-                direction: scale[0] * scale[1] > 0 ? 1 : -1,
+                direction,
+                beforeDirection: direction,
                 left: left - info.left!,
                 top: top - info.top!,
             },

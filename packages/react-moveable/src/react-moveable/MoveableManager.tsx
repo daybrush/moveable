@@ -315,8 +315,40 @@ export default class MoveableManager<T = {}, U = {}>
             beforeOrigin,
             origin,
             transformOrigin,
-            rotation: (this.rotation || 0),
+            rotation: this.getRotation(),
         };
+    }
+    public getRotation() {
+        const {
+            pos1,
+            pos2,
+            direction,
+        } = this.state;
+
+        let deg = getRad(pos1, pos2) / Math.PI * 180;
+
+        if (this.props.groupable) {
+            const scale = this.scale;
+
+            if (scale[0] < 0) {
+                deg = 360 - deg;
+            }
+            if (scale[1] < 0) {
+                // -90 ~ 90
+                // 270 ~ 360, 0 ~ 90
+                if (deg <= 180) {
+                    deg = 180 - deg;
+                } else {
+                    deg = 540 - deg;
+                }
+            }
+            return deg;
+        }
+
+        deg = direction > 0 ? deg : 180 - deg;
+        deg = deg >= 0 ? deg : 360 + deg;
+
+        return deg;
     }
     public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {
         const { ables, groupable } = this.props as any;

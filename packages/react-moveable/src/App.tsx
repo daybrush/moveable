@@ -68,10 +68,10 @@ class App extends React.Component<any, any> {
                     pinchable={true}
                     draggable={true}
                     rotatable={true}
-                    resizable={true}
-                    // scalable={true}
+                    // resizable={true}
+                    scalable={true}
                     ref={ref(this, "ab")}
-                    // keepRatio={false}
+                    keepRatio={false}
                     bounds={{ left: 50, top: 30 }}
                     target={this.state.targets}
                     padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
@@ -126,7 +126,7 @@ class App extends React.Component<any, any> {
                         });
                     }}
                     onRotateGroup={e => {
-                        console.log((this as any).ab.getRect().rotation);
+                        console.log(e.currentTarget.getRect().rotation);
                         e.events.forEach(ev => {
                             const groupItem = this.itemMap.get(ev.target)!;
 
@@ -134,7 +134,7 @@ class App extends React.Component<any, any> {
                                 groupItem.set("tx", `${parseFloat(groupItem.get("tx")) + ev.drag.beforeDelta[0]}px`);
                                 groupItem.set("ty", `${parseFloat(groupItem.get("ty")) + ev.drag.beforeDelta[1]}px`);
                             }
-                            console.log("A", parseFloat(groupItem.get("rotate")), ev.beforeDelta);
+                            // console.log("A", parseFloat(groupItem.get("rotate")), ev.beforeDelta);
                             groupItem.set("rotate", `${parseFloat(groupItem.get("rotate")) + ev.beforeDelta}deg`);
 
                             ev.target.style.cssText += groupItem.toCSS();
@@ -281,8 +281,10 @@ class App extends React.Component<any, any> {
 
                         set(rotate);
                     }}
-                    onRotate={({ target, beforeRotate }) => {
+                    onRotate={({ target, beforeRotate, currentTarget }) => {
                         item.set("rotate", `${beforeRotate}deg`);
+
+                        console.log(currentTarget.getRect().rotation);
                         target.style.cssText += item.toCSS();
                     }}
                     onDragStart={({ set }) => {
@@ -501,7 +503,7 @@ class App extends React.Component<any, any> {
     }
     public componentDidMount() {
         const keycon = new KeyController(window);
-        const mvb = (this as any).moveable;
+        const mvb = (this as any).ab;
         let requester: any;
         keycon.keydown("shift", () => {
             this.setState({ isResizable: false, isShift: true });
