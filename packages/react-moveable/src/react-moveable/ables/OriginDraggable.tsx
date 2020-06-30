@@ -17,21 +17,10 @@ export default {
         originRelative: Boolean,
     },
     css: [
-`.control.origin.origin-draggable {
+`:host[data-able-origindraggable] .control.origin {
     pointer-events: auto;
 }`,
     ],
-    render(moveable: MoveableManager<OriginProps>, React: Renderer): any {
-        if (!origin) {
-            return null;
-        }
-        const { beforeOrigin, rotation } = moveable.state;
-
-        return [
-            <div className={prefix("control", "origin", "origin-draggable")}
-                style={getControlTransform(rotation, beforeOrigin)} key="beforeOrigin"></div>,
-        ];
-    },
     dragControlCondition(e: any) {
         if (e.isRequest) {
             return e.requestAble === "originDraggable";
@@ -124,6 +113,7 @@ export default {
                 setCustomDrag(moveable.state, dragDelta, inputEvent, !!isPinch, false),
             )!,
         }));
+        return true;
     },
     dragControlEnd(moveable: MoveableManager<OriginProps>, e: any) {
         const { datas } = e;

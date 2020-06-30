@@ -271,6 +271,7 @@ export default {
             controlPoses,
             nextPoses,
         );
+        return true;
     },
     dragControlEnd(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
         const state = moveable.state;

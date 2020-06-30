@@ -8,9 +8,6 @@ export default {
         origin: Boolean,
     },
     render(moveable: MoveableManager<OriginProps>, React: Renderer): any {
-        if (moveable.props.originDraggable) {
-            return null;
-        }
         const { beforeOrigin, rotation } = moveable.state;
 
         return [
