@@ -109,15 +109,17 @@ export default class MoveableManager<T = {}, U = {}>
         const { left, top, target: stateTarget, direction, renderPoses } = state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
+        const isDragging = this.isDragging();
         const ableAttributes: IObject<boolean> = {};
 
         this.getEnabledAbles().forEach(able => {
-            ableAttributes[`data-able-${able.name}`] = true;
+            ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
         return (
             <ControlBoxElement
                 ref={ref(this, "controlBox")}
-                className={`${prefix("control-box", direction === -1 ? "reverse" : "")} ${className}`}
+                className={`${prefix("control-box", direction === -1
+                    ? "reverse" : "", isDragging ? "dragging" : "")} ${className}`}
                 {...ableAttributes}
                 style={{
                     "position": "absolute",
@@ -211,7 +213,7 @@ export default class MoveableManager<T = {}, U = {}>
         }
 
         const rectSize = (Math.min(rectRight, right) - Math.max(left, rectLeft))
-        * (Math.min(rectBottom, bottom) - Math.max(rectTop, top));
+            * (Math.min(rectBottom, bottom) - Math.max(rectTop, top));
 
         return Math.min(100, (testRight - testLeft) * (testBottom - testTop) / rectSize * 100);
     }
@@ -276,7 +278,7 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public isDragging() {
         return (this.targetDragger ? this.targetDragger.isFlag() : false)
-        || (this.controlDragger ? this.controlDragger.isFlag() : false);
+            || (this.controlDragger ? this.controlDragger.isFlag() : false);
     }
     public updateTarget(type?: "Start" | "" | "End") {
         this.updateRect(type, true);
