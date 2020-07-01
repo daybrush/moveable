@@ -78,7 +78,7 @@ export function triggerAble<T extends IObject<any>>(
         triggerRenderStart(moveable, isGroup, renderEvent);
     } else if (isEnd) {
         triggerRenderEnd(moveable, isGroup, renderEvent);
-    } else {
+    } else if (!isAfter || isUpdate) {
         triggerRender(moveable, isGroup, renderEvent);
     }
     if (isEnd) {
