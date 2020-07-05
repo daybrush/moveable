@@ -16,8 +16,13 @@ export function triggerAble<T extends IObject<any>>(
     requestInstant?: boolean,
 ) {
     const isStart = eventType === "Start";
+    const target = moveable.state.target;
 
-    if (isStart && eventAffix.indexOf("Control") > -1 && !e.isRequest && moveable.areaElement === e.inputEvent.target) {
+    if (
+        !target
+        || (isStart && eventAffix.indexOf("Control") > -1
+            && !e.isRequest && moveable.areaElement === e.inputEvent.target)
+    ) {
         return false;
     }
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
