@@ -1,107 +1,107 @@
 {
-  "name": "react-moveable",
-  "version": "0.21.0-beta14",
-  "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
-  "main": "./dist/moveable.cjs.js",
-  "module": "./dist/moveable.esm.js",
-  "sideEffects": false,
-  "types": "declaration/index.d.ts",
-  "scripts": {
-    "lint": "tslint -c tslint.json 'src/react-moveable/**/*.ts' 'src/react-moveable/**/*.tsx'",
-    "start": "react-scripts start",
-    "build": "rollup -c && npm run declaration && print-sizes ./dist ",
-    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-    "test": "karma start",
-    "test:chrome": "karma start --chrome",
-    "coverage": "karma start --coverage && print-coveralls --sort=desc",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
-    "packages:update": "pvu --path=../ --update=preact-moveable,react-compat-moveable",
-    "packages:build": "pvu --path=../ --build=preact-moveable,react-compat-moveable",
-    "packages:publish": "pvu --path=../  --publish=preact-moveable,react-compat-moveable"
-  },
-  "keywords": [
-    "moveable",
-    "resizable",
-    "scalable",
-    "draggable",
-    "rotatable",
-    "warpable",
-    "pinchable",
-    "groupable",
-    "snappable",
-    "scrollable",
-    "movable",
-    "throttle",
-    "scroll",
-    "ratio",
-    "dom",
-    "resize",
-    "scale",
-    "drag",
-    "move",
-    "rotate",
-    "react",
-    "warp",
-    "snap",
-    "pinch"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/daybrush/moveable/blob/master/packages/react-moveable"
-  },
-  "author": "Daybrush",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/daybrush/moveable/issues"
-  },
-  "homepage": "https://daybrush.com/moveable",
-  "devDependencies": {
-    "@daybrush/builder": "^0.1.0",
-    "@daybrush/tester": "^0.1.3",
-    "@scena/react-guides": "^0.4.1",
-    "@scenejs/effects": "^1.0.1",
-    "@types/karma-chai": "^0.1.2",
-    "@types/mocha": "^5.2.7",
-    "@types/react": "^16.8.18",
-    "@types/react-dom": "^16.8.4",
-    "keycon": "^0.3.0",
-    "print-sizes": "0.0.4",
-    "pvu": "^0.3.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "^3.0.1",
-    "scenejs": "^1.1.4",
-    "shape-svg": "^0.3.3",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
-  },
-  "dependencies": {
-    "@daybrush/drag": "^0.18.6",
-    "@daybrush/utils": "^0.10.5",
-    "@egjs/agent": "^2.1.5",
-    "@egjs/children-differ": "^1.0.0",
-    "@scena/dragscroll": "^0.2.1",
-    "framework-utils": "^0.3.4",
-    "react-css-styled": "^0.1.4"
-  },
-  "peerDependencies": {
-    "@daybrush/drag": ">=0.18.6",
-    "@daybrush/utils": ">=0.10.5",
-    "framework-utils": ">=0.3.4",
-    "react-css-styled": ">=0.1.3",
-    "@scena/dragscroll": ">=0.2.1"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+    "name": "react-moveable",
+    "version": "0.21.0-beta15",
+    "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
+    "main": "./dist/moveable.cjs.js",
+    "module": "./dist/moveable.esm.js",
+    "sideEffects": false,
+    "types": "declaration/index.d.ts",
+    "scripts": {
+        "lint": "tslint -c tslint.json 'src/react-moveable/**/*.ts' 'src/react-moveable/**/*.tsx'",
+        "start": "react-scripts start",
+        "build": "rollup -c && npm run declaration && print-sizes ./dist ",
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
+        "test": "karma start",
+        "test:chrome": "karma start --chrome",
+        "coverage": "karma start --coverage && print-coveralls --sort=desc",
+        "coveralls": "cat ./coverage/lcov.info | coveralls",
+        "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
+        "packages:update": "pvu --path=../ --update=preact-moveable,react-compat-moveable",
+        "packages:build": "pvu --path=../ --build=preact-moveable,react-compat-moveable",
+        "packages:publish": "pvu --path=../  --publish=preact-moveable,react-compat-moveable"
+    },
+    "keywords": [
+        "moveable",
+        "resizable",
+        "scalable",
+        "draggable",
+        "rotatable",
+        "warpable",
+        "pinchable",
+        "groupable",
+        "snappable",
+        "scrollable",
+        "movable",
+        "throttle",
+        "scroll",
+        "ratio",
+        "dom",
+        "resize",
+        "scale",
+        "drag",
+        "move",
+        "rotate",
+        "react",
+        "warp",
+        "snap",
+        "pinch"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/daybrush/moveable/blob/master/packages/react-moveable"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/moveable/issues"
+    },
+    "homepage": "https://daybrush.com/moveable",
+    "devDependencies": {
+        "@daybrush/builder": "^0.1.0",
+        "@daybrush/tester": "^0.1.3",
+        "@scena/react-guides": "^0.4.1",
+        "@scenejs/effects": "^1.0.1",
+        "@types/karma-chai": "^0.1.2",
+        "@types/mocha": "^5.2.7",
+        "@types/react": "^16.8.18",
+        "@types/react-dom": "^16.8.4",
+        "keycon": "^0.3.0",
+        "print-sizes": "0.0.4",
+        "pvu": "^0.3.1",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "react-scripts": "^3.0.1",
+        "scenejs": "^1.1.4",
+        "shape-svg": "^0.3.3",
+        "tslint": "^5.16.0",
+        "typescript": "^3.4.5"
+    },
+    "dependencies": {
+        "@daybrush/drag": "^0.19.0",
+        "@daybrush/utils": "^0.10.5",
+        "@egjs/agent": "^2.1.5",
+        "@egjs/children-differ": "^1.0.0",
+        "@scena/dragscroll": "^0.2.1",
+        "framework-utils": "^0.3.4",
+        "react-css-styled": "^0.1.4"
+    },
+    "peerDependencies": {
+        "@daybrush/drag": ">=0.19.0",
+        "@daybrush/utils": ">=0.10.5",
+        "framework-utils": ">=0.3.4",
+        "react-css-styled": ">=0.1.3",
+        "@scena/dragscroll": ">=0.2.1"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }

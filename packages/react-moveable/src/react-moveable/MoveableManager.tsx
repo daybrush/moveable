@@ -168,7 +168,7 @@ export default class MoveableManager<T = {}, U = {}>
     }
     public dragStart(e: MouseEvent | TouchEvent) {
         if (this.targetDragger) {
-            this.targetDragger.onDragStart(e);
+            this.targetDragger.triggerDragStart(e);
         }
         return this;
     }
