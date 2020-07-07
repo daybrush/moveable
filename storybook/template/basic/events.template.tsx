@@ -50,3 +50,12 @@ export const WARP_TEMPLATE = previewFunction(`function onWarp({ matrix }) {
     this.frame.matrix = matrix;
     target.style.transform = ${"`"}matrix3d(${"$"}{matrix.join(",")})${"`"};
 }`);
+export const CLIP_START_TEMPLATE = previewFunction(`function onClipStart() {}`);
+export const CLIP_TEMPLATE = previewFunction(`function onClip({ clipType, clipStyle }) {
+    if (e.clipType === "rect") {
+        e.target.style.clip = e.clipStyle;
+    } else {
+        e.target.style.clipPath = e.clipStyle;
+    }
+    this.frame.clipStyle = e.clipStyle;
+}`);

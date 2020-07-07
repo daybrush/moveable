@@ -1,5 +1,7 @@
 import * as React from "react";
 import Moveable from "react-moveable";
+import { RESIZE_START_TEMPLATE, RESIZE_TEMPLATE } from "../events.template";
+import { boolean, number, array, object } from "@storybook/addon-knobs";
 
 export default function ResizableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
@@ -44,6 +46,25 @@ export default function ResizableApp(props: any) {
 export const RESIZABLE_PROPS = ["keepRatio", "throttleResize", "renderDirections", "edge", "zoom", "origin", "padding"];
 export const RESIZABLE_FRAME = {
     translate: [0, 0],
-    width: 100,
-    height: 100,
 };
+
+export const RESIZABLE_TEMPLATE_OPTIONS = {
+    ableName: "resizable",
+    props: RESIZABLE_PROPS,
+    frame: RESIZABLE_FRAME,
+    events: {
+        resizeStart: RESIZE_START_TEMPLATE,
+        resize: RESIZE_TEMPLATE,
+    },
+};
+export const RESIZABLE_PROPS_TEMPLATE = () => ({
+    keepRatio: boolean("keepRatio", false),
+    throttleResize: number("throttleResize", 0),
+    renderDirections: array("renderDirections", [
+        "nw", "n", "ne", "w", "e", "sw", "s", "se",
+    ]),
+    edge: boolean("edge", false),
+    zoom: number("zoom", 1),
+    origin: boolean("origin", true),
+    padding: object("padding", { left: 0, top: 0, right: 0, bottom: 0 }),
+});

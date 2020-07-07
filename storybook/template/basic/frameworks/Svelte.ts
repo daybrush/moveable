@@ -11,14 +11,15 @@ import { RESIZABLE_PROPS, RESIZABLE_FRAME } from "../ables/Resizable.template";
 import { SCALABLE_PROPS, SCALABLE_FRAME } from "../ables/Scalable.template";
 import { ROTATABLE_PROPS, ROTATABLE_FRAME } from "../ables/Rotatable.template";
 import { WARPABLE_PROPS, WARPABLE_FRAME } from "../ables/Warpable.template";
+import { IObject } from "@daybrush/utils";
 
-export const BASIC_SVELTE_TEMPLATE = (
-    frame: any,
-) => css => previewTemplate`
+export const BASIC_SVELTE_TEMPLATE = ({
+    frame,
+}) => css => previewTemplate`
 <script>
     import Moveable from "svelte-moveable";
 
-    const frame = {
+    let frame = {
 ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     };
     let target;
@@ -28,63 +29,22 @@ ${css}
 </style>
 `;
 
-export const BASIC_SVELTE_JSX_TEMPLATE = (
+export const BASIC_SVELTE_JSX_TEMPLATE = (markup: any, {
+    ableName,
+    props,
+    frame,
+    events,
+}: {
     ableName: string,
-    props: any,
-    eventName: string,
-    startTemplate: any,
-    ingTemplate: any,
-) => markup => previewTemplate`
+    props: any[],
+    frame: any,
+    events: IObject<any>,
+}) => previewTemplate`
 ${markup}
 <Moveable
     ${ableName}={true}
     target={target}
 ${JSX_PROPS_TEMPLATE(props)}
-    on:${eventName}Start={${codeIndent(startTemplate(CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}
-    on:${eventName}={${codeIndent(ingTemplate(CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}
+${Object.keys(events).map(name => `    on:${name}={${codeIndent(events[name](CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}`).join("\n")}
 />
 `;
-
-export const BASIC_DRAGGABLE_SVELTE_TEMPLATE = BASIC_SVELTE_TEMPLATE(DRAGGABLE_FRAME);
-export const BASIC_DRAGGABLE_SVELTE_JSX_TEMPLATE = BASIC_SVELTE_JSX_TEMPLATE(
-    "draggable",
-    DRAGGABLE_PROPS,
-    "drag",
-    DRAG_START_TEMPLATE,
-    DRAG_TEMPLATE,
-);
-
-export const BASIC_RESIZABLE_SVELTE_TEMPLATE = BASIC_SVELTE_TEMPLATE(RESIZABLE_FRAME);
-export const BASIC_RESIZABLE_SVELTE_JSX_TEMPLATE = BASIC_SVELTE_JSX_TEMPLATE(
-    "resizable",
-    RESIZABLE_PROPS,
-    "resize",
-    RESIZE_START_TEMPLATE,
-    RESIZE_TEMPLATE,
-);
-export const BASIC_SCALABLE_SVELTE_TEMPLATE = BASIC_SVELTE_TEMPLATE(SCALABLE_FRAME);
-export const BASIC_SCALABLE_SVELTE_JSX_TEMPLATE = BASIC_SVELTE_JSX_TEMPLATE(
-    "scalable",
-    SCALABLE_PROPS,
-    "scale",
-    SCALE_START_TEMPLATE,
-    SCALE_TEMPLATE,
-);
-
-export const BASIC_ROTATABLE_SVELTE_TEMPLATE = BASIC_SVELTE_TEMPLATE(ROTATABLE_FRAME);
-export const BASIC_ROTATABLE_SVELTE_JSX_TEMPLATE = BASIC_SVELTE_JSX_TEMPLATE(
-    "rotatable",
-    ROTATABLE_PROPS,
-    "rotate",
-    ROTATE_START_TEMPLATE,
-    ROTATE_TEMPLATE,
-);
-
-export const BASIC_WARPABLE_SVELTE_TEMPLATE = BASIC_SVELTE_TEMPLATE(WARPABLE_FRAME);
-export const BASIC_WARPABLE_SVELTE_JSX_TEMPLATE = BASIC_SVELTE_JSX_TEMPLATE(
-    "warpable",
-    WARPABLE_PROPS,
-    "warp",
-    WARP_START_TEMPLATE,
-    WARP_TEMPLATE,
-);

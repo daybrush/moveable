@@ -3,7 +3,7 @@ import {
 } from "storybook-addon-preview";
 import { camelize, IObject } from "@daybrush/utils";
 
-export const BASIC_REACT_TEMPLATE = (markup: any, {
+export const GROUP_REACT_TEMPLATE = (markup: any, {
     ableName,
     props,
     frame,
@@ -18,16 +18,20 @@ import * as React from "react";
 import Moveable from "react-moveable";
 
 export default function App() {
-    const [target, setTarget] = React.useState();
-    const [frame, setFrame] = React.useState({
+    const [targets, setTargets] = React.useState();
+    const [frames, setFrames] = React.useState([{
 ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
-    });
+    }, {
+${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
+    }, {
+${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
+    }]);
     React.useEffect(() => {
-        setTarget(document.querySelector(".target")!);
+        setTargets(document.querySelector(".target")!);
     }, []);
     return <div className="container">${markup}
         <Moveable
-            target={target}
+            target={targets}
             ${ableName}={true}
 ${JSX_PROPS_TEMPLATE(props, { indent: 12 })}
 ${Object.keys(events).map(name =>  `            ${camelize(`on ${name}`)}={${codeIndent(events[name](CODE_TYPE.ARROW, "react"), { indent: 12 })}}`).join("\n")}

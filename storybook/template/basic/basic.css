@@ -5,7 +5,8 @@
     top: 100px;
     left: 100px;
     line-height: 100px;
-    text-align: center;;
+    text-align: center;
+    ;
     border: 1px solid #333;
     box-sizing: border-box;
 }

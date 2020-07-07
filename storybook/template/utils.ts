@@ -59,7 +59,7 @@ export function previewCollection(
         },
         {
             tab: "Svelte",
-            template: svelteTemplate,
+            template: svelteTemplate(cssTemplate),
             language: "html",
             continue: true,
             codesandbox: SVELTE_CODESANDBOX,

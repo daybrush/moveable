@@ -1,5 +1,7 @@
 import * as React from "react";
 import Moveable from "react-moveable";
+import { SCALE_START_TEMPLATE, SCALE_TEMPLATE } from "../events.template";
+import { boolean, number, array, object } from "@storybook/addon-knobs";
 
 export default function ScalableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
@@ -43,3 +45,24 @@ export const SCALABLE_FRAME = {
     translate: [0, 0],
     scale: [1, 1],
 };
+export const SCALABLE_TEMPLATE_OPTIONS = {
+    ableName: "scalable",
+    props: SCALABLE_PROPS,
+    frame: SCALABLE_FRAME,
+    events: {
+        scaleStart: SCALE_START_TEMPLATE,
+        scale: SCALE_TEMPLATE,
+    },
+};
+
+export const SCALABLE_PROPS_TEMPLATE = () => ({
+    keepRatio: boolean("keepRatio", false),
+    throttleScale: number("throttleScale", 0),
+    renderDirections: array("renderDirections", [
+        "nw", "n", "ne", "w", "e", "sw", "s", "se",
+    ]),
+    edge: boolean("edge", false),
+    zoom: number("zoom", 1),
+    origin: boolean("origin", true),
+    padding: object("padding", { left: 0, top: 0, right: 0, bottom: 0 }),
+});

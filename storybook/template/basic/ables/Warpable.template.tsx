@@ -1,5 +1,6 @@
 import * as React from "react";
 import Moveable from "react-moveable";
+import { WARP_START_TEMPLATE, WARP_TEMPLATE } from "../events.template";
 
 export default function RotatableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
@@ -46,4 +47,13 @@ export const WARPABLE_FRAME = {
         0, 0, 1, 0,
         0, 0, 0, 1,
     ],
+};
+export const WARPABLE_TEMPLATE_OPTIONS = {
+    ableName: "warpable",
+    props: WARPABLE_PROPS,
+    frame: WARPABLE_FRAME,
+    events: {
+        warpStart: WARP_START_TEMPLATE,
+        warp: WARP_TEMPLATE,
+    },
 };
