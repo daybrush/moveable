@@ -303,6 +303,8 @@ export default {
         }
 
         const params = fillParams<OnScale>(moveable, e, {
+            offsetWidth: width,
+            offsetHeight: height,
             scale,
             direction,
             dist: nowDist,

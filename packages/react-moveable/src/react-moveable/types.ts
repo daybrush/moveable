@@ -436,6 +436,8 @@ export interface OnScaleStart extends OnEvent {
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - The direction of scale.
+ * @property - a target's offsetWidth
+ * @property - a target's offsetHeight
  * @property - a target's scale
  * @property - The distance of scale
  * @property - The delta of scale
@@ -444,6 +446,8 @@ export interface OnScaleStart extends OnEvent {
  */
 export interface OnScale extends OnEvent {
     direction: number[];
+    offsetWidth: number;
+    offsetHeight: number;
     scale: number[];
     dist: number[];
     delta: number[];
