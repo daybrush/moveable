@@ -1,5 +1,6 @@
 import getAgent from "@egjs/agent";
 import { IObject } from "@daybrush/utils";
+import { MoveableInterface } from "./types";
 
 function getSVGCursor(scale: number, degree: number) {
     return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="${32 * scale}px" height="${32 * scale}px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(${degree}deg);transform-origin: 16px 16px"></path></svg>`;
@@ -230,3 +231,17 @@ export const DIRECTION_ROTATIONS: IObject<number> = {
     sw: 225,
     se: 135,
 };
+
+export const METHODS: Array<keyof MoveableInterface> = [
+    "isMoveableElement",
+    "updateRect",
+    "updateTarget",
+    "destroy",
+    "dragStart",
+    "isInside",
+    "hitTest",
+    "setState",
+    "getRect",
+    "request",
+    "isDragging",
+];

@@ -40,7 +40,7 @@ class App extends React.Component<any, any> {
     private items: IObject<Frame> = {};
     private guides1!: Guides;
     private guides2!: Guides;
-    public render() {7
+    public render() {
         if (this.state.isUnmount) {
             return (<div></div>);
         }

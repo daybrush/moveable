@@ -143,20 +143,18 @@ export function getPositions(
     rotationPosition: RotatableProps["rotationPosition"],
     [pos1, pos2, pos3, pos4]: number[][],
     direction: number,
-    scale: number[] = [1, 1],
 ) {
+    const [dir1, dir2] = (rotationPosition || "top").split("-");
     let radPoses = [pos1, pos2];
 
-    let [dir1, dir2] = (rotationPosition || "top").split("-");
-
-    if (scale[0] < 0) {
-        dir1 = getReversePositionX(dir1);
-        dir2 = getReversePositionX(dir2);
-    }
-    if (scale[1] < 0) {
-        dir1 = getReversePositionY(dir1);
-        dir2 = getReversePositionY(dir2);
-    }
+    // if (scale[0] < 0) {
+    //     dir1 = getReversePositionX(dir1);
+    //     dir2 = getReversePositionX(dir2);
+    // }
+    // if (scale[1] < 0) {
+    //     dir1 = getReversePositionY(dir1);
+    //     dir2 = getReversePositionY(dir2);
+    // }
     if (dir1 === "left") {
         radPoses = [pos3, pos1];
     } else if (dir1 === "right") {
@@ -198,14 +196,12 @@ export default {
         const {
             rotatable,
             rotationPosition,
-            groupable,
         } = moveable.props;
         if (!rotatable) {
             return null;
         }
         const { renderPoses, direction } = moveable.state;
-        const [pos, rotationRad] = getPositions(
-            rotationPosition!, renderPoses, groupable ? 1 : direction, moveable.scale);
+        const [pos, rotationRad] = getPositions(rotationPosition!, renderPoses, direction);
 
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{

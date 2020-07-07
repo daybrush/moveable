@@ -81,16 +81,3 @@ export const EVENTS: Array<keyof MoveableEvents> = [
 
     "snap",
 ];
-export const METHODS: Array<keyof MoveableInterface> = [
-    "isMoveableElement",
-    "updateRect",
-    "updateTarget",
-    "destroy",
-    "dragStart",
-    "isInside",
-    "hitTest",
-    "setState",
-    "getRect",
-    "request",
-    "isDragging",
-];

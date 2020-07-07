@@ -163,15 +163,61 @@ export default class MoveableManager<T = {}, U = {}>
             || (parentMoveable && parentMoveable.getContainer())
             || this.controlBox.getElement().parentElement!;
     }
+    /**
+     * Check if the target is an element included in the moveable.
+     * @method Moveable#isMoveableElement
+     * @param - the target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("click", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *         moveable.target = e.target;
+     *     }
+     * });
+     */
     public isMoveableElement(target: HTMLElement | SVGElement) {
         return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
     }
+    /**
+     * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
+     * @method Moveable#dragStart
+     * @param - external `MouseEvent`or `TouchEvent`
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *          moveable.dragStart(e);
+     *     }
+     * });
+     */
     public dragStart(e: MouseEvent | TouchEvent) {
         if (this.targetDragger) {
             this.targetDragger.triggerDragStart(e);
         }
         return this;
     }
+    /**
+     * Hit test an element or rect on a moveable target.
+     * @method Moveable#hitTest
+     * @param - element or rect to test
+     * @return - Get hit test rate (rate > 0 is hitted)
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.hitTest(e.target) > 0) {
+     *          console.log("hiited");
+     *     }
+     * });
+     */
     public hitTest(el: Element | HitRect): number {
         let rect: Required<HitRect>;
 
@@ -217,6 +263,23 @@ export default class MoveableManager<T = {}, U = {}>
 
         return Math.min(100, (testRight - testLeft) * (testBottom - testTop) / rectSize * 100);
     }
+    /**
+     * Whether the coordinates are inside Moveable
+     * @method Moveable#isInside
+     * @param - x coordinate
+     * @param - y coordinate
+     * @return - True if the coordinate is in moveable or false
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.isInside(e.clientX, e.clientY)) {
+     *          console.log("inside");
+     *     }
+     * });
+     */
     public isInside(clientX: number, clientY: number) {
         const { pos1, pos2, pos3, pos4, target, targetClientRect } = this.state;
 
@@ -228,6 +291,18 @@ export default class MoveableManager<T = {}, U = {}>
 
         return isInside(pos, pos1, pos2, pos3, pos4);
     }
+    /**
+     * If the width, height, left, and top of all elements change, update the shape of the moveable.
+     * @method Moveable#updateRect
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("resize", e => {
+     *     moveable.updateRect();
+     * });
+     */
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         const props = this.props;
         const parentMoveable = props.parentMoveable;
@@ -276,13 +351,50 @@ export default class MoveableManager<T = {}, U = {}>
             this.unsetAbles();
         }
     }
+    /**
+     * Check if the moveable state is being dragged.
+     * @method Moveable#isDragging
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // false
+     * console.log(moveable.isDragging());
+     *
+     * moveable.on("drag", () => {
+     *   // true
+     *   console.log(moveable.isDragging());
+     * });
+     */
     public isDragging() {
         return (this.targetDragger ? this.targetDragger.isFlag() : false)
             || (this.controlDragger ? this.controlDragger.isFlag() : false);
     }
+    /**
+     * If the width, height, left, and top of the only target change, update the shape of the moveable.
+     * @method Moveable#updateTarget
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.updateTarget();
+     */
     public updateTarget(type?: "Start" | "" | "End") {
         this.updateRect(type, true);
     }
+    /**
+     * You can get the vertex information, position and offset size information of the target based on the container.
+     * @method Moveable#getRect
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const rectInfo = moveable.getRect();
+     */
     public getRect(): RectInfo {
         const state = this.state;
         const poses = getAbsolutePosesByState(this.state);
@@ -329,29 +441,40 @@ export default class MoveableManager<T = {}, U = {}>
 
         let deg = getRad(pos1, pos2) / Math.PI * 180;
 
-        if (this.props.groupable) {
-            const scale = this.scale;
-
-            if (scale[0] < 0) {
-                deg = 360 - deg;
-            }
-            if (scale[1] < 0) {
-                // -90 ~ 90
-                // 270 ~ 360, 0 ~ 90
-                if (deg <= 180) {
-                    deg = 180 - deg;
-                } else {
-                    deg = 540 - deg;
-                }
-            }
-            return deg;
-        }
-
-        deg = direction > 0 ? deg : 180 - deg;
+        deg = direction >= 0 ? deg : 180 - deg;
         deg = deg >= 0 ? deg : 360 + deg;
 
         return deg;
     }
+    /**
+     * Request able through a method rather than an event.
+     * At the moment of execution, requestStart is executed,
+     * and then request and requestEnd can be executed through Requester.
+     * @method Moveable#request
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html#request|Draggable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request|Resizable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request|Scalable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request|Rotatable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.OriginDraggable.html#request|OriginDraggable Requester}
+     * @param - ableName
+     * @param - request to be able params.
+     * @param - If isInstant is true, request and requestEnd are executed immediately.
+     * @return - Able Requester. If there is no request in able, nothing will work.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10 }, true);
+     *
+     * // Start move
+     * const requester = moveable.request("draggable");
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.requestEnd();
+     */
     public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {
         const { ables, groupable } = this.props as any;
         const requsetAble: Able = ables!.filter((able: Able) => able.name === ableName)[0];
@@ -399,6 +522,19 @@ export default class MoveableManager<T = {}, U = {}>
         }, requestInstant);
 
         return requestInstant ? requester.request(param).requestEnd() : requester;
+    }
+    /**
+     * Remove the Moveable object and the events.
+     * @method Moveable#destroy
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.destroy();
+     */
+    public destroy(): void {
+        this.componentWillUnmount();
     }
     public updateRenderPoses() {
         const state = this.state;

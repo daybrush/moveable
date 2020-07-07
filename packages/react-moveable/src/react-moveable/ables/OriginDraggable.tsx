@@ -1,9 +1,9 @@
 import MoveableManager from "../MoveableManager";
 import {
-    prefix, getControlTransform, triggerEvent,
+    prefix, triggerEvent,
     fillParams, caculatePoses, getRect, fillEndParams, convertCSSSize
 } from "../utils";
-import { Renderer, OriginProps, OnDragOriginStart, OnDragOrigin, OnDragOriginEnd } from "../types";
+import { OriginProps, OnDragOriginStart, OnDragOrigin, OnDragOriginEnd } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
 import { setDragStart, getDragDist, getNextMatrix } from "../DraggerUtils";
 import { minus, plus } from "../matrix";
@@ -173,7 +173,7 @@ export default {
 
         return {
             isControl: true,
-            requestStart(e: IObject<any>) {
+            requestStart() {
                 return { datas };
             },
             request(e: IObject<any>) {

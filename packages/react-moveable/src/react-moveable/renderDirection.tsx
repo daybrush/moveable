@@ -16,22 +16,30 @@ export function renderControls(
     const {
         renderDirections: directions = defaultDirections,
     } = moveable.props;
+    const {
+        direction,
+    } = moveable.state;
 
     const directionMap: IObject<boolean> = {};
-    directions.forEach(direction => {
-        directionMap[direction] = true;
+    directions.forEach(dir => {
+        directionMap[dir] = true;
     });
-    return directions.map(direction => {
-        const indexes = DIRECTION_INDEXES[direction];
+    return directions.map(dir => {
+        const indexes = DIRECTION_INDEXES[dir];
 
-        if (!indexes || !directionMap[direction]) {
+        if (!indexes || !directionMap[dir]) {
             return null;
         }
-        const directionRotation = (throttle(rotation / Math.PI * 180, 15) + DIRECTION_ROTATIONS[direction]) % 180;
+        let directionRotation = throttle(rotation / Math.PI * 180, 15) + DIRECTION_ROTATIONS[dir];
+
+        if (direction < 1) {
+            directionRotation = 360 - directionRotation;
+        };
+        directionRotation %= 180;
 
         return (
-            <div className={prefix("control", "direction", direction)}
-                data-rotation={directionRotation} data-direction={direction} key={`direction-${direction}`}
+            <div className={prefix("control", "direction", dir)}
+                data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
                 style={getControlTransform(rotation, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });

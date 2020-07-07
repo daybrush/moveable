@@ -150,7 +150,8 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         const [left, top, width, height] = getGroupRect(this.moveables, rotation);
 
         // tslint:disable-next-line: max-line-length
-        target.style.cssText += `left:0px;top:0px;width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`;
+        target.style.cssText += `left:0px;top:0px;width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`
+            + ` scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
         state.width = width;
         state.height = height;
 
