@@ -1,9 +1,9 @@
-import MoveableManager from "../MoveableManager";
 import { triggerEvent, fillParams } from "../utils";
 import { IObject } from "@daybrush/utils";
+import { MoveableManagerInterface } from "../types";
 
 export function triggerRenderStart(
-    moveable: MoveableManager<any>,
+    moveable: MoveableManagerInterface<any, any>,
     isGroup: boolean,
     e: any,
 ) {
@@ -19,7 +19,7 @@ export function triggerRenderStart(
     triggerEvent<any>(moveable, `onRender${eventAffix}Start`, params);
 }
 export function triggerRender(
-    moveable: MoveableManager<any>,
+    moveable: MoveableManagerInterface<any, any>,
     isGroup: boolean,
     e: any,
 ) {
@@ -35,7 +35,7 @@ export function triggerRender(
     triggerEvent<any>(moveable, `onRender${eventAffix}`, params);
 }
 export function triggerRenderEnd(
-    moveable: MoveableManager<any>,
+    moveable: MoveableManagerInterface<any, any>,
     isGroup: boolean,
     e: any,
 ) {

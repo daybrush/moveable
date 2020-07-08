@@ -1,13 +1,13 @@
-import MoveableManager from "../MoveableManager";
 import { prefix, getControlTransform } from "../utils";
-import { Renderer, OriginProps } from "../types";
+import { Renderer, OriginOptions, MoveableManagerInterface } from "../types";
 
 export default {
     name: "origin",
     props: {
         origin: Boolean,
-    },
-    render(moveable: MoveableManager<OriginProps>, React: Renderer): any {
+    } as const,
+    events: {} as const,
+    render(moveable: MoveableManagerInterface<OriginOptions>, React: Renderer): any {
         const { beforeOrigin, rotation } = moveable.state;
 
         return [
@@ -16,3 +16,14 @@ export default {
         ];
     },
 };
+
+/**
+ * Whether or not the origin controlbox will be visible or not (default: true)
+ * @name Moveable#origin
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.origin = true;
+ */

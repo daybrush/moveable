@@ -1,14 +1,14 @@
-import MoveableManager from "../MoveableManager";
 import { prefix, makeMatrixCSS } from "../utils";
-import { Renderer } from "../types";
+import { Renderer, MoveableManagerInterface } from "../types";
 import { createWarpMatrix } from "../matrix";
 
 export default {
     name: "padding",
     props: {
         padding: Object,
-    },
-    render(moveable: MoveableManager, React: Renderer): any {
+    } as const,
+    events: {} as const,
+    render(moveable: MoveableManagerInterface, React: Renderer): any {
         const props = moveable.props;
         if (props.dragArea) {
             return [];
@@ -68,3 +68,17 @@ export default {
         });
     },
 };
+
+/**
+ * Add padding around the target to increase the drag area. (default: null)
+ * @name Moveable#padding
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  target: document.querySelector(".target"),
+ *  padding: { left: 0, top: 0, right: 0, bottom: 0 },
+ * });
+ * moveable.padding = { left: 10, top: 10, right: 10, bottom: 10 },
+ * moveable.updateRect();
+ */

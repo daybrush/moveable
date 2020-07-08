@@ -36,8 +36,8 @@ function renderLine(direction: string, pos1: number[], pos2: number[], index: nu
         data-line-index={index}
         data-direction={direction} style={getLineStyle(pos1, pos2, rad)}></div>;
 }
-export default class MoveableManager<T = {}, U = {}>
-    extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState<U>> {
+export default class MoveableManager<T = {}>
+    extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
     public static defaultProps: Required<MoveableManagerProps> = {
         target: null,
         dragTarget: null,
@@ -59,7 +59,7 @@ export default class MoveableManager<T = {}, U = {}>
         checkInput: false,
         groupable: false,
     };
-    public state: MoveableManagerState<U> = {
+    public state: MoveableManagerState = {
         container: null,
         target: null,
         beforeMatrix: createIdentityMatrix3(),
@@ -147,7 +147,7 @@ export default class MoveableManager<T = {}, U = {}>
         }
         this.updateCheckInput();
     }
-    public componentDidUpdate(prevProps: MoveableManagerProps<T>) {
+    public componentDidUpdate(prevProps: MoveableManagerProps) {
         this.updateEvent(prevProps);
         this.updateCheckInput();
     }
@@ -319,7 +319,7 @@ export default class MoveableManager<T = {}, U = {}>
             parentMoveable ? false : isSetState,
         );
     }
-    public updateEvent(prevProps: MoveableManagerProps<T>) {
+    public updateEvent(prevProps: MoveableManagerProps) {
         const controlBoxElement = this.controlBox.getElement();
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
@@ -342,10 +342,10 @@ export default class MoveableManager<T = {}, U = {}>
         }
 
         if (target && hasTargetAble && !this.targetDragger) {
-            this.targetDragger = getTargetAbleDragger(this, target!, "");
+            this.targetDragger = getTargetAbleDragger<any>(this, target!, "");
         }
         if (!this.controlDragger && hasControlAble) {
-            this.controlDragger = getAbleDragger(this, controlBoxElement, "controlAbles", "Control");
+            this.controlDragger = getAbleDragger<any>(this, controlBoxElement, "controlAbles", "Control");
         }
         if (isUnset) {
             this.unsetAbles();
@@ -646,3 +646,152 @@ export default class MoveableManager<T = {}, U = {}>
         this.targetDragger && (this.targetDragger.options.checkInput = this.props.checkInput);
     }
 }
+
+/**
+ * The target to indicate Moveable Control Box.
+ * @name Moveable#target
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.target = document.querySelector(".target");
+ */
+/**
+ * Zooms in the elements of a moveable. (default: 1)
+ * @name Moveable#zoom
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.zoom = 2;
+ */
+
+/**
+ * Resize, Scale Events at edges
+ * @name Moveable#edge
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.edge = true;
+ */
+
+/**
+ * You can specify the className of the moveable controlbox. (default: "")
+ * @name Moveable#className
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   className: "",
+ * });
+ *
+ * moveable.className = "moveable1";
+ */
+
+/**
+ * The target(s) to drag Moveable target(s) (default: target)
+ * @name Moveable#dragTarget
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.target = document.querySelector(".target");
+ * moveable.dragTarget = document.querySelector(".dragTarget");
+ */
+
+/**
+ * `renderStart` event occurs at the first start of all events.
+ * @memberof Moveable
+ * @event renderStart
+ * @param {Moveable.OnRenderStart} - Parameters for the `renderStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("renderStart", ({ target }) => {
+ *     console.log("onRenderStart", target);
+ * });
+ */
+
+/**
+ * `render` event occurs before the target is drawn on the screen.
+ * @memberof Moveable
+ * @event render
+ * @param {Moveable.OnRender} - Parameters for the `render` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("render", ({ target }) => {
+ *     console.log("onRender", target);
+ * });
+ */
+
+/**
+ * `renderEnd` event occurs at the end of all events.
+ * @memberof Moveable
+ * @event renderEnd
+ * @param {Moveable.OnRenderEnd} - Parameters for the `renderEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("renderEnd", ({ target }) => {
+ *     console.log("onRenderEnd", target);
+ * });
+ */
+
+/**
+ * `renderGroupStart` event occurs at the first start of all events in group.
+ * @memberof Moveable
+ * @event renderGroupStart
+ * @param {Moveable.OnRenderGroupStart} - Parameters for the `renderGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroupStart", ({ targets }) => {
+ *     console.log("onRenderGroupStart", targets);
+ * });
+ */
+
+/**
+ * `renderGroup` event occurs before the target is drawn on the screen in group.
+ * @memberof Moveable
+ * @event renderGroup
+ * @param {Moveable.OnRenderGroup} - Parameters for the `renderGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroup", ({ targets }) => {
+ *     console.log("onRenderGroup", targets);
+ * });
+ */
+
+/**
+ * `renderGroupEnd` event occurs at the end of all events in group.
+ * @memberof Moveable
+ * @event renderGroupEnd
+ * @param {Moveable.OnRenderGroupEnd} - Parameters for the `renderGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroupEnd", ({ targets }) => {
+ *     console.log("onRenderGroupEnd", targets);
+ * });
+ */

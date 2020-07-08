@@ -3,13 +3,11 @@ import {
     getRotationRad, getClientRect, caculatePosition, fillEndParams
 } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
-import MoveableManager from "../MoveableManager";
 import {
     RotatableProps, OnRotateGroup, OnRotateGroupEnd,
     Renderer, OnRotateGroupStart, OnRotateStart, OnRotate,
-    OnRotateEnd, MoveableClientRect, SnappableProps, SnappableState,
+    OnRotateEnd, MoveableClientRect, SnappableProps, SnappableState, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
-import MoveableGroup from "../MoveableGroup";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, getRad, rotate as rotateMatrix } from "../matrix";
@@ -19,10 +17,11 @@ import { checkSnapRotate } from "./Snappable";
 /**
  * @namespace Rotatable
  * @memberof Moveable
+ * @description Rotatable indicates whether the target can be rotated.
  */
 
 function setRotateStartInfo(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
 
     const n = moveable.state.is3d ? 4 : 3;
@@ -36,7 +35,7 @@ function setRotateStartInfo(
     datas.loop = 0;
 }
 function getParentDeg(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     moveableRect: any,
     datas: IObject<any>,
     parentDist: number,
@@ -61,7 +60,7 @@ function getParentDeg(
     return [delta, dist, startRotate + dist];
 }
 function getDeg(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     moveableRect: any,
     datas: IObject<any>,
     deg: number,
@@ -103,7 +102,7 @@ function getDeg(
     return [delta, dist, startRotate + dist];
 }
 function getRotateInfo(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     moveableRect: any,
     datas: IObject<any>,
     direction: number,
@@ -191,8 +190,16 @@ export default {
         rotatable: Boolean,
         rotationPosition: String,
         throttleRotate: Number,
-    },
-    render(moveable: MoveableManager<RotatableProps>, React: Renderer): any {
+    } as const,
+    events: {
+        onRotateStart: "rotateStart",
+        onRotate: "rotate",
+        onRotateEnd: "rotateEnd",
+        onRotateGroupStart: "rotateGroupStart",
+        onRotateGroup: "rotateGroup",
+        onRotateGroupEnd: "rotateGroupEnd",
+    } as const,
+    render(moveable: MoveableManagerInterface<RotatableProps>, React: Renderer): any {
         const {
             rotatable,
             rotationPosition,
@@ -214,7 +221,7 @@ export default {
     },
     dragControlCondition,
     dragControlStart(
-        moveable: MoveableManager<RotatableProps & SnappableProps, SnappableState>,
+        moveable: MoveableManagerInterface<RotatableProps & SnappableProps, SnappableState>,
         e: any) {
         const {
             datas,
@@ -280,7 +287,7 @@ export default {
         return datas.isRotate ? params : false;
     },
     dragControl(
-        moveable: MoveableManager<RotatableProps>,
+        moveable: MoveableManagerInterface<RotatableProps>,
         e: any,
     ) {
         const { datas, clientX, clientY, parentRotate, parentFlag, isPinch } = e;
@@ -347,7 +354,7 @@ export default {
 
         return params;
     },
-    dragControlEnd(moveable: MoveableManager<RotatableProps>, e: any) {
+    dragControlEnd(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
         const { datas, isDrag } = e;
 
         if (!datas.isRotate) {
@@ -359,7 +366,7 @@ export default {
         return isDrag;
     },
     dragGroupControlCondition: dragControlCondition,
-    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+    dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas, inputEvent } = e;
         const {
             left: parentLeft,
@@ -407,7 +414,7 @@ export default {
 
         return datas.isRotate ? params : false;
     },
-    dragGroupControl(moveable: MoveableGroup, e: any) {
+    dragGroupControl(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { inputEvent, datas } = e;
 
         if (!datas.isRotate) {
@@ -457,7 +464,7 @@ export default {
         triggerEvent(moveable, "onRotateGroup", nextParams);
         return nextParams;
     },
-    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+    dragGroupControlEnd(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { isDrag, datas } = e;
 
         if (!datas.isRotate) {
@@ -502,7 +509,7 @@ export default {
      * // requestEnd
      * requester.requestEnd();
      */
-    request(moveable: MoveableManager<RotatableProps>) {
+    request(moveable: MoveableManagerInterface<RotatableProps>) {
         const datas = {};
         let distRotate = 0;
 
@@ -527,3 +534,135 @@ export default {
         };
     },
 };
+/**
+ * Whether or not target can be rotated. (default: false)
+ * @name Moveable.Rotatable#rotatable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.rotatable = true;
+ */
+/**
+ * You can specify the position of the rotation. (default: "top")
+ * @name Moveable.Rotatable#rotationPosition
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   rotationPosition: "top",
+ * });
+ *
+ * moveable.rotationPosition = "bottom"
+ */
+
+/**
+ * throttle of angle(degree) when rotate.
+ * @name Moveable.Rotatable#throttleRotate
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleRotate = 1;
+ */
+
+/**
+ * When the rotate starts, the rotateStart event is called.
+ * @memberof Moveable.Rotatable
+ * @event rotateStart
+ * @param {Moveable.Rotatable.OnRotateStart} - Parameters for the rotateStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { rotatable: true });
+ * moveable.on("rotateStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+
+/**
+* When rotating, the rotate event is called.
+* @memberof Moveable.Rotatable
+* @event rotate
+* @param {Moveable.Rotatable.OnRotate} - Parameters for the rotate event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, { rotatable: true });
+* moveable.on("rotate", ({ target, transform, dist }) => {
+*     target.style.transform = transform;
+* });
+*/
+/**
+ * When the rotate finishes, the rotateEnd event is called.
+ * @memberof Moveable.Rotatable
+ * @event rotateEnd
+ * @param {Moveable.Rotatable.OnRotateEnd} - Parameters for the rotateEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { rotatable: true });
+ * moveable.on("rotateEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+
+/**
+ * When the group rotate starts, the `rotateGroupStart` event is called.
+ * @memberof Moveable.Rotatable
+ * @event rotateGroupStart
+ * @param {Moveable.Rotatable.OnRotateGroupStart} - Parameters for the `rotateGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     rotatable: true
+ * });
+ * moveable.on("rotateGroupStart", ({ targets }) => {
+ *     console.log("onRotateGroupStart", targets);
+ * });
+ */
+
+/**
+* When the group rotate, the `rotateGroup` event is called.
+* @memberof Moveable.Rotatable
+* @event rotateGroup
+* @param {Moveable.Rotatable.OnRotateGroup} - Parameters for the `rotateGroup` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     rotatable: true
+* });
+* moveable.on("rotateGroup", ({ targets, events }) => {
+*     console.log("onRotateGroup", targets);
+*     events.forEach(ev => {
+*         const target = ev.target;
+*         // ev.drag is a drag event that occurs when the group rotate.
+*         const left = ev.drag.beforeDist[0];
+*         const top = ev.drag.beforeDist[1];
+*         const deg = ev.beforeDist;
+*     });
+* });
+*/
+
+/**
+ * When the group rotate finishes, the `rotateGroupEnd` event is called.
+ * @memberof Moveable.Rotatable
+ * @event rotateGroupEnd
+ * @param {Moveable.Rotatable.OnRotateGroupEnd} - Parameters for the `rotateGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     rotatable: true
+ * });
+ * moveable.on("rotateGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onRotateGroupEnd", targets, isDrag);
+ * });
+ */

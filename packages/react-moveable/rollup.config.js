@@ -4,10 +4,9 @@ const defaultOptions = {
     tsconfig: "tsconfig.build.json",
 };
 
-export default builder([
-    {
+export default builder([{
         ...defaultOptions,
-        input: "src/react-moveable/index.ts",
+        input: "src/react-moveable/index.esm.ts",
         output: "./dist/moveable.esm.js",
         visualizer: true,
         format: "es",

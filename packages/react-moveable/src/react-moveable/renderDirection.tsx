@@ -1,11 +1,10 @@
-import MoveableManager from "./MoveableManager";
 import { prefix, getControlTransform, throttle } from "./utils";
-import { ResizableProps, ScalableProps, WarpableProps, Renderer } from "./types";
+import { ResizableProps, ScalableProps, WarpableProps, Renderer, MoveableManagerInterface } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
 import { IObject } from "@daybrush/utils";
 
 export function renderControls(
-    moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
     defaultDirections: string[],
     React: Renderer,
 ): any[] {
@@ -34,7 +33,7 @@ export function renderControls(
 
         if (direction < 1) {
             directionRotation = 360 - directionRotation;
-        };
+        }
         directionRotation %= 180;
 
         return (
@@ -45,13 +44,13 @@ export function renderControls(
     });
 }
 export function renderAllDirections(
-    moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
     React: Renderer,
 ) {
     return renderControls(moveable, DIRECTIONS, React);
 }
 export function renderDiagonalDirections(
-    moveable: MoveableManager<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
     React: Renderer,
 ): any[] {
     return renderControls(moveable, ["nw", "ne", "sw", "se"], React);

@@ -1,7 +1,6 @@
 import { maxOffset, getDistSize, throttle } from "../../utils";
 import { average, rotate, getRad } from "../../matrix";
-import MoveableManager from "../../MoveableManager";
-import { SnappableProps, DraggableProps, RotatableProps } from "../../types";
+import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";
 import { getNearOffsetInfo } from "./snap";
 import { TINY_NUM } from "../../consts";
@@ -82,7 +81,7 @@ function checkInnerBoundDot(
 }
 
 function checkInnerBound(
-    moveable: MoveableManager<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps>,
     line: number[][],
     center: number[],
 ) {
@@ -204,7 +203,7 @@ function checkLineBoundCollision(
     };
 }
 export function getInnerBoundInfo(
-    moveable: MoveableManager<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps>,
     lines: number[][][],
     center: number[],
     datas: any,
@@ -235,7 +234,7 @@ export function getInnerBoundInfo(
 }
 
 export function getInnerBoundDragInfo(
-    moveable: MoveableManager<SnappableProps & DraggableProps, any>,
+    moveable: MoveableManagerInterface<SnappableProps & DraggableProps, any>,
     poses: number[][],
     datas: any,
 ) {
@@ -395,7 +394,7 @@ function solveReverseLine([pos1, pos2]: number[][]) {
     ];
 }
 export function checkRotateInnerBounds(
-    moveable: MoveableManager<SnappableProps & RotatableProps, any>,
+    moveable: MoveableManagerInterface<SnappableProps & RotatableProps, any>,
     prevPoses: number[][],
     nextPoses: number[][],
     origin: number[],
@@ -468,7 +467,7 @@ export function checkRotateInnerBounds(
 }
 
 export function checkInnerBoundPoses(
-    moveable: MoveableManager<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps>,
 ) {
     const innerBounds = moveable.props.innerBounds;
 

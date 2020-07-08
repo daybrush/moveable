@@ -74,6 +74,7 @@ class App extends React.Component<any, any> {
                     keepRatio={false}
                     bounds={{ left: 50, top: 30 }}
                     target={this.state.targets}
+                    originDraggable={true   }
                     padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
                     rootContainer={document.body}
                     defaultGroupRotate={0}

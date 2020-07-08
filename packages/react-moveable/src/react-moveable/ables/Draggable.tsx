@@ -1,12 +1,11 @@
 import { getDragDist, setDragStart } from "../DraggerUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
 import { minus, plus, getRad } from "../matrix";
-import MoveableManager from "../MoveableManager";
 import {
     DraggableProps, OnDrag, OnDragGroup,
-    OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState, Renderer, OnDragGroupEnd,
+    OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState,
+    Renderer, OnDragGroupEnd, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
-import MoveableGroup from "../MoveableGroup";
 import { triggerChildDragger } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 import { IObject } from "@daybrush/utils";
@@ -14,6 +13,7 @@ import { IObject } from "@daybrush/utils";
 /**
  * @namespace Draggable
  * @memberof Moveable
+ * @description Draggable refers to the ability to drag and move targets.
  */
 export default {
     name: "draggable",
@@ -22,9 +22,17 @@ export default {
         throttleDrag: Number,
         throttleDragRotate: Number,
         startDragRotate: Number,
-    },
+    } as const,
+    events: {
+        onDragStart: "dragStart",
+        onDrag: "drag",
+        onDragEnd: "dragEnd",
+        onDragGroupStart: "dragGroupStart",
+        onDragGroup: "dragGroup",
+        onDragGroupEnd: "dragGroupEnd",
+    } as const,
     render(
-        moveable: MoveableManager<DraggableProps, DraggableState>,
+        moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         React: Renderer,
     ) {
         const throttleDragRotate = moveable.props.throttleDragRotate;
@@ -53,7 +61,7 @@ export default {
         }} />;
     },
     dragStart(
-        moveable: MoveableManager<DraggableProps, any>,
+        moveable: MoveableManagerInterface<DraggableProps, any>,
         e: any,
     ) {
         const { datas, parentEvent, parentDragger } = e;
@@ -105,7 +113,7 @@ export default {
         return datas.isDrag ? params : false;
     },
     drag(
-        moveable: MoveableManager<DraggableProps, any>,
+        moveable: MoveableManagerInterface<DraggableProps, any>,
         e: any,
     ): OnDrag | undefined {
         const { datas, parentEvent, parentFlag, isPinch, isRequest } = e;
@@ -129,8 +137,8 @@ export default {
             const deg
                 = throttle(startDragRotate + getRad([0, 0], [distX, distY]) * 180 / Math.PI, throttleDragRotate)
                 - startDragRotate;
-            const ry  = distY * Math.abs(Math.cos((deg - 90) / 180 * Math.PI));
-            const rx  = distX * Math.abs(Math.cos(deg / 180 * Math.PI));
+            const ry = distY * Math.abs(Math.cos((deg - 90) / 180 * Math.PI));
+            const rx = distX * Math.abs(Math.cos(deg / 180 * Math.PI));
             const r = getDistSize([rx, ry]);
             dragRotateRad = deg * Math.PI / 180;
 
@@ -206,7 +214,7 @@ export default {
         return params;
     },
     dragEnd(
-        moveable: MoveableManager<DraggableProps, DraggableState>,
+        moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         e: any,
     ) {
         const { parentEvent, datas, isDrag } = e;
@@ -220,7 +228,7 @@ export default {
         !parentEvent && triggerEvent<DraggableProps>(moveable, "onDragEnd", fillEndParams<OnDragEnd>(moveable, e, {}));
         return isDrag;
     },
-    dragGroupStart(moveable: MoveableGroup, e: any) {
+    dragGroupStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas, clientX, clientY } = e;
 
         const params = this.dragStart(moveable, e);
@@ -244,7 +252,7 @@ export default {
 
         return datas.isDrag ? params : false;
     },
-    dragGroup(moveable: MoveableGroup, e: any) {
+    dragGroup(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
 
         if (!datas.isDrag) {
@@ -266,7 +274,7 @@ export default {
         triggerEvent(moveable, "onDragGroup", nextParams);
         return nextParams;
     },
-    dragGroupEnd(moveable: MoveableGroup, e: any) {
+    dragGroupEnd(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { isDrag, datas } = e;
 
         if (!datas.isDrag) {
@@ -312,7 +320,7 @@ export default {
      * // requestEnd
      * requester.requestEnd();
      */
-    request(moveable: MoveableManager<any, any>) {
+    request(moveable: MoveableManagerInterface<any, any>) {
         const datas = {};
         const rect = moveable.getRect();
         let distX = 0;
@@ -320,7 +328,7 @@ export default {
 
         return {
             isControl: false,
-            requestStart(e: IObject<any>) {
+            requestStart() {
                 return { datas };
             },
             request(e: IObject<any>) {
@@ -348,3 +356,148 @@ export default {
         moveable.state.dragInfo = null;
     },
 };
+
+/**
+ * Whether or not target can be dragged. (default: false)
+ * @name Moveable.Draggable#draggable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.draggable = true;
+ */
+
+/**
+ * throttle of x, y when drag.
+ * @name Moveable.Draggable#throttleDrag
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleDrag = 1;
+ */
+
+/**
+* throttle of angle of x, y when drag.
+* @name Moveable.Draggable#throttleDragRotate
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body);
+*
+* moveable.throttleDragRotate = 45;
+*/
+
+/**
+* start angle of throttleDragRotate of x, y when drag.
+* @name Moveable.Draggable#startDragRotate
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body);
+*
+* // 45, 135, 225, 315
+* moveable.throttleDragRotate = 90;
+* moveable.startDragRotate = 45;
+*/
+
+/**
+ * When the drag starts, the dragStart event is called.
+ * @memberof Moveable.Draggable
+ * @event dragStart
+ * @param {Moveable.Draggable.OnDragStart} - Parameters for the dragStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { draggable: true });
+ * moveable.on("dragStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When dragging, the drag event is called.
+ * @memberof Moveable.Draggable
+ * @event drag
+ * @param {Moveable.Draggable.OnDrag} - Parameters for the drag event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { draggable: true });
+ * moveable.on("drag", ({ target, transform }) => {
+ *     target.style.transform = transform;
+ * });
+ */
+/**
+ * When the drag finishes, the dragEnd event is called.
+ * @memberof Moveable.Draggable
+ * @event dragEnd
+ * @param {Moveable.Draggable.OnDragEnd} - Parameters for the dragEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { draggable: true });
+ * moveable.on("dragEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+
+ /**
+ * When the group drag starts, the `dragGroupStart` event is called.
+ * @memberof Moveable.Draggable
+ * @event dragGroupStart
+ * @param {Moveable.Draggable.OnDragGroupStart} - Parameters for the `dragGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroupStart", ({ targets }) => {
+ *     console.log("onDragGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group drag, the `dragGroup` event is called.
+ * @memberof Moveable.Draggable
+ * @event dragGroup
+ * @param {Moveable.Draggable.OnDragGroup} - Parameters for the `dragGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroup", ({ targets, events }) => {
+ *     console.log("onDragGroup", targets);
+ *     events.forEach(ev => {
+ *          // drag event
+ *          console.log("onDrag left, top", ev.left, ev.top);
+ *          // ev.target!.style.left = `${ev.left}px`;
+ *          // ev.target!.style.top = `${ev.top}px`;
+ *          console.log("onDrag translate", ev.dist);
+ *          ev.target!.style.transform = ev.transform;)
+ *     });
+ * });
+ */
+
+/**
+ * When the group drag finishes, the `dragGroupEnd` event is called.
+ * @memberof Moveable.Draggable
+ * @event dragGroupEnd
+ * @param {Moveable.Draggable.OnDragGroupEnd} - Parameters for the `dragGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     draggable: true
+ * });
+ * moveable.on("dragGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onDragGroupEnd", targets, isDrag);
+ * });
+ */

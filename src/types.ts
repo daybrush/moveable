@@ -20,15 +20,17 @@ import {
  * @memberof Moveable
  * @typedef
  * @extends Moveable.MoveableDefaultProps
- * @extends Moveable.DraggableOptions
- * @extends Moveable.ResizableOptions
- * @extends Moveable.ScalableOptions
- * @extends Moveable.PinchableOptions
- * @extends Moveable.RotatableOptions
- * @extends Moveable.WarpableOptions
- * @extends Moveable.ScrollableOptions
- * @extends Moveable.GroupableOptions
- * @extends Moveable.SnappableOptions
+ * @extends Moveable.Draggable.DraggableOptions
+ * @extends Moveable.Resizable.ResizableOptions
+ * @extends Moveable.Scalable.ScalableOptions
+ * @extends Moveable.Pinchable.PinchableOptions
+ * @extends Moveable.Rotatable.RotatableOptions
+ * @extends Moveable.Warpable.WarpableOptions
+ * @extends Moveable.Scrollable.ScrollableOptions
+ * @extends Moveable.Group.GroupableOptions
+ * @extends Moveable.Clippable.ClippableOptions
+ * @extends Moveable.OriginDraggable.OriginDraggableOptions
+ * @extends Moveable.Roundable.RoundableOptions
  */
 export interface MoveableOptions extends
     Pick<MoveableDefaultProps, Exclude<keyof MoveableDefaultProps, "target">>,

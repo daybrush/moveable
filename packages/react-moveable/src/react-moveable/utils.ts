@@ -17,7 +17,10 @@ import {
 } from "./matrix";
 
 import MoveableManager from "./MoveableManager";
-import { MoveableManagerState, Able, MoveableClientRect, MoveableProps, ControlPose } from "./types";
+import {
+    MoveableManagerState, Able, MoveableClientRect,
+    MoveableProps, ControlPose, MoveableManagerInterface
+} from "./types";
 import { getDragDist } from "./DraggerUtils";
 
 export function round(num: number) {
@@ -1203,7 +1206,7 @@ export function moveControlPos(
     }
 }
 
-export function caculatePointerDist(moveable: MoveableManager, e: any) {
+export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) {
     const { clientX, clientY, datas } = e;
     const {
         moveableClientRect,

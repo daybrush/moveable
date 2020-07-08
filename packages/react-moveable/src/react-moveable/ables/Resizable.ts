@@ -12,11 +12,9 @@ import {
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
-    OnResize, OnResizeEnd,
+    OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
-import MoveableManager from "../MoveableManager";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
-import MoveableGroup from "../MoveableGroup";
 import {
     triggerChildAble,
 } from "../groupUtils";
@@ -33,6 +31,7 @@ import { TINY_NUM } from "../consts";
 /**
  * @namespace Resizable
  * @memberof Moveable
+ * @description Resizable indicates whether the target's width and height can be increased or decreased.
  */
 
 export default {
@@ -44,10 +43,18 @@ export default {
         resizable: Boolean,
         throttleResize: Number,
         renderDirections: Array,
-        baseDirection: Array,
         keepRatio: Boolean,
-    },
-    render(moveable: MoveableManager<Partial<ResizableProps>>, React: Renderer): any[] | undefined {
+    } as const,
+    events: {
+        onResizeStart: "resizeStart",
+        onResize: "resize",
+        onResizeEnd: "resizeEnd",
+
+        onResizeGroupStart: "onResizeGroupStart",
+        onResizeGroup: "onResizeGroup",
+        onResizeGroupEnd: "onResizeGroupEnd",
+    } as const,
+    render(moveable: MoveableManagerInterface<Partial<ResizableProps>>, React: Renderer): any[] | undefined {
         const { resizable, edge } = moveable.props;
         if (resizable) {
             if (edge) {
@@ -58,7 +65,7 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ResizableProps & DraggableProps, SnappableState>,
+        moveable: MoveableManagerInterface<ResizableProps & DraggableProps, SnappableState>,
         e: any,
     ) {
         const {
@@ -144,7 +151,7 @@ export default {
         return datas.isResize ? params : false;
     },
     dragControl(
-        moveable: MoveableManager<ResizableProps & DraggableProps>,
+        moveable: MoveableManagerInterface<ResizableProps & DraggableProps>,
         e: any,
     ) {
         const {
@@ -349,7 +356,7 @@ export default {
         return params;
     },
     dragControlAfter(
-        moveable: MoveableManager<ResizableProps & DraggableProps>,
+        moveable: MoveableManagerInterface<ResizableProps & DraggableProps>,
         e: any,
     ) {
         const datas = e.datas;
@@ -389,7 +396,7 @@ export default {
         }
     },
     dragControlEnd(
-        moveable: MoveableManager<ResizableProps & DraggableProps>,
+        moveable: MoveableManagerInterface<ResizableProps & DraggableProps>,
         e: any,
     ) {
         const { datas, isDrag } = e;
@@ -403,7 +410,7 @@ export default {
         return isDrag;
     },
     dragGroupControlCondition: directionCondition,
-    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+    dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
         const params = this.dragControlStart(moveable, e);
 
@@ -442,7 +449,7 @@ export default {
         datas.isResize = result !== false;
         return datas.isResize ? params : false;
     },
-    dragGroupControl(moveable: MoveableGroup, e: any) {
+    dragGroupControl(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
         if (!datas.isResize) {
             return;
@@ -498,7 +505,7 @@ export default {
         triggerEvent<ResizableProps>(moveable, "onResizeGroup", nextParams);
         return nextParams;
     },
-    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+    dragGroupControlEnd(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { isDrag, datas } = e;
 
         if (!datas.isResize) {
@@ -551,7 +558,7 @@ export default {
      * // requestEnd
      * requester.requestEnd();
      */
-    request(moveable: MoveableManager<any>) {
+    request(moveable: MoveableManagerInterface<any>) {
         const datas = {};
         let distWidth = 0;
         let distHeight = 0;
@@ -582,3 +589,158 @@ export default {
         };
     },
 };
+
+/**
+ * Whether or not target can be resized. (default: false)
+ * @name Moveable.Resizable#resizable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     resizable: false,
+ * });
+ *
+ * moveable.resizable = true;
+ */
+
+/**
+ * throttle of width, height when resize.
+ * @name Moveable.Resizable#throttleResize
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ *   throttleResize: 0,
+ * });
+ *
+ * moveable.throttleResize = 1;
+ */
+/**
+ * When resize or scale, keeps a ratio of the width, height. (default: false)
+ * @name Moveable.Resizable#keepRatio
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ * });
+ *
+ * moveable.keepRatio = true;
+ */
+/**
+ * Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * @name Moveable.Resizable#renderDirections
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ *   renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+ * });
+ *
+ * moveable.renderDirections = ["nw", "ne", "sw", "se"];
+ */
+
+/**
+ * When the resize starts, the resizeStart event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeStart
+ * @param {Moveable.Resizable.OnResizeStart} - Parameters for the resizeStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resizeStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When resizing, the resize event is called.
+ * @memberof Moveable.Resizable
+ * @event resize
+ * @param {Moveable.Resizable.OnResize} - Parameters for the resize event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resize", ({ target, width, height }) => {
+ *     target.style.width = `${e.width}px`;
+ *     target.style.height = `${e.height}px`;
+ * });
+ */
+/**
+ * When the resize finishes, the resizeEnd event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeEnd
+ * @param {Moveable.Resizable.OnResizeEnd} - Parameters for the resizeEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resizeEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+
+ /**
+ * When the group resize starts, the `resizeGroupStart` event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeGroupStart
+ * @param {Moveable.Resizable.OnResizeGroupStart} - Parameters for the `resizeGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroupStart", ({ targets }) => {
+ *     console.log("onResizeGroupStart", targets);
+ * });
+ */
+
+ /**
+ * When the group resize, the `resizeGroup` event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeGroup
+ * @param {Moveable.Resizable.onResizeGroup} - Parameters for the `resizeGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroup", ({ targets, events }) => {
+ *     console.log("onResizeGroup", targets);
+ *     events.forEach(ev => {
+ *         const offset = [
+ *             direction[0] < 0 ? -ev.delta[0] : 0,
+ *             direction[1] < 0 ? -ev.delta[1] : 0,
+ *         ];
+ *         // ev.drag is a drag event that occurs when the group resize.
+ *         const left = offset[0] + ev.drag.beforeDist[0];
+ *         const top = offset[1] + ev.drag.beforeDist[1];
+ *         const width = ev.width;
+ *         const top = ev.top;
+ *     });
+ * });
+ */
+
+/**
+ * When the group resize finishes, the `resizeGroupEnd` event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeGroupEnd
+ * @param {Moveable.Resizable.OnResizeGroupEnd} - Parameters for the `resizeGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onResizeGroupEnd", targets, isDrag);
+ * });
+ */

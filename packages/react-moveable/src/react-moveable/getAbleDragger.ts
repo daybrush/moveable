@@ -1,13 +1,11 @@
-import MoveableManager from "./MoveableManager";
-import { Able } from "./types";
+import { Able, MoveableManagerInterface, MoveableGroupInterface } from "./types";
 import { IObject } from "@daybrush/utils";
 import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
-import MoveableGroup from "./MoveableGroup";
 import { convertDragDist } from "./utils";
 import Dragger from "@daybrush/drag";
 
 export function triggerAble<T extends IObject<any>>(
-    moveable: MoveableManager,
+    moveable: MoveableManagerInterface<any, any>,
     ableType: string,
     eventOperation: string,
     eventAffix: string,
@@ -55,11 +53,11 @@ export function triggerAble<T extends IObject<any>>(
     const renderEvent = { ...e, datas: renderDatas, originalDatas: datas };
 
     const results = events.filter((able: any) => {
-        const condition = isStart && able[conditionName];
+        const hasCondition = isStart && able[conditionName];
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
-        if (!condition || condition(e, moveable)) {
+        if (!hasCondition || able[conditionName](e, moveable)) {
             return able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas });
         }
         return false;
@@ -70,8 +68,8 @@ export function triggerAble<T extends IObject<any>>(
         if (events.length && !isUpdate) {
             moveable.state.dragger = null;
 
-            if ((moveable as MoveableGroup).moveables) {
-                (moveable as MoveableGroup).moveables.forEach(childeMoveable => {
+            if ((moveable as MoveableGroupInterface).moveables) {
+                (moveable as MoveableGroupInterface).moveables.forEach(childeMoveable => {
                     childeMoveable.state.dragger = null;
                 });
             }
@@ -106,7 +104,7 @@ export function triggerAble<T extends IObject<any>>(
 }
 
 export function getTargetAbleDragger<T>(
-    moveable: MoveableManager<T>,
+    moveable: MoveableManagerInterface<T>,
     moveableTarget: HTMLElement | SVGElement,
     eventAffix: string,
 ) {
@@ -135,7 +133,7 @@ export function getTargetAbleDragger<T>(
     });
 }
 export function getAbleDragger<T>(
-    moveable: MoveableManager<T>,
+    moveable: MoveableManagerInterface<T>,
     target: HTMLElement | SVGElement | Array<HTMLElement | SVGElement>,
     ableType: string,
     eventAffix: string,

@@ -1,11 +1,12 @@
-import MoveableManager from "../MoveableManager";
+
 import {
     Renderer,
     SnappableProps,
     SnappableState, Guideline,
     SnapInfo, BoundInfo,
     ScalableProps, SnapPosInfo, RotatableProps,
-    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline, SnappableOptions, MoveableClientRect,
+    RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline,
+    SnappableOptions, MoveableClientRect, MoveableManagerInterface,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
@@ -48,7 +49,7 @@ export function caculateContainerPos(
         containerRect.top + clientPos[1],
     ];
 }
-export function snapStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
+export function snapStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
     const state = moveable.state;
     if (state.guidelines && state.guidelines.length) {
         return;
@@ -159,9 +160,9 @@ export function snapStart(moveable: MoveableManager<SnappableProps, SnappableSta
 }
 
 export function hasGuidelines(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     ableName: string,
-): moveable is MoveableManager<SnappableProps, SnappableState> {
+): moveable is MoveableManagerInterface<SnappableProps, SnappableState> {
     const {
         props: {
             snappable,
@@ -248,7 +249,7 @@ function getSnapBound(boundInfo: BoundInfo, snapInfo: SnapInfo) {
     return 0;
 }
 export function checkSnapBoundsKeepRatio(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     startPos: number[],
     endPos: number[],
     isRequest: boolean,
@@ -295,7 +296,7 @@ export function checkSnapBoundsKeepRatio(
     };
 }
 export function checkSnapBounds(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     isRequest: boolean,
     poses: number[][],
     boundPoses: number[][] = poses,
@@ -345,7 +346,7 @@ export function normalized(value: number) {
     return value ? value / Math.abs(value) : 0;
 }
 export function checkMaxBounds(
-    moveable: MoveableManager<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps>,
     poses: number[][],
     direction: number[],
     fixedPos: number[],
@@ -424,7 +425,7 @@ export function checkMaxBounds(
     };
 }
 function getSnapBoundInfo(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     poses: number[][],
     directions: number[][][],
     keepRatio: boolean,
@@ -556,7 +557,7 @@ export function getCheckSnapDirections(
     return directions;
 }
 export function getSizeOffsetInfo(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     poses: number[][],
     direction: number[],
     keepRatio: boolean,
@@ -584,7 +585,7 @@ export function getSizeOffsetInfo(
     };
 }
 export function recheckSizeByTwoDirection(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     poses: number[][],
     width: number,
     height: number,
@@ -628,7 +629,7 @@ export function recheckSizeByTwoDirection(
     ];
 }
 export function checkSizeDist(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     getNextPoses: (widthOffset: number, heightOffset: number) => number[][],
     width: number,
     height: number,
@@ -721,7 +722,7 @@ export function checkSizeDist(
 }
 
 export function checkSnapRotate(
-    moveable: MoveableManager<SnappableProps & RotatableProps, any>,
+    moveable: MoveableManagerInterface<SnappableProps & RotatableProps, any>,
     rect: RectInfo,
     origin: number[],
     rotation: number,
@@ -753,7 +754,7 @@ export function checkSnapRotate(
     }
 }
 export function checkSnapSize(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     width: number,
     height: number,
     direction: number[],
@@ -783,7 +784,7 @@ export function checkSnapSize(
     );
 }
 export function checkSnapScale(
-    moveable: MoveableManager<ScalableProps, any>,
+    moveable: MoveableManagerInterface<ScalableProps, any>,
     scale: number[],
     direction: number[],
     fixedPos: number[],
@@ -870,7 +871,7 @@ export function solveEquation(
 }
 
 export function startCheckSnapDrag(
-    moveable: MoveableManager<any, any>,
+    moveable: MoveableManagerInterface<any, any>,
     datas: any,
 ) {
     datas.absolutePoses = getAbsolutePosesByState(moveable.state);
@@ -955,7 +956,7 @@ export function checkThrottleDragRotate(
     return [offsetX, offsetY];
 }
 export function checkSnapDrag(
-    moveable: MoveableManager<SnappableProps & DraggableProps, any>,
+    moveable: MoveableManagerInterface<SnappableProps & DraggableProps, any>,
     distX: number,
     distY: number,
     throttleDragRotate: number,
@@ -1289,7 +1290,7 @@ function getGapGuidelines(
     }));
 }
 function renderGapGuidelines(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     gapGuidelines: GapGuideline[],
     type: "vertical" | "horizontal",
     [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
@@ -1324,7 +1325,7 @@ function renderGapGuidelines(
 }
 
 function addBoundGuidelines(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     verticalPoses: number[],
     horizontalPoses: number[],
     verticalSnapPoses: number[],
@@ -1359,6 +1360,11 @@ function addBoundGuidelines(
         ...horizontalInnerBoundPoses.filter(pos => horizontalSnapPoses.indexOf(pos) < 0),
     );
 }
+/**
+ * @namespace Moveable.Snappable
+ * @description Whether or not target can be snapped to the guideline. (default: false)
+ * @sort 2
+ */
 export default {
     name: "snappable",
     props: {
@@ -1376,8 +1382,12 @@ export default {
         elementGuidelines: Array,
         bounds: Object,
         innerBounds: Object,
+        snapDistFormat: Function,
     } as const,
-    render(moveable: MoveableManager<SnappableProps, SnappableState>, React: Renderer): any[] {
+    events: {
+        onSnap: "snap",
+    } as const,
+    render(moveable: MoveableManagerInterface<SnappableProps, SnappableState>, React: Renderer): any[] {
         const {
             top: targetTop,
             left: targetLeft,
@@ -1569,7 +1579,7 @@ export default {
             ),
         ];
     },
-    dragStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
+    dragStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>, e: any) {
         moveable.state.snapRenderInfo = {
             request: e.isRequest,
             snap: true,
@@ -1577,20 +1587,20 @@ export default {
         };
         snapStart(moveable);
     },
-    pinchStart(moveable: MoveableManager<SnappableProps, SnappableState>) {
+    pinchStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
-    dragEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
+    dragEnd(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
     dragControlCondition(e: any) {
         return directionCondition(e) || rotatableDragControlCondtion(e);
     },
-    dragControlStart(moveable: MoveableManager<SnappableProps, SnappableState>, e: any) {
+    dragControlStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>, e: any) {
         moveable.state.snapRenderInfo = null;
         snapStart(moveable);
     },
-    dragControlEnd(moveable: MoveableManager<SnappableProps, SnappableState>) {
+    dragControlEnd(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
     dragGroupStart(moveable: any, e: any) {
@@ -1614,3 +1624,201 @@ export default {
         state.snapRenderInfo = null;
     },
 };
+
+ /**
+ * Whether or not target can be snapped to the guideline. (default: false)
+ * @name Moveable.Snappable#snappable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snappable = true;
+ */
+/**
+ * When you drag, make the snap in the center of the target. (default: false)
+ * @name Moveable.Snappable#snapCenter
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ * });
+ *
+ * moveable.snapCenter = true;
+ */
+
+/**
+ * When you drag, make the snap in the vertical guidelines. (default: true)
+ * @name Moveable.Snappable#snapVertical
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ * });
+ *
+ * moveable.snapVertical = false;
+ */
+/**
+ * When you drag, make the snap in the horizontal guidelines. (default: true)
+ * @name Moveable.Snappable#snapHorizontal
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ * });
+ *
+ * moveable.snapHorizontal = false;
+ */
+/**
+ * When you drag, make the gap snap in the element guidelines. (default: true)
+ * @name Moveable.Snappable#snapGap
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ *   snapGap: true,
+ * });
+ *
+ * moveable.snapGap = false;
+ */
+/**
+ * When you drag, make the snap in the element guidelines. (default: true)
+ * @name Moveable.Snappable#snapElement
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   snappable: true,
+ *   snapVertical: true,
+ *   snapHorizontal: true,
+ *   snapElement: true,
+ * });
+ *
+ * moveable.snapElement = false;
+ */
+/**
+ * Distance value that can snap to guidelines. (default: 5)
+ * @name Moveable.Snappable#snapThreshold
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snapThreshold = 5;
+ */
+
+/**
+ * Add guidelines in the horizontal direction. (default: [])
+ * @name Moveable.Snappable#horizontalGuidlines
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.horizontalGuidlines = [100, 200, 500];
+ */
+
+/**
+ * Add guidelines in the vertical direction. (default: [])
+ * @name Moveable.Snappable#verticalGuidlines
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.verticalGuidlines = [100, 200, 500];
+ */
+/**
+ * Add guidelines for the element. (default: [])
+ * @name Moveable.Snappable#elementGuidelines
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.elementGuidelines = [
+ *   document.querySelector(".element"),
+ * ];
+ */
+/**
+ * You can set up boundaries. (default: null)
+ * @name Moveable.Snappable#bounds
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.bounds = { left: 0, right: 1000, top: 0, bottom: 1000};
+ */
+/**
+ * You can set up inner boundaries. (default: null)
+ * @name Moveable.Snappable#innerBounds
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.innerBounds = { left: 500, top: 500, width: 100, height: 100};
+ */
+/**
+ * snap distance digits (default: 0)
+ * @name Moveable.Snappable#snapDigit
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.snapDigit = 0
+ */
+/**
+ * Whether to show snap distance (default: true)
+ * @name Moveable.Snappable#isDisplaySnapDigit
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.isDisplaySnapDigit = true;
+ */
+
+/**
+ * You can set the text format of the distance shown in the guidelines. (default: self)
+ * @name Moveable.Snappable#snapDistFormat
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  snappable: true,
+ *  snapDistFormat: v => v,
+ * });
+ * moveable.snapDistFormat = v => `${v}px`;
+ */
+
+/**
+ * When you drag or dragControl, the `snap` event is called.
+ * @memberof Moveable.Snappable
+ * @event snap
+ * @param {Moveable.Snappable.OnSnap} - Parameters for the `snap` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     snappable: true
+ * });
+ * moveable.on("snap", e => {
+ *     console.log("onSnap", e);
+ * });
+ */

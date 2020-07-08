@@ -88,8 +88,10 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
     }
     return [minX, minY, groupWidth, groupHeight];
 }
-
-class MoveableGroup extends MoveableManager<GroupableProps, any> {
+/**
+ * @namespace Moveable.Group
+ */
+class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
         ...MoveableManager.defaultProps,
         transformOrigin: ["50%", "50%"],
@@ -98,9 +100,11 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         keepRatio: true,
         targets: [],
         defaultGroupRotate: 0,
+        defaultGroupOrigin: "50% 50%",
     };
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
+    public transformOrigin = "50% 50%";
 
     public updateEvent(prevProps: MoveableManagerProps<GroupableProps>) {
         const state = this.state;
@@ -143,14 +147,16 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         if (!isTarget || (type !== "" && props.updateGroup)) {
             // reset rotataion
             this.rotation = props.defaultGroupRotate!;
+            this.transformOrigin = props.defaultGroupOrigin || "50% 50%";
             this.scale = [1, 1];
+
         }
         const rotation = this.rotation;
         const scale = this.scale;
         const [left, top, width, height] = getGroupRect(this.moveables, rotation);
 
         // tslint:disable-next-line: max-line-length
-        target.style.cssText += `left:0px;top:0px;width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`
+        target.style.cssText += `left:0px;top:0px; transform-origin: ${this.transformOrigin}; width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`
             + ` scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
         state.width = width;
         state.height = height;
@@ -200,5 +206,19 @@ class MoveableGroup extends MoveableManager<GroupableProps, any> {
         super.updateAbles([...this.props.ables!, Groupable], "Group");
     }
 }
+
+/**
+ * Sets the initial rotation of the group. (default 0)
+ * @name Moveable.Group#defaultGroupRotate
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   target: [].slice.call(document.querySelectorAll(".target")),
+ *   defaultGroupRotate: 0,
+ * });
+ *
+ * moveable.defaultGroupRotate = 40;
+ */
 
 export default MoveableGroup;

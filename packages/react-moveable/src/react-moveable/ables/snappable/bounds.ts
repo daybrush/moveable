@@ -1,11 +1,10 @@
-import MoveableManager from "../../MoveableManager";
-import { BoundInfo, SnappableProps, BoundType, RotatableProps } from "../../types";
+import { BoundInfo, SnappableProps, BoundType, RotatableProps, MoveableManagerInterface } from "../../types";
 import { rotate, getRad, minus } from "../../matrix";
 import { getDistSize, throttle } from "../../utils";
 import { TINY_NUM } from "../../consts";
 
 export function checkBoundPoses(
-    moveable: MoveableManager<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps>,
     verticalPoses: number[],
     horizontalPoses: number[],
 ) {
@@ -24,7 +23,7 @@ export function checkBoundPoses(
 }
 
 export function checkBoundKeepRatio(
-    moveable: MoveableManager<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps>,
     startPos: number[],
     endPos: number[],
 ) {
@@ -199,7 +198,7 @@ export function boundRotate(
 }
 
 export function checkRotateBounds(
-    moveable: MoveableManager<SnappableProps & RotatableProps, any>,
+    moveable: MoveableManagerInterface<SnappableProps & RotatableProps, any>,
     prevPoses: number[][],
     nextPoses: number[][],
     origin: number[],

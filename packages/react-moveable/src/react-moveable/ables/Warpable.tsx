@@ -14,11 +14,10 @@ import {
 } from "../matrix";
 import { NEARBY_POS } from "../consts";
 import { setDragStart, getDragDist, getPosIndexesByDirection } from "../DraggerUtils";
-import MoveableManager from "../MoveableManager";
 import {
     WarpableProps, ScalableProps, ResizableProps,
     Renderer, SnappableProps, SnappableState,
-    OnWarpStart, OnWarp, OnWarpEnd,
+    OnWarpStart, OnWarp, OnWarpEnd, MoveableManagerInterface,
 } from "../types";
 import { hasClass, dot } from "@daybrush/utils";
 import { renderAllDirections } from "../renderDirection";
@@ -49,14 +48,23 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
     return true;
 }
 
+/**
+ * @namespace Moveable.Warpable
+ * @description Warpable indicates whether the target can be warped(distorted, bented).
+ */
 export default {
     name: "warpable",
     ableGroup: "size",
     props: {
         warpable: Boolean,
         renderDirections: Array,
-    },
-    render(moveable: MoveableManager<ResizableProps & ScalableProps & WarpableProps>, React: Renderer) {
+    } as const,
+    events: {
+        onWarpStart: "warpStart",
+        onWarp: "warp",
+        onWarpEnd: "warpEnd",
+    } as const,
+    render(moveable: MoveableManagerInterface<ResizableProps & ScalableProps & WarpableProps>, React: Renderer) {
         const { resizable, scalable, warpable } = moveable.props;
 
         if (resizable || scalable || !warpable) {
@@ -88,7 +96,7 @@ export default {
         return hasClass(e.inputEvent.target, prefix("direction"));
     },
     dragControlStart(
-        moveable: MoveableManager<WarpableProps, SnappableState>,
+        moveable: MoveableManagerInterface<WarpableProps, SnappableState>,
         e: any,
     ) {
         const { datas, inputEvent } = e;
@@ -145,7 +153,7 @@ export default {
         return datas.isWarp;
     },
     dragControl(
-        moveable: MoveableManager<WarpableProps & SnappableProps, SnappableState>,
+        moveable: MoveableManagerInterface<WarpableProps & SnappableProps, SnappableState>,
         e: any,
     ) {
         const { datas, isRequest } = e;
@@ -227,7 +235,7 @@ export default {
         return true;
     },
     dragControlEnd(
-        moveable: MoveableManager<WarpableProps>,
+        moveable: MoveableManagerInterface<WarpableProps>,
         e: any,
     ) {
         const { datas, isDrag } = e;
@@ -240,3 +248,74 @@ export default {
         return isDrag;
     },
 };
+
+/**
+ * Whether or not target can be warped. (default: false)
+ * @name Moveable.Warpable#warpable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.warpable = true;
+ */
+
+ /**
+ * Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * @name Moveable.Warpable#renderDirections
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     warpable: true,
+ *     renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+ * });
+ *
+ * moveable.renderDirections = ["nw", "ne", "sw", "se"];
+ */
+/**
+* When the warp starts, the warpStart event is called.
+* @memberof Moveable.Warpable
+* @event warpStart
+* @param {Moveable.Warpable.OnWarpStart} - Parameters for the warpStart event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, { warpable: true });
+* moveable.on("warpStart", ({ target }) => {
+*     console.log(target);
+* });
+*/
+/**
+ * When warping, the warp event is called.
+ * @memberof Moveable.Warpable
+ * @event warp
+ * @param {Moveable.Warpable.OnWarp} - Parameters for the warp event
+ * @example
+ * import Moveable from "moveable";
+ * let matrix = [
+ *  1, 0, 0, 0,
+ *  0, 1, 0, 0,
+ *  0, 0, 1, 0,
+ *  0, 0, 0, 1,
+ * ];
+ * const moveable = new Moveable(document.body, { warpable: true });
+ * moveable.on("warp", ({ target, transform, delta, multiply }) => {
+ *    // target.style.transform = transform;
+ *    matrix = multiply(matrix, delta);
+ *    target.style.transform = `matrix3d(${matrix.join(",")})`;
+ * });
+ */
+/**
+ * When the warp finishes, the warpEnd event is called.
+ * @memberof Moveable.Warpable
+ * @event warpEnd
+ * @param {Moveable.Warpable.OnWarpEnd} - Parameters for the warpEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { warpable: true });
+ * moveable.on("warpEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */

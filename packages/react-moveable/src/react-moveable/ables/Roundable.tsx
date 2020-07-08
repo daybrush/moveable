@@ -1,10 +1,9 @@
-import MoveableManager from "../MoveableManager";
 import {
     prefix, triggerEvent,
     fillParams, fillEndParams, caculatePosition, moveControlPos, caculatePointerDist
 } from "../utils";
 import {
-    Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd,
+    Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd, MoveableManagerInterface,
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
 import { setDragStart, getDragDist } from "../DraggerUtils";
@@ -103,7 +102,7 @@ function getBorderRadius(
 }
 
 function triggerRoundEvent(
-    moveable: MoveableManager<RoundableProps, RoundableState>,
+    moveable: MoveableManagerInterface<RoundableProps, RoundableState>,
     e: any,
     dist: number[],
     delta: number[],
@@ -142,12 +141,23 @@ function triggerRoundEvent(
         dist,
     }));
 }
+
+/**
+ * @namespace Moveable.Roundable
+ * @description Whether to show and drag or double click border-radius
+ */
+
 export default {
     name: "roundable",
     props: {
         roundable: Boolean,
         roundRelative: Boolean,
-    },
+    } as const,
+    events: {
+        onRoundStart: "roundStart",
+        onRound: "round",
+        onRoundEnd: "roundEnd",
+    } as const,
     css: [
         `.control.border-radius {
     background: #d66;
@@ -157,7 +167,7 @@ export default {
     cursor: pointer;
 }`,
     ],
-    render(moveable: MoveableManager<RoundableProps, RoundableState>, React: Renderer): any {
+    render(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, React: Renderer): any {
         const {
             target,
             width,
@@ -199,7 +209,7 @@ export default {
         return className.indexOf("border-radius") > -1
             || (className.indexOf("moveable-line") > -1 && className.indexOf("moveable-direction") > -1);
     },
-    dragControlStart(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
+    dragControlStart(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, e: any) {
         const { inputEvent, datas, } = e;
         const inputTarget = inputEvent.target;
         const className = (inputTarget.className || "");
@@ -246,7 +256,7 @@ export default {
             controlPoses.map(pos => pos.pos), controlPoses, roundRelative!, width, height).styles.join(" ");
         return true;
     },
-    dragControl(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
+    dragControl(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, e: any) {
         const { datas } = e;
 
         if (!datas.isRound || !datas.isControl || !datas.controlPoses.length) {
@@ -273,7 +283,7 @@ export default {
         );
         return true;
     },
-    dragControlEnd(moveable: MoveableManager<RoundableProps, RoundableState>, e: any) {
+    dragControlEnd(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, e: any) {
         const state = moveable.state;
 
         state.borderRadiusState = "";
@@ -319,7 +329,104 @@ export default {
         state.borderRadiusState = "";
         return true;
     },
-    unset(moveable: MoveableManager<RoundableProps, RoundableState>) {
+    unset(moveable: MoveableManagerInterface<RoundableProps, RoundableState>) {
         moveable.state.borderRadiusState = "";
     },
 };
+/**
+ * Whether to show and drag or double click border-radius, (default: false)
+ * @name Moveable.Roundable#roundable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * % Can be used instead of the absolute px
+ * @name Moveable.Roundable#roundRelative
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+
+/**
+ * When drag start the clip area or controls, the `roundStart` event is called.
+ * @memberof Moveable.Roundable
+ * @event roundStart
+ * @param {Moveable.Roundable.OnRoundStart} - Parameters for the `roundStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag or double click the border area or controls, the `round` event is called.
+ * @memberof Moveable.Roundable
+ * @event round
+ * @param {Moveable.Roundable.OnRound} - Parameters for the `round` event
+ * @example
+  * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag end the border area or controls, the `roundEnd` event is called.
+ * @memberof Moveable.Roundable
+ * @event roundEnd
+ * @param {Moveable.Roundable.onRoundEnd} - Parameters for the `roundEnd` event
+ * @example
+  * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */

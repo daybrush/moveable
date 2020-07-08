@@ -2,6 +2,8 @@ import { IObject } from "@daybrush/utils";
 import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
+import { StyledInterface } from "react-css-styled";
+import { MOVEABLE_EVENTS_PROPS_MAP } from "./ables/consts";
 
 export interface MoveableClientRect {
     left: number;
@@ -21,8 +23,9 @@ export type MoveableManagerProps<T = {}> = {
     parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
     groupable?: boolean;
-} & MoveableDefaultProps & T;
+} & MoveableDefaultOptions & (unknown extends T ? IObject<any> : T);
 
+export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
 /**
  * @typedef
  * @memberof Moveable
@@ -30,8 +33,6 @@ export type MoveableManagerProps<T = {}> = {
  * @property - The target(s) to drag Moveable target(s) (default: target)
  * @property - Moveable Container. (default: parentElement)
  * @property - Moveable Root Container (No Transform Container). (default: container)
- * @property - You can specify the position of the rotation. (default: "top")
- * @property - Whether or not the origin control box will be visible or not (default: true)
  * @property - Zooms in the elements of a moveable. (default: 1)
  * @property - The default transformOrigin of the target can be set in advance. (default: "")
  * @property - Whether to scale and resize through edge lines. (default: false)
@@ -40,16 +41,13 @@ export type MoveableManagerProps<T = {}> = {
  * @property - Minimum distance to pinch. (default: 20)
  * @property - Whether the container containing the target becomes a pinch. (default: true)
  * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
- * @property - Add padding around the target to increase the drag area. (default: null)
  * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
  */
-export interface MoveableDefaultProps {
+export interface DefaultOptions {
     target?: SVGElement | HTMLElement | null;
     dragTarget?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
     rootContainer?: HTMLElement | null;
-    dragArea?: boolean;
-    origin?: boolean;
     zoom?: number;
     transformOrigin?: Array<string | number> | string | "";
     edge?: boolean;
@@ -58,9 +56,21 @@ export interface MoveableDefaultProps {
     pinchThreshold?: number;
     pinchOutside?: boolean;
     triggerAblesSimultaneously?: boolean;
-    padding?: PaddingBox;
     checkInput?: boolean;
 }
+/**
+ * @typedef
+ * @extends Moveable.DefaultOptions
+ * @extends Moveable.DragAreaOptions
+ * @extends Moveable.OriginOptions
+ * @extends Moveable.PaddingOptions
+ */
+export interface MoveableDefaultOptions
+    extends ExcludeKey<DefaultOptions, "target">,
+    DragAreaOptions, OriginOptions, PaddingOptions {
+    target: HTMLElement | SVGElement | null;
+}
+
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
     target: SVGElement | HTMLElement | null | undefined;
@@ -113,7 +123,7 @@ export interface Renderer {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Snappable
  */
 export interface Guideline {
     type: "horizontal" | "vertical";
@@ -153,30 +163,67 @@ export interface SnapGuidelineInfo {
     offset: number;
     guideline: Guideline;
 }
-export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, "target">>;
+export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, U>>;
+
 export interface MoveableProps extends
-    ExcludeKey<MoveableManagerProps, "target">,
+    ExcludeKey<MoveableDefaultOptions, "target">,
     DraggableProps,
-    OriginProps,
+    DragAreaProps,
+    OriginDraggableProps,
     RotatableProps,
     ResizableProps,
     ScalableProps,
     WarpableProps,
     PinchableProps,
-    GroupableProps,
+    ExcludeKey<GroupableProps, "targets" | "updateGroup">,
     SnappableProps,
     ScrollableProps,
     ClippableProps,
     RoundableProps,
     RenderProps {
-        target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
+    target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
+}
+
+/**
+ * @memberof Moveable
+ * @typedef
+ * @extends Moveable.MoveableDefaultProps
+ * @extends Moveable.Draggable.DraggableOptions
+ * @extends Moveable.Resizable.ResizableOptions
+ * @extends Moveable.Scalable.ScalableOptions
+ * @extends Moveable.Rotatable.RotatableOptions
+ * @extends Moveable.Warpable.WarpableOptions
+ * @extends Moveable.Pinchable.PinchableOptions
+ * @extends Moveable.Scrollable.ScrollableOptions
+ * @extends Moveable.Group.GroupableOptions
+ * @extends Moveable.Clippable.ClippableOptions
+ * @extends Moveable.OriginDraggable.OriginDraggableOptions
+ * @extends Moveable.Roundable.RoundableOptions
+ */
+export interface MoveableOptions extends
+    ExcludeKey<MoveableDefaultOptions, "target">,
+    DraggableOptions,
+    DragAreaOptions,
+    OriginDraggableOptions,
+    RotatableOptions,
+    ResizableOptions,
+    ScalableOptions,
+    WarpableOptions,
+    PinchableOptions,
+    GroupableOptions,
+    SnappableOptions,
+    ScrollableOptions,
+    ClippableOptions,
+    RoundableOptions {
+    target?: HTMLElement | SVGElement | Array<SVGElement | HTMLElement> | null;
 }
 
 export type MoveableState = MoveableManagerState;
 
-export interface Able {
+export interface Able<O extends IObject<any> = IObject<any>, E extends IObject<any> = IObject<any>> {
     name: string;
-    props: IObject<any>;
+    props: { [key in keyof O]: any };
+    events: { [key in keyof E]: string };
     ableGroup?: string;
     updateRect?: boolean;
     canPinch?: boolean;
@@ -278,27 +325,27 @@ export interface AbleRequester {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @extends Moveable.OnEvent
  */
 export interface OnPinchStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @extends Moveable.OnEvent
  */
 export interface OnPinch extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @extends Moveable.OnEndEvent
  */
-export interface OnPinchEnd extends OnEndEvent {}
+export interface OnPinchEnd extends OnEndEvent { }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @extends Moveable.OnEvent
  * @property - You can set the start translate value.
  */
@@ -307,7 +354,7 @@ export interface OnDragStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @extends Moveable.OnEvent
  * @property - The delta of [left, top]
  * @property - The distance of [left, top]
@@ -338,7 +385,7 @@ export interface OnDrag extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @extends Moveable.OnEndEvent
  */
 export interface OnDragEnd extends OnEndEvent {
@@ -346,7 +393,7 @@ export interface OnDragEnd extends OnEndEvent {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.OriginDraggable
  * @extends Moveable.OnEvent
  * @property - dragOrigin causes a `dragStart` event.
  */
@@ -356,7 +403,7 @@ export interface OnDragOriginStart extends OnEvent {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.OriginDraggable
  * @extends Moveable.OnEvent
  * @property - Offset width of target
  * @property - Offset height of target
@@ -377,7 +424,7 @@ export interface OnDragOrigin extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.OriginDraggable
  * @extends Moveable.OnEndEvent
  */
 export interface OnDragOriginEnd extends OnEndEvent {
@@ -385,14 +432,14 @@ export interface OnDragOriginEnd extends OnEndEvent {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Roundable
  * @extends Moveable.OnEvent
  */
-export interface OnRoundStart extends OnEvent {}
+export interface OnRoundStart extends OnEvent { }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Roundable
  * @extends Moveable.OnEvent
  * @property - Offset width of target
  * @property - Offset height of target
@@ -413,14 +460,14 @@ export interface OnRound extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Roundable
  * @extends Moveable.OnEndEvent
  */
 export interface OnRoundEnd extends OnEndEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
  * @property - The direction of scale.
  * @property - scale causes a `dragStart` event.
@@ -433,7 +480,7 @@ export interface OnScaleStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
  * @property - The direction of scale.
  * @property - a target's offsetWidth
@@ -457,7 +504,7 @@ export interface OnScale extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @extends Moveable.OnEndEvent
  */
 export interface OnScaleEnd extends OnEndEvent {
@@ -465,7 +512,7 @@ export interface OnScaleEnd extends OnEndEvent {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
  * @property - The direction of resize.
  * @property - resize causes a `dragStart` event.
@@ -484,7 +531,7 @@ export interface OnResizeStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
  * @property - The direction of resize.
  * @property - a target's cssWidth
@@ -508,14 +555,14 @@ export interface OnResize extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnEndEvent
  */
 export interface OnResizeEnd extends OnEndEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
  * @property - You can set the start rotate value.
  */
@@ -524,7 +571,7 @@ export interface OnRotateStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
  * @property - The distance of rotation rad before transform is applied
  * @property - The delta of rotation rad before transform is applied
@@ -548,14 +595,14 @@ export interface OnRotate extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @extends Moveable.OnEndEvent
  */
-export interface OnRotateEnd extends OnEndEvent {}
+export interface OnRotateEnd extends OnEndEvent { }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Warpable
  * @extends Moveable.OnEvent
  * @property - You can set the start matrix value.
  */
@@ -564,7 +611,7 @@ export interface OnWarpStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Warpable
  * @extends Moveable.OnEvent
  * @property - a target's transform
  * @property - The delta of warp matrix
@@ -581,14 +628,14 @@ export interface OnWarp extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Warpable
  * @extends Moveable.OnEndEvent
  */
-export interface OnWarpEnd extends OnEndEvent {}
+export interface OnWarpEnd extends OnEndEvent { }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @extends Moveable.OnDragStart
  * @property - targets to drag
  * @property - Each `dragStart` event on the targets
@@ -600,7 +647,7 @@ export interface OnDragGroupStart extends OnDragStart {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @extends Moveable.OnDrag
  * @property - The dragging targets
  * @property - Each `drag` event on the targets
@@ -611,7 +658,7 @@ export interface OnDragGroup extends OnDrag {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @extends Moveable.OnDragEnd
  * @property - The drag finished targets
  */
@@ -621,7 +668,7 @@ export interface OnDragGroupEnd extends OnDragEnd {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotateStart
  * @property - targets to rotate
  * @property - Each `rotateStart` & `dragStart` event on the targets
@@ -633,7 +680,7 @@ export interface OnRotateGroupStart extends OnRotateStart {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotate
  * @property - The rotating targets
  * @property - Each `rotate` & `drag` event on the targets
@@ -647,7 +694,7 @@ export interface OnRotateGroup extends OnRotate {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotateEnd
  * @property - The rotate finished targets
  */
@@ -657,7 +704,7 @@ export interface OnRotateGroupEnd extends OnRotateEnd {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnResizeStart
  * @property - targets to resize
  * @property - Each `resizeStart` event on the targets
@@ -669,7 +716,7 @@ export interface OnResizeGroupStart extends OnResizeStart {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnResize
  * @property - The resizing targets
  * @property - Each `resize` & `drag `event on the targets
@@ -681,7 +728,7 @@ export interface OnResizeGroup extends OnResize {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnResizeEnd
  * @property - The resize finished targets
  */
@@ -691,7 +738,7 @@ export interface OnResizeGroupEnd extends OnResizeEnd {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @extends Moveable.OnScaleStart
  * @property - targets to scale
  * @property - Each `scaleStart` & `dragStart` event on the targets
@@ -703,7 +750,7 @@ export interface OnScaleGroupStart extends OnScaleStart {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @extends Moveable.OnScale
  * @property - The scaling targets
  * @property - Each `scale` & `drag` event on the targets
@@ -715,7 +762,7 @@ export interface OnScaleGroup extends OnScale {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @extends Moveable.OnScaleEnd
  * @property - The scale finished targets
  */
@@ -725,7 +772,7 @@ export interface OnScaleGroupEnd extends OnScaleEnd {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @extends Moveable.OnPinchStart
  * @property - targets to pinch
  */
@@ -735,7 +782,7 @@ export interface OnPinchGroupStart extends OnPinchStart {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @extends Moveable.OnPinch
  * @property - targets to pinch
  */
@@ -745,7 +792,7 @@ export interface OnPinchGroup extends OnPinch {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @extends Moveable.OnPinchEnd
  * @property - The pinch finished targets
  */
@@ -823,10 +870,13 @@ export interface OnRenderEnd extends OnEvent {
     isPinch: boolean;
     isDrag: boolean;
 }
+export type EventInterface<T extends IObject<any> = {}> = {
+    [key in keyof T]?: (e: T[key]) => any;
+};
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scrollable
  * @extends Moveable.OnEvent
  * @property - The container corresponding to scrolling area (scrollContainer >= rootContainer >= container)
  * @property - The direction of scrolling [left, top]
@@ -838,7 +888,7 @@ export interface OnScroll extends OnEvent {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scrollable
  * @extends Moveable.OnScroll
  * @property - targets set to group.
  */
@@ -878,7 +928,7 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Draggable
  * @property - Whether or not target can be dragged. (default: false)
  * @property - throttle of x, y when drag. (default: 0)
  * @property - throttle of angle(degree) of x,y when drag. (default: 0)
@@ -890,16 +940,18 @@ export interface DraggableOptions {
     throttleDragRotate?: number;
     startDragRotate?: number;
 }
-export interface DraggableProps extends DraggableOptions {
+export interface DraggableEvents {
+    onDragStart: OnDragStart;
+    onDrag: OnDrag;
+    onDragEnd: OnDragEnd;
 
-    onDragStart?: (e: OnDragStart) => any;
-    onDrag?: (e: OnDrag) => any;
-    onDragEnd?: (e: OnDragEnd) => any;
-
-    onDragGroupStart?: (e: OnDragGroupStart) => any;
-    onDragGroup?: (e: OnDragGroup) => any;
-    onDragGroupEnd?: (e: OnDragGroupEnd) => any;
+    onDragGroupStart: OnDragGroupStart;
+    onDragGroup: OnDragGroup;
+    onDragGroupEnd: OnDragGroupEnd;
 }
+export interface DraggableProps extends DraggableOptions, EventInterface<DraggableEvents> {
+}
+
 export interface DraggableState {
     dragInfo: {
         startRect: RectInfo;
@@ -910,23 +962,40 @@ export interface DraggableState {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Whether or not the origin control box will be visible or not (default: false)
- * @property - % Can be used instead of the absolute px
+ * @property - Add padding around the target to increase the drag area. (default: null)
+ */
+export interface PaddingOptions {
+    padding?: PaddingBox;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Whether or not the origin control box will be visible or not (default: true)
  */
 export interface OriginOptions {
+    origin?: boolean;
+}
+/**
+ * @typedef
+ * @memberof Moveable.OriginDraggable
+ * @property - * Whether to drag origin (default: false)
+ * @property - % Can be used instead of the absolute px (default: true)
+ */
+export interface OriginDraggableOptions {
     originDraggable?: boolean;
     originRelative?: boolean;
 }
-
-export interface OriginProps extends OriginOptions {
-    onDragOriginStart?: (e: OnDragOriginStart) => any;
-    onDragOrigin?: (e: OnDragOrigin) => any;
-    onDragOriginEnd?: (e: OnDragOriginEnd) => any;
+export interface OriginDraggableEvents {
+    onDragOriginStart: OnDragOriginStart;
+    onDragOrigin: OnDragOrigin;
+    onDragOriginEnd: OnDragOriginEnd;
+}
+export interface OriginDraggableProps extends OriginDraggableOptions, EventInterface<OriginDraggableEvents> {
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Roundable
  * @property - Whether to show and drag border-radius
  * @property - % Can be used instead of the absolute px
  */
@@ -935,10 +1004,12 @@ export interface RoundableOptions {
     roundRelative?: boolean;
 }
 
-export interface RoundableProps extends RoundableOptions {
-    onRoundStart?: (e: OnRoundStart) => any;
-    onRound?: (e: OnRound) => any;
-    onRoundEnd?: (e: OnRoundEnd) => any;
+export interface RoundableEvents {
+    onRoundStart: OnRoundStart;
+    onRound: OnRound;
+    onRoundEnd: OnRoundEnd;
+}
+export interface RoundableProps extends RoundableOptions, EventInterface<RoundableEvents> {
 }
 
 export interface RoundableState {
@@ -946,32 +1017,33 @@ export interface RoundableState {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Resizable
  * @property - Whether or not target can be resized. (default: false)
  * @property - throttle of width, height when resize. (default: 0)
  * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
- * @property - Target's base direcition using top, left, right, bottom (top: -1, left: -1, right: 1, bottom: 1) (default: [-1, -1])
+
  * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
  */
 export interface ResizableOptions {
     resizable?: boolean;
     throttleResize?: number;
     renderDirections?: string[];
-    baseDirection?: number[];
     keepRatio?: boolean;
 }
-export interface ResizableProps extends ResizableOptions {
-    onResizeStart?: (e: OnResizeStart) => any;
-    onResize?: (e: OnResize) => any;
-    onResizeEnd?: (e: OnResizeEnd) => any;
+export interface ResizableEvents {
+    onResizeStart: OnResizeStart;
+    onResize: OnResize;
+    onResizeEnd: OnResizeEnd;
 
-    onResizeGroupStart?: (e: OnResizeGroupStart) => any;
-    onResizeGroup?: (e: OnResizeGroup) => any;
-    onResizeGroupEnd?: (e: OnResizeGroupEnd) => any;
+    onResizeGroupStart: OnResizeGroupStart;
+    onResizeGroup: OnResizeGroup;
+    onResizeGroupEnd: OnResizeGroupEnd;
+}
+export interface ResizableProps extends ResizableOptions, EventInterface<ResizableEvents> {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scalable
  * @property - Whether or not target can be scaled. (default: false)
  * @property - throttle of scaleX, scaleY when scale. (default: 0)
  * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
@@ -983,26 +1055,28 @@ export interface ScalableOptions {
     renderDirections?: string[];
     keepRatio?: boolean;
 }
-export interface ScalableProps extends ScalableOptions {
-    onScaleStart?: (e: OnScaleStart) => any;
-    onScale?: (e: OnScale) => any;
-    onScaleEnd?: (e: OnScaleEnd) => any;
+export interface ScalableEvents {
+    onScaleStart: OnScaleStart;
+    onScale: OnScale;
+    onScaleEnd: OnScaleEnd;
 
-    onScaleGroupStart?: (e: OnScaleGroupStart) => any;
-    onScaleGroup?: (e: OnScaleGroup) => any;
-    onScaleGroupEnd?: (e: OnScaleGroupEnd) => any;
+    onScaleGroupStart: OnScaleGroupStart;
+    onScaleGroup: OnScaleGroup;
+    onScaleGroupEnd: OnScaleGroupEnd;
+}
+export interface ScalableProps extends ScalableOptions, EventInterface<ScalableEvents> {
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Snappable
  */
 export interface GapGuideline extends Guideline {
     renderPos: number[];
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Rotatable
  * @property - Whether or not target can be rotated. (default: false)
  * @property - You can specify the position of the rotation. (default: "top")
  * @property - throttle of angle(degree) when rotate. (default: 0)
@@ -1010,25 +1084,27 @@ export interface GapGuideline extends Guideline {
 export interface RotatableOptions {
     rotatable?: boolean;
     rotationPosition?:
-        "top" | "bottom" | "left" | "right"
-        | "top-right" | "top-left"
-        | "bottom-right" | "bottom-left"
-        | "left-top" | "left-bottom"
-        | "right-top" | "right-bottom";
+    "top" | "bottom" | "left" | "right"
+    | "top-right" | "top-left"
+    | "bottom-right" | "bottom-left"
+    | "left-top" | "left-bottom"
+    | "right-top" | "right-bottom";
     throttleRotate?: number;
 }
-export interface RotatableProps extends RotatableOptions {
-    onRotateStart?: (e: OnRotateStart) => any;
-    onRotate?: (e: OnRotate) => any;
-    onRotateEnd?: (e: OnRotateEnd) => any;
+export interface RotatableEvents {
+    onRotateStart: OnRotateStart;
+    onRotate: OnRotate;
+    onRotateEnd: OnRotateEnd;
 
-    onRotateGroupStart?: (e: OnRotateGroupStart) => any;
-    onRotateGroup?: (e: OnRotateGroup) => any;
-    onRotateGroupEnd?: (e: OnRotateGroupEnd) => any;
+    onRotateGroupStart: OnRotateGroupStart;
+    onRotateGroup: OnRotateGroup;
+    onRotateGroupEnd: OnRotateGroupEnd;
+}
+export interface RotatableProps extends RotatableOptions, EventInterface<RotatableEvents> {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Warpable
  * @property - Whether or not target can be warped. (default: false)
  * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
  */
@@ -1036,57 +1112,57 @@ export interface WarpableOptions {
     warpable?: boolean;
     renderDirections?: string[];
 }
-export interface WarpableProps extends WarpableOptions {
-    onWarpStart?: (e: OnWarpStart) => any;
-    onWarp?: (e: OnWarp) => any;
-    onWarpEnd?: (e: OnWarpEnd) => any;
+
+export interface WarpableEvents {
+    onWarpStart: OnWarpStart;
+    onWarp: OnWarp;
+    onWarpEnd: OnWarpEnd;
+}
+export interface WarpableProps extends WarpableOptions, EventInterface<WarpableEvents> {
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Pinchable
  * @property - Whether or not target can be pinched with draggable, resizable, scalable, rotatable. (default: false)
  */
 export interface PinchableOptions {
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
 }
+export interface PinchableEvents {
+    onPinchStart: OnPinchStart;
+    onPinch: OnPinch;
+    onPinchEnd: OnPinchEnd;
 
-export interface PinchableProps extends PinchableOptions, ResizableProps, ScalableProps, RotatableProps {
-    onPinchStart?: (e: OnPinchStart) => any;
-    onPinch?: (e: OnPinch) => any;
-    onPinchEnd?: (e: OnPinchEnd) => any;
-
-    onPinchGroupStart?: (e: OnPinchGroupStart) => any;
-    onPinchGroup?: (e: OnPinchGroup) => any;
-    onPinchGroupEnd?: (e: OnPinchGroupEnd) => any;
+    onPinchGroupStart: OnPinchGroupStart;
+    onPinchGroup: OnPinchGroup;
+    onPinchGroupEnd: OnPinchGroupEnd;
+}
+export interface PinchableProps
+    extends PinchableOptions, ResizableProps, ScalableProps,
+    RotatableProps, EventInterface<PinchableEvents> {
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Group
  * @property - Sets the initial rotation of the group. (default 0)
+ * @property - Sets the initial transform origin of the group. (default "50% 50%")
+ *
  */
 export interface GroupableOptions {
     defaultGroupRotate?: number;
+    defaultGroupOrigin?: string;
+    groupable?: boolean;
 }
-export interface GroupableProps extends
-    PinchableProps,
-    DraggableProps,
-    RotatableProps,
-    ResizableProps,
-    ScalableProps,
-    SnappableProps,
-    RenderProps,
-    DragAreaProps,
-    ScrollableProps,
-    GroupableOptions {
+export interface GroupableProps extends GroupableOptions {
     targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Snappable
  * @property - Whether or not target can be snapped to the guideline. (default: false)
  * @property - When you drag, make the snap in the center of the target. (default: false)
  * @property - When you drag, make the snap in the horizontal guidelines. (default: true)
@@ -1120,14 +1196,16 @@ export interface SnappableOptions {
     innerBounds?: InnerBoundType;
     snapDistFormat?: (distance: number) => number | string;
 }
-
-export interface SnappableProps extends SnappableOptions {
+export interface SnappableEvents {
+    onSnap: OnSnap;
+}
+export interface SnappableProps extends SnappableOptions, EventInterface<SnappableEvents> {
     onSnap?: (e: OnSnap) => any;
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Snappable
  * @property - snapped verticalGuidelines, horizontalGuidelines,
  * @property - snapped elements (group by element)
  * @property - gaps is snapped guidelines that became gap snap between elements.
@@ -1139,7 +1217,7 @@ export interface OnSnap {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Snappable
  */
 export interface InnerBoundType {
     left: number;
@@ -1149,7 +1227,7 @@ export interface InnerBoundType {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Snappable
  */
 export interface BoundType {
     left?: number;
@@ -1171,7 +1249,7 @@ export interface SnapRenderInfo {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Scrollable
  * @property - Whether or not target can be scrolled to the scroll container (default: false)
  * @property - The container to which scroll is applied (default: container)
  * @property - Expand the range of the scroll check area. (default: 0)
@@ -1183,26 +1261,41 @@ export interface ScrollableOptions {
     scrollThreshold?: number;
     getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
 }
-export interface ScrollableProps extends ScrollableOptions {
-    onScroll?: (e: OnScroll) => any;
-    onScrollGroup?: (e: OnScrollGroup) => any;
+export interface ScrollableEvents {
+    onScroll: OnScroll;
+    onScrollGroup: OnScrollGroup;
 }
-export interface DragAreaProps {
-    onClick?: (e: OnClick) => any;
-    onClickGroup?: (e: OnClickGroup) => any;
+export interface ScrollableProps extends ScrollableOptions, EventInterface<ScrollableEvents> {
 }
-export interface RenderProps {
-    onRenderStart?: (e: OnRenderStart) => any;
-    onRender?: (e: OnRender) => any;
-    onRenderEnd?: (e: OnRenderEnd) => any;
-    onRenderGroupStart?: (e: OnRenderGroupStart) => any;
-    onRenderGroup?: (e: OnRenderGroup) => any;
-    onRenderGroupEnd?: (e: OnRenderGroupEnd) => any;
+export interface DragAreaEvents {
+    onClick: OnClick;
+    onClickGroup: OnClickGroup;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Instead of firing an event on the target, we add it to the moveable control element. You can use click and clickGroup events. (default: if group, true, else false)
+ */
+export interface DragAreaOptions {
+    dragArea?: boolean;
+}
+export interface DragAreaProps extends DragAreaOptions, EventInterface<DragAreaEvents> {
+}
+
+export interface RenderEvents {
+    onRenderStart: OnRenderStart;
+    onRender: OnRender;
+    onRenderEnd: OnRenderEnd;
+    onRenderGroupStart: OnRenderGroupStart;
+    onRenderGroup: OnRenderGroup;
+    onRenderGroupEnd: OnRenderGroupEnd;
+}
+export interface RenderProps extends EventInterface<RenderEvents> {
 }
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Clippable
  * @property - Whether to clip the target.
  * @property - You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
  * @property - If clippath is not set, the default value can be set. (defaultClipPath < style < customClipPath < dragging clipPath)
@@ -1218,10 +1311,12 @@ export interface ClippableOptions {
     dragWithClip?: boolean;
     clipArea?: boolean;
 }
-export interface ClippableProps extends ClippableOptions {
-    onClipStart?: (e: OnClipStart) => any;
-    onClip?: (e: OnClip) => any;
-    onClipEnd?: (e: OnClipEnd) => any;
+export interface ClippableEvents {
+    onClipStart: OnClipStart;
+    onClip: OnClip;
+    onClipEnd: OnClipEnd;
+}
+export interface ClippableProps extends ClippableOptions, EventInterface<ClippableEvents> {
 }
 export interface ClippableState {
     clipPathState?: string;
@@ -1229,7 +1324,7 @@ export interface ClippableState {
 
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Clippable
  * @extends Moveable.OnEvent
  * @property - The clip type.
  * @property - The control positions
@@ -1242,7 +1337,7 @@ export interface OnClipStart extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Clippable
  * @extends Moveable.OnEvent
  * @property - The clip type.
  * @property - The clip event type.
@@ -1263,10 +1358,10 @@ export interface OnClip extends OnEvent {
 }
 /**
  * @typedef
- * @memberof Moveable
+ * @memberof Moveable.Clippable
  * @extends Moveable.OnEndEvent
  */
-export interface OnClipEnd extends OnEndEvent {}
+export interface OnClipEnd extends OnEndEvent { }
 
 export interface OnCustomDrag extends Position {
     type: string;
@@ -1326,10 +1421,31 @@ export interface HitRect {
     width?: number;
     height?: number;
 }
+export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterface {
+    props: MoveableManagerProps<T>;
+    state: MoveableManagerState<U>;
+    rotation: number;
+    scale: number[];
+    controlDragger: Dragger;
+    targetDragger: Dragger;
+    controlAbles: Able[];
+    targetAbles: Able[];
+    areaElement: HTMLElement;
+    controlBox: StyledInterface;
+    isUnmounted: boolean;
+    getContainer(): HTMLElement | SVGElement;
+    getRotation(): number;
+    forceUpdate(): any;
+}
+export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {
+    props: MoveableManagerProps<T> & { targets: Array<HTMLElement | SVGElement> };
+    moveables: MoveableManagerInterface[];
+    transformOrigin: string;
+}
 export interface MoveableInterface {
     getRect(): RectInfo;
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
-    updateRect(isNotSetState?: boolean): void;
+    updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
     request(ableName: string, params: IObject<any>): Requester;
     destroy(): void;
@@ -1348,3 +1464,18 @@ export interface ControlPose {
     raw?: number;
     direction?: "n" | "e" | "s" | "w" | "nw" | "ne" | "sw" | "se" | "nesw";
 }
+export type Entries<T> = {
+    [key in keyof T]: { key: key, value: Readonly<T[key]> }
+};
+export type InferKey<E, V> = E extends { key: infer U, value: V } ? U & string : never;
+export type InvertTypes<
+    T extends IObject<any>,
+    En extends IObject<any> = Entries<T>
+    > = {
+        [key in En[keyof En]["value"]]: InferKey<En[keyof En], key>
+    };
+export type AnyProps<T extends IObject<any>> = Required<{ [key in keyof T]: any }>;
+export type UnionToIntersection<U> =
+    (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
+
+export type MoveableEventsProps = Parameters<Required<MoveableProps>[keyof typeof MOVEABLE_EVENTS_PROPS_MAP]>[0];

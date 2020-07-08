@@ -3,12 +3,11 @@ import {
     convertPositionMatrix, average,
     createScaleMatrix, multiply,
 } from "./matrix";
-import MoveableManager from "./MoveableManager";
 import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
 import { splitUnit } from "@daybrush/utils";
-import { MoveableManagerState, GroupableProps, ResizableProps } from "./types";
+import { MoveableManagerState, ResizableProps, MoveableManagerInterface } from "./types";
 
-export function setDragStart(moveable: MoveableManager<any>, { datas }: any) {
+export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }: any) {
     const {
         matrix,
         beforeMatrix,
@@ -212,7 +211,7 @@ export function scaleMatrix(
     );
 }
 export function getScaleDist(
-    moveable: MoveableManager<any>,
+    moveable: MoveableManagerInterface<any>,
     scale: number[],
     direction: number[],
     fixedPosition: number[],
@@ -238,7 +237,7 @@ export function getScaleDist(
 }
 
 export function getResizeDist(
-    moveable: MoveableManager<GroupableProps>,
+    moveable: MoveableManagerInterface<any>,
     width: number,
     height: number,
     direction: number[],
@@ -276,22 +275,20 @@ export function getResizeDist(
     return minus(dist, [groupLeft, groupTop]);
 }
 export function getStartDirection(
-    moveable: MoveableManager<ResizableProps>,
+    moveable: MoveableManagerInterface<ResizableProps>,
     direction: number[],
 ) {
     if (!direction[0] && !direction[1]) {
         return [0, 0];
     }
-    const {
-        baseDirection = [-1, -1],
-    } = moveable.props;
+    const baseDirection = [-1, -1];
     return [
         direction[0] ? direction[0] : baseDirection[0] * -1,
         direction[1] ? direction[1] : baseDirection[1] * -1,
     ];
 }
 export function getAbsoluteFixedPosition(
-    moveable: MoveableManager<ResizableProps>,
+    moveable: MoveableManagerInterface<ResizableProps>,
     direction: number[],
 ) {
     return getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);

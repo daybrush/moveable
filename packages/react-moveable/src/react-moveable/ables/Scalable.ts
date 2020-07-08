@@ -8,17 +8,16 @@ import {
     getScaleDist,
     getAbsoluteFixedPosition,
 } from "../DraggerUtils";
-import MoveableManager from "../MoveableManager";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
     ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
     Renderer, OnScaleGroupStart, DraggableProps, OnDragStart,
-    OnDrag, SnappableState, GroupableProps, OnScaleStart, OnScale, OnScaleEnd,
+    OnDrag, SnappableState, GroupableProps, OnScaleStart,
+    OnScale, OnScaleEnd, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
 import {
     triggerChildAble,
 } from "../groupUtils";
-import MoveableGroup from "../MoveableGroup";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "../matrix";
 import CustomDragger, { setCustomDrag } from "../CustomDragger";
@@ -31,6 +30,7 @@ import {
 /**
  * @namespace Scalable
  * @memberof Moveable
+ * @description Scalable indicates whether the target's x and y can be scale of transform.
  */
 export default {
     name: "scalable",
@@ -41,8 +41,18 @@ export default {
         throttleScale: Number,
         renderDirections: String,
         keepRatio: Boolean,
-    },
-    render(moveable: MoveableManager<Partial<ResizableProps & ScalableProps>>, React: Renderer): any[] | undefined {
+    } as const,
+    events: {
+        onScaleStart: "scaleStart",
+        onScale: "scaleEnd",
+        onScaleEnd: "scaleEnd",
+        onScaleGroupStart: "scaleGroupStart",
+        onScaleGroup: "scaleGroup",
+        onScaleGroupEnd: "scaleGroupEnd",
+    } as const,
+    render(
+        moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps>>,
+        React: Renderer): any[] | undefined {
         const { resizable, scalable, edge } = moveable.props;
         if (!resizable && scalable) {
             if (edge) {
@@ -53,7 +63,7 @@ export default {
     },
     dragControlCondition: directionCondition,
     dragControlStart(
-        moveable: MoveableManager<ScalableProps & DraggableProps, SnappableState>,
+        moveable: MoveableManagerInterface<ScalableProps & DraggableProps, SnappableState>,
         e: any) {
 
         const { datas, isPinch, inputEvent, parentDirection } = e;
@@ -105,7 +115,7 @@ export default {
         return datas.isScale ? params : false;
     },
     dragControl(
-        moveable: MoveableManager<ScalableProps & DraggableProps & GroupableProps, SnappableState>,
+        moveable: MoveableManagerInterface<ScalableProps & DraggableProps & GroupableProps, SnappableState>,
         e: any) {
         const {
             datas, distX, distY,
@@ -320,7 +330,7 @@ export default {
 
         return params;
     },
-    dragControlEnd(moveable: MoveableManager<ScalableProps>, e: any) {
+    dragControlEnd(moveable: MoveableManagerInterface<ScalableProps>, e: any) {
         const { datas, isDrag } = e;
         if (!datas.isScale) {
             return false;
@@ -332,7 +342,7 @@ export default {
         return isDrag;
     },
     dragGroupControlCondition: directionCondition,
-    dragGroupControlStart(moveable: MoveableGroup, e: any) {
+    dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
 
         const params = this.dragControlStart(moveable, e);
@@ -375,7 +385,7 @@ export default {
         datas.isScale = result !== false;
         return datas.isScale ? nextParams : false;
     },
-    dragGroupControl(moveable: MoveableGroup, e: any) {
+    dragGroupControl(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
         if (!datas.isScale) {
             return;
@@ -430,7 +440,7 @@ export default {
         triggerEvent(moveable, "onScaleGroup", nextParams);
         return nextParams;
     },
-    dragGroupControlEnd(moveable: MoveableGroup, e: any) {
+    dragGroupControlEnd(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { isDrag, datas } = e;
 
         if (!datas.isScale) {
@@ -491,3 +501,158 @@ export default {
         };
     },
 };
+
+/**
+ * Whether or not target can scaled. (default: false)
+ * @name Moveable.Scalable#scalable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.scalable = true;
+ */
+/**
+ * When resize or scale, keeps a ratio of the width, height. (default: false)
+ * @name Moveable.Scalable#keepRatio
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.keepRatio = true;
+ */
+
+/**
+ * throttle of scaleX, scaleY when scale.
+ * @name Moveable.Scalable#throttleScale
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.throttleScale = 0.1;
+ */
+/**
+ * Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * @name Moveable.Scalable#renderDirections
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     scalable: true,
+ *   renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+ * });
+ *
+ * moveable.renderDirections = ["nw", "ne", "sw", "se"];
+ */
+/**
+ * When resize or scale, keeps a ratio of the width, height. (default: false)
+ * @name Moveable.Scalable#keepRatio
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     scalable: true,
+ * });
+ *
+ * moveable.keepRatio = true;
+ */
+/**
+ * When the scale starts, the scaleStart event is called.
+ * @memberof Moveable.Scalable
+ * @event scaleStart
+ * @param {Moveable.Scalable.OnScaleStart} - Parameters for the scaleStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("scaleStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When scaling, the scale event is called.
+ * @memberof Moveable.Scalable
+ * @event scale
+ * @param {Moveable.Scalable.OnScale} - Parameters for the scale event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("scale", ({ target, transform, dist }) => {
+ *     target.style.transform = transform;
+ * });
+ */
+/**
+ * When the scale finishes, the scaleEnd event is called.
+ * @memberof Moveable.Scalable
+ * @event scaleEnd
+ * @param {Moveable.Scalable.OnScaleEnd} - Parameters for the scaleEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("scaleEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+
+/**
+* When the group scale starts, the `scaleGroupStart` event is called.
+* @memberof Moveable.Scalable
+* @event scaleGroupStart
+* @param {Moveable.Scalable.OnScaleGroupStart} - Parameters for the `scaleGroupStart` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     scalable: true
+* });
+* moveable.on("scaleGroupStart", ({ targets }) => {
+*     console.log("onScaleGroupStart", targets);
+* });
+*/
+
+/**
+* When the group scale, the `scaleGroup` event is called.
+* @memberof Moveable.Scalable
+* @event scaleGroup
+* @param {Moveable.Scalable.OnScaleGroup} - Parameters for the `scaleGroup` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     scalable: true
+* });
+* moveable.on("scaleGroup", ({ targets, events }) => {
+*     console.log("onScaleGroup", targets);
+*     events.forEach(ev => {
+*         const target = ev.target;
+*         // ev.drag is a drag event that occurs when the group scale.
+*         const left = ev.drag.beforeDist[0];
+*         const top = ev.drag.beforeDist[1];
+*         const scaleX = ev.scale[0];
+*         const scaleY = ev.scale[1];
+*     });
+* });
+*/
+
+/**
+ * When the group scale finishes, the `scaleGroupEnd` event is called.
+ * @memberof Moveable.Scalable
+ * @event scaleGroupEnd
+ * @param {Moveable.Scalable.OnScaleGroupEnd} - Parameters for the `scaleGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     scalable: true
+ * });
+ * moveable.on("scaleGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onScaleGroupEnd", targets, isDrag);
+ * });
+ */

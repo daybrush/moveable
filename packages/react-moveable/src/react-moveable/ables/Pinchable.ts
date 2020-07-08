@@ -1,18 +1,29 @@
 import { triggerEvent, fillParams, fillEndParams } from "../utils";
-import MoveableManager from "../MoveableManager";
-import { PinchableProps, Able, SnappableState, OnPinchStart, OnPinch, OnPinchEnd } from "../types";
-import MoveableGroup from "../MoveableGroup";
+import {
+    PinchableProps, Able, SnappableState,
+    OnPinchStart, OnPinch, OnPinchEnd, MoveableManagerInterface, MoveableGroupInterface,
+} from "../types";
 
+/**
+ * @namespace Moveable.Pinchable
+ * @description Whether or not target can be pinched with draggable, resizable, scalable, rotatable (default: false)
+ */
 export default {
     name: "pinchable",
     updateRect: true,
     props: {
         pinchable: Boolean,
-        pinchOutside: Boolean,
-        pinchThreshold: Number,
-    },
+    } as const,
+    events: {
+        onPinchStart: "pinchStart",
+        onPinch: "pinch",
+        onPinchEnd: "pinchEnd",
+        onPinchGroupStart: "pinchStart",
+        onPinchGroup: "pinch",
+        onPinchGroupEnd: "pinchEnd",
+    } as const,
     pinchStart(
-        moveable: MoveableManager<PinchableProps, SnappableState>,
+        moveable: MoveableManagerInterface<PinchableProps, SnappableState>,
         e: any,
     ) {
         const { datas, targets, angle } = e;
@@ -65,7 +76,7 @@ export default {
         return isPinch;
     },
     pinch(
-        moveable: MoveableManager<PinchableProps>,
+        moveable: MoveableManagerInterface<PinchableProps>,
         e: any,
     ) {
         const {
@@ -104,7 +115,7 @@ export default {
         return params;
     },
     pinchEnd(
-        moveable: MoveableManager<PinchableProps>,
+        moveable: MoveableManagerInterface<PinchableProps>,
         e: any,
     ) {
         const { datas, isPinch, inputEvent, targets } = e;
@@ -136,13 +147,145 @@ export default {
         });
         return isPinch;
     },
-    pinchGroupStart(moveable: MoveableGroup, e: any) {
+    pinchGroupStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         return this.pinchStart(moveable, { ...e, targets: moveable.props.targets });
     },
-    pinchGroup(moveable: MoveableGroup, e: any) {
+    pinchGroup(moveable: MoveableGroupInterface, e: any) {
         return this.pinch(moveable, { ...e, targets: moveable.props.targets });
     },
-    pinchGroupEnd(moveable: MoveableGroup, e: any) {
+    pinchGroupEnd(moveable: MoveableGroupInterface, e: any) {
         return this.pinchEnd(moveable, { ...e, targets: moveable.props.targets });
     },
 };
+
+/**
+ * Whether or not target can be pinched with draggable, resizable, scalable, rotatable (default: false)
+ * @name Moveable.Pinchable#pinchable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ *
+ * moveable.pinchable = true;
+ */
+
+/**
+ * When the pinch starts, the pinchStart event is called with part of scaleStart, rotateStart, resizeStart
+ * @memberof Moveable.Pinchable
+ * @event pinchStart
+ * @param {Moveable.Pinchable.OnPinchStart} - Parameters for the pinchStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     rotatable: true,
+ *     scalable: true,
+ *     pinchable: true, // ["rotatable", "scalable"]
+ * });
+ * moveable.on("pinchStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("rotateStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("scaleStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When pinching, the pinch event is called with part of scale, rotate, resize
+ * @memberof Moveable.Pinchable
+ * @event pinch
+ * @param {Moveable.Pinchable.OnPinch} - Parameters for the pinch event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     rotatable: true,
+ *     scalable: true,
+ *     pinchable: true, // ["rotatable", "scalable"]
+ * });
+ * moveable.on("pinch", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("rotate", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("scale", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+/**
+ * When the pinch finishes, the pinchEnd event is called.
+ * @memberof Moveable.Pinchable
+ * @event pinchEnd
+ * @param {Moveable.Pinchable.OnPinchEnd} - Parameters for the pinchEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     rotatable: true,
+ *     scalable: true,
+ *     pinchable: true, // ["rotatable", "scalable"]
+ * });
+ * moveable.on("pinchEnd", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("rotateEnd", ({ target }) => {
+ *     console.log(target);
+ * });
+ * moveable.on("scaleEnd", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+
+/**
+ * When the group pinch starts, the `pinchGroupStart` event is called.
+ * @memberof Moveable.Pinchable
+ * @event pinchGroupStart
+ * @param {Moveable.Pinchable.OnPinchGroupStart} - Parameters for the `pinchGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     pinchable: true
+ * });
+ * moveable.on("pinchGroupStart", ({ targets }) => {
+ *     console.log("onPinchGroupStart", targets);
+ * });
+ */
+
+/**
+ * When the group pinch, the `pinchGroup` event is called.
+ * @memberof Moveable.Pinchable
+ * @event pinchGroup
+ * @param {Moveable.Pinchable.OnPinchGroup} - Parameters for the `pinchGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     pinchable: true
+ * });
+ * moveable.on("pinchGroup", ({ targets, events }) => {
+ *     console.log("onPinchGroup", targets);
+ * });
+ */
+
+/**
+ * When the group pinch finishes, the `pinchGroupEnd` event is called.
+ * @memberof Moveable.Pinchable
+ * @event pinchGroupEnd
+ * @param {Moveable.Pinchable.OnPinchGroupEnd} - Parameters for the `pinchGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     pinchable: true
+ * });
+ * moveable.on("pinchGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onPinchGroupEnd", targets, isDrag);
+ * });
+ */

@@ -1,5 +1,8 @@
-import MoveableManager from "../MoveableManager";
-import { Renderer, ClippableProps, OnClip, ClippableState, OnClipEnd, OnClipStart, ControlPose } from "../types";
+import {
+    Renderer, ClippableProps, OnClip,
+    ClippableState, OnClipEnd, OnClipStart,
+    ControlPose, MoveableManagerInterface
+} from "../types";
 import { splitBracket, splitComma, splitUnit, splitSpace } from "@daybrush/utils";
 import {
     prefix, caculatePosition, getDiagonalSize,
@@ -32,7 +35,7 @@ const CLIP_RECT_DIRECTIONS = [
 // 0 1 2 3 4 5 6 7
 
 function getClipStyles(
-    moveable: MoveableManager<ClippableProps>,
+    moveable: MoveableManagerInterface<ClippableProps>,
     clipPath: ReturnType<typeof getClipPath>,
     poses: number[][],
 ) {
@@ -53,9 +56,9 @@ function getClipStyles(
     if (clipType === "polygon") {
         return poses.map(pos => `${
             convertCSSSize(pos[0], width, clipRelative)
-        } ${
+            } ${
             convertCSSSize(pos[1], height, clipRelative)
-        }`);
+            }`);
     } else if (isRect || clipType === "inset") {
         const top = poses[1][1];
         const right = poses[3][0];
@@ -72,7 +75,7 @@ function getClipStyles(
         }
         const clipStyles
             = [top, width - right, height - bottom, left]
-            .map((pos, i) => convertCSSSize(pos, i % 2 ? width : height, clipRelative));
+                .map((pos, i) => convertCSSSize(pos, i % 2 ? width : height, clipRelative));
 
         if (poses.length > 8) {
             const [subWidth, subHeight] = minus(poses[4], poses[0]);
@@ -290,7 +293,7 @@ function getClipPath(
     }
     return;
 }
-function addClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
+function addClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
     const [distX, distY] = caculatePointerDist(moveable, e);
     const { clipPath, index } = e.datas;
     const {
@@ -337,7 +340,7 @@ function addClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
         distY: 0,
     }));
 }
-function removeClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
+function removeClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
     const { clipPath, index } = e.datas;
     const {
         type: clipType,
@@ -372,17 +375,28 @@ function removeClipPath(moveable: MoveableManager<ClippableProps>, e: any) {
         distY: 0,
     }));
 }
+/**
+ * @namespace Moveable.Clippable
+ * @description Whether to clip the target.
+ */
+
 export default {
     name: "clippable",
     props: {
-        defaultClipPath: String,
-        clipRelative: Boolean,
         clippable: Boolean,
+        defaultClipPath: String,
+        customClipPath: String,
+        clipRelative: Boolean,
         clipArea: Boolean,
         dragWithClip: Boolean,
-    },
+    } as const,
+    events: {
+        onClipStart: "clipStart",
+        onClip: "clip",
+        onClipEnd: "clipEnd",
+    } as const,
     css: [
-`.control.clip-control {
+        `.control.clip-control {
     background: #6d6;
     cursor: pointer;
 }
@@ -408,7 +422,7 @@ export default {
     transform-origin: 0px 0px;
 }`,
     ],
-    render(moveable: MoveableManager<ClippableProps, ClippableState>, React: Renderer) {
+    render(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, React: Renderer) {
         const {
             customClipPath, defaultClipPath,
             clipArea, zoom,
@@ -540,7 +554,7 @@ export default {
                     transform: `translate(${allLeft}px, ${allTop}px)`,
                     clipPath: `polygon(${
                         areaPoses.map(pos => `${pos[0] - allLeft}px ${pos[1] - allTop}px`).join(", ")
-                    })`,
+                        })`,
                 }}></div>);
             }
         }
@@ -552,7 +566,7 @@ export default {
     dragControlCondition(e: any) {
         return e.inputEvent && (e.inputEvent.target.className || "").indexOf("clip") > -1;
     },
-    dragStart(moveable: MoveableManager<ClippableProps>, e: any) {
+    dragStart(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
         const props = moveable.props;
         const {
             dragWithClip = true,
@@ -564,13 +578,13 @@ export default {
 
         return this.dragControlStart(moveable, e);
     },
-    drag(moveable: MoveableManager<ClippableProps>, e: any) {
+    drag(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
         return this.dragControl(moveable, e);
     },
-    dragEnd(moveable: MoveableManager<ClippableProps>, e: any) {
+    dragEnd(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
         return this.dragControlEnd(moveable, e);
     },
-    dragControlStart(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
+    dragControlStart(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
         const state = moveable.state;
         const { defaultClipPath, customClipPath } = moveable.props;
         const { target, width, height } = state;
@@ -604,7 +618,7 @@ export default {
 
         return true;
     },
-    dragControl(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
+    dragControl(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
         const { datas, originalDatas } = e;
 
         if (!datas.isClipStart) {
@@ -661,7 +675,7 @@ export default {
 
         return true;
     },
-    dragControlEnd(moveable: MoveableManager<ClippableProps, ClippableState>, e: any) {
+    dragControlEnd(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
         moveable.state.clipPathState = "";
         const { isDrag, datas, isDouble } = e;
         const { isLine, isClipStart, isControl } = datas;
@@ -680,7 +694,252 @@ export default {
         }
         return isDouble || isDrag;
     },
-    unset(moveable: MoveableManager<ClippableProps, ClippableState>) {
+    unset(moveable: MoveableManagerInterface<ClippableProps, ClippableState>) {
         moveable.state.clipPathState = "";
     },
 };
+
+/**
+ * Whether to clip the target. (default: false)
+ * @name Moveable.Clippable#clippable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ *  If clippath is not set, the default value can be set. (defaultClipPath < style < customClipPath < dragging clipPath)
+ * @name Moveable.Clippable#defaultClipPath
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+
+/**
+ * % Can be used instead of the absolute px (`rect` not possible) (default: false)
+ * @name Moveable.Clippable#clipRelative
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+
+/**
+ * You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
+ * @name Moveable.Clippable#customClipPath
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+
+/**
+ * When dragging the target, the clip also moves. (default: true)
+ * @name Moveable.Clippable#dragWithClip
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+
+/**
+ * You can drag the clip by setting clipArea. (default: false)
+ * @name Moveable.Clippable#clipArea
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag start the clip area or controls, the `clipStart` event is called.
+ * @memberof Moveable.Clippable
+ * @event clipStart
+ * @param {Moveable.Clippable.OnClipStart} - Parameters for the `clipStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag the clip area or controls, the `clip` event is called.
+ * @memberof Moveable.Clippable
+ * @event clip
+ * @param {Moveable.Clippable.OnClip} - Parameters for the `clip` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag end the clip area or controls, the `clipEnd` event is called.
+ * @memberof Moveable.Clippable
+ * @event clipEnd
+ * @param {Moveable.Clippable.OnClipEnd} - Parameters for the `clipEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     clippable: true,
+ *     defaultClipPath: "inset",
+ *     customClipPath: "",
+ *     clipRelative: false,
+ *     clipArea: false,
+ *     dragWithClip: true,
+ * });
+ * moveable.on("clipStart", e => {
+ *     console.log(e);
+ * }).on("clip", e => {
+ *     if (e.clipType === "rect") {
+ *         e.target.style.clip = e.clipStyle;
+ *     } else {
+ *         e.target.style.clipPath = e.clipStyle;
+ *     }
+ * }).on("clipEnd", e => {
+ *     console.log(e);
+ * });
+ */

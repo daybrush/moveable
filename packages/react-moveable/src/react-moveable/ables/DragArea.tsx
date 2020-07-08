@@ -1,15 +1,16 @@
-import MoveableManager from "../MoveableManager";
 import {
     createWarpMatrix,
 } from "../matrix";
 import { ref } from "framework-utils";
 import { triggerEvent, fillParams, getRect, caculateInversePosition, makeMatrixCSS } from "../utils";
-import { Renderer, GroupableProps, DragAreaProps, OnClick, OnClickGroup } from "../types";
+import {
+    Renderer, GroupableProps, DragAreaProps, OnClick,
+    OnClickGroup, MoveableManagerInterface, MoveableGroupInterface
+} from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
-import MoveableGroup from "../MoveableGroup";
 import { addClass, findIndex, removeClass } from "@daybrush/utils";
 
-function restoreStyle(moveable: MoveableManager) {
+function restoreStyle(moveable: MoveableManagerInterface) {
     const el = moveable.areaElement;
     const { width, height } = moveable.state;
 
@@ -30,8 +31,12 @@ export default {
     name: "dragArea",
     props: {
         dragArea: Boolean,
-    },
-    render(moveable: MoveableManager<GroupableProps>, React: Renderer): any[] {
+    } as const,
+    events: {
+        onClick: "click",
+        onClickGroup: "clickGroup",
+    } as const,
+    render(moveable: MoveableManagerInterface<GroupableProps>, React: Renderer): any[] {
         const { target, dragArea, groupable } = moveable.props;
         const { width, height, renderPoses } = moveable.state;
 
@@ -68,7 +73,7 @@ export default {
             renderPieces(React),
         ];
     },
-    dragStart(moveable: MoveableManager, { datas, clientX, clientY, inputEvent }: any) {
+    dragStart(moveable: MoveableManagerInterface, { datas, clientX, clientY, inputEvent }: any) {
         if (!inputEvent) {
             return false;
         }
@@ -108,7 +113,7 @@ export default {
         addClass(areaElement, AVOID);
         return true;
     },
-    drag(moveable: MoveableManager, { datas, inputEvent }: any) {
+    drag(moveable: MoveableManagerInterface, { datas, inputEvent }: any) {
         if (!inputEvent) {
             return false;
         }
@@ -117,7 +122,7 @@ export default {
             restoreStyle(moveable);
         }
     },
-    dragEnd(moveable: MoveableManager<DragAreaProps>, e: any) {
+    dragEnd(moveable: MoveableManagerInterface<DragAreaProps>, e: any) {
         if (!e.inputEvent) {
             return false;
         }
@@ -136,21 +141,21 @@ export default {
         }
         const containsTarget = target.contains(inputTarget);
 
-        triggerEvent(moveable, "onClick", fillParams<OnClick>(moveable, e, {
+        triggerEvent<DragAreaProps>(moveable, "onClick", fillParams<OnClick>(moveable, e, {
             isDouble: e.isDouble,
             inputTarget,
             isTarget: target === inputTarget,
             containsTarget,
         }));
     },
-    dragGroupStart(moveable: MoveableGroup, e: any) {
+    dragGroupStart(moveable: MoveableGroupInterface, e: any) {
         return this.dragStart(moveable, e);
     },
-    dragGroup(moveable: MoveableGroup, e: any) {
+    dragGroup(moveable: MoveableGroupInterface, e: any) {
         return this.drag(moveable, e);
     },
     dragGroupEnd(
-        moveable: MoveableGroup,
+        moveable: MoveableGroupInterface<DragAreaProps>,
         e: any,
     ) {
         const { inputEvent, isDragArea, datas } = e;
@@ -176,7 +181,7 @@ export default {
             containsTarget = targetIndex > -1;
         }
 
-        triggerEvent(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
+        triggerEvent<DragAreaProps>(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
             isDouble: e.isDouble,
             targets,
             inputTarget,
@@ -186,3 +191,48 @@ export default {
         }));
     },
 };
+
+/**
+ * Add an event to the moveable area instead of the target for stopPropagation. (default: false)
+ * @name Moveable#dragArea
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  dragArea: false,
+ * });
+ */
+
+/**
+ * When you click on the element, the `click` event is called.
+ * @memberof Moveable
+ * @event click
+ * @param {Moveable.OnClick} - Parameters for the `click` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("click", ({ hasTarget, containsTarget, targetIndex }) => {
+ *     // If you click on an element other than the target and not included in the target, index is -1.
+ *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
+ * });
+ */
+
+/**
+ * When you click on the element inside the group, the `clickGroup` event is called.
+ * @memberof Moveable
+ * @event clickGroup
+ * @param {Moveable.OnClickGroup} - Parameters for the `clickGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("clickGroup", ({ inputTarget, isTarget, containsTarget, targetIndex }) => {
+ *     // If you click on an element other than the target and not included in the target, index is -1.
+ *     console.log("onClickGroup", inputTarget, isTarget, containsTarget, targetIndex);
+ * });
+ */

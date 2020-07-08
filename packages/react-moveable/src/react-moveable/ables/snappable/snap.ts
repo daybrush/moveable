@@ -1,8 +1,7 @@
 import {
     SnapInfo, SnappableProps, SnappableState,
-    Guideline, ResizableProps, ScalableProps, SnapOffsetInfo
+    Guideline, ResizableProps, ScalableProps, SnapOffsetInfo, MoveableManagerInterface
 } from "../../types";
-import MoveableManager from "../../MoveableManager";
 import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
 import { TINY_NUM } from "../../consts";
@@ -93,7 +92,7 @@ export function getGapGuidelines(
     return totalGuidelines;
 }
 export function getTotalGuidelines(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
 ) {
     const {
         guidelines,
@@ -148,7 +147,7 @@ export function getTotalGuidelines(
     return totalGuidelines;
 }
 export function checkSnapPoses(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     posesX: number[],
     posesY: number[],
     snapCenter?: boolean,
@@ -178,7 +177,7 @@ export function checkSnapPoses(
 }
 
 export function checkSnapKeepRatio(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     startPos: number[],
     endPos: number[],
 ): {
@@ -282,7 +281,7 @@ export function checkSnapKeepRatio(
 }
 
 export function checkSnaps(
-    moveable: MoveableManager<SnappableProps, SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     rect: {
         left?: number,
         top?: number,
@@ -404,7 +403,7 @@ function checkSnap(
 }
 
 export function getSnapInfosByDirection(
-    moveable: MoveableManager<SnappableProps & (ResizableProps | ScalableProps), SnappableState>,
+    moveable: MoveableManagerInterface<SnappableProps & (ResizableProps | ScalableProps), SnappableState>,
     poses: number[][],
     snapDirection: number[],
 ) {

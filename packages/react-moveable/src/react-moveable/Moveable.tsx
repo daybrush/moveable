@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MoveableProps, Able, MoveableInterface } from "./types";
+import { MoveableProps, Able, MoveableInterface, GroupableProps } from "./types";
 import MoveableManager from "./MoveableManager";
 import { MOVEABLE_ABLES } from "./ables/consts";
 import MoveableGroup from "./MoveableGroup";
@@ -8,9 +8,9 @@ import { isArray } from "@daybrush/utils";
 import Groupable from "./ables/Groupable";
 import { METHODS } from "./consts";
 
-export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & T> {
+export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & GroupableProps & T> {
     @withMethods(METHODS)
-    public moveable!: MoveableManager<MoveableProps> | MoveableGroup;
+    public moveable!: MoveableManager | MoveableGroup;
 
     public render() {
         const props = this.props;
@@ -25,17 +25,18 @@ export default class Moveable<T = {}> extends React.PureComponent<MoveableProps 
                 target: null,
                 targets: target as any[],
                 ables: [...MOVEABLE_ABLES, Groupable, ...ables],
-            };
+            } as any;
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
                 {...nextProps} />;
         } else {
             const moveableTarget = isArr ? (target as any[])[0] : target;
 
-            return <MoveableManager<MoveableProps> key="single" ref={ref(this, "moveable")}
+            return <MoveableManager<any> key="single" ref={ref(this, "moveable")}
                 {...{ ...this.props, target: moveableTarget, ables: [...MOVEABLE_ABLES, ...ables] }} />;
         }
     }
 }
-export default interface Moveable<T = {}> extends React.PureComponent<MoveableProps & T>, MoveableInterface {
+export default interface Moveable<T = {}>
+    extends React.PureComponent<MoveableProps & GroupableProps & T>, MoveableInterface {
     setState(state: any, callback?: () => any): any;
 }

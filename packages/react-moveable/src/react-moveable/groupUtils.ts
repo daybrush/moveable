@@ -1,10 +1,8 @@
-import MoveableGroup from "./MoveableGroup";
-import { Able } from "./types";
-import MoveableManager from "./MoveableManager";
+import { Able, MoveableGroupInterface, MoveableManagerInterface } from "./types";
 import { IObject, isFunction } from "@daybrush/utils";
 import CustomDragger, { setCustomDrag } from "./CustomDragger";
 export function triggerChildDragger(
-    moveable: MoveableGroup,
+    moveable: MoveableGroupInterface<any, any>,
     able: Able,
     type: string,
     delta: number[],
@@ -40,12 +38,12 @@ export function triggerChildDragger(
     return childs;
 }
 export function triggerChildAble<T extends Able>(
-    moveable: MoveableGroup,
+    moveable: MoveableGroupInterface<any, any>,
     able: T,
     type: keyof T & string,
     datas: IObject<any>,
-    eachEvent: ((movebale: MoveableManager, datas: IObject<any>) => any) | IObject<any>,
-    callback?: (moveable: MoveableManager<any>, datas: IObject<any>, result: any, index: number) => any,
+    eachEvent: ((movebale: MoveableManagerInterface<any, any>, datas: IObject<any>) => any) | IObject<any>,
+    callback?: (moveable: MoveableManagerInterface<any, any>, datas: IObject<any>, result: any, index: number) => any,
 ) {
     const name = able.name!;
     const ableDatas = datas[name] || (datas[name] = []);

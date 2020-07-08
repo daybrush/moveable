@@ -1,6 +1,5 @@
 import Moveable from "./Moveable";
 
-export * from "./types";
 export {
     MOVEABLE_ABLES,
     MOVEABLE_EVENTS,
