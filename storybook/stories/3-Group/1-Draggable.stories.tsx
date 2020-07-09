@@ -14,6 +14,7 @@ import {
 import { GROUP_VANILLA_TEMPLATE } from "../../template/group/frameworks/Vanilla";
 import { GROUP_ANGULAR_HTML_TEMPLATE, GROUP_ANGULAR_COMPONENT_TEMPLATE } from "../../template/group/frameworks/Angular";
 import { GROUP_SVELTE_TEMPLATE, GROUP_SVELTE_JSX_TEMPLATE } from "../../template/group/frameworks/Svelte";
+import { GROUP_PROPS_TEMPLATE } from "../../template/group/ables/Groupable.template";
 
 const story = storiesOf("Group", module);
 
@@ -21,7 +22,12 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Draggable", () => {
     return <DraggableApp
-        // key={Math.random()}
+        key={Math.random()}
+        description={<p className="description">You can drag the targets. (
+            <a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html" target="_blank">See Draggable API</a>, &nbsp;
+            <a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Group.html" target="_blank">See Group API</a>
+        )</p>}
+        {...GROUP_PROPS_TEMPLATE()}
         {...DRAGGABLE_PROPS_TEMPLATE()}
     />;
 }, {

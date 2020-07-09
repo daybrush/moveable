@@ -15,6 +15,7 @@ import { BASIC_VANILLA_TEMPLATE } from "../../template/basic/frameworks/Vanilla"
 import { BASIC_REACT_TEMPLATE } from "../../template/basic/frameworks/React";
 import { BASIC_ANGULAR_COMPONENT_TEMPLATE, BASIC_ANGULAR_HTML_TEMPLATE } from "../../template/basic/frameworks/Angular";
 import { BASIC_SVELTE_TEMPLATE, BASIC_SVELTE_JSX_TEMPLATE } from "../../template/basic/frameworks/Svelte";
+import "../index.css";
 
 const story = storiesOf("Basic", module);
 
@@ -22,6 +23,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Draggable", () => {
     return <DraggableApp
+        description={<p className="description">You can drag the target. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html" target="_blank">See Draggable API</a>)</p>}
         // key={Math.random()}
         {...DRAGGABLE_PROPS_TEMPLATE()}
     />;

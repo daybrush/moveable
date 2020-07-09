@@ -41,7 +41,6 @@ export const GROUP_SVELTE_JSX_TEMPLATE = (markup: any, {
 }) => previewTemplate`
 ${markup}
 <Moveable
-    ${ableName}={true}
     target={targets}
 ${JSX_PROPS_TEMPLATE(props)}
 ${Object.keys(events).map(name => `    on:${name}={${codeIndent(events[name](CODE_TYPE.CUSTOM_EVENT_ARROW), { indent: 4 })}}`).join("\n")}

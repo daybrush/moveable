@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Resizable", () => {
     return <ResizableApp
+        description={<p className="description">You can resize the target. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html" target="_blank">See Resizable API</a>)</p>}
         keepRatio={boolean("keepRatio", false)}
         throttleResize={number("throttleResize", 0)}
         renderDirections={array("renderDirections", [

@@ -12,7 +12,7 @@ import { BASIC_VANILLA_TEMPLATE } from "../../template/basic/frameworks/Vanilla"
 import { BASIC_REACT_TEMPLATE } from "../../template/basic/frameworks/React";
 import { BASIC_ANGULAR_HTML_TEMPLATE, BASIC_ANGULAR_COMPONENT_TEMPLATE } from "../../template/basic/frameworks/Angular";
 import { BASIC_SVELTE_TEMPLATE, BASIC_SVELTE_JSX_TEMPLATE } from "../../template/basic/frameworks/Svelte";
-import ClippableApp, { CLIPPABLE_FRAME } from "../../template/basic/ables/Clippable.template";
+import ClippableApp, { CLIPPABLE_FRAME, CLIPPABLE_PROPS_TEMPLATE } from "../../template/basic/ables/Clippable.template";
 import { LAST_EVENT_CLIPPABLE_TEMPLATE_OPTIONS } from "../../template/lastEvent/ables/Clippable.template";
 
 const story = storiesOf("Use state at the last event.", module);
@@ -21,18 +21,8 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Cliappable", () => {
     return <ClippableApp key={Math.random()}
-        draggable={boolean("draggable", true)}
-        clipRelative={boolean("clipRelative", false)}
-        clipArea={boolean("clipArea", false)}
-        dragWithClip={boolean("dragWithClip", true)}
-        defaultClipPath={radios("defaultClipPath", {
-            circle: "circle", inset: "inset",
-            ellipse: "ellipse", rect: "rect",
-            polygon: "polygon",
-        }, "inset")}
-        zoom={number("zoom", 1)}
-        origin={boolean("origin", true)}
-        padding={object("padding", { left: 0, top: 0, right: 0, bottom: 0 })}
+        description={<p className="description">At the end of the event, you can store it only once in the state using the lastEvent property. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Clippable.html" target="_blank">See Clippable API</a>)</p>}
+        {...CLIPPABLE_PROPS_TEMPLATE()}
     />;
 }, {
     preview: previewCollection(

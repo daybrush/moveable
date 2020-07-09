@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Rotatable", () => {
     return <RotatableApp
+    description={<p className="description">No matter how many transforms are layered, you can rotate the target properly. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html" target="_blank">See Rotatable API</a>)</p>}
         children={NESTED_JSX}
         {...ROTATABLE_PROPS_TEMPLATE()}
     />;

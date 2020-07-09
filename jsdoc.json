@@ -9,6 +9,7 @@
         "include": [
             "./src",
             "README.md",
+            "packages/react-moveable/src/react-moveable/MoveableGroup.tsx",
             "packages/react-moveable/src/react-moveable/ables",
             "packages/react-moveable/src/react-moveable/MoveableManager.tsx",
             "packages/react-moveable/src/react-moveable/types.ts",

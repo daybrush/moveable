@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Draggable", () => {
     return <DraggableApp
+        description={<p className="description">No matter how many transforms are layered, you can drag the target properly. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html" target="_blank">See Draggable API</a>)</p>}
         children={NESTED_JSX}
         {...DRAGGABLE_PROPS_TEMPLATE()}
     />;

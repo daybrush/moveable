@@ -21,6 +21,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Rotatable", () => {
     return <RotatableApp
+        description={<p className="description">At the end of the event, you can store it only once in the state using the lastEvent property. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html" target="_blank">See Rotatable API</a>)</p>}
         {...ROTATABLE_PROPS_TEMPLATE()}
     />;
 }, {

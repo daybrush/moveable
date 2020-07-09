@@ -18,7 +18,6 @@ import Moveable from "moveable";
 const moveable = new Moveable(document.body, {
     // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
     target: document.querySelector(".target"),
-    ${ableName}: true,
 ${DEFAULT_PROPS_TEMPLATE(props)}
 });
 let frame = {

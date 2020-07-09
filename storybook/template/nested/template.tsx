@@ -3,7 +3,7 @@ import NESTED_CSS from "!!raw-loader!./nested.css";
 import { BASIC_CSS_TEMPLATE } from "../basic/template";
 export const NESTED_HTML_TEMPLATE = `
 <div class="container">
-    <div class="nested">
+    <div class="nested first">
         No Transform
         <div class="nested scale">
             scale(1.2, 1.2)
@@ -16,7 +16,7 @@ export const NESTED_HTML_TEMPLATE = `
 </div>
 `;
 export const NESTED_REACT_MARKUP_TEMPLATE = `
-        <div className="nested">
+        <div className="nested first">
             No Transform
             <div className="nested scale">
                 scale(1.2, 1.2)
@@ -27,7 +27,7 @@ export const NESTED_REACT_MARKUP_TEMPLATE = `
             </div>
         </div>`;
 export const NESTED_ANGULAR_MARKUP_TEMPLATE = `
-<div class="nested">
+<div class="nested first">
     No Transform
     <div class="nested scale">
         scale(1.2, 1.2)
@@ -38,7 +38,7 @@ export const NESTED_ANGULAR_MARKUP_TEMPLATE = `
     </div>
 </div>`;
 export const NESTED_SVELTE_MARKUP_TEMPLATE = `
-<div class="nested">
+<div class="nested first">
     No Transform
     <div class="nested scale">
         scale(1.2, 1.2)
@@ -50,7 +50,7 @@ export const NESTED_SVELTE_MARKUP_TEMPLATE = `
 </div>`;
 
 export const NESTED_JSX = <div className="container">
-    <div className="nested">
+    <div className="nested first">
         No Transform
     <div className="nested scale">
             scale(1.2, 1.2)

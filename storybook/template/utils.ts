@@ -2,6 +2,18 @@ import { VANILLA_CODESANDBOX, REACT_CODESANDBOX, ANGULAR_CODESANDBOX, SVELTE_COD
 
 import { DEFAULT_ANGULAR_MODULE_TEMPLATE } from "./default";
 
+export function removeDuplicate(arr: string[]) {
+    const arrMap = {};
+
+    return arr.filter(v => {
+        if (arrMap[v]) {
+            return false;
+        }
+
+        arrMap[v] = true;
+        return true;
+    });
+}
 export function previewCollection(
     htmlTemplate,
     cssTemplate,

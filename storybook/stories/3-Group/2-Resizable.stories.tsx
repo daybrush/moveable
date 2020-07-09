@@ -15,6 +15,7 @@ import { GROUP_ANGULAR_HTML_TEMPLATE, GROUP_ANGULAR_COMPONENT_TEMPLATE } from ".
 import { GROUP_SVELTE_TEMPLATE, GROUP_SVELTE_JSX_TEMPLATE } from "../../template/group/frameworks/Svelte";
 import ResizableApp, { GROUP_RESIZABLE_TEMPLATE_OPTIONS } from "../../template/group/ables/Resizable.template";
 import { RESIZABLE_FRAME, RESIZABLE_PROPS_TEMPLATE } from "../../template/basic/ables/Resizable.template";
+import { GROUP_PROPS_TEMPLATE } from "../../template/group/ables/Groupable.template";
 
 const story = storiesOf("Group", module);
 
@@ -22,6 +23,11 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Resizable", () => {
     return <ResizableApp
+        description={<p className="description">You can resize the targets. (
+        <a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html" target="_blank">See Resizable API</a>, &nbsp;
+        <a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Group.html" target="_blank">See Group API</a>
+    )</p>}
+        {...GROUP_PROPS_TEMPLATE()}
         {...RESIZABLE_PROPS_TEMPLATE()}
     />;
 }, {

@@ -17,7 +17,6 @@ export const GROUP_ANGULAR_HTML_TEMPLATE = (markup: any, {
 ${markup}
 <ngx-moveable
     [target]="targets"
-    [${ableName}]="true"
 ${ANGULAR_PROPS_TEMPLATE(props, { wrap: "'" })}
 ${Object.keys(events).map(name => `    (${name})="${camelize(`on ${name}`)}($event)"`).join("\n")}
     ></ngx-moveable>

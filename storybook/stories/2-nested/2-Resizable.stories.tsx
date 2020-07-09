@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Resizable", () => {
     return <ResizableApp
+    description={<p className="description">No matter how many transforms are layered, you can resize the target properly. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html" target="_blank">See Resizable API</a>)</p>}
         children={NESTED_JSX}
         {...RESIZABLE_PROPS_TEMPLATE()}
     />;

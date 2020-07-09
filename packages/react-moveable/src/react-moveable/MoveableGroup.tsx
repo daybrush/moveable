@@ -90,6 +90,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
 }
 /**
  * @namespace Moveable.Group
+ * @description You can make targets moveable.
  */
 class MoveableGroup extends MoveableManager<GroupableProps> {
     public static defaultProps = {
@@ -221,4 +222,17 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
  * moveable.defaultGroupRotate = 40;
  */
 
+/**
+ * Sets the initial origin of the group. (default 0)
+ * @name Moveable.Group#defaultGroupOrigin
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   target: [].slice.call(document.querySelectorAll(".target")),
+ *   defaultGroupOrigin: "50% 50%",
+ * });
+ *
+ * moveable.defaultGroupOrigin = "20% 40%";
+ */
 export default MoveableGroup;

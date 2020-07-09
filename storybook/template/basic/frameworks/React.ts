@@ -28,7 +28,6 @@ ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     return <div className="container">${markup}
         <Moveable
             target={target}
-            ${ableName}={true}
 ${JSX_PROPS_TEMPLATE(props, { indent: 12 })}
 ${Object.keys(events).map(name =>  `            ${camelize(`on ${name}`)}={${codeIndent(events[name](CODE_TYPE.ARROW, "react"), { indent: 12 })}}`).join("\n")}
         />

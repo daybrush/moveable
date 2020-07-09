@@ -14,6 +14,7 @@ import { GROUP_ANGULAR_HTML_TEMPLATE, GROUP_ANGULAR_COMPONENT_TEMPLATE } from ".
 import { GROUP_SVELTE_TEMPLATE, GROUP_SVELTE_JSX_TEMPLATE } from "../../template/group/frameworks/Svelte";
 import ScalableApp, { GROUP_SCALABLE_TEMPLATE_OPTIONS, GROUP_SCALABLE_FRAME } from "../../template/group/ables/Scalable.template";
 import { SCALABLE_FRAME, SCALABLE_PROPS_TEMPLATE } from "../../template/basic/ables/Scalable.template";
+import { GROUP_PROPS_TEMPLATE } from "../../template/group/ables/Groupable.template";
 
 const story = storiesOf("Group", module);
 
@@ -21,7 +22,12 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Scalable", () => {
     return <ScalableApp
-    {...SCALABLE_PROPS_TEMPLATE()}
+        description={<p className="description">You can scale the targets. (
+        <a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html" target="_blank">See Scalable API</a>, &nbsp;
+        <a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Group.html" target="_blank">See Group API</a>
+    )</p>}
+        {...GROUP_PROPS_TEMPLATE()}
+        {...SCALABLE_PROPS_TEMPLATE()}
     />;
 }, {
     preview: previewCollection(

@@ -15,10 +15,12 @@ export default function ScalableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = <div className="target">Target</div>,
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}
@@ -40,7 +42,7 @@ export default function ScalableApp(props: any) {
     </div>);
 }
 
-export const SCALABLE_PROPS = ["keepRatio", "throttleScale", "renderDirections", "edge", "zoom", "origin", "padding"];
+export const SCALABLE_PROPS = ["scalable", "keepRatio", "throttleScale", "renderDirections", "edge", "zoom", "origin", "padding"];
 export const SCALABLE_FRAME = {
     translate: [0, 0],
     scale: [1, 1],
@@ -56,6 +58,7 @@ export const SCALABLE_TEMPLATE_OPTIONS = {
 };
 
 export const SCALABLE_PROPS_TEMPLATE = () => ({
+    scalable: boolean("scalable", true),
     keepRatio: boolean("keepRatio", false),
     throttleScale: number("throttleScale", 0),
     renderDirections: array("renderDirections", [

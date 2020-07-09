@@ -16,6 +16,7 @@ export default function ResizableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = [
             <div className="target target1">Target1</div>,
             <div className="target target2">Target2</div>,
@@ -24,6 +25,7 @@ export default function ResizableApp(props: any) {
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}

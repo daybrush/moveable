@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Rotatable", () => {
     return <RotatableApp
+        description={<p className="description">You can rotate the target. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html" target="_blank">See Rotatable API</a>)</p>}
         {...ROTATABLE_PROPS_TEMPLATE()}
     />;
 }, {

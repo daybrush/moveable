@@ -1,7 +1,9 @@
 import * as React from "react";
 import Moveable from "react-moveable";
 import { ROTATE_GROUP_START_TEMPLATE, ROTATE_GROUP_TEMPLATE } from "../events.template";
-import { ROTATABLE_TEMPLATE_OPTIONS } from "../../basic/ables/Rotatable.template";
+import { ROTATABLE_TEMPLATE_OPTIONS, ROTATABLE_PROPS } from "../../basic/ables/Rotatable.template";
+import { GROUP_PROPS } from "./Groupable.template";
+import { boolean } from "@storybook/addon-knobs";
 
 export default function RotatableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
@@ -16,6 +18,7 @@ export default function RotatableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = [
             <div className="target target1">Target1</div>,
             <div className="target target2">Target2</div>,
@@ -24,6 +27,7 @@ export default function RotatableApp(props: any) {
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}
@@ -51,11 +55,18 @@ export const GROUP_ROTATABLE_FRAME = {
     translate: [0, 0],
     rotate: 0,
 };
+export const GROUP_ROTATABLE_PROPS = [...GROUP_PROPS, "originDraggable", "originRelative", ...ROTATABLE_PROPS];
 export const GROUP_ROTATABLE_TEMPLATE_OPTIONS = {
     ...ROTATABLE_TEMPLATE_OPTIONS,
+    props: GROUP_ROTATABLE_PROPS,
     frame: GROUP_ROTATABLE_FRAME,
     events: {
         rotateGroupStart: ROTATE_GROUP_START_TEMPLATE,
         rotateGroup: ROTATE_GROUP_TEMPLATE,
     },
 };
+
+export const GROUP_ROTATABLE_PROPS_TEMPLATE = () => ({
+    originDraggable: boolean("originDraggable", true),
+    originRelative: boolean("originRelative", true),
+});

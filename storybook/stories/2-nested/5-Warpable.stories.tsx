@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Warpable", () => {
     return <WarpableApp
+    description={<p className="description">No matter how many transforms are layered, you can warp the target properly. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Warpable.html" target="_blank">See Warpable API</a>)</p>}
         children={NESTED_JSX}
         renderDirections={array("renderDirections", [
             "nw", "n", "ne", "w", "e", "sw", "s", "se",

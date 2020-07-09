@@ -20,6 +20,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Scalable", () => {
     return <ScalableApp
+    description={<p className="description">No matter how many transforms are layered, you can scale the target properly. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html" target="_blank">See Scalable API</a>)</p>}
         children={NESTED_JSX}
         {...SCALABLE_PROPS_TEMPLATE()}
     />;

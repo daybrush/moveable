@@ -14,10 +14,12 @@ export default function DraggableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = <div className="target">Target</div>,
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}
@@ -35,7 +37,7 @@ export default function DraggableApp(props: any) {
     </div>);
 }
 
-export const DRAGGABLE_PROPS = ["throttleDrag", "startDragRotate", "throttleDragRotate", "zoom", "origin", "padding"];
+export const DRAGGABLE_PROPS = ["draggable", "throttleDrag", "startDragRotate", "throttleDragRotate", "zoom", "origin", "padding"];
 export const DRAGGABLE_FRAME = {
     translate: [0, 0],
 };
@@ -50,6 +52,7 @@ export const DRAGGABLE_TEMPLATE_OPTIONS = {
 };
 
 export const DRAGGABLE_PROPS_TEMPLATE = () => ({
+    draggable: boolean("draggable", true),
     throttleDrag: number("throttleDrag", 0),
     throttleDragRotate: number("throttleDragRotate", 0),
     startDragRotate: number("startDragRotate", 0),

@@ -1,7 +1,9 @@
 import * as React from "react";
 import Moveable from "react-moveable";
 import { DRAG_GROUP_START_TEMPLATE, DRAG_GROUP_TEMPLATE } from "../events.template";
-import { DRAGGABLE_TEMPLATE_OPTIONS } from "../../basic/ables/Draggable.template";
+import { DRAGGABLE_TEMPLATE_OPTIONS, DRAGGABLE_PROPS } from "../../basic/ables/Draggable.template";
+import { number, text } from "@storybook/addon-knobs";
+import { GROUP_PROPS } from "./Groupable.template";
 
 export default function DraggableApp(props: any) {
     const [target, setTarget] = React.useState<HTMLElement>();
@@ -16,6 +18,7 @@ export default function DraggableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = [
             <div className="target target1">Target1</div>,
             <div className="target target2">Target2</div>,
@@ -24,6 +27,7 @@ export default function DraggableApp(props: any) {
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}
@@ -45,8 +49,10 @@ export default function DraggableApp(props: any) {
     </div>);
 }
 
+export const GROUP_DRAGGABLE_PROPS = [...GROUP_PROPS, ...DRAGGABLE_PROPS];
 export const GROUP_DRAGGABLE_TEMPLATE_OPTIONS = {
     ...DRAGGABLE_TEMPLATE_OPTIONS,
+    props: GROUP_DRAGGABLE_PROPS,
     events: {
         dragGroupStart: DRAG_GROUP_START_TEMPLATE,
         dragGroup: DRAG_GROUP_TEMPLATE,

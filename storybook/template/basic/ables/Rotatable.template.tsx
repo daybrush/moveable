@@ -14,10 +14,12 @@ export default function RotatableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = <div className="target">Target</div>,
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}
@@ -35,7 +37,7 @@ export default function RotatableApp(props: any) {
     </div>);
 }
 
-export const ROTATABLE_PROPS = ["throttleRotate", "rotationPosition", "zoom", "origin", "padding"];
+export const ROTATABLE_PROPS = ["rotatable", "throttleRotate", "rotationPosition", "zoom", "origin", "padding"];
 export const ROTATABLE_FRAME = {
     rotate: 0,
 };
@@ -50,6 +52,7 @@ export const ROTATABLE_TEMPLATE_OPTIONS = {
 };
 
 export const ROTATABLE_PROPS_TEMPLATE = () => ({
+    rotatable: boolean("rotatable", true),
     throttleRotate: number("throttleRotate", 0),
     rotationPosition: radios("rotationPosition", {
         "top": "top",

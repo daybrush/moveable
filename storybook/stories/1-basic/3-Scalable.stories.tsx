@@ -21,6 +21,7 @@ story.addDecorator(withKnobs).addDecorator(withPreview);
 
 story.add("Scalable", () => {
     return <ScalableApp
+        description={<p className="description">You can scale the target. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html" target="_blank">See Scalable API</a>)</p>}
         {...SCALABLE_PROPS_TEMPLATE()}
     />;
 }, {

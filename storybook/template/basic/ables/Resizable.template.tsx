@@ -16,10 +16,12 @@ export default function ResizableApp(props: any) {
 
     const {
         rootChildren = d => d,
+        description,
         children = <div className="target">Target</div>,
         ...moveableProps
     } = props;
     return rootChildren(<div className="container">
+        {description}
         {children}
         <Moveable
             target={target}
@@ -43,7 +45,10 @@ export default function ResizableApp(props: any) {
     </div>);
 }
 
-export const RESIZABLE_PROPS = ["keepRatio", "throttleResize", "renderDirections", "edge", "zoom", "origin", "padding"];
+export const RESIZABLE_PROPS = [
+    "reiszable", "keepRatio", "throttleResize",
+    "renderDirections", "edge", "zoom", "origin", "padding",
+];
 export const RESIZABLE_FRAME = {
     translate: [0, 0],
 };
@@ -58,6 +63,7 @@ export const RESIZABLE_TEMPLATE_OPTIONS = {
     },
 };
 export const RESIZABLE_PROPS_TEMPLATE = () => ({
+    reisizable: boolean("resizable", true),
     keepRatio: boolean("keepRatio", false),
     throttleResize: number("throttleResize", 0),
     renderDirections: array("renderDirections", [
