@@ -11,7 +11,7 @@
 <p align="middle">A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.</p>
 <p align="middle">
     <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
-    <a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md" target="_blank"><strong>Handbook</strong></a> /
+    <a href="https://daybrush.com/moveable/storybook/" target="_blank"><strong>Storybook</strong></a> /
     <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
     <a href="https://github.com/daybrush/scena" target="_blank"><strong>Main Project</strong></a>
 </p>
@@ -26,10 +26,10 @@
 <th colspan="4">Moveable</th>
 </tr>
 <tr>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-draggable"><strong>Draggable</strong></a></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-resizable"><strong>Resizable</strong></a></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-scalable"><strong>Scalable</strong></a></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-rotatable"><strong>Rotatable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--draggable"><strong>Draggable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--resizable"><strong>Resizable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--scalable"><strong>Scalable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--rotatable"><strong>Rotatable</strong></a></td>
 </tr>
 <tr>
 <td align="center">
@@ -46,16 +46,28 @@
 </td>
 </tr>
 <tr>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-warpable"><strong>Warpable</strong></a></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-pinchable"><strong>Pinchable</strong></a></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-group"><strong>Groupable</strong></a></td>
-<td align="center"><a href="https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-snappable"><strong>Snappable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--warpable"><strong>Warpable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Pinchable.html"><strong>Pinchable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/group--draggable"><strong>Groupable</strong></a></td>
+<td align="center"><a href="http://localhost:6006/?path=/story/use-snap-bounds-with-ables--snap-guidelines-elements"><strong>Snappable</strong></a></td>
 </tr>
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"></td>
+</tr>
+<tr>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--clippable"><strong>Clippable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--roundable"><strong>Roundable</strong></a></td>
+<td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--origindraggable"><strong>OriginDraggable</strong></a></td>
+<td align="center"><a href="https://github.com/daybrush/selecto"><strong>Selecto</strong></a></td>
+</tr>
+<tr>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/clippable.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/roundable.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/origindraggable.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/selecto.gif"></td>
 </tr>
 </table>
 
@@ -69,6 +81,9 @@
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 * **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 * **Snappable** indicates whether to snap to the guideline.
+* **OriginDraggable*** indicates Whether to drag origin.
+* **Clippable** indicates Whether to clip the target.
+* **Roundable** indicates Whether to show and drag or double click border-radius.
 * Support SVG Elements (svg, path, line, ellipse, g, rect, ...etc)
 * Support Major Browsers
 * Support 3d Transform
