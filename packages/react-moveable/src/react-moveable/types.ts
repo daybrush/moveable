@@ -1449,7 +1449,7 @@ export interface MoveableInterface {
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
-    request(ableName: string, params: IObject<any>): Requester;
+    request(ableName: string, params: IObject<any>, isInstant?: boolean): Requester;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
