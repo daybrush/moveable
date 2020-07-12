@@ -1,5 +1,5 @@
 import React from "react";
-import Moveable, { ClippableProps } from "./react-moveable";
+import Moveable, { ClippableProps } from "../react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";
@@ -7,7 +7,7 @@ import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
 import { IObject } from "@daybrush/utils";
 import Guides from "@scena/react-guides";
-import Clippable from "./react-moveable/ables/Clippable";
+import Clippable from "../react-moveable/ables/Clippable";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);

@@ -42,6 +42,7 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @property - Whether the container containing the target becomes a pinch. (default: true)
  * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
  * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
+ * @property - add nonce property to style for CSP (default: "")
  */
 export interface DefaultOptions {
     target?: SVGElement | HTMLElement | null;
@@ -57,6 +58,7 @@ export interface DefaultOptions {
     pinchOutside?: boolean;
     triggerAblesSimultaneously?: boolean;
     checkInput?: boolean;
+    cspNonce?: string;
 }
 /**
  * @typedef

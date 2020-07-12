@@ -14,6 +14,7 @@ export default {
         pinchOutside: Boolean,
         triggerAblesSimultaneously: Boolean,
         checkInput: Boolean,
+        cspNonce: String,
     } as const,
     events: {
         onRenderStart: "renderStart",

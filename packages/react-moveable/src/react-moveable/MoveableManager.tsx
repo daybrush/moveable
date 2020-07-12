@@ -58,6 +58,7 @@ export default class MoveableManager<T = {}>
         pinchOutside: true,
         checkInput: false,
         groupable: false,
+        cspNonce: "",
     };
     public state: MoveableManagerState = {
         container: null,
@@ -100,7 +101,7 @@ export default class MoveableManager<T = {}>
     public render() {
         const props = this.props;
         const state = this.state;
-        const { edge, parentPosition, className, target: propsTarget, zoom } = props;
+        const { edge, parentPosition, className, target: propsTarget, zoom, cspNonce } = props;
 
         this.checkUpdate();
         this.updateRenderPoses();
@@ -117,6 +118,7 @@ export default class MoveableManager<T = {}>
         });
         return (
             <ControlBoxElement
+                cspNonce={cspNonce}
                 ref={ref(this, "controlBox")}
                 className={`${prefix("control-box", direction === -1
                     ? "reverse" : "", isDragging ? "dragging" : "")} ${className}`}

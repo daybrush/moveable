@@ -37,8 +37,6 @@ export const MOVEABLE_PROPS: string[] = Object.keys(MOVEABLE_PROPS_MAP);
 
 const cssMap: IObject<boolean> = {};
 
-console.log(MOVEABLE_PROPS, MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_MAP, MOVEABLE_EVENTS);
-
 MOVEABLE_ABLES.forEach(({ css }: Able) => {
     if (!css) {
         return;

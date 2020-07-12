@@ -1,0 +1,73 @@
+.container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    border: 1px solid #333;
+    display: inline-block;
+    vertical-align: top;
+    top: 40px;
+    margin: 20px;
+}
+.box {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    left: 50%;
+    top: 50%;
+    margin-left: -60px;
+    margin-top: -60px;
+    color: #333;
+}
+
+.box span {
+    position: absolute;
+    font-size: 60px;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.clippable .box, .roundable .box {
+    color: white;
+    background: #4af;
+}
+
+p {
+    position: absolute;
+    transform: translateY(-100%);
+    box-sizing: border-box;
+    padding: 10px 0px;
+    margin: 0;
+}
+
+
+.selecto .box {
+    width: 50px;
+    height: 60px;
+    margin-left: -25px;
+    margin-top: -30px;
+}
+
+.selecto .box span {
+    font-size: 40px;
+}
+.selecto .box1 {
+    left: 35%;
+    top: 35%;
+}
+.selecto .box2 {
+    left: 65%;
+    top: 35%;
+}
+
+.selecto .box3 {
+    top: 65%;
+    left: 35%;
+}
+.selecto .box4 {
+    top: 65%;
+    left: 65%;
+}

@@ -71,19 +71,20 @@
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
         "react-scripts": "^3.0.1",
+        "react-selecto": "^1.5.0",
         "scenejs": "^1.1.4",
         "shape-svg": "^0.3.3",
         "tslint": "^5.16.0",
         "typescript": "^3.4.5"
     },
     "dependencies": {
-        "@daybrush/drag": "^0.19.0",
+        "@daybrush/drag": "^0.19.1",
         "@daybrush/utils": "^0.10.5",
         "@egjs/agent": "^2.1.5",
         "@egjs/children-differ": "^1.0.0",
         "@scena/dragscroll": "^0.2.1",
         "framework-utils": "^0.3.4",
-        "react-css-styled": "^0.1.4"
+        "react-css-styled": "^0.2.0"
     },
     "peerDependencies": {
         "@daybrush/drag": ">=0.19.0",
