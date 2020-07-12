@@ -27,8 +27,12 @@ export function triggerAble<T extends IObject<any>>(
     const conditionName = `${eventOperation}${eventAffix}Condition`;
     const isEnd = eventType === "End";
     const isAfter = eventType.indexOf("After") > -1;
+    const isFirstStart = isStart && (
+        !moveable.targetDragger || !moveable.controlDragger
+        || (!moveable.targetDragger.isFlag() || !moveable.controlDragger.isFlag())
+    );
 
-    if (isStart) {
+    if (isFirstStart) {
         moveable.updateRect(eventType, true, false);
     }
     if (eventType === "" && !isAfter) {
@@ -52,6 +56,11 @@ export function triggerAble<T extends IObject<any>>(
     const renderDatas = datas.render || (datas.render = {});
     const renderEvent = { ...e, datas: renderDatas, originalDatas: datas };
 
+    if (isFirstStart) {
+        events.forEach(able => {
+            able.unset && able.unset(moveable);
+        });
+    }
     const results = events.filter((able: any) => {
         const hasCondition = isStart && able[conditionName];
         const ableName = able.name;
@@ -73,9 +82,7 @@ export function triggerAble<T extends IObject<any>>(
                     childeMoveable.state.dragger = null;
                 });
             }
-            events.forEach(able => {
-                able.unset && able.unset(moveable);
-            });
+
             return false;
         }
         triggerRenderStart(moveable, isGroup, renderEvent);
