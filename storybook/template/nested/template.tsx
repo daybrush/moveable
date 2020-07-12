@@ -62,4 +62,4 @@ export const NESTED_JSX = <div className="container">
     </div>
 </div>;
 
-export const NESTED_CSS_TEMPLATE = NESTED_CSS + BASIC_CSS_TEMPLATE;
+export const NESTED_CSS_TEMPLATE = NESTED_CSS + "\n" + BASIC_CSS_TEMPLATE;

@@ -149,6 +149,47 @@ function RenderSelecto() {
         ></Selecto>
     </div>;
 }
+
+function RenderBounds() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".bounds .box")!);
+    }, []);
+    return <div className="container bounds">
+        Bounds
+        <div className="box"><span>A</span></div>
+        <Moveable
+            target={target}
+            draggable={true}
+            origin={false}
+            snappable={true}
+            bounds={{ top: 60, left: 60 }}
+            onDrag={e => {
+                e.target.style.cssText = `left:${e.left}px; top: ${e.top}px;`;
+            }}
+        ></Moveable>
+    </div>;
+}
+function RenderInnerBounds() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".inner .box")!);
+    }, []);
+    return <div className="container inner">
+        Inner Bounds
+        <div className="box"><span>A</span></div>
+        <Moveable
+            target={target}
+            draggable={true}
+            origin={false}
+            snappable={true}
+            innerBounds={{ top: 20, left: 60, width: 100, height: 100 }}
+            onDrag={e => {
+                e.target.style.cssText = `left:${e.left}px; top: ${e.top}px;`;
+            }}
+        ></Moveable>
+    </div>;
+}
 export default function App() {
     return <div>
         <RenderDraggable />
@@ -156,5 +197,7 @@ export default function App() {
         <RenderRoundable />
         <RenderOriginDraggable />
         <RenderSelecto />
+        <RenderBounds />
+        <RenderInnerBounds />
     </div>;
 }

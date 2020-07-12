@@ -1,6 +1,6 @@
 {
     "name": "react-moveable",
-    "version": "0.21.0-beta16",
+    "version": "0.21.0-beta19",
     "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -87,7 +87,7 @@
         "react-css-styled": "^0.2.0"
     },
     "peerDependencies": {
-        "@daybrush/drag": ">=0.19.0",
+        "@daybrush/drag": ">=0.19.1",
         "@daybrush/utils": ">=0.10.5",
         "framework-utils": ">=0.3.4",
         "react-css-styled": ">=0.1.3",

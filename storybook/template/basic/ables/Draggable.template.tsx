@@ -2,22 +2,30 @@ import * as React from "react";
 import Moveable from "react-moveable";
 import { DRAG_START_TEMPLATE, DRAG_TEMPLATE } from "../events.template";
 import { number, boolean, object } from "@storybook/addon-knobs";
+import { IObject } from "@daybrush/utils";
 
-export default function DraggableApp(props: any) {
+export default function DraggableApp(props: any, ) {
     const [target, setTarget] = React.useState<HTMLElement>();
     const [frame] = React.useState({
         translate: [0, 0],
     });
-    React.useEffect(() => {
-        setTarget(document.querySelector<HTMLElement>(".target")!);
-    }, []);
+    const [nextProps, setNextProps] = React.useState<IObject<any>>({});
 
     const {
         rootChildren = d => d,
         description,
+        callback,
         children = <div className="target">Target</div>,
         ...moveableProps
     } = props;
+
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".target")!);
+
+        if (callback) {
+            setNextProps(callback());
+        }
+    }, []);
     return rootChildren(<div className="container">
         {description}
         {children}
@@ -25,6 +33,7 @@ export default function DraggableApp(props: any) {
             target={target}
             draggable={true}
             {...moveableProps}
+            {...nextProps}
             onDragStart={e => {
                 e.set(frame.translate);
             }}
