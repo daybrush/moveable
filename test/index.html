@@ -1,0 +1,37 @@
+<style>
+    .test {
+        position: absolute;
+        width: 100px;
+        /* height: 100px; */
+        left: 100px;
+        top: 100px;
+    }
+
+    .moveable-line.moveable-rotation-line {
+        height: 20px !important;
+        top: -20px !important;
+    }
+</style>
+<div class="test" contenteditable="true">Test</div>
+<!-- <script src="https://daybrush.com/moveable/release/latest/dist/moveable.js"></script> -->
+<script src="../dist/moveable.js"></script>
+<script>
+    const moveable = new Moveable(document.body, {
+        draggable: true,
+        target: document.querySelector(".test"),
+        snappable: true,
+        // verticalGuidelines: [200],
+        bounds: { bottom: 200, right: 200 },
+        snapThreshold: 5,
+        padding: { top: 10 },
+    }).on("dragStart", e => {
+        if (e.inputEvent && e.inputEvent.target.className === "test") e.stop();
+    }).on("drag", e => {
+        e.target.style.cssText = `top: ${e.top}px; left: ${e.left}px;`;
+    });
+
+    window.addEventListener("keyup", e => {
+        moveable.updateRect();
+        moveable.request("draggable", { deltaX: 0, deltaY: 0 }, true);
+    })
+</script>

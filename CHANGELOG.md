@@ -3,7 +3,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.2] - 2020-07-13
+* `moveable` 0.18.2
+* `react-moveable` 0.21.3
+* `preact-moveable` 0.20.4
+* `ngx-moveable` 0.14.0
+* `svelte-moveable` 0.9.0
 
+### Added
+* Add `roundable` props
+* Add `originDraggable` props #169
+* Add `clippable` props
+* Add `cspNonce` props #279
+* Add `setMin`, `setMax` property in resizable event #231 #256
+* Add `top-left`, `top-right`, ...etc 8 direction value for rotatable #259
+* Add `moveable-dragging` className #268
+* Add `lastEvent` property #262
+
+### Fixed
+* Fix angular dependecies #274
+* Fix `@daybrush/utils` types #273
+* Fix zero dist issue #264
+* Fix that innerBounds not works and change bounds color
 
 ## [0.17.10] - 2020-06-08
 * `moveable` 0.17.10

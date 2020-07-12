@@ -12,7 +12,12 @@ const resolveCompatPlugin = compat({
     useReactCompat: true,
     resolveCompat: true,
 });
-
+/*
+    "demo:start": "rollup -c rollup.config.demo.js -w",
+    "demo:build": "rm -rf ./demo/dist && rollup -c rollup.config.demo.js",
+    "prerelease": "npm run doc && npm run build && npm run demo:build && prerelease --dirs=dist,doc",
+    "release:before": "npm run build && npm run doc && npm run demo:build && npm run storybook",
+*/
 const external = {
     "react-simple-compat": "react-simple-compat",
     "react-compat-css-styled": "react-compat-css-styled",

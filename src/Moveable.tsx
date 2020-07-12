@@ -3,13 +3,13 @@ import { ref, Properties } from "framework-utils";
 import * as React from "react";
 import { render } from "react-dom";
 import InnerMoveable from "./InnerMoveable";
-import { MoveableOptions, MoveableGetterSetter, MoveableEvents } from "./types";
 import {
     MoveableInterface,
-    RectInfo,
+    MoveableOptions, MoveableProperties,
 } from "react-moveable/declaration/types";
-import { PROPERTIES, EVENTS, METHODS } from "./consts";
 import { camelize, isArray } from "@daybrush/utils";
+import { MoveableEventsParameters } from "./types";
+import { PROPERTIES, EVENTS, METHODS } from "./consts";
 
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
@@ -88,8 +88,9 @@ class Moveable extends EgComponent {
     }
 }
 
-interface Moveable extends MoveableGetterSetter, MoveableInterface {
-    on<T extends keyof MoveableEvents>(eventName: T, handlerToAttach: (event: MoveableEvents[T]) => any): this;
+interface Moveable extends MoveableProperties, MoveableInterface {
+    on<T extends keyof MoveableEventsParameters>(
+        eventName: T, handlerToAttach: (event: MoveableEventsParameters[T]) => any): this;
     on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
     on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
 }
