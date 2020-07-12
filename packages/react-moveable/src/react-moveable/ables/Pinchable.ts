@@ -18,9 +18,9 @@ export default {
         onPinchStart: "pinchStart",
         onPinch: "pinch",
         onPinchEnd: "pinchEnd",
-        onPinchGroupStart: "pinchStart",
-        onPinchGroup: "pinch",
-        onPinchGroupEnd: "pinchEnd",
+        onPinchGroupStart: "pinchGroupStart",
+        onPinchGroup: "pinchGroup",
+        onPinchGroupEnd: "pinchGroupEnd",
     } as const,
     pinchStart(
         moveable: MoveableManagerInterface<PinchableProps, SnappableState>,
