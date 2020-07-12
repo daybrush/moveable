@@ -44,7 +44,7 @@ export default {
     } as const,
     events: {
         onScaleStart: "scaleStart",
-        onScale: "scaleEnd",
+        onScale: "scale",
         onScaleEnd: "scaleEnd",
         onScaleGroupStart: "scaleGroupStart",
         onScaleGroup: "scaleGroup",

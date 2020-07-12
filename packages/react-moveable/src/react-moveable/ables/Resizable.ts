@@ -50,9 +50,9 @@ export default {
         onResize: "resize",
         onResizeEnd: "resizeEnd",
 
-        onResizeGroupStart: "onResizeGroupStart",
-        onResizeGroup: "onResizeGroup",
-        onResizeGroupEnd: "onResizeGroupEnd",
+        onResizeGroupStart: "resizeGroupStart",
+        onResizeGroup: "resizeGroup",
+        onResizeGroupEnd: "resizeGroupEnd",
     } as const,
     render(moveable: MoveableManagerInterface<Partial<ResizableProps>>, React: Renderer): any[] | undefined {
         const { resizable, edge } = moveable.props;

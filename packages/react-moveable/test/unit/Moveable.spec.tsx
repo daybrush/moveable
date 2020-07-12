@@ -2,6 +2,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import MoveableExample from "./MoveableExample";
 import { wait } from "./TestHelper";
+import { MOVEABLE_EVENTS, MOVEABLE_EVENTS_PROPS_MAP, MOVEABLE_EVENTS_MAP } from "../../src/react-moveable";
+import { camelize } from "@daybrush/utils";
 
 describe("test Moveable", () => {
     beforeEach(() => {
@@ -151,5 +153,14 @@ describe("test Moveable", () => {
         expect(nextTargetDragger).to.be.not.equals(targetDragger);
         expect(controlDragger).to.be.not.ok;
         expect(nextControlDragger).to.be.not.ok;
+    });
+    it ("check event validation", () => {
+        const map = MOVEABLE_EVENTS_PROPS_MAP;
+
+        for (const name in map) {
+            const result = (map as any)[name];
+
+            expect(camelize(`on ${result}`)).to.be.equals(name);
+        }
     });
 });

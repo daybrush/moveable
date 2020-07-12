@@ -11,7 +11,7 @@ import {
     ScrollableOptions, MoveableProps, ScrollableProps, PinchableProps, DragAreaProps,
     OriginDraggableProps, ClippableProps, RoundableProps, SnappableProps, WarpableProps,
     RotatableProps, ScalableProps, ResizableProps, DraggableProps, OriginOptions,
-    PaddingOptions, GroupableProps, ExcludeKey, OriginDraggableOptions, MoveableOptions
+    PaddingOptions, GroupableProps, ExcludeKey, OriginDraggableOptions, MoveableOptions, MoveableEvents
 } from "../../src/react-moveable";
 import Draggable from "../../src/react-moveable/ables/Draggable";
 import Resizable from "../../src/react-moveable/ables/Resizable";
@@ -27,7 +27,7 @@ import Clippable from "../../src/react-moveable/ables/Clippable";
 import OriginDraggable from "../../src/react-moveable/ables/OriginDraggable";
 import Pinchable from "../../src/react-moveable/ables/Pinchable";
 import Scrollable from "../../src/react-moveable/ables/Scrollable";
-import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP } from "../../src/react-moveable/ables/consts";
+import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP, MOVEABLE_EVENTS_MAP } from "../../src/react-moveable/ables/consts";
 import Origin from "../../src/react-moveable/ables/Origin";
 import Padding from "../../src/react-moveable/ables/Padding";
 
