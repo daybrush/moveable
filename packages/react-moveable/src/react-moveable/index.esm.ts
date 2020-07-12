@@ -8,4 +8,7 @@ export {
     MOVEABLE_PROPS,
     MOVEABLE_PROPS_MAP,
 } from "./ables/consts";
+export {
+    MOVEABLE_METHODS,
+} from "./consts";
 export default Moveable;

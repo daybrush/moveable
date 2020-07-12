@@ -232,7 +232,7 @@ export const DIRECTION_ROTATIONS: IObject<number> = {
     se: 135,
 };
 
-export const METHODS: Array<keyof MoveableInterface> = [
+export const MOVEABLE_METHODS: Array<keyof MoveableInterface> = [
     "isMoveableElement",
     "updateRect",
     "updateTarget",

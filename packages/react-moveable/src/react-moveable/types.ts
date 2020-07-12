@@ -3,7 +3,7 @@ import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
 import { StyledInterface } from "react-css-styled";
-import { MOVEABLE_EVENTS_PROPS_MAP } from "./ables/consts";
+import { MOVEABLE_EVENTS_PROPS_MAP, MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
 
 export interface MoveableClientRect {
     left: number;
@@ -1480,7 +1480,13 @@ export type AnyProps<T extends IObject<any>> = Required<{ [key in keyof T]: any 
 export type UnionToIntersection<U> =
     (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
 
-export type MoveableEventsProps = Parameters<Required<MoveableProps>[keyof typeof MOVEABLE_EVENTS_PROPS_MAP]>[0];
+// export type MoveableEventsProps = Parameters<Required<MoveableProps>[keyof typeof MOVEABLE_EVENTS_PROPS_MAP]>[0];
+export type MoveableEvents = {
+    [key in keyof typeof MOVEABLE_EVENTS_MAP]: Parameters<Required<MoveableProps>[typeof MOVEABLE_EVENTS_MAP[key]]>[0];
+};
+export type MoveableProperties = {
+    [key in keyof typeof MOVEABLE_PROPS_MAP]: MoveableProps[key];
+};
 
 export interface SnappableRenderType {
     type: "snap" | "bounds";

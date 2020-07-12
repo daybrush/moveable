@@ -343,8 +343,6 @@ export default {
                     distY += e.deltaY;
                 }
 
-                console.log(distX, distY);
-
                 return { datas, distX, distY };
             },
             requestEnd() {

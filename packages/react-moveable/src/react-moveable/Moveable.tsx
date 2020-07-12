@@ -6,10 +6,10 @@ import MoveableGroup from "./MoveableGroup";
 import { ref, withMethods } from "framework-utils";
 import { isArray } from "@daybrush/utils";
 import Groupable from "./ables/Groupable";
-import { METHODS } from "./consts";
+import { MOVEABLE_METHODS } from "./consts";
 
 export default class Moveable<T = {}> extends React.PureComponent<MoveableProps & GroupableProps & T> {
-    @withMethods(METHODS)
+    @withMethods(MOVEABLE_METHODS)
     public moveable!: MoveableManager | MoveableGroup;
 
     public render() {
