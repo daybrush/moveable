@@ -1481,3 +1481,8 @@ export type UnionToIntersection<U> =
     (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
 
 export type MoveableEventsProps = Parameters<Required<MoveableProps>[keyof typeof MOVEABLE_EVENTS_PROPS_MAP]>[0];
+
+export interface SnappableRenderType {
+    type: "snap" | "bounds";
+    pos: number;
+}

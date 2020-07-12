@@ -1,4 +1,4 @@
-import { maxOffset, getDistSize, throttle } from "../../utils";
+import { maxOffset, getDistSize, throttle, getTinyDist } from "../../utils";
 import { average, rotate, getRad } from "../../matrix";
 import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";
@@ -164,37 +164,69 @@ function checkLineBoundCollision(
     boundLine: number[][],
     isStart: boolean,
     threshold?: number,
+    isRender?: boolean,
 ) {
     const dot1 = line[0];
     const dot2 = line[1];
     const boundDot1 = boundLine[0];
     const boundDot2 = boundLine[1];
-    const dy1 = dot2[1] - dot1[1];
-    const dx1 = dot2[0] - dot1[0];
+    const dy1 = getTinyDist(dot2[1] - dot1[1]);
+    const dx1 = getTinyDist(dot2[0] - dot1[0]);
 
-    const dy2 = boundDot2[1] - boundDot1[1];
-    const dx2 = boundDot2[0] - boundDot1[0];
+    const dy2 = getTinyDist(boundDot2[1] - boundDot1[1]);
+    const dx2 = getTinyDist(boundDot2[0] - boundDot1[0]);
 
     // dx2 or dy2 is zero
     if (!dx2) {
         // vertical
-        if (dx1) {
-            const y = dy1 ? dy1 / dx1 * (boundDot1[0] - dot1[0]) + dot1[1] : dot1[1];
+        if (isRender && !dy1) {
+            // 90deg
+            return {
+                isBound: false,
+                offset: 0,
+            };
+        } else if (dx1) {
+            // const y = dy1 ? dy1 / dx1 * (boundDot1[0] - dot1[0]) + dot1[1] : dot1[1];
+            const y = dy1 / dx1 * (boundDot1[0] - dot1[0]) + dot1[1];
 
             // boundDot1[1] <= y  <= boundDot2[1]
             return checkInnerBoundDot(y, boundDot1[1], boundDot2[1], isStart, threshold);
+        } else {
+            const offset = boundDot1[0] - dot1[0];
+
+            const isBound = Math.abs(offset) <= (threshold || 0);
+
+            return {
+                isBound,
+                offset: isBound ? offset : 0,
+            };
         }
     } else if (!dy2) {
         // horizontal
-
-        if (dy1) {
+        if (isRender && !dx1) {
+            // 90deg
+            return {
+                isBound: false,
+                offset: 0,
+            };
+        } else if (dy1) {
             // y = a * (x - x1) + y1
             // x = (y - y1) / a + x1
-            const a = dy1 / dx1;
-            const x = dx1 ? (boundDot1[1] - dot1[1]) / a + dot1[0] : dot1[0];
+            // const a = dy1 / dx1;
+            // const x = dx1 ? (boundDot1[1] - dot1[1]) / a + dot1[0] : dot1[0];
+            const x = (boundDot1[1] - dot1[1]) / (dy1 / dx1) + dot1[0];
 
             // boundDot1[0] <= x && x <= boundDot2[0]
             return checkInnerBoundDot(x, boundDot1[0], boundDot2[0], isStart, threshold);
+        } else {
+            const offset = boundDot1[1] - dot1[1];
+
+            const isBound = Math.abs(offset) <= (threshold || 0);
+
+            return {
+                isBound,
+                offset: isBound ? offset : 0,
+            };
         }
     }
     return {
@@ -220,7 +252,7 @@ export function getInnerBoundInfo(
             datas,
             distX: offset[0],
             distY: offset[1],
-        }).map((size, i) => size * (multiple[i] ?  2 / multiple[i] : 0));
+        }).map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
 
         return {
             sign: multiple,
@@ -515,12 +547,12 @@ export function checkInnerBoundPoses(
         } = isStartLine(center, line);
 
         // test vertical
-        const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart, 1);
-        const bottomBoundInfo = checkLineBoundCollision(line, bottomLine, isVerticalStart, 1);
+        const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart, 1, true);
+        const bottomBoundInfo = checkLineBoundCollision(line, bottomLine, isVerticalStart, 1, true);
 
         // test horizontal
-        const leftBoundInfo = checkLineBoundCollision(line, leftLine, isHorizontalStart, 1);
-        const rightBoundInfo = checkLineBoundCollision(line, rightLine, isHorizontalStart, 1);
+        const leftBoundInfo = checkLineBoundCollision(line, leftLine, isHorizontalStart, 1, true);
+        const rightBoundInfo = checkLineBoundCollision(line, rightLine, isHorizontalStart, 1, true);
 
         if (topBoundInfo.isBound && !boundMap.top) {
             horizontalPoses.push(top);

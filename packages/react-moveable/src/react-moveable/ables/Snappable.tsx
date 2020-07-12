@@ -6,14 +6,14 @@ import {
     SnapInfo, BoundInfo,
     ScalableProps, SnapPosInfo, RotatableProps,
     RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline,
-    SnappableOptions, MoveableClientRect, MoveableManagerInterface,
+    SnappableOptions, MoveableClientRect, MoveableManagerInterface, SnappableRenderType,
 } from "../types";
 import {
     prefix, caculatePoses, getRect,
     getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign,
     getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent, caculateInversePosition, caculatePosition,
 } from "../utils";
-import { IObject, find } from "@daybrush/utils";
+import { IObject, find, findIndex } from "@daybrush/utils";
 import {
     getPosByReverseDirection,
     getDragDist, scaleMatrix, getPosByDirection,
@@ -60,10 +60,15 @@ export function snapStart(moveable: MoveableManagerInterface<SnappableProps, Sna
         verticalGuidelines = [],
         elementGuidelines = [],
         bounds,
+        innerBounds,
         snapCenter,
     } = moveable.props;
 
-    if (!bounds && !horizontalGuidelines.length && !verticalGuidelines.length && !elementGuidelines.length) {
+    if (
+        !innerBounds && !bounds
+        && !horizontalGuidelines.length
+        && !verticalGuidelines.length && !elementGuidelines.length
+    ) {
         return;
     }
 
@@ -167,6 +172,7 @@ export function hasGuidelines(
         props: {
             snappable,
             bounds,
+            innerBounds,
             verticalGuidelines,
             horizontalGuidelines,
         },
@@ -184,7 +190,7 @@ export function hasGuidelines(
         return false;
     }
     if (
-        bounds
+        bounds || innerBounds
         || (guidelines && guidelines.length)
         || (verticalGuidelines && verticalGuidelines.length)
         || (horizontalGuidelines && horizontalGuidelines.length)
@@ -1145,20 +1151,21 @@ function renderElementGroup(
     }));
 }
 function renderSnapPoses(
-    snapPoses: number[],
+    snapPoses: SnappableRenderType[],
     [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
     minPos: number,
     targetPos: number,
     size: number,
     React: Renderer,
 ) {
-    return snapPoses.map((pos, i) => {
+    return snapPoses.map(({ type, pos }, i) => {
         return <div className={prefix(
             "line",
             directionName,
             "guideline",
             "target",
             "bold",
+            type,
         )} key={`${directionName}TargetGuidline${i}`} style={{
             [posName1]: `${minPos}px`,
             [posName2]: `${-targetPos + pos}px`,
@@ -1328,8 +1335,8 @@ function addBoundGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     verticalPoses: number[],
     horizontalPoses: number[],
-    verticalSnapPoses: number[],
-    horizontalSnapPoses: number[],
+    verticalSnapPoses: SnappableRenderType[],
+    horizontalSnapPoses: SnappableRenderType[],
 ) {
     const {
         vertical: {
@@ -1342,23 +1349,42 @@ function addBoundGuidelines(
         },
     } = checkBoundPoses(moveable, verticalPoses, horizontalPoses);
 
-    if (isVerticalBound && verticalSnapPoses.indexOf(verticalBoundPos) < 0) {
-        verticalSnapPoses.push(verticalBoundPos);
+    if (isVerticalBound) {
+        verticalSnapPoses.push({
+            type: "bounds",
+            pos: verticalBoundPos,
+        });
     }
-    if (isHorizontalBound && horizontalSnapPoses.indexOf(horizontalBoundPos) < 0) {
-        horizontalSnapPoses.push(horizontalBoundPos);
+    if (isHorizontalBound) {
+        horizontalSnapPoses.push({
+            type: "bounds",
+            pos: horizontalBoundPos,
+        });
     }
     const {
         vertical: verticalInnerBoundPoses,
         horizontal: horizontalInnerBoundPoses,
     } = checkInnerBoundPoses(moveable);
 
-    verticalSnapPoses.push(
-        ...verticalInnerBoundPoses.filter(pos => verticalSnapPoses.indexOf(pos) < 0),
-    );
-    horizontalSnapPoses.push(
-        ...horizontalInnerBoundPoses.filter(pos => horizontalSnapPoses.indexOf(pos) < 0),
-    );
+    verticalInnerBoundPoses.forEach(innerPos => {
+        if (findIndex(verticalSnapPoses, ({ type, pos }) => type === "bounds" && pos === innerPos) >= 0) {
+            return;
+        }
+        verticalSnapPoses.push({
+            type: "bounds",
+            pos: innerPos,
+        });
+    });
+
+    horizontalInnerBoundPoses.forEach(innerPos => {
+        if (findIndex(horizontalSnapPoses, ({ type, pos }) => type === "bounds" && pos === innerPos) >= 0) {
+            return;
+        }
+        horizontalSnapPoses.push({
+            type: "bounds",
+            pos: innerPos,
+        });
+    });
 }
 /**
  * @namespace Moveable.Snappable
@@ -1387,6 +1413,19 @@ export default {
     events: {
         onSnap: "snap",
     } as const,
+    css: [
+        `:host {
+    --bounds-color: #d66;
+}`,
+        `.guideline {
+    pointer-events: none;
+    z-index: 1;
+}`,
+        `.line.guideline.bounds {
+    background: #d66;
+    background: var(--bounds-color);
+}`,
+    ],
     render(moveable: MoveableManagerInterface<SnappableProps, SnappableState>, React: Renderer): any[] {
         const {
             top: targetTop,
@@ -1420,8 +1459,8 @@ export default {
         } = moveable.props;
         const poses = getAbsolutePosesByState(moveable.state);
         const { width, height, top, left, bottom, right } = getRect(poses);
-        const verticalSnapPoses: number[] = [];
-        const horizontalSnapPoses: number[] = [];
+        const verticalSnapPoses: SnappableRenderType[] = [];
+        const horizontalSnapPoses: SnappableRenderType[] = [];
         const verticalGuidelines: Guideline[] = [];
         const horizontalGuidelines: Guideline[] = [];
         const snapInfos: Array<{ vertical: SnapInfo, horizontal: SnapInfo }> = [];
@@ -1448,8 +1487,14 @@ export default {
                         posInfos: horizontalPosInfos,
                     },
                 } = snapInfo;
-                verticalSnapPoses.push(...verticalPosInfos.map(posInfo => posInfo.pos));
-                horizontalSnapPoses.push(...horizontalPosInfos.map(posInfo => posInfo.pos));
+                verticalSnapPoses.push(...verticalPosInfos.map(posInfo => ({
+                    type: "snap",
+                    pos: posInfo.pos,
+                } as const)));
+                horizontalSnapPoses.push(...horizontalPosInfos.map(posInfo => ({
+                    type: "snap",
+                    pos: posInfo.pos,
+                } as const)));
                 verticalGuidelines.push(...getSnapGuidelines(verticalPosInfos));
                 horizontalGuidelines.push(...getSnapGuidelines(horizontalPosInfos));
             });
@@ -1625,16 +1670,16 @@ export default {
     },
 };
 
- /**
- * Whether or not target can be snapped to the guideline. (default: false)
- * @name Moveable.Snappable#snappable
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * moveable.snappable = true;
- */
+/**
+* Whether or not target can be snapped to the guideline. (default: false)
+* @name Moveable.Snappable#snappable
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body);
+*
+* moveable.snappable = true;
+*/
 /**
  * When you drag, make the snap in the center of the target. (default: false)
  * @name Moveable.Snappable#snapCenter

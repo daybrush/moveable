@@ -2,7 +2,7 @@ import {
     SnapInfo, SnappableProps, SnappableState,
     Guideline, ResizableProps, ScalableProps, SnapOffsetInfo, MoveableManagerInterface
 } from "../../types";
-import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy } from "../../utils";
+import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy, getTinyDist } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "../../matrix";
@@ -21,8 +21,9 @@ export function getGapGuidelines(
 
     const elementGuidelines
         = groupBy(guidelines.filter(({ type: guidelineType }) => guidelineType === type), ({ element }) => element)
-        .map(group => group[0])
-        .filter(({ pos, sizes }) => pos[otherIndex] <= otherEnd && otherStart <= pos[otherIndex] + sizes![otherIndex]);
+            .map(group => group[0])
+            .filter(({ pos, sizes }) => pos[otherIndex] <= otherEnd
+                && otherStart <= pos[otherIndex] + sizes![otherIndex]);
 
     elementGuidelines.forEach(guideline1 => {
         const elementStart = guideline1.pos[index];
@@ -190,8 +191,8 @@ export function checkSnapKeepRatio(
     const isBottom = dy > 0;
     const isRight = dx > 0;
 
-    dx = Math.abs(dx) <= TINY_NUM ? 0 : dx;
-    dy = Math.abs(dy) <= TINY_NUM ? 0 : dy;
+    dx = getTinyDist(dx);
+    dy = getTinyDist(dy);
 
     const verticalInfo: SnapOffsetInfo = {
         isSnap: false,

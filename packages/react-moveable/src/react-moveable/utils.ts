@@ -1,4 +1,4 @@
-import { PREFIX, IS_WEBKIT } from "./consts";
+import { PREFIX, IS_WEBKIT, TINY_NUM } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
 import {
@@ -1220,4 +1220,8 @@ export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) 
     const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
 
     return [distX, distY];
+}
+
+export function getTinyDist(v: number) {
+    return  Math.abs(v) <= TINY_NUM ? 0 : v;
 }
