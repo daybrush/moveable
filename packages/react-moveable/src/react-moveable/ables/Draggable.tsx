@@ -34,23 +34,23 @@ export default {
     render(
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         React: Renderer,
-    ) {
+    ): any[] {
         const throttleDragRotate = moveable.props.throttleDragRotate;
         const { dragInfo, beforeOrigin } = moveable.state;
 
         if (!throttleDragRotate || !dragInfo) {
-            return;
+            return [];
         }
         const dist = dragInfo.dist;
 
         if (!dist[0] && !dist[1]) {
-            return;
+            return [];
         }
 
         const width = getDistSize(dist);
         const rad = getRad(dist, [0, 0]);
 
-        return <div className={prefix(
+        return [<div className={prefix(
             "line",
             "horizontal",
             "dragline",
@@ -58,7 +58,7 @@ export default {
         )} key={`dragRotateGuideline`} style={{
             width: `${width}px`,
             transform: `translate(${beforeOrigin[0]}px, ${beforeOrigin[1]}px) rotate(${rad}rad)`,
-        }} />;
+        }} />];
     },
     dragStart(
         moveable: MoveableManagerInterface<DraggableProps, any>,

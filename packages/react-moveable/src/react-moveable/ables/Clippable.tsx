@@ -422,7 +422,7 @@ export default {
     transform-origin: 0px 0px;
 }`,
     ],
-    render(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, React: Renderer) {
+    render(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, React: Renderer): any[] {
         const {
             customClipPath, defaultClipPath,
             clipArea, zoom,

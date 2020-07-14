@@ -175,7 +175,7 @@ function RenderInnerBounds() {
         setTarget(document.querySelector<HTMLElement>(".inner .box")!);
     }, []);
     return <div className="container inner">
-        Inner Bounds
+        <p>Inner Bounds</p>
         <div className="box"><span>A</span></div>
         <Moveable
             target={target}
@@ -246,6 +246,30 @@ function RenderScaleGroup() {
     </div>;
 }
 
+function RenderPSpan() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".psan span")!);
+    }, []);
+    return <div className="container psan">
+        Render &lt; P &lt; SPAN
+        <div>
+            <p data-no>
+                <span>AAA</span>
+            </p>
+        </div>
+        <Moveable
+            target={target}
+            draggable={true}
+            origin={false}
+            snappable={true}
+            innerBounds={{ top: 20, left: 60, width: 100, height: 100 }}
+            onDrag={e => {
+                e.target.style.cssText = `left:${e.left}px; top: ${e.top}px;`;
+            }}
+        ></Moveable>
+    </div>;
+}
 export default function App() {
     return <div>
         <RenderDraggable />
@@ -256,5 +280,6 @@ export default function App() {
         <RenderBounds />
         <RenderInnerBounds />
         <RenderScaleGroup />
+        <RenderPSpan />
     </div>;
 }

@@ -7,7 +7,7 @@ export default {
         origin: Boolean,
     } as const,
     events: {} as const,
-    render(moveable: MoveableManagerInterface<OriginOptions>, React: Renderer): any {
+    render(moveable: MoveableManagerInterface<OriginOptions>, React: Renderer): any[] {
         const { beforeOrigin, rotation } = moveable.state;
 
         return [

@@ -64,11 +64,11 @@ export default {
         onWarp: "warp",
         onWarpEnd: "warpEnd",
     } as const,
-    render(moveable: MoveableManagerInterface<ResizableProps & ScalableProps & WarpableProps>, React: Renderer) {
+    render(moveable: MoveableManagerInterface<ResizableProps & ScalableProps & WarpableProps>, React: Renderer): any[] {
         const { resizable, scalable, warpable } = moveable.props;
 
         if (resizable || scalable || !warpable) {
-            return;
+            return [];
         }
         const { pos1, pos2, pos3, pos4 } = moveable.state;
 

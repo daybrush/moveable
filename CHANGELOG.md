@@ -3,6 +3,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.4] - 2020-07-15
+* `moveable` 0.18.4
+* `react-moveable` 0.21.5
+* `preact-moveable` 0.20.6
+* `ngx-moveable` 0.14.2
+* `svelte-moveable` 0.9.2
+
+### Fixed
+* Remove react types #273 #284
+
+
+
+## [0.18.3] - 2020-07-14
+* `moveable` 0.18.3
+* `react-moveable` 0.21.4
+* `preact-moveable` 0.20.5
+* `ngx-moveable` 0.14.1
+* `svelte-moveable` 0.9.1
+
+### Fixed
+* Remove react types #284
+
 ## [0.18.2] - 2020-07-13
 * `moveable` 0.18.2
 * `react-moveable` 0.21.3

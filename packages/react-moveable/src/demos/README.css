@@ -35,7 +35,7 @@
     background: #4af;
 }
 
-p {
+p:not([data-no]) {
     position: absolute;
     transform: translateY(-100%);
     box-sizing: border-box;

@@ -8,7 +8,7 @@ export default {
         padding: Object,
     } as const,
     events: {} as const,
-    render(moveable: MoveableManagerInterface, React: Renderer): any {
+    render(moveable: MoveableManagerInterface, React: Renderer): any[] {
         const props = moveable.props;
         if (props.dragArea) {
             return [];
