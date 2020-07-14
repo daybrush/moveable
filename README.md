@@ -79,7 +79,7 @@
 * **Resizable** indicates whether the target's width and height can be increased or decreased.
 * **Scalable** indicates whether the target's x and y can be scale of transform.
 * **Rotatable** indicates whether the target can be rotated.
-* **Warpable** indicates whether the target can be warped(distorted, bented).
+* **Warpable** indicates whether the target can be warped (distorted, bented).
 * **Pinchable** indicates whether the target can be pinched with draggable, resizable, scalable, rotatable.
 * **Groupable** indicates Whether the targets can be moved in group with draggable, resizable, scalable, rotatable.
 * **Snappable** indicates whether to snap to the guideline.
