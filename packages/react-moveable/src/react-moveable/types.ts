@@ -2,8 +2,7 @@ import { IObject } from "@daybrush/utils";
 import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
-import { StyledInterface } from "react-css-styled";
-import { MOVEABLE_EVENTS_PROPS_MAP, MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
+import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
 
 export interface MoveableClientRect {
     left: number;
@@ -316,7 +315,7 @@ export interface AbleRequestParam {
  */
 export interface Requester {
     request(param: IObject<any>): this;
-    requestEnd(param: IObject<any>): this;
+    requestEnd(): this;
 }
 export interface AbleRequester {
     isControl: boolean;
@@ -1433,7 +1432,9 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     controlAbles: Able[];
     targetAbles: Able[];
     areaElement: HTMLElement;
-    controlBox: StyledInterface;
+    controlBox: {
+        getElement(): HTMLElement,
+    };
     isUnmounted: boolean;
     getContainer(): HTMLElement | SVGElement;
     getRotation(): number;
@@ -1449,7 +1450,7 @@ export interface MoveableInterface {
     isMoveableElement(target: HTMLElement | SVGElement): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
-    request(ableName: string, params: IObject<any>, isInstant?: boolean): Requester;
+    request(ableName: string, params?: IObject<any>, isInstant?: boolean): Requester;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;

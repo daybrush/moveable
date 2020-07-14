@@ -44,30 +44,30 @@ p {
 }
 
 
-.selecto .box {
+.group .box {
     width: 50px;
     height: 60px;
     margin-left: -25px;
     margin-top: -30px;
 }
 
-.selecto .box span {
+.group .box span {
     font-size: 40px;
 }
-.selecto .box1 {
+.group .box1 {
     left: 35%;
     top: 35%;
 }
-.selecto .box2 {
+.group .box2 {
     left: 65%;
     top: 35%;
 }
 
-.selecto .box3 {
+.group .box3 {
     top: 65%;
     left: 35%;
 }
-.selecto .box4 {
+.group .box4 {
     top: 65%;
     left: 65%;
 }
