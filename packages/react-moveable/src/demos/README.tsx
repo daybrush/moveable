@@ -253,9 +253,9 @@ function RenderPSpan() {
     }, []);
     return <div className="container psan">
         Render &lt; P &lt; SPAN
-        <div>
-            <p data-no>
-                <span>AAA</span>
+        <div style={{ padding: "10px", margin: "10px" }}>
+            <p data-no style={{ padding: "10px", margin: "10px", transform: "translateZ(0px)" }}>
+                <span style={{ padding: "10px", margin: "10px" }}>AAA</span>
             </p>
         </div>
         <Moveable
@@ -265,21 +265,89 @@ function RenderPSpan() {
             snappable={true}
             innerBounds={{ top: 20, left: 60, width: 100, height: 100 }}
             onDrag={e => {
-                e.target.style.cssText = `left:${e.left}px; top: ${e.top}px;`;
+                e.target.style.cssText += `left:${e.left}px; top: ${e.top}px;`;
             }}
         ></Moveable>
     </div>;
 }
+function RenderSVGOriginDraggable() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    const ref = React.useRef<Moveable>(null);
+    const frame = {
+        translate: [0, 0],
+        rotate: 0,
+    };
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".svg path")!);
+
+        setTimeout(() => {
+            console.log(ref.current!.getRect());
+            console.log(ref.current!);
+        }, 100);
+    }, []);
+    return <div className="container svg">
+        <p>SVG</p>
+
+        <svg data-target="svg" style={{ width: "300px", border: "1px solid #333" }}>
+            <path data-target="path1" d="M 74 53.64101615137753 L 14.000000000000027 88.28203230275507 L 14 19 L 74 53.64101615137753 Z" fill="#f55" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#5f5" origin="50% 50%" />
+            <path data-target="path2" d="M 84 68.64101615137753 L 24.00000000000003 103.28203230275507 L 24 34 L 84 68.64101615137753 Z" fill="#55f" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#333" origin="50% 50%" />
+            <g style={{ transform: "translate(40px, 10px)" }}>
+                <path data-target="pathline" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
+    c13,4.667,13.167,38.724,39.667,7.39" fill="transparent" stroke="#ff5" />
+                <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{ fill: "yellow", stroke: "purple", strokeWidth: 2 }} />
+            </g>
+        </svg>
+        <Moveable
+            ref={ref}
+            target={target}
+            originDraggable={true}
+            origin={true}
+            draggable={true}
+            rotatable={true}
+            originRelative={false}
+            onDragStart={e => {
+                e.set(frame.translate);
+            }}
+            onDrag={e => {
+                frame.translate = e.beforeTranslate;
+            }}
+            onRotateStart={e => {
+                e.set(frame.rotate);
+            }}
+            onRotate={e => {
+                frame.rotate = e.beforeRotate;
+            }}
+            onDragOriginStart={e => {
+                e.dragStart && e.dragStart.set(frame.translate);
+            }}
+            onDragOrigin={e => {
+                frame.translate = e.drag.beforeTranslate;
+
+                console.log(e.dist, e.drag.beforeDist);
+                e.target.style.transformOrigin = e.transformOrigin;
+            }}
+            onRender={e => {
+                const { translate, rotate } = frame;
+
+                e.target.style.transform
+                    = `translate(${translate[0]}px, ${translate[1]}px)`
+                    + ` rotate(${rotate}deg)`;
+            }}
+        ></Moveable>
+    </div>;
+}
+
 export default function App() {
     return <div>
-        <RenderDraggable />
+        {/* <RenderDraggable />
         <RenderClippable />
         <RenderRoundable />
         <RenderOriginDraggable />
         <RenderSelecto />
         <RenderBounds />
         <RenderInnerBounds />
-        <RenderScaleGroup />
+        <RenderScaleGroup /> */}
         <RenderPSpan />
+        {/* <RenderSVGOriginDraggable /> */}
     </div>;
 }

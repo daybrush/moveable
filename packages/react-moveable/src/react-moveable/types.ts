@@ -89,6 +89,7 @@ export type MoveableManagerState<T = {}> = {
     offsetMatrix: number[];
     is3d: boolean;
     transformOrigin: number[];
+    targetOrigin: number[];
     beforeOrigin: number[];
     origin: number[];
     beforeDirection: 1 | -1;

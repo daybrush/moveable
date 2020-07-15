@@ -54,6 +54,7 @@ export default {
             moveable, "onDragOriginStart", params);
 
         datas.startOrigin = moveable.state.transformOrigin;
+        datas.startTargetOrigin = moveable.state.targetOrigin;
         datas.prevOrigin = [0, 0];
         datas.isDragOrigin = true;
 
@@ -92,6 +93,7 @@ export default {
             }
         }
         const origin = plus(datas.startOrigin, dist);
+        const targetOrigin = plus(datas.startTargetOrigin, dist);
         const delta = minus(dist, datas.prevOrigin);
 
         const nextMatrix = getNextMatrix(
@@ -111,8 +113,8 @@ export default {
 
         datas.prevOrigin = dist;
         const transformOrigin = [
-            convertCSSSize(origin[0], width, originRelative),
-            convertCSSSize(origin[1], height, originRelative),
+            convertCSSSize(targetOrigin[0], width, originRelative),
+            convertCSSSize(targetOrigin[1], height, originRelative),
         ].join(" ");
         const params = fillParams<OnDragOrigin>(moveable, e, {
             width,

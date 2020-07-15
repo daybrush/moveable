@@ -131,12 +131,14 @@ export function getOffsetPosInfo(
     const isSVG = isUndefined(offsetLeft);
     let hasOffset = !isSVG;
     let origin: number[];
+    let targetOrigin: number[];
     // inner svg element
     if (!hasOffset && tagName !== "svg") {
         origin = IS_WEBKIT
             ? getBeforeTransformOrigin(el as SVGElement)
             : getTransformOrigin(style).map(pos => parseFloat(pos));
 
+        targetOrigin = origin.slice();
         hasOffset = true;
 
         if (tagName === "g") {
@@ -149,12 +151,14 @@ export function getOffsetPosInfo(
         }
     } else {
         origin = getTransformOrigin(style).map(pos => parseFloat(pos));
+        targetOrigin = origin.slice();
     }
     return {
         isSVG,
         hasOffset,
         offset: [offsetLeft, offsetTop],
         origin,
+        targetOrigin,
     };
 }
 export function getMatrixStackInfo(
@@ -168,6 +172,7 @@ export function getMatrixStackInfo(
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
+    let targetTransformOrigin!: number[];
     let targetMatrix!: number[];
 
     const offsetContainer = getOffsetInfo(container, container, true).offsetParent;
@@ -206,6 +211,7 @@ export function getMatrixStackInfo(
             hasOffset,
             isSVG,
             origin,
+            targetOrigin,
             offset: offsetPos,
         } = getOffsetPosInfo(el, container, style, isFixed);
         let [
@@ -253,6 +259,9 @@ export function getMatrixStackInfo(
         if (!transformOrigin) {
             transformOrigin = origin;
         }
+        if (!targetTransformOrigin) {
+            targetTransformOrigin = targetOrigin;
+        }
         if (isEnd || isFixed) {
             break;
         } else {
@@ -266,11 +275,15 @@ export function getMatrixStackInfo(
     if (!transformOrigin) {
         transformOrigin = [0, 0];
     }
+    if (!targetTransformOrigin) {
+        targetTransformOrigin = [0, 0];
+    }
     return {
         offsetContainer,
         matrixes,
         targetMatrix,
         transformOrigin,
+        targetTransformOrigin,
         is3d,
     };
 }
@@ -281,12 +294,13 @@ export function caculateMatrixStack(
     prevMatrix?: number[],
     prevRootMatrix?: number[],
     prevN?: number,
-): [number[], number[], number[], number[], number[], string, number[], boolean] {
+): [number[], number[], number[], number[], number[], string, number[], number[], boolean] {
     const {
         matrixes,
         is3d,
         targetMatrix: prevTargetMatrix,
         transformOrigin,
+        targetTransformOrigin,
         offsetContainer,
     } = getMatrixStackInfo(target, container, prevMatrix);
     const {
@@ -373,6 +387,7 @@ export function caculateMatrixStack(
         targetMatrix,
         transform,
         transformOrigin,
+        targetTransformOrigin,
         is3d || isRoot3d,
     ];
 }
@@ -493,11 +508,11 @@ export function getSVGOffset(
     container: HTMLElement | SVGElement,
     n: number, origin: number[], beforeMatrix: number[], absoluteMatrix: number[]) {
 
-    const [width, height] = getSize(el);
+    const [width, height] = getSize(el, undefined, true);
     const containerClientRect = container.getBoundingClientRect();
     const rect = el.getBoundingClientRect();
-    const rectLeft = rect.left - containerClientRect.left + container.scrollLeft;
-    const rectTop = rect.top - containerClientRect.top + container.scrollTop;
+    const rectLeft = rect.left - containerClientRect.left + container.scrollLeft - (container.clientLeft || 0);
+    const rectTop = rect.top - containerClientRect.top + container.scrollTop - (container.clientTop || 0);
     const rectWidth = rect.width;
     const rectHeight = rect.height;
     const mat = multiplies(
@@ -711,6 +726,7 @@ export function getTargetInfo(
     let targetClientRect = resetClientRect();
     let containerClientRect = resetClientRect();
     let moveableClientRect = resetClientRect();
+    let targetOrigin = [0, 0];
     let rotation = 0;
 
     const prevMatrix = state ? state.beforeMatrix : undefined;
@@ -737,7 +753,10 @@ export function getTargetInfo(
             offsetMatrix,
             matrix,
             targetMatrix,
-            targetTransform, transformOrigin, is3d,
+            targetTransform,
+            transformOrigin,
+            targetOrigin,
+            is3d,
         ] = caculateMatrixStack(
             target, container!, rootContainer!,
             prevMatrix, prevRootMatrix, prevN,
@@ -801,6 +820,7 @@ export function getTargetInfo(
         beforeOrigin,
         origin,
         transformOrigin,
+        targetOrigin,
     };
 }
 export function resetClientRect(): MoveableClientRect {
