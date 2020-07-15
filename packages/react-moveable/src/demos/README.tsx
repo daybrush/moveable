@@ -255,7 +255,7 @@ function RenderPSpan() {
         Render &lt; P &lt; SPAN
         <div style={{ padding: "10px", margin: "10px" }}>
             <p data-no style={{ padding: "10px", margin: "10px", transform: "translateZ(0px)" }}>
-                <span style={{ padding: "10px", margin: "10px" }}>AAA</span>
+                <span style={{ top: 0, left: 0, padding: "10px", margin: "10px" }}>AAA</span>
             </p>
         </div>
         <Moveable

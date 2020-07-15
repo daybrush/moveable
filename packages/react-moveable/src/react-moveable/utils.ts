@@ -231,7 +231,7 @@ export function getMatrixStackInfo(
             isStatic,
         } = getOffsetInfo(el, container);
 
-        if (IS_WEBKIT && hasOffset && !isSVG && isStatic && position === "relative") {
+        if (IS_WEBKIT && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
             offsetLeft -= offsetParent.offsetLeft;
             offsetTop -= offsetParent.offsetTop;
             isEnd = isEnd || isOffsetEnd;
