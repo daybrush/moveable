@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [0.18.5] - 2020-07-17
+* `moveable` 0.18.5
+* `react-moveable` 0.21.6
+* `preact-moveable` 0.20.7
+* `ngx-moveable` 0.14.3
+* `svelte-moveable` 0.9.3
+
+### Fixed
+* Fix Safari Offset Caculation #285
+* Fix SVG Transform Origin Caculation #286
+* Fix SVG ClientSize Caculation #288
+
+
 ## [0.18.4] - 2020-07-15
 * `moveable` 0.18.4
 * `react-moveable` 0.21.5

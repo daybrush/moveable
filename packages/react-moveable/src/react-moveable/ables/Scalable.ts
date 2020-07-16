@@ -512,16 +512,6 @@ export default {
  *
  * moveable.scalable = true;
  */
-/**
- * When resize or scale, keeps a ratio of the width, height. (default: false)
- * @name Moveable.Scalable#keepRatio
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body);
- *
- * moveable.keepRatio = true;
- */
 
 /**
  * throttle of scaleX, scaleY when scale.
