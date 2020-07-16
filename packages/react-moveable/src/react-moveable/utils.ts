@@ -660,14 +660,14 @@ export function getSize(
     if ((isOffset || isBoxSizing) && hasOffset) {
         return [width, height];
     }
+    if (!hasOffset && target.tagName.toLowerCase() !== "svg") {
+        const bbox = (target as SVGGraphicsElement).getBBox();
+        return [bbox.width, bbox.height];
+    }
+
     width = target.clientWidth;
     height = target.clientHeight;
 
-    if (!hasOffset && !width && !height) {
-        const bbox = (target as SVGGraphicsElement).getBBox();
-
-        return [bbox.width, bbox.height];
-    }
     if (isOffset || isBoxSizing) {
         const borderLeft = parseFloat(style.borderLeftWidth!) || 0;
         const borderRight = parseFloat(style.borderRightWidth!) || 0;

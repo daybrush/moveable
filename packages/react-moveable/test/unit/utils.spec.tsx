@@ -173,15 +173,15 @@ describe("test utils", () => {
 
         // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [1, 0, 0, 0, 1, 0, 0, 0, 1], 'matrix(1,0,0,1,0,0)', [50, 50], false
         const [
-            , beforeMatrix1, offsetMatrix1, matrix1, targetMatrix1, transform1, transformOrigin1, is3d1,
+            , beforeMatrix1, offsetMatrix1, matrix1, targetMatrix1, transform1, transformOrigin1, , is3d1,
         ] = stack1;
         // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, 152, 0, 0, 1], [2, 0, 152, 0, 2, 232, 0, 0, 1], [1, 0, 100, 0, 1, 40, 0, 0, 1], 'matrix(1,0,0,1,100,40)', [50, 50], false
         const [
-            , beforeMatrix2, offsetMatrix2, matrix2, targetMatrix2, transform2, transformOrigin2, is3d2,
+            , beforeMatrix2, offsetMatrix2, matrix2, targetMatrix2, transform2, transformOrigin2, , is3d2,
         ] = stack2;
         // [[2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -48, 0, 2, 0, 448, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -48, 0, 2, 0, 448, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
         const [
-            , beforeMatrix3, offsetMatrix3, matrix3, targetMatrix3, transform3, transformOrigin3, is3d3,
+            , beforeMatrix3, offsetMatrix3, matrix3, targetMatrix3, transform3, transformOrigin3, , is3d3,
         ] = stack3;
 
         // Then

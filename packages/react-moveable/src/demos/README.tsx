@@ -278,7 +278,7 @@ function RenderSVGOriginDraggable() {
         rotate: 0,
     };
     React.useEffect(() => {
-        setTarget(document.querySelector<HTMLElement>(".svg path")!);
+        setTarget(document.querySelector<HTMLElement>(".svg text")!);
 
         setTimeout(() => {
             console.log(ref.current!.getRect());
@@ -295,6 +295,7 @@ function RenderSVGOriginDraggable() {
                 <path data-target="pathline" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
     c13,4.667,13.167,38.724,39.667,7.39" fill="transparent" stroke="#ff5" />
                 <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{ fill: "yellow", stroke: "purple", strokeWidth: 2 }} />
+                <text text-anchor="middle" x="40" y="40">HIHI</text>
             </g>
         </svg>
         <Moveable
@@ -339,15 +340,15 @@ function RenderSVGOriginDraggable() {
 
 export default function App() {
     return <div>
-        {/* <RenderDraggable />
+        <RenderDraggable />
         <RenderClippable />
         <RenderRoundable />
         <RenderOriginDraggable />
         <RenderSelecto />
         <RenderBounds />
         <RenderInnerBounds />
-        <RenderScaleGroup /> */}
+        <RenderScaleGroup />
         <RenderPSpan />
-        {/* <RenderSVGOriginDraggable /> */}
+        <RenderSVGOriginDraggable />
     </div>;
 }
