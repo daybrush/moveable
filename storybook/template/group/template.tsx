@@ -22,4 +22,4 @@ export const GROUP_SVELTE_MARKUP_TEMPLATE = `
 
 import GROUP_CSS from "!!raw-loader!./group.css";
 
-export const GROUP_CSS_TEMPLATE = GROUP_CSS + "\n" + BASIC_CSS_TEMPLATE;
+export const GROUP_CSS_TEMPLATE =  BASIC_CSS_TEMPLATE + "\n" + GROUP_CSS;

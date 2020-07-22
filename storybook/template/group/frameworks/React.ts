@@ -27,7 +27,7 @@ ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
 ${DEFAULT_PROPS_TEMPLATE(Object.keys(frame), { indent: 8 })}
     }]);
     React.useEffect(() => {
-        setTargets(document.querySelector(".target")!);
+        setTargets([].slice.call(document.querySelectorAll(".target")));
     }, []);
     return <div className="container">${markup}
         <Moveable

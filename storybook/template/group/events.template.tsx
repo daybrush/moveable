@@ -23,7 +23,7 @@ export const RESIZE_GROUP_TEMPLATE = previewFunction(`function onResizeGroup({ e
         ev.target.style.width = ${"`"}${"$"}{ev.width}px${"`"};
         ev.target.style.height = ${"`"}${"$"}{ev.height}px${"`"};
         ev.target.style.transform
-            = ${"`"}translate(${"$"}{ev.beforeTranslate[0]}px, ${"$"}{ev.beforeTranslate[1]}px)${"`"};
+            = ${"`"}translate(${"$"}{ev.drag.beforeTranslate[0]}px, ${"$"}{ev.drag.beforeTranslate[1]}px)${"`"};
     });
 }`);
 
@@ -39,7 +39,7 @@ export const SCALE_GROUP_TEMPLATE = previewFunction(`function onScaleGroup({ eve
         this.frames[i].scale = ev.scale;
 
         ev.target.style.transform
-            = ${"`"}translate(${"$"}{ev.beforeTranslate[0]}px, ${"$"}{ev.beforeTranslate[1]}px)${"`"}
+            = ${"`"}translate(${"$"}{ev.drag.beforeTranslate[0]}px, ${"$"}{ev.drag.beforeTranslate[1]}px)${"`"}
             + ${"`"} scale(${"$"}{ev.scale[0]}, ${"$"}{ev.scale[1]})${"`"};
     });
 }`);
@@ -56,7 +56,7 @@ export const ROTATE_GROUP_TEMPLATE = previewFunction(`function onRotateGroup({ e
         this.frames[i].rotate = ev.rotate;
 
         ev.target.style.transform
-            = ${"`"}translate(${"$"}{ev.beforeTranslate[0]}px, ${"$"}{ev.beforeTranslate[1]}px)${"`"}
+            = ${"`"}translate(${"$"}{ev.drag.beforeTranslate[0]}px, ${"$"}{ev.drag.beforeTranslate[1]}px)${"`"}
             + ${"`"} rotate(${"$"}{ev.rotate}deg)${"`"};
     });
 }`);
