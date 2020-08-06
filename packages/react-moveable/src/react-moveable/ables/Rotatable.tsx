@@ -288,7 +288,7 @@ export default {
 
         const params = fillParams<OnRotateStart>(moveable, e, {
             set: (rotatation: number) => {
-                datas.startValue = rotatation * 180 / Math.PI;
+                datas.startValue = rotatation * Math.PI / 180;
             },
             ...fillTransformStartEvent(datas, "rotate"),
             dragStart: Draggable.dragStart(
