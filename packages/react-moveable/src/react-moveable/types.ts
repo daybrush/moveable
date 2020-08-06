@@ -391,6 +391,8 @@ export interface OnDragStart extends OnEvent, OnTransformStartEvent {
  * @property - a target's top
  * @property - a target's bottom
  * @property - a target's right
+ * @property - a target's offset width
+ * @property - a target's offset height
  * @property - Whether or not it is being pinched.
  */
 export interface OnDrag extends OnEvent {
@@ -404,6 +406,8 @@ export interface OnDrag extends OnEvent {
     left: number;
     top: number;
     bottom: number;
+    width: number;
+    height: number;
     right: number;
     isPinch: boolean;
 }

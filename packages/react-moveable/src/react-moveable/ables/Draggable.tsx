@@ -201,6 +201,11 @@ export default {
         if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
             return;
         }
+
+        const {
+            width,
+            height,
+        } = moveable.state;
         const params = fillParams<OnDrag>(moveable, e, {
             transform: nextTransform,
             dist,
@@ -213,6 +218,8 @@ export default {
             top,
             right,
             bottom,
+            width,
+            height,
             isPinch,
         });
 
