@@ -83,7 +83,7 @@ export default {
         if (!direction || !target) {
             return false;
         }
-        !isPinch && setDragStart(moveable, { datas });
+        !isPinch && setDragStart(moveable, e);
 
         datas.datas = {};
         datas.direction = direction;

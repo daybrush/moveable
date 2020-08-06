@@ -127,14 +127,22 @@ export function getRad(pos1: number[], pos2: number[]) {
 
 export function getOrigin(matrix: number[], n: number = Math.sqrt(matrix.length)) {
     const originMatrix: number[] = [];
-
+    const w = matrix[n * n - 1];
     for (let i = 0; i < n - 1; ++i) {
-        originMatrix[i] = matrix[n * (n - 1) + i];
+        originMatrix[i] = matrix[n * (n - 1) + i] / w;
     }
     originMatrix[n - 1] = 0;
     return originMatrix;
 }
 
+export function fromTranslation(pos: number[], n: number) {
+    const newMatrix = createIdentityMatrix(n);
+
+    for (let i = 0; i < n - 1; ++i) {
+        newMatrix[n * (n - 1) + i] = pos[i] || 0;
+    }
+    return newMatrix;
+}
 export function convertPositionMatrix(matrix: number[], n: number) {
     const newMatrix = matrix.slice();
 

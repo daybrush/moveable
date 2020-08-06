@@ -10,13 +10,71 @@ function RenderDraggable() {
     }, []);
     return <div className="container draggable">
         Draggable
-        <div className="box"><span>A</span></div>
+        <div className="box" style={{
+            transform: "translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)",
+        }}><span>A</span></div>
         <Moveable
             target={target}
             draggable={true}
-            origin={false}
+            origin={true}
+            onDragStart={e => {
+                e.setTransform("translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)", 2);
+            }}
             onDrag={e => {
-                e.target.style.cssText = `left:${e.left}px; top: ${e.top}px;`;
+                console.log(e.transform);
+                e.target.style.transform = e.transform;
+            }}
+        ></Moveable>
+    </div>;
+}
+function RenderScalable() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".scalable .box")!);
+    }, []);
+    return <div className="container scalable">
+        <p className="description">Draggable</p>
+        <div className="box" style={{
+            transform: "rotate(30deg) translate(10px, 10px) scale(2, 2) translate(10px, 10px)",
+        }}><span>A</span></div>
+        <Moveable
+            target={target}
+            draggable={true}
+            scalable={true}
+            origin={true}
+            onScaleStart={e => {
+                // e.set([2, 2]);
+                e.setTransform("rotate(30deg) translate(10px, 10px)  scale(2, 2) translate(10px, 10px)", 2);
+                e.dragStart && e.dragStart.setTransformIndex(1);
+            }}
+            onScale={e => {
+                e.target.style.transform = e.drag.transform;
+            }}
+        ></Moveable>
+    </div>;
+}
+function RenderRotatable() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".rotatable .box")!);
+    }, []);
+    return <div className="container rotatable">
+        <p className="description">Rotatable</p>
+        <div className="box" style={{
+            transform: "rotate(30deg) translate(10px, 10px) scale(2, 2) translate(10px, 10px)",
+        }}><span>A</span></div>
+        <Moveable
+            target={target}
+            rotatable={true}
+            origin={true}
+            onRotateStart={e => {
+                // e.set([2, 2]);
+                e.setTransform("rotate(30deg) translate(10px, 10px)  scale(2, 2) translate(10px, 10px)", 0);
+                e.dragStart && e.dragStart.setTransformIndex(1);
+            }}
+            onRotate={e => {
+                console.log(e.drag.transform);
+                e.target.style.transform = e.drag.transform;
             }}
         ></Moveable>
     </div>;
@@ -341,6 +399,8 @@ function RenderSVGOriginDraggable() {
 export default function App() {
     return <div>
         <RenderDraggable />
+        <RenderScalable />
+        <RenderRotatable />
         <RenderClippable />
         <RenderRoundable />
         <RenderOriginDraggable />

@@ -1,11 +1,17 @@
 import {
     invert, caculate, minus, plus,
     convertPositionMatrix, average,
-    createScaleMatrix, multiply,
+    createScaleMatrix, multiply, fromTranslation, convertDimension, convertMatrixtoCSS,
 } from "./matrix";
-import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState } from "./utils";
-import { splitUnit } from "@daybrush/utils";
-import { MoveableManagerState, ResizableProps, MoveableManagerInterface } from "./types";
+import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState, caculatePosition } from "./utils";
+import { splitUnit, isArray, splitSpace, isUndefined, findIndex } from "@daybrush/utils";
+import {
+    MoveableManagerState, ResizableProps, MoveableManagerInterface,
+    OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
+} from "./types";
+import { getTransform, stringToMatrixInfo, valueToMatrix } from "./ables/utils";
+import Draggable from "./ables/Draggable";
+import { setCustomDrag } from "./CustomDragger";
 
 export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }: any) {
     const {
@@ -32,6 +38,131 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
     datas.absoluteOrigin = convertPositionMatrix(plus([left, top], origin), n);
     datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
     datas.startDragDist = caculate(datas.inverseMatrix, datas.absoluteOrigin, n);
+}
+export function resolveTransformEvent(event: any, functionName: string) {
+    const {
+        resolveNextTransform,
+        resolveTransformIndexes,
+        datas,
+    } = event;
+    if (resolveNextTransform) {
+        const index = datas.transformAppendIndex;
+        const nextIndex = index + resolveTransformIndexes.filter((i: number) => i < index).length;
+
+        setTransformStart(datas, resolveNextTransform, functionName, nextIndex);
+
+        if (datas.isAppendTransform) {
+            datas.transformAppendedIndexes = [...resolveTransformIndexes, nextIndex];
+        }
+    }
+}
+
+export function setDefaultTransformStart(
+    moveable: MoveableManagerInterface, datas: any, functionName: string, index: number = -1) {
+    const {
+        is3d,
+        targetMatrix,
+    } = moveable.state;
+    const cssMatrix = is3d
+        ? `matrix3d(${targetMatrix.join(",")})`
+        : `matrix(${convertMatrixtoCSS(targetMatrix, true)})`;
+    return setTransformStart(datas, cssMatrix, functionName, index);
+}
+
+export function setTransformStart(datas: any, transform: string | string[], functionName: string, index?: number) {
+    const transforms = (isArray(transform) ? transform : splitSpace(transform));
+
+    if (isUndefined(index)) {
+        index = findIndex(transforms, v => v.indexOf(functionName) === 0);
+    }
+    const result = getTransform(transform, index);
+
+    datas.transformFormat = (value: any) => {
+        return `${datas.beforeFunctionTexts.join(" ")} ${value} ${datas.afterFunctionTexts.join(" ")}`;
+    };
+
+    datas.transformIndex = index;
+    datas.transformAppendIndex = index < 0 ? result.transforms.length : index;
+    datas.transformAppendedIndexes = [];
+
+    datas.targetAllTransform = multiply(
+        result.beforeFunctionMatrix as number[],
+        result.afterFunctionMatrix as number[], 4);
+    datas.beforeFunctionTexts = result.beforeFunctionTexts;
+    datas.afterFunctionTexts = result.afterFunctionTexts;
+    datas.beforeTransform = result.beforeFunctionMatrix;
+    datas.targetTansform = result.targetFunctionMatrix;
+    datas.afterTransform = result.afterFunctionMatrix;
+
+    const targetFunction = result.targetFunction;
+
+    const matFunctionName = functionName === "rotate" ? "rotateZ" : functionName;
+
+    if (targetFunction.functionName === matFunctionName) {
+        datas.startValue = targetFunction.functionValue;
+        datas.afterFunctionTexts.splice(0, 1);
+        datas.isAppendTransform = false;
+    } else {
+        datas.transformAppendedIndexes.push(datas.transformAppendIndex);
+        datas.isAppendTransform = true;
+    }
+
+    return result;
+}
+export function convertTransformFormat(datas: any, value: any, dist: any) {
+    return datas.transformFormat(datas.isAppendTransform ? dist : value);
+}
+export function getTransformDist({ datas, distX, distY }: any) {
+    const [bx, by] = getBeforeDragDist({ datas, distX, distY });
+    const n = datas.is3d ? 4 : 3;
+    // B * [tx, ty] * A = [bx, by] * targetMatrix;
+    // [tx, ty] = B-1 * [bx, by] * targetMatrix * A-1 * [0, 0];
+
+    const res = getTransfromMatrix(datas, fromTranslation([bx, by], n));
+
+    return caculate(res, convertPositionMatrix([0, 0, 0], n), n);
+}
+export function getTransfromMatrix(datas: any, beforeTargetMatrix: number[]) {
+    const {
+        is3d,
+        beforeTransform,
+        afterTransform,
+        targetAllTransform,
+    } = datas;
+
+    // B * afterTargetMatrix * A = beforeTargetMatrix * targetAllMatrix
+    // afterTargetMatrix = B-1 * beforeTargetMatrix * targetAllMatrix * A-1
+
+    const n = is3d ? 4 : 3;
+    // res1 = B-1 * beforeTargetMatrix
+    const res1 = multiply(invert(convertDimension(beforeTransform, 4, n), n), beforeTargetMatrix, n);
+    // res2 = res1 * targetMatrix
+    const res2 = multiply(res1, convertDimension(targetAllTransform, 4, n), n);
+
+    // res3 = res2 * A-1
+    const afterTargetMatrix = multiply(res2, invert(convertDimension(afterTransform, 4, n), n), n);
+    return afterTargetMatrix;
+}
+export function getBeforeDragDist({ datas, distX, distY }: any) {
+    // TT = BT
+    const {
+        inverseBeforeMatrix,
+        is3d,
+        startDragBeforeDist,
+        absoluteOrigin,
+    } = datas;
+    const n = is3d ? 4 : 3;
+
+    // ABS_ORIGIN * [distX, distY] = BM * (ORIGIN + [tx, ty])
+    // BM -1 * ABS_ORIGIN * [distX, distY] - ORIGIN = [tx, ty]
+    return minus(
+        caculate(
+            inverseBeforeMatrix,
+            plus(absoluteOrigin, [distX, distY]),
+            n,
+        ),
+        startDragBeforeDist,
+    );
 }
 export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
     const {
@@ -191,6 +322,30 @@ export function getNextMatrix(
         n,
     );
 }
+export function getNextTransformMatrix(
+    state: MoveableManagerState<any>,
+    datas: any,
+    transform: string,
+) {
+    const {
+        transformOrigin,
+        offsetMatrix,
+        is3d,
+    } = state;
+    const {
+        beforeTransform,
+        afterTransform,
+    } = datas;
+    const n = is3d ? 4 : 3;
+    const targetTransform = valueToMatrix(stringToMatrixInfo([transform]));
+
+    return getNextMatrix(
+        offsetMatrix,
+        convertDimension(multiply(multiply(beforeTransform, targetTransform as any, 4), afterTransform, 4), 4, n),
+        transformOrigin,
+        n,
+    );
+}
 export function scaleMatrix(
     state: MoveableManagerState<any>,
     scale: number[],
@@ -210,7 +365,7 @@ export function scaleMatrix(
         n,
     );
 }
-export function getScaleDist(
+export function getScaleDelta(
     moveable: MoveableManagerInterface<any>,
     scale: number[],
     direction: number[],
@@ -236,6 +391,119 @@ export function getScaleDist(
     return minus(dist, [groupLeft, groupTop]);
 }
 
+export function fillTransformStartEvent(datas: any, functionName: string): OnTransformStartEvent {
+    return {
+        setTransform: (transform: string | string[], index?: number) => {
+            setTransformStart(datas, transform, functionName, index);
+        },
+        setTransformIndex: (transformIndex: number) => {
+            if (transformIndex < 0) {
+                return;
+            }
+            datas.transformIndex = transformIndex;
+            datas.transformAppendIndex = transformIndex;
+        },
+    };
+}
+export function fillTransformEvent(
+    moveable: MoveableManagerInterface<DraggableProps>,
+    nextTransform: string,
+    delta: number[],
+    isPinch: boolean,
+    inputEvent: any,
+    datas: any,
+): OnTransformEvent {
+    return {
+        transform: nextTransform,
+        drag: Draggable.drag(
+            moveable,
+            {
+                ...setCustomDrag(moveable.state, delta, inputEvent, isPinch, false),
+                resolveNextTransform: nextTransform,
+                resolveTransformIndexes: datas.transformAppendedIndexes,
+            },
+        ) as OnDrag,
+    };
+}
+export function getTranslateDist(
+    moveable: MoveableManagerInterface<any>,
+    transform: string,
+    fixedPosition: number[],
+    fixedDirection: number[],
+    datas: any,
+) {
+    const state = moveable.state;
+    const {
+        left,
+        top,
+    } = state;
+
+    const groupable = moveable.props.groupable;
+    const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform);
+    const groupLeft = groupable ? left : 0;
+    const groupTop = groupable ? top : 0;
+    // const dist = getDist(fixedPosition, nextMatrix, width, height, n, direction);
+    const nextFixedPosition = getDirectionOffset(moveable, fixedDirection, nextMatrix);
+    const dist = minus(fixedPosition, nextFixedPosition);
+    return minus(dist, [groupLeft, groupTop]);
+}
+export function getScaleDist(
+    moveable: MoveableManagerInterface<any>,
+    scaleDist: number[],
+    direction: number[],
+    fixedPosition: number[],
+    datas: any,
+) {
+    return getTranslateDist(
+        moveable,
+        `scale(${scaleDist.join(", ")})`,
+        fixedPosition,
+        direction.map(dir => -dir),
+        datas,
+    );
+}
+export function getOriginDirection(moveable: MoveableManagerInterface<any>) {
+    const {
+        width,
+        height,
+        transformOrigin,
+    } = moveable.state;
+    return [
+        -1 + transformOrigin[0] / (width / 2),
+        -1 + transformOrigin[1] / (height / 2),
+    ];
+}
+export function getDirectionOffset(
+    moveable: MoveableManagerInterface, direction: number[],
+    nextMatrix: number[] = moveable.state.matrix,
+) {
+    const {
+        width,
+        height,
+        is3d,
+    } = moveable.state;
+    const n = is3d ? 4 : 3;
+    const nextFixedOffset = [
+        width / 2 * (1 + direction[0]),
+        height / 2 * (1 + direction[1]),
+    ];
+    return caculatePosition(nextMatrix, nextFixedOffset, n);
+}
+export function getRotateDist(
+    moveable: MoveableManagerInterface<any>,
+    rotateDist: number,
+    fixedPosition: number[],
+    datas: any,
+) {
+    const fixedDirection = getOriginDirection(moveable);
+    return getTranslateDist(
+        moveable,
+        `rotate(${rotateDist}deg)`,
+        fixedPosition,
+        fixedDirection,
+        datas,
+    );
+}
 export function getResizeDist(
     moveable: MoveableManagerInterface<any>,
     width: number,

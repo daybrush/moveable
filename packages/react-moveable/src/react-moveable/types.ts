@@ -3,6 +3,7 @@ import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
 import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
+import { mat4 } from "gl-matrix";
 
 export interface MoveableClientRect {
     left: number;
@@ -297,6 +298,26 @@ export interface OnEndEvent extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
+ * @property - Set your original transform. `index` is the sequence of functions used in the event. If you use `setTransform`, you don't need to use `set` function.
+ * @property - `index` is the sequence of functions used in the event.
+ */
+export interface OnTransformStartEvent {
+    setTransform(transform: string | string[], index: number): void;
+    setTransformIndex(transformIndex: number): void;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - a target's next transform string value.
+ * @property - transform events causes a `drag` event.
+ */
+export interface OnTransformEvent {
+    transform: string;
+    drag: OnDrag;
+}
+/**
+ * @typedef
+ * @memberof Moveable
  * @property - Run the request instantly. (requestStart, request, requestEnd happen at the same time)
  */
 export interface AbleRequestParam {
@@ -349,9 +370,10 @@ export interface OnPinchEnd extends OnEndEvent { }
  * @typedef
  * @memberof Moveable.Draggable
  * @extends Moveable.OnEvent
+ * @extends Moveable.OnTransformStartEvent
  * @property - You can set the start translate value.
  */
-export interface OnDragStart extends OnEvent {
+export interface OnDragStart extends OnEvent, OnTransformStartEvent {
     set: (translate: number[]) => void;
 }
 /**
@@ -475,7 +497,7 @@ export interface OnRoundEnd extends OnEndEvent {
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
  */
-export interface OnScaleStart extends OnEvent {
+export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
     direction: number[];
     dragStart: OnDragStart | false;
     set: (scale: number[]) => void;
@@ -490,19 +512,23 @@ export interface OnScaleStart extends OnEvent {
  * @property - a target's scale
  * @property - The distance of scale
  * @property - The delta of scale
- * @property - a target's transform
- * @property - scale causes a `drag` event.
+ *
+ * @property - Whether or not it is being pinched.
  */
-export interface OnScale extends OnEvent {
+export interface OnScale extends OnEvent, OnTransformEvent {
     direction: number[];
     offsetWidth: number;
     offsetHeight: number;
+
+    // beforeScale: number[];
+    // beforeDist: number[];
+    // beforeDelta: number[];
+
     scale: number[];
     dist: number[];
     delta: number[];
-    transform: string;
+
     isPinch: boolean;
-    drag: OnDrag;
 }
 /**
  * @typedef
@@ -542,6 +568,7 @@ export interface OnResizeStart extends OnEvent {
  * @property - a target's offsetHeight
  * @property - The distance of [width, height]
  * @property - The delta of [width, height]
+ * @property - Whether or not it is being pinched.
  * @property - resize causes a `drag` event.
  */
 export interface OnResize extends OnEvent {
@@ -567,9 +594,11 @@ export interface OnResizeEnd extends OnEndEvent {
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
  * @property - You can set the start rotate value.
+ * @property - rotate causes a `dragStart` event.
  */
-export interface OnRotateStart extends OnEvent {
+export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
     set: (rotate: number) => void;
+    dragStart: OnDragStart | false;
 }
 /**
  * @typedef
@@ -582,6 +611,8 @@ export interface OnRotateStart extends OnEvent {
  * @property - The delta of rotation rad
  * @property - The now rotation rad
  * @property - a target's transform
+ * @property - Whether or not it is being pinched.
+ * @property - rotate causes a `drag` event.
  */
 export interface OnRotate extends OnEvent {
     beforeDist: number;
@@ -594,6 +625,7 @@ export interface OnRotate extends OnEvent {
 
     transform: string;
     isPinch: boolean;
+    drag: OnDrag;
 }
 /**
  * @typedef
@@ -759,7 +791,7 @@ export interface OnScaleGroupStart extends OnScaleStart {
  */
 export interface OnScaleGroup extends OnScale {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnScale & { drag: OnDrag }>;
+    events: OnScale[];
 }
 
 /**
@@ -838,9 +870,8 @@ export interface OnClickGroup extends OnEvent {
     isDouble: boolean;
 }
 
-// `renderStart` event occurs at the first start of all events.
 /**
- * @typedef
+ * @typedef - `renderStart` event occurs at the first start of all events.
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.
@@ -849,9 +880,8 @@ export interface OnRenderStart extends OnEvent {
     isPinch: boolean;
 }
 
-// `render` event occurs before the target is drawn on the screen.
 /**
- * @typedef
+ * @typedef - `render` event occurs before the target is drawn on the screen.
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.
@@ -860,9 +890,8 @@ export interface OnRender extends OnEvent {
     isPinch: boolean;
 }
 
-// `renderEnd` event occurs at the end of all events.
 /**
- * @typedef
+ * @typedef - `renderEnd` event occurs at the end of all events.
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being dragged.
@@ -1493,4 +1522,11 @@ export type MoveableProperties = {
 export interface SnappableRenderType {
     type: "snap" | "bounds";
     pos: number;
+}
+
+export interface MatrixInfo {
+    name: string;
+    value: string;
+    functionName: keyof typeof mat4 | "";
+    functionValue: any;
 }

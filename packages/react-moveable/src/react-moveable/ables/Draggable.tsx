@@ -1,4 +1,7 @@
-import { getDragDist, setDragStart } from "../DraggerUtils";
+import {
+    setDragStart, getBeforeDragDist, getTransformDist,
+    convertTransformFormat, resolveTransformEvent, setDefaultTransformStart, fillTransformStartEvent
+} from "../DraggerUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
 import { minus, plus, getRad } from "../matrix";
 import {
@@ -67,7 +70,6 @@ export default {
         const { datas, parentEvent, parentDragger } = e;
         const state = moveable.state;
         const {
-            targetTransform,
             target,
             dragger,
         } = state;
@@ -83,20 +85,21 @@ export default {
         datas.top = parseFloat(style.top || "") || 0;
         datas.bottom = parseFloat(style.bottom || "") || 0;
         datas.right = parseFloat(style.right || "") || 0;
-        datas.transform = targetTransform;
-        datas.startTranslate = [0, 0];
+        datas.startValue = [0, 0];
 
-        setDragStart(moveable, { datas });
+        setDragStart(moveable, e);
+        setDefaultTransformStart(moveable, datas, "translate");
+        startCheckSnapDrag(moveable, datas);
 
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
         datas.isDrag = false;
 
-        startCheckSnapDrag(moveable, datas);
         const params = fillParams<OnDragStart>(moveable, e, {
             set: (translate: number[]) => {
-                datas.startTranslate = translate;
+                datas.startValue = translate;
             },
+            ...fillTransformStartEvent(datas, "translate"),
         });
         const result = parentEvent || triggerEvent(moveable, "onDragStart", params);
 
@@ -116,9 +119,11 @@ export default {
         moveable: MoveableManagerInterface<DraggableProps, any>,
         e: any,
     ): OnDrag | undefined {
+        resolveTransformEvent(e, "translate");
+
         const { datas, parentEvent, parentFlag, isPinch, isRequest } = e;
         let { distX, distY } = e;
-        const { isDrag, prevDist, prevBeforeDist, transform, startTranslate } = datas;
+        const { isDrag, prevDist, prevBeforeDist, startValue } = datas;
 
         if (!isDrag) {
             return;
@@ -169,16 +174,16 @@ export default {
         datas.passDeltaY = distY - (datas.passDistY || 0);
         datas.passDistX = distX;
         datas.passDistY = distY;
-        const beforeTranslate = plus(getDragDist({ datas, distX, distY }, true), startTranslate);
-        const translate = plus(getDragDist({ datas, distX, distY }, false), startTranslate);
+        const beforeTranslate = plus(getBeforeDragDist({ datas, distX, distY }), startValue);
+        const translate = plus(getTransformDist({ datas, distX, distY }), startValue);
 
         if (!throttleDragRotate && !isSnap) {
             throttleArray(translate, throttleDrag);
             throttleArray(beforeTranslate, throttleDrag);
         }
 
-        const beforeDist = minus(beforeTranslate, startTranslate);
-        const dist = minus(translate, startTranslate);
+        const beforeDist = minus(beforeTranslate, startValue);
+        const dist = minus(translate, startValue);
         const delta = minus(dist, prevDist);
         const beforeDelta = minus(beforeDist, prevBeforeDist);
 
@@ -189,7 +194,8 @@ export default {
         const top = datas.top + beforeDist[1];
         const right = datas.right - beforeDist[0];
         const bottom = datas.bottom - beforeDist[1];
-        const nextTransform = `${transform} translate(${dist[0]}px, ${dist[1]}px)`;
+        const nextTransform = convertTransformFormat(datas,
+            `translate(${translate[0]}px, ${translate[1]}px)`, `translate(${dist[0]}px, ${dist[1]}px)`);
 
         moveable.state.dragInfo.dist = parentEvent ? [0, 0] : dist;
         if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {
@@ -441,47 +447,47 @@ export default {
  * });
  */
 
- /**
- * When the group drag starts, the `dragGroupStart` event is called.
- * @memberof Moveable.Draggable
- * @event dragGroupStart
- * @param {Moveable.Draggable.OnDragGroupStart} - Parameters for the `dragGroupStart` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     draggable: true
- * });
- * moveable.on("dragGroupStart", ({ targets }) => {
- *     console.log("onDragGroupStart", targets);
- * });
- */
+/**
+* When the group drag starts, the `dragGroupStart` event is called.
+* @memberof Moveable.Draggable
+* @event dragGroupStart
+* @param {Moveable.Draggable.OnDragGroupStart} - Parameters for the `dragGroupStart` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     draggable: true
+* });
+* moveable.on("dragGroupStart", ({ targets }) => {
+*     console.log("onDragGroupStart", targets);
+* });
+*/
 
- /**
- * When the group drag, the `dragGroup` event is called.
- * @memberof Moveable.Draggable
- * @event dragGroup
- * @param {Moveable.Draggable.OnDragGroup} - Parameters for the `dragGroup` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     draggable: true
- * });
- * moveable.on("dragGroup", ({ targets, events }) => {
- *     console.log("onDragGroup", targets);
- *     events.forEach(ev => {
- *          // drag event
- *          console.log("onDrag left, top", ev.left, ev.top);
- *          // ev.target!.style.left = `${ev.left}px`;
- *          // ev.target!.style.top = `${ev.top}px`;
- *          console.log("onDrag translate", ev.dist);
- *          ev.target!.style.transform = ev.transform;)
- *     });
- * });
- */
+/**
+* When the group drag, the `dragGroup` event is called.
+* @memberof Moveable.Draggable
+* @event dragGroup
+* @param {Moveable.Draggable.OnDragGroup} - Parameters for the `dragGroup` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     draggable: true
+* });
+* moveable.on("dragGroup", ({ targets, events }) => {
+*     console.log("onDragGroup", targets);
+*     events.forEach(ev => {
+*          // drag event
+*          console.log("onDrag left, top", ev.left, ev.top);
+*          // ev.target!.style.left = `${ev.left}px`;
+*          // ev.target!.style.top = `${ev.top}px`;
+*          console.log("onDrag translate", ev.dist);
+*          ev.target!.style.transform = ev.transform;)
+*     });
+* });
+*/
 
 /**
  * When the group drag finishes, the `dragGroupEnd` event is called.

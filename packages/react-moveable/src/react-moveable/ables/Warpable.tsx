@@ -123,7 +123,7 @@ export default {
         datas.left = left;
         datas.top = top;
 
-        setDragStart(moveable, { datas });
+        setDragStart(moveable,e);
         datas.poses = [
             [0, 0],
             [width, 0],
