@@ -1005,12 +1005,12 @@ export function fillEndParams<T extends IObject<any>>(
 
 export function triggerEvent<T extends IObject<any> = MoveableProps, U extends keyof T = string>(
     moveable: any,
-    name: U & string,
+    name: U,
     params: T[U] extends ((e: infer P) => any) | undefined ? P : IObject<any>,
     isManager?: boolean,
 ): any {
     if (isManager) {
-        MoveableManager.prototype.triggerEvent.call(moveable, name, params);
+        MoveableManager.prototype.triggerEvent.call(moveable, name as any, params);
     }
     return moveable.triggerEvent(name, params);
 }

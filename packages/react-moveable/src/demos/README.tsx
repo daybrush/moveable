@@ -33,7 +33,7 @@ function RenderScalable() {
         setTarget(document.querySelector<HTMLElement>(".scalable .box")!);
     }, []);
     return <div className="container scalable">
-        <p className="description">Draggable</p>
+        <p className="description">Scalable</p>
         <div className="box" style={{
             transform: "rotate(30deg) translate(10px, 10px) scale(2, 2) translate(10px, 10px)",
         }}><span>A</span></div>
@@ -48,6 +48,7 @@ function RenderScalable() {
                 e.dragStart && e.dragStart.setTransformIndex(1);
             }}
             onScale={e => {
+                console.log(e.drag.transform);
                 e.target.style.transform = e.drag.transform;
             }}
         ></Moveable>
@@ -73,7 +74,7 @@ function RenderRotatable() {
                 e.dragStart && e.dragStart.setTransformIndex(1);
             }}
             onRotate={e => {
-                console.log(e.drag.transform);
+                // console.log(e.drag.transform);
                 e.target.style.transform = e.drag.transform;
             }}
         ></Moveable>

@@ -183,7 +183,8 @@ export interface MoveableProps extends
     ScrollableProps,
     ClippableProps,
     RoundableProps,
-    RenderProps {
+    BeforeRenderableProps,
+    RenderableProps {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
 
@@ -227,6 +228,7 @@ export interface Able<O extends IObject<any> = IObject<any>, E extends IObject<a
     name: string;
     props: { [key in keyof O]: any };
     events: { [key in keyof E]: string };
+    always?: boolean;
     ableGroup?: string;
     updateRect?: boolean;
     canPinch?: boolean;
@@ -875,6 +877,69 @@ export interface OnClickGroup extends OnEvent {
 }
 
 /**
+ * @typedef - `beforeRenderStart` event occurs before the first start of all events.
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Whether or not it is being pinched.
+ */
+export interface OnBeforeRenderStart extends OnEvent {
+    isPinch: boolean;
+}
+
+/**
+ * @typedef - `beforeRender` event occurs before the dragging of all events.
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Whether or not it is being pinched.
+ */
+export interface OnBeforeRender extends OnEvent {
+    isPinch: boolean;
+}
+
+/**
+ * @typedef - `beforeRenderEnd` event occurs before the end of all events.
+ * @memberof Moveable
+ * @extends Moveable.OnEvent
+ * @property - Whether or not it is being dragged.
+ * @property - Whether or not it is being pinched.
+ */
+export interface OnBeforeRenderEnd extends OnEvent {
+    isPinch: boolean;
+    isDrag: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnBeforeRenderStart
+ * @property - targets set to group.
+ */
+export interface OnBeforeRenderGroupStart extends OnBeforeRenderStart {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnBeforeRender
+ * @property - targets set to group.
+ */
+export interface OnBeforeRenderGroup extends OnBeforeRender {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.OnBeforeRenderEnd
+ * @property - targets set to group.
+ */
+export interface OnBeforeRenderGroupEnd extends OnBeforeRenderEnd {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+
+/**
  * @typedef - `renderStart` event occurs at the first start of all events.
  * @memberof Moveable
  * @extends Moveable.OnEvent
@@ -905,6 +970,7 @@ export interface OnRenderEnd extends OnEvent {
     isPinch: boolean;
     isDrag: boolean;
 }
+
 export type EventInterface<T extends IObject<any> = {}> = {
     [key in keyof T]?: (e: T[key]) => any;
 };
@@ -1317,7 +1383,17 @@ export interface DragAreaOptions {
 export interface DragAreaProps extends DragAreaOptions, EventInterface<DragAreaEvents> {
 }
 
-export interface RenderEvents {
+export interface BeforeRenderableEvents {
+    onBeforeRenderStart: OnBeforeRenderStart;
+    onBeforeRender: OnBeforeRender;
+    onBeforeRenderEnd: OnBeforeRenderEnd;
+    onBeforeRenderGroupStart: OnBeforeRenderGroupStart;
+    onBeforeRenderGroup: OnBeforeRenderGroup;
+    onBeforeRenderGroupEnd: OnBeforeRenderGroupEnd;
+}
+export interface BeforeRenderableProps extends EventInterface<BeforeRenderableEvents> {
+}
+export interface RenderableEvents {
     onRenderStart: OnRenderStart;
     onRender: OnRender;
     onRenderEnd: OnRenderEnd;
@@ -1325,7 +1401,7 @@ export interface RenderEvents {
     onRenderGroup: OnRenderGroup;
     onRenderGroupEnd: OnRenderGroupEnd;
 }
-export interface RenderProps extends EventInterface<RenderEvents> {
+export interface RenderableProps extends EventInterface<RenderableEvents> {
 }
 
 /**

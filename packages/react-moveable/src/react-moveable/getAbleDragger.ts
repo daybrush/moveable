@@ -3,6 +3,7 @@ import { IObject } from "@daybrush/utils";
 import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
 import { convertDragDist } from "./utils";
 import Dragger from "@daybrush/drag";
+import BeforeRenderable from "./ables/BeforeRenderable";
 
 export function triggerAble<T extends IObject<any>>(
     moveable: MoveableManagerInterface<any, any>,
@@ -39,7 +40,7 @@ export function triggerAble<T extends IObject<any>>(
         convertDragDist(moveable.state, e);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
-    const ables: Able[] = (moveable as any)[ableType].slice();
+    const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType].slice()];
 
     if (e.isRequest) {
         const requestAble = e.requestAble;

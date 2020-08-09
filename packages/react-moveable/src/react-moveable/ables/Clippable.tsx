@@ -330,7 +330,7 @@ function addClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: any)
         return;
     }
     const clipStyles = getClipStyles(moveable, clipPath, poses)!;
-    triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
+    triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
         clipEventType: "added",
         clipType,
         poses,
@@ -365,7 +365,7 @@ function removeClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: a
         return;
     }
     const clipStyles = getClipStyles(moveable, clipPath, poses)!;
-    triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
+    triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
         clipEventType: "removed",
         clipType,
         poses,
@@ -597,7 +597,7 @@ export default {
             return false;
         }
         const { clipText, type, poses } = clipPath;
-        const result = triggerEvent<ClippableProps>(moveable, "onClipStart", fillParams<OnClipStart>(moveable, e, {
+        const result = triggerEvent(moveable, "onClipStart", fillParams<OnClipStart>(moveable, e, {
             clipType: type,
             clipStyle: clipText,
             poses: poses.map(pos => pos.pos),
@@ -663,7 +663,7 @@ export default {
         const clipStyle = `${clipType}(${nextClipStyles.join(splitter)})`;
 
         state.clipPathState = clipStyle;
-        triggerEvent<OnClip>(moveable, "onClip", fillParams<OnClip>(moveable, e, {
+        triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
             clipEventType: "changed",
             clipType,
             poses: nextPoses,
@@ -683,7 +683,7 @@ export default {
         if (!isClipStart) {
             return false;
         }
-        triggerEvent<ClippableProps>(moveable, "onClipEnd", fillEndParams<OnClipEnd>(moveable, e, {}));
+        triggerEvent(moveable, "onClipEnd", fillEndParams<OnClipEnd>(moveable, e, {}));
         if (isDouble) {
             if (isControl) {
                 removeClipPath(moveable, e);

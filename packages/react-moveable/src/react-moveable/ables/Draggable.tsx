@@ -238,7 +238,7 @@ export default {
             return;
         }
         datas.isDrag = false;
-        !parentEvent && triggerEvent<DraggableProps>(moveable, "onDragEnd", fillEndParams<OnDragEnd>(moveable, e, {}));
+        !parentEvent && triggerEvent(moveable, "onDragEnd", fillEndParams<OnDragEnd>(moveable, e, {}));
         return isDrag;
     },
     dragGroupStart(moveable: MoveableGroupInterface<any, any>, e: any) {

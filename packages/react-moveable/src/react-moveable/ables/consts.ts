@@ -17,8 +17,12 @@ import { Able, UnionToIntersection } from "../types";
 import { IObject } from "@daybrush/utils";
 import { invert } from "./utils";
 import Groupable from "./Groupable";
+import BeforeRenderable from "./BeforeRenderable";
+import Renderable from "./Renderable";
 
 export const MOVEABLE_ABLES = [
+    BeforeRenderable,
+    Renderable,
     Default, Snappable, Pinchable, Draggable, Rotatable,
     Resizable, Scalable, Warpable, Scrollable, DragArea, Padding, Origin, OriginDraggable,
     Clippable, Roundable, Groupable,

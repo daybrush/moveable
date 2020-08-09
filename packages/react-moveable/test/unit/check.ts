@@ -4,7 +4,7 @@ import {
     ScalableEvents, RotatableEvents, DraggableOptions,
     ResizableOptions, ScalableOptions, RotatableOptions, WarpableOptions,
     WarpableEvents, GroupableOptions, SnappableEvents, SnappableOptions,
-    RenderEvents, DragAreaEvents, RoundableEvents, RoundableOptions,
+    RenderableEvents, DragAreaEvents, RoundableEvents, RoundableOptions,
     ClippableOptions, ClippableEvents, OriginDraggableEvents,
     DefaultOptions,
     DragAreaOptions, PinchableOptions, PinchableEvents, ScrollableEvents,
@@ -27,7 +27,7 @@ import Clippable from "../../src/react-moveable/ables/Clippable";
 import OriginDraggable from "../../src/react-moveable/ables/OriginDraggable";
 import Pinchable from "../../src/react-moveable/ables/Pinchable";
 import Scrollable from "../../src/react-moveable/ables/Scrollable";
-import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP, MOVEABLE_EVENTS_MAP } from "../../src/react-moveable/ables/consts";
+import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP } from "../../src/react-moveable/ables/consts";
 import Origin from "../../src/react-moveable/ables/Origin";
 import Padding from "../../src/react-moveable/ables/Padding";
 
@@ -38,7 +38,6 @@ type MatchTypes<
         [key in keyof Required<E>]: Required<T>[key]
     };
 type Writable<T> = { -readonly [key in keyof T]: any };
-
 
 export type P00 = MatchTypes<typeof Default["props"], DefaultOptions>;
 export type P01 = MatchTypes<typeof DragArea["props"], DragAreaOptions>;
@@ -107,7 +106,7 @@ export type P13
     & MatchTypes<Required<ClippableOptions>, typeof Clippable["props"]>;
 export type PP13 = MatchTypes<typeof Clippable["events"] & typeof Clippable["props"], ClippableProps>;
 
-export type E14 = MatchTypes<typeof Default["events"], RenderEvents>;
+export type E14 = MatchTypes<typeof Default["events"], RenderableEvents>;
 
 export type E15 = MatchTypes<typeof Scrollable["events"], ScrollableEvents>;
 export type P15
