@@ -6,7 +6,8 @@
     "module": "es2015",
     "target": "es5",
     "experimentalDecorators": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
+    "strict": true,
     "moduleResolution": "node",
     "jsx": "react",
     "lib": [

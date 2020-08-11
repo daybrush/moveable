@@ -43,6 +43,7 @@
         "@angular/core": ">=8"
     },
     "dependencies": {
-        "moveable": "^0.18.5"
+        "moveable": "^0.18.5",
+        "tslib": "^2.0.1"
     }
 }

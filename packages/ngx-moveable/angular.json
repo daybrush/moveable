@@ -93,8 +93,7 @@
           "options": {
             "tsConfig": [
               "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -126,6 +125,11 @@
           "options": {
             "tsConfig": "projects/ngx-moveable/tsconfig.lib.json",
             "project": "projects/ngx-moveable/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-moveable/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {

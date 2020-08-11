@@ -19,11 +19,11 @@ import { NgxMoveableInterface } from './ngx-moveable.interface';
 export class NgxMoveableComponent
   extends NgxMoveableInterface
   implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableEvents {
-  @Input() public draggable!: MoveableOptions['draggable'];
-  @Input() public resizable!: MoveableOptions['resizable'];
-  @Input() public scalable!: MoveableOptions['scalable'];
-  @Input() public rotatable!: MoveableOptions['rotatable'];
-  @Input() public warpable!: MoveableOptions['warpable'];
+  @Input() public draggable!: Required<MoveableOptions>['draggable'];
+  @Input() public resizable!: Required<MoveableOptions>['resizable'];
+  @Input() public scalable!: Required<MoveableOptions>['scalable'];
+  @Input() public rotatable!: Required<MoveableOptions>['rotatable'];
+  @Input() public warpable!: Required<MoveableOptions>['warpable'];
   @Input() public pinchable!: boolean | Array<'rotatable' | 'resizable' | 'scalable'>;
   @Input() public snappable!: boolean | string[];
   @Input() public origin!: boolean;
@@ -57,38 +57,38 @@ export class NgxMoveableComponent
   @Input() public scrollable!: boolean;
   @Input() public scrollContainer!: HTMLElement;
   @Input() public scrollThreshold!: number;
-  @Input() public getScrollPosition!: MoveableOptions['getScrollPosition'];
+  @Input() public getScrollPosition!: Required<MoveableOptions>['getScrollPosition'];
 
-  @Input() public rootContainer!: MoveableOptions['rootContainer'];
-  @Input() public zoom!: MoveableOptions['zoom'];
-  @Input() public transformOrigin!: MoveableOptions['transformOrigin'];
-  @Input() public snapDigit!: MoveableOptions['snapDigit'];
-  @Input() public isDisplaySnapDigit!: MoveableOptions['isDisplaySnapDigit'];
-  @Input() public innerBounds!: MoveableOptions['innerBounds'];
+  @Input() public rootContainer!: Required<MoveableOptions>['rootContainer'];
+  @Input() public zoom!: Required<MoveableOptions>['zoom'];
+  @Input() public transformOrigin!: Required<MoveableOptions>['transformOrigin'];
+  @Input() public snapDigit!: Required<MoveableOptions>['snapDigit'];
+  @Input() public isDisplaySnapDigit!: Required<MoveableOptions>['isDisplaySnapDigit'];
+  @Input() public innerBounds!: Required<MoveableOptions>['innerBounds'];
 
-  @Input() public triggerAblesSimultaneously!: MoveableOptions['triggerAblesSimultaneously'];
-  @Input() public snapGap!: MoveableOptions['snapGap'];
+  @Input() public triggerAblesSimultaneously!: Required<MoveableOptions>['triggerAblesSimultaneously'];
+  @Input() public snapGap!: Required<MoveableOptions>['snapGap'];
 
-  @Input() public pinchOutside!: MoveableOptions['pinchOutside'];
-  @Input() public padding!: MoveableOptions['padding'];
-  @Input() public snapDistFormat!: MoveableOptions['snapDistFormat'];
-  @Input() public dragTarget!: MoveableOptions['dragTarget'];
+  @Input() public pinchOutside!: Required<MoveableOptions>['pinchOutside'];
+  @Input() public padding!: Required<MoveableOptions>['padding'];
+  @Input() public snapDistFormat!: Required<MoveableOptions>['snapDistFormat'];
+  @Input() public dragTarget!: Required<MoveableOptions>['dragTarget'];
 
-  @Input() public checkInput!: MoveableOptions['checkInput'];
-  @Input() public cspNonce!: MoveableOptions['cspNonce'];
-  @Input() public startDragRotate!: MoveableOptions['startDragRotate'];
-  @Input() public originDraggable!: MoveableOptions['originDraggable'];
-  @Input() public originRelative!: MoveableOptions['originRelative'];
-  @Input() public defaultGroupOrigin!: MoveableOptions['defaultGroupOrigin'];
-  @Input() public groupable!: MoveableOptions['groupable'];
-  @Input() public clippable!: MoveableOptions['clippable'];
-  @Input() public customClipPath!: MoveableOptions['customClipPath'];
-  @Input() public defaultClipPath!: MoveableOptions['defaultClipPath'];
-  @Input() public clipRelative!: MoveableOptions['clipRelative'];
-  @Input() public dragWithClip!: MoveableOptions['dragWithClip'];
-  @Input() public clipArea!: MoveableOptions['clipArea'];
-  @Input() public roundable!: MoveableOptions['roundable'];
-  @Input() public roundRelative!: MoveableOptions['roundRelative'];
+  @Input() public checkInput!: Required<MoveableOptions>['checkInput'];
+  @Input() public cspNonce!: Required<MoveableOptions>['cspNonce'];
+  @Input() public startDragRotate!: Required<MoveableOptions>['startDragRotate'];
+  @Input() public originDraggable!: Required<MoveableOptions>['originDraggable'];
+  @Input() public originRelative!: Required<MoveableOptions>['originRelative'];
+  @Input() public defaultGroupOrigin!: Required<MoveableOptions>['defaultGroupOrigin'];
+  @Input() public groupable!: Required<MoveableOptions>['groupable'];
+  @Input() public clippable!: Required<MoveableOptions>['clippable'];
+  @Input() public customClipPath!: Required<MoveableOptions>['customClipPath'];
+  @Input() public defaultClipPath!: Required<MoveableOptions>['defaultClipPath'];
+  @Input() public clipRelative!: Required<MoveableOptions>['clipRelative'];
+  @Input() public dragWithClip!: Required<MoveableOptions>['dragWithClip'];
+  @Input() public clipArea!: Required<MoveableOptions>['clipArea'];
+  @Input() public roundable!: Required<MoveableOptions>['roundable'];
+  @Input() public roundRelative!: Required<MoveableOptions>['roundRelative'];
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;
@@ -160,7 +160,8 @@ export class NgxMoveableComponent
   constructor() {
     super();
     EVENTS.forEach(name => {
-      this[name] = new EventEmitter<any>();
+      // @ts-expect-error
+      this[name] = new EventEmitter<unknown>();
     });
   }
 
@@ -169,10 +170,12 @@ export class NgxMoveableComponent
     const events: IObject<any> = {};
 
     PROPERTIES.forEach(name => {
+      // @ts-expect-error
       (options as any)[name] = this[name];
     });
     EVENTS.forEach(name => {
-      events[name] = e => {
+      events[name] = (e: any) => {
+        // @ts-expect-error
         this[name].emit(e);
       };
     });
@@ -192,6 +195,7 @@ export class NgxMoveableComponent
       if (previousValue === currentValue) {
         continue;
       }
+      // @ts-expect-error
       moveable[name] = currentValue;
     }
   }
