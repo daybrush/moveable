@@ -79,7 +79,7 @@
     },
     "dependencies": {
         "@daybrush/drag": "^0.19.1",
-        "@daybrush/utils": "^0.10.5",
+        "@daybrush/utils": "^0.11.0",
         "@egjs/agent": "^2.1.5",
         "@egjs/children-differ": "^1.0.0",
         "@scena/dragscroll": "^0.2.1",
@@ -89,7 +89,7 @@
     },
     "peerDependencies": {
         "@daybrush/drag": ">=0.19.1",
-        "@daybrush/utils": ">=0.10.5",
+        "@daybrush/utils": ">=0.11.0",
         "framework-utils": ">=0.3.4",
         "react-css-styled": ">=0.1.3",
         "@scena/dragscroll": ">=0.2.1"

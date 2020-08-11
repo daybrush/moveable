@@ -1,9 +1,9 @@
 import { Able, MoveableManagerInterface, MoveableGroupInterface } from "./types";
 import { IObject } from "@daybrush/utils";
-import { triggerRenderStart, triggerRenderEnd, triggerRender } from "./ables/triggerRender";
 import { convertDragDist } from "./utils";
 import Dragger from "@daybrush/drag";
 import BeforeRenderable from "./ables/BeforeRenderable";
+import Renderable from "./ables/Renderable";
 
 export function triggerAble<T extends IObject<any>>(
     moveable: MoveableManagerInterface<any, any>,
@@ -40,7 +40,7 @@ export function triggerAble<T extends IObject<any>>(
         convertDragDist(moveable.state, e);
     }
     const isGroup = eventAffix.indexOf("Group") > -1;
-    const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType].slice()];
+    const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType].slice(), Renderable];
 
     if (e.isRequest) {
         const requestAble = e.requestAble;
@@ -54,8 +54,6 @@ export function triggerAble<T extends IObject<any>>(
     }
     const events = ables.filter((able: any) => able[eventName]);
     const datas = e.datas;
-    const renderDatas = datas.render || (datas.render = {});
-    const renderEvent = { ...e, datas: renderDatas, originalDatas: datas };
 
     if (isFirstStart) {
         events.forEach(able => {
@@ -86,11 +84,6 @@ export function triggerAble<T extends IObject<any>>(
 
             return false;
         }
-        triggerRenderStart(moveable, isGroup, renderEvent);
-    } else if (isEnd) {
-        triggerRenderEnd(moveable, isGroup, renderEvent);
-    } else if (!isAfter || isUpdate) {
-        triggerRender(moveable, isGroup, renderEvent);
     }
     if (isEnd) {
         moveable.state.dragger = null;

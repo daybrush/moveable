@@ -15,8 +15,6 @@ import {
     convertCSStoMatrix,
     convertMatrixtoCSS,
 } from "./matrix";
-
-import MoveableManager from "./MoveableManager";
 import {
     MoveableManagerState, Able, MoveableClientRect,
     MoveableProps, ControlPose, MoveableManagerInterface
@@ -1009,10 +1007,7 @@ export function triggerEvent<T extends IObject<any> = MoveableProps, U extends k
     params: T[U] extends ((e: infer P) => any) | undefined ? P : IObject<any>,
     isManager?: boolean,
 ): any {
-    if (isManager) {
-        MoveableManager.prototype.triggerEvent.call(moveable, name as any, params);
-    }
-    return moveable.triggerEvent(name, params);
+    return moveable.triggerEvent(name, params, isManager);
 }
 
 export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: string | null) {

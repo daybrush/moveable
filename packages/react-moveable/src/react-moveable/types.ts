@@ -938,7 +938,6 @@ export interface OnBeforeRenderGroupEnd extends OnBeforeRenderEnd {
     targets: Array<HTMLElement | SVGElement>;
 }
 
-
 /**
  * @typedef - `renderStart` event occurs at the first start of all events.
  * @memberof Moveable

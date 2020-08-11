@@ -198,8 +198,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             isSetState,
         );
     }
-    public triggerEvent(name: string, e: any): any {
-        if (name.indexOf("Group") > -1) {
+    public triggerEvent(name: string, e: any, isManager?: boolean): any {
+        if (isManager || name.indexOf("Group") > -1) {
             return super.triggerEvent(name as any, e);
         }
     }
