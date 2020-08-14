@@ -20,7 +20,7 @@ import { PROPERTIES, EVENTS, METHODS } from "./consts";
     if (prototype[property]) {
         return;
     }
-    prototype[property] = function(...args) {
+    prototype[property] = function(...args: any[]) {
         const self = this.getMoveable();
 
         if (!self || !self[property]) {
@@ -44,8 +44,8 @@ import { PROPERTIES, EVENTS, METHODS } from "./consts";
     });
 })
 class Moveable extends EgComponent {
-    private innerMoveable!: InnerMoveable;
-    private tempElement = document.createElement("div");
+    private innerMoveable!: InnerMoveable | null;
+    private tempElement: HTMLElement | null = document.createElement("div");
 
     /**
      *
@@ -75,16 +75,16 @@ class Moveable extends EgComponent {
         }
     }
     public setState(state: Partial<MoveableOptions>, callback?: () => any) {
-        this.innerMoveable.setState(state, callback);
+        this.innerMoveable!.setState(state, callback);
     }
     public destroy() {
-        render(null, this.tempElement);
+        render(null as any, this.tempElement!);
         this.off();
         this.tempElement = null;
         this.innerMoveable = null;
     }
     private getMoveable() {
-        return this.innerMoveable.moveable;
+        return this.innerMoveable!.moveable;
     }
 }
 

@@ -22,8 +22,9 @@
     "@angular/platform-browser": "~10.0.8",
     "@angular/platform-browser-dynamic": "~10.0.8",
     "@angular/router": "~10.0.8",
-    "scenejs": "1.2.0",
+    "moveable": "^0.18.5",
     "rxjs": "~6.6.2",
+    "scenejs": "1.2.0",
     "tslib": "^2.0.1",
     "zone.js": "~0.10.3"
   },

@@ -6,6 +6,7 @@
   },
   "whitelistedNonPeerDependencies": [
     "framework-utils",
-    "moveable"
+    "moveable",
+    "react-moveable"
   ]
 }

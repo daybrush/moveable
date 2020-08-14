@@ -1,49 +1,51 @@
 {
-    "name": "ngx-moveable",
-    "version": "0.14.3",
-    "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable"
-    },
-    "keywords": [
-        "moveable",
-        "resizable",
-        "scalable",
-        "draggable",
-        "rotatable",
-        "warpable",
-        "pinchable",
-        "groupable",
-        "movable",
-        "snappable",
-        "throttle",
-        "ratio",
-        "dom",
-        "resize",
-        "scale",
-        "drag",
-        "move",
-        "rotate",
-        "warp",
-        "pinch",
-        "snap",
-        "angular",
-        "ngx",
-        "ng"
-    ],
-    "author": "Daybrush",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/daybrush/moveable/issues"
-    },
-    "homepage": "https://daybrush.com/moveable",
-    "peerDependencies": {
-        "@angular/common": ">=8",
-        "@angular/core": ">=8"
-    },
-    "dependencies": {
-        "moveable": "^0.18.5",
-        "tslib": "^2.0.1"
-    }
+  "name": "ngx-moveable",
+  "version": "0.14.4",
+  "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable"
+  },
+  "keywords": [
+    "moveable",
+    "resizable",
+    "scalable",
+    "draggable",
+    "rotatable",
+    "warpable",
+    "pinchable",
+    "groupable",
+    "movable",
+    "snappable",
+    "throttle",
+    "ratio",
+    "dom",
+    "resize",
+    "scale",
+    "drag",
+    "move",
+    "rotate",
+    "warp",
+    "pinch",
+    "snap",
+    "angular",
+    "ngx",
+    "ng"
+  ],
+  "author": "Daybrush",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daybrush/moveable/issues"
+  },
+  "homepage": "https://daybrush.com/moveable",
+  "peerDependencies": {
+    "@angular/common": ">=8",
+    "@angular/core": ">=8"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.1"
+  },
+  "dependencies": {
+    "moveable": "^0.18.5"
+  }
 }
