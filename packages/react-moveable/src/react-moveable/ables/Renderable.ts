@@ -60,13 +60,13 @@ export default {
     dragControlEnd(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         return this.dragEnd(moveable, e);
     },
-    dragControlGroupStart(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
+    dragGroupControlStart(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
         return this.dragGroupStart(moveable, e);
     },
-    dragControlGroup(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
+    dragGroupControl(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
         return this.dragGroup(moveable, e);
     },
-    dragControlGroupEnd(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
+    dragGroupControlEnd(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
         return this.dragGroupEnd(moveable, e);
     },
 } as const;

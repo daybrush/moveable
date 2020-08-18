@@ -11,7 +11,7 @@ import {
     ScrollableOptions, MoveableProps, ScrollableProps, PinchableProps, DragAreaProps,
     OriginDraggableProps, ClippableProps, RoundableProps, SnappableProps, WarpableProps,
     RotatableProps, ScalableProps, ResizableProps, DraggableProps, OriginOptions,
-    PaddingOptions, GroupableProps, ExcludeKey, OriginDraggableOptions, MoveableOptions, MoveableEvents
+    PaddingOptions, GroupableProps, ExcludeKey, OriginDraggableOptions, MoveableOptions, MoveableEvents, BeforeRenderableEvents
 } from "../../src/react-moveable";
 import Draggable from "../../src/react-moveable/ables/Draggable";
 import Resizable from "../../src/react-moveable/ables/Resizable";
@@ -30,6 +30,8 @@ import Scrollable from "../../src/react-moveable/ables/Scrollable";
 import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP } from "../../src/react-moveable/ables/consts";
 import Origin from "../../src/react-moveable/ables/Origin";
 import Padding from "../../src/react-moveable/ables/Padding";
+import Renderable from "../../src/react-moveable/ables/Renderable";
+import BeforeRenderable from "../../src/react-moveable/ables/BeforeRenderable";
 
 type MatchTypes<
     T extends { [key in keyof Required<E>]: any },
@@ -106,13 +108,18 @@ export type P13
     & MatchTypes<Required<ClippableOptions>, typeof Clippable["props"]>;
 export type PP13 = MatchTypes<typeof Clippable["events"] & typeof Clippable["props"], ClippableProps>;
 
-export type E14 = MatchTypes<typeof Default["events"], RenderableEvents>;
+export type E14 = MatchTypes<typeof Default["events"], {}>;
 
 export type E15 = MatchTypes<typeof Scrollable["events"], ScrollableEvents>;
+
 export type P15
     = MatchTypes<typeof Scrollable["props"], ScrollableOptions>
     & MatchTypes<Required<ScrollableOptions>, typeof Scrollable["props"]>;
 export type PP15 = MatchTypes<typeof Scrollable["events"] & typeof Scrollable["props"], ScrollableProps>;
+
+export type E16 = MatchTypes<typeof Renderable["events"], RenderableEvents>;
+
+export type E17 = MatchTypes<typeof BeforeRenderable["events"], BeforeRenderableEvents>;
 
 export type PAll = MatchTypes<typeof MOVEABLE_PROPS_MAP & typeof MOVEABLE_EVENTS_PROPS_MAP, MoveableProps>;
 export type PAllOptions = MatchTypes<typeof MOVEABLE_PROPS_MAP, MoveableOptions>;

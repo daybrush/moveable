@@ -24,6 +24,15 @@ function RenderDraggable() {
                 console.log(e.transform);
                 e.target.style.transform = e.transform;
             }}
+            onRenderStart={e => {
+                console.log(e);
+            }}
+            onRender={e => {
+                console.log(e);
+            }}
+            onRenderEnd={e => {
+                console.log(e);
+            }}
         ></Moveable>
     </div>;
 }

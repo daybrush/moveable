@@ -59,6 +59,7 @@ export default class MoveableManager<T = {}>
         checkInput: false,
         groupable: false,
         cspNonce: "",
+        translateZ: 50,
     };
     public state: MoveableManagerState = {
         container: null,
@@ -101,7 +102,12 @@ export default class MoveableManager<T = {}>
     public render() {
         const props = this.props;
         const state = this.state;
-        const { edge, parentPosition, className, target: propsTarget, zoom, cspNonce } = props;
+        const {
+            edge, parentPosition, className,
+            target: propsTarget,
+            zoom, cspNonce,
+            translateZ,
+        } = props;
 
         this.checkUpdate();
         this.updateRenderPoses();
@@ -126,7 +132,7 @@ export default class MoveableManager<T = {}>
                 style={{
                     "position": "absolute",
                     "display": isDisplay ? "block" : "none",
-                    "transform": `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(50px)`,
+                    "transform": `translate(${left - parentLeft}px, ${top - parentTop}px) translateZ(${translateZ}px)`,
                     "--zoom": zoom,
                     "--zoompx": `${zoom}px`,
                 }}>
