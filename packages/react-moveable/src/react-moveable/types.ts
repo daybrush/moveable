@@ -43,6 +43,7 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
  * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
  * @property - add nonce property to style for CSP (default: "")
+ * @property - You can set the translateZ value of moveable (default: 50)
  */
 export interface DefaultOptions {
     target?: SVGElement | HTMLElement | null;
@@ -59,6 +60,7 @@ export interface DefaultOptions {
     triggerAblesSimultaneously?: boolean;
     checkInput?: boolean;
     cspNonce?: string;
+    translateZ?: number;
 }
 /**
  * @typedef
@@ -499,6 +501,7 @@ export interface OnRoundEnd extends OnEndEvent {
  * @typedef
  * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
+ * @extends Moveable.OnTransformStartEvent
  * @property - The direction of scale.
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
@@ -512,6 +515,7 @@ export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
  * @typedef
  * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
+ * @extends Moveable.OnTransformEvent
  * @property - The direction of scale.
  * @property - a target's offsetWidth
  * @property - a target's offsetHeight
@@ -525,10 +529,6 @@ export interface OnScale extends OnEvent, OnTransformEvent {
     direction: number[];
     offsetWidth: number;
     offsetHeight: number;
-
-    // beforeScale: number[];
-    // beforeDist: number[];
-    // beforeDelta: number[];
 
     scale: number[];
     dist: number[];
@@ -599,6 +599,7 @@ export interface OnResizeEnd extends OnEndEvent {
  * @typedef
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
+ * @extends Moveable.OnTransformStartEvent
  * @property - You can set the start rotate value.
  * @property - rotate causes a `dragStart` event.
  */
@@ -610,6 +611,7 @@ export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
  * @typedef
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
+ * @extends Moveable.OnTransformEvent
  * @property - The distance of rotation rad before transform is applied
  * @property - The delta of rotation rad before transform is applied
  * @property - The now rotation rad before transform is applied

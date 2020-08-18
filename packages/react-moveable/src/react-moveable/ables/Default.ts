@@ -15,13 +15,7 @@ export default {
         triggerAblesSimultaneously: Boolean,
         checkInput: Boolean,
         cspNonce: String,
+        translateZ: Number,
     } as const,
-    events: {
-        onRenderStart: "renderStart",
-        onRender: "render",
-        onRenderEnd: "renderEnd",
-        onRenderGroupStart: "renderGroupStart",
-        onRenderGroup: "renderGroup",
-        onRenderGroupEnd: "renderGroupEnd",
-    } as const,
+    events: {} as const,
 };
