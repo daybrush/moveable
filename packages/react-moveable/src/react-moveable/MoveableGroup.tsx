@@ -1,5 +1,5 @@
 import MoveableManager from "./MoveableManager";
-import { GroupableProps, MoveableManagerProps } from "./types";
+import { GroupableProps, MoveableManagerProps, RectInfo } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleDragger, getTargetAbleDragger } from "./getAbleDragger";
 import Groupable from "./ables/Groupable";
@@ -197,6 +197,12 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             },
             isSetState,
         );
+    }
+    public getRect(): RectInfo {
+        return {
+            ...super.getRect(),
+            children: this.moveables.map(child => child.getRect()),
+        };
     }
     public triggerEvent(name: string, e: any, isManager?: boolean): any {
         if (isManager || name.indexOf("Group") > -1) {

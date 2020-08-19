@@ -1511,7 +1511,8 @@ export interface OnCustomDrag extends Position {
  * @property - The absolute transform origin
  * @property - The absolute transform origin before transformation
  * @property - The target transform origin
- * @property - If you use a group, you can get the rotation value of the group.
+ * @property - you can get the absolute rotation value
+ * @property - If you use a group, you can get child moveables' rect info
  */
 export interface RectInfo {
     pos1: number[];
@@ -1528,6 +1529,7 @@ export interface RectInfo {
     beforeOrigin: number[];
     transformOrigin: number[];
     rotation: number;
+    children?: RectInfo[];
 }
 /**
  * @typedef
