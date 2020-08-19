@@ -1,6 +1,6 @@
 import {
     setDragStart, getBeforeDragDist, getTransformDist,
-    convertTransformFormat, resolveTransformEvent, setDefaultTransformStart, fillTransformStartEvent
+    convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex
 } from "../DraggerUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
 import { minus, plus, getRad } from "../matrix";
@@ -88,7 +88,7 @@ export default {
         datas.startValue = [0, 0];
 
         setDragStart(moveable, e);
-        setDefaultTransformStart(moveable, datas, "translate");
+        setDefaultTransformIndex(e);
         startCheckSnapDrag(moveable, datas);
 
         datas.prevDist = [0, 0];
@@ -99,7 +99,7 @@ export default {
             set: (translate: number[]) => {
                 datas.startValue = translate;
             },
-            ...fillTransformStartEvent(datas, "translate"),
+            ...fillTransformStartEvent(e),
         });
         const result = parentEvent || triggerEvent(moveable, "onDragStart", params);
 

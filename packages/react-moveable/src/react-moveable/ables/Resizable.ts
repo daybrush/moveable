@@ -137,7 +137,7 @@ export default {
             },
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], inputEvent),
+                new CustomDragger().dragStart([0, 0], e),
             ),
         });
         const result = triggerEvent<ResizableProps>(moveable, "onResizeStart", params);
@@ -158,7 +158,7 @@ export default {
             datas,
             distX, distY,
             parentFlag, isPinch,
-            parentDistance, parentScale, inputEvent,
+            parentDistance, parentScale,
             parentKeepRatio,
             dragClient,
             parentDist,
@@ -349,7 +349,7 @@ export default {
             isPinch: !!isPinch,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable.state, inverseDelta, inputEvent, !!isPinch, false),
+                setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false),
             ) as OnDrag,
         });
         triggerEvent<ResizableProps>(moveable, "onResize", params);
@@ -424,18 +424,18 @@ export default {
             moveable,
             this,
             "dragControlStart",
-            datas,
-            (child, childDatas) => {
+            e,
+            (child, ev) => {
                 const pos = getAbsoluteFixedPosition(child, direction);
                 const [originalX, originalY] = caculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
                     3,
                 );
-                childDatas.originalX = originalX;
-                childDatas.originalY = originalY;
+                ev.datas.originalX = originalX;
+                ev.datas.originalY = originalY;
 
-                return e;
+                return ev;
             },
         );
 
@@ -475,20 +475,20 @@ export default {
             moveable,
             this,
             "dragControl",
-            datas,
-            (_, childDatas) => {
+            e,
+            (_, ev) => {
                 const [clientX, clientY] = caculate(
                     createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
                     [
-                        childDatas.originalX * parentScale[0],
-                        childDatas.originalY * parentScale[1],
+                        ev.datas.originalX * parentScale[0],
+                        ev.datas.originalY * parentScale[1],
                         1,
                     ],
                     3,
                 );
 
                 return {
-                    ...e,
+                    ...ev,
                     parentDist: null,
                     parentScale,
                     dragClient: plus(fixedPosition, [clientX, clientY]),
@@ -513,7 +513,7 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
 
         const nextParams: OnResizeGroupEnd = fillEndParams<OnResizeGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,

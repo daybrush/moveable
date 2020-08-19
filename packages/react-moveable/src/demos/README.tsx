@@ -258,6 +258,66 @@ function RenderInnerBounds() {
     </div>;
 }
 
+function RenderDragGroup() {
+    const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
+    const frames = [
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+    ];
+
+    const ref = React.useRef<Moveable>(null);
+    React.useEffect(() => {
+        setTarget([].slice.call(document.querySelectorAll<HTMLElement | SVGElement>(".draggroup .box")!));
+
+        // setTimeout(() => {
+        //     const scaleRequester = ref.current!.request("scalable");
+        //     scaleRequester.request({
+        //         direction: [1, 1],
+        //         deltaWidth: -100,
+        //         deltaHeight: -100,
+        //     });
+        //     scaleRequester.requestEnd();
+        // }, 1000);
+    }, []);
+
+    return <div className="container draggroup group">
+        <p>Drag Group</p>
+        <div className="box box1"><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3"><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            ref={ref}
+            target={target}
+            origin={false}
+            draggable={true}
+            onBeforeRenderGroupStart={e => {
+                e.events.forEach((ev, i) => {
+                    const translate = frames[i].translate;
+                    ev.setTransform(`translate(${translate[0]}px, ${translate[1]}px)`);
+                });
+            }}
+            onDragGroupStart={e => {
+                // e.events.forEach((ev, i) => {
+                //     ev.set(frames[i].translate);
+                // });
+                e.events.forEach((ev, i) => {
+                    ev.setTransformIndex(0);
+                });
+            }}
+            onDragGroup={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    frames[i].translate = ev.beforeTranslate;
+
+                    ev.target.style.transform = ev.transform;
+                });
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderScaleGroup() {
     const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
     const frames = [
@@ -283,7 +343,7 @@ function RenderScaleGroup() {
     }, []);
 
     return <div className="container scalegroup group">
-        <p>Selecto</p>
+        <p>Scale Group</p>
         <div className="box box1"><span>A</span></div>
         <div className="box box2"><span>B</span></div>
         <div className="box box3"><span>C</span></div>
@@ -293,6 +353,9 @@ function RenderScaleGroup() {
             target={target}
             origin={false}
             scalable={true}
+            onBeforeRenderGroupStart={e => {
+                console.log(e);
+            }}
             onScaleGroupStart={e => {
                 const { events } = e;
                 events.forEach((ev, i) => {
@@ -305,6 +368,7 @@ function RenderScaleGroup() {
                 events.forEach((ev, i) => {
                     frames[i].translate = ev.drag.beforeTranslate;
                     frames[i].scale = ev.scale;
+
                     ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
                         // + ` rotate(${frames[i].rotate}deg)`
                         + ` scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`;
@@ -313,7 +377,124 @@ function RenderScaleGroup() {
         ></Moveable>
     </div>;
 }
+function RenderResizeGroup() {
+    const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
+    const frames = [
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+    ];
 
+    const ref = React.useRef<Moveable>(null);
+    React.useEffect(() => {
+        setTarget([].slice.call(document.querySelectorAll<HTMLElement | SVGElement>(".resizegroup .box")!));
+
+        // setTimeout(() => {
+        //     const scaleRequester = ref.current!.request("scalable");
+        //     scaleRequester.request({
+        //         direction: [1, 1],
+        //         deltaWidth: -100,
+        //         deltaHeight: -100,
+        //     });
+        //     scaleRequester.requestEnd();
+        // }, 1000);
+    }, []);
+
+    return <div className="container resizegroup group">
+        <p>Resize Group</p>
+        <div className="box box1"><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3"><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            ref={ref}
+            target={target}
+            origin={false}
+            resizable={true}
+            onBeforeRenderGroupStart={e => {
+                console.log(e);
+            }}
+            onResizeGroupStart={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    ev.dragStart && ev.dragStart.set(frames[i].translate);
+                });
+            }}
+            onResizeGroup={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    frames[i].translate = ev.drag.beforeTranslate;
+
+                    console.log(ev.width, ev.height);
+                    ev.target.style.width = `${ev.width}px`;
+                    ev.target.style.height = `${ev.height}px`;
+                    ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`;
+                });
+            }}
+        ></Moveable>
+    </div>;
+}
+
+function RenderRotateGroup() {
+    const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
+    const frames = [
+        { translate: [0, 0], rotate: 0 },
+        { translate: [0, 0], rotate: 0 },
+        { translate: [0, 0], rotate: 0 },
+        { translate: [0, 0], rotate: 0 },
+    ];
+
+    const ref = React.useRef<Moveable>(null);
+    React.useEffect(() => {
+        setTarget([].slice.call(document.querySelectorAll<HTMLElement | SVGElement>(".rotategroup .box")!));
+
+        // setTimeout(() => {
+        //     const scaleRequester = ref.current!.request("scalable");
+        //     scaleRequester.request({
+        //         direction: [1, 1],
+        //         deltaWidth: -100,
+        //         deltaHeight: -100,
+        //     });
+        //     scaleRequester.requestEnd();
+        // }, 1000);
+    }, []);
+
+    return <div className="container rotategroup group">
+        <p>Rotate Group</p>
+        <div className="box box1"><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3"><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            ref={ref}
+            target={target}
+            origin={false}
+            rotatable={true}
+            onBeforeRenderGroupStart={e => {
+                console.log(e);
+            }}
+            onRotateGroupStart={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    ev.set(frames[i].rotate);
+                    ev.dragStart && ev.dragStart.set(frames[i].translate);
+                });
+            }}
+            onRotateGroup={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    frames[i].translate = ev.drag.beforeTranslate;
+                    frames[i].rotate = ev.beforeRotate;
+
+                    ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                        // + ` rotate(${frames[i].rotate}deg)`
+                        + ` rotate(${frames[i].rotate}deg)`;
+                });
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderPSpan() {
     const [target, setTarget] = React.useState<HTMLElement>();
     React.useEffect(() => {
@@ -348,10 +529,10 @@ function RenderSVGOriginDraggable() {
     React.useEffect(() => {
         setTarget(document.querySelector<HTMLElement>(".svg text")!);
 
-        setTimeout(() => {
-            console.log(ref.current!.getRect());
-            console.log(ref.current!);
-        }, 100);
+        // setTimeout(() => {
+        //     console.log(ref.current!.getRect());
+        //     console.log(ref.current!);
+        // }, 100);
     }, []);
     return <div className="container svg">
         <p>SVG</p>
@@ -417,7 +598,10 @@ export default function App() {
         <RenderSelecto />
         <RenderBounds />
         <RenderInnerBounds />
+        <RenderDragGroup />
         <RenderScaleGroup />
+        <RenderRotateGroup />
+        <RenderResizeGroup />
         <RenderPSpan />
         <RenderSVGOriginDraggable />
     </div>;

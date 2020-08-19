@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MOVEABLE_CSS, PREFIX } from "./consts";
+import { PREFIX } from "./consts";
 import {
     prefix, getLineStyle,
     getTargetInfo,
@@ -16,16 +16,12 @@ import {
     groupByMap,
     caculatePadding,
 } from "./utils";
-import styled from "react-css-styled";
 import Dragger from "@daybrush/drag";
-import { ref, prefixCSS } from "framework-utils";
+import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
 import { triggerAble, getTargetAbleDragger, getAbleDragger } from "./getAbleDragger";
 import { getRad, plus } from "./matrix";
 import { IObject } from "@daybrush/utils";
-import { ABLE_CSS } from "./ables/consts";
-
-const ControlBoxElement = styled("div", prefixCSS(PREFIX, MOVEABLE_CSS + ABLE_CSS));
 
 function renderLine(direction: string, pos1: number[], pos2: number[], index: number) {
     const rad = getRad(pos1, pos2);
@@ -60,6 +56,7 @@ export default class MoveableManager<T = {}>
         groupable: false,
         cspNonce: "",
         translateZ: 50,
+        cssStyled: null,
     };
     public state: MoveableManagerState = {
         container: null,
@@ -91,7 +88,7 @@ export default class MoveableManager<T = {}>
     } as any;
     public targetAbles: Able[] = [];
     public controlAbles: Able[] = [];
-    public controlBox!: typeof ControlBoxElement extends new (...args: any[]) => infer K ? K : never;
+    public controlBox!: { getElement(): HTMLElement };
     public areaElement!: HTMLElement;
     public targetDragger!: Dragger;
     public controlDragger!: Dragger;
@@ -107,6 +104,7 @@ export default class MoveableManager<T = {}>
             target: propsTarget,
             zoom, cspNonce,
             translateZ,
+            cssStyled: ControlBoxElement,
         } = props;
 
         this.checkUpdate();

@@ -7,11 +7,11 @@ import {
     setDragStart, getDragDist,
     getAbsoluteFixedPosition,
     resolveTransformEvent,
-    setDefaultTransformStart,
     convertTransformFormat,
     getScaleDist,
     fillTransformStartEvent,
     fillTransformEvent,
+    setDefaultTransformIndex,
 } from "../DraggerUtils";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
@@ -85,7 +85,7 @@ export default {
         if (!isPinch) {
             setDragStart(moveable, e);
         }
-        setDefaultTransformStart(moveable, datas, "scale");
+        setDefaultTransformIndex(e);
 
         datas.datas = {};
         datas.transform = targetTransform;
@@ -102,10 +102,10 @@ export default {
             set: (scale: number[]) => {
                 datas.startValue = scale;
             },
-            ...fillTransformStartEvent(datas, "scale"),
+            ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], inputEvent),
+                new CustomDragger().dragStart([0, 0], e),
             ) as OnDragStart,
         });
         const result = triggerEvent<ScalableProps, "onScaleStart">(moveable, "onScaleStart", params);
@@ -129,7 +129,7 @@ export default {
             parentScale,
             parentDistance,
             parentKeepRatio,
-            parentFlag, isPinch, inputEvent,
+            parentFlag, isPinch,
             dragClient,
             parentDist,
             isRequest,
@@ -341,8 +341,7 @@ export default {
                 nextTransform,
                 inverseDelta,
                 isPinch,
-                inputEvent,
-                datas,
+                e,
             ),
         });
         triggerEvent(moveable, "onScale", params);
@@ -378,8 +377,8 @@ export default {
             moveable,
             this,
             "dragControlStart",
-            datas,
-            (child, childDatas) => {
+            e,
+            (child, ev) => {
                 const pos = getAbsoluteFixedPosition(child, direction);
 
                 const [originalX, originalY] = caculate(
@@ -387,10 +386,10 @@ export default {
                     [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
                     3,
                 );
-                childDatas.originalX = originalX;
-                childDatas.originalY = originalY;
+                ev.datas.originalX = originalX;
+                ev.datas.originalY = originalY;
 
-                return e;
+                return ev;
             },
         );
 
@@ -429,20 +428,20 @@ export default {
             moveable,
             this,
             "dragControl",
-            datas,
-            (_, childDatas) => {
+            e,
+            (_, ev) => {
                 const [clientX, clientY] = caculate(
                     createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
                     [
-                        childDatas.originalX * dist[0],
-                        childDatas.originalY * dist[1],
+                        ev.datas.originalX * dist[0],
+                        ev.datas.originalY * dist[1],
                         1,
                     ],
                     3,
                 );
 
                 return {
-                    ...e,
+                    ...ev,
                     parentDist: null,
                     parentScale: scale,
                     parentKeepRatio: keepRatio,
@@ -466,7 +465,7 @@ export default {
             return;
         }
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", datas, e);
+        triggerChildAble(moveable, this, "dragControlEnd", e);
 
         const nextParams = fillEndParams<OnScaleGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,

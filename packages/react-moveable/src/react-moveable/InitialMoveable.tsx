@@ -53,7 +53,6 @@ export class InitialMoveable<T = {}>
             ...userAbles,
         ];
 
-        console.log(moveableContructor.defaultStyled);
         if (isGroup) {
             const nextProps = {
                 ...this.props,

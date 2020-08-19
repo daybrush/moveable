@@ -1,10 +1,10 @@
 import {
     invert, caculate, minus, plus,
     convertPositionMatrix, average,
-    createScaleMatrix, multiply, fromTranslation, convertDimension, convertMatrixtoCSS,
+    createScaleMatrix, multiply, fromTranslation, convertDimension,
 } from "./matrix";
 import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState, caculatePosition } from "./utils";
-import { splitUnit, isArray, splitSpace, isUndefined, findIndex } from "@daybrush/utils";
+import { splitUnit, isArray, splitSpace } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
@@ -41,76 +41,43 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
 }
 export function resolveTransformEvent(event: any, functionName: string) {
     const {
-        resolveNextTransform,
-        resolveTransformIndexes,
         datas,
+        originalDatas: {
+            beforeRenderable: originalDatas,
+        },
     } = event;
-    if (resolveNextTransform) {
-        const index = datas.transformAppendIndex;
-        const nextIndex = index + resolveTransformIndexes.filter((i: number) => i < index).length;
 
-        setTransformStart(datas, resolveNextTransform, functionName, nextIndex);
+    const index = datas.transformIndex;
+    const nextTransforms = originalDatas.nextTransforms;
+    const nextTransformAppendedIndexes = originalDatas.nextTransformAppendedIndexes;
+    const nextIndex = index === -1 ? nextTransforms.length
+        : index + nextTransformAppendedIndexes.filter((i: number) => i < index).length;
 
-        if (datas.isAppendTransform) {
-            datas.transformAppendedIndexes = [...resolveTransformIndexes, nextIndex];
-        }
-    }
-}
-
-export function setDefaultTransformStart(
-    moveable: MoveableManagerInterface, datas: any, functionName: string, index: number = -1) {
-    const {
-        is3d,
-        targetMatrix,
-    } = moveable.state;
-    const cssMatrix = is3d
-        ? `matrix3d(${targetMatrix.join(",")})`
-        : `matrix(${convertMatrixtoCSS(targetMatrix, true)})`;
-    return setTransformStart(datas, cssMatrix, functionName, index);
-}
-
-export function setTransformStart(datas: any, transform: string | string[], functionName: string, index?: number) {
-    const transforms = (isArray(transform) ? transform : splitSpace(transform));
-
-    if (isUndefined(index)) {
-        index = findIndex(transforms, v => v.indexOf(functionName) === 0);
-    }
-    const result = getTransform(transform, index);
-
-    datas.transformFormat = (value: any) => {
-        return `${datas.beforeFunctionTexts.join(" ")} ${value} ${datas.afterFunctionTexts.join(" ")}`;
-    };
-
-    datas.transformIndex = index;
-    datas.transformAppendIndex = index < 0 ? result.transforms.length : index;
-    datas.transformAppendedIndexes = [];
+    const result = getTransform(nextTransforms, nextIndex);
+    const targetFunction = result.targetFunction;
+    const matFunctionName = functionName === "rotate" ? "rotateZ" : functionName;
 
     datas.targetAllTransform = multiply(
         result.beforeFunctionMatrix as number[],
-        result.afterFunctionMatrix as number[], 4);
+        result.afterFunctionMatrix as number[],
+        4);
     datas.beforeFunctionTexts = result.beforeFunctionTexts;
     datas.afterFunctionTexts = result.afterFunctionTexts;
     datas.beforeTransform = result.beforeFunctionMatrix;
     datas.targetTansform = result.targetFunctionMatrix;
     datas.afterTransform = result.afterFunctionMatrix;
 
-    const targetFunction = result.targetFunction;
-
-    const matFunctionName = functionName === "rotate" ? "rotateZ" : functionName;
-
     if (targetFunction.functionName === matFunctionName) {
-        datas.startValue = targetFunction.functionValue;
         datas.afterFunctionTexts.splice(0, 1);
         datas.isAppendTransform = false;
     } else {
-        datas.transformAppendedIndexes.push(datas.transformAppendIndex);
         datas.isAppendTransform = true;
+        originalDatas.nextTransformAppendedIndexes = [...nextTransformAppendedIndexes, nextIndex];
     }
-
-    return result;
 }
+
 export function convertTransformFormat(datas: any, value: any, dist: any) {
-    return datas.transformFormat(datas.isAppendTransform ? dist : value);
+    return `${datas.beforeFunctionTexts.join(" ")} ${datas.isAppendTransform ? dist : value} ${datas.afterFunctionTexts.join(" ")}`;
 }
 export function getTransformDist({ datas, distX, distY }: any) {
     const [bx, by] = getBeforeDragDist({ datas, distX, distY });
@@ -391,37 +358,52 @@ export function getScaleDelta(
     return minus(dist, [groupLeft, groupTop]);
 }
 
-export function fillTransformStartEvent(datas: any, functionName: string): OnTransformStartEvent {
+export function fillTransformStartEvent(e: any): OnTransformStartEvent {
+    const originalDatas = e.originalDatas.beforeRenderable;
     return {
-        setTransform: (transform: string | string[], index?: number) => {
-            setTransformStart(datas, transform, functionName, index);
+        setTransform: (transform: string | string[], index: number = -1) => {
+            originalDatas.startTransforms = isArray(transform) ? transform : splitSpace(transform);
+            setTransformIndex(e, index);
         },
-        setTransformIndex: (transformIndex: number) => {
-            if (transformIndex < 0) {
-                return;
-            }
-            datas.transformIndex = transformIndex;
-            datas.transformAppendIndex = transformIndex;
+        setTransformIndex: (index: number) => {
+            setTransformIndex(e, index);
         },
     };
+}
+export function setDefaultTransformIndex(e: any) {
+    setTransformIndex(e, -1);
+}
+export function setTransformIndex(e: any, index: number) {
+    const originalDatas = e.originalDatas.beforeRenderable;
+    const datas = e.datas;
+    datas.transformIndex = index;
+    if (index === -1) {
+        return;
+    }
+    const transform = originalDatas.startTransforms[index];
+
+    if (!transform) {
+        return;
+    }
+    const info = stringToMatrixInfo([transform]);
+
+    datas.startValue = info[0].functionValue;
 }
 export function fillTransformEvent(
     moveable: MoveableManagerInterface<DraggableProps>,
     nextTransform: string,
     delta: number[],
     isPinch: boolean,
-    inputEvent: any,
-    datas: any,
+    e: any,
 ): OnTransformEvent {
+    const originalDatas = e.originalDatas.beforeRenderable;
+
+    originalDatas.nextTransforms = splitSpace(nextTransform);
     return {
         transform: nextTransform,
         drag: Draggable.drag(
             moveable,
-            {
-                ...setCustomDrag(moveable.state, delta, inputEvent, isPinch, false),
-                resolveNextTransform: nextTransform,
-                resolveTransformIndexes: datas.transformAppendedIndexes,
-            },
+            setCustomDrag(e, moveable.state, delta, isPinch, false),
         ) as OnDrag,
     };
 }

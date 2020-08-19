@@ -26,7 +26,7 @@ export default {
         moveable: MoveableManagerInterface<PinchableProps, SnappableState>,
         e: any,
     ) {
-        const { datas, targets, angle } = e;
+        const { datas, targets, angle, originalDatas } = e;
         const { pinchable, ables } = moveable.props;
 
         if (!pinchable) {
@@ -55,14 +55,14 @@ export default {
             return false;
         }
         pinchAbles.forEach(able => {
-            datas[able.name + "Datas"] = {};
+            originalDatas[able.name] = originalDatas[able.name] || {};
 
             if (!able[controlEventName]) {
                 return;
             }
             const ableEvent: any = {
                 ...e,
-                datas: datas[able.name + "Datas"],
+                datas: originalDatas[able.name],
                 parentRotate: angle,
                 isPinch: true,
             };
@@ -81,6 +81,7 @@ export default {
     ) {
         const {
             datas, scale: pinchScale, distance,
+            originalDatas,
             inputEvent, targets,
             angle,
         } = e;
@@ -105,7 +106,7 @@ export default {
             }
             able[controlEventName]!(moveable, {
                 ...e,
-                datas: datas[able.name + "Datas"],
+                datas: originalDatas[able.name],
                 inputEvent,
                 parentDistance,
                 parentRotate: angle,
@@ -118,7 +119,7 @@ export default {
         moveable: MoveableManagerInterface<PinchableProps>,
         e: any,
     ) {
-        const { datas, isPinch, inputEvent, targets } = e;
+        const { datas, isPinch, inputEvent, targets, originalDatas } = e;
         if (!datas.isPinch) {
             return;
         }
@@ -140,7 +141,7 @@ export default {
             able[controlEventName]!(moveable, {
                 ...e,
                 isDrag: isPinch,
-                datas: datas[able.name + "Datas"],
+                datas: originalDatas[able.name],
                 inputEvent,
                 isPinch: true,
             } as any);

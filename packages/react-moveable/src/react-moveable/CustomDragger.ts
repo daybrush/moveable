@@ -2,13 +2,13 @@ import { MoveableManagerState, OnCustomDrag } from "./types";
 import { convertDragDist } from "./utils";
 
 export function setCustomDrag(
+    e: any,
     state: MoveableManagerState<any>,
     delta: number[],
-    inputEvent: any,
     isPinch: boolean,
     isConvert: boolean,
 ) {
-    const result = state.dragger!.move(delta, inputEvent);
+    const result = state.dragger!.move(delta, e.inputEvent);
     const datas = result.originalDatas || result.datas;
     const draggableDatas = datas.draggable || (datas.draggable = {});
 
@@ -18,6 +18,7 @@ export function setCustomDrag(
         isPinch: !!isPinch,
         parentEvent: true,
         datas: draggableDatas,
+        originalDatas: e.originalDatas,
     };
 }
 
@@ -32,14 +33,17 @@ export default class CustomDragger {
         draggable: {},
     };
 
-    public dragStart(client: number[], inputEvent: any) {
+    public dragStart(client: number[], e: any) {
         this.isDrag = false;
         this.isFlag = false;
-        this.datas = {
-            draggable: {},
-        };
+        const originalDatas = e.originalDatas;
+
+        this.datas = originalDatas;
+        if (!originalDatas.draggable) {
+            originalDatas.draggable = {};
+        }
         return {
-            ...this.move(client, inputEvent),
+            ...this.move(client, e.inputEvent),
             type: "dragstart",
         };
     }

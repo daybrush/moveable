@@ -1,6 +1,45 @@
 import { Able, MoveableGroupInterface, MoveableManagerInterface } from "./types";
-import { IObject, isFunction } from "@daybrush/utils";
 import CustomDragger, { setCustomDrag } from "./CustomDragger";
+
+export function fillChildEvents(
+    moveable: MoveableGroupInterface,
+    name: string,
+    e: any,
+): any[] {
+    const datas = e.originalDatas;
+
+    datas.groupable = datas.groupable || {};
+
+    const groupableDatas = datas.groupable;
+
+    groupableDatas.childDatas = groupableDatas.childDatas || [];
+
+    const childDatas = groupableDatas.childDatas;
+    const {
+        inputEvent,
+        isPinch,
+        clientX,
+        clientY,
+        distX,
+        distY,
+    } = e;
+
+    return moveable.moveables.map((child, i) => {
+        childDatas[i] = childDatas[i] || {};
+        childDatas[i][name] = childDatas[i][name] || {};
+
+        return {
+            inputEvent,
+            datas: childDatas[i][name],
+            originalDatas: childDatas[i],
+            isPinch,
+            clientX,
+            clientY,
+            distX,
+            distY,
+        };
+    });
+}
 export function triggerChildDragger(
     moveable: MoveableGroupInterface<any, any>,
     able: Able,
@@ -11,29 +50,32 @@ export function triggerChildDragger(
 ) {
     const isStart = !!type.match(/Start$/g);
     const isEnd = !!type.match(/End$/g);
-    const inputEvent = e.inputEvent;
     const isPinch = e.isPinch;
     const datas = e.datas;
-    const childs = moveable.moveables.map((child, i) => {
-        let childEvent = {};
+    const events = fillChildEvents(moveable, able.name, e);
+
+    const moveables = moveable.moveables;
+    const childs = events.map((ev, i) => {
+        const childMoveable = moveables[i];
+        let childEvent: any = ev;
 
         if (isStart) {
-            childEvent = new CustomDragger().dragStart(delta, inputEvent);
+            childEvent = new CustomDragger().dragStart(delta, ev);
         } else {
-            if (!child.state.dragger) {
-                child.state.dragger = datas.childDraggers[i];
+            if (!childMoveable.state.dragger) {
+                childMoveable.state.dragger = datas.childDraggers[i];
             }
-            childEvent = setCustomDrag(child.state, delta, inputEvent, isPinch, isConvert);
+            childEvent = setCustomDrag(ev, childMoveable.state, delta, isPinch, isConvert);
         }
-        const result = (able as any)[type]!(child,  { ...childEvent, parentFlag: true });
+        const result = (able as any)[type]!(childMoveable,  { ...childEvent, parentFlag: true });
 
         if (isEnd) {
-            child.state.dragger = null;
+            childMoveable.state.dragger = null;
         }
         return result;
     });
     if (isStart) {
-        datas.childDraggers = moveable.moveables.map(child => child.state.dragger);
+        datas.childDraggers = moveables.map(child => child.state.dragger);
     }
     return childs;
 }
@@ -41,23 +83,25 @@ export function triggerChildAble<T extends Able>(
     moveable: MoveableGroupInterface<any, any>,
     able: T,
     type: keyof T & string,
-    datas: IObject<any>,
-    eachEvent: ((movebale: MoveableManagerInterface<any, any>, datas: IObject<any>) => any) | IObject<any>,
-    callback?: (moveable: MoveableManagerInterface<any, any>, datas: IObject<any>, result: any, index: number) => any,
+    e: any,
+    eachEvent: (movebale: MoveableManagerInterface<any, any>, ev: any) => any = (_, ev) => ev,
+    callback?: (moveable: MoveableManagerInterface<any, any>, ev: any, result: any, index: number) => any,
 ) {
-    const name = able.name!;
-    const ableDatas = datas[name] || (datas[name] = []);
     const isEnd = !!type.match(/End$/g);
-    const childs = moveable.moveables.map((child, i) => {
-        const childDatas = ableDatas[i] || (ableDatas[i] = {});
+    const events = fillChildEvents(moveable, able.name, e);
+    const moveables = moveable.moveables;
+    const childs = events.map((ev, i) => {
+        const childMoveable = moveables[i];
+        let childEvent = ev;
 
-        const childEvent = isFunction(eachEvent) ? eachEvent(child, childDatas) : eachEvent;
-        const result = (able as any)[type]!(child,  { ...childEvent, datas: childDatas, parentFlag: true });
+        childEvent = eachEvent(childMoveable, ev);
 
-        result && callback && callback(child, childDatas, result, i);
+        const result = (able as any)[type]!(childMoveable,  { ...childEvent, parentFlag: true });
+
+        result && callback && callback(childMoveable, ev, result, i);
 
         if (isEnd) {
-            child.state.dragger = null;
+            childMoveable.state.dragger = null;
         }
         return result;
     });

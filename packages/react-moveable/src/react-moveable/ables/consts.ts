@@ -13,8 +13,7 @@ import Padding from "./Padding";
 import Clippable from "./Clippable";
 import OriginDraggable from "./OriginDraggable";
 import Roundable from "./Roundable";
-import { Able, UnionToIntersection } from "../types";
-import { IObject } from "@daybrush/utils";
+import { UnionToIntersection } from "../types";
 import { invert } from "./utils";
 import Groupable from "./Groupable";
 import BeforeRenderable from "./BeforeRenderable";
@@ -28,26 +27,13 @@ export const MOVEABLE_ABLES = [
     Clippable, Roundable, Groupable,
 ] as const;
 
-export const MOVEABLE_EVENTS_PROPS_MAP = MOVEABLE_ABLES.reduce((current, able) => {
+export const MOVEABLE_EVENTS_PROPS_MAP = /*#__PURE__*/MOVEABLE_ABLES.reduce((current, able) => {
     return {...current, ...able.events};
 }, {}) as UnionToIntersection<typeof MOVEABLE_ABLES[number]["events"]>;
-export const MOVEABLE_PROPS_MAP = MOVEABLE_ABLES.reduce((current, able) => {
+export const MOVEABLE_PROPS_MAP = /*#__PURE__*/MOVEABLE_ABLES.reduce((current, able) => {
     return {...current, ...able.props};
 }, {}) as UnionToIntersection<typeof MOVEABLE_ABLES[number]["props"]>;
 
-export const MOVEABLE_EVENTS_MAP = invert(MOVEABLE_EVENTS_PROPS_MAP);
-export const MOVEABLE_EVENTS: string[] = Object.keys(MOVEABLE_EVENTS_MAP);
-export const MOVEABLE_PROPS: string[] = Object.keys(MOVEABLE_PROPS_MAP);
-
-const cssMap: IObject<boolean> = {};
-
-MOVEABLE_ABLES.forEach(({ css }: Able) => {
-    if (!css) {
-        return;
-    }
-    css.forEach(text => {
-        cssMap[text] = true;
-    });
-});
-
-export const ABLE_CSS = Object.keys(cssMap).join("\n");
+export const MOVEABLE_EVENTS_MAP = /*#__PURE__*/invert(MOVEABLE_EVENTS_PROPS_MAP);
+export const MOVEABLE_EVENTS: string[] = /*#__PURE__*/Object.keys(MOVEABLE_EVENTS_MAP);
+export const MOVEABLE_PROPS: string[] = /*#__PURE__*/Object.keys(MOVEABLE_PROPS_MAP);

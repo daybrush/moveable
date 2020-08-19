@@ -40,14 +40,14 @@ export default {
         return hasClass(e.inputEvent.target, prefix("origin"));
     },
     dragControlStart(moveable: MoveableManagerInterface<OriginDraggableProps & DraggableProps>, e: any) {
-        const { inputEvent, datas } = e;
+        const { datas } = e;
 
         setDragStart(moveable, e);
 
         const params = fillParams<OnDragOriginStart>(moveable, e, {
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], inputEvent),
+                new CustomDragger().dragStart([0, 0], e),
             ),
         });
         const result = triggerEvent<OriginDraggableProps>(
@@ -66,7 +66,7 @@ export default {
         return params;
     },
     dragControl(moveable: MoveableManagerInterface<OriginDraggableProps & DraggableProps>, e: any) {
-        const { datas, inputEvent, isPinch, isRequest } = e;
+        const { datas, isPinch, isRequest } = e;
 
         if (!datas.isDragOrigin) {
             return false;
@@ -125,7 +125,7 @@ export default {
             transformOrigin,
             drag: Draggable.drag(
                 moveable,
-                setCustomDrag(moveable.state, dragDelta, inputEvent, !!isPinch, false),
+                setCustomDrag(e, moveable.state, dragDelta, !!isPinch, false),
             )!,
         });
         triggerEvent<OriginDraggableProps>(moveable, "onDragOrigin", params);

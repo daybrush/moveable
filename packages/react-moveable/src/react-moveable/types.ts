@@ -20,6 +20,7 @@ export interface MoveableClientRect {
     scrollHeight?: number;
 }
 export type MoveableManagerProps<T = {}> = {
+    cssStyled: any;
     parentMoveable?: any;
     parentPosition?: { left: number, top: number } | null;
     groupable?: boolean;
@@ -70,9 +71,7 @@ export interface DefaultOptions {
  * @extends Moveable.PaddingOptions
  */
 export interface MoveableDefaultOptions
-    extends ExcludeKey<DefaultOptions, "target">,
-    DragAreaOptions, OriginOptions, PaddingOptions {
-    target: HTMLElement | SVGElement | null;
+    extends DefaultOptions, DragAreaOptions, OriginOptions, PaddingOptions {
 }
 
 export type MoveableManagerState<T = {}> = {
@@ -171,7 +170,7 @@ export interface SnapGuidelineInfo {
 export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, U>>;
 
 export interface MoveableProps extends
-    ExcludeKey<MoveableDefaultOptions, "target">,
+    MoveableDefaultProps,
     DraggableProps,
     DragAreaProps,
     OriginDraggableProps,
@@ -187,9 +186,15 @@ export interface MoveableProps extends
     RoundableProps,
     BeforeRenderableProps,
     RenderableProps {
+}
+/**
+ * @memberof Moveable
+ * @typedef
+ * @extends Moveable.MoveableDefaultOptions
+ */
+export interface MoveableDefaultProps extends ExcludeKey<MoveableDefaultOptions, "target"> {
     target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
 }
-
 /**
  * @memberof Moveable
  * @typedef
@@ -207,7 +212,7 @@ export interface MoveableProps extends
  * @extends Moveable.Roundable.RoundableOptions
  */
 export interface MoveableOptions extends
-    ExcludeKey<MoveableDefaultOptions, "target">,
+    MoveableDefaultProps,
     DraggableOptions,
     DragAreaOptions,
     OriginDraggableOptions,
@@ -221,7 +226,6 @@ export interface MoveableOptions extends
     ScrollableOptions,
     ClippableOptions,
     RoundableOptions {
-    target?: HTMLElement | SVGElement | Array<SVGElement | HTMLElement> | null;
 }
 
 export type MoveableState = MoveableManagerState;
@@ -883,9 +887,11 @@ export interface OnClickGroup extends OnEvent {
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.
+ * @property - Set your original transform.
  */
 export interface OnBeforeRenderStart extends OnEvent {
     isPinch: boolean;
+    setTransform(transform: string | string[]): any;
 }
 
 /**
@@ -915,9 +921,11 @@ export interface OnBeforeRenderEnd extends OnEvent {
  * @memberof Moveable
  * @extends Moveable.OnBeforeRenderStart
  * @property - targets set to group.
+ * @property - children's `beforeRenderStart` events
  */
 export interface OnBeforeRenderGroupStart extends OnBeforeRenderStart {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnBeforeRenderStart[];
 }
 
 /**
@@ -925,9 +933,11 @@ export interface OnBeforeRenderGroupStart extends OnBeforeRenderStart {
  * @memberof Moveable
  * @extends Moveable.OnBeforeRender
  * @property - targets set to group.
+ * @property - children's `beforeRender` events
  */
 export interface OnBeforeRenderGroup extends OnBeforeRender {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnBeforeRender[];
 }
 
 /**

@@ -1,5 +1,5 @@
 import { prefix } from "../utils";
-import { hasClass, IObject, isArray, splitSpace, splitBracket, splitComma, splitUnit } from "@daybrush/utils";
+import { hasClass, IObject, splitBracket, splitComma, splitUnit } from "@daybrush/utils";
 import { InvertTypes, MatrixInfo } from "../types";
 import { createIdentityMatrix, convertCSStoMatrix, convertDimension } from "../matrix";
 import { mat4 } from "gl-matrix";
@@ -15,8 +15,6 @@ export function directionCondition(e: any) {
     return hasClass(e.inputEvent.target, prefix("direction"));
 }
 
-// MatchTypes<typeof Draggable["props"], AnyProps<DraggableOptions>>;
-// MatchTypes<typeof Resizable["events"], DraggableEvents>;
 export function invert<T extends IObject<any>>(obj: T): InvertTypes<T> {
     const nextObj: IObject<any> = {};
 
@@ -106,8 +104,7 @@ export function valueToMatrix(matrixInfos: MatrixInfo[]) {
     });
     return target;
 }
-export function getTransform(transform: string | string[], index: number) {
-    const transforms = (isArray(transform) ? transform : splitSpace(transform));
+export function getTransform(transforms: string[], index: number) {
     const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
     const targetFunctionText = transforms[index] || "";
     const afterFunctionTexts = index < 0 ? [] : transforms.slice(index);

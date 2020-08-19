@@ -158,11 +158,12 @@ export default {
         moveable: MoveableGroupInterface<DragAreaProps>,
         e: any,
     ) {
-        const { inputEvent, isDragArea, datas } = e;
+        const { inputEvent, datas } = e;
         if (!inputEvent) {
             return false;
         }
-        if (!isDragArea) {
+        const isDragArea = datas.isDragArea;
+        if (!datas.isDragArea) {
             restoreStyle(moveable);
         }
         const prevInputTarget = datas.inputTarget;

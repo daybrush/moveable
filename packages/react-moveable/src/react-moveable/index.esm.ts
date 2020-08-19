@@ -11,4 +11,10 @@ export {
 export {
     MOVEABLE_METHODS,
 } from "./consts";
+export {
+    makeMoveable,
+} from "./makeMoveable";
+export {
+    InitialMoveable,
+} from "./InitialMoveable";
 export default Moveable;
