@@ -23,6 +23,7 @@ export default {
                 ref={refs(moveable, "moveables", i)}
                 target={target}
                 origin={false}
+                cssStyled={moveable.props.cssStyled}
                 parentMoveable={moveable}
                 parentPosition={position}
             />;
