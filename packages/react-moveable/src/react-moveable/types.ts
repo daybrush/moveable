@@ -3,7 +3,6 @@ import Dragger, * as DraggerTypes from "@daybrush/drag";
 import CustomDragger from "./CustomDragger";
 import { Position } from "@daybrush/drag";
 import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
-import { mat4 } from "gl-matrix";
 
 export interface MoveableClientRect {
     left: number;
@@ -1615,11 +1614,4 @@ export type MoveableProperties = {
 export interface SnappableRenderType {
     type: "snap" | "bounds";
     pos: number;
-}
-
-export interface MatrixInfo {
-    name: string;
-    value: string;
-    functionName: keyof typeof mat4 | "";
-    functionValue: any;
 }

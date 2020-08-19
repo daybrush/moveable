@@ -281,24 +281,24 @@ export function getMatrixStackInfo(
         matrixes,
         targetMatrix,
         transformOrigin,
-        targetTransformOrigin,
+        targetOrigin: targetTransformOrigin,
         is3d,
     };
 }
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
-    rootContainer: SVGElement | HTMLElement | null,
+    rootContainer: SVGElement | HTMLElement | null = container,
     prevMatrix?: number[],
     prevRootMatrix?: number[],
     prevN?: number,
-): [number[], number[], number[], number[], number[], string, number[], number[], boolean] {
+) {
     const {
         matrixes,
         is3d,
         targetMatrix: prevTargetMatrix,
         transformOrigin,
-        targetTransformOrigin,
+        targetOrigin,
         offsetContainer,
     } = getMatrixStackInfo(target, container, prevMatrix);
     const {
@@ -370,24 +370,25 @@ export function caculateMatrixStack(
     if (!targetMatrix) {
         targetMatrix = createIdentityMatrix(isMatrix3d ? 4 : 3);
     }
-    const transform = makeMatrixCSS(
+    const targetTransform = makeMatrixCSS(
         isSVGGraphicElement && targetMatrix.length === 16
             ? convertDimension(targetMatrix, 4, 3) : targetMatrix,
         isMatrix3d,
     );
 
     rootMatrix = ignoreDimension(rootMatrix, n, n);
-    return [
+
+    return {
         rootMatrix,
         beforeMatrix,
         offsetMatrix,
         allMatrix,
         targetMatrix,
-        transform,
+        targetTransform,
         transformOrigin,
-        targetTransformOrigin,
-        is3d || isRoot3d,
-    ];
+        targetOrigin,
+        is3d: is3d || isRoot3d,
+    };
 }
 export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 9) {
     return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix, !is3d).join(",")})`;
@@ -745,20 +746,21 @@ export function getTargetInfo(
                 [width, height] = getSize(target, style, true);
             }
         }
-        [
-            rootMatrix,
-            beforeMatrix,
-            offsetMatrix,
-            matrix,
-            targetMatrix,
-            targetTransform,
-            transformOrigin,
-            targetOrigin,
-            is3d,
-        ] = caculateMatrixStack(
+        const result = caculateMatrixStack(
             target, container!, rootContainer!,
             prevMatrix, prevRootMatrix, prevN,
         );
+        rootMatrix = result.rootMatrix;
+        beforeMatrix = result.rootMatrix;
+        rootMatrix = result.rootMatrix;
+        beforeMatrix = result.beforeMatrix;
+        offsetMatrix = result.offsetMatrix;
+        matrix = result.allMatrix;
+        targetMatrix = result.targetMatrix;
+        targetTransform = result.targetTransform;
+        transformOrigin = result.transformOrigin;
+        targetOrigin = result.targetOrigin;
+        is3d = result.is3d;
 
         [
             [left, top, right, bottom],

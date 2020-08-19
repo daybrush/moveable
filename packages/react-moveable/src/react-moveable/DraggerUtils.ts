@@ -9,9 +9,10 @@ import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
 } from "./types";
-import { getTransform, stringToMatrixInfo, valueToMatrix } from "./ables/utils";
+import { getTransform } from "./ables/utils";
 import Draggable from "./ables/Draggable";
 import { setCustomDrag } from "./CustomDragger";
+import { parse, parseMat } from "css-to-mat";
 
 export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }: any) {
     const {
@@ -304,7 +305,7 @@ export function getNextTransformMatrix(
         afterTransform,
     } = datas;
     const n = is3d ? 4 : 3;
-    const targetTransform = valueToMatrix(stringToMatrixInfo([transform]));
+    const targetTransform = parseMat([transform]);
 
     return getNextMatrix(
         offsetMatrix,
@@ -385,7 +386,7 @@ export function setTransformIndex(e: any, index: number) {
     if (!transform) {
         return;
     }
-    const info = stringToMatrixInfo([transform]);
+    const info = parse([transform]);
 
     datas.startValue = info[0].functionValue;
 }
