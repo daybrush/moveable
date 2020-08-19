@@ -13,7 +13,7 @@ import {
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, getRad, rotate as rotateMatrix } from "../matrix";
-import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import CustomDragger from "../CustomDragger";
 import { checkSnapRotate } from "./Snappable";
 import {
     fillTransformStartEvent,
@@ -309,7 +309,7 @@ export default {
         moveable: MoveableManagerInterface<RotatableProps & DraggableProps>,
         e: any,
     ) {
-        const { datas, clientX, clientY, parentRotate, parentFlag, isPinch } = e;
+        const { datas, clientX, clientY, parentRotate, parentFlag, isPinch, groupDelta } = e;
         const {
             direction,
             beforeDirection,
@@ -365,8 +365,12 @@ export default {
 
         const nextTransform = convertTransformFormat(
             datas, `rotate(${rotate}deg)`, `rotate(${dist}deg)`);
+
         const inverseDist = getRotateDist(moveable, dist, datas.fixedPosition, datas);
-        const inverseDelta = minus(inverseDist, datas.prevInverseDist || [0, 0]);
+        const inverseDelta = minus(
+            plus(groupDelta || [0, 0], inverseDist),
+            datas.prevInverseDist || [0, 0],
+        );
 
         datas.prevInverseDist = inverseDist;
 
@@ -423,7 +427,6 @@ export default {
             this,
             "dragControlStart",
             e,
-            (_, ev) => ({ ...ev, parentRotate: 0 }),
             (child, ev) => {
                 const { left, top, beforeOrigin } = child.state;
                 const childClient = plus(
@@ -431,7 +434,8 @@ export default {
                     minus(beforeOrigin, parentBeforeOrigin),
                 );
 
-                ev.datas.prevClient = childClient;
+                ev.datas.groupClient = childClient;
+                return { ...ev, parentRotate: 0 };
             },
         );
 
@@ -467,19 +471,14 @@ export default {
             this,
             "dragControl",
             e,
-            (_, ev) => ({ ...ev, parentRotate }),
-            (child, ev, result) => {
-                const [prevX, prevY] = ev.datas.prevClient;
+            (_, ev) => {
+                const [prevX, prevY] = ev.datas.groupClient;
                 const [clientX, clientY] = rotateMatrix([prevX, prevY], rad * direction);
                 const delta = [clientX - prevX, clientY - prevY];
 
-                ev.datas.prevClient = [clientX, clientY];
+                ev.datas.groupClient = [clientX, clientY];
 
-                const dragResult = Draggable.drag(
-                    child,
-                    setCustomDrag(e, child.state, delta, !!e.isPinch, false),
-                );
-                result.drag = dragResult;
+                return { ...ev, parentRotate, groupDelta: delta };
             },
         );
         moveable.rotation = direction * params.beforeRotate;

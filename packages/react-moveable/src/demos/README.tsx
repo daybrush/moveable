@@ -77,13 +77,17 @@ function RenderRotatable() {
             target={target}
             rotatable={true}
             origin={true}
+            onBeforeRenderStart={e => {
+                e.setTransform("rotate(30deg) translate(30px, 30px)  scale(2, 2) translate(10px, 10px)");
+            }}
             onRotateStart={e => {
                 // e.set([2, 2]);
-                e.setTransform("rotate(30deg) translate(10px, 10px)  scale(2, 2) translate(10px, 10px)", 0);
+                // e.setTransform("rotate(30deg) translate(30px, 30px)  scale(2, 2) translate(10px, 10px)", 0);
+                e.setTransformIndex(0);
                 e.dragStart && e.dragStart.setTransformIndex(1);
             }}
             onRotate={e => {
-                // console.log(e.drag.transform);
+                console.log(e.drag.transform);
                 e.target.style.transform = e.drag.transform;
             }}
         ></Moveable>
@@ -470,26 +474,56 @@ function RenderRotateGroup() {
             ref={ref}
             target={target}
             origin={false}
+            draggable={true}
             rotatable={true}
             onBeforeRenderGroupStart={e => {
-                console.log(e);
+                e.events.forEach((ev, i) => {
+                    ev.setTransform([
+                        `rotate(${frames[i].rotate}deg)`,
+                        `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`,
+                    ]);
+                });
             }}
             onRotateGroupStart={e => {
                 const { events } = e;
                 events.forEach((ev, i) => {
-                    ev.set(frames[i].rotate);
-                    ev.dragStart && ev.dragStart.set(frames[i].translate);
+                    ev.setTransformIndex(0);
+                    ev.dragStart && ev.dragStart.setTransformIndex(1);
+
+                    // ev.set(frames[i].rotate);
+                    // ev.dragStart && ev.dragStart.set(frames[i].translate);
+                });
+            }}
+            onDragGroupStart={e => {
+                e.events.forEach((ev, i) => {
+                    ev.setTransformIndex(1);
+                });
+            }}
+            onDragGroup={e => {
+                e.events.forEach((ev, i) => {
+                    frames[i].translate = ev.translate;
+
+                    ev.target.style.transform
+                        = ` rotate(${frames[i].rotate}deg)`
+                        + `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`;
+
                 });
             }}
             onRotateGroup={e => {
                 const { events } = e;
                 events.forEach((ev, i) => {
-                    frames[i].translate = ev.drag.beforeTranslate;
-                    frames[i].rotate = ev.beforeRotate;
+                    frames[i].translate = ev.drag.translate;
+                    frames[i].rotate = ev.rotate;
+                    ev.target.style.transform
+                        = ` rotate(${frames[i].rotate}deg)`
+                        + `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`;
 
-                    ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
-                        // + ` rotate(${frames[i].rotate}deg)`
-                        + ` rotate(${frames[i].rotate}deg)`;
+                    // frames[i].translate = ev.drag.beforeTranslate;
+                    // frames[i].rotate = ev.beforeRotate;
+
+                    // ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                    //     // + ` rotate(${frames[i].rotate}deg)`
+                    //     + ` rotate(${frames[i].rotate}deg)`;
                 });
             }}
         ></Moveable>
