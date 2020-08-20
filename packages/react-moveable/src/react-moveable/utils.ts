@@ -285,7 +285,7 @@ export function getMatrixStackInfo(
         is3d,
     };
 }
-export function getMatrixStack(
+export function getElementMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
     rootContainer: SVGElement | HTMLElement | null = container,

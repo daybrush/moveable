@@ -18,6 +18,6 @@ export {
     InitialMoveable,
 } from "./InitialMoveable";
 
-export { getMatrixStack } from "./utils";
+export { getElementMatrixStack } from "./utils";
 
 export default Moveable;
