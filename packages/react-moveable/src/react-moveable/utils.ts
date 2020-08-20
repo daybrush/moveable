@@ -285,10 +285,18 @@ export function getMatrixStackInfo(
         is3d,
     };
 }
+export function getMatrixStack(
+    target: SVGElement | HTMLElement,
+    container: SVGElement | HTMLElement | null,
+    rootContainer: SVGElement | HTMLElement | null = container,
+) {
+    return caculateMatrixStack(target, container, rootContainer, true);
+}
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
     container: SVGElement | HTMLElement | null,
     rootContainer: SVGElement | HTMLElement | null = container,
+    isAbsolute3d?: boolean,
     prevMatrix?: number[],
     prevRootMatrix?: number[],
     prevN?: number,
@@ -306,7 +314,8 @@ export function caculateMatrixStack(
         is3d: isRoot3d,
     } = getMatrixStackInfo(offsetContainer, rootContainer, prevRootMatrix);
 
-    const n = isRoot3d || is3d ? 4 : 3;
+    const isNext3d = isAbsolute3d || isRoot3d || is3d;
+    const n = isNext3d ? 4 : 3;
     const isSVGGraphicElement = target.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in target;
     const originalContainer = container || document.body;
     let allMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
@@ -320,13 +329,13 @@ export function caculateMatrixStack(
     rootMatrixes.reverse();
     matrixes.reverse();
 
-    if (!is3d && isRoot3d) {
+    if (!is3d && isNext3d) {
         targetMatrix = convertDimension(targetMatrix, 3, 4);
         matrixes.forEach((matrix, i) => {
             matrixes[i] = convertDimension(matrix, 3, 4);
         });
     }
-    if (is3d && !isRoot3d) {
+    if (!isRoot3d && isNext3d) {
         rootMatrixes.forEach((matrix, i) => {
             rootMatrixes[i] = convertDimension(matrix, 3, 4);
         });
@@ -387,7 +396,7 @@ export function caculateMatrixStack(
         targetTransform,
         transformOrigin,
         targetOrigin,
-        is3d: is3d || isRoot3d,
+        is3d: isNext3d,
     };
 }
 export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 9) {
@@ -747,7 +756,7 @@ export function getTargetInfo(
             }
         }
         const result = caculateMatrixStack(
-            target, container!, rootContainer!,
+            target, container!, rootContainer!, false,
             prevMatrix, prevRootMatrix, prevN,
         );
         rootMatrix = result.rootMatrix;
