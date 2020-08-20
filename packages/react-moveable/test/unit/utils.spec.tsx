@@ -171,43 +171,30 @@ describe("test utils", () => {
         const stack6 = caculateMatrixStack(c6, c4, c4);
         const stack7 = caculateMatrixStack(c6, null, null);
 
-        // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [2, 0, -48, 0, 2, -48, 0, 0, 1], [1, 0, 0, 0, 1, 0, 0, 0, 1], 'matrix(1,0,0,1,0,0)', [50, 50], false
-        const [
-            , beforeMatrix1, offsetMatrix1, matrix1, targetMatrix1, transform1, transformOrigin1, , is3d1,
-        ] = stack1;
-        // [2, 0, -252, 0, 2, -252, 0, 0, 1], [2, 0, -48, 0, 2, 152, 0, 0, 1], [2, 0, 152, 0, 2, 232, 0, 0, 1], [1, 0, 100, 0, 1, 40, 0, 0, 1], 'matrix(1,0,0,1,100,40)', [50, 50], false
-        const [
-            , beforeMatrix2, offsetMatrix2, matrix2, targetMatrix2, transform2, transformOrigin2, , is3d2,
-        ] = stack2;
-        // [[2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -48, 0, 2, 0, 448, 0, 0, 1, 0, 0, 0, 0, 1], [2, 0, 0, -48, 0, 2, 0, 448, 0, 0, 1, 100, 0, 0, 0, 1], [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1], 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)', [50, 50], true]
-        const [
-            , beforeMatrix3, offsetMatrix3, matrix3, targetMatrix3, transform3, transformOrigin3, , is3d3,
-        ] = stack3;
-
         // Then
-        expect(beforeMatrix1).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
-        expect(offsetMatrix1).to.be.deep.equals(transpose([2, 0, -48, 0, 2, -48, 0, 0, 1]));
-        expect(matrix1).to.be.deep.equals(transpose([2, 0, -48, 0, 2, -48, 0, 0, 1]));
-        expect(targetMatrix1).to.be.deep.equals(transpose([1, 0, 0, 0, 1, 0, 0, 0, 1]));
-        expect(transform1).to.be.equals("matrix(1,0,0,1,0,0)");
-        expect(transformOrigin1).to.be.deep.equals([50, 50]);
-        expect(is3d1).to.be.false;
+        expect(stack1.beforeMatrix).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
+        expect(stack1.offsetMatrix).to.be.deep.equals(transpose([2, 0, -48, 0, 2, -48, 0, 0, 1]));
+        expect(stack1.allMatrix).to.be.deep.equals(transpose([2, 0, -48, 0, 2, -48, 0, 0, 1]));
+        expect(stack1.targetMatrix).to.be.deep.equals(transpose([1, 0, 0, 0, 1, 0, 0, 0, 1]));
+        expect(stack1.targetTransform).to.be.equals("matrix(1,0,0,1,0,0)");
+        expect(stack1.transformOrigin).to.be.deep.equals([50, 50]);
+        expect(stack1.is3d).to.be.false;
 
-        expect(beforeMatrix2).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
-        expect(offsetMatrix2).to.be.deep.equals(transpose([2, 0, -48, 0, 2, 152, 0, 0, 1]));
-        expect(matrix2).to.be.deep.equals(transpose([2, 0, 152, 0, 2, 232, 0, 0, 1]));
-        expect(targetMatrix2).to.be.deep.equals(transpose([1, 0, 100, 0, 1, 40, 0, 0, 1]));
-        expect(transform2).to.be.equals("matrix(1,0,0,1,100,40)");
-        expect(transformOrigin2).to.be.deep.equals([50, 50]);
-        expect(is3d2).to.be.false;
+        expect(stack2.beforeMatrix).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
+        expect(stack2.offsetMatrix).to.be.deep.equals(transpose([2, 0, -48, 0, 2, 152, 0, 0, 1]));
+        expect(stack2.allMatrix).to.be.deep.equals(transpose([2, 0, 152, 0, 2, 232, 0, 0, 1]));
+        expect(stack2.targetMatrix).to.be.deep.equals(transpose([1, 0, 100, 0, 1, 40, 0, 0, 1]));
+        expect(stack2.targetTransform).to.be.equals("matrix(1,0,0,1,100,40)");
+        expect(stack2.transformOrigin).to.be.deep.equals([50, 50]);
+        expect(stack2.is3d).to.be.false;
 
-        expect(beforeMatrix3).to.be.deep.equals(transpose([2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1]));
-        expect(offsetMatrix3).to.be.deep.equals(transpose([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 0, 0, 0, 0, 1]));
-        expect(matrix3).to.be.deep.equals(transpose([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 100, 0, 0, 0, 1]));
-        expect(targetMatrix3).to.be.deep.equals(transpose([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1]));
-        expect(transform3).to.be.equals("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)");
-        expect(transformOrigin3).to.be.deep.equals([50, 50]);
-        expect(is3d3).to.be.true;
+        expect(stack3.beforeMatrix).to.be.deep.equals(transpose([2, 0, 0, -252, 0, 2, 0, -252, 0, 0, 1, 0, 0, 0, 0, 1]));
+        expect(stack3.offsetMatrix).to.be.deep.equals(transpose([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 0, 0, 0, 0, 1]));
+        expect(stack3.allMatrix).to.be.deep.equals(transpose([2, 0, 0, -48, 0, 2, 0, 452, 0, 0, 1, 100, 0, 0, 0, 1]));
+        expect(stack3.targetMatrix).to.be.deep.equals(transpose([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 100, 0, 0, 0, 1]));
+        expect(stack3.targetTransform).to.be.equals("matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,100,1)");
+        expect(stack3.transformOrigin).to.be.deep.equals([50, 50]);
+        expect(stack3.is3d).to.be.true;
     });
 
     it("test throttle", () => {
