@@ -7,10 +7,11 @@ import { splitBracket, splitComma, splitUnit, splitSpace } from "@daybrush/utils
 import {
     prefix, caculatePosition, getDiagonalSize,
     fillParams, triggerEvent,
-    makeMatrixCSS, getRect, fillEndParams, getUnitSize, convertCSSSize, moveControlPos, caculatePointerDist
+    makeMatrixCSS, getRect, fillEndParams,
+    getUnitSize, convertCSSSize, moveControlPos
 } from "../utils";
 import { getRad, plus, minus } from "../matrix";
-import { setDragStart, getDragDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, caculatePointerDist } from "../DraggerUtils";
 import {
     getRadiusValues,
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos

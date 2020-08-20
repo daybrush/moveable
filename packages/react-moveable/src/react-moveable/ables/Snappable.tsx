@@ -11,7 +11,9 @@ import {
 import {
     prefix, caculatePoses, getRect,
     getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign,
-    getDistSize, groupBy, flat, maxOffset, minOffset, triggerEvent, caculateInversePosition, caculatePosition,
+    getDistSize, groupBy, flat, maxOffset, minOffset,
+    triggerEvent, caculateInversePosition, caculatePosition,
+    directionCondition,
 } from "../utils";
 import { IObject, find, findIndex } from "@daybrush/utils";
 import {
@@ -23,7 +25,6 @@ import {
     dragControlCondition as rotatableDragControlCondtion,
 } from "./Rotatable";
 import { TINY_NUM } from "../consts";
-import { directionCondition } from "./utils";
 import {
     getInnerBoundInfo, getCheckSnapLines,
     getInnerBoundDragInfo, checkRotateInnerBounds, checkInnerBoundPoses,

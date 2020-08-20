@@ -1,16 +1,16 @@
 import {
     prefix, triggerEvent,
-    fillParams, fillEndParams, caculatePosition, moveControlPos, caculatePointerDist
+    fillParams, fillEndParams, caculatePosition, moveControlPos
 } from "../utils";
 import {
     Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd, MoveableManagerInterface,
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
-import { setDragStart, getDragDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, caculatePointerDist } from "../DraggerUtils";
 import { minus } from "../matrix";
 import {
     getRadiusValues, getRadiusStyles, removeRadiusPos,
-    addRadiusPos, splitRadiusPoses
+    addRadiusPos, splitRadiusPoses,
 } from "./roundable/borderRadius";
 
 function addBorderRadius(

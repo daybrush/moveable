@@ -13,7 +13,10 @@ import {
     plus,
 } from "../matrix";
 import { NEARBY_POS } from "../consts";
-import { setDragStart, getDragDist, getPosIndexesByDirection } from "../DraggerUtils";
+import {
+    setDragStart, getDragDist, getPosIndexesByDirection, setDefaultTransformIndex,
+    fillTransformStartEvent, resolveTransformEvent, convertTransformFormat, fillOriginalTransform
+} from "../DraggerUtils";
 import {
     WarpableProps, ScalableProps, ResizableProps,
     Renderer, SnappableProps, SnappableState,
@@ -123,7 +126,9 @@ export default {
         datas.left = left;
         datas.top = top;
 
-        setDragStart(moveable,e);
+        setDragStart(moveable, e);
+        setDefaultTransformIndex(e);
+
         datas.poses = [
             [0, 0],
             [width, 0],
@@ -132,7 +137,7 @@ export default {
         ].map(p => minus(p, transformOrigin));
 
         datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.warpTargetMatrix, [x, y, 0, 1], 4));
-        datas.startMatrix = createIdentityMatrix(4);
+        datas.startValue = createIdentityMatrix(4);
         datas.prevMatrix = createIdentityMatrix(4);
         datas.absolutePoses = getAbsolutePosesByState(state);
         datas.posIndexes = getPosIndexesByDirection(direction);
@@ -143,8 +148,9 @@ export default {
 
         const params = fillParams<OnWarpStart>(moveable, e, {
             set: (matrix: number[]) => {
-                datas.startMatrix = matrix;
+                datas.startValue = matrix;
             },
+            ...fillTransformStartEvent(e),
         });
         const result = triggerEvent(moveable, "onWarpStart", params);
         if (result !== false) {
@@ -168,7 +174,7 @@ export default {
         if (!isWarp) {
             return false;
         }
-
+        resolveTransformEvent(e, "matrix3d");
         if (hasGuidelines(moveable, "warpable")) {
             const selectedPoses: number[][] = posIndexes.map((index: number) => absolutePoses[index]);
 
@@ -224,13 +230,17 @@ export default {
         const delta = multiply(invert(prevMatrix, 4), matrix, 4);
 
         datas.prevMatrix = matrix;
+        const totalMatrix = multiply(startMatrix, matrix, 4);
+        const nextTransform = convertTransformFormat(
+            datas, `matrix3d(${totalMatrix.join(", ")})`, `matrix3d(${matrix.join(", ")})`);
 
+        fillOriginalTransform(e, nextTransform);
         triggerEvent(moveable, "onWarp", fillParams<OnWarp>(moveable, e, {
             delta,
-            matrix: multiply(startMatrix, matrix, 4),
-            multiply,
+            matrix: totalMatrix,
             dist: matrix,
-            transform,
+            multiply,
+            transform: nextTransform,
         }));
         return true;
     },

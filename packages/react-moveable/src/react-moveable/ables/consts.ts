@@ -14,7 +14,7 @@ import Clippable from "./Clippable";
 import OriginDraggable from "./OriginDraggable";
 import Roundable from "./Roundable";
 import { UnionToIntersection } from "../types";
-import { invert } from "./utils";
+import { invertObject } from "../utils";
 import Groupable from "./Groupable";
 import BeforeRenderable from "./BeforeRenderable";
 import Renderable from "./Renderable";
@@ -34,6 +34,6 @@ export const MOVEABLE_PROPS_MAP = /*#__PURE__*/MOVEABLE_ABLES.reduce((current, a
     return {...current, ...able.props};
 }, {}) as UnionToIntersection<typeof MOVEABLE_ABLES[number]["props"]>;
 
-export const MOVEABLE_EVENTS_MAP = /*#__PURE__*/invert(MOVEABLE_EVENTS_PROPS_MAP);
+export const MOVEABLE_EVENTS_MAP = /*#__PURE__*/invertObject(MOVEABLE_EVENTS_PROPS_MAP);
 export const MOVEABLE_EVENTS: string[] = /*#__PURE__*/Object.keys(MOVEABLE_EVENTS_MAP);
 export const MOVEABLE_PROPS: string[] = /*#__PURE__*/Object.keys(MOVEABLE_PROPS_MAP);

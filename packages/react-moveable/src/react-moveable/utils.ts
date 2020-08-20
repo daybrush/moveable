@@ -1,6 +1,6 @@
 import { PREFIX, IS_WEBKIT, TINY_NUM } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit, IObject } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass } from "@daybrush/utils";
 import {
     multiply, invert,
     convertDimension, createIdentityMatrix,
@@ -17,9 +17,9 @@ import {
 } from "./matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
-    MoveableProps, ControlPose, MoveableManagerInterface
+    MoveableProps, ControlPose, InvertTypes
 } from "./types";
-import { getDragDist } from "./DraggerUtils";
+import { parse, toMat } from "css-to-mat";
 
 export function round(num: number) {
     return Math.round(num);
@@ -1232,22 +1232,48 @@ export function moveControlPos(
     }
 }
 
-export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) {
-    const { clientX, clientY, datas } = e;
-    const {
-        moveableClientRect,
-        rootMatrix,
-        is3d,
-        pos1,
-    } = moveable.state;
-    const { left, top } = moveableClientRect;
-    const n = is3d ? 4 : 3;
-    const [posX, posY] = minus(caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
-    const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
-
-    return [distX, distY];
+export function getTinyDist(v: number) {
+    return Math.abs(v) <= TINY_NUM ? 0 : v;
 }
 
-export function getTinyDist(v: number) {
-    return  Math.abs(v) <= TINY_NUM ? 0 : v;
+export function directionCondition(e: any) {
+    if (e.isRequest) {
+        if (e.requestAble === "resizable" || e.requestAble === "scalable") {
+            return e.parentDirection!;
+        } else {
+            return false;
+        }
+    }
+    return hasClass(e.inputEvent.target, prefix("direction"));
+}
+
+export function invertObject<T extends IObject<any>>(obj: T): InvertTypes<T> {
+    const nextObj: IObject<any> = {};
+
+    for (const name in obj) {
+        nextObj[obj[name]] = name;
+    }
+    return nextObj as any;
+}
+
+export function getTransform(transforms: string[], index: number) {
+    const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
+    const targetFunctionText = transforms[index] || "";
+    const afterFunctionTexts = index < 0 ? [] : transforms.slice(index);
+    const beforeFunctions = parse(beforeFunctionTexts);
+    const targetFunctions = parse([targetFunctionText]);
+    const afterFunctions = parse(afterFunctionTexts);
+
+    return {
+        transforms,
+        beforeFunctionMatrix: toMat(beforeFunctions),
+        targetFunctionMatrix: toMat(targetFunctions),
+        afterFunctionMatrix: toMat(afterFunctions),
+        beforeFunctions,
+        targetFunction: targetFunctions[0],
+        afterFunctions,
+        beforeFunctionTexts,
+        targetFunctionText,
+        afterFunctionTexts,
+    };
 }

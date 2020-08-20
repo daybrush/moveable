@@ -3,16 +3,34 @@ import {
     convertPositionMatrix, average,
     createScaleMatrix, multiply, fromTranslation, convertDimension,
 } from "./matrix";
-import { caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState, caculatePosition } from "./utils";
+import {
+    caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
+    caculatePosition, caculateInversePosition, getTransform
+} from "./utils";
 import { splitUnit, isArray, splitSpace } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
 } from "./types";
-import { getTransform } from "./ables/utils";
 import Draggable from "./ables/Draggable";
 import { setCustomDrag } from "./CustomDragger";
 import { parse, parseMat } from "css-to-mat";
+
+export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) {
+    const { clientX, clientY, datas } = e;
+    const {
+        moveableClientRect,
+        rootMatrix,
+        is3d,
+        pos1,
+    } = moveable.state;
+    const { left, top } = moveableClientRect;
+    const n = is3d ? 4 : 3;
+    const [posX, posY] = minus(caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
+    const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
+
+    return [distX, distY];
+}
 
 export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }: any) {
     const {
@@ -390,6 +408,14 @@ export function setTransformIndex(e: any, index: number) {
 
     datas.startValue = info[0].functionValue;
 }
+export function fillOriginalTransform(
+    e: any,
+    transform: string,
+) {
+    const originalDatas = e.originalDatas.beforeRenderable;
+
+    originalDatas.nextTransforms = splitSpace(transform);
+}
 export function fillTransformEvent(
     moveable: MoveableManagerInterface<DraggableProps>,
     nextTransform: string,
@@ -397,9 +423,7 @@ export function fillTransformEvent(
     isPinch: boolean,
     e: any,
 ): OnTransformEvent {
-    const originalDatas = e.originalDatas.beforeRenderable;
-
-    originalDatas.nextTransforms = splitSpace(nextTransform);
+    fillOriginalTransform(e, nextTransform);
     return {
         transform: nextTransform,
         drag: Draggable.drag(
