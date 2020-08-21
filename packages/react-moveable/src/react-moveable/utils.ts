@@ -1184,12 +1184,6 @@ export function caculateBoundSize(
     return [width, height];
 }
 
-export function getUnitSize(pos: string, size: number) {
-    const { value, unit } = splitUnit(pos);
-
-    return unit === "%" ? value * size / 100 : value;
-}
-
 export function convertCSSSize(value: number, size: number, isRelative?: boolean) {
     return isRelative ? `${value / size * 100}%` : `${value}px`;
 }

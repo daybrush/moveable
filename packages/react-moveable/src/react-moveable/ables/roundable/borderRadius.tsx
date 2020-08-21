@@ -1,5 +1,6 @@
-import { getUnitSize, convertCSSSize } from "../../utils";
+import { convertCSSSize } from "../../utils";
 import { ControlPose } from "../../types";
+import { convertUnitSize } from "@daybrush/utils";
 
 const RADIUS_DIRECTIONS = ["nw", "ne", "se", "sw"] as const;
 
@@ -111,8 +112,8 @@ export function getRadiusValues(
         wsValue = enValue,
     ] = verticalValues;
 
-    const horizontalRawPoses = [nwValue, neValue, seValue, swValue].map(pos => getUnitSize(pos, width));
-    const verticalRawPoses = [wnValue, enValue, esValue, wsValue].map(pos => getUnitSize(pos, height));
+    const horizontalRawPoses = [nwValue, neValue, seValue, swValue].map(pos => convertUnitSize(pos, width));
+    const verticalRawPoses = [wnValue, enValue, esValue, wsValue].map(pos => convertUnitSize(pos, height));
     const horizontalPoses = horizontalRawPoses.slice();
     const verticalPoses = verticalRawPoses.slice();
 

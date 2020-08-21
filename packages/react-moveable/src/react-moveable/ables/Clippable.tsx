@@ -3,12 +3,12 @@ import {
     ClippableState, OnClipEnd, OnClipStart,
     ControlPose, MoveableManagerInterface
 } from "../types";
-import { splitBracket, splitComma, splitUnit, splitSpace } from "@daybrush/utils";
+import { splitBracket, splitComma, splitUnit, splitSpace, convertUnitSize } from "@daybrush/utils";
 import {
     prefix, caculatePosition, getDiagonalSize,
     fillParams, triggerEvent,
     makeMatrixCSS, getRect, fillEndParams,
-    getUnitSize, convertCSSSize, moveControlPos
+    convertCSSSize, moveControlPos
 } from "../utils";
 import { getRad, plus, minus } from "../matrix";
 import { setDragStart, getDragDist, caculatePointerDist } from "../DraggerUtils";
@@ -164,8 +164,8 @@ function getClipPath(
                 vertical: 1,
                 horizontal: 1,
                 pos: [
-                    getUnitSize(xPos, width),
-                    getUnitSize(yPos, height),
+                    convertUnitSize(xPos, width),
+                    convertUnitSize(yPos, height),
                 ],
             };
         });
@@ -187,19 +187,19 @@ function getClipPath(
             let radius = "";
             [radius = "50%", , xPos = "50%", yPos = "50%"] = values;
 
-            radiusX = getUnitSize(radius, Math.sqrt((width * width + height * height) / 2));
+            radiusX = convertUnitSize(radius, Math.sqrt((width * width + height * height) / 2));
             radiusY = radiusX;
         } else {
             let xRadius = "";
             let yRadius = "";
             [xRadius = "50%", yRadius = "50%", , xPos = "50%", yPos = "50%"] = values;
 
-            radiusX = getUnitSize(xRadius, width);
-            radiusY = getUnitSize(yRadius, height);
+            radiusX = convertUnitSize(xRadius, width);
+            radiusY = convertUnitSize(yRadius, height);
         }
         const centerPos = [
-            getUnitSize(xPos, width),
-            getUnitSize(yPos, height),
+            convertUnitSize(xPos, width),
+            convertUnitSize(yPos, height),
         ];
         const poses: ControlPose[] = [
             {
@@ -241,8 +241,8 @@ function getClipPath(
             bottomValue = topValue,
             leftValue = rightValue,
         ] = values.slice(0, rectLength);
-        const [top, bottom] = [topValue, bottomValue].map(pos => getUnitSize(pos, height));
-        const [left, right] = [leftValue, rightValue].map(pos => getUnitSize(pos, width));
+        const [top, bottom] = [topValue, bottomValue].map(pos => convertUnitSize(pos, height));
+        const [left, right] = [leftValue, rightValue].map(pos => convertUnitSize(pos, width));
         const nextRight = width - right;
         const nextBottom = height - bottom;
         const radiusPoses = getRadiusValues(
