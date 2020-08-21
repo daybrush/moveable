@@ -21,6 +21,9 @@ import {
 } from "./types";
 import { parse, toMat } from "css-to-mat";
 
+export function abcde() {
+    return [parse, toMat] as const;
+}
 export function round(num: number) {
     return Math.round(num);
 }

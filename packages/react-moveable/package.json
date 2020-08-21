@@ -13,7 +13,7 @@
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
         "test": "karma start",
         "test:chrome": "karma start --chrome",
-        "coverage": "node ./test.js && karma start --coverage && print-coveralls --sort=desc",
+        "coverage": "node ./test.js && npm run declaration && karma start --coverage && print-coveralls --sort=desc",
         "coveralls": "cat ./coverage/lcov.info | coveralls",
         "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
         "packages:update": "pvu --path=../ --update=preact-moveable,react-compat-moveable",
