@@ -19,10 +19,11 @@ import {
     MoveableManagerState, Able, MoveableClientRect,
     MoveableProps, ControlPose, InvertTypes
 } from "./types";
+import { parse as parse2, toMat as toMat2 } from "css-to-mat/declaration/index";
 import { parse, toMat } from "css-to-mat";
 
-export function abcde() {
-    return [parse, toMat] as const;
+export function abcde(): [typeof parse2, typeof toMat2]  {
+    return null as any;
 }
 export function round(num: number) {
     return Math.round(num);
