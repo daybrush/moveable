@@ -93,6 +93,37 @@ function RenderRotatable() {
         ></Moveable>
     </div>;
 }
+function RenderWarpable() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    const [warpMatrix, setWarpMatrix]
+        = React.useState<string>("rotate(30deg) translate(10px, 10px) scale(2, 2) translate(10px, 10px)");
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".warpable .box")!);
+    }, []);
+    return <div className="container warpable">
+        <p className="description">Warpable</p>
+        <div className="box" style={{
+            transform: warpMatrix,
+        }}><span>A</span></div>
+        <Moveable
+            target={target}
+            warpable={true}
+            origin={true}
+            // onBeforeRenderStart={e => {
+            //     e.setTransform("rotate(30deg) translate(30px, 30px)  scale(2, 2) translate(10px, 10px)");
+            // }}
+            onWarpStart={e => {
+                e.setTransform(warpMatrix, 1);
+            }}
+            onWarp={e => {
+                e.target.style.transform = e.transform;
+            }}
+            onWarpEnd={e => {
+                e.lastEvent && setWarpMatrix(e.lastEvent.transform);
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderClippable() {
     const [target, setTarget] = React.useState<HTMLElement>();
     React.useEffect(() => {
@@ -626,6 +657,7 @@ export default function App() {
         <RenderDraggable />
         <RenderScalable />
         <RenderRotatable />
+        <RenderWarpable />
         <RenderClippable />
         <RenderRoundable />
         <RenderOriginDraggable />

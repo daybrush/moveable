@@ -104,29 +104,31 @@ export function getTransformDist({ datas, distX, distY }: any) {
     // B * [tx, ty] * A = [bx, by] * targetMatrix;
     // [tx, ty] = B-1 * [bx, by] * targetMatrix * A-1 * [0, 0];
 
-    const res = getTransfromMatrix(datas, fromTranslation([bx, by], n));
+    const res = getTransfromMatrix(datas, fromTranslation([bx, by], 4));
 
-    return caculate(res, convertPositionMatrix([0, 0, 0], n), n);
+    return caculate(res, convertPositionMatrix([0, 0, 0], 4), 4);
 }
-export function getTransfromMatrix(datas: any, beforeTargetMatrix: number[]) {
+export function getTransfromMatrix(datas: any, targetMatrix: number[], isAfter?: boolean) {
     const {
-        is3d,
         beforeTransform,
         afterTransform,
         targetAllTransform,
     } = datas;
 
-    // B * afterTargetMatrix * A = beforeTargetMatrix * targetAllMatrix
-    // afterTargetMatrix = B-1 * beforeTargetMatrix * targetAllMatrix * A-1
+    // B * afterTargetMatrix * A = (targetMatrix * targetAllTransform)
+    // afterTargetMatrix = B-1 * targetMatrix * targetAllTransform * A-1
+    // nextTargetMatrix = (targetMatrix * targetAllTransform)
+    const nextTargetMatrix
+        = isAfter
+        ? multiply(targetAllTransform, targetMatrix, 4)
+        : multiply(targetMatrix, targetAllTransform, 4);
 
-    const n = is3d ? 4 : 3;
-    // res1 = B-1 * beforeTargetMatrix
-    const res1 = multiply(invert(convertDimension(beforeTransform, 4, n), n), beforeTargetMatrix, n);
-    // res2 = res1 * targetMatrix
-    const res2 = multiply(res1, convertDimension(targetAllTransform, 4, n), n);
+    // res1 = B-1 * nextTargetMatrix
+    const res1 = multiply(invert(beforeTransform, 4), nextTargetMatrix, 4);
 
     // res3 = res2 * A-1
-    const afterTargetMatrix = multiply(res2, invert(convertDimension(afterTransform, 4, n), n), n);
+    const afterTargetMatrix = multiply(res1, invert(afterTransform, 4), 4);
+
     return afterTargetMatrix;
 }
 export function getBeforeDragDist({ datas, distX, distY }: any) {

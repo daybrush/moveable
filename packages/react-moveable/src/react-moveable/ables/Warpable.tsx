@@ -15,7 +15,7 @@ import {
 import { NEARBY_POS } from "../consts";
 import {
     setDragStart, getDragDist, getPosIndexesByDirection, setDefaultTransformIndex,
-    fillTransformStartEvent, resolveTransformEvent, convertTransformFormat, fillOriginalTransform
+    fillTransformStartEvent, resolveTransformEvent, convertTransformFormat, fillOriginalTransform, getTransfromMatrix
 } from "../DraggerUtils";
 import {
     WarpableProps, ScalableProps, ResizableProps,
@@ -141,6 +141,7 @@ export default {
         datas.prevMatrix = createIdentityMatrix(4);
         datas.absolutePoses = getAbsolutePosesByState(state);
         datas.posIndexes = getPosIndexesByDirection(direction);
+
         state.snapRenderInfo = {
             request: e.isRequest,
             direction,
@@ -165,7 +166,7 @@ export default {
         const { datas, isRequest } = e;
         let { distX, distY } = e;
         const {
-            targetInverseMatrix, prevMatrix, isWarp, startMatrix,
+            targetInverseMatrix, prevMatrix, isWarp, startValue,
             poses,
             posIndexes,
             absolutePoses,
@@ -224,13 +225,16 @@ export default {
         if (!h.length) {
             return false;
         }
+        // B * A * M
+        const afterMatrix = multiply(targetInverseMatrix, h, 4);
 
-        const matrix = multiply(targetInverseMatrix, h, 4);
-        const transform = `${datas.targetTransform} ${makeMatrixCSS(matrix, true)}`;
+        // B * M * A
+        const matrix = getTransfromMatrix(datas, afterMatrix, true);
+
         const delta = multiply(invert(prevMatrix, 4), matrix, 4);
 
         datas.prevMatrix = matrix;
-        const totalMatrix = multiply(startMatrix, matrix, 4);
+        const totalMatrix = multiply(startValue, matrix, 4);
         const nextTransform = convertTransformFormat(
             datas, `matrix3d(${totalMatrix.join(", ")})`, `matrix3d(${matrix.join(", ")})`);
 

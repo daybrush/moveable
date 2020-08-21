@@ -649,9 +649,10 @@ export interface OnRotateEnd extends OnEndEvent { }
  * @typedef
  * @memberof Moveable.Warpable
  * @extends Moveable.OnEvent
+ * @extends Moveable.OnTransformStartEvent
  * @property - You can set the start matrix value.
  */
-export interface OnWarpStart extends OnEvent {
+export interface OnWarpStart extends OnEvent, OnTransformStartEvent {
     set: (matrix: number[]) => any;
 }
 /**
