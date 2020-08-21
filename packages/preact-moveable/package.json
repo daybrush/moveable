@@ -62,10 +62,10 @@
         "typescript": "^3.4.5"
     },
     "dependencies": {
-        "preact-css-styled": "^0.2.0",
+        "preact-css-styled": "^0.2.2",
         "react-moveable": "^0.21.6"
     },
     "peerDependencies": {
-        "preact-css-styled": ">=0.2.0"
+        "preact-css-styled": ">=0.2.2"
     }
 }

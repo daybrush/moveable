@@ -61,12 +61,12 @@
         "@types/react": "^16.0.0"
     },
     "dependencies": {
-        "react-compat-css-styled": "^0.2.0",
+        "react-compat-css-styled": "^0.2.2",
         "react-moveable": "^0.21.6",
-        "react-simple-compat": "^0.1.8"
+        "react-simple-compat": "^0.1.9"
     },
     "peerDependencies": {
-        "react-compat-css-styled": ">=0.2.0",
-        "react-simple-compat": ">=0.1.8"
+        "react-compat-css-styled": ">=0.2.2",
+        "react-simple-compat": ">=0.1.9"
     }
 }
