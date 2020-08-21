@@ -84,7 +84,7 @@
         "@egjs/agent": "^2.1.5",
         "@egjs/children-differ": "^1.0.0",
         "@scena/dragscroll": "^0.2.1",
-        "css-to-mat": "^0.1.1",
+        "css-to-mat": "^0.1.2",
         "framework-utils": "^0.3.4",
         "react-css-styled": "^0.2.0"
     },
@@ -94,7 +94,7 @@
         "framework-utils": ">=0.3.4",
         "react-css-styled": ">=0.2.0",
         "@scena/dragscroll": ">=0.2.1",
-        "css-to-mat": ">=0.1.1"
+        "css-to-mat": ">=0.1.2"
     },
     "browserslist": {
         "production": [
