@@ -100,7 +100,6 @@ export function convertTransformFormat(datas: any, value: any, dist: any) {
 }
 export function getTransformDist({ datas, distX, distY }: any) {
     const [bx, by] = getBeforeDragDist({ datas, distX, distY });
-    const n = datas.is3d ? 4 : 3;
     // B * [tx, ty] * A = [bx, by] * targetMatrix;
     // [tx, ty] = B-1 * [bx, by] * targetMatrix * A-1 * [0, 0];
 

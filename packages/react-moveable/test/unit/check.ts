@@ -4,7 +4,7 @@ import {
     ScalableEvents, RotatableEvents, DraggableOptions,
     ResizableOptions, ScalableOptions, RotatableOptions, WarpableOptions,
     WarpableEvents, GroupableOptions, SnappableEvents, SnappableOptions,
-    RenderableEvents, DragAreaEvents, RoundableEvents, RoundableOptions,
+    RenderableEvents, ClickableEvents, RoundableEvents, RoundableOptions,
     ClippableOptions, ClippableEvents, OriginDraggableEvents,
     DefaultOptions,
     DragAreaOptions, PinchableOptions, PinchableEvents, ScrollableEvents,
@@ -32,6 +32,7 @@ import Origin from "../../src/react-moveable/ables/Origin";
 import Padding from "../../src/react-moveable/ables/Padding";
 import Renderable from "../../src/react-moveable/ables/Renderable";
 import BeforeRenderable from "../../src/react-moveable/ables/BeforeRenderable";
+import Clickable from "../../src/react-moveable/ables/Clickable";
 
 type MatchTypes<
     T extends { [key in keyof Required<E>]: any },
@@ -50,7 +51,7 @@ export type E1 = MatchTypes<typeof Draggable["events"], DraggableEvents>;
 export type P1 = MatchTypes<typeof Draggable["props"], DraggableOptions>;
 export type PP1 = MatchTypes<typeof Draggable["events"] & typeof Draggable["props"], DraggableProps>;
 
-export type E2 = MatchTypes<typeof DragArea["events"], DragAreaEvents>;
+export type E2 = MatchTypes<typeof Clickable["events"], ClickableEvents>;
 export type P2 = MatchTypes<typeof DragArea["props"], DragAreaOptions>;
 export type PP2 = MatchTypes<typeof DragArea["events"] & typeof DragArea["props"], DragAreaProps>;
 

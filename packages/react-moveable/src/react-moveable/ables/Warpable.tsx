@@ -1,6 +1,6 @@
 import {
     prefix, getLineStyle, getDirection, getAbsolutePosesByState,
-    triggerEvent, fillParams, makeMatrixCSS, fillEndParams,
+    triggerEvent, fillParams, fillEndParams,
  } from "../utils";
 import {
     convertDimension, invert, multiply,

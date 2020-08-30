@@ -3,6 +3,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 2020
+* `moveable` 1.0.0
+* `react-moveable` 1.0.0
+* `preact-moveable` 1.0.0
+* `ngx-moveable` 1.0.0
+* `svelte-moveable` 1.0.0
+
+### Added
+* Support Original Transform
+* Add `onBeforeRenderStart`, `onBeforeRender`, `onBeforeRenderEnd` events.
+* Add `onBeforeRenderGroupStart`, `onBeforeRenderGroup`, `onBeforeRenderGroupEnd` events.
+* Add `setTransform`, `setTransformIndex` event properties.
+* Expand the functions of `translate` and `rotate` properties.
+
+## [0.19.0] - 2020-07-17
+* `moveable` 0.19.0
+* `react-moveable` 0.22.0
+* `preact-moveable` 0.21.0
+* `ngx-moveable` 0.15.0
+* `svelte-moveable` 0.10.0
+
+### Added
+* Export `getMatrixStack` function (react-moveable)
+* Add `translateZ` props. #302
+* Support `click`, `clickGroup` event for no `dragArea` #309
+
+
+### Fixed
+* Support Tree Shaking #15
 
 ## [0.18.5] - 2020-07-17
 * `moveable` 0.18.5

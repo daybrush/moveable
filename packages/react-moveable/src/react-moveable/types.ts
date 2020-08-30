@@ -184,6 +184,7 @@ export interface MoveableProps extends
     ClippableProps,
     RoundableProps,
     BeforeRenderableProps,
+    ClickableProps,
     RenderableProps {
 }
 /**
@@ -856,7 +857,7 @@ export interface OnPinchGroupEnd extends OnPinchEnd {
  * @property - Whether it is double-click
  */
 export interface OnClick extends OnEvent {
-    inputTarget: HTMLElement | SVGElement;
+    inputTarget: Element;
     isTarget: boolean;
     containsTarget: boolean;
     isDouble: boolean;
@@ -874,8 +875,8 @@ export interface OnClick extends OnEvent {
  * @property - Whether it is double-click
  */
 export interface OnClickGroup extends OnEvent {
-    targets: Array<HTMLElement | SVGElement>;
-    inputTarget: HTMLElement | SVGElement;
+    targets: Element[];
+    inputTarget: Element;
     isTarget: boolean;
     containsTarget: boolean;
     targetIndex: number;
@@ -1379,10 +1380,7 @@ export interface ScrollableEvents {
 }
 export interface ScrollableProps extends ScrollableOptions, EventInterface<ScrollableEvents> {
 }
-export interface DragAreaEvents {
-    onClick: OnClick;
-    onClickGroup: OnClickGroup;
-}
+
 /**
  * @typedef
  * @memberof Moveable
@@ -1391,9 +1389,16 @@ export interface DragAreaEvents {
 export interface DragAreaOptions {
     dragArea?: boolean;
 }
-export interface DragAreaProps extends DragAreaOptions, EventInterface<DragAreaEvents> {
+export interface DragAreaProps extends DragAreaOptions {
 }
 
+export interface ClickableEvents {
+    onClick: OnClick;
+    onClickGroup: OnClickGroup;
+}
+
+export interface ClickableProps extends EventInterface<ClickableEvents> {
+}
 export interface BeforeRenderableEvents {
     onBeforeRenderStart: OnBeforeRenderStart;
     onBeforeRender: OnBeforeRender;
@@ -1570,7 +1575,7 @@ export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerI
 }
 export interface MoveableInterface {
     getRect(): RectInfo;
-    isMoveableElement(target: HTMLElement | SVGElement): boolean;
+    isMoveableElement(target: Element): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
     request(ableName: string, params?: IObject<any>, isInstant?: boolean): Requester;

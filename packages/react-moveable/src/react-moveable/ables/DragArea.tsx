@@ -2,13 +2,12 @@ import {
     createWarpMatrix,
 } from "../matrix";
 import { ref } from "framework-utils";
-import { triggerEvent, fillParams, getRect, caculateInversePosition, makeMatrixCSS } from "../utils";
+import { getRect, caculateInversePosition, makeMatrixCSS } from "../utils";
 import {
-    Renderer, GroupableProps, DragAreaProps, OnClick,
-    OnClickGroup, MoveableManagerInterface, MoveableGroupInterface
+    Renderer, GroupableProps, DragAreaProps, MoveableManagerInterface, MoveableGroupInterface
 } from "../types";
 import { AREA_PIECE, AREA, AVOID, AREA_PIECES } from "../classNames";
-import { addClass, findIndex, removeClass } from "@daybrush/utils";
+import { addClass, removeClass } from "@daybrush/utils";
 
 function restoreStyle(moveable: MoveableManagerInterface) {
     const el = moveable.areaElement;
@@ -78,7 +77,6 @@ export default {
             return false;
         }
         datas.isDragArea = false;
-        datas.inputTarget = inputEvent.target;
         const areaElement = moveable.areaElement;
         const {
             moveableClientRect,
@@ -126,27 +124,12 @@ export default {
         if (!e.inputEvent) {
             return false;
         }
-        const { inputEvent, datas } = e;
+        const { datas } = e;
         const isDragArea = datas.isDragArea;
 
         if (!isDragArea) {
             restoreStyle(moveable);
         }
-
-        const target = moveable.state.target!;
-        const inputTarget = inputEvent.target;
-
-        if (isDragArea || moveable.isMoveableElement(inputTarget)) {
-            return;
-        }
-        const containsTarget = target.contains(inputTarget);
-
-        triggerEvent<DragAreaProps>(moveable, "onClick", fillParams<OnClick>(moveable, e, {
-            isDouble: e.isDouble,
-            inputTarget,
-            isTarget: target === inputTarget,
-            containsTarget,
-        }));
     },
     dragGroupStart(moveable: MoveableGroupInterface, e: any) {
         return this.dragStart(moveable, e);
@@ -162,34 +145,9 @@ export default {
         if (!inputEvent) {
             return false;
         }
-        const isDragArea = datas.isDragArea;
         if (!datas.isDragArea) {
             restoreStyle(moveable);
         }
-        const prevInputTarget = datas.inputTarget;
-        const inputTarget = inputEvent.target;
-
-        if (isDragArea || moveable.isMoveableElement(inputTarget) || prevInputTarget === inputTarget) {
-            return;
-        }
-        const targets = moveable.props.targets!;
-        let targetIndex = targets.indexOf(inputTarget);
-        const isTarget = targetIndex > -1;
-        let containsTarget = false;
-
-        if (targetIndex === -1) {
-            targetIndex = findIndex(targets, parentTarget => parentTarget.contains(inputTarget));
-            containsTarget = targetIndex > -1;
-        }
-
-        triggerEvent<DragAreaProps>(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
-            isDouble: e.isDouble,
-            targets,
-            inputTarget,
-            targetIndex,
-            isTarget,
-            containsTarget,
-        }));
     },
 };
 
@@ -201,39 +159,5 @@ export default {
  *
  * const moveable = new Moveable(document.body, {
  *  dragArea: false,
- * });
- */
-
-/**
- * When you click on the element, the `click` event is called.
- * @memberof Moveable
- * @event click
- * @param {Moveable.OnClick} - Parameters for the `click` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: document.querySelector(".target"),
- * });
- * moveable.on("click", ({ hasTarget, containsTarget, targetIndex }) => {
- *     // If you click on an element other than the target and not included in the target, index is -1.
- *     console.log("onClickGroup", target, hasTarget, containsTarget, targetIndex);
- * });
- */
-
-/**
- * When you click on the element inside the group, the `clickGroup` event is called.
- * @memberof Moveable
- * @event clickGroup
- * @param {Moveable.OnClickGroup} - Parameters for the `clickGroup` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- * });
- * moveable.on("clickGroup", ({ inputTarget, isTarget, containsTarget, targetIndex }) => {
- *     // If you click on an element other than the target and not included in the target, index is -1.
- *     console.log("onClickGroup", inputTarget, isTarget, containsTarget, targetIndex);
  * });
  */

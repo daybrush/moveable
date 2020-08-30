@@ -16,11 +16,12 @@ export function triggerAble<T extends IObject<any>>(
 ) {
     const isStart = eventType === "Start";
     const target = moveable.state.target;
+    const isRequest = e.isRequest;
 
     if (
         !target
         || (isStart && eventAffix.indexOf("Control") > -1
-            && !e.isRequest && moveable.areaElement === e.inputEvent.target)
+            && !isRequest && moveable.areaElement === e.inputEvent.target)
     ) {
         return false;
     }
@@ -42,7 +43,7 @@ export function triggerAble<T extends IObject<any>>(
     const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType].slice(), Renderable];
 
-    if (e.isRequest) {
+    if (isRequest) {
         const requestAble = e.requestAble;
         if (!ables.some(able => able.name === requestAble)) {
             ables.push(...moveable.props.ables!.filter(able => able.name === requestAble));
@@ -60,13 +61,20 @@ export function triggerAble<T extends IObject<any>>(
             able.unset && able.unset(moveable);
         });
     }
+
+    const inputEvent = e.inputEvent;
+    let inputTarget: Element;
+
+    if (isEnd && inputEvent) {
+        inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
+    }
     const results = events.filter((able: any) => {
         const hasCondition = isStart && able[conditionName];
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
         if (!hasCondition || able[conditionName](e, moveable)) {
-            return able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas });
+            return able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas, inputTarget });
         }
         return false;
     });

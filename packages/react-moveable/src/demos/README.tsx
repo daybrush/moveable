@@ -36,6 +36,30 @@ function RenderDraggable() {
         ></Moveable>
     </div>;
 }
+function RenderClickable() {
+    const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
+    React.useEffect(() => {
+        setTarget([].slice.call(document.querySelectorAll<HTMLElement | SVGElement>(".clickable .box")!));
+    }, []);
+    return <div className="container clickable group">
+        <p>Clickable</p>
+        <div className="box box1"><span>A</span></div>
+        {/* <div className="box box2"><span>B</span></div>
+        <div className="box box3"><span>C</span></div>
+        <div className="box box4"><span>D</span></div> */}
+        <Moveable
+            target={target}
+            draggable={true}
+            // origin={true}
+            onClick={e => {
+                console.log(e);
+            }}
+            onClickGroup={e => {
+                console.log("group", e);
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderScalable() {
     const [target, setTarget] = React.useState<HTMLElement>();
     React.useEffect(() => {
@@ -655,6 +679,7 @@ function RenderSVGOriginDraggable() {
 export default function App() {
     return <div>
         <RenderDraggable />
+        <RenderClickable/>
         <RenderScalable />
         <RenderRotatable />
         <RenderWarpable />

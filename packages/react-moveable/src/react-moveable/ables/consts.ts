@@ -18,13 +18,16 @@ import { invertObject } from "../utils";
 import Groupable from "./Groupable";
 import BeforeRenderable from "./BeforeRenderable";
 import Renderable from "./Renderable";
+import Clickable from "./Clickable";
 
 export const MOVEABLE_ABLES = [
     BeforeRenderable,
-    Renderable,
     Default, Snappable, Pinchable, Draggable, Rotatable,
-    Resizable, Scalable, Warpable, Scrollable, DragArea, Padding, Origin, OriginDraggable,
+    Resizable, Scalable, Warpable, Scrollable, Padding, Origin, OriginDraggable,
     Clippable, Roundable, Groupable,
+    Clickable,
+    DragArea,
+    Renderable,
 ] as const;
 
 export const MOVEABLE_EVENTS_PROPS_MAP = /*#__PURE__*/MOVEABLE_ABLES.reduce((current, able) => {
