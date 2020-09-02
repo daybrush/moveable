@@ -79,24 +79,23 @@ export function triggerAble<T extends IObject<any>>(
         return false;
     });
     const isUpdate = results.length;
+    const isForceEnd = isStart && events.length && !isUpdate;
 
-    if (isStart) {
-        if (events.length && !isUpdate) {
-            moveable.state.dragger = null;
+    if (isEnd || isForceEnd) {
+        moveable.state.dragger = null;
 
-            if ((moveable as MoveableGroupInterface).moveables) {
-                (moveable as MoveableGroupInterface).moveables.forEach(childeMoveable => {
-                    childeMoveable.state.dragger = null;
-                });
-            }
-
-            return false;
+        if ((moveable as MoveableGroupInterface).moveables) {
+            (moveable as MoveableGroupInterface).moveables.forEach(childMoveable => {
+                childMoveable.state.dragger = null;
+            });
         }
     }
-    if (isEnd) {
-        moveable.state.dragger = null;
+    if (isFirstStart && isForceEnd) {
+        events.forEach(able => {
+            able.unset && able.unset(moveable);
+        });
     }
-    if (moveable.isUnmounted) {
+    if (moveable.isUnmounted || isForceEnd) {
         return false;
     }
     if ((!isStart && isUpdate && !requestInstant) || isEnd) {

@@ -46,6 +46,7 @@ export default class MoveableManager<T = {}>
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
+        passDragArea: false,
         transformOrigin: "",
         className: "",
         zoom: 1,

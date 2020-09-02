@@ -1385,9 +1385,11 @@ export interface ScrollableProps extends ScrollableOptions, EventInterface<Scrol
  * @typedef
  * @memberof Moveable
  * @property - Instead of firing an event on the target, we add it to the moveable control element. You can use click and clickGroup events. (default: if group, true, else false)
+ * @property - Set `pointerEvents: none;` css to pass events in dragArea.
  */
 export interface DragAreaOptions {
     dragArea?: boolean;
+    passDragArea?: boolean;
 }
 export interface DragAreaProps extends DragAreaOptions {
 }
