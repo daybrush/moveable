@@ -28,6 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Export `getMatrixStack` function (react-moveable)
 * Add `translateZ` props. #302
 * Support `click`, `clickGroup` event for no `dragArea` #309
+* Add `passDragArea` props #309
+* Support target's string, React.RefObject type #275 #290
 
 
 ### Fixed

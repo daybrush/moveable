@@ -4,17 +4,14 @@ import Selecto from "react-selecto";
 import "./README.css";
 
 function RenderDraggable() {
-    const [target, setTarget] = React.useState<HTMLElement>();
-    React.useEffect(() => {
-        setTarget(document.querySelector<HTMLElement>(".draggable .box")!);
-    }, []);
+    const ref = React.useRef<HTMLDivElement>(null);
     return <div className="container draggable">
         Draggable
-        <div className="box" style={{
+        <div className="box" ref={ref} style={{
             transform: "translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)",
         }}><span>A</span></div>
         <Moveable
-            target={target}
+            target={ref}
             draggable={true}
             origin={true}
             onDragStart={e => {
@@ -37,10 +34,6 @@ function RenderDraggable() {
     </div>;
 }
 function RenderClickable() {
-    const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
-    React.useEffect(() => {
-        setTarget([].slice.call(document.querySelectorAll<HTMLElement | SVGElement>(".clickable .box")!));
-    }, []);
     return <div className="container clickable group">
         <p>Clickable</p>
         <div className="box box1"><span>A</span></div>
@@ -48,7 +41,27 @@ function RenderClickable() {
         <div className="box box3"><span>C</span></div>
         <div className="box box4"><span>D</span></div> */}
         <Moveable
-            target={target}
+            target={".clickable .box"}
+            draggable={true}
+            // origin={true}
+            onClick={e => {
+                console.log(e);
+            }}
+            onClickGroup={e => {
+                console.log("group", e);
+            }}
+        ></Moveable>
+    </div>;
+}
+function RenderGroupClickable() {
+    return <div className="container clickable2 group">
+        <p>Group Clickable</p>
+        <div className="box box1"><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3"><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            target={".clickable2 .box"}
             draggable={true}
             // origin={true}
             onClick={e => {
@@ -680,6 +693,7 @@ export default function App() {
     return <div>
         <RenderDraggable />
         <RenderClickable/>
+        <RenderGroupClickable/>
         <RenderScalable />
         <RenderRotatable />
         <RenderWarpable />

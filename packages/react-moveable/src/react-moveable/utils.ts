@@ -1,6 +1,6 @@
 import { PREFIX, IS_WEBKIT, TINY_NUM } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString } from "@daybrush/utils";
 import {
     multiply, invert,
     convertDimension, createIdentityMatrix,
@@ -17,7 +17,7 @@ import {
 } from "./matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
-    MoveableProps, ControlPose, InvertTypes
+    MoveableProps, ControlPose, InvertTypes, ArrayFormat, MoveableRefType
 } from "./types";
 import { parse, toMat } from "css-to-mat";
 
@@ -1270,4 +1270,52 @@ export function getTransform(transforms: string[], index: number) {
         targetFunctionText,
         afterFunctionTexts,
     };
+}
+
+export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
+    if (!arr || !isObject(arr)) {
+        return false;
+    }
+    return isArray(arr) || "length" in arr;
+}
+
+export function getRefTargets(targets: MoveableRefType | MoveableRefType[]) {
+    if (!targets) {
+        return [];
+    }
+    const userTargets = isArrayFormat(targets) ? [].slice.call(targets) : [targets];
+
+    return userTargets.map(target => {
+        if (!target) {
+            return null;
+        }
+        if (isString(target)) {
+            return target;
+        }
+        if ("current" in target) {
+            return target.current;
+        }
+        return target;
+    }) as Array<SVGElement | HTMLElement | string | null | undefined>;
+}
+
+export function getElementTargets(
+    targets: Array<SVGElement | HTMLElement | string | null | undefined>,
+    selectorMap: IObject<Array<HTMLElement | SVGElement>>,
+) {
+    const elementTargets: Array<SVGElement | HTMLElement> = [];
+    targets.forEach(target => {
+        if (!target) {
+            return;
+        }
+        if (isString(target)) {
+            if (selectorMap[target]) {
+                elementTargets.push(...selectorMap[target]);
+            }
+            return;
+        }
+        elementTargets.push(target);
+    });
+
+    return elementTargets;
 }

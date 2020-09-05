@@ -193,7 +193,12 @@ export interface MoveableProps extends
  * @extends Moveable.MoveableDefaultOptions
  */
 export interface MoveableDefaultProps extends ExcludeKey<MoveableDefaultOptions, "target"> {
-    target?: SVGElement | HTMLElement | Array<SVGElement | HTMLElement> | null;
+    target?: MoveableRefType | ArrayFormat<MoveableRefType>;
+}
+export type MoveableRefType
+    = string | MoveableRefObject | SVGElement | HTMLElement | null | undefined;
+export interface MoveableRefObject {
+    current?: HTMLElement | SVGElement | null;
 }
 /**
  * @memberof Moveable
@@ -1269,7 +1274,7 @@ export interface GroupableOptions {
     groupable?: boolean;
 }
 export interface GroupableProps extends GroupableOptions {
-    targets?: Array<HTMLElement | SVGElement>;
+    targets?: ArrayFormat<HTMLElement | SVGElement>;
     updateGroup?: boolean;
 }
 
@@ -1399,6 +1404,10 @@ export interface ClickableEvents {
     onClickGroup: OnClickGroup;
 }
 
+export interface ArrayFormat<T = any> {
+    length: number;
+    [key: number]: T;
+}
 export interface ClickableProps extends EventInterface<ClickableEvents> {
 }
 export interface BeforeRenderableEvents {
