@@ -743,8 +743,8 @@ export default {
             [],
             width!,
             height!,
-            props.clipHorizontalGuidelines,
-            props.clipVerticalGuidelines,
+            (props.clipHorizontalGuidelines || []).map(v => convertUnitSize(`${v}`, width)),
+            (props.clipVerticalGuidelines || []).map(v => convertUnitSize(`${v}`, height)),
         );
 
         for (let i = 0; i < 2; ++i) {
