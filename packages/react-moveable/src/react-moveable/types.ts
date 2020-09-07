@@ -1461,8 +1461,8 @@ export interface ClippableOptions {
     dragWithClip?: boolean;
     clipArea?: boolean;
     clipTargetBounds?: boolean;
-    clipVerticalGuidelines?: number[];
-    clipHorizontalGuidelines?: number[];
+    clipVerticalGuidelines?: Array<string | number>;
+    clipHorizontalGuidelines?: Array<string | number>;
     clipSnapThreshold?: number;
 }
 export interface ClippableEvents {
