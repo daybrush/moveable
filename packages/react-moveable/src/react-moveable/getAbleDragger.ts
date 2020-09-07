@@ -106,7 +106,7 @@ export function triggerAble<T extends IObject<any>>(
         }
         moveable.forceUpdate();
     }
-    if (!isStart && !isEnd && !isAfter && isUpdate) {
+    if (!isStart && !isEnd && !isAfter && isUpdate && !requestInstant) {
         triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
     }
 }
