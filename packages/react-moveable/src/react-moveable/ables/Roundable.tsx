@@ -7,7 +7,7 @@ import {
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
 import { setDragStart, getDragDist, caculatePointerDist } from "../DraggerUtils";
-import { minus } from "../matrix";
+import { minus, plus } from "../matrix";
 import {
     getRadiusValues, getRadiusStyles, removeRadiusPos,
     addRadiusPos, splitRadiusPoses,
@@ -264,12 +264,12 @@ export default {
         }
         const index = datas.controlIndex as number;
         const controlPoses = datas.controlPoses as ControlPose[];
-        const nextPoses = controlPoses.map(pos => pos.pos.slice());
         const [distX, distY] = getDragDist(e);
         const dist = [distX, distY];
         const delta = minus(dist, datas.prevDist);
 
-        moveControlPos(controlPoses, nextPoses, index, distX, distY);
+        const dists = moveControlPos(controlPoses, index, dist);
+        const nextPoses = controlPoses.map((pos, i) => plus(pos.pos, dists[i]));
 
         datas.prevDist = [distX, distY];
 

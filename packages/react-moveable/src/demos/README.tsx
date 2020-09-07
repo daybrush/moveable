@@ -33,6 +33,42 @@ function RenderDraggable() {
         ></Moveable>
     </div>;
 }
+function RenderResizableRequest() {
+    const ref = React.useRef<Moveable>(null);
+    const [frame] = React.useState(() => ({
+        translate: [0, 0],
+    }));
+
+    return <div className="container resize-request group">
+        <p>Resize Request</p>
+        <div className="box box1"><span>A</span></div>
+        <button onClick={() => {
+             ref.current!.request("resizable", {
+                offsetWidth: 300,
+                offsetHeight: 300,
+                isInstant: true,
+            });
+        }}>REQUEST</button>
+        <Moveable
+            ref={ref}
+            target={".resize-request .box1"}
+            origin={false}
+            resizable={true}
+            onResizeStart={e => {
+                e.setOrigin(["%", "%"]);
+                e.dragStart && e.dragStart.set(frame.translate);
+            }}
+            onResize={e => {
+                console.log(e.width, e.height);
+                frame.translate = e.drag.beforeTranslate;
+
+                e.target.style.width = `${e.width}px`;
+                e.target.style.height = `${e.height}px`;
+                e.target.style.transform = `translate(${frame.translate[0]}px, ${frame.translate[1]}px)`;
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderClickable() {
     return <div className="container clickable group">
         <p>Clickable</p>
@@ -168,20 +204,29 @@ function RenderClippable() {
     }, []);
     return <div className="container clippable">
         Clippable
-        <div className="box"><span>A</span></div>
+        <div className="box" style={{ transform: "translate(20px, 30px) rotate(30deg)" }}><span>A</span></div>
         <Moveable target={target}
             draggable={true}
             clippable={true}
             clipArea={true}
+            defaultClipPath={"circle"}
             clipRelative={false}
             dragWithClip={false}
+            clipTargetBounds={true}
+            clipVerticalGuidelines={[10, 30, 200]}
+            clipHorizontalGuidelines={[10, 30, 200]}
             dragArea={true}
             origin={false}
+
+            snappable={true}
+            verticalGuidelines={[80, 150, 200]}
+            bounds={{ top: 60, left: 60 }}
+
             onDrag={e => {
                 e.target.style.cssText += `left:${e.left}px; top: ${e.top}px;`;
             }}
             onClip={e => {
-                console.log(e.clipStyle);
+                // console.log(e.clipStyle);
                 if (e.clipType === "rect") {
                     e.target.style.clip = e.clipStyle;
                 } else {
@@ -692,8 +737,9 @@ function RenderSVGOriginDraggable() {
 export default function App() {
     return <div>
         <RenderDraggable />
-        <RenderClickable/>
-        <RenderGroupClickable/>
+        <RenderResizableRequest />
+        <RenderClickable />
+        <RenderGroupClickable />
         <RenderScalable />
         <RenderRotatable />
         <RenderWarpable />

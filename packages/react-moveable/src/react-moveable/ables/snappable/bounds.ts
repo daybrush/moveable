@@ -4,7 +4,7 @@ import { getDistSize, throttle } from "../../utils";
 import { TINY_NUM } from "../../consts";
 
 export function checkBoundPoses(
-    moveable: MoveableManagerInterface<SnappableProps>,
+    bounds: BoundType | false | undefined,
     verticalPoses: number[],
     horizontalPoses: number[],
 ) {
@@ -13,12 +13,12 @@ export function checkBoundPoses(
         top = -Infinity,
         right = Infinity,
         bottom = Infinity,
-    } = moveable.props.bounds || {};
-    const bounds = { left, top, right, bottom };
+    } = bounds || {};
+    const nextBounds = { left, top, right, bottom };
 
     return {
-        vertical: checkBound(bounds, verticalPoses, true),
-        horizontal: checkBound(bounds, horizontalPoses, false),
+        vertical: checkBounds(nextBounds, verticalPoses, true),
+        horizontal: checkBounds(nextBounds, horizontalPoses, false),
     };
 }
 
@@ -134,11 +134,11 @@ export function checkBoundKeepRatio(
         horizontal: horizontalInfo,
     };
 }
-function checkBound(
+function checkBounds(
     bounds: Required<BoundType>,
     poses: number[],
     isVertical: boolean,
-): BoundInfo {
+): BoundInfo[] {
     // 0   [100 - 200]  300
     const startBoundPos = bounds[isVertical ? "left" : "top"];
     const endBoundPos = bounds[isVertical ? "right" : "bottom"];
@@ -146,27 +146,32 @@ function checkBound(
     // 450
     const minPos = Math.min(...poses);
     const maxPos = Math.max(...poses);
+    const boundInfos: BoundInfo[] = [];
 
     if (startBoundPos + 1 > minPos) {
-        return {
+        boundInfos.push({
             isBound: true,
             offset: minPos - startBoundPos,
             pos: startBoundPos,
-        };
+        });
     }
     if (endBoundPos - 1 < maxPos) {
-        return {
+        boundInfos.push({
             isBound: true,
             offset: maxPos - endBoundPos,
             pos: endBoundPos,
-        };
+        });
     }
 
-    return {
-        isBound: false,
-        offset: 0,
-        pos: 0,
-    };
+    if (!boundInfos.length) {
+        boundInfos.push({
+            isBound: false,
+            offset: 0,
+            pos: 0,
+        });
+    }
+
+    return boundInfos.sort((a, b) => Math.abs(b.offset) - Math.abs(a.offset));
 }
 export function isBoundRotate(
     relativePoses: number[][],

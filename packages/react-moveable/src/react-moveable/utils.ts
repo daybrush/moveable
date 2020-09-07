@@ -1167,7 +1167,7 @@ export function caculateBoundSize(
     maxSize: number[], keepRatio?: boolean,
 ) {
     if (!keepRatio) {
-        return size.map((value, i) => Math.min(maxSize[i], Math.max(value, minSize[i])));
+        return size.map((value, i) => between(value, minSize[i], maxSize[i]));
     }
     let [width, height] = size;
     // width : height = minWidth : minHeight;
@@ -1190,16 +1190,12 @@ export function convertCSSSize(value: number, size: number, isRelative?: boolean
 
 export function moveControlPos(
     controlPoses: ControlPose[],
-    nextPoses: number[][],
     index: number,
-    distX: number,
-    distY: number,
+    dist: number[],
 ) {
-    const { direction, pos, horizontal, vertical, sub } = controlPoses[index];
-    const dist = [
-        distX * Math.abs(horizontal),
-        distY * Math.abs(vertical),
-    ];
+    const { direction, sub } = controlPoses[index];
+    const dists = controlPoses.map(() => [0, 0]);
+
     if (direction && !sub) {
         direction.split("").forEach(dir => {
             const isVertical = dir === "n" || dir === "s";
@@ -1209,21 +1205,22 @@ export function moveControlPos(
                     direction: dirDir,
                     horizontal: dirHorizontal,
                     vertical: dirVertical,
-                    pos: controlPos,
                 } = controlPose;
 
                 if (!dirDir || dirDir.indexOf(dir) === -1) {
                     return;
                 }
-                nextPoses[i] = plus(controlPos, [
+                dists[i] = [
                     isVertical || !dirHorizontal ? 0 : dist[0],
                     !isVertical || !dirVertical ? 0 : dist[1],
-                ]);
+                ];
             });
         });
     } else {
-        nextPoses[index] = plus(pos, dist);
+        dists[index] = dist;
     }
+
+    return dists;
 }
 
 export function getTinyDist(v: number) {
@@ -1318,4 +1315,12 @@ export function getElementTargets(
     });
 
     return elementTargets;
+}
+
+export function between(value: number, min: number, max: number) {
+    return Math.max(min, Math.min(value, max));
+}
+
+export function minmax(...values: number[]) {
+    return [Math.min(...values), Math.max(...values)];
 }

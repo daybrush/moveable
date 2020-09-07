@@ -142,6 +142,10 @@ export interface SnapBoundInfo {
     isBound: boolean;
     isSnap: boolean;
     offset: number;
+    dist: number;
+    snapIndex: number;
+    bounds: BoundInfo[];
+    snap: SnapInfo;
 }
 export interface BoundInfo {
     isBound: boolean;
@@ -155,10 +159,12 @@ export interface SnapOffsetInfo {
 }
 export interface SnapInfo {
     isSnap: boolean;
+    index: number;
     posInfos: SnapPosInfo[];
 }
 export interface SnapPosInfo {
     pos: number;
+    index: number;
     guidelineInfos: SnapGuidelineInfo[];
 }
 export interface SnapGuidelineInfo {
@@ -1363,6 +1369,8 @@ export interface SnapRenderInfo {
     snap?: boolean;
     center?: boolean;
     request?: boolean;
+    externalPoses?: number[][];
+    externalBounds?: BoundType | false | null;
 }
 
 /**
@@ -1440,6 +1448,10 @@ export interface RenderableProps extends EventInterface<RenderableEvents> {
  * @property - % Can be used instead of the absolute px (`rect` not possible) (default: false)
  * @property - When dragging the target, the clip also moves. (default: true)
  * @property - You can drag the clip by setting clipArea. (default: false)
+ * @property - Whether the clip is bound to the target. (default: false)
+ * @property - Add clip guidelines in the vertical direction. (default: [])
+ * @property - Add clip guidelines in the horizontal direction. (default: [])
+ * @property - Distance value that can snap to clip guidelines. (default: 5)
  */
 export interface ClippableOptions {
     clippable?: boolean;
@@ -1448,6 +1460,10 @@ export interface ClippableOptions {
     clipRelative?: boolean;
     dragWithClip?: boolean;
     clipArea?: boolean;
+    clipTargetBounds?: boolean;
+    clipVerticalGuidelines?: number[];
+    clipHorizontalGuidelines?: number[];
+    clipSnapThreshold?: number;
 }
 export interface ClippableEvents {
     onClipStart: OnClipStart;
@@ -1458,6 +1474,7 @@ export interface ClippableProps extends ClippableOptions, EventInterface<Clippab
 }
 export interface ClippableState {
     clipPathState?: string;
+    snapBoundInfos?: { vertical: SnapBoundInfo, horizontal: SnapBoundInfo } | null;
 }
 
 /**

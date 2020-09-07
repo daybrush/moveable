@@ -1,7 +1,8 @@
-import { prefix, getControlTransform, throttle } from "./utils";
+import { prefix, getControlTransform, throttle, getLineStyle } from "./utils";
 import { ResizableProps, ScalableProps, WarpableProps, Renderer, MoveableManagerInterface } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
 import { IObject } from "@daybrush/utils";
+import { getRad } from "./matrix";
 
 export function renderControls(
     moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
@@ -42,6 +43,17 @@ export function renderControls(
                 style={getControlTransform(rotation, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });
+}
+export function renderLine(
+    React: Renderer, direction: string, pos1: number[], pos2: number[],
+    key: number | string, ...classNames: string[]) {
+    const rad = getRad(pos1, pos2);
+    const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
+
+    return <div key={`line${key}`} className={prefix("line", "direction", direction, ...classNames)}
+        data-rotation={rotation}
+        data-line-index={key}
+        data-direction={direction} style={getLineStyle(pos1, pos2, rad)}></div>;
 }
 export function renderAllDirections(
     moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
