@@ -1,7 +1,7 @@
 import { maxOffset, getDistSize, throttle, getTinyDist } from "../../utils";
 import { average, rotate, getRad } from "../../matrix";
 import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
-import { getDragDist, getPosByDirection, getInverseDragDist } from "../../DraggerUtils";
+import { getDragDist, getPosByDirection, getInverseDragDist } from "../../gesto/GestoUtils";
 import { getNearOffsetInfo } from "./snap";
 import { TINY_NUM } from "../../consts";
 

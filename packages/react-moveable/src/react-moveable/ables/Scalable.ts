@@ -12,7 +12,7 @@ import {
     fillTransformStartEvent,
     fillTransformEvent,
     setDefaultTransformIndex,
-} from "../DraggerUtils";
+} from "../gesto/GestoUtils";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
     ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
@@ -25,7 +25,7 @@ import {
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus, minus } from "../matrix";
-import CustomDragger from "../CustomDragger";
+import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapScale } from "./Snappable";
 import { isArray, IObject } from "@daybrush/utils";
 
@@ -102,7 +102,7 @@ export default {
             ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], e),
+                new CustomGesto().dragStart([0, 0], e),
             ) as OnDragStart,
         });
         const result = triggerEvent<ScalableProps, "onScaleStart">(moveable, "onScaleStart", params);

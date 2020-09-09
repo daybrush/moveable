@@ -15,14 +15,13 @@ import {
     groupByMap,
     caculatePadding,
 } from "./utils";
-import Dragger from "@daybrush/drag";
+import Gesto from "gesto";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
-import { triggerAble, getTargetAbleDragger, getAbleDragger } from "./getAbleDragger";
+import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { getRad, plus } from "./matrix";
 import { IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
-
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -83,8 +82,8 @@ export default class MoveableManager<T = {}>
     public controlAbles: Able[] = [];
     public controlBox!: { getElement(): HTMLElement };
     public areaElement!: HTMLElement;
-    public targetDragger!: Dragger;
-    public controlDragger!: Dragger;
+    public targetGesto!: Gesto;
+    public controlGesto!: Gesto;
     public rotation: number = 0;
     public scale: number[] = [1, 1];
     public isUnmounted = false;
@@ -152,8 +151,8 @@ export default class MoveableManager<T = {}>
     }
     public componentWillUnmount() {
         this.isUnmounted = true;
-        unset(this, "targetDragger");
-        unset(this, "controlDragger");
+        unset(this, "targetGesto");
+        unset(this, "controlGesto");
     }
     public getContainer(): HTMLElement | SVGElement {
         const { parentMoveable, container } = this.props;
@@ -196,8 +195,8 @@ export default class MoveableManager<T = {}>
      * });
      */
     public dragStart(e: MouseEvent | TouchEvent) {
-        if (this.targetDragger) {
-            this.targetDragger.triggerDragStart(e);
+        if (this.targetGesto) {
+            this.targetGesto.triggerDragStart(e);
         }
         return this;
     }
@@ -328,23 +327,23 @@ export default class MoveableManager<T = {}>
         const dragArea = props.dragArea;
         const prevDragArea = prevProps.dragArea;
         const isTargetChanged = !dragArea && prevTarget !== target;
-        const isUnset = (!hasTargetAble && this.targetDragger)
+        const isUnset = (!hasTargetAble && this.targetGesto)
             || isTargetChanged
             || prevDragArea !== dragArea;
 
         if (isUnset) {
-            unset(this, "targetDragger");
-            this.updateState({ dragger: null });
+            unset(this, "targetGesto");
+            this.updateState({ gesto: null });
         }
         if (!hasControlAble) {
-            unset(this, "controlDragger");
+            unset(this, "controlGesto");
         }
 
-        if (target && hasTargetAble && !this.targetDragger) {
-            this.targetDragger = getTargetAbleDragger<any>(this, target!, "");
+        if (target && hasTargetAble && !this.targetGesto) {
+            this.targetGesto = getTargetAbleGesto<any>(this, target!, "");
         }
-        if (!this.controlDragger && hasControlAble) {
-            this.controlDragger = getAbleDragger<any>(this, controlBoxElement, "controlAbles", "Control");
+        if (!this.controlGesto && hasControlAble) {
+            this.controlGesto = getAbleGesto<any>(this, controlBoxElement, "controlAbles", "Control");
         }
         if (isUnset) {
             this.unsetAbles();
@@ -367,8 +366,8 @@ export default class MoveableManager<T = {}>
      * });
      */
     public isDragging() {
-        return (this.targetDragger ? this.targetDragger.isFlag() : false)
-            || (this.controlDragger ? this.controlDragger.isFlag() : false);
+        return (this.targetGesto ? this.targetGesto.isFlag() : false)
+            || (this.controlGesto ? this.controlGesto.isFlag() : false);
     }
     /**
      * If the width, height, left, and top of the only target change, update the shape of the moveable.
@@ -642,7 +641,7 @@ export default class MoveableManager<T = {}>
             })).filter(el => el), ({ key }) => key).map(group => group[0]);
     }
     protected updateCheckInput() {
-        this.targetDragger && (this.targetDragger.options.checkInput = this.props.checkInput);
+        this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
     }
 }
 

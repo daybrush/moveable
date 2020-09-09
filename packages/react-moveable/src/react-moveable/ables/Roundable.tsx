@@ -6,7 +6,7 @@ import {
     Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd, MoveableManagerInterface,
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
-import { setDragStart, getDragDist, caculatePointerDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, caculatePointerDist } from "../gesto/GestoUtils";
 import { minus, plus } from "../matrix";
 import {
     getRadiusValues, getRadiusStyles, removeRadiusPos,

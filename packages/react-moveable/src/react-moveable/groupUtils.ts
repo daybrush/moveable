@@ -1,5 +1,5 @@
 import { Able, MoveableGroupInterface, MoveableManagerInterface } from "./types";
-import CustomDragger, { setCustomDrag } from "./CustomDragger";
+import CustomGesto, { setCustomDrag } from "./gesto/CustomGesto";
 
 export function fillChildEvents(
     moveable: MoveableGroupInterface,
@@ -40,7 +40,7 @@ export function fillChildEvents(
         };
     });
 }
-export function triggerChildDragger(
+export function triggerChildGesto(
     moveable: MoveableGroupInterface<any, any>,
     able: Able,
     type: string,
@@ -60,22 +60,22 @@ export function triggerChildDragger(
         let childEvent: any = ev;
 
         if (isStart) {
-            childEvent = new CustomDragger().dragStart(delta, ev);
+            childEvent = new CustomGesto().dragStart(delta, ev);
         } else {
-            if (!childMoveable.state.dragger) {
-                childMoveable.state.dragger = datas.childDraggers[i];
+            if (!childMoveable.state.gesto) {
+                childMoveable.state.gesto = datas.childGestos[i];
             }
             childEvent = setCustomDrag(ev, childMoveable.state, delta, isPinch, isConvert);
         }
         const result = (able as any)[type]!(childMoveable,  { ...childEvent, parentFlag: true });
 
         if (isEnd) {
-            childMoveable.state.dragger = null;
+            childMoveable.state.gesto = null;
         }
         return result;
     });
     if (isStart) {
-        datas.childDraggers = moveables.map(child => child.state.dragger);
+        datas.childGestos = moveables.map(child => child.state.gesto);
     }
     return childs;
 }
@@ -101,7 +101,7 @@ export function triggerChildAble<T extends Able>(
         result && callback && callback(childMoveable, ev, result, i);
 
         if (isEnd) {
-            childMoveable.state.dragger = null;
+            childMoveable.state.gesto = null;
         }
         return result;
     });

@@ -134,8 +134,8 @@ describe("test Moveable", () => {
         }} />, document.querySelector(".container"));
 
         await wait(300);
-        const targetDragger = moveable.innerMoveable.moveable.targetDragger;
-        const controlDragger = moveable.innerMoveable.moveable.controlDragger;
+        const targetGesto = moveable.innerMoveable.moveable.targetGesto;
+        const controlGesto = moveable.innerMoveable.moveable.controlGesto;
 
         // When
         moveable.setState({
@@ -145,14 +145,14 @@ describe("test Moveable", () => {
         await wait(300);
 
         // Then
-        const nextTargetDragger = moveable.innerMoveable.moveable.targetDragger;
-        const nextControlDragger = moveable.innerMoveable.moveable.controlDragger;
+        const nextTargetGesto = moveable.innerMoveable.moveable.targetGesto;
+        const nextControlGesto = moveable.innerMoveable.moveable.controlGesto;
 
-        expect(targetDragger).to.be.ok;
-        expect(nextTargetDragger).to.be.ok;
-        expect(nextTargetDragger).to.be.not.equals(targetDragger);
-        expect(controlDragger).to.be.not.ok;
-        expect(nextControlDragger).to.be.not.ok;
+        expect(targetGesto).to.be.ok;
+        expect(nextTargetGesto).to.be.ok;
+        expect(nextTargetGesto).to.be.not.equals(targetGesto);
+        expect(controlGesto).to.be.not.ok;
+        expect(nextControlGesto).to.be.not.ok;
     });
     it ("check event validation", () => {
         const map = MOVEABLE_EVENTS_PROPS_MAP;

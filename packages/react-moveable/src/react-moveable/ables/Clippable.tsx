@@ -11,7 +11,7 @@ import {
     convertCSSSize, moveControlPos,
 } from "../utils";
 import { getRad, plus, minus } from "../matrix";
-import { setDragStart, getDragDist, caculatePointerDist } from "../DraggerUtils";
+import { setDragStart, getDragDist, caculatePointerDist } from "../gesto/GestoUtils";
 import {
     getRadiusValues,
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos

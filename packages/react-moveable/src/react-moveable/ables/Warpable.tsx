@@ -16,7 +16,7 @@ import { NEARBY_POS } from "../consts";
 import {
     setDragStart, getDragDist, getPosIndexesByDirection, setDefaultTransformIndex,
     fillTransformStartEvent, resolveTransformEvent, convertTransformFormat, fillOriginalTransform, getTransfromMatrix
-} from "../DraggerUtils";
+} from "../gesto/GestoUtils";
 import {
     WarpableProps, ScalableProps, ResizableProps,
     Renderer, SnappableProps, SnappableState,

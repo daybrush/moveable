@@ -38,7 +38,7 @@ export default {
 
         e.datas.dragScroll = dragScroll;
 
-        const draggerName = e.isControl ? "controlDragger" : "targetDragger";
+        const gestoName = e.isControl ? "controlGesto" : "targetGesto";
         const targets = e.targets;
 
         dragScroll.on("scroll", ({ container, direction }) => {
@@ -53,7 +53,7 @@ export default {
             }
             triggerEvent(moveable, eventName, params);
         }).on("move", ({ offsetX, offsetY }) => {
-            moveable[draggerName].scrollBy(offsetX, offsetY, e.inputEvent, false);
+            moveable[gestoName].scrollBy(offsetX, offsetY, e.inputEvent, false);
         });
         dragScroll.dragStart(e, {
             container: scrollContainer as HTMLElement,

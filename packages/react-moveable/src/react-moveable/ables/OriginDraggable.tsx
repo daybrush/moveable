@@ -7,10 +7,10 @@ import {
     OnDragOriginEnd, MoveableManagerInterface, DraggableProps, OriginDraggableProps, MoveableGroupInterface
 } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
-import { setDragStart, getDragDist, getNextMatrix } from "../DraggerUtils";
+import { setDragStart, getDragDist, getNextMatrix } from "../gesto/GestoUtils";
 import { minus, plus } from "../matrix";
 import Draggable from "./Draggable";
-import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 
 /**
  * @namespace OriginDraggable
@@ -47,7 +47,7 @@ export default {
         const params = fillParams<OnDragOriginStart>(moveable, e, {
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], e),
+                new CustomGesto().dragStart([0, 0], e),
             ),
         });
         const result = triggerEvent<OriginDraggableProps>(

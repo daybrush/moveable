@@ -1,7 +1,6 @@
 import { IObject } from "@daybrush/utils";
-import Dragger, * as DraggerTypes from "@daybrush/drag";
-import CustomDragger from "./CustomDragger";
-import { Position } from "@daybrush/drag";
+import Gesto, * as GestoTypes from "gesto";
+import CustomGesto from "./gesto/CustomGesto";
 import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
 
 export interface MoveableClientRect {
@@ -100,7 +99,7 @@ export type MoveableManagerState<T = {}> = {
     pos2: number[];
     pos3: number[];
     pos4: number[];
-    dragger: Dragger | CustomDragger | null;
+    gesto: Gesto | CustomGesto | null;
     targetClientRect: MoveableClientRect;
     containerClientRect: MoveableClientRect;
     moveableClientRect: MoveableClientRect;
@@ -253,32 +252,32 @@ export interface Able<O extends IObject<any> = IObject<any>, E extends IObject<a
     unset?: (moveable: any) => any;
     render?: (moveable: any, renderer: Renderer) => any;
 
-    dragStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
-    drag?: (moveable: any, e: DraggerTypes.OnDrag) => any;
-    dragEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
+    dragStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
+    drag?: (moveable: any, e: GestoTypes.OnDrag) => any;
+    dragEnd?: (moveable: any, e: GestoTypes.OnDragEnd) => any;
 
-    pinchStart?: (moveable: any, e: DraggerTypes.OnPinchStart) => any;
-    pinch?: (moveable: any, e: DraggerTypes.OnPinch) => any;
-    pinchEnd?: (moveable: any, e: DraggerTypes.OnPinchEnd) => any;
+    pinchStart?: (moveable: any, e: GestoTypes.OnPinchStart) => any;
+    pinch?: (moveable: any, e: GestoTypes.OnPinch) => any;
+    pinchEnd?: (moveable: any, e: GestoTypes.OnPinchEnd) => any;
 
     dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
-    dragControlStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
-    dragControl?: (moveable: any, e: DraggerTypes.OnDrag) => any;
-    dragControlEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
+    dragControlStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
+    dragControl?: (moveable: any, e: GestoTypes.OnDrag) => any;
+    dragControlEnd?: (moveable: any, e: GestoTypes.OnDragEnd) => any;
 
     dragGroupCondition?: (e: any) => boolean;
-    dragGroupStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
-    dragGroup?: (moveable: any, e: DraggerTypes.OnDrag) => any;
-    dragGroupEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
+    dragGroupStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
+    dragGroup?: (moveable: any, e: GestoTypes.OnDrag) => any;
+    dragGroupEnd?: (moveable: any, e: GestoTypes.OnDragEnd) => any;
 
-    pinchGroupStart?: (moveable: any, e: DraggerTypes.OnPinchStart) => any;
-    pinchGroup?: (moveable: any, e: DraggerTypes.OnPinch) => any;
-    pinchGroupEnd?: (moveable: any, e: DraggerTypes.OnPinchEnd) => any;
+    pinchGroupStart?: (moveable: any, e: GestoTypes.OnPinchStart) => any;
+    pinchGroup?: (moveable: any, e: GestoTypes.OnPinch) => any;
+    pinchGroupEnd?: (moveable: any, e: GestoTypes.OnPinchEnd) => any;
 
     dragGroupControlCondition?: (e: any) => boolean;
-    dragGroupControlStart?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
-    dragGroupControl?: (moveable: any, e: DraggerTypes.OnDragStart) => any;
-    dragGroupControlEnd?: (moveable: any, e: DraggerTypes.OnDragEnd) => any;
+    dragGroupControlStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
+    dragGroupControl?: (moveable: any, e: GestoTypes.OnDragStart) => any;
+    dragGroupControlEnd?: (moveable: any, e: GestoTypes.OnDragEnd) => any;
 
     request?: (moveable: any) => AbleRequester;
 }
@@ -1518,14 +1517,14 @@ export interface OnClip extends OnEvent {
  */
 export interface OnClipEnd extends OnEndEvent { }
 
-export interface OnCustomDrag extends Position {
+export interface OnCustomDrag extends GestoTypes.Position {
     type: string;
     inputEvent: any;
     isDrag: boolean;
     datas: IObject<any>;
     originalDatas: IObject<any>;
     parentEvent: boolean;
-    parentDragger: CustomDragger;
+    parentGesto: CustomGesto;
 }
 
 /**
@@ -1583,8 +1582,8 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     state: MoveableManagerState<U>;
     rotation: number;
     scale: number[];
-    controlDragger: Dragger;
-    targetDragger: Dragger;
+    controlGesto: Gesto;
+    targetGesto: Gesto;
     controlAbles: Able[];
     targetAbles: Able[];
     areaElement: HTMLElement;

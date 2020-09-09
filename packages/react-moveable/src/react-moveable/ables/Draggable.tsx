@@ -1,7 +1,7 @@
 import {
     setDragStart, getBeforeDragDist, getTransformDist,
     convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex
-} from "../DraggerUtils";
+} from "../gesto/GestoUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
 import { minus, plus, getRad } from "../matrix";
 import {
@@ -9,7 +9,7 @@ import {
     OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState,
     Renderer, OnDragGroupEnd, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
-import { triggerChildDragger } from "../groupUtils";
+import { triggerChildGesto } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
 import { IObject } from "@daybrush/utils";
 
@@ -67,17 +67,17 @@ export default {
         moveable: MoveableManagerInterface<DraggableProps, any>,
         e: any,
     ) {
-        const { datas, parentEvent, parentDragger } = e;
+        const { datas, parentEvent, parentGesto } = e;
         const state = moveable.state;
         const {
             target,
-            dragger,
+            gesto,
         } = state;
 
-        if (dragger) {
+        if (gesto) {
             return false;
         }
-        state.dragger = parentDragger || moveable.targetDragger;
+        state.gesto = parentGesto || moveable.targetGesto;
         const style = window.getComputedStyle(target!);
 
         datas.datas = {};
@@ -110,7 +110,7 @@ export default {
                 dist: [0, 0],
             };
         } else {
-            state.dragger = null;
+            state.gesto = null;
             datas.isPinch = false;
         }
         return datas.isDrag ? params : false;
@@ -232,7 +232,7 @@ export default {
     ) {
         const { parentEvent, datas, isDrag } = e;
 
-        moveable.state.dragger = null;
+        moveable.state.gesto = null;
         moveable.state.dragInfo = null;
         if (!datas.isDrag) {
             return;
@@ -249,7 +249,7 @@ export default {
         if (!params) {
             return false;
         }
-        const events = triggerChildDragger(moveable, this, "dragStart", [
+        const events = triggerChildGesto(moveable, this, "dragStart", [
             clientX || 0,
             clientY || 0,
         ], e, false);
@@ -273,7 +273,7 @@ export default {
         }
         const params = this.drag(moveable, e);
         const { passDeltaX, passDeltaY } = e.datas;
-        const events = triggerChildDragger(moveable, this, "drag", [passDeltaX, passDeltaY], e, false);
+        const events = triggerChildGesto(moveable, this, "drag", [passDeltaX, passDeltaY], e, false);
 
         if (!params) {
             return;
@@ -294,7 +294,7 @@ export default {
             return;
         }
         this.dragEnd(moveable, e);
-        triggerChildDragger(moveable, this, "dragEnd", [0, 0], e, false);
+        triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false);
         triggerEvent(moveable, "onDragGroupEnd", fillEndParams<OnDragGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
         }));

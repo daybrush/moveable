@@ -13,7 +13,7 @@ import {
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, getRad, rotate as rotateMatrix } from "../matrix";
-import CustomDragger from "../CustomDragger";
+import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapRotate } from "./Snappable";
 import {
     fillTransformStartEvent,
@@ -23,7 +23,7 @@ import {
     fillTransformEvent,
     setDefaultTransformIndex,
     resolveTransformEvent,
-} from "../DraggerUtils";
+} from "../gesto/GestoUtils";
 
 /**
  * @namespace Rotatable
@@ -294,7 +294,7 @@ export default {
             ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], e),
+                new CustomGesto().dragStart([0, 0], e),
             ) as OnDragStart | false,
         });
         const result = triggerEvent(moveable, "onRotateStart", params);
@@ -320,10 +320,12 @@ export default {
             rect,
         } = datas;
 
-        resolveTransformEvent(e, "rotate");
         if (!isRotate) {
             return;
         }
+
+        resolveTransformEvent(e, "rotate");
+
         const {
             throttleRotate = 0,
             parentMoveable,
@@ -371,7 +373,6 @@ export default {
             plus(groupDelta || [0, 0], inverseDist),
             datas.prevInverseDist || [0, 0],
         );
-
         datas.prevInverseDist = inverseDist;
 
         const params = fillParams<OnRotate>(moveable, e, {

@@ -19,7 +19,7 @@ import { IObject, find, findIndex, hasClass } from "@daybrush/utils";
 import {
     getPosByReverseDirection,
     getDragDist, scaleMatrix, getPosByDirection,
-} from "../DraggerUtils";
+} from "../gesto/GestoUtils";
 import { minus, rotate, plus, getRad } from "../matrix";
 import {
     dragControlCondition as rotatableDragControlCondtion,

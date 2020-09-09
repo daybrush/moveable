@@ -9,7 +9,7 @@ import {
     getResizeDist,
     getStartDirection,
     getAbsoluteFixedPosition,
-} from "../DraggerUtils";
+} from "../gesto/GestoUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
@@ -21,7 +21,7 @@ import {
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { getRad, caculate, createRotateMatrix, plus } from "../matrix";
-import CustomDragger, { setCustomDrag } from "../CustomDragger";
+import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapSize } from "./Snappable";
 import { IObject, isString } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
@@ -135,7 +135,7 @@ export default {
             },
             dragStart: Draggable.dragStart(
                 moveable,
-                new CustomDragger().dragStart([0, 0], e),
+                new CustomGesto().dragStart([0, 0], e),
             ),
         });
         const result = triggerEvent<ResizableProps>(moveable, "onResizeStart", params);

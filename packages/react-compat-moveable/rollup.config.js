@@ -9,7 +9,7 @@ const external = {
     "@daybrush/utils": "utils",
     "css-styled": "css-styled",
     "framework-utils": "framework-utils",
-    "@daybrush/drag": "Dragger",
+    "gesto": "Gesto",
     "@egjs/agent": "eg.Agent",
     "@egjs/children-differ": "eg.ChildrenDiffer",
     "@moveable/matrix": "@moveable/matrix",

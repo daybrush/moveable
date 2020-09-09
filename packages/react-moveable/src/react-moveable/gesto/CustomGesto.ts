@@ -1,5 +1,5 @@
-import { MoveableManagerState, OnCustomDrag } from "./types";
-import { convertDragDist } from "./utils";
+import { MoveableManagerState, OnCustomDrag } from "../types";
+import { convertDragDist } from "../utils";
 
 export function setCustomDrag(
     e: any,
@@ -8,7 +8,8 @@ export function setCustomDrag(
     isPinch: boolean,
     isConvert: boolean,
 ) {
-    const result = state.dragger!.move(delta, e.inputEvent);
+
+    const result = state.gesto!.move(delta, e.inputEvent);
     const datas = result.originalDatas || result.datas;
     const draggableDatas = datas.draggable || (datas.draggable = {});
 
@@ -22,7 +23,7 @@ export function setCustomDrag(
     };
 }
 
-export default class CustomDragger {
+export default class CustomGesto {
     private prevX = 0;
     private prevY = 0;
     private startX = 0;
@@ -89,7 +90,7 @@ export default class CustomDragger {
             datas: this.datas.draggable,
             originalDatas: this.datas,
             parentEvent: true,
-            parentDragger: this,
+            parentGesto: this,
         };
     }
 }

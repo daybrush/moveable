@@ -1,9 +1,9 @@
-import { Able, MoveableManagerInterface, MoveableGroupInterface } from "./types";
+import { Able, MoveableManagerInterface, MoveableGroupInterface } from "../types";
 import { IObject } from "@daybrush/utils";
-import { convertDragDist } from "./utils";
-import Dragger from "@daybrush/drag";
-import BeforeRenderable from "./ables/BeforeRenderable";
-import Renderable from "./ables/Renderable";
+import { convertDragDist } from "../utils";
+import Gesto from "gesto";
+import BeforeRenderable from "../ables/BeforeRenderable";
+import Renderable from "../ables/Renderable";
 
 export function triggerAble<T extends IObject<any>>(
     moveable: MoveableManagerInterface<any, any>,
@@ -30,8 +30,8 @@ export function triggerAble<T extends IObject<any>>(
     const isEnd = eventType === "End";
     const isAfter = eventType.indexOf("After") > -1;
     const isFirstStart = isStart && (
-        !moveable.targetDragger || !moveable.controlDragger
-        || (!moveable.targetDragger.isFlag() || !moveable.controlDragger.isFlag())
+        !moveable.targetGesto || !moveable.controlGesto
+        || (!moveable.targetGesto.isFlag() || !moveable.controlGesto.isFlag())
     );
 
     if (isFirstStart) {
@@ -68,6 +68,7 @@ export function triggerAble<T extends IObject<any>>(
     if (isEnd && inputEvent) {
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
+
     const results = events.filter((able: any) => {
         const hasCondition = isStart && able[conditionName];
         const ableName = able.name;
@@ -82,11 +83,11 @@ export function triggerAble<T extends IObject<any>>(
     const isForceEnd = isStart && events.length && !isUpdate;
 
     if (isEnd || isForceEnd) {
-        moveable.state.dragger = null;
+        moveable.state.Gesto = null;
 
         if ((moveable as MoveableGroupInterface).moveables) {
             (moveable as MoveableGroupInterface).moveables.forEach(childMoveable => {
-                childMoveable.state.dragger = null;
+                childMoveable.state.gesto = null;
             });
         }
     }
@@ -109,9 +110,10 @@ export function triggerAble<T extends IObject<any>>(
     if (!isStart && !isEnd && !isAfter && isUpdate && !requestInstant) {
         triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
     }
+    return true;
 }
 
-export function getTargetAbleDragger<T>(
+export function getTargetAbleGesto<T>(
     moveable: MoveableManagerInterface<T>,
     moveableTarget: HTMLElement | SVGElement,
     eventAffix: string,
@@ -135,12 +137,12 @@ export function getTargetAbleDragger<T>(
             || eventTarget.className.indexOf("moveable-padding") > -1;
     };
 
-    return getAbleDragger(moveable, targets, "targetAbles", eventAffix, {
-        dragstart: startFunc,
-        pinchstart: startFunc,
+    return getAbleGesto(moveable, targets, "targetAbles", eventAffix, {
+        dragStart: startFunc,
+        pinchStart: startFunc,
     });
 }
-export function getAbleDragger<T>(
+export function getAbleGesto<T>(
     moveable: MoveableManagerInterface<T>,
     target: HTMLElement | SVGElement | Array<HTMLElement | SVGElement>,
     ableType: string,
@@ -156,18 +158,25 @@ export function getAbleDragger<T>(
         pinchThreshold,
         pinchOutside,
     };
+    const gesto = new Gesto(target!, options);
+
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
-            const eventName = `${eventOperation}${eventType.toLowerCase()}`;
-            options[eventName]
-                = (e: any) => {
-                    if (conditionFunctions[eventName] && !conditionFunctions[eventName](e)) {
-                        return false;
-                    }
-                    return triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
-                };
+            gesto.on(`${eventOperation}${eventType}`, e => {
+                const eventName = e.eventType;
+
+                if (conditionFunctions[eventName] && !conditionFunctions[eventName](e)) {
+                    e.stop();
+                    return;
+                }
+                const result = triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
+
+                if (!result) {
+                    e.stop();
+                }
+            });
         });
     });
 
-    return new Dragger(target!, options);
+    return gesto;
 }

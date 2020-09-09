@@ -22,6 +22,9 @@ export default {
         onPinchGroup: "pinchGroup",
         onPinchGroupEnd: "pinchGroupEnd",
     } as const,
+    dragStart() {
+        return true;
+    },
     pinchStart(
         moveable: MoveableManagerInterface<PinchableProps, SnappableState>,
         e: any,

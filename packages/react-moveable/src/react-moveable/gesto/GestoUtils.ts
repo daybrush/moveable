@@ -2,18 +2,18 @@ import {
     invert, caculate, minus, plus,
     convertPositionMatrix, average,
     createScaleMatrix, multiply, fromTranslation, convertDimension,
-} from "./matrix";
+} from "../matrix";
 import {
     caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
     caculatePosition, caculateInversePosition, getTransform
-} from "./utils";
+} from "../utils";
 import { splitUnit, isArray, splitSpace } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
-} from "./types";
-import Draggable from "./ables/Draggable";
-import { setCustomDrag } from "./CustomDragger";
+} from "../types";
+import Draggable from "../ables/Draggable";
+import { setCustomDrag } from "./CustomGesto";
 import { parse, parseMat } from "css-to-mat";
 
 export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) {
@@ -504,6 +504,7 @@ export function getRotateDist(
     datas: any,
 ) {
     const fixedDirection = getOriginDirection(moveable);
+
     return getTranslateDist(
         moveable,
         `rotate(${rotateDist}deg)`,

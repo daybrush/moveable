@@ -2,7 +2,7 @@ import {
     SnapInfo, SnappableProps, SnappableState,
     Guideline, ResizableProps, ScalableProps, SnapOffsetInfo, MoveableManagerInterface} from "../../types";
 import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy, getTinyDist } from "../../utils";
-import { getPosByDirection, getPosesByDirection } from "../../DraggerUtils";
+import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "../../matrix";
 

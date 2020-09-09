@@ -139,6 +139,9 @@ function RenderScalable() {
 function RenderRotatable() {
     const [target, setTarget] = React.useState<HTMLElement>();
     React.useEffect(() => {
+        document.addEventListener("gesturestart", e => {
+            e.preventDefault();
+        });
         setTarget(document.querySelector<HTMLElement>(".rotatable .box")!);
     }, []);
     return <div className="container rotatable">
@@ -148,6 +151,9 @@ function RenderRotatable() {
         }}><span>A</span></div>
         <Moveable
             target={target}
+            // draggable={true}
+            pinchable={["rotatable"]}
+            pinchOutside={true}
             rotatable={true}
             origin={true}
             onBeforeRenderStart={e => {
