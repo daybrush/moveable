@@ -172,7 +172,7 @@ export default {
             target,
             width,
             height,
-            matrix,
+            allMatrix,
             is3d,
             left,
             top,
@@ -190,7 +190,7 @@ export default {
             return null;
         }
         return radiusValues.map((v, i) => {
-            const pos = minus(caculatePosition(matrix, v.pos, n), [left, top]);
+            const pos = minus(caculatePosition(allMatrix, v.pos, n), [left, top]);
 
             return <div key={`borderRadiusControl${i}`}
                 className={prefix("control", "border-radius")}

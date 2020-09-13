@@ -447,7 +447,7 @@ export default {
             clipArea, zoom,
         } = moveable.props;
         const {
-            target, width, height, matrix, is3d, left, top,
+            target, width, height, allMatrix, is3d, left, top,
             pos1, pos2, pos3, pos4,
             clipPathState,
             snapBoundInfos,
@@ -468,7 +468,7 @@ export default {
         const clipPoses = clipPath.poses;
         const poses = clipPoses.map(pos => {
             // return [x, y];
-            const caculatedPos = caculatePosition(matrix, pos.pos, n);
+            const caculatedPos = caculatePosition(allMatrix, pos.pos, n);
 
             return [
                 caculatedPos[0] - left,
@@ -527,8 +527,8 @@ export default {
             } = clipPath;
 
             const [distLeft, distTop] = minus(
-                caculatePosition(matrix, [clipLeft!, clipTop!], n),
-                caculatePosition(matrix, [0, 0], n),
+                caculatePosition(allMatrix, [clipLeft!, clipTop!], n),
+                caculatePosition(allMatrix, [0, 0], n),
             );
             let ellipseClipPath = "none";
 
@@ -556,7 +556,7 @@ export default {
                 width: `${radiusX! * 2}px`,
                 height: `${radiusY! * 2}px`,
                 clipPath: ellipseClipPath,
-                transform: `translate(${-left + distLeft}px, ${-top + distTop}px) ${makeMatrixCSS(matrix)}`,
+                transform: `translate(${-left + distLeft}px, ${-top + distTop}px) ${makeMatrixCSS(allMatrix)}`,
             }}></div>);
         }
         if (clipArea) {
@@ -586,9 +586,9 @@ export default {
                 if (info.isBound) {
                     lines.push(...info.bounds.map(({ pos }, i) => {
                         const snapPos1 = minus(caculatePosition(
-                            matrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
+                            allMatrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
                         const snapPos2 = minus(caculatePosition(
-                            matrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
+                            allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
                         return renderLine(
                             React, "", snapPos1, snapPos2,
@@ -597,9 +597,9 @@ export default {
                 } else if (info.isSnap) {
                     lines.push(...info.snap.posInfos.map(({ pos }, i) => {
                         const snapPos1 = minus(caculatePosition(
-                            matrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
+                            allMatrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
                         const snapPos2 = minus(caculatePosition(
-                            matrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
+                            allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
                         return renderLine(
                             React, "", snapPos1, snapPos2,

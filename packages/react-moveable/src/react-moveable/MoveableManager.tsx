@@ -4,13 +4,11 @@ import {
     prefix,
     getTargetInfo,
     unset,
-    createIdentityMatrix3,
     isInside,
     getAbsolutePosesByState,
     getRect,
     filterAbles,
     equals,
-    resetClientRect,
     flat,
     groupByMap,
     caculatePadding,
@@ -53,31 +51,10 @@ export default class MoveableManager<T = {}>
     public state: MoveableManagerState = {
         container: null,
         target: null,
-        beforeMatrix: createIdentityMatrix3(),
-        matrix: createIdentityMatrix3(),
-        targetMatrix: createIdentityMatrix3(),
-        offsetMatrix: createIdentityMatrix3(),
-        targetTransform: "",
-        is3d: false,
-        left: 0,
-        top: 0,
-        width: 0,
-        height: 0,
-        transformOrigin: [0, 0],
-        direction: 1,
-        beforeDirection: 1,
-        beforeOrigin: [0, 0],
-        origin: [0, 0],
-        pos1: [0, 0],
-        pos2: [0, 0],
-        pos3: [0, 0],
-        pos4: [0, 0],
+        gesto: null,
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
-        targetClientRect: resetClientRect(),
-        containerClientRect: resetClientRect(),
-        moveableClientRect: resetClientRect(),
-        rotation: 0,
-    } as any;
+        ...getTargetInfo(null),
+    };
     public targetAbles: Able[] = [];
     public controlAbles: Able[] = [];
     public controlBox!: { getElement(): HTMLElement };
@@ -539,7 +516,9 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const {
             beforeOrigin, transformOrigin,
-            matrix, is3d, pos1, pos2, pos3, pos4, left: stateLeft, top: stateTop } = state;
+            allMatrix, is3d, pos1, pos2, pos3, pos4,
+            left: stateLeft, top: stateTop,
+        } = state;
         const {
             left = 0,
             top = 0,
@@ -550,10 +529,10 @@ export default class MoveableManager<T = {}>
         const absoluteOrigin = (props as any).groupable ? beforeOrigin : plus(beforeOrigin, [stateLeft, stateTop]);
 
         state.renderPoses = [
-            plus(pos1, caculatePadding(matrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos2, caculatePadding(matrix, [right, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos3, caculatePadding(matrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
-            plus(pos4, caculatePadding(matrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
+            plus(pos1, caculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos2, caculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos3, caculatePadding(allMatrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
+            plus(pos4, caculatePadding(allMatrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
         ];
     }
     public checkUpdate() {

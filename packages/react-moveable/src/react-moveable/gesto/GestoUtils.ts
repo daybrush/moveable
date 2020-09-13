@@ -34,7 +34,7 @@ export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) 
 
 export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }: any) {
     const {
-        matrix,
+        allMatrix,
         beforeMatrix,
         is3d,
         left,
@@ -47,12 +47,12 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
     const n = is3d ? 4 : 3;
 
     datas.is3d = is3d;
-    datas.matrix = matrix;
+    datas.matrix = allMatrix;
     datas.targetMatrix = targetMatrix;
     datas.beforeMatrix = beforeMatrix;
     datas.offsetMatrix = offsetMatrix;
     datas.transformOrigin = transformOrigin;
-    datas.inverseMatrix = invert(matrix, n);
+    datas.inverseMatrix = invert(allMatrix, n);
     datas.inverseBeforeMatrix = invert(beforeMatrix, n);
     datas.absoluteOrigin = convertPositionMatrix(plus([left, top], origin), n);
     datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
@@ -483,7 +483,7 @@ export function getOriginDirection(moveable: MoveableManagerInterface<any>) {
 }
 export function getDirectionOffset(
     moveable: MoveableManagerInterface, direction: number[],
-    nextMatrix: number[] = moveable.state.matrix,
+    nextMatrix: number[] = moveable.state.allMatrix,
 ) {
     const {
         width,

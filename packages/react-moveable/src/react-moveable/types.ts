@@ -82,7 +82,7 @@ export type MoveableManagerState<T = {}> = {
     width: number;
     height: number;
     beforeMatrix: number[];
-    matrix: number[];
+    allMatrix: number[];
     targetTransform: string;
     rootMatrix: number[];
     targetMatrix: number[];
@@ -92,8 +92,8 @@ export type MoveableManagerState<T = {}> = {
     targetOrigin: number[];
     beforeOrigin: number[];
     origin: number[];
-    beforeDirection: 1 | -1;
-    direction: 1 | -1;
+    beforeDirection: number;
+    direction: number;
     renderPoses: number[][];
     pos1: number[];
     pos2: number[];

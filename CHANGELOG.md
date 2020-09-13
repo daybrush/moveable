@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
-## [0.19.0] - 2020-07-17
+## [0.19.0] - 2020-09-14
 * `moveable` 0.19.0
 * `react-moveable` 0.22.0
 * `preact-moveable` 0.21.0
@@ -25,15 +25,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `svelte-moveable` 0.10.0
 
 ### Added
-* Export `getMatrixStack` function (react-moveable)
-* Add `translateZ` props. #302
+* Export `getElementMatrixStack` function (moveable, react-moveable)
+* Add `translateZ` prop. #302
 * Support `click`, `clickGroup` event for no `dragArea` #309
-* Add `passDragArea` props #309
+* Add `passDragArea` prop #309
+* Add `clipVerticalGuidelines`, `clipHorizontalGuidelines`, `clipTargetBounds`, `clipSnapThreshold` props #292
 * Support target's string, React.RefObject type #275 #290
 
 
 ### Fixed
 * Support Tree Shaking #15
+* Change `Dragger` to `gesto`
+* Fix agent issue #310
+* resizable request is not worked #312
 
 ## [0.18.5] - 2020-07-17
 * `moveable` 0.18.5
