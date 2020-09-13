@@ -6,7 +6,7 @@ import { triggerEvent, fillParams } from "../utils";
 import { findIndex } from "@daybrush/utils";
 
 export default {
-    name: "Clickable",
+    name: "clickable",
     props: {} as const,
     events: {
         onClick: "click",
@@ -14,7 +14,9 @@ export default {
     } as const,
     always: true,
     dragStart() {},
-    dragGroupStart() {},
+    dragGroupStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
+        e.datas.inputTarget = e.inputEvent && e.inputEvent.target;
+    },
     dragEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
         const target = moveable.state.target!;
         const inputEvent = e.inputEvent;
@@ -23,6 +25,7 @@ export default {
         if (
             !inputEvent || !inputTarget || e.isDrag
             || moveable.isMoveableElement(inputTarget)
+            // External event duplicate target or dragAreaElement
         ) {
             return;
         }
@@ -42,6 +45,8 @@ export default {
         if (
             !inputEvent || !inputTarget || e.isDrag
             || moveable.isMoveableElement(inputTarget)
+            // External event duplicate target or dragAreaElement
+            || e.datas.inputTarget === inputTarget
         ) {
             return;
         }

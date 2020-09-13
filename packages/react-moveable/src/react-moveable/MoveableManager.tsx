@@ -597,10 +597,10 @@ export default class MoveableManager<T = {}>
         if (isSetState) {
             this.setState(nextState);
         } else {
-            const state = this.state as any;
+            const state = this.state;
 
             for (const name in nextState) {
-                state[name] = nextState[name];
+                (state as any)[name] = nextState[name];
             }
         }
     }
