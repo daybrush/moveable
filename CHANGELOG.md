@@ -32,12 +32,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `clipVerticalGuidelines`, `clipHorizontalGuidelines`, `clipTargetBounds`, `clipSnapThreshold` props #292
 * Support target's string, React.RefObject type #275 #290
 
-
 ### Fixed
 * Support Tree Shaking #15
 * Change `Dragger` to `gesto`
 * Fix agent issue #310
 * resizable request is not worked #312
+
 
 ## [0.18.5] - 2020-07-17
 * `moveable` 0.18.5

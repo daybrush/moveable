@@ -835,7 +835,7 @@ export function checkSnapRotate(
     }
 }
 export function checkSnapSize(
-    moveable: MoveableManagerInterface<any, any>,
+    moveable: MoveableManagerInterface<{}, {}>,
     width: number,
     height: number,
     direction: number[],
@@ -847,14 +847,14 @@ export function checkSnapSize(
         return [0, 0];
     }
     const {
-        matrix,
+        allMatrix,
         is3d,
     } = moveable.state;
     return checkSizeDist(
         moveable,
         (widthOffset: number, heightOffset: number) => {
             return getNextFixedPoses(
-                matrix,
+                allMatrix,
                 width + widthOffset,
                 height + heightOffset,
                 fixedPos,
