@@ -582,7 +582,18 @@ export default {
             (["vertical", "horizontal"] as const).forEach(directionType => {
                 const info = snapBoundInfos[directionType];
                 const isHorizontal = directionType === "horizontal";
+                if (info.isSnap) {
+                    lines.push(...info.snap.posInfos.map(({ pos }, i) => {
+                        const snapPos1 = minus(caculatePosition(
+                            allMatrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
+                        const snapPos2 = minus(caculatePosition(
+                            allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
+                        return renderLine(
+                            React, "", snapPos1, snapPos2,
+                            `clip${directionType}snap${i}`, "guideline");
+                    }));
+                }
                 if (info.isBound) {
                     lines.push(...info.bounds.map(({ pos }, i) => {
                         const snapPos1 = minus(caculatePosition(
@@ -593,17 +604,6 @@ export default {
                         return renderLine(
                             React, "", snapPos1, snapPos2,
                             `clip${directionType}bounds${i}`, "guideline", "bounds", "bold");
-                    }));
-                } else if (info.isSnap) {
-                    lines.push(...info.snap.posInfos.map(({ pos }, i) => {
-                        const snapPos1 = minus(caculatePosition(
-                            allMatrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
-                        const snapPos2 = minus(caculatePosition(
-                            allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
-
-                        return renderLine(
-                            React, "", snapPos1, snapPos2,
-                            `clip${directionType}snap${i}`, "guideline");
                     }));
                 }
             });
@@ -707,7 +707,7 @@ export default {
                 distX * Math.abs(horizontal),
                 distY * Math.abs(vertical),
             ];
-            dists = moveControlPos(clipPoses, index, dist);
+            dists = moveControlPos(clipPoses, index, dist, clipType === "inset" || clipType === "rect");
         } else if (isAll) {
             dists = poses.map(() => [distX, distY]);
         }
@@ -741,12 +741,16 @@ export default {
 
         const guidelines = addGuidelines(
             [],
-            width!,
-            height!,
-            (props.clipHorizontalGuidelines || []).map(v => convertUnitSize(`${v}`, width)),
-            (props.clipVerticalGuidelines || []).map(v => convertUnitSize(`${v}`, height)),
+            width!, height!,
+            (props.clipHorizontalGuidelines || []).map(v => convertUnitSize(`${v}`, height)),
+            (props.clipVerticalGuidelines || []).map(v => convertUnitSize(`${v}`, width)),
         );
-
+        const guideXPoses = isCircle || isEllipse
+            ? [guidePoses[4][0], guidePoses[2][0]]
+            : guidePoses.filter((_, i) => dists[i][0]).map(pos => pos[0]);
+        const guideYPoses = isCircle || isEllipse
+            ? [guidePoses[1][1], guidePoses[3][1]]
+            : guidePoses.filter((_, i) => dists[i][1]).map(pos => pos[1]);
         for (let i = 0; i < 2; ++i) {
             const {
                 horizontal: horizontalSnapInfo,
@@ -754,8 +758,8 @@ export default {
             } = checkSnapBounds(
                 guidelines,
                 props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
-                isCircle || isEllipse ? [guidePoses[4][0], guidePoses[2][0]] : guidePoses.map(pos => pos[0]),
-                isCircle || isEllipse ? [guidePoses[1][1], guidePoses[3][1]] : guidePoses.map(pos => pos[1]),
+                guideXPoses,
+                guideYPoses,
                 {
                     snapThreshold: 5,
                 },

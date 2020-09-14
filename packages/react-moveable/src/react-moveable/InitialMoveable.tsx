@@ -3,14 +3,13 @@ import { Able, MoveableInterface, GroupableProps, MoveableDefaultProps } from ".
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
 import { ref, withMethods, prefixCSS } from "framework-utils";
-import { getKeys, IObject } from "@daybrush/utils";
+import { getKeys, IObject, isString } from "@daybrush/utils";
 import { MOVEABLE_METHODS, PREFIX, MOVEABLE_CSS } from "./consts";
 import Default from "./ables/Default";
 import Groupable from "./ables/Groupable";
 import DragArea from "./ables/DragArea";
 import styled from "react-css-styled";
 import { getRefTargets, getElementTargets } from "./utils";
-import { isString } from "util";
 
 export class InitialMoveable<T = {}>
     extends React.PureComponent<MoveableDefaultProps & GroupableProps & T> {

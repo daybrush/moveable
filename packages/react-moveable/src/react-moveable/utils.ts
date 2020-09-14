@@ -1205,12 +1205,42 @@ export function moveControlPos(
     controlPoses: ControlPose[],
     index: number,
     dist: number[],
+    isRect?: boolean,
 ) {
     const { direction, sub } = controlPoses[index];
     const dists = controlPoses.map(() => [0, 0]);
+    const directions = direction ? direction.split("") : [];
 
-    if (direction && !sub) {
-        direction.split("").forEach(dir => {
+    if (isRect && index < 8) {
+        const verticalDirection = directions.filter(dir => dir === "w" || dir === "e")[0];
+        const horizontalDirection = directions.filter(dir => dir === "n" || dir === "s")[0];
+
+        dists[index] = dist;
+        controlPoses.forEach((controlPose, i) => {
+            const {
+                direction: controlDir,
+            } = controlPose;
+
+            if (!controlDir) {
+                return;
+            }
+            if (controlDir.indexOf(verticalDirection) > -1) {
+                dists[i][0] = dist[0];
+            }
+            if (controlDir.indexOf(horizontalDirection) > -1) {
+                dists[i][1] = dist[1];
+            }
+        });
+        if (verticalDirection) {
+            dists[1][0] = dist[0] / 2;
+            dists[5][0] = dist[0] / 2;
+        }
+        if (horizontalDirection) {
+            dists[3][1] = dist[1] / 2;
+            dists[7][1] = dist[1] / 2;
+        }
+    } else if (direction && !sub) {
+        directions.forEach(dir => {
             const isVertical = dir === "n" || dir === "s";
 
             controlPoses.forEach((controlPose, i) => {

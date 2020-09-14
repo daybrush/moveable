@@ -20,7 +20,7 @@ import BeforeRenderable from "./BeforeRenderable";
 import Renderable from "./Renderable";
 import Clickable from "./Clickable";
 
-export const MOVEABLE_ABLES = [
+export const MOVEABLE_ABLES = /*#__PURE__*/[
     BeforeRenderable,
     Default, Snappable, Pinchable, Draggable, Rotatable,
     Resizable, Scalable, Warpable, Scrollable, Padding, Origin, OriginDraggable,
