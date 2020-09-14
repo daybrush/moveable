@@ -17,15 +17,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
-## [0.19.0] - 2020-09-14
-* `moveable` 0.19.0
-* `react-moveable` 0.22.0
-* `preact-moveable` 0.21.0
-* `ngx-moveable` 0.15.0
-* `svelte-moveable` 0.10.0
+## [0.19.1] - 2020-09-15
+* `moveable` 0.19.1
+* `react-moveable` 0.22.3
+* `preact-moveable` 0.21.3
+* `ngx-moveable` 0.15.1
+* `svelte-moveable` 0.10.1
 
 ### Added
-* Export `getElementMatrixStack` function (moveable, react-moveable)
+* Export `getElementInfo` function (moveable, react-moveable)
 * Add `translateZ` prop. #302
 * Support `click`, `clickGroup` event for no `dragArea` #309
 * Add `passDragArea` prop #309

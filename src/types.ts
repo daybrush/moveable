@@ -1,5 +1,4 @@
 import {
-    MoveableProps,
     MoveableEvents,
 } from "react-moveable/declaration/types";
 

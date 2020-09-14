@@ -215,7 +215,8 @@ function RenderClippable() {
             draggable={true}
             clippable={true}
             clipArea={true}
-            defaultClipPath={"circle"}
+            // defaultClipPath={"circle"}
+            defaultClipPath={"rect"}
             clipRelative={false}
             dragWithClip={false}
             clipTargetBounds={true}

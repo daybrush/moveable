@@ -6,7 +6,7 @@ import Moveable, {
   PROPERTIES, EVENTS, MoveableOptions, MoveableEventsParameters,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
-import { NgxMoveableEvents } from './types';
+import { NgxMoveableEvents, RequiredMoveableOptions } from './types';
 import { Able } from 'moveable';
 import { NgxMoveableInterface } from './ngx-moveable.interface';
 
@@ -18,12 +18,12 @@ import { NgxMoveableInterface } from './ngx-moveable.interface';
 })
 export class NgxMoveableComponent
   extends NgxMoveableInterface
-  implements OnDestroy, OnInit, OnChanges, Required<MoveableOptions>, NgxMoveableEvents {
-  @Input() public draggable!: Required<MoveableOptions>['draggable'];
-  @Input() public resizable!: Required<MoveableOptions>['resizable'];
-  @Input() public scalable!: Required<MoveableOptions>['scalable'];
-  @Input() public rotatable!: Required<MoveableOptions>['rotatable'];
-  @Input() public warpable!: Required<MoveableOptions>['warpable'];
+  implements OnDestroy, OnInit, OnChanges, RequiredMoveableOptions, NgxMoveableEvents {
+  @Input() public draggable!: RequiredMoveableOptions['draggable'];
+  @Input() public resizable!: RequiredMoveableOptions['resizable'];
+  @Input() public scalable!: RequiredMoveableOptions['scalable'];
+  @Input() public rotatable!: RequiredMoveableOptions['rotatable'];
+  @Input() public warpable!: RequiredMoveableOptions['warpable'];
   @Input() public pinchable!: boolean | Array<'rotatable' | 'resizable' | 'scalable'>;
   @Input() public snappable!: boolean | string[];
   @Input() public origin!: boolean;
@@ -52,43 +52,51 @@ export class NgxMoveableComponent
   @Input() public defaultGroupRotate!: number;
   @Input() public ables!: Able[];
 
+
+  @Input() public translateZ!: RequiredMoveableOptions['translateZ'];
+  @Input() public passDragArea!: RequiredMoveableOptions['passDragArea'];
+  @Input() public clipTargetBounds!: RequiredMoveableOptions['clipTargetBounds'];
+  @Input() public clipVerticalGuidelines!: RequiredMoveableOptions['clipVerticalGuidelines'];
+  @Input() public clipHorizontalGuidelines!: RequiredMoveableOptions['clipHorizontalGuidelines'];
+  @Input() public clipSnapThreshold!: RequiredMoveableOptions['clipSnapThreshold'];
+
   @Input() public className!: string;
   @Input() public renderDirections!: string[];
   @Input() public scrollable!: boolean;
   @Input() public scrollContainer!: HTMLElement;
   @Input() public scrollThreshold!: number;
-  @Input() public getScrollPosition!: Required<MoveableOptions>['getScrollPosition'];
+  @Input() public getScrollPosition!: RequiredMoveableOptions['getScrollPosition'];
 
-  @Input() public rootContainer!: Required<MoveableOptions>['rootContainer'];
-  @Input() public zoom!: Required<MoveableOptions>['zoom'];
-  @Input() public transformOrigin!: Required<MoveableOptions>['transformOrigin'];
-  @Input() public snapDigit!: Required<MoveableOptions>['snapDigit'];
-  @Input() public isDisplaySnapDigit!: Required<MoveableOptions>['isDisplaySnapDigit'];
-  @Input() public innerBounds!: Required<MoveableOptions>['innerBounds'];
+  @Input() public rootContainer!: RequiredMoveableOptions['rootContainer'];
+  @Input() public zoom!: RequiredMoveableOptions['zoom'];
+  @Input() public transformOrigin!: RequiredMoveableOptions['transformOrigin'];
+  @Input() public snapDigit!: RequiredMoveableOptions['snapDigit'];
+  @Input() public isDisplaySnapDigit!: RequiredMoveableOptions['isDisplaySnapDigit'];
+  @Input() public innerBounds!: RequiredMoveableOptions['innerBounds'];
 
-  @Input() public triggerAblesSimultaneously!: Required<MoveableOptions>['triggerAblesSimultaneously'];
-  @Input() public snapGap!: Required<MoveableOptions>['snapGap'];
+  @Input() public triggerAblesSimultaneously!: RequiredMoveableOptions['triggerAblesSimultaneously'];
+  @Input() public snapGap!: RequiredMoveableOptions['snapGap'];
 
-  @Input() public pinchOutside!: Required<MoveableOptions>['pinchOutside'];
-  @Input() public padding!: Required<MoveableOptions>['padding'];
-  @Input() public snapDistFormat!: Required<MoveableOptions>['snapDistFormat'];
-  @Input() public dragTarget!: Required<MoveableOptions>['dragTarget'];
+  @Input() public pinchOutside!: RequiredMoveableOptions['pinchOutside'];
+  @Input() public padding!: RequiredMoveableOptions['padding'];
+  @Input() public snapDistFormat!: RequiredMoveableOptions['snapDistFormat'];
+  @Input() public dragTarget!: RequiredMoveableOptions['dragTarget'];
 
-  @Input() public checkInput!: Required<MoveableOptions>['checkInput'];
-  @Input() public cspNonce!: Required<MoveableOptions>['cspNonce'];
-  @Input() public startDragRotate!: Required<MoveableOptions>['startDragRotate'];
-  @Input() public originDraggable!: Required<MoveableOptions>['originDraggable'];
-  @Input() public originRelative!: Required<MoveableOptions>['originRelative'];
-  @Input() public defaultGroupOrigin!: Required<MoveableOptions>['defaultGroupOrigin'];
-  @Input() public groupable!: Required<MoveableOptions>['groupable'];
-  @Input() public clippable!: Required<MoveableOptions>['clippable'];
-  @Input() public customClipPath!: Required<MoveableOptions>['customClipPath'];
-  @Input() public defaultClipPath!: Required<MoveableOptions>['defaultClipPath'];
-  @Input() public clipRelative!: Required<MoveableOptions>['clipRelative'];
-  @Input() public dragWithClip!: Required<MoveableOptions>['dragWithClip'];
-  @Input() public clipArea!: Required<MoveableOptions>['clipArea'];
-  @Input() public roundable!: Required<MoveableOptions>['roundable'];
-  @Input() public roundRelative!: Required<MoveableOptions>['roundRelative'];
+  @Input() public checkInput!: RequiredMoveableOptions['checkInput'];
+  @Input() public cspNonce!: RequiredMoveableOptions['cspNonce'];
+  @Input() public startDragRotate!: RequiredMoveableOptions['startDragRotate'];
+  @Input() public originDraggable!: RequiredMoveableOptions['originDraggable'];
+  @Input() public originRelative!: RequiredMoveableOptions['originRelative'];
+  @Input() public defaultGroupOrigin!: RequiredMoveableOptions['defaultGroupOrigin'];
+  @Input() public groupable!: RequiredMoveableOptions['groupable'];
+  @Input() public clippable!: RequiredMoveableOptions['clippable'];
+  @Input() public customClipPath!: RequiredMoveableOptions['customClipPath'];
+  @Input() public defaultClipPath!: RequiredMoveableOptions['defaultClipPath'];
+  @Input() public clipRelative!: RequiredMoveableOptions['clipRelative'];
+  @Input() public dragWithClip!: RequiredMoveableOptions['dragWithClip'];
+  @Input() public clipArea!: RequiredMoveableOptions['clipArea'];
+  @Input() public roundable!: RequiredMoveableOptions['roundable'];
+  @Input() public roundRelative!: RequiredMoveableOptions['roundRelative'];
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;
@@ -156,6 +164,13 @@ export class NgxMoveableComponent
   @Output() public dragOrigin!: EventEmitter<MoveableEventsParameters['dragOrigin']>;
   @Output() public dragOriginEnd!: EventEmitter<MoveableEventsParameters['dragOriginEnd']>;
 
+  @Output() public beforeRenderStart!: EventEmitter<MoveableEventsParameters['beforeRenderStart']>;
+  @Output() public beforeRender!: EventEmitter<MoveableEventsParameters['beforeRender']>;
+  @Output() public beforeRenderEnd!: EventEmitter<MoveableEventsParameters['beforeRenderEnd']>;
+  @Output() public beforeRenderGroupStart!: EventEmitter<MoveableEventsParameters['beforeRenderGroupStart']>;
+  @Output() public beforeRenderGroup!: EventEmitter<MoveableEventsParameters['beforeRenderGroup']>;
+  @Output() public beforeRenderGroupEnd!: EventEmitter<MoveableEventsParameters['beforeRenderGroupEnd']>;
+
 
   constructor() {
     super();
@@ -164,6 +179,7 @@ export class NgxMoveableComponent
       this[name] = new EventEmitter<unknown>();
     });
   }
+
 
   ngOnInit(): void {
     const options: MoveableOptions = {};
