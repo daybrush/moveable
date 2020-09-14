@@ -699,15 +699,16 @@ export default {
             distY = -distY;
         }
         const isAll = !isControl || clipPoses[index].direction === "nesw";
-
+        const isRect = clipType === "inset" || clipType === "rect";
         let dists = clipPoses.map(() => [0, 0]);
+
         if (isControl && !isAll) {
             const { horizontal, vertical } = clipPoses[index];
             const dist = [
                 distX * Math.abs(horizontal),
                 distY * Math.abs(vertical),
             ];
-            dists = moveControlPos(clipPoses, index, dist, clipType === "inset" || clipType === "rect");
+            dists = moveControlPos(clipPoses, index, dist, isRect);
         } else if (isAll) {
             dists = poses.map(() => [distX, distY]);
         }
@@ -745,12 +746,22 @@ export default {
             (props.clipHorizontalGuidelines || []).map(v => convertUnitSize(`${v}`, height)),
             (props.clipVerticalGuidelines || []).map(v => convertUnitSize(`${v}`, width)),
         );
-        const guideXPoses = isCircle || isEllipse
-            ? [guidePoses[4][0], guidePoses[2][0]]
-            : guidePoses.filter((_, i) => dists[i][0]).map(pos => pos[0]);
-        const guideYPoses = isCircle || isEllipse
-            ? [guidePoses[1][1], guidePoses[3][1]]
-            : guidePoses.filter((_, i) => dists[i][1]).map(pos => pos[1]);
+        let guideXPoses: number[] = [];
+        let guideYPoses: number[] = [];
+
+        if (isCircle || isEllipse) {
+            guideXPoses = [guidePoses[4][0], guidePoses[2][0]];
+            guideYPoses = [guidePoses[1][1], guidePoses[3][1]];
+        } else if (isRect) {
+            const rectPoses = [guidePoses[0], guidePoses[2], guidePoses[4], guidePoses[6]];
+            const rectDists = [dists[0], dists[2], dists[4], dists[6]];
+
+            guideXPoses = rectPoses.filter((_, i) => rectDists[i][0]).map(pos => pos[0]);
+            guideYPoses = rectPoses.filter((_, i) => rectDists[i][1]).map(pos => pos[1]);
+        } else {
+            guideXPoses = guidePoses.filter((_, i) => dists[i][0]).map(pos => pos[0]);
+            guideYPoses = guidePoses.filter((_, i) => dists[i][1]).map(pos => pos[1]);
+        }
         for (let i = 0; i < 2; ++i) {
             const {
                 horizontal: horizontalSnapInfo,
@@ -808,11 +819,24 @@ export default {
         const clipStyle = `${clipType}(${nextClipStyles.join(splitter)})`;
 
         state.clipPathState = clipStyle;
+
+        if (isCircle || isEllipse) {
+            guideXPoses = [guidePoses[4][0], guidePoses[2][0]];
+            guideYPoses = [guidePoses[1][1], guidePoses[3][1]];
+        } else if (isRect) {
+            const rectPoses = [guidePoses[0], guidePoses[2], guidePoses[4], guidePoses[6]];
+
+            guideXPoses = rectPoses.map(pos => pos[0]);
+            guideYPoses = rectPoses.map(pos => pos[1]);
+        } else {
+            guideXPoses = guidePoses.map(pos => pos[0]);
+            guideYPoses = guidePoses.map(pos => pos[1]);
+        }
         state.snapBoundInfos = checkSnapBounds(
             guidelines,
             props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
-            isCircle || isEllipse ? [guidePoses[4][0], guidePoses[2][0]] : guidePoses.map(pos => pos[0]),
-            isCircle || isEllipse ? [guidePoses[1][1], guidePoses[3][1]] : guidePoses.map(pos => pos[1]),
+            guideXPoses,
+            guideYPoses,
             {
                 snapThreshold: 1,
             },
