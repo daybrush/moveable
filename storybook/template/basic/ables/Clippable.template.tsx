@@ -47,7 +47,14 @@ export default function ClippableApp(props: any) {
     </div>);
 }
 
-export const CLIPPABLE_PROPS = [...DRAGGABLE_PROPS, "clippable", "clipRelative", "clipArea", "dragArea", "dragWithClip", "defaultClipPath", "zoom", "origin", "padding"];
+export const CLIPPABLE_PROPS = [
+    ...DRAGGABLE_PROPS,
+    "clippable", "clipRelative", "clipArea", "dragArea", "dragWithClip", "defaultClipPath", "zoom", "origin", "padding",
+    "clipTargetBounds",
+    "clipVerticalGuidelines",
+    "clipHorizontalGuidelines",
+    "snapThreshold",
+];
 export const CLIPPABLE_FRAME = {
     translate: [0, 0],
     clipStyle: "inset",
@@ -76,4 +83,8 @@ export const CLIPPABLE_PROPS_TEMPLATE = () => ({
     zoom: number("zoom", 1),
     origin: boolean("origin", true),
     padding: object("padding", { left: 0, top: 0, right: 0, bottom: 0 }),
+    clipTargetBounds: boolean("clipTargetBounds", false),
+    clipVerticalGuidelines: object("clipVerticalGuidelines", []),
+    clipHorizontalGuidelines: object("clipHorizontalGuidelines", []),
+    snapThreshold: number("snapThreshold", 5),
 });
