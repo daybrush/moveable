@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
-## [0.19.2] - 2020-09-15
+## [0.19.2] - 2020-09-16
 * `moveable` 0.19.2
 * `react-moveable` 0.22.5
 * `preact-moveable` 0.21.4
