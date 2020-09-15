@@ -317,10 +317,10 @@ export default class MoveableManager<T = {}>
         }
 
         if (target && hasTargetAble && !this.targetGesto) {
-            this.targetGesto = getTargetAbleGesto<any>(this, target!, "");
+            this.targetGesto = getTargetAbleGesto(this, target!, "");
         }
         if (!this.controlGesto && hasControlAble) {
-            this.controlGesto = getAbleGesto<any>(this, controlBoxElement, "controlAbles", "Control");
+            this.controlGesto = getAbleGesto(this, controlBoxElement, "controlAbles", "Control");
         }
         if (isUnset) {
             this.unsetAbles();

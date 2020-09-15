@@ -74,6 +74,7 @@ export default {
             gesto,
         } = state;
 
+        console.log("has", gesto);
         if (gesto) {
             return false;
         }

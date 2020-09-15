@@ -5,8 +5,8 @@ import Gesto from "gesto";
 import BeforeRenderable from "../ables/BeforeRenderable";
 import Renderable from "../ables/Renderable";
 
-export function triggerAble<T extends IObject<any>>(
-    moveable: MoveableManagerInterface<any, any>,
+export function triggerAble(
+    moveable: MoveableManagerInterface,
     ableType: string,
     eventOperation: string,
     eventAffix: string,
@@ -68,7 +68,6 @@ export function triggerAble<T extends IObject<any>>(
     if (isEnd && inputEvent) {
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
-
     const results = events.filter((able: any) => {
         const hasCondition = isStart && able[conditionName];
         const ableName = able.name;
@@ -79,11 +78,12 @@ export function triggerAble<T extends IObject<any>>(
         }
         return false;
     });
+
     const isUpdate = results.length;
     const isForceEnd = isStart && events.length && !isUpdate;
 
     if (isEnd || isForceEnd) {
-        moveable.state.Gesto = null;
+        moveable.state.gesto = null;
 
         if ((moveable as MoveableGroupInterface).moveables) {
             (moveable as MoveableGroupInterface).moveables.forEach(childMoveable => {
@@ -113,8 +113,8 @@ export function triggerAble<T extends IObject<any>>(
     return true;
 }
 
-export function getTargetAbleGesto<T>(
-    moveable: MoveableManagerInterface<T>,
+export function getTargetAbleGesto(
+    moveable: MoveableManagerInterface,
     moveableTarget: HTMLElement | SVGElement,
     eventAffix: string,
 ) {
@@ -142,8 +142,8 @@ export function getTargetAbleGesto<T>(
         pinchStart: startFunc,
     });
 }
-export function getAbleGesto<T>(
-    moveable: MoveableManagerInterface<T>,
+export function getAbleGesto(
+    moveable: MoveableManagerInterface,
     target: HTMLElement | SVGElement | Array<HTMLElement | SVGElement>,
     ableType: string,
     eventAffix: string,

@@ -17,6 +17,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+
+## [0.19.2] - 2020-09-15
+* `moveable` 0.19.2
+* `react-moveable` 0.22.5
+* `preact-moveable` 0.21.4
+* `ngx-moveable` 0.15.2
+* `svelte-moveable` 0.10.2
+
+### Fixed
+* Fix dragging a control and dragging does not occur on the target
+
 ## [0.19.1] - 2020-09-15
 * `moveable` 0.19.1
 * `react-moveable` 0.22.3
