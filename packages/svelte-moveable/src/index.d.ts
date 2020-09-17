@@ -1,27 +1,12 @@
-import { MoveableInterface } from "moveable";
+import { SvelteComponentDev } from "svelte/internal";
+import Moveable, { MoveableInterface, MoveableOptions } from "moveable";
 
-
-interface ComponentOptions {
-    target: HTMLElement;
-    anchor?: HTMLElement | null;
-    props?: {};
-    hydrate?: boolean;
-    intro?: boolean;
+export default class MoveableComponent<T={}> extends SvelteComponentDev {
+    $$prop_def: MoveableOptions & T;
+    getInstance(): Moveable;
+}
+export default interface MoveableComponent extends MoveableInterface {
 }
 
-interface MoveableComponent extends MoveableInterface {
-    new(options: ComponentOptions): any;
-    // client-side methods
-    $set(props: {}): void;
-    $on(event: string, callback: (event: CustomEvent) => void): void;
-    $destroy(): void;
-    // server-side methods
-    render(props?: {}): {
-        html: string;
-        css: { code: string; map: string | null };
-        head?: string;
-    };
-}
 
-export default MoveableComponent;
 export * from "moveable";
