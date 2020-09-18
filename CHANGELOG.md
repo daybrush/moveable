@@ -18,6 +18,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+## [0.19.3] - 2020-09-19
+* `moveable` 0.19.3
+* `react-moveable` 0.22.6
+* `preact-moveable` 0.21.5
+* `ngx-moveable` 0.15.3
+* `svelte-moveable` 0.10.4
+
+### Fixed
+* Fix svelte-moveable types #320
+* Fix rootContainer is not worked #318
+
 ## [0.19.2] - 2020-09-16
 * `moveable` 0.19.2
 * `react-moveable` 0.22.5
