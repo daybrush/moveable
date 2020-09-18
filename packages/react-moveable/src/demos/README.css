@@ -8,6 +8,10 @@
     top: 40px;
     margin: 20px;
 }
+
+.root {
+    transform: scale(0.7);
+}
 .box {
     position: absolute;
     width: 120px;

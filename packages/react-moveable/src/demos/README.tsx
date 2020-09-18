@@ -33,6 +33,38 @@ function RenderDraggable() {
         ></Moveable>
     </div>;
 }
+
+function RenderRootDraggable() {
+    const ref = React.useRef<HTMLDivElement>(null);
+    return <div className="container root_draggable root">
+        <p>Draggable Root Container</p>
+        <div className="box" ref={ref} style={{
+            transform: "translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)",
+        }}><span>A</span></div>
+        <Moveable
+            target={ref}
+            draggable={true}
+            origin={true}
+            rootContainer={document.body}
+            onDragStart={e => {
+                e.setTransform("translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)", 2);
+            }}
+            onDrag={e => {
+                console.log(e.transform);
+                e.target.style.transform = e.transform;
+            }}
+            onRenderStart={e => {
+                console.log(e);
+            }}
+            onRender={e => {
+                console.log(e);
+            }}
+            onRenderEnd={e => {
+                console.log(e);
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderResizableRequest() {
     const ref = React.useRef<Moveable>(null);
     const [frame] = React.useState(() => ({
@@ -442,6 +474,53 @@ function RenderDragGroup() {
         ></Moveable>
     </div>;
 }
+function RenderDragRootGroup() {
+    const frames = [
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+        { translate: [0, 0], scale: [1, 1] },
+    ];
+
+    return <div className="container draggroup_root root group">
+        <p>Drag Root Group</p>
+        <div className="box box1"><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3"><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            ref={e => {
+                (window as any).aaa = e;
+            }}
+            target={".draggroup_root .box"}
+            rootContainer={document.body}
+            origin={false}
+            draggable={true}
+            onBeforeRenderGroupStart={e => {
+                e.events.forEach((ev, i) => {
+                    const translate = frames[i].translate;
+                    ev.setTransform(`translate(${translate[0]}px, ${translate[1]}px)`);
+                });
+            }}
+            onDragGroupStart={e => {
+                // e.events.forEach((ev, i) => {
+                //     ev.set(frames[i].translate);
+                // });
+                e.events.forEach((ev, i) => {
+                    ev.setTransformIndex(0);
+                });
+            }}
+            onDragGroup={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    frames[i].translate = ev.beforeTranslate;
+
+                    ev.target.style.transform = ev.transform;
+                });
+            }}
+        ></Moveable>
+    </div>;
+}
 function RenderScaleGroup() {
     const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
     const frames = [
@@ -744,6 +823,7 @@ function RenderSVGOriginDraggable() {
 export default function App() {
     return <div>
         <RenderDraggable />
+        <RenderRootDraggable />
         <RenderResizableRequest />
         <RenderClickable />
         <RenderGroupClickable />
@@ -757,6 +837,7 @@ export default function App() {
         <RenderBounds />
         <RenderInnerBounds />
         <RenderDragGroup />
+        <RenderDragRootGroup />
         <RenderScaleGroup />
         <RenderRotateGroup />
         <RenderResizeGroup />

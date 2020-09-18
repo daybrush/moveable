@@ -6,7 +6,6 @@
     position: relative;
     /* transform: scale(0.75); */
 }
-
 .App * {
     position: relative;
     transform-origin: 50% 50%;
