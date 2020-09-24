@@ -46,7 +46,7 @@ export default function ResizableApp(props: any) {
 }
 
 export const RESIZABLE_PROPS = [
-    "reiszable", "keepRatio", "throttleResize",
+    "resizable", "keepRatio", "throttleResize",
     "renderDirections", "edge", "zoom", "origin", "padding",
 ];
 export const RESIZABLE_FRAME = {
