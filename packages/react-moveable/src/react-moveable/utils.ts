@@ -1304,11 +1304,19 @@ export function getTransform(transforms: string[], index: number) {
     const targetFunctions = parse([targetFunctionText]);
     const afterFunctions = parse(afterFunctionTexts);
 
+    const beforeFunctionMatrix = toMat(beforeFunctions);
+    const afterFunctionMatrix = toMat(afterFunctions);
+    const allFunctionMatrix = multiply(
+        beforeFunctionMatrix,
+        afterFunctionMatrix,
+        4,
+    );
     return {
         transforms,
-        beforeFunctionMatrix: toMat(beforeFunctions),
+        beforeFunctionMatrix,
         targetFunctionMatrix: toMat(targetFunctions),
-        afterFunctionMatrix: toMat(afterFunctions),
+        afterFunctionMatrix,
+        allFunctionMatrix,
         beforeFunctions,
         targetFunction: targetFunctions[0],
         afterFunctions,

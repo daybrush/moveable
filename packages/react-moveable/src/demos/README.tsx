@@ -75,7 +75,7 @@ function RenderResizableRequest() {
         <p>Resize Request</p>
         <div className="box box1"><span>A</span></div>
         <button onClick={() => {
-             ref.current!.request("resizable", {
+            ref.current!.request("resizable", {
                 offsetWidth: 300,
                 offsetHeight: 300,
                 isInstant: true,
@@ -642,10 +642,10 @@ function RenderResizeGroup() {
 function RenderRotateGroup() {
     const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
     const frames = [
-        { translate: [0, 0], rotate: 0 },
-        { translate: [0, 0], rotate: 0 },
-        { translate: [0, 0], rotate: 0 },
-        { translate: [0, 0], rotate: 0 },
+        { translate: [0, 0], rotate: 0, scale: [-1, 1] },
+        { translate: [0, 0], rotate: 0, scale: [1, 1] },
+        { translate: [0, 0], rotate: 0, scale: [-1, 1] },
+        { translate: [0, 0], rotate: 0, scale: [1, 1] },
     ];
 
     const ref = React.useRef<Moveable>(null);
@@ -665,9 +665,9 @@ function RenderRotateGroup() {
 
     return <div className="container rotategroup group">
         <p>Rotate Group</p>
-        <div className="box box1"><span>A</span></div>
+        <div className="box box1" style={{ transform: "scale(-1, 1)" }}><span>A</span></div>
         <div className="box box2"><span>B</span></div>
-        <div className="box box3"><span>C</span></div>
+        <div className="box box3" style={{ transform: "scale(-1, 1)" }}><span>C</span></div>
         <div className="box box4"><span>D</span></div>
         <Moveable
             ref={ref}
@@ -680,6 +680,7 @@ function RenderRotateGroup() {
                     ev.setTransform([
                         `rotate(${frames[i].rotate}deg)`,
                         `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`,
+                        `scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`,
                     ]);
                 });
             }}
@@ -704,18 +705,21 @@ function RenderRotateGroup() {
 
                     ev.target.style.transform
                         = ` rotate(${frames[i].rotate}deg)`
-                        + `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`;
+                        + `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                        + `scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`;
 
                 });
             }}
             onRotateGroup={e => {
+                console.log(e.events.map(ev => ev.beforeRotate), e.events.map(ev => ev.rotate));
                 const { events } = e;
                 events.forEach((ev, i) => {
                     frames[i].translate = ev.drag.translate;
                     frames[i].rotate = ev.rotate;
                     ev.target.style.transform
                         = ` rotate(${frames[i].rotate}deg)`
-                        + `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`;
+                        + `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                        + `scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`;
 
                     // frames[i].translate = ev.drag.beforeTranslate;
                     // frames[i].rotate = ev.beforeRotate;
@@ -820,6 +824,121 @@ function RenderSVGOriginDraggable() {
     </div>;
 }
 
+function RenderTRSGroup() {
+    const [target, setTarget] = React.useState<Array<HTMLElement | SVGElement>>();
+    const frames = [
+        { translate: [0, 0], rotate: 0, scale: [-1, 1] },
+        { translate: [0, 0], rotate: 0, scale: [1, 1] },
+        { translate: [0, 0], rotate: 0, scale: [-1, 1] },
+        { translate: [0, 0], rotate: 0, scale: [1, 1] },
+    ];
+
+    const ref = React.useRef<Moveable>(null);
+    React.useEffect(() => {
+        setTarget([].slice.call(document.querySelectorAll<HTMLElement | SVGElement>(".trsgroup .box")!));
+
+        // setTimeout(() => {
+        //     const scaleRequester = ref.current!.request("scalable");
+        //     scaleRequester.request({
+        //         direction: [1, 1],
+        //         deltaWidth: -100,
+        //         deltaHeight: -100,
+        //     });
+        //     scaleRequester.requestEnd();
+        // }, 1000);
+    }, []);
+
+    return <div className="container trsgroup group">
+        <p>T & R & S  Group</p>
+        <div className="box box1" style={{ transform: "scale(-1, 1)" }}><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3" style={{ transform: "scale(-1, 1)" }}><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            ref={ref}
+            target={target}
+            origin={false}
+            draggable={true}
+            scalable={true}
+            rotatable={true}
+            onBeforeRenderGroupStart={e => {
+                e.events.forEach((ev, i) => {
+                    ev.setTransform([
+                        `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`,
+                        `rotate(${frames[i].rotate}deg)`,
+                        `scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`,
+                    ]);
+                });
+            }}
+            onRotateGroupStart={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    ev.setTransformIndex(1);
+                    ev.dragStart && ev.dragStart.setTransformIndex(0);
+
+                    // ev.set(frames[i].rotate);
+                    // ev.dragStart && ev.dragStart.set(frames[i].translate);
+                });
+            }}
+            onDragGroupStart={e => {
+                e.events.forEach((ev, i) => {
+                    ev.setTransformIndex(0);
+                });
+            }}
+            onDragGroup={e => {
+                e.events.forEach((ev, i) => {
+                    frames[i].translate = ev.translate;
+
+                    ev.target.style.transform
+                        = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                        + ` rotate(${frames[i].rotate}deg)`
+                        + `scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`;
+
+                });
+            }}
+            onRotateGroup={e => {
+                console.log(e.events.map(ev => ev.beforeRotate), e.events.map(ev => ev.rotate));
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    frames[i].translate = ev.drag.translate;
+                    frames[i].rotate = ev.rotate;
+                    ev.target.style.transform
+                        = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                        + ` rotate(${frames[i].rotate}deg)`
+                        + `scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`;
+
+                    // frames[i].translate = ev.drag.beforeTranslate;
+                    // frames[i].rotate = ev.beforeRotate;
+
+                    // ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                    //     // + ` rotate(${frames[i].rotate}deg)`
+                    //     + ` rotate(${frames[i].rotate}deg)`;
+                });
+            }}
+            onScaleGroupStart={e => {
+                e.events.forEach((ev, i) => {
+                    ev.setTransformIndex(2);
+                    ev.dragStart && ev.dragStart.setTransformIndex(0);
+
+                    // ev.set(frames[i].rotate);
+                    // ev.dragStart && ev.dragStart.set(frames[i].translate);
+                });
+            }}
+            onScaleGroup={e => {
+                const { events } = e;
+                events.forEach((ev, i) => {
+                    frames[i].translate = ev.drag.beforeTranslate;
+                    frames[i].scale = ev.scale;
+
+                    ev.target.style.transform
+                        = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`
+                        + ` rotate(${frames[i].rotate}deg)`
+                        + ` scale(${frames[i].scale[0]}, ${frames[i].scale[1]})`;
+                });
+            }}
+        ></Moveable>
+    </div>;
+}
 export default function App() {
     return <div>
         <RenderDraggable />
@@ -841,6 +960,7 @@ export default function App() {
         <RenderScaleGroup />
         <RenderRotateGroup />
         <RenderResizeGroup />
+        <RenderTRSGroup />
         <RenderPSpan />
         <RenderSVGOriginDraggable />
     </div>;

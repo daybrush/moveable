@@ -5,7 +5,7 @@ import {
 } from "../matrix";
 import {
     caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
-    caculatePosition, caculateInversePosition, getTransform
+    caculatePosition, caculateInversePosition, getTransform, caculateMoveablePosition
 } from "../utils";
 import { splitUnit, isArray, splitSpace } from "@daybrush/utils";
 import {
@@ -58,6 +58,9 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
     datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
     datas.startDragDist = caculate(datas.inverseMatrix, datas.absoluteOrigin, n);
 }
+export function getTransformDirection(e: any) {
+    return caculateMoveablePosition(e.datas.beforeTransform, [50, 50], 100, 100).direction;
+}
 export function resolveTransformEvent(event: any, functionName: string) {
     const {
         datas,
@@ -76,15 +79,12 @@ export function resolveTransformEvent(event: any, functionName: string) {
     const targetFunction = result.targetFunction;
     const matFunctionName = functionName === "rotate" ? "rotateZ" : functionName;
 
-    datas.targetAllTransform = multiply(
-        result.beforeFunctionMatrix as number[],
-        result.afterFunctionMatrix as number[],
-        4);
     datas.beforeFunctionTexts = result.beforeFunctionTexts;
     datas.afterFunctionTexts = result.afterFunctionTexts;
     datas.beforeTransform = result.beforeFunctionMatrix;
     datas.targetTansform = result.targetFunctionMatrix;
     datas.afterTransform = result.afterFunctionMatrix;
+    datas.targetAllTransform = result.allFunctionMatrix;
 
     if (targetFunction.functionName === matFunctionName) {
         datas.afterFunctionTexts.splice(0, 1);

@@ -162,7 +162,7 @@ export function getAbleGesto(
 
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
-            gesto.on(`${eventOperation}${eventType}`, e => {
+            gesto.on(`${eventOperation}${eventType}` as any, e => {
                 const eventName = e.eventType;
 
                 if (conditionFunctions[eventName] && !conditionFunctions[eventName](e)) {

@@ -23,6 +23,7 @@ import {
     fillTransformEvent,
     setDefaultTransformIndex,
     resolveTransformEvent,
+    getTransformDirection,
 } from "../gesto/GestoUtils";
 
 /**
@@ -311,7 +312,6 @@ export default {
     ) {
         const { datas, clientX, clientY, parentRotate, parentFlag, isPinch, groupDelta } = e;
         const {
-            direction,
             beforeDirection,
             beforeInfo,
             afterInfo,
@@ -326,6 +326,8 @@ export default {
 
         resolveTransformEvent(e, "rotate");
 
+        const targetDirection = getTransformDirection(e);
+        const direction = beforeDirection * targetDirection;
         const {
             throttleRotate = 0,
             parentMoveable,
@@ -346,13 +348,13 @@ export default {
             [delta, dist, rotate]
                 = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startDeg);
             [beforeDelta, beforeDist, beforeRotate]
-                = getParentDeg(moveable, rect, beforeInfo, parentDist, direction, startDeg);
+                = getParentDeg(moveable, rect, beforeInfo, parentDist, beforeDirection, startDeg);
 
         } else if (isPinch || parentFlag) {
             [delta, dist, rotate]
                 = getDeg(moveable, rect, afterInfo, parentRotate, direction, startDeg, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate]
-                = getDeg(moveable, rect, beforeInfo, parentRotate, direction, startDeg, throttleRotate);
+                = getDeg(moveable, rect, beforeInfo, parentRotate, beforeDirection, startDeg, throttleRotate);
         } else {
             [delta, dist, rotate]
                 = getRotateInfo(moveable, rect, afterInfo, direction, clientX, clientY, startDeg, throttleRotate);
@@ -366,7 +368,8 @@ export default {
         }
 
         const nextTransform = convertTransformFormat(
-            datas, `rotate(${rotate}deg)`, `rotate(${dist}deg)`);
+            datas, `rotate(${rotate}deg)`, `rotate(${dist}deg)`,
+        );
 
         const inverseDist = getRotateDist(moveable, dist, datas.fixedPosition, datas);
         const inverseDelta = minus(
