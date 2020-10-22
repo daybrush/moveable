@@ -614,7 +614,7 @@ export default {
         ];
     },
     dragControlCondition(e: any) {
-        return e.inputEvent && (e.inputEvent.target.className || "").indexOf("clip") > -1;
+        return e.inputEvent && (e.inputEvent.target.getAttribute("class") || "").indexOf("clip") > -1;
     },
     dragStart(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
         const props = moveable.props;
@@ -639,7 +639,7 @@ export default {
         const { defaultClipPath, customClipPath } = moveable.props;
         const { target, width, height } = state;
         const inputTarget = e.inputEvent ? e.inputEvent.target : null;
-        const className = inputTarget ? inputTarget.className : "";
+        const className = inputTarget ? inputTarget.getAttribute("class") : "";
         const datas = e.datas;
         const clipPath = getClipPath(target!, width, height, defaultClipPath || "inset", customClipPath);
 

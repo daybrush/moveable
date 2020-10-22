@@ -1,5 +1,5 @@
 import { Able, MoveableManagerInterface, MoveableGroupInterface } from "../types";
-import { IObject } from "@daybrush/utils";
+import { hasClass, IObject } from "@daybrush/utils";
 import { convertDragDist } from "../utils";
 import Gesto from "gesto";
 import BeforeRenderable from "../ables/BeforeRenderable";
@@ -133,8 +133,8 @@ export function getTargetAbleGesto(
 
         return eventTarget === areaElement
             || !moveable.isMoveableElement(eventTarget)
-            || eventTarget.className.indexOf("moveable-area") > -1
-            || eventTarget.className.indexOf("moveable-padding") > -1;
+            || hasClass(eventTarget, "moveable-area")
+            || hasClass(eventTarget, "moveable-padding");
     };
 
     return getAbleGesto(moveable, targets, "targetAbles", eventAffix, {

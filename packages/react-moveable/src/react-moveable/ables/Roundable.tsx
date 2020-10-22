@@ -204,7 +204,7 @@ export default {
         if (!e.inputEvent || e.isRequest) {
             return false;
         }
-        const className = (e.inputEvent.target.className || "");
+        const className = (e.inputEvent.target.getAttribute("class") || "");
 
         return className.indexOf("border-radius") > -1
             || (className.indexOf("moveable-line") > -1 && className.indexOf("moveable-direction") > -1);
@@ -212,7 +212,7 @@ export default {
     dragControlStart(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, e: any) {
         const { inputEvent, datas, } = e;
         const inputTarget = inputEvent.target;
-        const className = (inputTarget.className || "");
+        const className = (inputTarget.getAttribute("class") || "");
         const isControl = className.indexOf("border-radius") > -1;
         const isLine = className.indexOf("moveable-line") > -1 && className.indexOf("moveable-direction") > -1;
         const controlIndex = isControl ? parseInt(inputTarget.getAttribute("data-radius-index"), 10) : -1;
