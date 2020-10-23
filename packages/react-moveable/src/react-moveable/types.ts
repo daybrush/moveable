@@ -266,14 +266,14 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     pinchEnd?: (moveable: any, e: GestoTypes.OnPinchEnd) => any;
 
     // Condition that occurs dragControl
-    dragControlCondition?: (target: SVGElement | HTMLElement) => boolean;
+    dragControlCondition?: (e: any, moveable: any) => boolean;
     // Operates when a drag event occurs for the moveable control and single target.
     dragControlStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
     dragControl?: (moveable: any, e: GestoTypes.OnDrag) => any;
     dragControlEnd?: (moveable: any, e: GestoTypes.OnDragEnd) => any;
 
     // Condition that occurs dragGroup
-    dragGroupCondition?: (e: any) => boolean;
+    dragGroupCondition?: (e: any, moveable: any) => boolean;
     // Operates when a drag event occurs for the multi target.
     dragGroupStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
     dragGroup?: (moveable: any, e: GestoTypes.OnDrag) => any;
@@ -285,7 +285,7 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     pinchGroupEnd?: (moveable: any, e: GestoTypes.OnPinchEnd) => any;
 
     // Condition that occurs dragGroupControl
-    dragGroupControlCondition?: (e: any) => boolean;
+    dragGroupControlCondition?: (e: any, moveable: any) => boolean;
     // Operates when a drag event occurs for the moveable control and multi target.
     dragGroupControlStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
     dragGroupControl?: (moveable: any, e: GestoTypes.OnDragStart) => any;
@@ -1069,12 +1069,14 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
  * @property - throttle of x, y when drag. (default: 0)
  * @property - throttle of angle(degree) of x,y when drag. (default: 0)
  * @property - start angle(degree) of x,y for throttleDragRotate when drag. (default: 0)
+ * @property - Whether to move by dragging the edge line
  */
 export interface DraggableOptions {
     draggable?: boolean;
     throttleDrag?: number;
     throttleDragRotate?: number;
     startDragRotate?: number;
+    edgeDraggable?: boolean;
 }
 export interface DraggableEvents {
     onDragStart: OnDragStart;

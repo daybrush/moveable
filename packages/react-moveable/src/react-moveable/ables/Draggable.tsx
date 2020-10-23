@@ -11,7 +11,7 @@ import {
 } from "../types";
 import { triggerChildGesto } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
-import { IObject } from "@daybrush/utils";
+import { hasClass, IObject } from "@daybrush/utils";
 
 /**
  * @namespace Draggable
@@ -25,6 +25,7 @@ export default {
         throttleDrag: Number,
         throttleDragRotate: Number,
         startDragRotate: Number,
+        edgeDraggable: Boolean,
     } as const,
     events: {
         onDragStart: "dragStart",
@@ -301,6 +302,38 @@ export default {
 
         return isDrag;
     },
+    dragControlCondition(e: any, moveable: MoveableManagerInterface<DraggableProps>) {
+        if (!moveable.props.edgeDraggable || !e.inputEvent) {
+            return false;
+        }
+        const target = e.inputEvent.target;
+        return hasClass(target, prefix("direction")) && hasClass(target, prefix("line"));
+    },
+    dragControlStart(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
+        return this.dragStart(moveable, e);
+    },
+    dragControl(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
+        return this.drag(moveable, e);
+    },
+    dragControlEnd(moveable: MoveableManagerInterface<DraggableProps, any>, e: any) {
+        return this.dragEnd(moveable, e);
+    },
+    dragGroupControlCondition(e: any, moveable: MoveableGroupInterface<DraggableProps>) {
+        if (!moveable.props.edgeDraggable || !e.inputEvent) {
+            return false;
+        }
+        const target = e.inputEvent.target;
+        return hasClass(target, prefix("direction")) && hasClass(target, prefix("line"));
+    },
+    dragGroupControlStart(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
+        return this.dragGroupStart(moveable, e);
+    },
+    dragGroupControl(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
+        return this.dragGroup(moveable, e);
+    },
+    dragGroupControlEnd(moveable: MoveableGroupInterface<DraggableProps, any>, e: any) {
+        return this.dragGroupEnd(moveable, e);
+    },
     /**
      * @method Moveable.Draggable#request
      * @param {object} [e] - the draggable's request parameter
@@ -377,6 +410,19 @@ export default {
  * const moveable = new Moveable(document.body);
  *
  * moveable.draggable = true;
+ */
+/**
+ * Whether to move by dragging the edge line (default: false)
+ * @name Moveable.Draggable#draggable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *  draggable: true,
+ *  edgeDraggable: false,
+ * });
+ *
+ * moveable.edgeDraggable = true;
  */
 
 /**
