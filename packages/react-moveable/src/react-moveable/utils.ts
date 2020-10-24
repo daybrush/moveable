@@ -1,4 +1,4 @@
-import { PREFIX, IS_WEBKIT, TINY_NUM } from "./consts";
+import { PREFIX, IS_WEBKIT605, TINY_NUM } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString } from "@daybrush/utils";
 import {
@@ -60,12 +60,15 @@ export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[])
 export function measureSVGSize(el: SVGElement, unit: string, isHorizontal: boolean) {
     if (unit === "%") {
         const viewBox = getSVGViewBox(el.ownerSVGElement!);
+
         return viewBox[isHorizontal ? "width" : "height"] / 100;
     }
     return 1;
 }
 export function getBeforeTransformOrigin(el: SVGElement) {
     const relativeOrigin = getTransformOrigin(getComputedStyle(el, ":before"));
+
+    console.log(el, getComputedStyle(el).transformOrigin, getComputedStyle(el, ":before").transformOrigin);
 
     return relativeOrigin.map((o, i) => {
         const { value, unit } = splitUnit(o);
@@ -132,7 +135,7 @@ export function getOffsetPosInfo(
     let targetOrigin: number[];
     // inner svg element
     if (!hasOffset && tagName !== "svg") {
-        origin = IS_WEBKIT
+        origin = IS_WEBKIT605
             ? getBeforeTransformOrigin(el as SVGElement)
             : getTransformOrigin(style).map(pos => parseFloat(pos));
 
@@ -154,10 +157,30 @@ export function getOffsetPosInfo(
     return {
         isSVG,
         hasOffset,
-        offset: [offsetLeft, offsetTop],
+        offset: [offsetLeft || 0, offsetTop || 0],
         origin,
         targetOrigin,
     };
+}
+export function getBodyOffset(
+    el: HTMLElement| SVGElement,
+    style: CSSStyleDeclaration = window.getComputedStyle(el),
+) {
+    const bodyStyle = window.getComputedStyle(document.body);
+
+    let marginLeft = parseInt(bodyStyle.marginLeft, 10);
+    let marginTop = parseInt(bodyStyle.marginTop, 10);
+
+    if (style.position === "absolute") {
+        if (style.top !== "auto" || style.bottom !== "auto") {
+            marginTop = 0;
+        }
+        if (style.left !== "auto" || style.right !== "auto") {
+            marginLeft = 0;
+        }
+    }
+
+    return [marginLeft, marginTop];
 }
 export function getMatrixStackInfo(
     target: SVGElement | HTMLElement,
@@ -229,7 +252,7 @@ export function getMatrixStackInfo(
             isStatic,
         } = getOffsetInfo(el, container);
 
-        if (IS_WEBKIT && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
+        if (IS_WEBKIT605 && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
             offsetLeft -= offsetParent.offsetLeft;
             offsetTop -= offsetParent.offsetTop;
             isEnd = isEnd || isOffsetEnd;
@@ -241,6 +264,11 @@ export function getMatrixStackInfo(
             // border
             parentClientLeft = offsetParent.clientLeft;
             parentClientTop = offsetParent.clientTop;
+        }
+        if (hasOffset && offsetParent === document.body) {
+            const margin = getBodyOffset(el, style);
+            offsetLeft += margin[0];
+            offsetTop += margin[1];
         }
         matrixes.push(
             // absolute matrix
@@ -614,9 +642,18 @@ export function getSVGOffset(
 
     const [width, height] = getSize(el, undefined, true);
     const containerClientRect = container.getBoundingClientRect();
+    let margin = [0, 0];
+
+    if (container === document.body) {
+        margin = getBodyOffset(el);
+    }
     const rect = el.getBoundingClientRect();
-    const rectLeft = rect.left - containerClientRect.left + container.scrollLeft - (container.clientLeft || 0);
-    const rectTop = rect.top - containerClientRect.top + container.scrollTop - (container.clientTop || 0);
+    const rectLeft
+        = rect.left - containerClientRect.left + container.scrollLeft
+        - (container.clientLeft || 0) + margin[0];
+    const rectTop
+        = rect.top - containerClientRect.top + container.scrollTop
+        - (container.clientTop || 0) + margin[1];
     const rectWidth = rect.width;
     const rectHeight = rect.height;
     const mat = multiplies(

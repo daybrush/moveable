@@ -835,7 +835,7 @@ function RenderSVGOriginDraggable() {
                 <path data-target="pathline" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
     c13,4.667,13.167,38.724,39.667,7.39" fill="transparent" stroke="#ff5" />
                 <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{ fill: "yellow", stroke: "purple", strokeWidth: 2 }} />
-                <text text-anchor="middle" x="40" y="40">HIHI</text>
+                <text text-anchor="middle" x="40" y="40" style={{ transformOrigin: "10% 10%" }}>HIHI</text>
             </g>
         </svg>
         <Moveable
@@ -870,9 +870,11 @@ function RenderSVGOriginDraggable() {
             onRender={e => {
                 const { translate, rotate } = frame;
 
-                e.target.style.transform
+                const transform
                     = `translate(${translate[0]}px, ${translate[1]}px)`
                     + ` rotate(${rotate}deg)`;
+                e.target.style.transform = transform;
+                e.target.setAttribute("transform", transform);
             }}
         ></Moveable>
     </div>;

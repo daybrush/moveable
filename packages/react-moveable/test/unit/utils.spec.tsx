@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import {
     getTransformMatrix, getAbsoluteMatrix,
     getSize, caculateMatrixStack,
-    throttle, throttleArray, isInside, caculateBoundSize,
+    throttle, throttleArray, isInside, caculateBoundSize, getElementInfo,
 } from "../../src/react-moveable/utils";
 import { getRad, multiply, invert, transpose, createWarpMatrix, caculate } from "../../src/react-moveable/matrix";
 import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCaculate } from "./TestHelper";
@@ -332,5 +332,33 @@ describe("test utils", () => {
         expect(size3).to.be.deep.equals([50, 50]);
         expect(size4).to.be.deep.equals([50, 50]);
         expect(size5).to.be.deep.equals([50, 125]);
+    });
+    it("test getElementInfo function", () => {
+        document.body.style.margin = "10px";
+        document.body.innerHTML = `<svg
+        class="svg4"
+        width="600"
+        height="600"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 600 600"
+        style="border: 1px solid #000000; position: relative;"
+        >
+     <text
+           ref="moveable"
+           class="moveable"
+           x="50"
+           y="50"
+           fill="#000000"
+           font-size="40px"
+           font-style="normal"
+           >
+       <tspan>Jon doe</tspan>
+     </text>
+   </svg>`;
+        // When
+        const info = getElementInfo(document.querySelector("svg")!, document.body);
+
+        expect(info.left).to.be.equals(10);
+        expect(info.top).to.be.equals(10);
     });
 });

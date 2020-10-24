@@ -24,7 +24,11 @@ function getCursorCSS(degree: number) {
 
 export const agent = getAgent();
 export const IS_WEBKIT = agent.browser.webkit;
+export const IS_WEBKIT605 = IS_WEBKIT && (() => {
+    const res = /applewebkit\/([^\s]+)/g.exec(navigator.userAgent.toLowerCase());
 
+    return res ? parseFloat(res[1]) < 605 : false;
+})();
 export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = `
 {
@@ -189,7 +193,7 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
     position: absolute;
 }
 
-${IS_WEBKIT ? `:global svg *:before {
+${IS_WEBKIT605 ? `:global svg *:before {
 	content:"";
 	transform-origin: inherit;
 }` : ""}
