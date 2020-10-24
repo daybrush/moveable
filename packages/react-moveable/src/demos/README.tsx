@@ -14,6 +14,9 @@ function RenderDraggable() {
             target={ref}
             draggable={true}
             origin={true}
+            edgeDraggable={true}
+            dragArea={true}
+            passDragArea={true}
             onDragStart={e => {
                 e.setTransform("translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)", 2);
             }}
@@ -29,6 +32,57 @@ function RenderDraggable() {
             }}
             onRenderEnd={e => {
                 console.log(e);
+            }}
+        ></Moveable>
+    </div>;
+}
+
+function RenderDraggableResizableRotatableSnappable() {
+    const ref = React.useRef<HTMLDivElement>(null);
+    const transformRef = React.useRef<string>("translate(10px, 10px) rotate(89deg) translate(10px, 10px)");
+    return <div className="container drrs">
+        DraggableResizableRotatableSnappable
+        <div className="box" ref={ref} style={{
+            transform: transformRef.current,
+        }}><span>A</span></div>
+        <Moveable
+            target={ref}
+            draggable={true}
+            resizable={true}
+            rotatable={true}
+            snappable={true}
+            verticalGuidelines={[0, 200, 400]}
+            horizontalGuidelines={[0, 200, 400]}
+            onBeforeRenderStart={e => {
+                e.setTransform(transformRef.current);
+            }}
+            onDragStart={e => {
+                e.setTransformIndex(0);
+            }}
+            onDrag={e => {
+                console.log("DDRRAAGG");
+                e.target.style.transform = e.transform;
+                transformRef.current = e.transform;
+            }}
+            onResizeStart={e => {
+                e.setOrigin(["50%", "50%"]);
+                e.dragStart && e.dragStart.setTransformIndex(0);
+            }}
+            onResize={e => {
+                e.target.style.width = `${e.width}px`;
+                e.target.style.height = `${e.height}px`;
+
+                e.target.style.transform = e.drag.transform;
+                transformRef.current = e.drag.transform;
+            }}
+            onRotateStart={e => {
+                e.setTransformIndex(1);
+                e.dragStart && e.dragStart.setTransformIndex(0);
+            }}
+            onRotate={e => {
+                console.log("RROOTTaATTEE");
+                e.target.style.transform = e.drag.transform;
+                transformRef.current = e.drag.transform;
             }}
         ></Moveable>
     </div>;
@@ -942,6 +996,7 @@ function RenderTRSGroup() {
 export default function App() {
     return <div>
         <RenderDraggable />
+        <RenderDraggableResizableRotatableSnappable />
         <RenderRootDraggable />
         <RenderResizableRequest />
         <RenderClickable />

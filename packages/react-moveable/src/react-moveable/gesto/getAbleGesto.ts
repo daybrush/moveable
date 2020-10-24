@@ -69,11 +69,14 @@ export function triggerAble(
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
     const results = events.filter((able: any) => {
-        const hasCondition = isStart && able[conditionName];
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
-        if (!hasCondition || able[conditionName](e, moveable)) {
+        if (isStart) {
+            nextDatas.isEventStart = !able[conditionName] || able[conditionName](e, moveable);
+        }
+
+        if (nextDatas.isEventStart) {
             return able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas, inputTarget });
         }
         return false;

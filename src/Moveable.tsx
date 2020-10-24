@@ -52,7 +52,7 @@ class Moveable extends EgComponent {
      */
     constructor(parentElement: HTMLElement | SVGElement, options: MoveableOptions = {}) {
         super();
-        const nextOptions = { container: parentElement, ...options };
+        const nextOptions = { container: parentElement || document.body, ...options };
 
         const events: any = {};
 

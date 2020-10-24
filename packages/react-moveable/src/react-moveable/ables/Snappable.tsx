@@ -262,7 +262,10 @@ export function checkSnapBoundsKeepRatio(
     startPos: number[],
     endPos: number[],
     isRequest: boolean,
-) {
+): {
+    horizontal: SnapBoundInfo,
+    vertical: SnapBoundInfo,
+} {
     const {
         horizontal: horizontalBoundInfo,
         vertical: verticalBoundInfo,
@@ -310,8 +313,8 @@ export function checkMoveableSnapBounds(
     poses: number[][],
     boundPoses: number[][] = poses,
 ): {
-    vertical: SnapBoundInfo,
-    horizontal: SnapBoundInfo,
+    vertical: Required<SnapBoundInfo>,
+    horizontal: Required<SnapBoundInfo>,
 } {
     const {
         horizontal: horizontalBoundInfos,
@@ -372,8 +375,8 @@ export function checkSnapBounds(
         snapElement?: boolean,
     } = {},
 ): {
-    vertical: SnapBoundInfo,
-    horizontal: SnapBoundInfo,
+    vertical: Required<SnapBoundInfo>,
+    horizontal: Required<SnapBoundInfo>,
 } {
     const {
         horizontal: horizontalBoundInfos,
@@ -505,6 +508,38 @@ export function checkMaxBounds(
         maxHeight,
     };
 }
+function checkSnapRightLine(
+    startPos: number[], endPos: number[],
+    snapBoundInfo: { vertical: SnapBoundInfo, horizontal: SnapBoundInfo },
+) {
+    const rad = getRad(startPos, endPos) / Math.PI * 180;
+    const {
+        vertical: {
+            isBound: isVerticalBound,
+            isSnap: isVerticalSnap,
+            dist: verticalDist,
+        },
+        horizontal: {
+            isBound: isHorizontalBound,
+            isSnap: isHorizontalSnap,
+            dist: horizontalDist,
+        },
+    } = snapBoundInfo;
+
+    const rad180 = rad % 180;
+    const isHorizontalLine = rad180 < 3 || rad180 > 177;
+    const isVerticalLine = rad180 > 87 && rad180 < 93;
+
+    if (horizontalDist < verticalDist) {
+        if (isVerticalBound || (isVerticalSnap && !isVerticalLine)) {
+            return "vertical";
+        }
+    }
+    if (isHorizontalBound || (isHorizontalSnap && !isHorizontalLine)) {
+        return "horizontal";
+    }
+    return "";
+}
 function getSnapBoundInfo(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     poses: number[][],
@@ -523,13 +558,13 @@ function getSnapBoundInfo(
 
         const {
             horizontal: {
-                dist: otherHorizontalDist,
+                // dist: otherHorizontalDist,
                 offset: otherHorizontalOffset,
                 isBound: isOtherHorizontalBound,
                 isSnap: isOtherHorizontalSnap,
             },
             vertical: {
-                dist: otherVerticalDist,
+                // dist: otherVerticalDist,
                 offset: otherVerticalOffset,
                 isBound: isOtherVerticalBound,
                 isSnap: isOtherVerticalSnap,
@@ -546,7 +581,18 @@ function getSnapBoundInfo(
                 offset: [0, 0],
             };
         }
-        const isVertical = otherHorizontalDist < otherVerticalDist;
+        const snapLine = checkSnapRightLine(otherStartPos, otherEndPos, snapBoundInfo);
+
+        if (!snapLine) {
+            return {
+                sign: multiple,
+                isBound: false,
+                isSnap: false,
+                offset: [0, 0],
+            };
+        }
+
+        const isVertical = snapLine === "vertical";
         const sizeOffset = solveNextOffset(
             otherStartPos,
             otherEndPos,

@@ -142,9 +142,9 @@ export interface SnapBoundInfo {
     isSnap: boolean;
     offset: number;
     dist: number;
-    snapIndex: number;
-    bounds: BoundInfo[];
-    snap: SnapInfo;
+    snapIndex?: number;
+    bounds?: BoundInfo[];
+    snap?: SnapInfo;
 }
 export interface BoundInfo {
     isBound: boolean;
@@ -1488,7 +1488,7 @@ export interface ClippableProps extends ClippableOptions, EventInterface<Clippab
 }
 export interface ClippableState {
     clipPathState?: string;
-    snapBoundInfos?: { vertical: SnapBoundInfo, horizontal: SnapBoundInfo } | null;
+    snapBoundInfos?: { vertical: Required<SnapBoundInfo>, horizontal: Required<SnapBoundInfo> } | null;
 }
 
 /**
