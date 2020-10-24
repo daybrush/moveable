@@ -11,7 +11,7 @@ import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCaculate } 
 describe("test utils", () => {
     beforeEach(() => {
         document.documentElement.style.cssText = "position: relative;height: 100%; width: 100%;";
-        document.body.style.cssText = "position: relative;height: 100%; width: 100%;";
+        document.body.style.cssText = "position: relative;height: 100%; width: 100%;margin: 0;";
         document.body.innerHTML = `<div class="container"></div>`;
     });
     afterEach(() => {
