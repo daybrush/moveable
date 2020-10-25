@@ -191,7 +191,9 @@ export default {
         if (!direction[0] && !direction[1]) {
             sizeDirection = [1, 1];
         }
-        const keepRatio = moveable.props.keepRatio || parentKeepRatio;
+        const keepRatio
+            = (startOffsetWidth !== 0 && startOffsetHeight !== 0)
+            && (moveable.props.keepRatio || parentKeepRatio);
         const isWidth = sizeDirection[0] || !sizeDirection[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
         const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
