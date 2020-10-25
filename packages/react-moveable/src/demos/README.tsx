@@ -39,10 +39,14 @@ function RenderDraggable() {
 
 function RenderDraggableResizableRotatableSnappable() {
     const ref = React.useRef<HTMLDivElement>(null);
-    const transformRef = React.useRef<string>("translate(10px, 10px) rotate(89deg) translate(10px, 10px)");
+    const transformRef = React.useRef<string>("translate(0px, 0px) rotate(89deg)");
     return <div className="container drrs">
         DraggableResizableRotatableSnappable
         <div className="box" ref={ref} style={{
+            left: "100px",
+            top: "100px",
+            marginLeft: 0,
+            marginTop: 0,
             transform: transformRef.current,
         }}><span>A</span></div>
         <Moveable
@@ -51,8 +55,10 @@ function RenderDraggableResizableRotatableSnappable() {
             resizable={true}
             rotatable={true}
             snappable={true}
-            verticalGuidelines={[0, 200, 400]}
-            horizontalGuidelines={[0, 200, 400]}
+            snapCenter={true}
+            verticalGuidelines={[0, 100, 200, 400]}
+            horizontalGuidelines={[0, 100, 200, 400]}
+            keepRatio={true}
             onBeforeRenderStart={e => {
                 e.setTransform(transformRef.current);
             }}

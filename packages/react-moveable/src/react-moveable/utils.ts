@@ -1,4 +1,4 @@
-import { PREFIX, IS_WEBKIT605, TINY_NUM } from "./consts";
+import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
 import { prefixNames } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString } from "@daybrush/utils";
 import {
@@ -252,7 +252,7 @@ export function getMatrixStackInfo(
             isStatic,
         } = getOffsetInfo(el, container);
 
-        if (IS_WEBKIT605 && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
+        if (IS_WEBKIT && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
             offsetLeft -= offsetParent.offsetLeft;
             offsetTop -= offsetParent.offsetTop;
             isEnd = isEnd || isOffsetEnd;
@@ -1210,35 +1210,6 @@ export function caculatePadding(
 ) {
     return minus(caculatePosition(matrix, plus(transformOrigin, pos), n), origin);
 }
-export function checkSize(targetSize: number[], compareSize: number[], isMax: boolean) {
-    return [
-        [compareSize[0], compareSize[0] * targetSize[1] / targetSize[0]],
-        [compareSize[1] * targetSize[0] / targetSize[1], compareSize[1]],
-    ].filter(size => size.every((value, i) => {
-        return isMax ? value <= compareSize[i] : value >= compareSize[i];
-    }))[0] || targetSize;
-}
-export function caculateBoundSize(
-    size: number[], minSize: number[],
-    maxSize: number[], keepRatio?: boolean,
-) {
-    if (!keepRatio) {
-        return size.map((value, i) => between(value, minSize[i], maxSize[i]));
-    }
-    let [width, height] = size;
-    // width : height = minWidth : minHeight;
-    const [minWidth, minHeight] = checkSize(size, minSize, false);
-    const [maxWidth, maxHeight] = checkSize(size, maxSize, true);
-
-    if (width < minWidth || height < minHeight) {
-        width = minWidth;
-        height = minHeight;
-    } else if (width > maxWidth || height > maxHeight) {
-        width = maxWidth;
-        height = maxHeight;
-    }
-    return [width, height];
-}
 
 export function convertCSSSize(value: number, size: number, isRelative?: boolean) {
     return isRelative ? `${value / size * 100}%` : `${value}px`;
@@ -1409,10 +1380,6 @@ export function getElementTargets(
     });
 
     return elementTargets;
-}
-
-export function between(value: number, min: number, max: number) {
-    return Math.max(min, Math.min(value, max));
 }
 
 export function minmax(...values: number[]) {

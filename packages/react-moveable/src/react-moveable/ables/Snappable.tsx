@@ -511,6 +511,7 @@ export function checkMaxBounds(
 function checkSnapRightLine(
     startPos: number[], endPos: number[],
     snapBoundInfo: { vertical: SnapBoundInfo, horizontal: SnapBoundInfo },
+    keepRatio: boolean,
 ) {
     const rad = getRad(startPos, endPos) / Math.PI * 180;
     const {
@@ -531,11 +532,11 @@ function checkSnapRightLine(
     const isVerticalLine = rad180 > 87 && rad180 < 93;
 
     if (horizontalDist < verticalDist) {
-        if (isVerticalBound || (isVerticalSnap && !isVerticalLine)) {
+        if (isVerticalBound || (isVerticalSnap && !isVerticalLine && (!keepRatio || !isHorizontalLine))) {
             return "vertical";
         }
     }
-    if (isHorizontalBound || (isHorizontalSnap && !isHorizontalLine)) {
+    if (isHorizontalBound || (isHorizontalSnap && !isHorizontalLine && (!keepRatio || !isVerticalLine))) {
         return "horizontal";
     }
     return "";
@@ -581,7 +582,7 @@ function getSnapBoundInfo(
                 offset: [0, 0],
             };
         }
-        const snapLine = checkSnapRightLine(otherStartPos, otherEndPos, snapBoundInfo);
+        const snapLine = checkSnapRightLine(otherStartPos, otherEndPos, snapBoundInfo, keepRatio);
 
         if (!snapLine) {
             return {
