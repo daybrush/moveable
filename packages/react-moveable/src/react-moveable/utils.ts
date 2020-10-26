@@ -327,6 +327,7 @@ export function cacaulateElementInfo(
     let height: number = 0;
     let rotation = 0;
     let allResult: {} = {};
+
     if (state) {
         width = state.width!;
         height = state.height!;
@@ -355,7 +356,10 @@ export function cacaulateElementInfo(
             ...result,
             ...position,
         };
-        rotation = getRotationRad([position.pos1, position.pos2], position.direction);
+        const rotationPosition = caculateMoveablePosition(
+            result.allMatrix, [50, 50], 100, 100,
+        );
+        rotation = getRotationRad([rotationPosition.pos1, rotationPosition.pos2], rotationPosition.direction);
     }
     const n = isAbsolute3d ? 4 : 3;
     return {

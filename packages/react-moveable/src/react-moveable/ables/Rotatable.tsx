@@ -150,10 +150,9 @@ export function getReversePositionY(dir: string) {
     }
     return dir;
 }
-export function getPositions(
+export function getRotationPosition(
     rotationPosition: RotatableProps["rotationPosition"],
     [pos1, pos2, pos3, pos4]: number[][],
-    direction: number,
 ) {
     const [dir1, dir2] = (rotationPosition || "top").split("-");
     let radPoses = [pos1, pos2];
@@ -177,15 +176,13 @@ export function getPositions(
         (radPoses[0][0] + radPoses[1][0]) / 2,
         (radPoses[0][1] + radPoses[1][1]) / 2,
     ];
-    const rad = getRotationRad(radPoses, direction);
-
     if (dir2) {
         const isStart = dir2 === "top" || dir2 === "left";
         const isReverse = dir1 === "bottom" || dir1 === "left";
 
         pos = radPoses[(isStart && !isReverse) || (!isStart && isReverse) ? 0 : 1];
     }
-    return [pos, rad] as const;
+    return pos;
 }
 
 export function dragControlCondition(e: any) {
@@ -211,21 +208,42 @@ export default {
         onRotateGroup: "rotateGroup",
         onRotateGroupEnd: "rotateGroupEnd",
     } as const,
+    css: [
+        `.line.rotation-line {
+            height: 40px;
+            width: 1px;
+            transform-origin: 50% calc(100% - 0.5px);
+            top: -40px;
+            width: var(--zoompx);
+            height: calc(40 * var(--zoompx));
+            top: calc(-40 * var(--zoompx));
+            transform-origin: 50% calc(100% - 0.5 * var(--zoompx));
+        }
+        .line.rotation-line .control {
+            border-color: #4af;
+            background:#fff;
+            cursor: alias;
+            left: 50%;
+        }`,
+    ],
     render(moveable: MoveableManagerInterface<RotatableProps>, React: Renderer): any {
         const {
             rotatable,
             rotationPosition,
         } = moveable.props;
+        const {
+            rotation,
+            renderPoses,
+        } = moveable.state;
         if (!rotatable) {
             return null;
         }
-        const { renderPoses, direction } = moveable.state;
-        const [pos, rotationRad] = getPositions(rotationPosition!, renderPoses, direction);
+        const pos = getRotationPosition(rotationPosition!, renderPoses);
 
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rotationRad}rad)`,
+                transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rotation}rad)`,
             }}>
                 <div className={prefix("control", "rotation")}></div>
             </div>

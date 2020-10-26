@@ -58,7 +58,7 @@ function RenderDraggableResizableRotatableSnappable() {
             snapCenter={true}
             verticalGuidelines={[0, 100, 200, 400]}
             horizontalGuidelines={[0, 100, 200, 400]}
-            keepRatio={true}
+            keepRatio={false}
             onBeforeRenderStart={e => {
                 e.setTransform(transformRef.current);
             }}

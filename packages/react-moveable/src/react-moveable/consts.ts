@@ -112,22 +112,6 @@ export const MOVEABLE_CSS = `
     transform: translateY(-50%);
     left: 5px;
 }
-.line.rotation-line {
-	height: 40px;
-    width: 1px;
-    transform-origin: 50% calc(100% - 0.5px);
-    top: -40px;
-    width: var(--zoompx);
-    height: calc(40 * var(--zoompx));
-    top: calc(-40 * var(--zoompx));
-    transform-origin: 50% calc(100% - 0.5 * var(--zoompx));
-}
-.line.rotation-line .control {
-	border-color: #4af;
-	background:#fff;
-    cursor: alias;
-    left: 50%;
-}
 .line.vertical {
     transform: translateX(-50%);
 }

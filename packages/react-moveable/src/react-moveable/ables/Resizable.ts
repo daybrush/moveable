@@ -13,7 +13,7 @@ import {
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
-    OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface,
+    OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
 } from "../types";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
@@ -149,7 +149,7 @@ export default {
         return datas.isResize ? params : false;
     },
     dragControl(
-        moveable: MoveableManagerInterface<ResizableProps & DraggableProps>,
+        moveable: MoveableManagerInterface<ResizableProps & DraggableProps & SnappableProps>,
         e: any,
     ) {
         const {
@@ -164,15 +164,8 @@ export default {
         } = e;
 
         const {
-            direction,
             isResize,
             transformOrigin,
-        } = datas;
-
-        if (!isResize) {
-            return;
-        }
-        const {
             startWidth,
             startHeight,
             startOffsetWidth,
@@ -182,11 +175,20 @@ export default {
             minSize,
             maxSize,
         } = datas;
+
+        if (!isResize) {
+            return;
+        }
         const {
             throttleResize = 0,
             parentMoveable,
+            snapThreshold = 5,
         } = moveable.props;
+        let direction = datas.direction;
         let sizeDirection = direction;
+        let fixedPosition = dragClient;
+        let distWidth: number = 0;
+        let distHeight: number = 0;
 
         if (!direction[0] && !direction[1]) {
             sizeDirection = [1, 1];
@@ -196,10 +198,7 @@ export default {
             && (moveable.props.keepRatio || parentKeepRatio);
         const isWidth = sizeDirection[0] || !sizeDirection[1];
         const ratio = isWidth ? startOffsetHeight / startOffsetWidth : startOffsetWidth / startOffsetHeight;
-        const startDirection = keepRatio || parentFlag ? direction : datas.startDirection;
-        let fixedPosition = dragClient;
-        let distWidth: number = 0;
-        let distHeight: number = 0;
+        let startDirection = keepRatio || parentFlag ? [...direction] : [...datas.startDirection];
 
         if (!dragClient) {
             if (!parentFlag && isPinch) {
@@ -246,6 +245,28 @@ export default {
                     distWidth = Math.cos(ratioRad) * signSize;
                     distHeight = Math.sin(ratioRad) * signSize;
                 }
+            } else if (!keepRatio) {
+                const nextDirection = [...direction];
+
+                if (!startOffsetWidth) {
+                    if (dist[0] < 0) {
+                        nextDirection[0] = -1;
+                    } else if (dist[0] > 0) {
+                        nextDirection[0] = 1;
+                    }
+                }
+                if (!startOffsetHeight) {
+                    if (dist[1] < 0) {
+                        nextDirection[1] = -1;
+                    } else if (dist[1] > 0) {
+                        nextDirection[1] = 1;
+                    }
+                }
+                direction = nextDirection;
+                sizeDirection = nextDirection;
+                startDirection = getStartDirection(moveable, nextDirection);
+                distWidth = sizeDirection[0] * dist[0];
+                distHeight = sizeDirection[1] * dist[1];
             }
         }
         let nextWidth = sizeDirection[0] || keepRatio
@@ -305,6 +326,12 @@ export default {
                 nextWidth = getKeepRatioWidth(nextHeight, isWidth, ratio);
             }
         } else {
+            if (startOffsetWidth + distWidth < -snapThreshold)  {
+                snapDist[0] = 0;
+            }
+            if (startOffsetWidth + distHeight < -snapThreshold)  {
+                snapDist[1] = 0;
+            }
             nextWidth += snapDist[0];
             nextHeight += snapDist[1];
             if (!snapDist[0]) {

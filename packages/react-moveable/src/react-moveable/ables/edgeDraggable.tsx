@@ -52,7 +52,7 @@ export default {
     unset(moveable: any) {
         moveable.state.dragInfo = null;
     },
-};
+} as const;
 
 /**
  * Whether to move by dragging the edge line (default: false)
