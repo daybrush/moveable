@@ -1,6 +1,6 @@
 import {
     throttle, prefix, triggerEvent, fillParams,
-    getRotationRad, getClientRect, caculatePosition, fillEndParams
+    getClientRect, caculatePosition, fillEndParams
 } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import {

@@ -1136,10 +1136,16 @@ export interface OriginDraggableProps extends OriginDraggableOptions, EventInter
  * @memberof Moveable.Roundable
  * @property - Whether to show and drag border-radius
  * @property - % Can be used instead of the absolute px
+ * @property - Minimum number of round controls. It moves in proportion by control. [horizontal, vertical] (default: [0, 0])
+ * @property - Maximum number of round controls. It moves in proportion by control. [horizontal, vertical] (default: [4, 4])
+ * @property - Whether you can add/delete round controls by double-clicking a line or control. (default: true)
  */
 export interface RoundableOptions {
     roundable?: boolean;
     roundRelative?: boolean;
+    minRoundControls?: number[];
+    maxRoundControls?: number[];
+    roundClickable?: boolean;
 }
 
 export interface RoundableEvents {

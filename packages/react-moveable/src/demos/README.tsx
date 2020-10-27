@@ -214,6 +214,7 @@ function RenderScalable() {
         <Moveable
             target={target}
             draggable={true}
+            rotatable={true}
             scalable={true}
             origin={true}
             onScaleStart={e => {
@@ -347,6 +348,8 @@ function RenderRoundable() {
         }}><span>A</span></div>
         <Moveable target={target}
             roundable={true}
+            minRoundControls={[1, 0]}
+            maxRoundControls={[1, 0]}
             origin={false}
             onRound={e => {
                 e.target.style.borderRadius = e.borderRadius;

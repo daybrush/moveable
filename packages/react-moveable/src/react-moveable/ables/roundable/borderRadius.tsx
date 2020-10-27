@@ -94,13 +94,14 @@ export function getRadiusValues(
     height: number,
     left: number,
     top: number,
+    minCounts: number[] = [0, 0],
 ): ControlPose[] {
     const splitIndex = values.indexOf("/");
     const splitLength = (splitIndex > -1 ? values.slice(0, splitIndex) : values).length;
     const horizontalValues = values.slice(0, splitLength);
     const verticalValues = values.slice(splitLength + 1);
     const [
-        nwValue = "0",
+        nwValue = "0px",
         neValue = nwValue,
         seValue = nwValue,
         swValue = neValue,
@@ -122,8 +123,10 @@ export function getRadiusValues(
     [verticalPoses[0], verticalPoses[3]] = caculateRatio([verticalPoses[0], verticalPoses[3]], height);
     [verticalPoses[1], verticalPoses[2]] = caculateRatio([verticalPoses[1], verticalPoses[2]], height);
 
-    const nextHorizontalPoses = horizontalPoses.slice(0, horizontalValues.length);
-    const nextVerticalPoses = verticalPoses.slice(0, verticalValues.length);
+    const nextHorizontalPoses
+        = horizontalPoses.slice(0, Math.max(minCounts[0], horizontalValues.length));
+    const nextVerticalPoses
+        = verticalPoses.slice(0, Math.max(minCounts[1], verticalValues.length));
     return [
         ...nextHorizontalPoses.map((pos, i) => {
             const direction = RADIUS_DIRECTIONS[i];
