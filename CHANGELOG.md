@@ -18,6 +18,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+## [0.20.0] - 2020-10-28
+* `moveable` 0.20.0
+* `react-moveable` 0.23.0
+* `preact-moveable` 0.22.0
+* `ngx-moveable` 0.16.0
+* `svelte-moveable` 0.11.0
+
+### Added
+* Add `minRoundControls`, `maxRoundControls`, `roundClickable` props for roundable #338
+* Add `edgeDraggable` prop #330
+*
+### Fixed
+* Fix rotation direction #332
+* Fix svg transform origin in safari #334
+* Fix svg className #337
+* when rotate to 90/180/270 deg, resize bug. #333
+
+
 ## [0.19.4] - 2020-10-10
 * `moveable` 0.19.4
 * `react-moveable` 0.22.6

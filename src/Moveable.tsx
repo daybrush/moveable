@@ -1,4 +1,3 @@
-import EgComponent from "@egjs/component";
 import { ref, Properties } from "framework-utils";
 import * as React from "react";
 import { render } from "react-dom";
@@ -10,7 +9,7 @@ import {
 import { camelize, isArray } from "@daybrush/utils";
 import { MoveableEventsParameters } from "./types";
 import { PROPERTIES, EVENTS, METHODS } from "./consts";
-
+import EventEmitter from "@scena/event-emitter";
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
  * @sort 1
@@ -43,7 +42,7 @@ import { PROPERTIES, EVENTS, METHODS } from "./consts";
         configurable: true,
     });
 })
-class Moveable extends EgComponent {
+class Moveable extends EventEmitter<MoveableEventsParameters> {
     private innerMoveable!: InnerMoveable | null;
     private tempElement: HTMLElement | null = document.createElement("div");
 
@@ -57,7 +56,7 @@ class Moveable extends EgComponent {
         const events: any = {};
 
         EVENTS.forEach(name => {
-            events[camelize(`on ${name}`)] = (e: any) => this.trigger(name, e);
+            events[camelize(`on ${name}`)] = (e: any) => this.trigger<any>(name, e);
         });
 
         render(
@@ -88,11 +87,7 @@ class Moveable extends EgComponent {
     }
 }
 
-interface Moveable extends MoveableProperties, MoveableInterface {
-    on<T extends keyof MoveableEventsParameters>(
-        eventName: T, handlerToAttach: (event: MoveableEventsParameters[T]) => any): this;
-    on(eventName: string, handlerToAttach: (event: { [key: string]: any }) => any): this;
-    on(events: { [key: string]: (event: { [key: string]: any }) => any }): this;
+interface Moveable extends MoveableInterface, MoveableProperties {
 }
 
 export default Moveable;

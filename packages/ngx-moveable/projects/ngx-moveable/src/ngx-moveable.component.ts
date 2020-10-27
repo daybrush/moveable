@@ -51,6 +51,7 @@ export class NgxMoveableComponent
   @Input() public baseDirection!: number[];
   @Input() public defaultGroupRotate!: number;
   @Input() public ables!: Able[];
+  @Input() public edgeDraggable!: RequiredMoveableOptions['edgeDraggable'];
 
 
   @Input() public translateZ!: RequiredMoveableOptions['translateZ'];
@@ -95,8 +96,13 @@ export class NgxMoveableComponent
   @Input() public clipRelative!: RequiredMoveableOptions['clipRelative'];
   @Input() public dragWithClip!: RequiredMoveableOptions['dragWithClip'];
   @Input() public clipArea!: RequiredMoveableOptions['clipArea'];
+
   @Input() public roundable!: RequiredMoveableOptions['roundable'];
   @Input() public roundRelative!: RequiredMoveableOptions['roundRelative'];
+  @Input() public roundClickable!: RequiredMoveableOptions['roundClickable'];
+  @Input() public minRoundControls!: RequiredMoveableOptions['minRoundControls'];
+  @Input() public maxRoundControls!: RequiredMoveableOptions['maxRoundControls'];
+
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;
