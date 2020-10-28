@@ -257,11 +257,14 @@ render() {
 ### `npm start`
 
 The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
+
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
 
 
 ```bash
 $ cd packages/react-moveable
+$ npm i
+$ npm start
 ```
 
 Runs the app in the development mode.<br>

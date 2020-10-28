@@ -234,17 +234,20 @@ moveable.on("pinchStart", ({ target, clientX, clientY }) => {
 * [**svelte-moveable**](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable): A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 * [**vue-moveable**(@probil)](https://github.com/probil/vue-moveable): A Vue Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 
-
 ## ⚙️ Developments
 ### `npm start`
 
 The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
+
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
 
 
 ```bash
 $ cd packages/react-moveable
+$ npm i
+$ npm start
 ```
+
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
