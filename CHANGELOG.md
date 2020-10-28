@@ -28,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 * Add `minRoundControls`, `maxRoundControls`, `roundClickable` props for roundable #338
 * Add `edgeDraggable` prop #330
-*
+
 ### Fixed
 * Fix rotation direction #332
 * Fix svg transform origin in safari #334

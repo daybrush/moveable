@@ -313,7 +313,7 @@ export function getMatrixStackInfo(
         is3d,
     };
 }
-export function cacaulateElementInfo(
+export function caculateElementInfo(
     target?: SVGElement | HTMLElement | null,
     container?: SVGElement | HTMLElement | null,
     rootContainer: HTMLElement | SVGElement | null | undefined = container,
@@ -412,7 +412,7 @@ export function getElementInfo(
     container?: SVGElement | HTMLElement | null,
     rootContainer: SVGElement | HTMLElement | null | undefined = container,
 ) {
-    return cacaulateElementInfo(target, container, rootContainer, true);
+    return caculateElementInfo(target, container, rootContainer, true);
 }
 export function caculateMatrixStack(
     target: SVGElement | HTMLElement,
@@ -856,7 +856,7 @@ export function getTargetInfo(
     let containerClientRect = resetClientRect();
     let moveableClientRect = resetClientRect();
 
-    const result = cacaulateElementInfo(
+    const result = caculateElementInfo(
         target, container!, rootContainer!, false, state,
     );
     if (target) {
