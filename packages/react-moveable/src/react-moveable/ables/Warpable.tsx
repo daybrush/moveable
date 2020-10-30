@@ -4,7 +4,7 @@ import {
  } from "../utils";
 import {
     convertDimension, invert, multiply,
-    caculate,
+    calculate,
     createIdentityMatrix,
     ignoreDimension,
     minus,
@@ -136,7 +136,7 @@ export default {
             [width, height],
         ].map(p => minus(p, transformOrigin));
 
-        datas.nextPoses = datas.poses.map(([x, y]: number[]) => caculate(datas.warpTargetMatrix, [x, y, 0, 1], 4));
+        datas.nextPoses = datas.poses.map(([x, y]: number[]) => calculate(datas.warpTargetMatrix, [x, y, 0, 1], 4));
         datas.startValue = createIdentityMatrix(4);
         datas.prevMatrix = createIdentityMatrix(4);
         datas.absolutePoses = getAbsolutePosesByState(state);

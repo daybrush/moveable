@@ -1,12 +1,12 @@
 import {
     prefix, triggerEvent,
-    fillParams, fillEndParams, caculatePosition
+    fillParams, fillEndParams, calculatePosition
 } from "../utils";
 import {
     Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd, MoveableManagerInterface,
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
-import { setDragStart, getDragDist, caculatePointerDist } from "../gesto/GestoUtils";
+import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
 import { minus, plus } from "../matrix";
 import {
     getRadiusValues, getRadiusStyles, removeRadiusPos,
@@ -205,7 +205,7 @@ export default {
         return radiusValues.map((v, i) => {
             horizontalCount += Math.abs(v.horizontal);
             verticalCount += Math.abs(v.vertical);
-            const pos = minus(caculatePosition(allMatrix, v.pos, n), [left, top]);
+            const pos = minus(calculatePosition(allMatrix, v.pos, n), [left, top]);
             const isDisplay = v.vertical
                 ? verticalCount <= maxRoundControls[1]
                 : horizontalCount <= maxRoundControls[0];
@@ -371,7 +371,7 @@ export default {
             if (isControl) {
                 removeRadiusPos(controlPoses, poses, controlIndex, 0);
             } else if (isLine) {
-                const [distX, distY] = caculatePointerDist(moveable, e);
+                const [distX, distY] = calculatePointerDist(moveable, e);
 
                 addBorderRadius(controlPoses, poses, lineIndex, distX, distY, width, height);
             }

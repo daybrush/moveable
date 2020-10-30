@@ -1,6 +1,6 @@
 import {
     throttle, prefix, triggerEvent, fillParams,
-    getClientRect, caculatePosition, fillEndParams
+    getClientRect, calculatePosition, fillEndParams
 } from "../utils";
 import { IObject, hasClass } from "@daybrush/utils";
 import {
@@ -37,7 +37,7 @@ function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
 
     const n = moveable.state.is3d ? 4 : 3;
-    const nextOrigin = caculatePosition(moveable.state.rootMatrix, origin, n);
+    const nextOrigin = calculatePosition(moveable.state.rootMatrix, origin, n);
     const startAbsoluteOrigin = plus([rect.left, rect.top], nextOrigin);
 
     datas.startAbsoluteOrigin = startAbsoluteOrigin;

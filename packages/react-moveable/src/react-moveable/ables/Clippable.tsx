@@ -5,13 +5,13 @@ import {
 } from "../types";
 import { splitBracket, splitComma, splitUnit, splitSpace, convertUnitSize } from "@daybrush/utils";
 import {
-    prefix, caculatePosition, getDiagonalSize,
+    prefix, calculatePosition, getDiagonalSize,
     fillParams, triggerEvent,
     makeMatrixCSS, getRect, fillEndParams,
     convertCSSSize, moveControlPos,
 } from "../utils";
 import { getRad, plus, minus } from "../matrix";
-import { setDragStart, getDragDist, caculatePointerDist } from "../gesto/GestoUtils";
+import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
 import {
     getRadiusValues,
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos
@@ -298,7 +298,7 @@ function getClipPath(
     return;
 }
 function addClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
-    const [distX, distY] = caculatePointerDist(moveable, e);
+    const [distX, distY] = calculatePointerDist(moveable, e);
     const { clipPath, index } = e.datas;
     const {
         type: clipType,
@@ -468,11 +468,11 @@ export default {
         const clipPoses = clipPath.poses;
         const poses = clipPoses.map(pos => {
             // return [x, y];
-            const caculatedPos = caculatePosition(allMatrix, pos.pos, n);
+            const calculatedPos = calculatePosition(allMatrix, pos.pos, n);
 
             return [
-                caculatedPos[0] - left,
-                caculatedPos[1] - top,
+                calculatedPos[0] - left,
+                calculatedPos[1] - top,
             ];
         });
 
@@ -527,8 +527,8 @@ export default {
             } = clipPath;
 
             const [distLeft, distTop] = minus(
-                caculatePosition(allMatrix, [clipLeft!, clipTop!], n),
-                caculatePosition(allMatrix, [0, 0], n),
+                calculatePosition(allMatrix, [clipLeft!, clipTop!], n),
+                calculatePosition(allMatrix, [0, 0], n),
             );
             let ellipseClipPath = "none";
 
@@ -584,9 +584,9 @@ export default {
                 const isHorizontal = directionType === "horizontal";
                 if (info.isSnap) {
                     lines.push(...info.snap.posInfos.map(({ pos }, i) => {
-                        const snapPos1 = minus(caculatePosition(
+                        const snapPos1 = minus(calculatePosition(
                             allMatrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
-                        const snapPos2 = minus(caculatePosition(
+                        const snapPos2 = minus(calculatePosition(
                             allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
                         return renderLine(
@@ -596,9 +596,9 @@ export default {
                 }
                 if (info.isBound) {
                     lines.push(...info.bounds.map(({ pos }, i) => {
-                        const snapPos1 = minus(caculatePosition(
+                        const snapPos1 = minus(calculatePosition(
                             allMatrix, isHorizontal ? [0, pos] : [pos, 0], n), [left, top]);
-                        const snapPos2 = minus(caculatePosition(
+                        const snapPos2 = minus(calculatePosition(
                             allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
                         return renderLine(

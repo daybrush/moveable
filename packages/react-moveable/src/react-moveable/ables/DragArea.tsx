@@ -2,7 +2,7 @@ import {
     createWarpMatrix,
 } from "../matrix";
 import { ref } from "framework-utils";
-import { getRect, caculateInversePosition, makeMatrixCSS, prefix } from "../utils";
+import { getRect, calculateInversePosition, makeMatrixCSS, prefix } from "../utils";
 import {
     Renderer, GroupableProps, DragAreaProps, MoveableManagerInterface, MoveableGroupInterface
 } from "../types";
@@ -94,7 +94,7 @@ export default {
             height,
         } = getRect(renderPoses);
         const n = is3d ? 4 : 3;
-        let [posX, posY] = caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n);
+        let [posX, posY] = calculateInversePosition(rootMatrix, [clientX - left, clientY - top], n);
 
         posX -= relativeLeft;
         posY -= relativeTop;
