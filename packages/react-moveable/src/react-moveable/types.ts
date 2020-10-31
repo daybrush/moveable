@@ -686,7 +686,7 @@ export interface OnWarpStart extends OnEvent, OnTransformStartEvent {
  * @property - a target's transform
  * @property - The delta of warp matrix
  * @property - The dist of warp matrix
- * @property - The caculated warp matrix
+ * @property - The calculated warp matrix
  * @property - Multiply function that can multiply previous matrix by warp matrix
  */
 export interface OnWarp extends OnEvent {

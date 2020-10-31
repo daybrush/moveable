@@ -272,14 +272,14 @@ export function convertMatrixtoCSS(a: number[], is2d: boolean = a.length === 9) 
     return a;
 }
 
-export function caculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
+export function calculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
     const result = multiply(matrix, matrix2, n);
     const k = result[n - 1];
     return result.map(v => v / k);
 }
 
 export function rotate(pos: number[], rad: number) {
-    return caculate(
+    return calculate(
         createRotateMatrix(rad, 3),
         convertPositionMatrix(pos, 3),
     );

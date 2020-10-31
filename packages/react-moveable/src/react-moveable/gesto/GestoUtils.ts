@@ -1,11 +1,11 @@
 import {
-    invert, caculate, minus, plus,
+    invert, calculate, minus, plus,
     convertPositionMatrix, average,
     createScaleMatrix, multiply, fromTranslation, convertDimension,
 } from "../matrix";
 import {
-    caculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
-    caculatePosition, caculateInversePosition, getTransform, caculateMoveablePosition
+    calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
+    calculatePosition, calculateInversePosition, getTransform, calculateMoveablePosition
 } from "../utils";
 import { splitUnit, isArray, splitSpace } from "@daybrush/utils";
 import {
@@ -16,7 +16,7 @@ import Draggable from "../ables/Draggable";
 import { setCustomDrag } from "./CustomGesto";
 import { parse, parseMat } from "css-to-mat";
 
-export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) {
+export function calculatePointerDist(moveable: MoveableManagerInterface, e: any) {
     const { clientX, clientY, datas } = e;
     const {
         moveableClientRect,
@@ -26,7 +26,7 @@ export function caculatePointerDist(moveable: MoveableManagerInterface, e: any) 
     } = moveable.state;
     const { left, top } = moveableClientRect;
     const n = is3d ? 4 : 3;
-    const [posX, posY] = minus(caculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
+    const [posX, posY] = minus(calculateInversePosition(rootMatrix, [clientX - left, clientY - top], n), pos1);
     const [distX, distY] = getDragDist({ datas, distX: posX, distY: posY });
 
     return [distX, distY];
@@ -55,11 +55,11 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
     datas.inverseMatrix = invert(allMatrix, n);
     datas.inverseBeforeMatrix = invert(beforeMatrix, n);
     datas.absoluteOrigin = convertPositionMatrix(plus([left, top], origin), n);
-    datas.startDragBeforeDist = caculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
-    datas.startDragDist = caculate(datas.inverseMatrix, datas.absoluteOrigin, n);
+    datas.startDragBeforeDist = calculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
+    datas.startDragDist = calculate(datas.inverseMatrix, datas.absoluteOrigin, n);
 }
 export function getTransformDirection(e: any) {
-    return caculateMoveablePosition(e.datas.beforeTransform, [50, 50], 100, 100).direction;
+    return calculateMoveablePosition(e.datas.beforeTransform, [50, 50], 100, 100).direction;
 }
 export function resolveTransformEvent(event: any, functionName: string) {
     const {
@@ -105,7 +105,7 @@ export function getTransformDist({ datas, distX, distY }: any) {
 
     const res = getTransfromMatrix(datas, fromTranslation([bx, by], 4));
 
-    return caculate(res, convertPositionMatrix([0, 0, 0], 4), 4);
+    return calculate(res, convertPositionMatrix([0, 0, 0], 4), 4);
 }
 export function getTransfromMatrix(datas: any, targetMatrix: number[], isAfter?: boolean) {
     const {
@@ -143,7 +143,7 @@ export function getBeforeDragDist({ datas, distX, distY }: any) {
     // ABS_ORIGIN * [distX, distY] = BM * (ORIGIN + [tx, ty])
     // BM -1 * ABS_ORIGIN * [distX, distY] - ORIGIN = [tx, ty]
     return minus(
-        caculate(
+        calculate(
             inverseBeforeMatrix,
             plus(absoluteOrigin, [distX, distY]),
             n,
@@ -163,7 +163,7 @@ export function getDragDist({ datas, distX, distY }: any, isBefore?: boolean) {
     const n = is3d ? 4 : 3;
 
     return minus(
-        caculate(
+        calculate(
             isBefore ? inverseBeforeMatrix : inverseMatrix,
             plus(absoluteOrigin, [distX, distY]),
             n,
@@ -183,7 +183,7 @@ export function getInverseDragDist({ datas, distX, distY }: any, isBefore?: bool
     const n = is3d ? 4 : 3;
 
     return minus(
-        caculate(
+        calculate(
             isBefore ? beforeMatrix : matrix,
             plus(isBefore ? startDragBeforeDist : startDragDist, [distX, distY]),
             n,
@@ -192,7 +192,7 @@ export function getInverseDragDist({ datas, distX, distY }: any, isBefore?: bool
     );
 }
 
-export function caculateTransformOrigin(
+export function calculateTransformOrigin(
     transformOrigin: string[],
     width: number,
     height: number,
@@ -290,7 +290,7 @@ function getDist(
     n: number,
     direction: number[],
 ) {
-    const poses = caculatePoses(matrix, width, height, n);
+    const poses = calculatePoses(matrix, width, height, n);
     const pos = getPosByReverseDirection(poses, direction);
     const distX = startPos[0] - pos[0];
     const distY = startPos[1] - pos[1];
@@ -495,7 +495,7 @@ export function getDirectionOffset(
         width / 2 * (1 + direction[0]),
         height / 2 * (1 + direction[1]),
     ];
-    return caculatePosition(nextMatrix, nextFixedOffset, n);
+    return calculatePosition(nextMatrix, nextFixedOffset, n);
 }
 export function getRotateDist(
     moveable: MoveableManagerInterface<any>,
@@ -536,7 +536,7 @@ export function getResizeDist(
     } = moveable.state;
 
     const n = is3d ? 4 : 3;
-    const nextOrigin = caculateTransformOrigin(
+    const nextOrigin = calculateTransformOrigin(
         transformOrigin!,
         width,
         height,

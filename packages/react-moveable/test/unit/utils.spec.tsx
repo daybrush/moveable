@@ -2,11 +2,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {
     getTransformMatrix, getAbsoluteMatrix,
-    getSize, caculateMatrixStack,
+    getSize, calculateMatrixStack,
     throttle, throttleArray, isInside, getElementInfo,
 } from "../../src/react-moveable/utils";
-import { getRad, multiply, invert, transpose, createWarpMatrix, caculate } from "../../src/react-moveable/matrix";
-import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCaculate } from "./TestHelper";
+import { getRad, multiply, invert, transpose, createWarpMatrix, calculate } from "../../src/react-moveable/matrix";
+import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCalculate } from "./TestHelper";
 
 describe("test utils", () => {
     beforeEach(() => {
@@ -136,7 +136,7 @@ describe("test utils", () => {
         expect(deg7).to.be.equals(270);
         expect(deg8).to.be.equals(315);
     });
-    it("test caculateMatrixStack(HTMLElement)", () => {
+    it("test calculateMatrixStack(HTMLElement)", () => {
         // Given
         ReactDOM.render(
             <div className="c1" style={{
@@ -164,12 +164,12 @@ describe("test utils", () => {
         const c6 = document.querySelector(".c6") as HTMLElement;
 
         // When
-        const stack1 = caculateMatrixStack(c2, document.body, document.body);
-        const stack2 = caculateMatrixStack(c3, document.body, document.body);
-        const stack3 = caculateMatrixStack(c4, document.body, document.body);
-        const stack5 = caculateMatrixStack(c6, c5, c5);
-        const stack6 = caculateMatrixStack(c6, c4, c4);
-        const stack7 = caculateMatrixStack(c6, null, null);
+        const stack1 = calculateMatrixStack(c2, document.body, document.body);
+        const stack2 = calculateMatrixStack(c3, document.body, document.body);
+        const stack3 = calculateMatrixStack(c4, document.body, document.body);
+        const stack5 = calculateMatrixStack(c6, c5, c5);
+        const stack6 = calculateMatrixStack(c6, c4, c4);
+        const stack7 = calculateMatrixStack(c6, null, null);
 
         // Then
         expect(stack1.beforeMatrix).to.be.deep.equals(transpose([2, 0, -252, 0, 2, -252, 0, 0, 1]));
@@ -303,7 +303,7 @@ describe("test utils", () => {
             // Then
             const pp = [...poses, ...nextPoses];
             poses.forEach((pos, j) => {
-                const [x, y] = caculate((createWarpMatrix as any)(...pp), [pos[0], pos[1], 0, 1]);
+                const [x, y] = calculate((createWarpMatrix as any)(...pp), [pos[0], pos[1], 0, 1]);
 
                 expect(x).to.be.closeTo(nextPoses[j][0], 0.01);
                 expect(y).to.be.closeTo(nextPoses[j][1], 0.01);
@@ -320,12 +320,12 @@ describe("test utils", () => {
 
         expect(isInside([30, 30], pos1, pos2, pos3, pos4)).to.be.true;
     });
-    // it("test caculateBoundSize", () => {
-    //     const size1 = caculateBoundSize([100, 100], [0, 0], [100, 50]);
-    //     const size2 = caculateBoundSize([-10, 100], [0, 0], [100, 50]);
-    //     const size3 = caculateBoundSize([100, 100], [0, 0], [100, 50], true);
-    //     const size4 = caculateBoundSize([100, 100], [50, 40], [100, 50], true);
-    //     const size5 = caculateBoundSize([40, 100], [50, 40], [Infinity, 150], true);
+    // it("test calculateBoundSize", () => {
+    //     const size1 = calculateBoundSize([100, 100], [0, 0], [100, 50]);
+    //     const size2 = calculateBoundSize([-10, 100], [0, 0], [100, 50]);
+    //     const size3 = calculateBoundSize([100, 100], [0, 0], [100, 50], true);
+    //     const size4 = calculateBoundSize([100, 100], [50, 40], [100, 50], true);
+    //     const size5 = calculateBoundSize([40, 100], [50, 40], [Infinity, 150], true);
 
     //     expect(size1).to.be.deep.equals([100, 50]);
     //     expect(size2).to.be.deep.equals([0, 50]);

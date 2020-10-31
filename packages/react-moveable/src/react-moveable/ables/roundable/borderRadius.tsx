@@ -4,7 +4,7 @@ import { convertUnitSize } from "@daybrush/utils";
 
 const RADIUS_DIRECTIONS = ["nw", "ne", "se", "sw"] as const;
 
-function caculateRatio(values: number[], size: number) {
+function calculateRatio(values: number[], size: number) {
     const sumSize = values[0] + values[1];
     const sumRatio = sumSize > size ? size / sumSize : 1;
 
@@ -118,10 +118,10 @@ export function getRadiusValues(
     const horizontalPoses = horizontalRawPoses.slice();
     const verticalPoses = verticalRawPoses.slice();
 
-    [horizontalPoses[0], horizontalPoses[1]] = caculateRatio([horizontalPoses[0], horizontalPoses[1]], width);
-    [horizontalPoses[3], horizontalPoses[2]] = caculateRatio([horizontalPoses[3], horizontalPoses[2]], width);
-    [verticalPoses[0], verticalPoses[3]] = caculateRatio([verticalPoses[0], verticalPoses[3]], height);
-    [verticalPoses[1], verticalPoses[2]] = caculateRatio([verticalPoses[1], verticalPoses[2]], height);
+    [horizontalPoses[0], horizontalPoses[1]] = calculateRatio([horizontalPoses[0], horizontalPoses[1]], width);
+    [horizontalPoses[3], horizontalPoses[2]] = calculateRatio([horizontalPoses[3], horizontalPoses[2]], width);
+    [verticalPoses[0], verticalPoses[3]] = calculateRatio([verticalPoses[0], verticalPoses[3]], height);
+    [verticalPoses[1], verticalPoses[2]] = calculateRatio([verticalPoses[1], verticalPoses[2]], height);
 
     const nextHorizontalPoses
         = horizontalPoses.slice(0, Math.max(minCounts[0], horizontalValues.length));

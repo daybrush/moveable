@@ -20,10 +20,10 @@ import {
     triggerChildAble,
 } from "../groupUtils";
 import Draggable from "./Draggable";
-import { getRad, caculate, createRotateMatrix, plus } from "../matrix";
+import { getRad, calculate, createRotateMatrix, plus } from "../matrix";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapSize } from "./Snappable";
-import { caculateBoundSize, IObject, isString } from "@daybrush/utils";
+import { calculateBoundSize, IObject, isString } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
 /**
@@ -341,7 +341,7 @@ export default {
                 nextHeight = throttle(nextHeight, throttleResize!);
             }
         }
-        [nextWidth, nextHeight] = caculateBoundSize(
+        [nextWidth, nextHeight] = calculateBoundSize(
             [nextWidth, nextHeight],
             minSize,
             maxSize,
@@ -454,7 +454,7 @@ export default {
             e,
             (child, ev) => {
                 const pos = getAbsoluteFixedPosition(child, direction);
-                const [originalX, originalY] = caculate(
+                const [originalX, originalY] = calculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
                     3,
@@ -504,7 +504,7 @@ export default {
             "dragControl",
             e,
             (_, ev) => {
-                const [clientX, clientY] = caculate(
+                const [clientX, clientY] = calculate(
                     createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
                     [
                         ev.datas.originalX * parentScale[0],

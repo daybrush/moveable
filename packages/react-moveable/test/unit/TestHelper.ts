@@ -1,5 +1,5 @@
 import MoveableManager from "../../src/react-moveable/MoveableManager";
-import {  createRotateMatrix, caculate, minus, plus, createIdentityMatrix } from "../../src/react-moveable/matrix";
+import {  createRotateMatrix, calculate, minus, plus, createIdentityMatrix } from "../../src/react-moveable/matrix";
 import { RotatableProps } from "../../src/react-moveable";
 import { getClientRect } from "../../src/react-moveable/utils";
 
@@ -194,7 +194,7 @@ export async function rotate(startInfo: any[], deg: number) {
 
     const m = createRotateMatrix(rad, 3);
     const dist = minus(startClient, absoluteOrigin);
-    const [offsetX, offsetY] = caculate(m, [dist[0], dist[1], 1]);
+    const [offsetX, offsetY] = calculate(m, [dist[0], dist[1], 1]);
     const client = plus(absoluteOrigin, [offsetX, offsetY]);
 
     dispatchEvent(rotationElement, "mousemove", client);
@@ -310,7 +310,7 @@ export function helperCreateWarpMatrix(
     return convertDimension(h, 3, 4);
 }
 
-export function helperCaculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
+export function helperCalculate(matrix: number[], matrix2: number[], n: number = matrix2.length) {
     const result = multiply(matrix, matrix2, n);
     const k = result[n - 1];
     return result.map(v => v / k);

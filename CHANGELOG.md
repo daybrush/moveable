@@ -98,9 +98,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `svelte-moveable` 0.9.3
 
 ### Fixed
-* Fix Safari Offset Caculation #285
-* Fix SVG Transform Origin Caculation #286
-* Fix SVG ClientSize Caculation #288
+* Fix Safari Offset Calculation #285
+* Fix SVG Transform Origin Calculation #286
+* Fix SVG ClientSize Calculation #288
 
 
 ## [0.18.4] - 2020-07-15
@@ -193,7 +193,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 * Fix CSS's camelized name issue #243
-* Fix wrong maxWidth, maxHeight caculation issue for `innerBounds` and `bounds`  #221 #245 #241 #235
+* Fix wrong maxWidth, maxHeight calculation issue for `innerBounds` and `bounds`  #221 #245 #241 #235
 * Remove `@types/react` , `@types/react-dom` #240
 * Fix `@daybrush/drag`'s version issue #239
 
@@ -218,7 +218,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 * Fix client position #220
-* Caculate min, max size for Resizable #231
+* Calculate min, max size for Resizable #231
 
 ## [0.17.4] - 2020-05-05
 * `moveable` 0.17.4
@@ -382,7 +382,7 @@ https://github.com/daybrush/moveable/milestone/8
 
 ### Fixed
 * Fixed that control points rotation is wrong bug #151
-* Fixed that Scrollable isn't working. (wrong caculation) #150
+* Fixed that Scrollable isn't working. (wrong calculation) #150
 * Fixed that Crash of ngx-moveable when using --prod on angular bug #129
 
 ## [0.13.3] - 2019-12-30
@@ -448,7 +448,7 @@ https://github.com/daybrush/moveable/milestone/8
 
 ## [0.11.1] - 2019-11-23
 ### Fixed
-* Fix Resizable's base direction caculation
+* Fix Resizable's base direction calculation
 
 ## [0.11.0] - 2019-11-23
 ### Added
@@ -501,17 +501,17 @@ https://github.com/daybrush/moveable/milestone/8
 * Add `warp` in top, right, bottom and left directions.
 
 ### Fixed
-* Fix target's boundingRect matrix caculation with scroll position
+* Fix target's boundingRect matrix calculation with scroll position
 * Fix problem where the ratio is not maintained with keepRatio #70
 * Fix that `el is undefined` #73
-* Fix `dragArea`'s caculation
+* Fix `dragArea`'s calculation
 * Fix that `dragStart` method is not work with group
 * Fix that `clickGroup` event occurs when `dragStart` a mousedown target
 * Fix that Moveable is deleted when a single target is changed to multiple targets
 
 ## [0.9.8] - 2019-10-26
 ### Fixed
-* Fix that miscaculate static parent's offset position
+* Fix that miscalculate static parent's offset position
 * Fix dragArea's transformOrigin
 
 ## [0.9.7] - 2019-10-16
@@ -532,7 +532,7 @@ https://github.com/daybrush/moveable/milestone/8
 ### Fixed
 * fix that resizing north, west direction occur decimal point issue.
 * Disable pinchable with snappable.
-* Fix offset caculation for Webkit
+* Fix offset calculation for Webkit
 
 ## [0.9.3] - 2019-10-01
 ### Fixed
@@ -562,7 +562,7 @@ https://github.com/daybrush/moveable/milestone/8
 
 ### Fixed
 * north and west controls want to behave like photoshop (#9)
-* Fix offset caculation for Webkit
+* Fix offset calculation for Webkit
 
 
 ## [0.8.0] - 2019-08-28

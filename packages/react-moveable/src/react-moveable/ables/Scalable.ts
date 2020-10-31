@@ -24,7 +24,7 @@ import {
     triggerChildAble,
 } from "../groupUtils";
 import Draggable from "./Draggable";
-import { getRad, caculate, createRotateMatrix, plus, minus } from "../matrix";
+import { getRad, calculate, createRotateMatrix, plus, minus } from "../matrix";
 import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapScale } from "./Snappable";
 import { isArray, IObject } from "@daybrush/utils";
@@ -378,7 +378,7 @@ export default {
             (child, ev) => {
                 const pos = getAbsoluteFixedPosition(child, direction);
 
-                const [originalX, originalY] = caculate(
+                const [originalX, originalY] = calculate(
                     createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                     [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
                     3,
@@ -427,7 +427,7 @@ export default {
             "dragControl",
             e,
             (_, ev) => {
-                const [clientX, clientY] = caculate(
+                const [clientX, clientY] = calculate(
                     createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
                     [
                         ev.datas.originalX * dist[0],

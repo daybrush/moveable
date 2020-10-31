@@ -1,6 +1,6 @@
 import {
     prefix, triggerEvent,
-    fillParams, caculatePoses, getRect, fillEndParams, convertCSSSize
+    fillParams, calculatePoses, getRect, fillEndParams, convertCSSSize
 } from "../utils";
 import {
     OnDragOriginStart, OnDragOrigin,
@@ -104,7 +104,7 @@ export default {
         );
 
         const rect = moveable.getRect();
-        const nextRect = getRect(caculatePoses(nextMatrix, width, height, n));
+        const nextRect = getRect(calculatePoses(nextMatrix, width, height, n));
 
         const dragDelta = [
             rect.left - nextRect.left,

@@ -4,7 +4,7 @@ import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isAr
 import {
     multiply, invert,
     convertDimension, createIdentityMatrix,
-    createOriginMatrix, convertPositionMatrix, caculate,
+    createOriginMatrix, convertPositionMatrix, calculate,
     multiplies,
     minus,
     getOrigin,
@@ -313,7 +313,7 @@ export function getMatrixStackInfo(
         is3d,
     };
 }
-export function caculateElementInfo(
+export function calculateElementInfo(
     target?: SVGElement | HTMLElement | null,
     container?: SVGElement | HTMLElement | null,
     rootContainer: HTMLElement | SVGElement | null | undefined = container,
@@ -343,11 +343,11 @@ export function caculateElementInfo(
     }
 
     if (target) {
-        const result = caculateMatrixStack(
+        const result = calculateMatrixStack(
             target, container, rootContainer, isAbsolute3d,
             // prevMatrix, prevRootMatrix, prevN,
         );
-        const position = caculateMoveablePosition(
+        const position = calculateMoveablePosition(
             result.allMatrix,
             result.transformOrigin,
             width, height,
@@ -356,7 +356,7 @@ export function caculateElementInfo(
             ...result,
             ...position,
         };
-        const rotationPosition = caculateMoveablePosition(
+        const rotationPosition = calculateMoveablePosition(
             result.allMatrix, [50, 50], 100, 100,
         );
         rotation = getRotationRad([rotationPosition.pos1, rotationPosition.pos2], rotationPosition.direction);
@@ -412,9 +412,9 @@ export function getElementInfo(
     container?: SVGElement | HTMLElement | null,
     rootContainer: SVGElement | HTMLElement | null | undefined = container,
 ) {
-    return caculateElementInfo(target, container, rootContainer, true);
+    return calculateElementInfo(target, container, rootContainer, true);
 }
-export function caculateMatrixStack(
+export function calculateMatrixStack(
     target: SVGElement | HTMLElement,
     container?: SVGElement | HTMLElement | null,
     rootContainer: SVGElement | HTMLElement | null | undefined = container,
@@ -488,7 +488,7 @@ export function caculateMatrixStack(
             offsetMatrix = allMatrix.slice();
         }
 
-        // caculate for SVGElement
+        // calculate for SVGElement
         if (isObject(matrix[n * (n - 1)])) {
             [matrix[n * (n - 1)], matrix[n * (n - 1) + 1]] =
                 getSVGOffset(
@@ -611,11 +611,11 @@ export function getSVGGraphicsOffset(
         origin[1] - top,
     ];
 }
-export function caculatePosition(matrix: number[], pos: number[], n: number) {
-    return caculate(matrix, convertPositionMatrix(pos, n), n);
+export function calculatePosition(matrix: number[], pos: number[], n: number) {
+    return calculate(matrix, convertPositionMatrix(pos, n), n);
 }
-export function caculatePoses(matrix: number[], width: number, height: number, n: number) {
-    return [[0, 0], [width, 0], [0, height], [width, height]].map(pos => caculatePosition(matrix, pos, n));
+export function calculatePoses(matrix: number[], width: number, height: number, n: number) {
+    return [[0, 0], [width, 0], [0, height], [width, height]].map(pos => calculatePosition(matrix, pos, n));
 }
 export function getRect(poses: number[][]) {
     const posesX = poses.map(pos => pos[0]);
@@ -634,8 +634,8 @@ export function getRect(poses: number[][]) {
         height: rectHeight,
     };
 }
-export function caculateRect(matrix: number[], width: number, height: number, n: number) {
-    const poses = caculatePoses(matrix, width, height, n);
+export function calculateRect(matrix: number[], width: number, height: number, n: number) {
+    const poses = calculatePoses(matrix, width, height, n);
 
     return getRect(poses);
 }
@@ -670,8 +670,8 @@ export function getSVGOffset(
         top: prevTop,
         width: prevWidth,
         height: prevHeight,
-    } = caculateRect(mat, width, height, n);
-    const posOrigin = caculatePosition(mat, origin, n);
+    } = calculateRect(mat, width, height, n);
+    const posOrigin = calculatePosition(mat, origin, n);
     const prevOrigin = minus(posOrigin, [prevLeft, prevTop]);
     const rectOrigin = [
         rectLeft + prevOrigin[0] * rectWidth / prevWidth,
@@ -683,8 +683,8 @@ export function getSVGOffset(
     while (++count < 10) {
         const inverseBeforeMatrix = invert(beforeMatrix, n);
         [offset[0], offset[1]] = minus(
-            caculatePosition(inverseBeforeMatrix, rectOrigin, n),
-            caculatePosition(inverseBeforeMatrix, posOrigin, n),
+            calculatePosition(inverseBeforeMatrix, rectOrigin, n),
+            calculatePosition(inverseBeforeMatrix, posOrigin, n),
         );
         const mat2 = multiplies(
             n,
@@ -695,7 +695,7 @@ export function getSVGOffset(
         const {
             left: nextLeft,
             top: nextTop,
-        } = caculateRect(mat2, width, height, n);
+        } = calculateRect(mat2, width, height, n);
         const distLeft = nextLeft - rectLeft;
         const distTop = nextTop - rectTop;
 
@@ -707,7 +707,7 @@ export function getSVGOffset(
     }
     return offset.map(p => Math.round(p));
 }
-export function caculateMoveablePosition(matrix: number[], origin: number[], width: number, height: number) {
+export function calculateMoveablePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
     const n = is3d ? 4 : 3;
     let [
@@ -715,8 +715,8 @@ export function caculateMoveablePosition(matrix: number[], origin: number[], wid
         [x2, y2],
         [x3, y3],
         [x4, y4],
-    ] = caculatePoses(matrix, width, height, n);
-    let [originX, originY] = caculatePosition(matrix, origin, n);
+    ] = calculatePoses(matrix, width, height, n);
+    let [originX, originY] = calculatePosition(matrix, origin, n);
 
     const left = Math.min(x1, x2, x3, x4);
     const top = Math.min(y1, y2, y3, y4);
@@ -856,12 +856,12 @@ export function getTargetInfo(
     let containerClientRect = resetClientRect();
     let moveableClientRect = resetClientRect();
 
-    const result = caculateElementInfo(
+    const result = calculateElementInfo(
         target, container!, rootContainer!, false, state,
     );
     if (target) {
         const n = result.is3d ? 4 : 3;
-        const beforePosition = caculateMoveablePosition(
+        const beforePosition = calculateMoveablePosition(
             result.offsetMatrix,
             plus(result.transformOrigin, getOrigin(result.targetMatrix, n)),
             result.width, result.height,
@@ -1188,8 +1188,8 @@ export function minOffset(...args: number[]) {
     return args[0];
 }
 
-export function caculateInversePosition(matrix: number[], pos: number[], n: number) {
-    return caculate(
+export function calculateInversePosition(matrix: number[], pos: number[], n: number) {
+    return calculate(
         invert(matrix, n),
         convertPositionMatrix(pos, n),
         n,
@@ -1203,16 +1203,16 @@ export function convertDragDist(state: MoveableManagerState, e: any) {
     const n = is3d ? 4 : 3;
     [
         e.distX, e.distY,
-    ] = caculateInversePosition(rootMatrix, [e.distX, e.distY], n);
+    ] = calculateInversePosition(rootMatrix, [e.distX, e.distY], n);
 
     return e;
 }
 
-export function caculatePadding(
+export function calculatePadding(
     matrix: number[], pos: number[],
     transformOrigin: number[], origin: number[], n: number,
 ) {
-    return minus(caculatePosition(matrix, plus(transformOrigin, pos), n), origin);
+    return minus(calculatePosition(matrix, plus(transformOrigin, pos), n), origin);
 }
 
 export function convertCSSSize(value: number, size: number, isRelative?: boolean) {

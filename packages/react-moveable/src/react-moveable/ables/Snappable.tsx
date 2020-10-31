@@ -9,10 +9,10 @@ import {
     SnappableOptions, MoveableClientRect, MoveableManagerInterface, SnappableRenderType, BoundType, SnapBoundInfo,
 } from "../types";
 import {
-    prefix, caculatePoses, getRect,
+    prefix, calculatePoses, getRect,
     getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign,
     getDistSize, groupBy, flat, maxOffset, minOffset,
-    triggerEvent, caculateInversePosition, caculatePosition,
+    triggerEvent, calculateInversePosition, calculatePosition,
     directionCondition,
 } from "../utils";
 import { IObject, find, findIndex, hasClass } from "@daybrush/utils";
@@ -38,12 +38,12 @@ import {
     checkSnapPoses,
 } from "./snappable/snap";
 
-export function caculateContainerPos(
+export function calculateContainerPos(
     rootMatrix: number[],
     containerRect: MoveableClientRect,
     n: number,
 ) {
-    const clientPos = caculatePosition(
+    const clientPos = calculatePosition(
         rootMatrix, [containerRect.clientLeft!, containerRect.clientTop!], n);
 
     return [
@@ -85,11 +85,11 @@ export function snapStart(moveable: MoveableManagerInterface<SnappableProps, Sna
         is3d,
     } = state;
     const n = is3d ? 4 : 3;
-    const [containerLeft, containerTop] = caculateContainerPos(rootMatrix, containerClientRect, n);
+    const [containerLeft, containerTop] = calculateContainerPos(rootMatrix, containerClientRect, n);
     const poses = getAbsolutePosesByState(state);
     const targetLeft = Math.min(...poses.map(pos => pos[0]));
     const targetTop = Math.min(...poses.map(pos => pos[1]));
-    const [distLeft, distTop] = minus([targetLeft, targetTop], caculateInversePosition(rootMatrix, [
+    const [distLeft, distTop] = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [
         clientLeft - containerLeft,
         clientTop - containerTop,
     ], n)).map(pos => roundSign(pos));
@@ -102,8 +102,8 @@ export function snapStart(moveable: MoveableManagerInterface<SnappableProps, Sna
         const top = rect.top - containerTop;
         const bottom = top + rect.height;
         const right = left + rect.width;
-        const [elementLeft, elementTop] = caculateInversePosition(rootMatrix, [left, top], n);
-        const [elementRight, elementBottom] = caculateInversePosition(rootMatrix, [right, bottom], n);
+        const [elementLeft, elementTop] = calculateInversePosition(rootMatrix, [left, top], n);
+        const [elementRight, elementBottom] = calculateInversePosition(rootMatrix, [right, bottom], n);
         const width = elementRight - elementLeft;
         const height = elementBottom - elementTop;
         const sizes = [width, height];
@@ -236,7 +236,7 @@ function getNextFixedPoses(
     direction: number[],
     is3d: boolean,
 ) {
-    const nextPoses = caculatePoses(matrix, width, height, is3d ? 4 : 3);
+    const nextPoses = calculatePoses(matrix, width, height, is3d ? 4 : 3);
     const nextPos = getPosByReverseDirection(nextPoses, direction);
 
     return getAbsolutePoses(nextPoses, minus(fixedPos, nextPos));
@@ -1566,8 +1566,8 @@ z-index: 2;
         const n = is3d ? 4 : 3;
         const minLeft = Math.min(pos1[0], pos2[0], pos3[0], pos4[0]);
         const minTop = Math.min(pos1[1], pos2[1], pos3[1], pos4[1]);
-        const containerPos = caculateContainerPos(rootMatrix, containerClientRect, n);
-        const [clientLeft, clientTop] = caculateInversePosition(rootMatrix, [
+        const containerPos = calculateContainerPos(rootMatrix, containerClientRect, n);
+        const [clientLeft, clientTop] = calculateInversePosition(rootMatrix, [
             targetClientRect.left - containerPos[0],
             targetClientRect.top - containerPos[1],
         ], n);

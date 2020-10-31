@@ -276,8 +276,8 @@ You will also see any lint errors in the console.
 ### Files related to major features.
 
 * Ables: https://github.com/daybrush/moveable/tree/master/packages/react-moveable/src/react-moveable/ables
-* Caculate Matrix Stack: https://github.com/daybrush/moveable/blob/master/packages/react-moveable/src/react-moveable/utils.ts
-  (`caculateElementInfo` function)
+* Calculate Matrix Stack: https://github.com/daybrush/moveable/blob/master/packages/react-moveable/src/react-moveable/utils.ts
+  (`calculateElementInfo` function)
 * Render Moveable Controls: https://github.com/daybrush/moveable/blob/master/packages/react-moveable/src/react-moveable/MoveableManager.tsx
 * Render Moveable Group: https://github.com/daybrush/moveable/blob/master/packages/react-moveable/src/react-moveable/MoveableGroup.tsx
 

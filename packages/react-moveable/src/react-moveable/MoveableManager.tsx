@@ -11,7 +11,7 @@ import {
     equals,
     flat,
     groupByMap,
-    caculatePadding,
+    calculatePadding,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
@@ -529,10 +529,10 @@ export default class MoveableManager<T = {}>
         const absoluteOrigin = (props as any).groupable ? beforeOrigin : plus(beforeOrigin, [stateLeft, stateTop]);
 
         state.renderPoses = [
-            plus(pos1, caculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos2, caculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos3, caculatePadding(allMatrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
-            plus(pos4, caculatePadding(allMatrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
+            plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos2, calculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos3, calculatePadding(allMatrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
+            plus(pos4, calculatePadding(allMatrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
         ];
     }
     public checkUpdate() {
