@@ -1267,7 +1267,7 @@ function renderElementGroup(
                 "dashed",
             )}
                 data-size={snapSize > 0 ? snapDistFormat(snapSize) : ""}
-                key={`${directionName}LinkGuidline${i}-${j}`} style={{
+                key={`${directionName}LinkGuideline${i}-${j}`} style={{
                     [posName1]: `${minPos + linePos}px`,
                     [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
                     [sizeName]: `${lineSize}px`,
@@ -1291,7 +1291,7 @@ function renderSnapPoses(
             "target",
             "bold",
             type,
-        )} key={`${directionName}TargetGuidline${i}`} style={{
+        )} key={`${directionName}TargetGuideline${i}`} style={{
             [posName1]: `${minPos}px`,
             [posName2]: `${-targetPos + pos}px`,
             [sizeName]: `${size}px`,
@@ -1314,7 +1314,7 @@ function renderGuidelines(
             directionName,
             "guideline",
             element ? "bold" : "",
-        )} key={`${directionName}Guidline${i}`} style={{
+        )} key={`${directionName}Guideline${i}`} style={{
             [posName1]: `${-targetPos1 + pos[index]}px`,
             [posName2]: `${-targetPos2 + pos[index ? 0 : 1]}px`,
             [sizeName]: `${size}px`,
