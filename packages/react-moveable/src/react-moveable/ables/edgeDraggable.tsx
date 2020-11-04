@@ -7,7 +7,7 @@ function getDraggableEvent(e: any) {
     let datas = e.originalDatas.draggable;
     if (!datas) {
         e.originalDatas.draggable = {};
-        datas = {};
+        datas = e.originalDatas.draggable;
     }
     return { ...e, datas };
 }
