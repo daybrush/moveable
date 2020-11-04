@@ -1914,24 +1914,24 @@ z-index: 2;
 
 /**
  * Add guidelines in the horizontal direction. (default: [])
- * @name Moveable.Snappable#horizontalGuidlines
+ * @name Moveable.Snappable#horizontalGuidelines
  * @example
  * import Moveable from "moveable";
  *
  * const moveable = new Moveable(document.body);
  *
- * moveable.horizontalGuidlines = [100, 200, 500];
+ * moveable.horizontalGuidelines = [100, 200, 500];
  */
 
 /**
  * Add guidelines in the vertical direction. (default: [])
- * @name Moveable.Snappable#verticalGuidlines
+ * @name Moveable.Snappable#verticalGuidelines
  * @example
  * import Moveable from "moveable";
  *
  * const moveable = new Moveable(document.body);
  *
- * moveable.verticalGuidlines = [100, 200, 500];
+ * moveable.verticalGuidelines = [100, 200, 500];
  */
 /**
  * Add guidelines for the element. (default: [])
