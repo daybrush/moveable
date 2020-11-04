@@ -3,9 +3,10 @@ import * as ReactDOM from "react-dom";
 import {
     getTransformMatrix, getAbsoluteMatrix,
     getSize, calculateMatrixStack,
-    throttle, throttleArray, isInside, getElementInfo,
+    throttle, throttleArray, getElementInfo,
 } from "../../src/react-moveable/utils";
-import { getRad, multiply, invert, transpose, createWarpMatrix, calculate } from "../../src/react-moveable/matrix";
+import { multiply, invert, transpose, createWarpMatrix, calculate } from "@scena/matrix";
+import { getRad } from "@daybrush/utils";
 import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCalculate } from "./TestHelper";
 
 describe("test utils", () => {
@@ -311,14 +312,6 @@ describe("test utils", () => {
             expect(h).to.be.deep.equals(helperH);
             expect(invertMatrix).to.be.deep.equals(transpose(helperInvertMatrix));
         });
-    });
-    it("test isInside", () => {
-        const pos1 = [0, 0];
-        const pos2 = [302, 0];
-        const pos3 = [0, 222];
-        const pos4 = [302, 222];
-
-        expect(isInside([30, 30], pos1, pos2, pos3, pos4)).to.be.true;
     });
     // it("test calculateBoundSize", () => {
     //     const size1 = calculateBoundSize([100, 100], [0, 0], [100, 50]);
