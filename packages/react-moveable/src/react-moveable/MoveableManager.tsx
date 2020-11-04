@@ -4,7 +4,6 @@ import {
     prefix,
     getTargetInfo,
     unset,
-    isInside,
     getAbsolutePosesByState,
     getRect,
     filterAbles,
@@ -17,9 +16,10 @@ import Gesto from "gesto";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
-import { plus } from "@scena/matrix";
+import { minus, plus } from "@scena/matrix";
 import { getRad, IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
+import { fitPoints, getAreaSize, getOverlapPoints, getOverlapSize, isInside } from "overlap-area";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -194,6 +194,11 @@ export default class MoveableManager<T = {}>
      * });
      */
     public hitTest(el: Element | HitRect): number {
+        const { target, pos1, pos2, pos3, pos4, targetClientRect } = this.state;
+
+        if (!target) {
+            return 0;
+        }
         let rect: Required<HitRect>;
 
         if (el instanceof Element) {
@@ -208,35 +213,27 @@ export default class MoveableManager<T = {}>
         } else {
             rect = { width: 0, height: 0, ...el };
         }
+
         const {
             left: rectLeft,
             top: rectTop,
             width: rectWidth,
             height: rectHeight,
-        } = this.state.targetClientRect;
-        const {
-            left,
-            top,
-            width,
-            height,
         } = rect;
-        const right = left + width;
-        const bottom = top + height;
-        const rectRight = rectLeft + rectWidth;
-        const rectBottom = rectTop + rectHeight;
-        const testLeft = Math.max(rectLeft, left);
-        const testRight = Math.min(rectRight, right);
-        const testTop = Math.max(rectTop, top);
-        const testBottom = Math.min(rectBottom, bottom);
+        const points = fitPoints([pos1, pos2, pos4, pos3], targetClientRect);
+        const size = getOverlapSize(points, [
+            [rectLeft, rectTop],
+            [rectLeft + rectWidth, rectTop],
+            [rectLeft + rectWidth, rectTop + rectHeight],
+            [rectLeft, rectTop + rectHeight],
+        ]);
+        const totalSize = getAreaSize(points);
 
-        if (testRight < testLeft || testBottom < testTop) {
+        if (!size || !totalSize) {
             return 0;
         }
 
-        const rectSize = (Math.min(rectRight, right) - Math.max(left, rectLeft))
-            * (Math.min(rectBottom, bottom) - Math.max(rectTop, top));
-
-        return Math.min(100, (testRight - testLeft) * (testBottom - testTop) / rectSize * 100);
+        return Math.min(100, size / totalSize * 100);
     }
     /**
      * Whether the coordinates are inside Moveable
@@ -256,15 +253,12 @@ export default class MoveableManager<T = {}>
      * });
      */
     public isInside(clientX: number, clientY: number) {
-        const { pos1, pos2, pos3, pos4, target, targetClientRect } = this.state;
+        const { target, pos1, pos2, pos3, pos4, targetClientRect } = this.state;
 
         if (!target) {
             return false;
         }
-        const { left, top } = targetClientRect;
-        const pos = [clientX - left, clientY - top];
-
-        return isInside(pos, pos1, pos2, pos3, pos4);
+        return isInside([clientX, clientY], fitPoints([pos1, pos2, pos4, pos3], targetClientRect));
     }
     /**
      * If the width, height, left, and top of all elements change, update the shape of the moveable.

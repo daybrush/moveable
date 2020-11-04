@@ -37,6 +37,7 @@ import {
     checkSnapKeepRatio,
     checkSnapPoses,
 } from "./snappable/snap";
+import { getMinMaxs } from "overlap-area";
 
 export function calculateContainerPos(
     rootMatrix: number[],
@@ -87,8 +88,10 @@ export function snapStart(moveable: MoveableManagerInterface<SnappableProps, Sna
     const n = is3d ? 4 : 3;
     const [containerLeft, containerTop] = calculateContainerPos(rootMatrix, containerClientRect, n);
     const poses = getAbsolutePosesByState(state);
-    const targetLeft = Math.min(...poses.map(pos => pos[0]));
-    const targetTop = Math.min(...poses.map(pos => pos[1]));
+    const {
+        minX: targetLeft,
+        minY: targetTop,
+    } = getMinMaxs(poses);
     const [distLeft, distTop] = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [
         clientLeft - containerLeft,
         clientTop - containerTop,

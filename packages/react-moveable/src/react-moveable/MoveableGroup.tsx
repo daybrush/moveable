@@ -70,9 +70,9 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
                 rotate(pos4, -rad),
             ];
         });
+
         groupWidth = getMaxPos(rotatePoses, 0) - getMinPos(rotatePoses, 0);
         groupHeight = getMaxPos(rotatePoses, 1) - getMinPos(rotatePoses, 1);
-
     } else {
         minX = getMinPos(moveablePoses, 0);
         minY = getMinPos(moveablePoses, 1);

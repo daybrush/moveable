@@ -1,6 +1,6 @@
 import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString, getRad } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString, getRad, getShapeDirection } from "@daybrush/utils";
 import {
     multiply, invert,
     convertDimension, createIdentityMatrix,
@@ -709,12 +709,13 @@ export function getSVGOffset(
 export function calculateMoveablePosition(matrix: number[], origin: number[], width: number, height: number) {
     const is3d = matrix.length === 16;
     const n = is3d ? 4 : 3;
+    const poses = calculatePoses(matrix, width, height, n);
     let [
         [x1, y1],
         [x2, y2],
         [x3, y3],
         [x4, y4],
-    ] = calculatePoses(matrix, width, height, n);
+    ] = poses;
     let [originX, originY] = calculatePosition(matrix, origin, n);
 
     const left = Math.min(x1, x2, x3, x4);
@@ -735,15 +736,7 @@ export function calculateMoveablePosition(matrix: number[], origin: number[], wi
     originX = (originX - left) || 0;
     originY = (originY - top) || 0;
 
-    const center = [
-        (x1 + x2 + x3 + x4) / 4,
-        (y1 + y2 + y3 + y4) / 4,
-    ];
-    const pos1Rad = getRad(center, [x1, y1]);
-    const pos2Rad = getRad(center, [x2, y2]);
-    const direction: 1 | -1 =
-        (pos1Rad < pos2Rad && pos2Rad - pos1Rad < Math.PI) || (pos1Rad > pos2Rad && pos2Rad - pos1Rad < -Math.PI)
-            ? 1 : -1;
+    const direction = getShapeDirection(poses);
 
     return {
         left,
@@ -987,31 +980,6 @@ export function unset(self: any, name: string) {
         self[name].unset();
         self[name] = null;
     }
-}
-
-export function getOrientationDirection(pos: number[], pos1: number[], pos2: number[]) {
-    return (pos[0] - pos1[0]) * (pos2[1] - pos1[1]) - (pos[1] - pos1[1]) * (pos2[0] - pos1[0]);
-}
-export function isInside(pos: number[], pos1: number[], pos2: number[], pos3: number[], pos4: number[]) {
-    const k1 = getOrientationDirection(pos, pos1, pos2);
-    const k2 = getOrientationDirection(pos, pos2, pos3);
-    const k3 = getOrientationDirection(pos, pos3, pos1);
-
-    const k4 = getOrientationDirection(pos, pos2, pos3);
-    const k5 = getOrientationDirection(pos, pos3, pos4);
-    const k6 = getOrientationDirection(pos, pos4, pos2);
-    const signs1 = [k1, k2, k3];
-    const signs2 = [k4, k5, k6];
-
-    if (
-        signs1.every(sign => sign >= 0)
-        || signs1.every(sign => sign <= 0)
-        || signs2.every(sign => sign >= 0)
-        || signs2.every(sign => sign <= 0)
-    ) {
-        return true;
-    }
-    return false;
 }
 
 export function fillParams<T extends IObject<any>>(
