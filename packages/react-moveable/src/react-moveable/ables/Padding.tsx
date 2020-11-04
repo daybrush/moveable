@@ -1,6 +1,6 @@
 import { prefix, makeMatrixCSS } from "../utils";
 import { Renderer, MoveableManagerInterface } from "../types";
-import { createWarpMatrix } from "../matrix";
+import { createWarpMatrix } from "@scena/matrix";
 
 export default {
     name: "padding",

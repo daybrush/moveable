@@ -8,7 +8,7 @@ import {
 } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
 import { setDragStart, getDragDist, getNextMatrix } from "../gesto/GestoUtils";
-import { minus, plus } from "../matrix";
+import { minus, plus } from "@scena/matrix";
 import Draggable from "./Draggable";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 

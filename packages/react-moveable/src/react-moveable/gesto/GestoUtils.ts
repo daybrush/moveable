@@ -1,13 +1,14 @@
+
 import {
     invert, calculate, minus, plus,
-    convertPositionMatrix, average,
+    convertPositionMatrix,
     createScaleMatrix, multiply, fromTranslation, convertDimension,
-} from "../matrix";
+} from "@scena/matrix";
 import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
     calculatePosition, calculateInversePosition, getTransform, calculateMoveablePosition
 } from "../utils";
-import { splitUnit, isArray, splitSpace } from "@daybrush/utils";
+import { splitUnit, isArray, splitSpace, average } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
@@ -265,8 +266,8 @@ export function getPosByDirection(
     const nextPoses = getPosesByDirection(poses, direction);
 
     return [
-        average(...nextPoses.map(pos => pos[0])),
-        average(...nextPoses.map(pos => pos[1])),
+        average(nextPoses.map(pos => pos[0])),
+        average(nextPoses.map(pos => pos[1])),
     ];
 }
 export function getPosByReverseDirection(

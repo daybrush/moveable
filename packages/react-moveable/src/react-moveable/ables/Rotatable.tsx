@@ -2,7 +2,7 @@ import {
     throttle, prefix, triggerEvent, fillParams,
     getClientRect, calculatePosition, fillEndParams
 } from "../utils";
-import { IObject, hasClass } from "@daybrush/utils";
+import { IObject, hasClass, getRad } from "@daybrush/utils";
 import {
     RotatableProps, OnRotateGroup, OnRotateGroupEnd,
     Renderer, OnRotateGroupStart, OnRotateStart, OnRotate,
@@ -12,7 +12,7 @@ import {
 } from "../types";
 import { triggerChildAble } from "../groupUtils";
 import Draggable from "./Draggable";
-import { minus, plus, getRad, rotate as rotateMatrix } from "../matrix";
+import { minus, plus, rotate as rotateMatrix } from "@scena/matrix";
 import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapRotate } from "./Snappable";
 import {

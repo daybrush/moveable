@@ -1,5 +1,5 @@
 import MoveableManager from "../../src/react-moveable/MoveableManager";
-import {  createRotateMatrix, calculate, minus, plus, createIdentityMatrix } from "../../src/react-moveable/matrix";
+import { createRotateMatrix, calculate, minus, plus, createIdentityMatrix } from "@scena/matrix";
 import { RotatableProps } from "../../src/react-moveable";
 import { getClientRect } from "../../src/react-moveable/utils";
 

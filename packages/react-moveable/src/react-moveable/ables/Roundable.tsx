@@ -7,7 +7,7 @@ import {
 } from "../types";
 import { splitSpace } from "@daybrush/utils";
 import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
-import { minus, plus } from "../matrix";
+import { minus, plus } from "@scena/matrix";
 import {
     getRadiusValues, getRadiusStyles, removeRadiusPos,
     addRadiusPos, splitRadiusPoses,

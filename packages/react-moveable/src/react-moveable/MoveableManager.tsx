@@ -17,8 +17,8 @@ import Gesto from "gesto";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
-import { getRad, plus } from "./matrix";
-import { IObject } from "@daybrush/utils";
+import { plus } from "@scena/matrix";
+import { getRad, IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
 
 export default class MoveableManager<T = {}>

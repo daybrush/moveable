@@ -1,6 +1,6 @@
 import {
     createWarpMatrix,
-} from "../matrix";
+} from "@scena/matrix";
 import { ref } from "framework-utils";
 import { getRect, calculateInversePosition, makeMatrixCSS, prefix } from "../utils";
 import {

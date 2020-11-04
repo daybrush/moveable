@@ -4,7 +4,7 @@ import {
 import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy, getTinyDist } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
-import { minus } from "../../matrix";
+import { minus } from "@scena/matrix";
 
 export function getGapGuidelines(
     guidelines: Guideline[],

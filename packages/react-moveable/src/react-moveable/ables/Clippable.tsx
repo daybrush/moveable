@@ -3,14 +3,14 @@ import {
     ClippableState, OnClipEnd, OnClipStart,
     ControlPose, MoveableManagerInterface
 } from "../types";
-import { splitBracket, splitComma, splitUnit, splitSpace, convertUnitSize } from "@daybrush/utils";
+import { splitBracket, splitComma, splitUnit, splitSpace, convertUnitSize, getRad } from "@daybrush/utils";
 import {
     prefix, calculatePosition, getDiagonalSize,
     fillParams, triggerEvent,
     makeMatrixCSS, getRect, fillEndParams,
     convertCSSSize, moveControlPos,
 } from "../utils";
-import { getRad, plus, minus } from "../matrix";
+import { plus, minus } from "@scena/matrix";
 import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
 import {
     getRadiusValues,

@@ -1,5 +1,6 @@
+import { getRad } from "@daybrush/utils";
 import { BoundInfo, SnappableProps, BoundType, RotatableProps, MoveableManagerInterface } from "../../types";
-import { rotate, getRad, minus } from "../../matrix";
+import { rotate, minus } from "@scena/matrix";
 import { getDistSize, throttle } from "../../utils";
 import { TINY_NUM } from "../../consts";
 

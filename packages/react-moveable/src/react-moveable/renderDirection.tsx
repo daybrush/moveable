@@ -1,8 +1,7 @@
 import { prefix, getControlTransform, throttle, getLineStyle } from "./utils";
 import { ResizableProps, ScalableProps, WarpableProps, Renderer, MoveableManagerInterface } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
-import { IObject } from "@daybrush/utils";
-import { getRad } from "./matrix";
+import { IObject, getRad } from "@daybrush/utils";
 
 export function renderControls(
     moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,

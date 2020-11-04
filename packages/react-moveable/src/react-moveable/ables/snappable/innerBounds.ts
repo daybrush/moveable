@@ -1,5 +1,7 @@
+import { average, getRad } from "@daybrush/utils";
+import { rotate } from "@scena/matrix";
 import { maxOffset, getDistSize, throttle, getTinyDist } from "../../utils";
-import { average, rotate, getRad } from "../../matrix";
+
 import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../gesto/GestoUtils";
 import { getNearOffsetInfo } from "./snap";
@@ -8,8 +10,8 @@ import { TINY_NUM } from "../../consts";
 function isStartLine(dot: number[], line: number[][]) {
     // l    o     => true
     // o    l    => false
-    const cx = average(line[0][0], line[1][0]);
-    const cy = average(line[0][1], line[1][1]);
+    const cx = average([line[0][0], line[1][0]]);
+    const cy = average([line[0][1], line[1][1]]);
 
     return {
         vertical: cx <= dot[0],

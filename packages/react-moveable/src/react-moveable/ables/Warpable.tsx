@@ -9,9 +9,8 @@ import {
     ignoreDimension,
     minus,
     createWarpMatrix,
-    getRad,
     plus,
-} from "../matrix";
+} from "@scena/matrix";
 import { NEARBY_POS } from "../consts";
 import {
     setDragStart, getDragDist, getPosIndexesByDirection, setDefaultTransformIndex,
@@ -22,7 +21,7 @@ import {
     Renderer, SnappableProps, SnappableState,
     OnWarpStart, OnWarp, OnWarpEnd, MoveableManagerInterface,
 } from "../types";
-import { hasClass, dot } from "@daybrush/utils";
+import { hasClass, dot, getRad } from "@daybrush/utils";
 import { renderAllDirections } from "../renderDirection";
 import { hasGuidelines, checkMoveableSnapBounds } from "./Snappable";
 

@@ -15,12 +15,12 @@ import {
     triggerEvent, calculateInversePosition, calculatePosition,
     directionCondition,
 } from "../utils";
-import { IObject, find, findIndex, hasClass } from "@daybrush/utils";
+import { IObject, find, findIndex, hasClass, getRad } from "@daybrush/utils";
 import {
     getPosByReverseDirection,
     getDragDist, scaleMatrix, getPosByDirection,
 } from "../gesto/GestoUtils";
-import { minus, rotate, plus, getRad } from "../matrix";
+import { minus, rotate, plus } from "@scena/matrix";
 import {
     dragControlCondition as rotatableDragControlCondtion,
 } from "./Rotatable";

@@ -5,7 +5,7 @@ import {
     OnBeforeRenderGroup, OnBeforeRenderGroupEnd
 } from "../types";
 import { fillParams, triggerEvent } from "../utils";
-import { convertMatrixtoCSS } from "../matrix";
+import { convertMatrixtoCSS } from "@scena/matrix";
 import { isArray, splitSpace } from "@daybrush/utils";
 import { fillChildEvents } from "../groupUtils";
 

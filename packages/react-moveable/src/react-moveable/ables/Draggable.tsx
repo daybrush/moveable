@@ -3,7 +3,7 @@ import {
     convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex
 } from "../gesto/GestoUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
-import { minus, plus, getRad } from "../matrix";
+import { minus, plus } from "@scena/matrix";
 import {
     DraggableProps, OnDrag, OnDragGroup,
     OnDragGroupStart, OnDragStart, OnDragEnd, DraggableState,
@@ -11,7 +11,7 @@ import {
 } from "../types";
 import { triggerChildGesto } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
-import { IObject } from "@daybrush/utils";
+import { IObject, getRad } from "@daybrush/utils";
 
 /**
  * @namespace Draggable
