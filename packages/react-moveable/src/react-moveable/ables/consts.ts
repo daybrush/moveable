@@ -20,13 +20,14 @@ import BeforeRenderable from "./BeforeRenderable";
 import Renderable from "./Renderable";
 import Clickable from "./Clickable";
 import edgeDraggable from "./edgeDraggable";
+import IndividualGroupable from "./IndividualGroupable";
 
 export const MOVEABLE_ABLES = /*#__PURE__*/[
     BeforeRenderable,
     Default, Snappable, Pinchable, Draggable, edgeDraggable, Rotatable,
     Resizable, Scalable, Warpable, Scrollable, Padding, Origin,
     OriginDraggable,
-    Clippable, Roundable, Groupable,
+    Clippable, Roundable, Groupable, IndividualGroupable,
     Clickable,
     DragArea,
     Renderable,

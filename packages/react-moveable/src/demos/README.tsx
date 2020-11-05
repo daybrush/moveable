@@ -1004,6 +1004,53 @@ function RenderTRSGroup() {
         ></Moveable>
     </div>;
 }
+
+function RenderTRSIndividualGroup() {
+    const [frameMap] = React.useState(() => {
+        return new Map<HTMLElement | SVGElement, { translate: number[], rotate: number, scale: number[] }>();
+    });
+    function getFrame(target: HTMLElement | SVGElement) {
+        if (!frameMap.has(target)) {
+            frameMap.set(target, { translate: [0, 0], rotate: 0, scale: [-1, 1] });
+        }
+
+        return frameMap.get(target);
+    }
+
+
+    return <div className="container trs-individual-group group">
+        <p>T & R & S  Group</p>
+        <div className="box box1" style={{ transform: "scale(-1, 1)" }}><span>A</span></div>
+        <div className="box box2"><span>B</span></div>
+        <div className="box box3" style={{ transform: "scale(-1, 1)" }}><span>C</span></div>
+        <div className="box box4"><span>D</span></div>
+        <Moveable
+            // ref={ref}
+            target={".trs-individual-group .box"}
+            individualGroupable={true}
+            origin={false}
+            draggable={true}
+            scalable={true}
+            rotatable={true}
+            onBeforeRenderStart={e => {
+                const frame = getFrame(e.target)!;
+
+                e.setTransform([
+                    `translate(${frame.translate[0]}px, ${frame.translate[1]}px)`,
+                    `rotate(${frame.rotate}deg)`,
+                    `scale(${frame.scale[0]}, ${frame.scale[1]})`,
+                ]);
+            }}
+            onDragStart={e => {
+                e.setTransformIndex(0);
+            }}
+            onDrag={e => {
+                frameMap.get(e.target)!.translate = e.translate;
+                e.target.style.transform = e.transform;
+            }}
+        ></Moveable>
+    </div>;
+}
 export default function App() {
     return <div>
         <RenderDraggable />
@@ -1027,6 +1074,7 @@ export default function App() {
         <RenderRotateGroup />
         <RenderResizeGroup />
         <RenderTRSGroup />
+        <RenderTRSIndividualGroup />
         <RenderPSpan />
         <RenderSVGOriginDraggable />
     </div>;

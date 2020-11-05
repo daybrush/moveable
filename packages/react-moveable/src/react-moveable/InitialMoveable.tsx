@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Able, MoveableInterface, GroupableProps, MoveableDefaultProps } from "./types";
+import { Able, MoveableInterface, GroupableProps, MoveableDefaultProps, IndividualGroupableProps } from "./types";
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
 import { ref, withMethods, prefixCSS } from "framework-utils";
@@ -10,9 +10,11 @@ import Groupable from "./ables/Groupable";
 import DragArea from "./ables/DragArea";
 import styled from "react-css-styled";
 import { getRefTargets, getElementTargets } from "./utils";
+import IndividualGroupable from "./ables/IndividualGroupable";
+import MoveableIndividualGroup from "./MoveableIndividualGroup";
 
 export class InitialMoveable<T = {}>
-    extends React.PureComponent<MoveableDefaultProps & GroupableProps & T> {
+    extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T> {
     public static defaultAbles: Able[] = [];
     public static defaultStyled: any = null;
     public static makeStyled() {
@@ -33,7 +35,7 @@ export class InitialMoveable<T = {}>
     }
     public static getTotalAbles(): Able[] {
 
-        return [Default, Groupable, DragArea, ...this.defaultAbles];
+        return [Default, Groupable, IndividualGroupable, DragArea, ...this.defaultAbles];
     }
     @withMethods(MOVEABLE_METHODS)
     public moveable!: MoveableManager | MoveableGroup;
@@ -45,30 +47,39 @@ export class InitialMoveable<T = {}>
         if (!moveableContructor.defaultStyled) {
             moveableContructor.makeStyled();
         }
-        const refTargets = getRefTargets((this.props.target || this.props.targets) as any);
+        const props = this.props;
+        const refTargets = getRefTargets((props.target || props.targets) as any);
         const elementTargets = getElementTargets(refTargets, this.selectorMap);
 
         this.refTargets = refTargets;
 
         const isGroup = elementTargets.length > 1;
         const totalAbles = moveableContructor.getTotalAbles();
-        const userAbles = this.props.ables! || [];
+        const userAbles = props.ables! || [];
         const ables = [
             ...totalAbles,
             ...userAbles,
         ];
 
         if (isGroup) {
+            if (props.individualGroupable) {
+                return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
+                    cssStyled={moveableContructor.defaultStyled}
+                    {...props}
+                    target={null}
+                    targets={elementTargets}
+                    ables={ables} />;
+            }
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
                 cssStyled={moveableContructor.defaultStyled}
-                {...this.props}
+                {...props}
                 target={null}
                 targets={elementTargets}
                 ables={ables} />;
         } else {
             return <MoveableManager<any> key="single" ref={ref(this, "moveable")}
                 cssStyled={moveableContructor.defaultStyled}
-                {...this.props}
+                {...props}
                 target={elementTargets[0]}
                 ables={ables} />;
         }
@@ -112,6 +123,6 @@ export class InitialMoveable<T = {}>
     }
 }
 export interface InitialMoveable<T = {}>
-    extends React.PureComponent<MoveableDefaultProps & GroupableProps & T>, MoveableInterface {
+    extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T>, MoveableInterface {
     setState(state: any, callback?: () => any): any;
 }

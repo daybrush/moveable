@@ -14,12 +14,12 @@ import {
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect } from "./types";
+import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
-import { minus, plus } from "@scena/matrix";
+import { plus } from "@scena/matrix";
 import { getRad, IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
-import { fitPoints, getAreaSize, getOverlapPoints, getOverlapSize, isInside } from "overlap-area";
+import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -31,6 +31,7 @@ export default class MoveableManager<T = {}>
         origin: true,
         edge: false,
         parentMoveable: null,
+        wrapperMoveable: null,
         parentPosition: null,
         ables: [],
         pinchThreshold: 20,
@@ -47,6 +48,7 @@ export default class MoveableManager<T = {}>
         cspNonce: "",
         translateZ: 50,
         cssStyled: null,
+        props: {},
     };
     public state: MoveableManagerState = {
         container: null,
@@ -114,11 +116,11 @@ export default class MoveableManager<T = {}>
     public componentDidMount() {
         this.controlBox.getElement();
         const props = this.props;
-        const { parentMoveable, container } = props;
+        const { parentMoveable, container, wrapperMoveable } = props;
 
         this.updateEvent(props);
-        if (!container && !parentMoveable) {
-            this.updateRect("End", false, true);
+        if (!container && !parentMoveable && !wrapperMoveable) {
+            this.updateRect("", false, true);
         }
         this.updateCheckInput();
     }
@@ -132,9 +134,10 @@ export default class MoveableManager<T = {}>
         unset(this, "controlGesto");
     }
     public getContainer(): HTMLElement | SVGElement {
-        const { parentMoveable, container } = this.props;
+        const { parentMoveable, wrapperMoveable, container } = this.props;
 
         return container!
+            || (wrapperMoveable && wrapperMoveable.getContainer())
             || (parentMoveable && parentMoveable.getContainer())
             || this.controlBox.getElement().parentElement!;
     }
@@ -400,6 +403,20 @@ export default class MoveableManager<T = {}>
             transformOrigin,
             rotation: this.getRotation(),
         };
+    }
+    /**
+     * Get a manager that manages the moveable's state and props.
+     * @method Moveable#getManager
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const manager = moveable.getManager(); // real moveable class instance
+     */
+    public getManager(): MoveableManagerInterface<any, any> {
+        return this as any;
     }
     public getRotation() {
         const {

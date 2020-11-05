@@ -32,7 +32,7 @@ export const IS_WEBKIT605 = IS_WEBKIT && (() => {
 export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = `
 {
-	position: fixed;
+	position: absolute;
 	width: 1px;
 	height: 1px;
 	left: 0;

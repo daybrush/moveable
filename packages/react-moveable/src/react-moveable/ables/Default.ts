@@ -16,6 +16,7 @@ export default {
         checkInput: Boolean,
         cspNonce: String,
         translateZ: Number,
+        props: Object,
     } as const,
     events: {} as const,
 };

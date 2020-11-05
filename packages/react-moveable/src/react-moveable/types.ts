@@ -19,7 +19,8 @@ export interface MoveableClientRect {
 }
 export type MoveableManagerProps<T = {}> = {
     cssStyled: any;
-    parentMoveable?: any;
+    wrapperMoveable?: MoveableManagerInterface | null;
+    parentMoveable?: MoveableManagerInterface | null;
     parentPosition?: { left: number, top: number } | null;
     groupable?: boolean;
 } & MoveableDefaultOptions & (unknown extends T ? IObject<any> : T);
@@ -43,6 +44,7 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
  * @property - add nonce property to style for CSP (default: "")
  * @property - You can set the translateZ value of moveable (default: 50)
+ * @property - You can use props in object format or custom props. (default: object)
  */
 export interface DefaultOptions {
     target?: SVGElement | HTMLElement | null;
@@ -60,6 +62,7 @@ export interface DefaultOptions {
     checkInput?: boolean;
     cspNonce?: string;
     translateZ?: number;
+    props?: Record<string, any>;
 }
 /**
  * @typedef
@@ -184,6 +187,7 @@ export interface MoveableProps extends
     WarpableProps,
     PinchableProps,
     ExcludeKey<GroupableProps, "targets" | "updateGroup">,
+    IndividualGroupableProps,
     SnappableProps,
     ScrollableProps,
     ClippableProps,
@@ -232,6 +236,7 @@ export interface MoveableOptions extends
     WarpableOptions,
     PinchableOptions,
     GroupableOptions,
+    IndividualGroupableOptions,
     SnappableOptions,
     ScrollableOptions,
     ClippableOptions,
@@ -1292,15 +1297,28 @@ export interface PinchableProps
  * @memberof Moveable.Group
  * @property - Sets the initial rotation of the group. (default 0)
  * @property - Sets the initial transform origin of the group. (default "50% 50%")
- *
  */
 export interface GroupableOptions {
     defaultGroupRotate?: number;
     defaultGroupOrigin?: string;
     groupable?: boolean;
 }
+
+
+/**
+ * @typedef
+ * @memberof Moveable.IndividualGroup
+ * @property - Create targets individually, not as a group.
+ */
+export interface IndividualGroupableOptions {
+    individualGroupable?: boolean;
+}
+
+export interface IndividualGroupableProps extends IndividualGroupableOptions {
+}
+
 export interface GroupableProps extends GroupableOptions {
-    targets?: ArrayFormat<HTMLElement | SVGElement>;
+    targets?: Array<HTMLElement | SVGElement>;
     updateGroup?: boolean;
 }
 
@@ -1599,6 +1617,7 @@ export interface HitRect {
     height?: number;
 }
 export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterface {
+    moveables?: MoveableManagerInterface[];
     props: MoveableManagerProps<T>;
     state: MoveableManagerState<U>;
     rotation: number;
@@ -1617,11 +1636,12 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     forceUpdate(): any;
 }
 export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {
-    props: MoveableManagerProps<T> & { targets: Array<HTMLElement | SVGElement> };
     moveables: MoveableManagerInterface[];
+    props: MoveableManagerProps<T> & { targets: Array<HTMLElement | SVGElement> };
     transformOrigin: string;
 }
 export interface MoveableInterface {
+    getManager(): MoveableManagerInterface<any, any>;
     getRect(): RectInfo;
     isMoveableElement(target: Element): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
@@ -1661,6 +1681,7 @@ export type UnionToIntersection<U> =
 export type MoveableEvents = {
     [key in keyof typeof MOVEABLE_EVENTS_MAP]: Parameters<Required<MoveableProps>[typeof MOVEABLE_EVENTS_MAP[key]]>[0];
 };
+
 export type MoveableProperties = {
     [key in keyof typeof MOVEABLE_PROPS_MAP]: MoveableProps[key];
 };
