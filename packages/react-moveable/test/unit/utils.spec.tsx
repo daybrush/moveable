@@ -16,6 +16,7 @@ describe("test utils", () => {
         document.body.innerHTML = `<div class="container"></div>`;
     });
     afterEach(() => {
+        document.body.style.position = "static";
         const container = document.querySelector(".container");
 
         if (container) {
@@ -326,8 +327,9 @@ describe("test utils", () => {
     //     expect(size4).to.be.deep.equals([50, 50]);
     //     expect(size5).to.be.deep.equals([50, 125]);
     // });
-    it("test getElementInfo function", () => {
+    it("test getElementInfo function (position: static)", () => {
         document.body.style.margin = "10px";
+        document.body.style.position = "static";
         document.body.innerHTML = `<svg
         class="svg4"
         width="600"
@@ -350,6 +352,55 @@ describe("test utils", () => {
    </svg>`;
         // When
         const info = getElementInfo(document.querySelector("svg")!, document.body);
+
+        expect(info.left).to.be.equals(10);
+        expect(info.top).to.be.equals(10);
+    });
+    it("test getElementInfo function(position: relative)", () => {
+        document.body.style.margin = "10px";
+        document.body.style.position = "relative";
+        document.body.innerHTML = `<svg
+        class="svg4"
+        width="600"
+        height="600"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 600 600"
+        style="border: 1px solid #000000; position: relative;"
+        >
+     <text
+           ref="moveable"
+           class="moveable"
+           x="50"
+           y="50"
+           fill="#000000"
+           font-size="40px"
+           font-style="normal"
+           >
+       <tspan>Jon doe</tspan>
+     </text>
+   </svg>`;
+        // When
+        const info = getElementInfo(document.querySelector("svg")!, document.body);
+
+        expect(info.left).to.be.equals(10);
+        expect(info.top).to.be.equals(10);
+    });
+    it("test getElementInfo function(div, position: static)", () => {
+        document.body.style.margin = "10px";
+        document.body.style.position = "static";
+        document.body.innerHTML = `<div id="test"></div>`;
+        // When
+        const info = getElementInfo(document.querySelector<HTMLElement>("#test")!, document.body);
+
+        expect(info.left).to.be.equals(10);
+        expect(info.top).to.be.equals(10);
+    });
+    it("test getElementInfo function(div, position: relative)", () => {
+        document.body.style.margin = "10px";
+        document.body.style.position = "relative";
+        document.body.innerHTML = `<div id="test"></div>`;
+        // When
+        const info = getElementInfo(document.querySelector<HTMLElement>("#test")!, document.body);
 
         expect(info.left).to.be.equals(10);
         expect(info.top).to.be.equals(10);

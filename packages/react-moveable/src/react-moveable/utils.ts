@@ -67,8 +67,6 @@ export function measureSVGSize(el: SVGElement, unit: string, isHorizontal: boole
 export function getBeforeTransformOrigin(el: SVGElement) {
     const relativeOrigin = getTransformOrigin(getComputedStyle(el, ":before"));
 
-    console.log(el, getComputedStyle(el).transformOrigin, getComputedStyle(el, ":before").transformOrigin);
-
     return relativeOrigin.map((o, i) => {
         const { value, unit } = splitUnit(o);
 
@@ -163,9 +161,14 @@ export function getOffsetPosInfo(
 }
 export function getBodyOffset(
     el: HTMLElement| SVGElement,
+    isSVG: boolean,
     style: CSSStyleDeclaration = window.getComputedStyle(el),
 ) {
     const bodyStyle = window.getComputedStyle(document.body);
+    const bodyPosition = bodyStyle.position;
+    if (!isSVG && (!bodyPosition || bodyPosition === "static")) {
+        return [0, 0];
+    }
 
     let marginLeft = parseInt(bodyStyle.marginLeft, 10);
     let marginTop = parseInt(bodyStyle.marginTop, 10);
@@ -265,7 +268,7 @@ export function getMatrixStackInfo(
             parentClientTop = offsetParent.clientTop;
         }
         if (hasOffset && offsetParent === document.body) {
-            const margin = getBodyOffset(el, style);
+            const margin = getBodyOffset(el, false, style);
             offsetLeft += margin[0];
             offsetTop += margin[1];
         }
@@ -648,7 +651,7 @@ export function getSVGOffset(
     let margin = [0, 0];
 
     if (container === document.body) {
-        margin = getBodyOffset(el);
+        margin = getBodyOffset(el, true);
     }
     const rect = el.getBoundingClientRect();
     const rectLeft
