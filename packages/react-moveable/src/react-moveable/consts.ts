@@ -231,4 +231,5 @@ export const MOVEABLE_METHODS: Array<keyof MoveableInterface> = [
     "getRect",
     "request",
     "isDragging",
+    "getManager",
 ];

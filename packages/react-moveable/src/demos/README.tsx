@@ -2,6 +2,7 @@ import React from "react";
 import Moveable from "../react-moveable";
 import Selecto from "react-selecto";
 import "./README.css";
+import { useEffect } from "react";
 
 function RenderDraggable() {
     const ref = React.useRef<HTMLDivElement>(null);
@@ -1011,26 +1012,32 @@ function RenderTRSIndividualGroup() {
     });
     function getFrame(target: HTMLElement | SVGElement) {
         if (!frameMap.has(target)) {
-            frameMap.set(target, { translate: [0, 0], rotate: 0, scale: [-1, 1] });
+            frameMap.set(target, { translate: [0, 0], rotate: 0, scale: [1, 1] });
         }
 
         return frameMap.get(target);
     }
 
+    const ref = React.useRef<any>(null);
+
+    useEffect(() => {
+        (window as any).b = ref.current;
+    })
+
 
     return <div className="container trs-individual-group group">
         <p>T & R & S  Group</p>
-        <div className="box box1" style={{ transform: "scale(-1, 1)" }}><span>A</span></div>
+        <div className="box box1" ><span>A</span></div>
         <div className="box box2"><span>B</span></div>
-        <div className="box box3" style={{ transform: "scale(-1, 1)" }}><span>C</span></div>
+        <div className="box box3" ><span>C</span></div>
         <div className="box box4"><span>D</span></div>
         <Moveable
-            // ref={ref}
+            ref={ref}
             target={".trs-individual-group .box"}
             individualGroupable={true}
             origin={false}
             draggable={true}
-            scalable={true}
+            resizable={true}
             rotatable={true}
             onBeforeRenderStart={e => {
                 const frame = getFrame(e.target)!;
@@ -1047,6 +1054,16 @@ function RenderTRSIndividualGroup() {
             onDrag={e => {
                 frameMap.get(e.target)!.translate = e.translate;
                 e.target.style.transform = e.transform;
+            }}
+            onResizeStart={e => {
+                e.dragStart && e.dragStart.setTransformIndex(0);
+            }}
+            onResize={e => {
+                e.target.style.width = `${e.width}px`;
+                e.target.style.height = `${e.height}px`;
+
+                e.target.style.transform = e.drag.transform;
+                frameMap.get(e.target)!.translate = e.drag.translate;
             }}
         ></Moveable>
     </div>;

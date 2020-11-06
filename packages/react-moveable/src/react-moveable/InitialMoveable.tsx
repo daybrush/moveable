@@ -1,5 +1,8 @@
 import * as React from "react";
-import { Able, MoveableInterface, GroupableProps, MoveableDefaultProps, IndividualGroupableProps } from "./types";
+import {
+    Able, MoveableInterface, GroupableProps, MoveableDefaultProps,
+    IndividualGroupableProps, MoveableManagerInterface
+} from "./types";
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
 import { ref, withMethods, prefixCSS } from "framework-utils";
@@ -12,6 +15,7 @@ import styled from "react-css-styled";
 import { getRefTargets, getElementTargets } from "./utils";
 import IndividualGroupable from "./ables/IndividualGroupable";
 import MoveableIndividualGroup from "./MoveableIndividualGroup";
+
 
 export class InitialMoveable<T = {}>
     extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T> {
@@ -120,6 +124,9 @@ export class InitialMoveable<T = {}>
         if (isUpdate) {
             this.forceUpdate();
         }
+    }
+    public getManager(): MoveableManagerInterface<any, any> {
+        return this.moveable;
     }
 }
 export interface InitialMoveable<T = {}>
