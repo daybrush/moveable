@@ -18,6 +18,8 @@ const defaultOptions = {
         "@moveable/matrix": "@moveable/matrix",
         "@scena/dragscroll": "@scena/dragscroll",
         "css-to-mat": "css-to-mat",
+        "overlap-area": "overlap-area",
+        "@scena/matrix": "@scena/matrix",
     },
     exports: "named",
     plugins: [

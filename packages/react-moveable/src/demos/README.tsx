@@ -1068,6 +1068,53 @@ function RenderTRSIndividualGroup() {
         ></Moveable>
     </div>;
 }
+
+const MouseCustomAble = {
+    name: "mouseTest",
+    props: {},
+    events: {},
+    mouseEnter() {
+        console.log("ENTER");
+    },
+    mouseLeave() {
+        console.log("LEAVE");
+    }
+}
+function RenderCustomAble() {
+    return <div className="container custom">
+        Custom Able
+        <div className="box"style={{
+            transform: "translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)",
+        }}><span>A</span></div>
+        <Moveable
+            target={".custom .box"}
+            ables={[MouseCustomAble]}
+            props={{
+                mouseTest: true,
+            }}
+            draggable={true}
+            origin={true}
+            edgeDraggable={true}
+            dragArea={true}
+            onDragStart={e => {
+                e.setTransform("translate(10px, 10px) rotate(30deg) translate(10px, 10px) scale(2, 2)", 2);
+            }}
+            onDrag={e => {
+                console.log(e.transform);
+                e.target.style.transform = e.transform;
+            }}
+            onRenderStart={e => {
+                console.log(e);
+            }}
+            onRender={e => {
+                console.log(e);
+            }}
+            onRenderEnd={e => {
+                console.log(e);
+            }}
+        ></Moveable>
+    </div>;
+}
 export default function App() {
     return <div>
         <RenderDraggable />
@@ -1094,5 +1141,6 @@ export default function App() {
         <RenderTRSIndividualGroup />
         <RenderPSpan />
         <RenderSVGOriginDraggable />
+        <RenderCustomAble />
     </div>;
 }

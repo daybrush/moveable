@@ -103,6 +103,9 @@ export class NgxMoveableComponent
   @Input() public minRoundControls!: RequiredMoveableOptions['minRoundControls'];
   @Input() public maxRoundControls!: RequiredMoveableOptions['maxRoundControls'];
 
+  @Input() public props!: RequiredMoveableOptions['props'];
+  @Input() public individualGroupable!: RequiredMoveableOptions['individualGroupable'];
+
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;

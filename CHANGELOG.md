@@ -19,6 +19,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+## [0.21.0] - 2020-11-08
+* `moveable` 0.21.0
+* `react-moveable` 0.24.0
+* `preact-moveable` 0.23.0
+* `ngx-moveable` 0.17.0
+* `svelte-moveable` 0.12.0
+
+### Added
+* Add `individualGroupable` prop
+* Add `getManager` method
+* Add `mouseEnter`, `mouseLeave` events #342
+* Add `props` prop for custom ables
+
+### Fixed
+* Fix `edgeDraggable` prop #330
+* Change `hitTest`, `isInside` algorithm.
+
+## [0.20.0] - 2020-10-28
+* `moveable` 0.20.0
+* `react-moveable` 0.23.0
+* `preact-moveable` 0.22.0
+* `ngx-moveable` 0.16.0
+* `svelte-moveable` 0.11.0
+
 ## [0.20.1] - 2020-10-31
 * `moveable` 0.20.1
 * `react-moveable` 0.23.1
