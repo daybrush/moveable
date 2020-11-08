@@ -51,7 +51,11 @@ export class InitialMoveable<T = {}>
         if (!moveableContructor.defaultStyled) {
             moveableContructor.makeStyled();
         }
-        const props = this.props;
+        const {
+            ables: userAbles,
+            props: userProps,
+            ...props
+        } = this.props;
         const refTargets = getRefTargets((props.target || props.targets) as any);
         const elementTargets = getElementTargets(refTargets, this.selectorMap);
 
@@ -59,33 +63,30 @@ export class InitialMoveable<T = {}>
 
         const isGroup = elementTargets.length > 1;
         const totalAbles = moveableContructor.getTotalAbles();
-        const userAbles = props.ables! || [];
         const ables = [
             ...totalAbles,
-            ...userAbles,
+            ...(userAbles as any || []),
         ];
+        const nextProps = {...props, ...(userProps || {}), ables };
 
         if (isGroup) {
             if (props.individualGroupable) {
                 return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
                     cssStyled={moveableContructor.defaultStyled}
-                    {...props}
+                    {...nextProps}
                     target={null}
-                    targets={elementTargets}
-                    ables={ables} />;
+                    targets={elementTargets} />;
             }
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
                 cssStyled={moveableContructor.defaultStyled}
-                {...props}
+                {...nextProps}
                 target={null}
-                targets={elementTargets}
-                ables={ables} />;
+                targets={elementTargets}  />;
         } else {
             return <MoveableManager<any> key="single" ref={ref(this, "moveable")}
                 cssStyled={moveableContructor.defaultStyled}
-                {...props}
-                target={elementTargets[0]}
-                ables={ables} />;
+                {...nextProps}
+                target={elementTargets[0]} />;
         }
     }
     public componentDidMount() {

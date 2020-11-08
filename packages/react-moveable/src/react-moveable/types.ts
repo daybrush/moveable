@@ -291,10 +291,17 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
 
     // Condition that occurs dragGroupControl
     dragGroupControlCondition?: (e: any, moveable: any) => boolean;
+
     // Operates when a drag event occurs for the moveable control and multi target.
     dragGroupControlStart?: (moveable: any, e: GestoTypes.OnDragStart) => any;
     dragGroupControl?: (moveable: any, e: GestoTypes.OnDragStart) => any;
     dragGroupControlEnd?: (moveable: any, e: GestoTypes.OnDragEnd) => any;
+
+    // mouse enter event
+    mouseEnter?: (e: any, moveable: any) => any;
+    // mouse leave event
+    mouseLeave?: (e: any, moveable: any) => any;
+
 
     // Execute the operation of able for external request
     request?: (moveable: any) => AbleRequester;
@@ -1624,6 +1631,7 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     scale: number[];
     controlGesto: Gesto;
     targetGesto: Gesto;
+    enabledAbles: Able[];
     controlAbles: Able[];
     targetAbles: Able[];
     areaElement: HTMLElement;

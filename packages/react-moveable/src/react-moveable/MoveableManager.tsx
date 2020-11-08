@@ -17,9 +17,10 @@ import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { getRad, IObject } from "@daybrush/utils";
+import { getKeys, getRad, IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
+import EventManager from "./EventManager";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -57,6 +58,7 @@ export default class MoveableManager<T = {}>
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         ...getTargetInfo(null),
     };
+    public enabledAbles: Able[] = [];
     public targetAbles: Able[] = [];
     public controlAbles: Able[] = [];
     public controlBox!: { getElement(): HTMLElement };
@@ -66,6 +68,10 @@ export default class MoveableManager<T = {}>
     public rotation: number = 0;
     public scale: number[] = [1, 1];
     public isUnmounted = false;
+    public events: Record<string, EventManager | null>  = {
+        "mouseEnter": null,
+        "mouseLeave": null,
+    };
 
     public render() {
         const props = this.props;
@@ -119,12 +125,14 @@ export default class MoveableManager<T = {}>
         const { parentMoveable, container, wrapperMoveable } = props;
 
         this.updateEvent(props);
+        this.updateNativeEvents(props);
         if (!container && !parentMoveable && !wrapperMoveable) {
             this.updateRect("", false, true);
         }
         this.updateCheckInput();
     }
     public componentDidUpdate(prevProps: MoveableManagerProps) {
+        this.updateNativeEvents(prevProps);
         this.updateEvent(prevProps);
         this.updateCheckInput();
     }
@@ -132,6 +140,12 @@ export default class MoveableManager<T = {}>
         this.isUnmounted = true;
         unset(this, "targetGesto");
         unset(this, "controlGesto");
+
+        const events = this.events;
+        for (const name in events) {
+            const manager = events[name];
+            manager && manager.destroy();
+        }
     }
     public getContainer(): HTMLElement | SVGElement {
         const { parentMoveable, wrapperMoveable, container } = this.props;
@@ -291,19 +305,60 @@ export default class MoveableManager<T = {}>
             parentMoveable ? false : isSetState,
         );
     }
-    public updateEvent(prevProps: MoveableManagerProps) {
-        const controlBoxElement = this.controlBox.getElement();
-        const hasTargetAble = this.targetAbles.length;
-        const hasControlAble = this.controlAbles.length;
+    public isTargetChanged(prevProps: MoveableManagerProps, useDragArea?: boolean) {
         const props = this.props;
         const target = props.dragTarget || props.target;
         const prevTarget = prevProps.dragTarget || prevProps.target;
         const dragArea = props.dragArea;
         const prevDragArea = prevProps.dragArea;
         const isTargetChanged = !dragArea && prevTarget !== target;
-        const isUnset = (!hasTargetAble && this.targetGesto)
-            || isTargetChanged
-            || prevDragArea !== dragArea;
+
+        return isTargetChanged || ((useDragArea || dragArea) && prevDragArea !== dragArea);
+    }
+    public updateNativeEvents(prevProps: MoveableManagerProps) {
+        const props = this.props;
+        const target = props.dragArea ? this.areaElement : this.state.target;
+        const events = this.events;
+        const eventKeys = getKeys(events);
+
+        if (this.isTargetChanged(prevProps)) {
+            for (const eventName in events) {
+                const manager = events[eventName];
+                manager && manager.destroy();
+                events[eventName] = null;
+            }
+        }
+        if (!target) {
+            return;
+        }
+        const enabledAbles = this.enabledAbles;
+        eventKeys.forEach(eventName => {
+            const ables = filterAbles(enabledAbles, [eventName] as any);
+            const hasAbles = ables.length > 0;
+            let manager = events[eventName];
+
+            if (!hasAbles) {
+                if (manager) {
+                    manager.destroy();
+                    events[eventName] = null;
+                }
+                return;
+            }
+            if (!manager) {
+                manager = new EventManager(target, this, eventName);
+                events[eventName] = manager;
+            }
+            manager.setAbles(ables);
+        });
+    }
+    public updateEvent(prevProps: MoveableManagerProps) {
+        const controlBoxElement = this.controlBox.getElement();
+        const hasTargetAble = this.targetAbles.length;
+        const hasControlAble = this.controlAbles.length;
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const isTargetChanged = this.isTargetChanged(prevProps, true);
+        const isUnset = (!hasTargetAble && this.targetGesto) || isTargetChanged;
 
         if (isUnset) {
             unset(this, "targetGesto");
@@ -601,6 +656,7 @@ export default class MoveableManager<T = {}>
         const targetAbles = filterAbles(enabledAbles, [dragStart, pinchStart], triggerAblesSimultaneously);
         const controlAbles = filterAbles(enabledAbles, [dragControlStart], triggerAblesSimultaneously);
 
+        this.enabledAbles = enabledAbles;
         this.targetAbles = targetAbles;
         this.controlAbles = controlAbles;
     }
