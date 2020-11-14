@@ -1,6 +1,6 @@
 import {
     throttle, prefix, triggerEvent, fillParams,
-    getClientRect, calculatePosition, fillEndParams
+    getClientRect, calculatePosition, fillEndParams, getRotationRad
 } from "../utils";
 import { IObject, hasClass, getRad } from "@daybrush/utils";
 import {
@@ -150,9 +150,10 @@ export function getReversePositionY(dir: string) {
     }
     return dir;
 }
-export function getRotationPosition(
+export function getRotationPositions(
     rotationPosition: RotatableProps["rotationPosition"],
     [pos1, pos2, pos3, pos4]: number[][],
+    direction: number,
 ) {
     const [dir1, dir2] = (rotationPosition || "top").split("-");
     let radPoses = [pos1, pos2];
@@ -176,13 +177,14 @@ export function getRotationPosition(
         (radPoses[0][0] + radPoses[1][0]) / 2,
         (radPoses[0][1] + radPoses[1][1]) / 2,
     ];
+    const rad = getRotationRad(radPoses, direction);
     if (dir2) {
         const isStart = dir2 === "top" || dir2 === "left";
         const isReverse = dir1 === "bottom" || dir1 === "left";
 
         pos = radPoses[(isStart && !isReverse) || (!isStart && isReverse) ? 0 : 1];
     }
-    return pos;
+    return [pos, rad] as const;
 }
 
 export function dragControlCondition(e: any) {
@@ -232,18 +234,18 @@ export default {
             rotationPosition,
         } = moveable.props;
         const {
-            rotation,
             renderPoses,
+            direction,
         } = moveable.state;
         if (!rotatable) {
             return null;
         }
-        const pos = getRotationPosition(rotationPosition!, renderPoses);
+        const [pos, rad] = getRotationPositions(rotationPosition!, renderPoses, direction);
 
         return (
             <div key="rotation" className={prefix("line rotation-line")} style={{
                 // tslint:disable-next-line: max-line-length
-                transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rotation}rad)`,
+                transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad)`,
             }}>
                 <div className={prefix("control", "rotation")}></div>
             </div>
