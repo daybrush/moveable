@@ -171,7 +171,7 @@ export function mouseup(target: HTMLElement | SVGElement, client: number[]) {
 }
 
 export function rotateStart(moveable: MoveableManager<RotatableProps>) {
-    const rotationElement = moveable.controlBox.getElement().querySelector<HTMLElement>(".moveable-rotation")!;
+    const rotationElement = moveable.controlBox.getElement().querySelector<HTMLElement>(".moveable-rotation-control")!;
 
     const { left, top, width, height } = rotationElement.getBoundingClientRect();
     const clientX = left + width / 2;
