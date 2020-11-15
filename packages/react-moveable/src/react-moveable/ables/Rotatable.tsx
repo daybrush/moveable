@@ -191,7 +191,7 @@ export function dragControlCondition(e: any) {
     if (e.isRequest) {
         return e.requestAble === "rotatable";
     }
-    return hasClass(e.inputEvent.target, prefix("rotation"));
+    return hasClass(e.inputEvent.target, prefix("rotation-control"));
 }
 
 export default {
@@ -211,27 +211,35 @@ export default {
         onRotateGroupEnd: "rotateGroupEnd",
     } as const,
     css: [
-        `.line.rotation-line {
+        `.rotation {
+            position: absolute;
             height: 40px;
             width: 1px;
-            transform-origin: 50% calc(100% - 0.5px);
-            top: -40px;
-            width: var(--zoompx);
-            height: calc(40 * var(--zoompx));
-            top: calc(-40 * var(--zoompx));
-            transform-origin: 50% calc(100% - 0.5 * var(--zoompx));
+            transform-origin: 50% 100%;
+            height: calc(40px * var(--zoom));
+            top: auto;
+            left: 0;
+            bottom: 100%;
+            will-change: transform;
         }
-        .line.rotation-line .control {
+        .rotation .rotation-line {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform-origin: 50% 50%;
+        }
+        .rotation .rotation-control {
             border-color: #4af;
+            border-color: var(--moveable-color);
             background:#fff;
             cursor: alias;
-            left: 50%;
         }`,
     ],
     render(moveable: MoveableManagerInterface<RotatableProps>, React: Renderer): any {
         const {
             rotatable,
             rotationPosition,
+            zoom,
         } = moveable.props;
         const {
             renderPoses,
@@ -243,11 +251,16 @@ export default {
         const [pos, rad] = getRotationPositions(rotationPosition!, renderPoses, direction);
 
         return (
-            <div key="rotation" className={prefix("line rotation-line")} style={{
+            <div key="rotation" className={prefix("rotation")} style={{
                 // tslint:disable-next-line: max-line-length
                 transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad)`,
             }}>
-                <div className={prefix("control", "rotation")}></div>
+                <div className={prefix("line rotation-line")} style={{
+                    transform: `scaleX(${zoom})`,
+                }}></div>
+                <div className={prefix("control rotation-control")} style={{
+                    transform: `translate(0.5px) scale(${zoom})`,
+                }}></div>
             </div>
         );
     },

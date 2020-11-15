@@ -112,10 +112,10 @@ export default class MoveableManager<T = {}>
                     "--zoompx": `${zoom}px`,
                 }}>
                 {this.renderAbles()}
-                {renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], 0)}
-                {renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], 1)}
-                {renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], 2)}
-                {renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], 3)}
+                {renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], zoom!, 0)}
+                {renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], zoom!, 1)}
+                {renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2)}
+                {renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3)}
             </ControlBoxElement>
         );
     }

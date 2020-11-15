@@ -763,21 +763,21 @@ export function getDiagonalSize(pos1: number[], pos2: number[]) {
         pos2[1] - pos1[1],
     ]);
 }
-export function getLineStyle(pos1: number[], pos2: number[], rad: number = getRad(pos1, pos2)) {
+export function getLineStyle(pos1: number[], pos2: number[], zoom = 1, rad: number = getRad(pos1, pos2)) {
     const width = getDiagonalSize(pos1, pos2);
 
     return {
-        transform: `translateY(-50%) translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad)`,
+        transform: `translateY(-50%) translate(${pos1[0]}px, ${pos1[1]}px) rotate(${rad}rad) scaleY(${zoom})`,
         width: `${width}px`,
     };
 }
-export function getControlTransform(rotation: number, ...poses: number[][]) {
+export function getControlTransform(rotation: number, zoom: number, ...poses: number[][]) {
     const length = poses.length;
 
     const x = poses.reduce((prev, pos) => prev + pos[0], 0) / length;
     const y = poses.reduce((prev, pos) => prev + pos[1], 0) / length;
     return {
-        transform: `translate(${x}px, ${y}px) rotate(${rotation}rad)`,
+        transform: `translateZ(0px) translate(${x}px, ${y}px) rotate(${rotation}rad) scale(${zoom})`,
     };
 }
 export function getCSSSize(target: SVGElement | HTMLElement) {

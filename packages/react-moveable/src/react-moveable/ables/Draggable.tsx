@@ -39,7 +39,7 @@ export default {
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         React: Renderer,
     ): any[] {
-        const throttleDragRotate = moveable.props.throttleDragRotate;
+        const { throttleDragRotate, zoom } = moveable.props;
         const { dragInfo, beforeOrigin } = moveable.state;
 
         if (!throttleDragRotate || !dragInfo) {
@@ -61,7 +61,7 @@ export default {
             "dashed",
         )} key={`dragRotateGuideline`} style={{
             width: `${width}px`,
-            transform: `translate(${beforeOrigin[0]}px, ${beforeOrigin[1]}px) rotate(${rad}rad)`,
+            transform: `translate(${beforeOrigin[0]}px, ${beforeOrigin[1]}px) rotate(${rad}rad) scaleY(${zoom})`,
         }} />];
     },
     dragStart(

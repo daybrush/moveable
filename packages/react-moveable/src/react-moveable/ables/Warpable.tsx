@@ -67,7 +67,7 @@ export default {
         onWarpEnd: "warpEnd",
     } as const,
     render(moveable: MoveableManagerInterface<ResizableProps & ScalableProps & WarpableProps>, React: Renderer): any[] {
-        const { resizable, scalable, warpable } = moveable.props;
+        const { resizable, scalable, warpable, zoom } = moveable.props;
 
         if (resizable || scalable || !warpable) {
             return [];
@@ -84,10 +84,10 @@ export default {
         const linePosTo4 = getMiddleLinePos(pos4, pos2);
 
         return [
-            <div className={prefix("line")} key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1)}></div>,
-            <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2)}></div>,
-            <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3)}></div>,
-            <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4)}></div>,
+            <div className={prefix("line")} key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1, zoom)}></div>,
+            <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2, zoom)}></div>,
+            <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3, zoom)}></div>,
+            <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4, zoom)}></div>,
             ...renderAllDirections(moveable, React),
         ];
     },

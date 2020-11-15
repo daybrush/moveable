@@ -14,6 +14,7 @@ export function renderControls(
     } = moveable.state;
     const {
         renderDirections: directions = defaultDirections,
+        zoom,
     } = moveable.props;
     const {
         direction,
@@ -39,12 +40,14 @@ export function renderControls(
         return (
             <div className={prefix("control", "direction", dir)}
                 data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
-                style={getControlTransform(rotation, ...indexes.map(index => renderPoses[index]))}></div>
+                style={getControlTransform(rotation, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });
 }
 export function renderLine(
-    React: Renderer, direction: string, pos1: number[], pos2: number[],
+    React: Renderer, direction: string,
+    pos1: number[], pos2: number[],
+    zoom: number,
     key: number | string, ...classNames: string[]) {
     const rad = getRad(pos1, pos2);
     const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
@@ -52,7 +55,7 @@ export function renderLine(
     return <div key={`line${key}`} className={prefix("line", "direction", direction, ...classNames)}
         data-rotation={rotation}
         data-line-index={key}
-        data-direction={direction} style={getLineStyle(pos1, pos2, rad)}></div>;
+        data-direction={direction} style={getLineStyle(pos1, pos2, zoom, rad)}></div>;
 }
 export function renderAllDirections(
     moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,

@@ -8,11 +8,12 @@ export default {
     } as const,
     events: {} as const,
     render(moveable: MoveableManagerInterface<OriginOptions>, React: Renderer): any[] {
+        const { zoom } = moveable.props;
         const { beforeOrigin, rotation } = moveable.state;
 
         return [
             <div className={prefix("control", "origin")}
-                style={getControlTransform(rotation, beforeOrigin)} key="beforeOrigin"></div>,
+                style={getControlTransform(rotation, zoom!, beforeOrigin)} key="beforeOrigin"></div>,
         ];
     },
 };

@@ -39,6 +39,9 @@ import {
 } from "./snappable/snap";
 import { getMinMaxs } from "overlap-area";
 
+const HORIZONTAL_NAMES = ["horizontal", "left", "top", "width", "Y"] as const;
+const VERTICAL_NAMES = ["vertical", "top", "left", "height", "X"] as const;
+
 export function calculateContainerPos(
     rootMatrix: number[],
     containerRect: MoveableClientRect,
@@ -1230,19 +1233,23 @@ function groupByElementGuidelines(
     return group;
 }
 function renderElementGroup(
+    moveable: MoveableManagerInterface<SnappableProps>,
     group: Guideline[][],
-    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    [directionName, posName1, posName2, sizeName, scaleDirection]: readonly [string, string, string, string, string],
     minPos: number,
     clientPos: number,
     clientSize: number,
     targetPos: number,
     snapThreshold: number,
-    isDisplaySnapDigit: boolean,
     snapDigit: number,
     index: number,
     snapDistFormat: Required<SnappableOptions>["snapDistFormat"],
     React: Renderer,
 ) {
+    const {
+        zoom,
+        isDisplaySnapDigit,
+    } = moveable.props;
     return flat(group.map((elementGuidelines, i) => {
         let isFirstRenderSize = true;
 
@@ -1271,18 +1278,21 @@ function renderElementGroup(
                     [posName1]: `${minPos + linePos}px`,
                     [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
                     [sizeName]: `${lineSize}px`,
+                    "transform": `translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
                 }} />;
         });
     }));
 }
 function renderSnapPoses(
+    moveable: MoveableManagerInterface,
     snapPoses: SnappableRenderType[],
-    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    [directionName, posName1, posName2, sizeName, scaleDirection]: readonly [string, string, string, string, string],
     minPos: number,
     targetPos: number,
     size: number,
     React: Renderer,
 ) {
+    const { zoom } = moveable.props;
     return snapPoses.map(({ type, pos }, i) => {
         return <div className={prefix(
             "line",
@@ -1295,17 +1305,20 @@ function renderSnapPoses(
             [posName1]: `${minPos}px`,
             [posName2]: `${-targetPos + pos}px`,
             [sizeName]: `${size}px`,
+            "transform": `translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
         }} />;
     });
 }
 function renderGuidelines(
+    moveable: MoveableManagerInterface,
     guidelines: Guideline[],
-    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    [directionName, posName1, posName2, sizeName, scaleDirection]: readonly [string, string, string, string, string],
     targetPos1: number,
     targetPos2: number,
     index: number,
     React: Renderer,
 ) {
+    const { zoom } = moveable.props;
     return guidelines.map((guideline, i) => {
         const { pos, size, element } = guideline;
 
@@ -1318,6 +1331,7 @@ function renderGuidelines(
             [posName1]: `${-targetPos1 + pos[index]}px`,
             [posName2]: `${-targetPos2 + pos[index ? 0 : 1]}px`,
             [sizeName]: `${size}px`,
+            "transform": `translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
         }} />;
     });
 }
@@ -1425,13 +1439,14 @@ function renderGapGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     gapGuidelines: GapGuideline[],
     type: "vertical" | "horizontal",
-    [directionName, posName1, posName2, sizeName]: readonly [string, string, string, string],
+    [directionName, posName1, posName2, sizeName, scaleDirection]: readonly [string, string, string, string, string],
     snapDistFormat: Required<SnappableOptions>["snapDistFormat"],
     React: any,
 ) {
     const {
         snapDigit = 0,
         isDisplaySnapDigit = true,
+        zoom,
     } = moveable.props;
 
     const otherType = type === "vertical" ? "horizontal" : "vertical";
@@ -1452,6 +1467,7 @@ function renderGapGuidelines(
                 [posName1]: `${renderPos[index]}px`,
                 [posName2]: `${renderPos[otherIndex]}px`,
                 [sizeName]: `${absGap}px`,
+                "transform": `translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
             }} />;
     });
 }
@@ -1578,7 +1594,6 @@ z-index: 2;
         const {
             snapThreshold = 5,
             snapDigit = 0,
-            isDisplaySnapDigit = true,
             snapDistFormat = (v: number) => v,
         } = moveable.props;
         const externalPoses = snapRenderInfo.externalPoses || [];
@@ -1663,8 +1678,6 @@ z-index: 2;
             height,
             1,
         );
-        const horizontalNames = ["horizontal", "left", "top", "width"] as const;
-        const verticalNames = ["vertical", "top", "left", "height"] as const;
 
         const gapVerticalGuidelines = getGapGuidelines(
             verticalGuidelines, "vertical",
@@ -1695,7 +1708,7 @@ z-index: 2;
                 moveable,
                 gapVerticalGuidelines,
                 "vertical",
-                horizontalNames,
+                HORIZONTAL_NAMES,
                 snapDistFormat,
                 React,
             ),
@@ -1703,65 +1716,69 @@ z-index: 2;
                 moveable,
                 gapHorizontalGuidelines,
                 "horizontal",
-                verticalNames,
+                VERTICAL_NAMES,
                 snapDistFormat,
                 React,
             ),
             ...renderElementGroup(
+                moveable,
                 elementHorizontalGroup,
-                horizontalNames,
+                HORIZONTAL_NAMES,
                 minLeft,
                 clientLeft,
                 width,
                 targetTop,
                 snapThreshold,
-                isDisplaySnapDigit,
                 snapDigit,
                 0,
                 snapDistFormat,
                 React,
             ),
             ...renderElementGroup(
+                moveable,
                 elementVerticalGroup,
-                verticalNames,
+                VERTICAL_NAMES,
                 minTop,
                 clientTop,
                 height,
                 targetLeft,
                 snapThreshold,
-                isDisplaySnapDigit,
                 snapDigit,
                 1,
                 snapDistFormat,
                 React,
             ),
             ...renderSnapPoses(
+                moveable,
                 horizontalSnapPoses,
-                horizontalNames,
+                HORIZONTAL_NAMES,
                 minLeft,
                 targetTop,
                 width,
                 React,
             ),
             ...renderSnapPoses(
+                moveable,
                 verticalSnapPoses,
-                verticalNames,
+                VERTICAL_NAMES,
                 minTop,
                 targetLeft,
                 height,
                 React,
             ),
             ...renderGuidelines(
+                moveable,
                 horizontalGuidelines,
-                horizontalNames,
+                HORIZONTAL_NAMES,
                 targetLeft,
                 targetTop,
                 0,
                 React,
             ),
             ...renderGuidelines(
+                moveable,
                 verticalGuidelines,
-                verticalNames,
+                VERTICAL_NAMES,
                 targetTop,
                 targetLeft,
                 1,

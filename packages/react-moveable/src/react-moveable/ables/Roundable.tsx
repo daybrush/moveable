@@ -186,6 +186,7 @@ export default {
         const {
             minRoundControls = [0, 0],
             maxRoundControls = [4, 4],
+            zoom,
         } = moveable.props;
 
         if (!target) {
@@ -215,7 +216,7 @@ export default {
                 data-radius-index={i}
                 style={{
                     display: isDisplay ? "block" : "none",
-                    transform: `translate(${pos[0]}px, ${pos[1]}px)`,
+                    transform: `translate(${pos[0]}px, ${pos[1]}px) scale(${zoom})`,
                 }}></div>;
         });
     },

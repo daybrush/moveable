@@ -495,7 +495,7 @@ export default {
                     data-clip-index={i}
                     style={{
                         width: `${dist}px`,
-                        transform: `translate(${from[0]}px, ${from[1]}px) rotate(${rad}rad)`,
+                        transform: `translate(${from[0]}px, ${from[1]}px) rotate(${rad}rad) scaleY(${zoom})`,
                     }}></div>;
             });
         }
@@ -504,7 +504,7 @@ export default {
                 className={prefix("control", "clip-control", "snap-control")}
                 data-clip-index={i}
                 style={{
-                    transform: `translate(${pos[0]}px, ${pos[1]}px)`,
+                    transform: `translate(${pos[0]}px, ${pos[1]}px) scale(${zoom})`,
                 }}></div>;
         });
 
@@ -514,7 +514,7 @@ export default {
                     className={prefix("control", "clip-control", "clip-radius", "snap-control")}
                     data-clip-index={8 + i}
                     style={{
-                        transform: `translate(${pos[0]}px, ${pos[1]}px)`,
+                        transform: `translate(${pos[0]}px, ${pos[1]}px) scale(${zoom})`,
                     }}></div>;
             }));
         }
@@ -590,7 +590,7 @@ export default {
                             allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
                         return renderLine(
-                            React, "", snapPos1, snapPos2,
+                            React, "", snapPos1, snapPos2, zoom!,
                             `clip${directionType}snap${i}`, "guideline");
                     }));
                 }
@@ -602,7 +602,7 @@ export default {
                             allMatrix, isHorizontal ? [width, pos] : [pos, height], n), [left, top]);
 
                         return renderLine(
-                            React, "", snapPos1, snapPos2,
+                            React, "", snapPos1, snapPos2, zoom!,
                             `clip${directionType}bounds${i}`, "guideline", "bounds", "bold");
                     }));
                 }

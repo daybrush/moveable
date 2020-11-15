@@ -38,8 +38,10 @@ export const MOVEABLE_CSS = `
 	left: 0;
 	top: 0;
     z-index: 3000;
+    --moveable-color: #4af;
     --zoom: 1;
     --zoompx: 1px;
+    will-change: transform;
 }
 .control-box {
     z-index: 0;
@@ -56,14 +58,11 @@ export const MOVEABLE_CSS = `
 	border-radius: 50%;
 	border: 2px solid #fff;
 	box-sizing: border-box;
-	background: #4af;
+    background: #4af;
+    background: var(--moveable-color);
 	margin-top: -7px;
     margin-left: -7px;
-    width: calc(14 * var(--zoompx));
-    height: calc(14 * var(--zoompx));
-    margin-top: calc(-7 * var(--zoompx));
-    margin-left: calc(-7 * var(--zoompx));
-    border: calc(2 * var(--zoompx)) solid #fff;
+    border: 2px solid #fff;
     z-index: 10;
 }
 .padding {
@@ -78,9 +77,8 @@ export const MOVEABLE_CSS = `
 	position: absolute;
 	width: 1px;
     height: 1px;
-    width: var(--zoompx);
-    height: var(--zoompx);
-	background: #4af;
+    background: #4af;
+    background: var(--moveable-color);
 	transform-origin: 0px 50%;
 }
 .line.dashed {
@@ -89,16 +87,17 @@ export const MOVEABLE_CSS = `
 }
 .line.dashed.horizontal {
     border-top: 1px dashed #4af;
-    border-top: var(--zoompx) dashed #4af;
+    border-top-color: #4af;
+    border-top-color: var(--moveable-color);
 }
 .line.dashed.vertical {
     border-left: 1px dashed #4af;
-    border-left: var(--zoompx) dashed #4af;
+    border-left-color: #4af;
+    border-left-color: var(--moveable-color);
 }
 .line.dashed:before {
     position: absolute;
     content: attr(data-size);
-    color: #4af;
     font-size: 12px;
     font-weight: bold;
 }
@@ -120,11 +119,9 @@ export const MOVEABLE_CSS = `
 }
 .line.vertical.bold {
     width: 2px;
-    width: calc(2 * var(--zoompx));
 }
 .line.horizontal.bold {
     height: 2px;
-    height: calc(2 * var(--zoompx));
 }
 
 .line.gap {
@@ -144,10 +141,6 @@ export const MOVEABLE_CSS = `
 	height: 12px;
 	margin-top: -6px;
     margin-left: -6px;
-    width: calc(12 * var(--zoompx));
-    height: calc(12 * var(--zoompx));
-    margin-top: calc(-6 * var(--zoompx));
-    margin-left: calc(-6 * var(--zoompx));
 	pointer-events: none;
 }
 ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
