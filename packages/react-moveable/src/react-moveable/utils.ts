@@ -533,6 +533,9 @@ export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 
     return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix, !is3d).join(",")})`;
 }
 export function getSVGViewBox(el: SVGSVGElement) {
+    if (!el) {
+        return { x: 0, y: 0, width: 0, height: 0 };
+    }
     const clientWidth = el.clientWidth;
     const clientHeight = el.clientHeight;
     const viewBox = el.viewBox;
