@@ -115,11 +115,10 @@ import { NgxMoveableModule, NgxMoveableComponent } from '../ngx-moveable';
 @NgModule({
   declarations: [
     AppComponent,
-    NgxMoveableComponent,
   ],
   imports: [
     BrowserModule,
-    // NgxMoveableModule,
+    NgxMoveableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
