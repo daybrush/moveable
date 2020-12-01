@@ -1,17 +1,17 @@
 import {
     throttle, getDirection, triggerEvent, multiply2,
-    fillParams, getKeepRatioHeight, getKeepRatioWidth, getDistSize, fillEndParams, directionCondition,
+    fillParams, getDistSize, fillEndParams, directionCondition,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
     setDragStart, getDragDist,
-    getAbsoluteFixedPosition,
     resolveTransformEvent,
     convertTransformFormat,
     getScaleDist,
     fillTransformStartEvent,
     fillTransformEvent,
     setDefaultTransformIndex,
+    getAbsolutePosition,
 } from "../gesto/GestoUtils";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
 import {
@@ -21,6 +21,7 @@ import {
     OnScale, OnScaleEnd, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
 import {
+    fillChildEvents,
     triggerChildAble,
 } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -91,14 +92,25 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startValue = [1, 1];
-        datas.fixedDirection = direction.map((dir: number) => -dir);
-        datas.fixedPosition = getAbsoluteFixedPosition(moveable, direction);
+
+        const isWidth = (!direction[0] && !direction[1]) || direction[0] || !direction[1];
+
+        datas.isWidth = isWidth;
+
+
+        function setFixedDirection(fixedDirection: number[]) {
+            datas.fixedDirection = fixedDirection;
+            datas.fixedPosition = getAbsolutePosition(moveable, fixedDirection);
+        }
+
+        setFixedDirection([-direction[0], -direction[1]]);
 
         const params = fillParams<OnScaleStart>(moveable, e, {
             direction,
             set: (scale: number[]) => {
                 datas.startValue = scale;
             },
+            setFixedDirection,
             ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
                 moveable,
@@ -138,6 +150,8 @@ export default {
             height,
             isScale,
             startValue,
+            isWidth,
+            fixedDirection,
         } = datas;
 
         if (!isScale) {
@@ -155,17 +169,17 @@ export default {
         }
         const keepRatio = moveable.props.keepRatio || parentKeepRatio;
         const state = moveable.state;
-        const isWidth = sizeDirection[0] || !sizeDirection[1];
         const startWidth = width * startValue[0];
         const startHeight = height * startValue[1];
-        const ratio = isWidth ? startHeight / startWidth : startWidth / startHeight;
+        const ratio = startWidth / startHeight;
+
         let scaleX: number = 1;
         let scaleY: number = 1;
         let fixedPosition = dragClient;
 
         if (!dragClient) {
             if (!parentFlag && isPinch) {
-                fixedPosition = getAbsoluteFixedPosition(moveable, [0, 0]);
+                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
             } else {
                 fixedPosition = datas.fixedPosition;
             }
@@ -198,11 +212,11 @@ export default {
                 if (!sizeDirection[0]) {
                     // top, bottom
                     distHeight = signSize;
-                    distWidth = getKeepRatioWidth(distHeight, isWidth, ratio);
+                    distWidth = distHeight * ratio;
                 } else if (!sizeDirection[1]) {
                     // left, right
                     distWidth = signSize;
-                    distHeight = getKeepRatioHeight(distWidth, isWidth, ratio);
+                    distHeight = distWidth / ratio;
                 } else {
                     // two-way
                     distWidth = Math.cos(ratioRad) * signSize;
@@ -241,11 +255,11 @@ export default {
                 moveable,
                 dist,
                 direction,
-                datas.fixedPosition,
                 isRequest,
                 datas,
             );
         }
+
 
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
@@ -272,7 +286,7 @@ export default {
                 || (isNoSnap && isWidth)
             ) {
                 dist[0] += snapDist[0];
-                const snapHeight = getKeepRatioHeight(width * dist[0] * startValue[0], isWidth, ratio);
+                const snapHeight = width * dist[0] * startValue[0] / ratio;
 
                 dist[1] = snapHeight / height / startValue[1];
             } else if (
@@ -281,7 +295,7 @@ export default {
                 || (isNoSnap && !isWidth)
             ) {
                 dist[1] += snapDist[1];
-                const snapWidth = getKeepRatioWidth(height * dist[1] * startValue[1], isWidth, ratio);
+                const snapWidth = height * dist[1] * startValue[1] * ratio;
 
                 dist[0] = snapWidth / width / startValue[0];
             }
@@ -304,7 +318,8 @@ export default {
         const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
         scale = multiply2(dist, startValue);
 
-        const inverseDist = getScaleDist(moveable, dist, direction, fixedPosition, datas);
+        const inverseDist = getScaleDist(moveable, dist, fixedDirection, fixedPosition, datas);
+
         const inverseDelta = minus(inverseDist, datas.prevInverseDist || [0, 0]);
 
         datas.prevDist = dist;
@@ -365,8 +380,22 @@ export default {
         if (!params) {
             return false;
         }
-        const direction = params.direction;
-        const fixedPosition = datas.fixedPosition;
+        const originalEvents = fillChildEvents(moveable, "resizable", e);
+
+        function setDist(child: MoveableManagerInterface, ev: any) {
+            const fixedDirection = datas.fixedDirection;
+            const fixedPosition = datas.fixedPosition;
+            const pos = getAbsolutePosition(child, fixedDirection);
+            const [originalX, originalY] = calculate(
+                createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
+                [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
+                3,
+            );
+            ev.datas.originalX = originalX;
+            ev.datas.originalY = originalY;
+
+            return ev;
+        }
 
         datas.moveableScale = moveable.scale;
 
@@ -376,17 +405,7 @@ export default {
             "dragControlStart",
             e,
             (child, ev) => {
-                const pos = getAbsoluteFixedPosition(child, direction);
-
-                const [originalX, originalY] = calculate(
-                    createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
-                    [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
-                    3,
-                );
-                ev.datas.originalX = originalX;
-                ev.datas.originalY = originalY;
-
-                return ev;
+                return setDist(child, ev);
             },
         );
 
@@ -394,6 +413,13 @@ export default {
             ...params,
             targets: moveable.props.targets!,
             events,
+            setFixedDirection(fixedDirection: number[]) {
+                params.setFixedDirection(fixedDirection);
+                events.forEach((ev, i) => {
+                    ev.setFixedDirection(fixedDirection);
+                    setDist(moveable.moveables[i], originalEvents[i]);
+                });
+            }
         };
         const result = triggerEvent(moveable, "onScaleGroupStart", nextParams);
 
@@ -418,7 +444,6 @@ export default {
         const keepRatio = moveable.props.keepRatio;
         const { dist, scale } = params;
 
-        // const fixedDirection = datas.fixedDirection;
         const fixedPosition = datas.fixedPosition;
 
         const events = triggerChildAble(

@@ -79,7 +79,7 @@
         "typescript": "^3.4.5"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.3.1",
+        "@daybrush/utils": "^1.4.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
         "@scena/dragscroll": "^0.3.1",

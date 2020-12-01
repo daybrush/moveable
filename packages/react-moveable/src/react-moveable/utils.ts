@@ -1082,13 +1082,6 @@ export function filterAbles(
     });
 }
 
-export function getKeepRatioHeight(width: number, isWidth: boolean, ratio: number) {
-    return width * (isWidth ? ratio : 1 / ratio);
-}
-export function getKeepRatioWidth(height: number, isWidth: boolean, ratio: number) {
-    return height * (isWidth ? 1 / ratio : ratio);
-}
-
 export function equals(a1: any, a2: any) {
     return a1 === a2 || (a1 == null && a2 == null);
 }

@@ -439,7 +439,7 @@ export function checkMaxBounds(
     moveable: MoveableManagerInterface<SnappableProps>,
     poses: number[][],
     direction: number[],
-    fixedPos: number[],
+    fixedPosition: number[],
     datas: any,
 ) {
     const fixedDirection = [-direction[0], -direction[1]];
@@ -470,20 +470,20 @@ export function checkMaxBounds(
 
             const verticalDirection = normalized(otherDirection[1] - fixedDirection[1]);
             const horizontalDirection = normalized(otherDirection[0] - fixedDirection[0]);
-            const deg = getRad(fixedPos, otherPos) * 360 / Math.PI;
+            const deg = getRad(fixedPosition, otherPos) * 360 / Math.PI;
 
             if (isCheckHorizontal) {
                 const nextOtherPos = otherPos.slice();
 
                 if (Math.abs(deg - 360) < 2 || Math.abs(deg - 180) < 2) {
-                    nextOtherPos[1] = fixedPos[1];
+                    nextOtherPos[1] = fixedPosition[1];
                 }
                 const [
                     ,
                     heightOffset,
                 ] = solveNextOffset(
-                    fixedPos, nextOtherPos,
-                    (fixedPos[1] < otherPos[1] ? bottom : top) - otherPos[1],
+                    fixedPosition, nextOtherPos,
+                    (fixedPosition[1] < otherPos[1] ? bottom : top) - otherPos[1],
                     false, datas,
                 );
                 if (!isNaN(heightOffset)) {
@@ -494,13 +494,13 @@ export function checkMaxBounds(
                 const nextOtherPos = otherPos.slice();
 
                 if (Math.abs(deg - 90) < 2 || Math.abs(deg - 270) < 2) {
-                    nextOtherPos[0] = fixedPos[0];
+                    nextOtherPos[0] = fixedPosition[0];
                 }
                 const [
                     widthOffset,
                 ] = solveNextOffset(
-                    fixedPos, nextOtherPos,
-                    (fixedPos[0] < otherPos[0] ? right : left) - otherPos[0],
+                    fixedPosition, nextOtherPos,
+                    (fixedPosition[0] < otherPos[0] ? right : left) - otherPos[0],
                     true, datas,
                 );
                 if (!isNaN(widthOffset)) {
@@ -765,10 +765,8 @@ export function recheckSizeByTwoDirection(
 export function checkSizeDist(
     moveable: MoveableManagerInterface<any, any>,
     getNextPoses: (widthOffset: number, heightOffset: number) => number[][],
-    width: number,
-    height: number,
-    direction: number[],
-    fixedPos: number[],
+    width: number, height: number,
+    direction: number[], fixedPosition: number[],
     isRequest: boolean,
     datas: any,
 ) {
@@ -814,8 +812,6 @@ export function checkSizeDist(
             const isGetWidthOffset
                 = isWidthBound && isHeightBound ? widthDist < heightDist
                     : isHeightBound || (!isWidthBound && widthDist < heightDist);
-
-            // height * widthOffset = width * heighOffset
             if (isGetWidthOffset) {
                 // width : height = ? : heightOffset
                 nextWidthOffset = width * nextHeightOffset / height;
@@ -832,7 +828,7 @@ export function checkSizeDist(
         const {
             maxWidth,
             maxHeight,
-        } = checkMaxBounds(moveable, poses, direction, fixedPos, datas);
+        } = checkMaxBounds(moveable, poses, direction, fixedPosition, datas);
 
         const [nextWidthOffset, nextHeightOffset] = recheckSizeByTwoDirection(
             moveable,
@@ -892,7 +888,7 @@ export function checkSnapSize(
     width: number,
     height: number,
     direction: number[],
-    fixedPos: number[],
+    fixedPosition: number[],
     isRequest: boolean,
     datas: any,
 ) {
@@ -910,24 +906,24 @@ export function checkSnapSize(
                 allMatrix,
                 width + widthOffset,
                 height + heightOffset,
-                fixedPos,
+                fixedPosition,
                 direction,
                 is3d,
             );
-        }, width, height, direction, fixedPos, isRequest, datas,
+        }, width, height, direction, fixedPosition, isRequest, datas,
     );
 }
 export function checkSnapScale(
     moveable: MoveableManagerInterface<ScalableProps, any>,
     scale: number[],
     direction: number[],
-    fixedPos: number[],
     isRequest: boolean,
     datas: any,
 ) {
     const {
         width,
         height,
+        fixedPosition,
     } = datas;
     if (!hasGuidelines(moveable, "scalable")) {
         return [0, 0];
@@ -940,14 +936,14 @@ export function checkSnapScale(
                 scaleMatrix(datas, plus(scale, [widthOffset / width, heightOffset / height])),
                 width,
                 height,
-                fixedPos,
+                fixedPosition,
                 direction,
                 is3d,
             );
         },
         width, height,
         direction,
-        fixedPos,
+        fixedPosition,
         isRequest,
         datas,
     );

@@ -65,7 +65,7 @@ function RenderDraggableResizableRotatableSnappable() {
             snapCenter={true}
             verticalGuidelines={[0, 100, 200, 400]}
             horizontalGuidelines={[0, 100, 200, 400]}
-            keepRatio={false}
+            keepRatio={true}
             zoom={zoom}
             onBeforeRenderStart={e => {
                 e.setTransform(transformRef.current);
@@ -79,8 +79,9 @@ function RenderDraggableResizableRotatableSnappable() {
                 transformRef.current = e.transform;
             }}
             onResizeStart={e => {
-                e.setOrigin(["50%", "50%"]);
                 e.dragStart && e.dragStart.setTransformIndex(0);
+                e.setMin([300, 150])
+                e.setRatio(1.2);
             }}
             onResize={e => {
                 e.target.style.width = `${e.width}px`;
@@ -231,6 +232,45 @@ function RenderScalable() {
                 e.dragStart && e.dragStart.setTransformIndex(1);
             }}
             onScale={e => {
+                console.log(e.drag.transform);
+                e.target.style.transform = e.drag.transform;
+            }}
+        ></Moveable>
+    </div>;
+}
+function RenderResizable() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        setTarget(document.querySelector<HTMLElement>(".resizable .box")!);
+    }, []);
+    return <div className="container resizable">
+        <p className="description">Resizable</p>
+        <div className="box" style={{
+            // transform: "translate(0px, 0px) rotate(0deg)",
+        }}><span>A</span></div>
+        <Moveable
+            target={target}
+            draggable={true}
+            rotatable={true}
+            resizable={true}
+            origin={true}
+            onResizeStart={e => {
+                // e.set([2, 2]);
+                // e.setFixedDirection([0, 0]);
+                e.dragStart && e.dragStart.setTransform(e.target.style.transform, 0);
+            }}
+            onResize={e => {
+                e.target.style.width = `${e.width}px`;
+                e.target.style.height = `${e.height}px`;
+                e.target.style.transform = e.drag.transform;
+            }}
+            onRotateStart={e => {
+                // e.set([2, 2]);
+                // e.setTransform("rotate(30deg) translate(30px, 30px)  scale(2, 2) translate(10px, 10px)", 0);
+                e.setTransform(e.target.style.transform, 1);
+                e.dragStart && e.dragStart.setTransformIndex(0);
+            }}
+            onRotate={e => {
                 console.log(e.drag.transform);
                 e.target.style.transform = e.drag.transform;
             }}
@@ -690,6 +730,7 @@ function RenderResizeGroup() {
                 console.log(e);
             }}
             onResizeGroupStart={e => {
+                e.setFixedDirection([0, 0]);
                 const { events } = e;
                 events.forEach((ev, i) => {
                     ev.dragStart && ev.dragStart.set(frames[i].translate);
@@ -700,7 +741,7 @@ function RenderResizeGroup() {
                 events.forEach((ev, i) => {
                     frames[i].translate = ev.drag.beforeTranslate;
 
-                    console.log(ev.width, ev.height);
+                    // console.log(ev.width, ev.height);
                     ev.target.style.width = `${ev.width}px`;
                     ev.target.style.height = `${ev.height}px`;
                     ev.target.style.transform = `translate(${frames[i].translate[0]}px, ${frames[i].translate[1]}px)`;
@@ -1131,6 +1172,7 @@ export default function App() {
         <RenderClickable />
         <RenderGroupClickable />
         <RenderScalable />
+        <RenderResizable />
         <RenderRotatable />
         <RenderWarpable />
         <RenderClippable />

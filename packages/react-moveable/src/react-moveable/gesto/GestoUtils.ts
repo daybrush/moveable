@@ -289,12 +289,12 @@ function getDist(
     width: number,
     height: number,
     n: number,
-    direction: number[],
+    fixedDirection: number[],
 ) {
     const poses = calculatePoses(matrix, width, height, n);
-    const pos = getPosByReverseDirection(poses, direction);
-    const distX = startPos[0] - pos[0];
-    const distY = startPos[1] - pos[1];
+    const fixedPos = getPosByDirection(poses, fixedDirection);
+    const distX = startPos[0] - fixedPos[0];
+    const distY = startPos[1] - fixedPos[1];
 
     return [distX, distY];
 }
@@ -352,31 +352,6 @@ export function scaleMatrix(
         transformOrigin,
         n,
     );
-}
-export function getScaleDelta(
-    moveable: MoveableManagerInterface<any>,
-    scale: number[],
-    direction: number[],
-    fixedPosition: number[],
-) {
-    const state = moveable.state;
-    const {
-        is3d,
-        left,
-        top,
-        width,
-        height,
-    } = state;
-
-    const n = is3d ? 4 : 3;
-    const groupable = moveable.props.groupable;
-    const nextMatrix = scaleMatrix(moveable.state, scale);
-    const groupLeft = groupable ? left : 0;
-    const groupTop = groupable ? top : 0;
-
-    const dist = getDist(fixedPosition, nextMatrix, width, height, n, direction);
-
-    return minus(dist, [groupLeft, groupTop]);
 }
 
 export function fillTransformStartEvent(e: any): OnTransformStartEvent {
@@ -437,8 +412,8 @@ export function fillTransformEvent(
 export function getTranslateDist(
     moveable: MoveableManagerInterface<any>,
     transform: string,
-    fixedPosition: number[],
     fixedDirection: number[],
+    fixedPosition: number[],
     datas: any,
 ) {
     const state = moveable.state;
@@ -451,7 +426,6 @@ export function getTranslateDist(
     const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform);
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
-    // const dist = getDist(fixedPosition, nextMatrix, width, height, n, direction);
     const nextFixedPosition = getDirectionOffset(moveable, fixedDirection, nextMatrix);
     const dist = minus(fixedPosition, nextFixedPosition);
     return minus(dist, [groupLeft, groupTop]);
@@ -459,15 +433,15 @@ export function getTranslateDist(
 export function getScaleDist(
     moveable: MoveableManagerInterface<any>,
     scaleDist: number[],
-    direction: number[],
+    fixedDirection: number[],
     fixedPosition: number[],
     datas: any,
 ) {
     return getTranslateDist(
         moveable,
         `scale(${scaleDist.join(", ")})`,
+        fixedDirection,
         fixedPosition,
-        direction.map(dir => -dir),
         datas,
     );
 }
@@ -509,8 +483,8 @@ export function getRotateDist(
     return getTranslateDist(
         moveable,
         `rotate(${rotateDist}deg)`,
-        fixedPosition,
         fixedDirection,
+        fixedPosition,
         datas,
     );
 }
@@ -518,7 +492,7 @@ export function getResizeDist(
     moveable: MoveableManagerInterface<any>,
     width: number,
     height: number,
-    direction: number[],
+    fixedDirection: number[],
     fixedPosition: number[],
     transformOrigin: string[],
 ) {
@@ -548,26 +522,13 @@ export function getResizeDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
-    const dist = getDist(fixedPosition, nextMatrix, width, height, n, direction);
+    const dist = getDist(fixedPosition, nextMatrix, width, height, n, fixedDirection);
 
     return minus(dist, [groupLeft, groupTop]);
 }
-export function getStartDirection(
+export function getAbsolutePosition(
     moveable: MoveableManagerInterface<ResizableProps>,
     direction: number[],
 ) {
-    if (!direction[0] && !direction[1]) {
-        return [0, 0];
-    }
-    const baseDirection = [-1, -1];
-    return [
-        direction[0] ? direction[0] : baseDirection[0] * -1,
-        direction[1] ? direction[1] : baseDirection[1] * -1,
-    ];
-}
-export function getAbsoluteFixedPosition(
-    moveable: MoveableManagerInterface<ResizableProps>,
-    direction: number[],
-) {
-    return getPosByReverseDirection(getAbsolutePosesByState(moveable.state), direction);
+    return getPosByDirection(getAbsolutePosesByState(moveable.state), direction);
 }

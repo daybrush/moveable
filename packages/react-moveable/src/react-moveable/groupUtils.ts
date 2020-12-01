@@ -24,7 +24,7 @@ export function fillChildEvents(
         distY,
     } = e;
 
-    return moveable.moveables.map((child, i) => {
+    return moveable.moveables.map((_, i) => {
         childDatas[i] = childDatas[i] || {};
         childDatas[i][name] = childDatas[i][name] || {};
 

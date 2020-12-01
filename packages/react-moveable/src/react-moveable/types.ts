@@ -544,11 +544,13 @@ export interface OnRoundEnd extends OnEndEvent {
  * @property - The direction of scale.
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
+ * @property - Set a fixed direction to resize. (default: Opposite direction)
  */
 export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
     direction: number[];
     dragStart: OnDragStart | false;
     set: (scale: number[]) => void;
+    setFixedDirection: (fixedDirection: number[]) => void;
 }
 /**
  * @typedef
@@ -593,6 +595,8 @@ export interface OnScaleEnd extends OnEndEvent {
  * @property - You can set the css min width, min height value. (default: min-width)
  * @property - You can set the css max width, max height value. (default: max-width)
  * @property - You can set the css origin (default: % %)
+ * @property - Set a fixed direction to resize. (default: Opposite direction)
+ * @property - Set the ratio of width and height. (default: offsetWidth / offsetHeight)
  */
 export interface OnResizeStart extends OnEvent {
     direction: number[];
@@ -601,6 +605,8 @@ export interface OnResizeStart extends OnEvent {
     setMin: (minSize: number[]) => any;
     setMax: (maxSize: number[]) => any;
     setOrigin: (origin: Array<string | number>) => any;
+    setFixedDirection: (startDirecition: number[]) => any;
+    setRatio: (ratio: number) => any;
 }
 /**
  * @typedef
