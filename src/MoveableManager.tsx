@@ -13,6 +13,7 @@ import EventEmitter from "@scena/event-emitter";
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
  * @sort 1
+ * @alias Moveable
  * @extends EventEmitter
  */
 @Properties(METHODS, (prototype, property) => {

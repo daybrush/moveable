@@ -1366,10 +1366,29 @@ export interface SnappableOptions {
     isDisplaySnapDigit?: boolean;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
-    elementGuidelines?: Element[];
+    elementGuidelines?: Array<ElementGuidelineValue | Element>;
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
     snapDistFormat?: (distance: number) => number | string;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ * @property - guideline element
+ * @property - Whether to snap the top of the element (default: true)
+ * @property - Whether to snap the left of the element (default: true)
+ * @property - Whether to snap the right of the element (default: true)
+ * @property - Whether to snap the bottom of the element (default: true)
+ * @property - Whether to update the guideline every render (default: false)
+ */
+export interface ElementGuidelineValue {
+    element: Element;
+    top?: boolean;
+    left?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+    refresh?: boolean;
 }
 export interface SnappableEvents {
     onSnap: OnSnap;
@@ -1411,7 +1430,8 @@ export interface BoundType {
     bottom?: number;
 }
 export interface SnappableState {
-    guidelines: any[];
+    staticGuidelines: Guideline[];
+    guidelines: Guideline[];
     snapRenderInfo?: SnapRenderInfo | null;
     enableSnap: boolean;
 }

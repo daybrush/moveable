@@ -6,14 +6,12 @@ import {
     SnapInfo, BoundInfo,
     ScalableProps, SnapPosInfo, RotatableProps,
     RectInfo, DraggableProps, SnapOffsetInfo, GapGuideline,
-    SnappableOptions, MoveableClientRect, MoveableManagerInterface, SnappableRenderType, BoundType, SnapBoundInfo,
+    SnappableOptions, MoveableManagerInterface, SnappableRenderType, BoundType, SnapBoundInfo, MoveableGroupInterface,
 } from "../types";
 import {
     prefix, calculatePoses, getRect,
-    getAbsolutePosesByState, getAbsolutePoses, throttle, roundSign,
-    getDistSize, groupBy, flat, maxOffset, minOffset,
-    triggerEvent, calculateInversePosition, calculatePosition,
-    directionCondition,
+    getAbsolutePosesByState, getAbsolutePoses, throttle, getDistSize, groupBy, flat, maxOffset, minOffset,
+    triggerEvent, calculateInversePosition, directionCondition,
 } from "../utils";
 import { IObject, find, findIndex, hasClass, getRad } from "@daybrush/utils";
 import {
@@ -36,140 +34,24 @@ import {
     getNearOffsetInfo,
     checkSnapKeepRatio,
     checkSnapPoses,
+    getElementGuidelines,
+    calculateContainerPos,
+    getTotalGuidelines,
 } from "./snappable/snap";
-import { getMinMaxs } from "overlap-area";
+import { stat } from "fs";
 
 const HORIZONTAL_NAMES = ["horizontal", "left", "top", "width", "Y"] as const;
 const VERTICAL_NAMES = ["vertical", "top", "left", "height", "X"] as const;
 
-export function calculateContainerPos(
-    rootMatrix: number[],
-    containerRect: MoveableClientRect,
-    n: number,
-) {
-    const clientPos = calculatePosition(
-        rootMatrix, [containerRect.clientLeft!, containerRect.clientTop!], n);
 
-    return [
-        containerRect.left + clientPos[0],
-        containerRect.top + clientPos[1],
-    ];
-}
 export function snapStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
     const state = moveable.state;
 
     if (state.guidelines && state.guidelines.length) {
         return;
     }
-
-    const {
-        horizontalGuidelines = [],
-        verticalGuidelines = [],
-        elementGuidelines = [],
-        bounds,
-        innerBounds,
-        snapCenter,
-    } = moveable.props;
-
-    if (
-        !innerBounds && !bounds
-        && !horizontalGuidelines.length
-        && !verticalGuidelines.length && !elementGuidelines.length
-    ) {
-        return;
-    }
-
-    const {
-        containerClientRect,
-        targetClientRect: {
-            top: clientTop,
-            left: clientLeft,
-        },
-        rootMatrix,
-        is3d,
-    } = state;
-    const n = is3d ? 4 : 3;
-    const [containerLeft, containerTop] = calculateContainerPos(rootMatrix, containerClientRect, n);
-    const poses = getAbsolutePosesByState(state);
-    const {
-        minX: targetLeft,
-        minY: targetTop,
-    } = getMinMaxs(poses);
-    const [distLeft, distTop] = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [
-        clientLeft - containerLeft,
-        clientTop - containerTop,
-    ], n)).map(pos => roundSign(pos));
-
-    const guidelines: Guideline[] = [];
-
-    elementGuidelines!.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        const left = rect.left - containerLeft;
-        const top = rect.top - containerTop;
-        const bottom = top + rect.height;
-        const right = left + rect.width;
-        const [elementLeft, elementTop] = calculateInversePosition(rootMatrix, [left, top], n);
-        const [elementRight, elementBottom] = calculateInversePosition(rootMatrix, [right, bottom], n);
-        const width = elementRight - elementLeft;
-        const height = elementBottom - elementTop;
-        const sizes = [width, height];
-
-        guidelines.push({
-            type: "vertical", element: el, pos: [
-                throttle(elementLeft + distLeft, 0.1),
-                elementTop,
-            ], size: height,
-            sizes,
-        });
-        guidelines.push({
-            type: "vertical", element: el, pos: [
-                throttle(elementRight + distLeft, 0.1),
-                elementTop,
-            ], size: height,
-            sizes,
-        });
-        guidelines.push({
-            type: "horizontal", element: el, pos: [
-                elementLeft,
-                throttle(elementTop + distTop, 0.1),
-            ], size: width,
-            sizes,
-        });
-        guidelines.push({
-            type: "horizontal", element: el, pos: [
-                elementLeft,
-                throttle(elementBottom + distTop, 0.1),
-            ], size: width,
-            sizes,
-        });
-
-        if (snapCenter) {
-            guidelines.push({
-                type: "vertical",
-                element: el,
-                pos: [
-                    throttle((elementLeft + elementRight) / 2 + distLeft, 0.1),
-                    elementTop,
-                ],
-                size: height,
-                sizes,
-                center: true,
-            });
-            guidelines.push({
-                type: "horizontal",
-                element: el,
-                pos: [
-                    elementLeft,
-                    throttle((elementTop + elementBottom) / 2 + distTop, 0.1),
-                ],
-                size: width,
-                sizes,
-                center: true,
-            });
-        }
-    });
-
-    state.guidelines = guidelines;
+    state.staticGuidelines = getElementGuidelines(moveable, false);
+    state.guidelines = getTotalGuidelines(moveable);
     state.enableSnap = true;
 }
 
@@ -1406,7 +1288,7 @@ function getGapGuidelines(
         ({ element, gap, type: guidelineType }) => element && gap && guidelineType === type);
     const [index, otherIndex] = type === "vertical" ? [0, 1] : [1, 0];
 
-    return flat(elementGuidelines.map((guideline, i) => {
+    return flat(elementGuidelines.map((guideline) => {
         const pos = guideline.pos;
         const gap = guideline.gap!;
         const gapGuidelines = guideline.gapGuidelines!;
@@ -1790,6 +1672,9 @@ z-index: 2;
         };
         snapStart(moveable);
     },
+    drag(moveable: MoveableManagerInterface<SnappableProps, SnappableState>, e: any) {
+        moveable.state.guidelines = getTotalGuidelines(moveable);
+    },
     pinchStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
@@ -1804,9 +1689,12 @@ z-index: 2;
             return hasClass(e.inputEvent.target, prefix("snap-control"));
         }
     },
-    dragControlStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>, e: any) {
+    dragControlStart(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
         moveable.state.snapRenderInfo = null;
         snapStart(moveable);
+    },
+    dragControl(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
+        moveable.state.guidelines = getTotalGuidelines(moveable);
     },
     dragControlEnd(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
@@ -1814,14 +1702,20 @@ z-index: 2;
     dragGroupStart(moveable: any, e: any) {
         this.dragStart(moveable, e);
     },
-    dragGroupEnd(moveable: any) {
+    dragGroup(moveable: MoveableGroupInterface<SnappableProps, SnappableState>) {
+        moveable.state.guidelines = getTotalGuidelines(moveable);
+    },
+    dragGroupEnd(moveable: MoveableGroupInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
-    dragGroupControlStart(moveable: any, e: any) {
+    dragGroupControlStart(moveable: MoveableGroupInterface<SnappableProps, SnappableState>) {
         moveable.state.snapRenderInfo = null;
         snapStart(moveable);
     },
-    dragGroupControlEnd(moveable: any) {
+    dragGroupControl(moveable: MoveableManagerInterface<SnappableProps, SnappableState>) {
+        moveable.state.guidelines = getTotalGuidelines(moveable);
+    },
+    dragGroupControlEnd(moveable: MoveableGroupInterface<SnappableProps, SnappableState>) {
         this.unset(moveable);
     },
     unset(moveable: any) {
