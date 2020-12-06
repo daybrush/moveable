@@ -38,7 +38,6 @@ import {
     calculateContainerPos,
     getTotalGuidelines,
 } from "./snappable/snap";
-import { stat } from "fs";
 
 const HORIZONTAL_NAMES = ["horizontal", "left", "top", "width", "Y"] as const;
 const VERTICAL_NAMES = ["vertical", "top", "left", "height", "X"] as const;
