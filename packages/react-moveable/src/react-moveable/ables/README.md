@@ -62,19 +62,31 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
 ## Example
 
 ```ts
-import { Renderer } from "../types";
+import Moveable, { MoveableManagerInterface, Renderer } from "react-moveable";
 
+interface CustomAbleProps {
+    customAble: boolean;
+    prop1: number;
+}
 const CustomAble = {
     name: "customAble",
-    always: true,
     props: {
-        draggable: Boolean,
+        customAble: Boolean,
+        prop1: Number,
     },
     events: {},
-    render(moveable: MoveableManager, React: Renderer) {
+    render(moveable: MoveableManagerInterface<CustomAbleProps>, React: Renderer) {
+        console.log(moveable.props.prop1);
+
         return <div></div>;
     },
 }
 
-<Moveable ables={[CustomAble]}>
+<Moveable
+    ables={[CustomAble]}
+    props={{
+        customAble: true,
+        prop1: 3,
+    }}
+    />
 ```
