@@ -301,7 +301,9 @@ export default class MoveableManager<T = {}>
         this.updateState(
             getTargetInfo(this.controlBox && this.controlBox.getElement(),
                 target, container, container,
-                rootContainer || container, isTarget ? state : undefined),
+                rootContainer || container,
+                // isTarget ? state : undefined
+            ),
             parentMoveable ? false : isSetState,
         );
     }

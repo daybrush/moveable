@@ -62,7 +62,6 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
             });
         });
         const rotatePoses = moveablePoses.map(([pos1, pos2, pos3, pos4]) => {
-
             return [
                 rotate(pos1, -rad),
                 rotate(pos2, -rad),
@@ -178,7 +177,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             this.controlBox.getElement(),
             this.getContainer(),
             this.props.rootContainer || container,
-            state,
+            // state,
         );
         const pos = [info.left!, info.top!];
         [

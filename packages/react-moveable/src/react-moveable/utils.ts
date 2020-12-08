@@ -320,7 +320,7 @@ export function calculateElementInfo(
     container?: SVGElement | HTMLElement | null,
     rootContainer: HTMLElement | SVGElement | null | undefined = container,
     isAbsolute3d?: boolean,
-    state?: Partial<MoveableManagerState> | false,
+    // state?: Partial<MoveableManagerState> | false,
 ) {
     // const prevMatrix = state ? state.beforeMatrix : undefined;
     // const prevRootMatrix = state ? state.rootMatrix : undefined;
@@ -330,10 +330,7 @@ export function calculateElementInfo(
     let rotation = 0;
     let allResult: {} = {};
 
-    if (state) {
-        width = state.width!;
-        height = state.height!;
-    } else if (target) {
+    if (target) {
         const style = getComputedStyle(target);
 
         width = (target as HTMLElement).offsetWidth;
@@ -846,7 +843,7 @@ export function getTargetInfo(
     container?: HTMLElement | SVGElement | null,
     parentContainer?: HTMLElement | SVGElement | null,
     rootContainer?: HTMLElement | SVGElement | null,
-    state?: Partial<MoveableManagerState> | false | undefined,
+    // state?: Partial<MoveableManagerState> | false | undefined,
 ) {
     let beforeDirection: 1 | -1 = 1;
     let beforeOrigin = [0, 0];
@@ -855,7 +852,8 @@ export function getTargetInfo(
     let moveableClientRect = resetClientRect();
 
     const result = calculateElementInfo(
-        target, container!, rootContainer!, false, state,
+        target, container!, rootContainer!, false,
+        // state,
     );
     if (target) {
         const n = result.is3d ? 4 : 3;
