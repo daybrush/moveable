@@ -38,6 +38,44 @@ function RenderDraggable() {
     </div>;
 }
 
+
+function RenderDraggable2() {
+    const ref = React.useRef<HTMLDivElement>(null);
+    return <div className="container draggable2">
+        Draggable (rotate: 270deg)
+        <div style={{
+            transform: "scale(1.3)",
+            transformOrigin: "top",
+        }}>
+            <div className="parent" style={{
+                transform: "rotate(270deg)",
+                position: "absolute",
+                height: "200px",
+                width: "240px",
+            }}>
+                <div className="child" style={{
+                    position: "absolute",
+                    width: "100px",
+                    height: "100px",
+                }}>child</div>
+            </div>
+        </div>
+        <Moveable
+            target={".draggable2 .child"}
+            draggable={true}
+            rotatable={true}
+            rotationPosition="bottom"
+            throttleRotate={10}
+            onDragStart={e => {
+                e.set([0, 0]);
+            }}
+            onDrag={e => {
+                e.target.style.transform = e.transform;
+            }}
+        ></Moveable>
+    </div>;
+}
+
 function RenderDraggableResizableRotatableSnappable() {
     const ref = React.useRef<HTMLDivElement>(null);
     const transformRef = React.useRef<string>("translate(0px, 0px) rotate(89deg)");
@@ -1166,6 +1204,7 @@ function RenderCustomAble() {
 export default function App() {
     return <div>
         <RenderDraggable />
+        <RenderDraggable2 />
         <RenderDraggableResizableRotatableSnappable />
         <RenderRootDraggable />
         <RenderResizableRequest />
