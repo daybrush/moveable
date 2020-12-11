@@ -4,8 +4,9 @@ import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
-import { getTargetInfo, throttle, getAbsolutePosesByState, equals, unset } from "./utils";
-import { plus, rotate } from "@scena/matrix";
+import { getTargetInfo, throttle, getAbsolutePosesByState, equals, unset, minmax } from "./utils";
+import { minus, plus, rotate } from "@scena/matrix";
+import { getMinMaxs } from "overlap-area";
 
 function getMaxPos(poses: number[][][], index: number) {
     return Math.max(...poses.map(([pos1, pos2, pos3, pos4]) => {
@@ -30,29 +31,29 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
     const fixedRotation = throttle(rotation, TINY_NUM);
 
     if (fixedRotation % 90) {
-        const rad = rotation / 180 * Math.PI;
+        const rad = fixedRotation / 180 * Math.PI;
         const a1 = Math.tan(rad);
         const a2 = -1 / a1;
-        const b1s = [MIN_NUM, MAX_NUM];
-        const b2s = [MIN_NUM, MAX_NUM];
+        const b1MinMax = [MIN_NUM, MAX_NUM];
+        const b2MinMax = [MIN_NUM, MAX_NUM];
 
         moveablePoses.forEach(poses => {
             poses.forEach(pos => {
                 // ax + b = y
-                // ㅠ = y - ax
+                // b = y - ax
                 const b1 = pos[1] - a1 * pos[0];
                 const b2 = pos[1] - a2 * pos[0];
 
-                b1s[0] = Math.max(b1s[0], b1);
-                b1s[1] = Math.min(b1s[1], b1);
-                b2s[0] = Math.max(b2s[0], b2);
-                b2s[1] = Math.min(b2s[1], b2);
+                b1MinMax[0] = Math.max(b1MinMax[0], b1);
+                b1MinMax[1] = Math.min(b1MinMax[1], b1);
+                b2MinMax[0] = Math.max(b2MinMax[0], b2);
+                b2MinMax[1] = Math.min(b2MinMax[1], b2);
             });
         });
 
-        b1s.forEach(b1 => {
+        b1MinMax.forEach(b1 => {
             // a1x + b1 = a2x + b2
-            b2s.forEach(b2 => {
+            b2MinMax.forEach(b2 => {
                 // (a1 - a2)x = b2 - b1
                 const x = (b2 - b1) / (a1 - a2);
                 const y = a1 * x + b1;
@@ -165,8 +166,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const [left, top, width, height] = getGroupRect(this.moveables, rotation);
 
         // tslint:disable-next-line: max-line-length
-        target.style.cssText += `left:0px;top:0px; transform-origin: ${this.transformOrigin}; width:${width}px; height:${height}px;transform:rotate(${rotation}deg)`
-            + ` scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
+        const transform = `rotate(${rotation}deg) scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
+        target.style.cssText += `left:0px;top:0px; transform-origin: ${this.transformOrigin}; width:${width}px; height:${height}px;`
+            + `transform:${transform}`;
         state.width = width;
         state.height = height;
 
@@ -180,28 +182,37 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             // state,
         );
         const pos = [info.left!, info.top!];
-        [
-            info.pos1,
-            info.pos2,
-            info.pos3,
-            info.pos4,
-        ] = getAbsolutePosesByState(info as Required<typeof info>);
+        const [
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+        ] = getAbsolutePosesByState(info); // info.left + info.pos(1 ~ 4)
+
+        const minPos = getMinMaxs([pos1, pos2, pos3, pos4]);
+        const delta = [minPos.minX, minPos.minY];
+        info.pos1 = minus(pos1, delta);
+        info.pos2 = minus(pos2, delta);
+        info.pos3 = minus(pos3, delta);
+        info.pos4 = minus(pos4, delta);
+        info.left = left - info.left! + delta[0];
+        info.top = top - info.top! + delta[1];
         info.origin = plus(pos, info.origin!);
         info.beforeOrigin = plus(pos, info.beforeOrigin!);
 
         const clientRect = info.targetClientRect!;
-
-        clientRect.top += (top - info.top!) - state.top;
-        clientRect.left += (left - info.left!) - state.left;
-
         const direction = scale[0] * scale[1] > 0 ? 1 : -1;
+
+        clientRect.top += info.top - state.top;
+        clientRect.left += info.left - state.left;
+
+        target.style.transform = `translate(${-delta[0]}px, ${-delta[1]}px) ${transform}`;
+
         this.updateState(
             {
                 ...info,
                 direction,
                 beforeDirection: direction,
-                left: left - info.left!,
-                top: top - info.top!,
             },
             isSetState,
         );

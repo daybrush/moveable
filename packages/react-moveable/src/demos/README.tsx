@@ -67,10 +67,12 @@ function RenderDraggable2() {
             rotationPosition="bottom"
             throttleRotate={10}
             onDragStart={e => {
-                e.set([0, 0]);
+                // e.set([0, 0]);
             }}
             onDrag={e => {
-                e.target.style.transform = e.transform;
+                e.target.style.left = e.left + "px";
+                e.target.style.top = e.top + "px";
+                // e.target.style.transform = e.transform;
             }}
         ></Moveable>
     </div>;
@@ -861,7 +863,7 @@ function RenderRotateGroup() {
                 });
             }}
             onRotateGroup={e => {
-                console.log(e.events.map(ev => ev.beforeRotate), e.events.map(ev => ev.rotate));
+                // console.log(e.events.map(ev => ev.beforeRotate), e.events.map(ev => ev.rotate));
                 const { events } = e;
                 events.forEach((ev, i) => {
                     frames[i].translate = ev.drag.translate;
@@ -1049,7 +1051,7 @@ function RenderTRSGroup() {
                 });
             }}
             onRotateGroup={e => {
-                console.log(e.events.map(ev => ev.beforeRotate), e.events.map(ev => ev.rotate));
+                // console.log(e.events.map(ev => ev.beforeRotate), e.events.map(ev => ev.rotate));
                 const { events } = e;
                 events.forEach((ev, i) => {
                     frames[i].translate = ev.drag.translate;
