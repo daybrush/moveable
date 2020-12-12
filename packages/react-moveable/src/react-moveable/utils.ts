@@ -989,7 +989,7 @@ export function unset(self: any, name: string) {
 export function fillParams<T extends IObject<any>>(
     moveable: any,
     e: any,
-    params: Pick<T, Exclude<keyof T, "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">>,
+    params: Pick<T, Exclude<keyof T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">>,
 ): T {
     const datas = e.datas;
 
@@ -1003,6 +1003,7 @@ export function fillParams<T extends IObject<any>>(
         clientY: e.clientY,
         inputEvent: e.inputEvent,
         currentTarget: moveable,
+        moveable,
         datas: datas.datas,
     } as any;
 
@@ -1018,7 +1019,7 @@ export function fillEndParams<T extends IObject<any>>(
     e: any,
     params: Pick<T, Exclude<
         keyof T,
-        "target" | "clientX" | "clientY" | "inputEvent" |
+        "moveable" | "target" | "clientX" | "clientY" | "inputEvent" |
         "datas" | "currentTarget" | "lastEvent" | "isDrag" | "isDouble">
     > & { isDrag?: boolean },
 ): T {
@@ -1352,4 +1353,14 @@ export function getElementTargets(
 
 export function minmax(...values: number[]) {
     return [Math.min(...values), Math.max(...values)];
+}
+
+
+export function getAbsoluteRotation(pos1: number[], pos2: number[], direction: number) {
+    let deg = getRad(pos1, pos2) / Math.PI * 180;
+
+    deg = direction >= 0 ? deg : 180 - deg;
+    deg = deg >= 0 ? deg : 360 + deg;
+
+    return deg;
 }

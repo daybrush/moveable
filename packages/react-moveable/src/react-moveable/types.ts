@@ -311,6 +311,7 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
  * @typedef
  * @memberof Moveable
  * @property - The Moveable instance
+ * @property - The Moveable instance
  * @property - The Moveable target
  * @property - The horizontal coordinate within the application's client area at which the event occurred.
  * @property - The vertical coordinate within the application's client area at which the event occurred.
@@ -318,7 +319,8 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
  * @property - The mouse or touch input event that is invoking the moveable event
  */
 export interface OnEvent {
-    currentTarget: MoveableInterface;
+    currentTarget: MoveableManagerInterface<any, any>;
+    moveable: MoveableManagerInterface<any, any>;
     target: HTMLElement | SVGElement;
     clientX: number;
     clientY: number;
@@ -675,6 +677,10 @@ export interface OnRotate extends OnEvent {
     dist: number;
     delta: number;
     rotate: number;
+
+    absoluteDist: number;
+    absoluteDelta: number;
+    absoluteRotate: number;
 
     transform: string;
     isPinch: boolean;

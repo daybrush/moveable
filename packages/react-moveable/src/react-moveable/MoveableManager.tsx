@@ -11,13 +11,14 @@ import {
     flat,
     groupByMap,
     calculatePadding,
+    getAbsoluteRotation,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
 import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { getKeys, getRad, IObject } from "@daybrush/utils";
+import { getKeys, IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
@@ -482,12 +483,7 @@ export default class MoveableManager<T = {}>
             direction,
         } = this.state;
 
-        let deg = getRad(pos1, pos2) / Math.PI * 180;
-
-        deg = direction >= 0 ? deg : 180 - deg;
-        deg = deg >= 0 ? deg : 360 + deg;
-
-        return deg;
+        return getAbsoluteRotation(pos1, pos2, direction);
     }
     /**
      * Request able through a method rather than an event.

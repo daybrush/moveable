@@ -289,7 +289,13 @@ export default {
         datas.left = left;
         datas.top = top;
         datas.fixedPosition = getDirectionOffset(moveable, getOriginDirection(moveable));
-
+        datas.absoluteInfo = {
+            loop: 0,
+            origin: rect.origin,
+            startDeg: rect.rotation,
+            prevDeg: rect.rotation,
+            prevSnapDeg: rect.rotation,
+        }
         if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
 
@@ -348,6 +354,7 @@ export default {
             beforeDirection,
             beforeInfo,
             afterInfo,
+            absoluteInfo,
             isRotate,
             startValue,
             rect,
@@ -369,11 +376,17 @@ export default {
         let delta: number;
         let dist: number;
         let rotate: number;
+
         let beforeDelta: number;
         let beforeDist: number;
         let beforeRotate: number;
 
+        let absoluteDelta: number;
+        let absoluteDist: number;
+        let absoluteRotate: number;
+
         const startDeg = 180 / Math.PI * startValue;
+        const absoluteStartDeg = absoluteInfo.startDeg;
 
         if (!parentFlag && "parentDist" in e) {
             const parentDist = e.parentDist;
@@ -382,21 +395,26 @@ export default {
                 = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startDeg);
             [beforeDelta, beforeDist, beforeRotate]
                 = getParentDeg(moveable, rect, beforeInfo, parentDist, beforeDirection, startDeg);
-
+            [absoluteDelta, absoluteDist, absoluteRotate]
+                = getParentDeg(moveable, rect, absoluteInfo, parentDist, direction, absoluteStartDeg);
         } else if (isPinch || parentFlag) {
             [delta, dist, rotate]
                 = getDeg(moveable, rect, afterInfo, parentRotate, direction, startDeg, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate]
                 = getDeg(moveable, rect, beforeInfo, parentRotate, beforeDirection, startDeg, throttleRotate);
+            [absoluteDelta, absoluteDist, absoluteRotate]
+             = getDeg(moveable, rect, absoluteInfo, parentRotate, direction, absoluteStartDeg, throttleRotate);
         } else {
             [delta, dist, rotate]
                 = getRotateInfo(moveable, rect, afterInfo, direction, clientX, clientY, startDeg, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate] = getRotateInfo(
                 moveable, rect, beforeInfo, beforeDirection, clientX, clientY, startDeg, throttleRotate,
             );
+            [absoluteDelta, absoluteDist, absoluteRotate]
+                = getRotateInfo(moveable, rect, absoluteInfo, direction, clientX, clientY, absoluteStartDeg, throttleRotate);
         }
 
-        if (!delta && !beforeDelta && !parentMoveable) {
+        if (!absoluteDelta && !delta && !beforeDelta && !parentMoveable) {
             return;
         }
 
@@ -415,9 +433,14 @@ export default {
             delta,
             dist,
             rotate,
+
             beforeDist,
             beforeDelta,
             beforeRotate,
+
+            absoluteDist,
+            absoluteDelta,
+            absoluteRotate,
             isPinch: !!isPinch,
             ...fillTransformEvent(
                 moveable,

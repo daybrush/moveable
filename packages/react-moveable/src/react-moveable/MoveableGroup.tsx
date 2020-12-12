@@ -4,7 +4,7 @@ import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
-import { getTargetInfo, throttle, getAbsolutePosesByState, equals, unset, minmax } from "./utils";
+import { getTargetInfo, throttle, getAbsolutePosesByState, equals, unset } from "./utils";
 import { minus, plus, rotate } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
 
