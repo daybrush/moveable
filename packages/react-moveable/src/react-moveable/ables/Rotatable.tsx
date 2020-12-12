@@ -1,6 +1,6 @@
 import {
     throttle, prefix, triggerEvent, fillParams,
-    getClientRect, calculatePosition, fillEndParams, getRotationRad
+    calculatePosition, fillEndParams, getRotationRad
 } from "../utils";
 import { IObject, hasClass, getRad } from "@daybrush/utils";
 import {
@@ -277,6 +277,7 @@ export default {
         const {
             target, left, top, origin, beforeOrigin,
             direction, beforeDirection, targetTransform,
+            moveableClientRect,
         } = moveable.state;
 
         if (!isRequest && !target) {
@@ -290,12 +291,10 @@ export default {
         datas.top = top;
         datas.fixedPosition = getDirectionOffset(moveable, getOriginDirection(moveable));
         datas.absoluteInfo = {
-            loop: 0,
             origin: rect.origin,
-            startDeg: rect.rotation,
-            prevDeg: rect.rotation,
-            prevSnapDeg: rect.rotation,
+            startValue: rect.rotation,
         }
+        setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, origin, moveableClientRect);
         if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
 
@@ -314,10 +313,8 @@ export default {
             datas.beforeInfo = { origin: rect.beforeOrigin };
             datas.afterInfo = { origin: rect.origin };
 
-            const controlRect = getClientRect(moveable.controlBox.getElement());
-
-            setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, beforeOrigin, controlRect);
-            setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, origin, controlRect);
+            setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, beforeOrigin, moveableClientRect);
+            setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, origin, moveableClientRect);
         }
 
         datas.direction = direction;
@@ -386,7 +383,7 @@ export default {
         let absoluteRotate: number;
 
         const startDeg = 180 / Math.PI * startValue;
-        const absoluteStartDeg = absoluteInfo.startDeg;
+        const absoluteStartDeg = absoluteInfo.startValue;
 
         if (!parentFlag && "parentDist" in e) {
             const parentDist = e.parentDist;
@@ -403,15 +400,19 @@ export default {
             [beforeDelta, beforeDist, beforeRotate]
                 = getDeg(moveable, rect, beforeInfo, parentRotate, beforeDirection, startDeg, throttleRotate);
             [absoluteDelta, absoluteDist, absoluteRotate]
-             = getDeg(moveable, rect, absoluteInfo, parentRotate, direction, absoluteStartDeg, throttleRotate);
+                = getDeg(moveable, rect, absoluteInfo, parentRotate, direction, absoluteStartDeg, throttleRotate);
         } else {
             [delta, dist, rotate]
                 = getRotateInfo(moveable, rect, afterInfo, direction, clientX, clientY, startDeg, throttleRotate);
             [beforeDelta, beforeDist, beforeRotate] = getRotateInfo(
-                moveable, rect, beforeInfo, beforeDirection, clientX, clientY, startDeg, throttleRotate,
+                moveable, rect, beforeInfo, beforeDirection, clientX, clientY,
+                startDeg, throttleRotate,
             );
             [absoluteDelta, absoluteDist, absoluteRotate]
-                = getRotateInfo(moveable, rect, absoluteInfo, direction, clientX, clientY, absoluteStartDeg, throttleRotate);
+                = getRotateInfo(
+                    moveable, rect, absoluteInfo, direction, clientX, clientY,
+                    absoluteStartDeg, throttleRotate,
+                );
         }
 
         if (!absoluteDelta && !delta && !beforeDelta && !parentMoveable) {
