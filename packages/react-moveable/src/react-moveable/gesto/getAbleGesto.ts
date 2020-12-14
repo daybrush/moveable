@@ -126,7 +126,7 @@ export function getTargetAbleGesto(
 
     targets.push(controlBox);
 
-    if (!moveable.props.dragArea) {
+    if (!moveable.props.dragArea || moveable.props.dragTarget) {
         targets.push(moveableTarget);
     }
 
