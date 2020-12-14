@@ -76,9 +76,17 @@ const CustomAble = {
     },
     events: {},
     render(moveable: MoveableManagerInterface<CustomAbleProps>, React: Renderer) {
+        const CustomElement = React.useCSS("div", `
+        {
+            position: absolute;
+        }
+        `);
         console.log(moveable.props.prop1);
 
-        return <div></div>;
+        // Add key (required)
+        // Add class prefix moveable-(required)
+        return <CustomElement key="custom-element" className="moveable-custom">
+        </CustomElement>;
     },
 }
 
