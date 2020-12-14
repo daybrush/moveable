@@ -19,6 +19,7 @@ export interface MoveableClientRect {
 }
 export type MoveableManagerProps<T = {}> = {
     cssStyled: any;
+    customStyledMap: Record<string, any>;
     wrapperMoveable?: MoveableManagerInterface | null;
     parentMoveable?: MoveableManagerInterface | null;
     parentPosition?: { left: number, top: number } | null;
@@ -125,6 +126,7 @@ export interface PaddingBox {
 }
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
+    useCSS(tag: string, css: string): any;
 }
 /**
  * @typedef

@@ -20,6 +20,7 @@ import MoveableIndividualGroup from "./MoveableIndividualGroup";
 export class InitialMoveable<T = {}>
     extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T> {
     public static defaultAbles: Able[] = [];
+    public static customStyledMap: Record<string, any> = {};
     public static defaultStyled: any = null;
     public static makeStyled() {
         const cssMap: IObject<boolean> = {};
@@ -67,24 +68,27 @@ export class InitialMoveable<T = {}>
             ...totalAbles,
             ...(userAbles as any || []),
         ];
-        const nextProps = {...props, ...(userProps || {}), ables };
+        const nextProps = {
+            ...props,
+            ...(userProps || {}),
+            ables,
+            cssStyled: moveableContructor.defaultStyled,
+            customStyledMap: moveableContructor.customStyledMap,
+        };
 
         if (isGroup) {
             if (props.individualGroupable) {
                 return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
-                    cssStyled={moveableContructor.defaultStyled}
                     {...nextProps}
                     target={null}
                     targets={elementTargets} />;
             }
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
-                cssStyled={moveableContructor.defaultStyled}
                 {...nextProps}
                 target={null}
                 targets={elementTargets}  />;
         } else {
             return <MoveableManager<any> key="single" ref={ref(this, "moveable")}
-                cssStyled={moveableContructor.defaultStyled}
                 {...nextProps}
                 target={elementTargets[0]} />;
         }

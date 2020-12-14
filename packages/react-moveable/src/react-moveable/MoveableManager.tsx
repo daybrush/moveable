@@ -22,6 +22,7 @@ import { getKeys, IObject } from "@daybrush/utils";
 import { renderLine } from "./renderDirection";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
+import styled from "react-css-styled";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -50,6 +51,7 @@ export default class MoveableManager<T = {}>
         cspNonce: "",
         translateZ: 50,
         cssStyled: null,
+        customStyledMap: {},
         props: {},
     };
     public state: MoveableManagerState = {
@@ -94,7 +96,12 @@ export default class MoveableManager<T = {}>
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
         const isDragging = this.isDragging();
         const ableAttributes: IObject<boolean> = {};
-        const Renderer = { createElement: React.createElement };
+        const Renderer = {
+            createElement: React.createElement,
+            useCSS: () => {
+
+            },
+        };
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
@@ -677,7 +684,10 @@ export default class MoveableManager<T = {}>
     protected renderAbles() {
         const props = this.props as any;
         const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
-        const Renderer = { createElement: React.createElement };
+        const Renderer = {
+            createElement: React.createElement,
+            useCSS: this.useCSS,
+        };
 
         return groupByMap(flat<any>(
             filterAbles(this.getEnabledAbles(), ["render"], triggerAblesSimultaneously).map(({ render }) => {
@@ -686,6 +696,16 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
+    }
+    private useCSS = (tag: string, css: string) => {
+        const customStyleMap = this.props.customStyledMap as Record<string, any>;
+
+        const key = tag + css;
+
+        if (!customStyleMap[key]) {
+            customStyleMap[key] = styled(tag, css);
+        }
+        return customStyleMap[key];
     }
 }
 
