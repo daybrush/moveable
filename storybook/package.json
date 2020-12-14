@@ -13,7 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "@daybrush/utils": "^0.10.5",
-    "react-moveable": "^0.24.1",
+    "moveable-helper": "^0.4.0",
+    "react-moveable": "^0.25.0-beta5",
     "storybook-addon-preview": "^1.2.0"
   },
   "devDependencies": {
