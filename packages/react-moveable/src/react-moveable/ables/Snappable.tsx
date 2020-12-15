@@ -221,6 +221,7 @@ export function checkMoveableSnapBounds(
         moveable,
         poses.map(pos => pos[0]),
         poses.map(pos => pos[1]),
+        moveable.props.snapCenter,
     );
 
     const horizontalOffset = getSnapBound(horizontalBoundInfos[0], horizontalSnapInfo);
@@ -1024,6 +1025,7 @@ export function checkSnapDrag(
         || horizontalInnerBoundInfo.isBound;
     const verticalOffset = maxOffset(verticalSnapBoundInfo.offset, verticalInnerBoundInfo.offset);
     const horizontalOffset = maxOffset(horizontalSnapBoundInfo.offset, horizontalInnerBoundInfo.offset);
+
     const [offsetX, offsetY] = checkThrottleDragRotate(
         throttleDragRotate,
         [distX, distY],
