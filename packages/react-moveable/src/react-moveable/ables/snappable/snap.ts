@@ -128,24 +128,16 @@ export function getElementGuidelines(
     const guidelines: Guideline[] = [];
     const state = moveable.state;
 
-    if (state.guidelines && state.guidelines.length) {
+    if (isRefresh && state.guidelines && state.guidelines.length) {
         return guidelines;
     }
 
     const {
-        horizontalGuidelines = [],
-        verticalGuidelines = [],
         elementGuidelines = [],
-        bounds,
-        innerBounds,
         snapCenter,
     } = moveable.props;
 
-    if (
-        !innerBounds && !bounds
-        && !horizontalGuidelines.length
-        && !verticalGuidelines.length && !elementGuidelines.length
-    ) {
+    if (!elementGuidelines.length) {
         return guidelines;
     }
 
@@ -170,8 +162,6 @@ export function getElementGuidelines(
         clientTop - containerTop,
     ], n)).map(pos => roundSign(pos));
 
-
-
     elementGuidelines.map(el => {
         if ("parentElement" in el) {
             return {
@@ -180,8 +170,9 @@ export function getElementGuidelines(
         }
         return el;
     }).filter(value => {
-        return value.refresh === isRefresh;
+        return (value.refresh && isRefresh) || (!value.refresh && !isRefresh);
     }).forEach(value => {
+        console.log(value);
         const {
             element,
             top: topValue,
@@ -573,12 +564,16 @@ function checkSnap(
                 || type !== targetType
                 || dist > snapThreshold
             ) {
+                if (isVertical && snapThreshold === 5 && dist <= snapThreshold) {
+                    console.log(type, targetType, snapCenter, center);
+                }
                 return false;
             }
             return true;
         }).sort(
             (a, b) => a.dist - b.dist,
         );
+
 
         return {
             pos: targetPos,

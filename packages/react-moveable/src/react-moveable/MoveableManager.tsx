@@ -599,7 +599,6 @@ export default class MoveableManager<T = {}>
         const n = is3d ? 4 : 3;
         const absoluteOrigin = (props as any).groupable ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
 
-        console.log(originalBeforeOrigin);
         state.renderPoses = [
             plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
             plus(pos2, calculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
