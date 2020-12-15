@@ -96,6 +96,7 @@ export type MoveableManagerState<T = {}> = {
     targetOrigin: number[];
     beforeOrigin: number[];
     origin: number[];
+    originalBeforeOrigin: number[];
     beforeDirection: number;
     direction: number;
     renderPoses: number[][];

@@ -586,7 +586,7 @@ export default class MoveableManager<T = {}>
         const state = this.state;
         const props = this.props;
         const {
-            beforeOrigin, transformOrigin,
+            originalBeforeOrigin, transformOrigin,
             allMatrix, is3d, pos1, pos2, pos3, pos4,
             left: stateLeft, top: stateTop,
         } = state;
@@ -597,8 +597,9 @@ export default class MoveableManager<T = {}>
             right = 0,
         } = (props.padding || {}) as PaddingBox;
         const n = is3d ? 4 : 3;
-        const absoluteOrigin = (props as any).groupable ? beforeOrigin : plus(beforeOrigin, [stateLeft, stateTop]);
+        const absoluteOrigin = (props as any).groupable ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
 
+        console.log(originalBeforeOrigin);
         state.renderPoses = [
             plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
             plus(pos2, calculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),

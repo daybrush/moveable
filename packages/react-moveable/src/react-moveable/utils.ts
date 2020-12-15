@@ -884,6 +884,7 @@ export function getTargetInfo(
         moveableClientRect,
         beforeDirection,
         beforeOrigin,
+        originalBeforeOrigin: beforeOrigin,
         target,
         ...result,
     };

@@ -197,8 +197,10 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         info.pos4 = minus(pos4, delta);
         info.left = left - info.left! + delta[0];
         info.top = top - info.top! + delta[1];
-        info.origin = plus(pos, info.origin!);
-        info.beforeOrigin = plus(pos, info.beforeOrigin!);
+        info.origin = minus(plus(pos, info.origin!), delta);
+        info.beforeOrigin = minus(plus(pos, info.beforeOrigin!), delta);
+        info.originalBeforeOrigin = plus(pos, info.originalBeforeOrigin!);
+        // info.transformOrigin = minus(plus(pos, info.transformOrigin!), delta);
 
         const clientRect = info.targetClientRect!;
         const direction = scale[0] * scale[1] > 0 ? 1 : -1;

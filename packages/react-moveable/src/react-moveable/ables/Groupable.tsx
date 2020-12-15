@@ -24,6 +24,7 @@ export default {
                 target={target}
                 origin={false}
                 cssStyled={moveable.props.cssStyled}
+                customStyledMap={moveable.props.customStyledMap}
                 parentMoveable={moveable}
                 parentPosition={position}
             />;
