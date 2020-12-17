@@ -1,6 +1,6 @@
 import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
 import { prefixNames } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString, getRad, getShapeDirection } from "@daybrush/utils";
+import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString, getRad, getShapeDirection, isFunction } from "@daybrush/utils";
 import {
     multiply, invert,
     convertDimension, createIdentityMatrix,
@@ -1311,24 +1311,37 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
     return isArray(arr) || "length" in arr;
 }
 
+export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector: true): T | null;
+export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector?: false): T | string | null;
+export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
+    target: MoveableRefType<T>,
+    isSelector?: boolean,
+): any {
+    if (!target) {
+        return null;
+    }
+    if (isString(target)) {
+        if (isSelector) {
+            return document.querySelector(target);
+        }
+        return target;
+    }
+    if (isFunction(target)) {
+        return target();
+    }
+    if ("current" in target) {
+        return target.current;
+    }
+    return target;
+}
+
 export function getRefTargets(targets: MoveableRefType | MoveableRefType[]) {
     if (!targets) {
         return [];
     }
     const userTargets = isArrayFormat(targets) ? [].slice.call(targets) : [targets];
 
-    return userTargets.map(target => {
-        if (!target) {
-            return null;
-        }
-        if (isString(target)) {
-            return target;
-        }
-        if ("current" in target) {
-            return target.current;
-        }
-        return target;
-    }) as Array<SVGElement | HTMLElement | string | null | undefined>;
+    return userTargets.map(target => getRefTarget(target)) as Array<SVGElement | HTMLElement | string | null | undefined>;
 }
 
 export function getElementTargets(

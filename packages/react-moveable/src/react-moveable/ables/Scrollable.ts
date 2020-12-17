@@ -1,6 +1,6 @@
 
 import { ScrollableProps, OnScroll, MoveableManagerInterface, MoveableGroupInterface } from "../types";
-import { triggerEvent, fillParams } from "../utils";
+import { triggerEvent, fillParams, getRefTarget } from "../utils";
 import DragScroll from "@scena/dragscroll";
 
 function getDefaultScrollPosition(e: { scrollContainer: HTMLElement, direction: number[] }) {
@@ -31,10 +31,11 @@ export default {
     dragStart(moveable: MoveableManagerInterface<ScrollableProps>, e: any) {
         const props = moveable.props;
         const {
-            scrollContainer = moveable.getContainer(),
+            scrollContainer = moveable.getContainer() as HTMLElement,
         } = props;
 
         const dragScroll = new DragScroll();
+        const scrollContainerElement = getRefTarget<HTMLElement>(scrollContainer, true);
 
         e.datas.dragScroll = dragScroll;
 
@@ -56,7 +57,7 @@ export default {
             moveable[gestoName].scrollBy(offsetX, offsetY, e.inputEvent, false);
         });
         dragScroll.dragStart(e, {
-            container: scrollContainer as HTMLElement,
+            container: scrollContainerElement!,
         });
     },
     checkScroll(moveable: MoveableManagerInterface<ScrollableProps>, e: any) {

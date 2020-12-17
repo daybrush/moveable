@@ -207,10 +207,10 @@ export interface MoveableProps extends
 export interface MoveableDefaultProps extends ExcludeKey<MoveableDefaultOptions, "target"> {
     target?: MoveableRefType | ArrayFormat<MoveableRefType>;
 }
-export type MoveableRefType
-    = string | MoveableRefObject | SVGElement | HTMLElement | null | undefined;
-export interface MoveableRefObject {
-    current?: HTMLElement | SVGElement | null;
+export type MoveableRefType<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>
+    = string |(() => T) | MoveableRefObject<T> | T | null | undefined;
+export interface MoveableRefObject<T extends HTMLElement | SVGElement = HTMLElement | SVGElement> {
+    current: T | undefined | null;
 }
 /**
  * @memberof Moveable
@@ -1463,7 +1463,7 @@ export interface SnapRenderInfo {
  */
 export interface ScrollableOptions {
     scrollable?: boolean;
-    scrollContainer?: HTMLElement;
+    scrollContainer?: MoveableRefType<HTMLElement>;
     scrollThreshold?: number;
     getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
 }

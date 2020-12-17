@@ -1,5 +1,5 @@
 import React from "react";
-import Moveable from "../react-moveable";
+import Moveable, { ElementGuidelineValue } from "../react-moveable";
 import Selecto from "react-selecto";
 import "./README.css";
 import { useEffect } from "react";
@@ -82,6 +82,15 @@ function RenderDraggableResizableRotatableSnappable() {
     const ref = React.useRef<HTMLDivElement>(null);
     const transformRef = React.useRef<string>("translate(0px, 0px) rotate(89deg)");
     const [zoom, setZoom] = React.useState(1);
+    const [elementGuidelines, setElementGuidelines] = React.useState<ElementGuidelineValue[]>([]);
+
+    React.useEffect(() => {
+        setElementGuidelines([
+            {
+                element: document.querySelector<HTMLElement>(".drrs")!,
+            },
+        ]);
+    }, []);
     return <div className="container drrs" style={{ transform: `scale(${1 / zoom})`}}>
         DraggableResizableRotatableSnappable
         <div className="box" ref={ref} style={{
@@ -103,8 +112,9 @@ function RenderDraggableResizableRotatableSnappable() {
             rotatable={true}
             snappable={true}
             snapCenter={true}
-            verticalGuidelines={[0, 100, 200, 400]}
-            horizontalGuidelines={[0, 100, 200, 400]}
+            elementGuidelines={elementGuidelines}
+            // verticalGuidelines={[0, 100, 200, 400]}
+            // horizontalGuidelines={[0, 100, 200, 400]}
             keepRatio={true}
             zoom={zoom}
             onBeforeRenderStart={e => {
@@ -404,7 +414,7 @@ function RenderClippable() {
             clipVerticalGuidelines={[10, 30, 200]}
             clipHorizontalGuidelines={[10, 30, 200]}
             dragArea={true}
-            origin={false}
+            origin={true}
 
             snappable={true}
             verticalGuidelines={[80, 150, 200]}
@@ -598,7 +608,7 @@ function RenderDragGroup() {
         <Moveable
             ref={ref}
             target={target}
-            origin={false}
+            origin={true}
             draggable={true}
             onBeforeRenderGroupStart={e => {
                 e.events.forEach((ev, i) => {
@@ -645,7 +655,7 @@ function RenderDragRootGroup() {
             }}
             target={".draggroup_root .box"}
             rootContainer={document.body}
-            origin={false}
+            origin={true}
             draggable={true}
             onBeforeRenderGroupStart={e => {
                 e.events.forEach((ev, i) => {
@@ -705,7 +715,7 @@ function RenderScaleGroup() {
         <Moveable
             ref={ref}
             target={target}
-            origin={false}
+            origin={true}
             scalable={true}
             onBeforeRenderGroupStart={e => {
                 console.log(e);
@@ -764,7 +774,7 @@ function RenderResizeGroup() {
         <Moveable
             ref={ref}
             target={target}
-            origin={false}
+            origin={true}
             resizable={true}
             onBeforeRenderGroupStart={e => {
                 console.log(e);
@@ -824,7 +834,7 @@ function RenderRotateGroup() {
         <Moveable
             ref={ref}
             target={target}
-            origin={false}
+            origin={true}
             draggable={true}
             rotatable={true}
             onBeforeRenderGroupStart={e => {
@@ -899,7 +909,7 @@ function RenderPSpan() {
         <Moveable
             target={target}
             draggable={true}
-            origin={false}
+            origin={true}
             snappable={true}
             innerBounds={{ top: 20, left: 60, width: 100, height: 100 }}
             onDrag={e => {
@@ -1011,7 +1021,7 @@ function RenderTRSGroup() {
         <Moveable
             ref={ref}
             target={target}
-            origin={false}
+            origin={true}
             draggable={true}
             scalable={true}
             rotatable={true}
