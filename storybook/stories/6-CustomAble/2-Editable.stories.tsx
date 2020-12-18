@@ -23,7 +23,7 @@ const Editable = {
 
         // Add key (required)
         // Add class prefix moveable-(required)
-        const EditableViewer = React.useCSS("div", `
+        const EditableViewer = moveable.useCSS("div", `
         {
             position: absolute;
             left: 0px;
@@ -107,7 +107,7 @@ const Editable = {
         const { pos2 } = moveable.state;
 
         // use css for able
-        const EditableViewer = React.useCSS("div", ${"`"}
+        const EditableViewer = moveable.useCSS("div", ${"`"}
         {
             position: absolute;
             left: 0px;

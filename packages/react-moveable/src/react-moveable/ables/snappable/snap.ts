@@ -172,7 +172,6 @@ export function getElementGuidelines(
     }).filter(value => {
         return (value.refresh && isRefresh) || (!value.refresh && !isRefresh);
     }).forEach(value => {
-        console.log(value);
         const {
             element,
             top: topValue,
@@ -564,9 +563,6 @@ function checkSnap(
                 || type !== targetType
                 || dist > snapThreshold
             ) {
-                if (isVertical && snapThreshold === 5 && dist <= snapThreshold) {
-                    console.log(type, targetType, snapCenter, center);
-                }
                 return false;
             }
             return true;

@@ -127,7 +127,6 @@ export interface PaddingBox {
 }
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
-    useCSS(tag: string, css: string): any;
 }
 /**
  * @typedef
@@ -1674,6 +1673,7 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
         getElement(): HTMLElement,
     };
     isUnmounted: boolean;
+    useCSS(tag: string, css: string): any;
     getContainer(): HTMLElement | SVGElement;
     getRotation(): number;
     forceUpdate(): any;

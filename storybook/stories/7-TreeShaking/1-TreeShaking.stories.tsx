@@ -4,8 +4,6 @@ import { withKnobs } from "@storybook/addon-knobs";
 import { DEFAULT_REACT_CODESANDBOX, withPreview } from "storybook-addon-preview";
 import "../../template/basic/basic.css";
 import { DraggableProps, makeMoveable, ResizableProps, RotatableProps, Rotatable, Draggable, Resizable } from "react-moveable";
-import { useRef } from "react";
-import { REACT_CODESANDBOX } from "../../template/codesandbox";
 import MoveableHelper from "moveable-helper";
 import { BASIC_CSS_TEMPLATE } from "../../template/basic/template";
 

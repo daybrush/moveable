@@ -98,9 +98,6 @@ export default class MoveableManager<T = {}>
         const ableAttributes: IObject<boolean> = {};
         const Renderer = {
             createElement: React.createElement,
-            useCSS: () => {
-
-            },
         };
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
@@ -635,6 +632,16 @@ export default class MoveableManager<T = {}>
 
         return callback && callback(e);
     }
+    public useCSS(tag: string, css: string) {
+        const customStyleMap = this.props.customStyledMap as Record<string, any>;
+
+        const key = tag + css;
+
+        if (!customStyleMap[key]) {
+            customStyleMap[key] = styled(tag, css);
+        }
+        return customStyleMap[key];
+    }
     protected unsetAbles() {
         if (this.targetAbles.filter(able => {
             if (able.unset) {
@@ -686,7 +693,6 @@ export default class MoveableManager<T = {}>
         const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
         const Renderer = {
             createElement: React.createElement,
-            useCSS: this.useCSS,
         };
 
         return groupByMap(flat<any>(
@@ -696,16 +702,6 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
-    }
-    private useCSS = (tag: string, css: string) => {
-        const customStyleMap = this.props.customStyledMap as Record<string, any>;
-
-        const key = tag + css;
-
-        if (!customStyleMap[key]) {
-            customStyleMap[key] = styled(tag, css);
-        }
-        return customStyleMap[key];
     }
 }
 
