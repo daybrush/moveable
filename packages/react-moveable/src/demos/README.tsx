@@ -87,6 +87,9 @@ function RenderDraggableResizableRotatableSnappable() {
     React.useEffect(() => {
         setElementGuidelines([
             {
+                element: document.querySelector<HTMLElement>(".draggable")!,
+            },
+            {
                 element: document.querySelector<HTMLElement>(".drrs")!,
             },
         ]);
@@ -113,6 +116,7 @@ function RenderDraggableResizableRotatableSnappable() {
             snappable={true}
             snapCenter={true}
             elementGuidelines={elementGuidelines}
+            snapGap={true}
             // verticalGuidelines={[0, 100, 200, 400]}
             // horizontalGuidelines={[0, 100, 200, 400]}
             keepRatio={true}

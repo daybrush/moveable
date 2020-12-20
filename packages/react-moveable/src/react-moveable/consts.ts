@@ -95,22 +95,6 @@ export const MOVEABLE_CSS = `
     border-left-color: #4af;
     border-left-color: var(--moveable-color);
 }
-.line.dashed:before {
-    position: absolute;
-    content: attr(data-size);
-    font-size: 12px;
-    font-weight: bold;
-}
-.line.dashed.horizontal:before, .line.gap.horizontal:before {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 5px;
-}
-.line.dashed.vertical:before, .line.gap.vertical:before {
-    top: 50%;
-    transform: translateY(-50%);
-    left: 5px;
-}
 .line.vertical {
     transform: translateX(-50%);
 }
@@ -124,16 +108,6 @@ export const MOVEABLE_CSS = `
     height: 2px;
 }
 
-.line.gap {
-    background: #f55;
-}
-.line.gap:before {
-    position: absolute;
-    content: attr(data-size);
-    color: #f55;
-    font-size: 12px;
-    font-weight: bold;
-}
 .control.origin {
 	border-color: #f55;
 	background: #fff;
