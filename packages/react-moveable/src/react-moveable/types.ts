@@ -16,6 +16,7 @@ export interface MoveableClientRect {
     clientHeight?: number;
     scrollWidth?: number;
     scrollHeight?: number;
+    overflow?: boolean;
 }
 export type MoveableManagerProps<T = {}> = {
     cssStyled: any;

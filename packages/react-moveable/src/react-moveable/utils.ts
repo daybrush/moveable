@@ -918,6 +918,7 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
         rect.clientHeight = el.clientHeight;
         rect.scrollWidth = el.scrollWidth;
         rect.scrollHeight = el.scrollHeight;
+        rect.overflow = getComputedStyle(el).overflow !== "visible";
     }
     return rect;
 }

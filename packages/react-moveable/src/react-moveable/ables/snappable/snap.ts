@@ -112,12 +112,14 @@ export function addGuidelines(
     height: number,
     horizontalGuidelines?: number[] | false,
     verticalGuidelines?: number[] | false,
+    clientLeft = 0,
+    clientTop = 0,
 ): Guideline[] {
     horizontalGuidelines && horizontalGuidelines!.forEach(pos => {
-        totalGuidelines.push({ type: "horizontal", pos: [0, throttle(pos, 0.1)], size: width! });
+        totalGuidelines.push({ type: "horizontal", pos: [0, throttle(pos - clientTop, 0.1)], size: width! });
     });
     verticalGuidelines && verticalGuidelines!.forEach(pos => {
-        totalGuidelines.push({ type: "vertical", pos: [throttle(pos, 0.1), 0], size: height! });
+        totalGuidelines.push({ type: "vertical", pos: [throttle(pos - clientLeft, 0.1), 0], size: height! });
     });
     return totalGuidelines;
 }
@@ -269,6 +271,11 @@ export function getTotalGuidelines(
         containerClientRect: {
             scrollHeight: containerHeight,
             scrollWidth: containerWidth,
+            clientHeight: containerClientHeight,
+            clientWidth: containerClientWidth,
+            overflow,
+            clientLeft,
+            clientTop,
         },
     } = moveable.state;
     const props = moveable.props;
@@ -305,10 +312,12 @@ export function getTotalGuidelines(
 
     addGuidelines(
         totalGuidelines,
-        containerWidth!,
-        containerHeight!,
+        overflow ? containerWidth! : containerClientWidth!,
+        overflow ? containerHeight! : containerClientHeight!,
         snapHorizontal && horizontalGuidelines,
         snapVertical && verticalGuidelines,
+        clientLeft,
+        clientTop,
     );
 
     return totalGuidelines;

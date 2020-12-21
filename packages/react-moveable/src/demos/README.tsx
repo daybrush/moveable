@@ -80,7 +80,7 @@ function RenderDraggable2() {
 
 function RenderDraggableResizableRotatableSnappable() {
     const ref = React.useRef<HTMLDivElement>(null);
-    const transformRef = React.useRef<string>("translate(0px, 0px) rotate(89deg)");
+    const transformRef = React.useRef<string>("translate(0px, 0px) rotate(90deg)");
     const [zoom, setZoom] = React.useState(1);
     const [elementGuidelines, setElementGuidelines] = React.useState<ElementGuidelineValue[]>([]);
 
@@ -114,9 +114,11 @@ function RenderDraggableResizableRotatableSnappable() {
             resizable={true}
             rotatable={true}
             snappable={true}
-            snapCenter={true}
+            // snapCenter={true}
             elementGuidelines={elementGuidelines}
             snapGap={true}
+            // verticalGuidelines={[0, 100]}
+            horizontalGuidelines={[0]}
             // verticalGuidelines={[0, 100, 200, 400]}
             // horizontalGuidelines={[0, 100, 200, 400]}
             keepRatio={true}
