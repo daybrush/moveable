@@ -18,6 +18,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+
+## [0.22.0] - 2020-12-22
+* `moveable` 0.22.0
+* `react-moveable` 0.25.0
+* `preact-moveable` 0.24.0
+* `ngx-moveable` 0.18.0
+* `svelte-moveable` 0.13.0
+
+### Added
+* Support Custom Able
+* Support Tree Shaking (React)
+* Support live element guidelines #317
+* Support partial element guidelines #357
+* Add `setFixedDirection`, `setRatio` properties in Resizable, Scalable #355 #362
+* Add `absoluteDist`, `absoluteDelta`, `absoluteRotate` properties #377
+* Support function element type
+
+### Fixed
+* Fix SVG deletion #359
+* Fix Group's dragTarget #373
+* Fix Groups' updateTarget #366
+* Fix floating point issue  #376
+* Fix snapCenter caculation
+* Fix guideline scale #380
+
 ## [0.21.1] - 2020-11-16
 * `moveable` 0.21.1
 * `react-moveable` 0.24.1
