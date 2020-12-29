@@ -1513,7 +1513,7 @@ function getGapGuidelines(
         })
     );
 }
-function renderGapGuidelines(
+export function renderGapGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     gapGuidelines: GapGuideline[],
     type: "vertical" | "horizontal",
@@ -1658,6 +1658,7 @@ export default {
         bounds: Object,
         innerBounds: Object,
         snapDistFormat: Function,
+        snapGapRenderer: typeof renderGapGuidelines,
     } as const,
     events: {
         onSnap: "snap",
@@ -1748,6 +1749,7 @@ export default {
             snapThreshold = 5,
             snapDigit = 0,
             snapDistFormat = (v: number) => v,
+            snapGapRenderer,
         } = moveable.props;
         const externalPoses = snapRenderInfo.externalPoses || [];
         const poses = getAbsolutePosesByState(moveable.state);
@@ -1882,7 +1884,7 @@ export default {
         );
 
         return [
-            ...renderGapGuidelines(
+            ...(snapGapRenderer ?? renderGapGuidelines)(
                 moveable,
                 gapVerticalGuidelines,
                 "vertical",
@@ -1890,7 +1892,7 @@ export default {
                 snapDistFormat,
                 React
             ),
-            ...renderGapGuidelines(
+            ...(snapGapRenderer ?? renderGapGuidelines)(
                 moveable,
                 gapHorizontalGuidelines,
                 "horizontal",

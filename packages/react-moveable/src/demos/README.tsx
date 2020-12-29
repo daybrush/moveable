@@ -1,6 +1,7 @@
 import React from "react";
 import Moveable, { ElementGuidelineValue } from "../react-moveable";
 import Selecto from "react-selecto";
+import {prefix} from '../react-moveable/utils';
 import "./README.css";
 import { useEffect } from "react";
 
@@ -924,6 +925,82 @@ function RenderPSpan() {
         ></Moveable>
     </div>;
 }
+function RenderSnappable() {
+    const [target, setTarget] = React.useState<HTMLElement>();
+    React.useEffect(() => {
+        const t = document.querySelector<HTMLElement>(".snappable .target2")!
+        setTarget(t);
+        const {translate} = frame;
+        t.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`
+        // eslint-disable-next-line
+    }, [])
+    const ref = React.useRef<Moveable>(null);
+    const frame = {
+        translate: [100, 100],
+        rotate: 0,
+    };
+    const elementGuidelines = Array.from(document.querySelectorAll('.snappable .target:not(.target2)'))
+    return <div className="container snappable">
+        <p>Snappable</p>
+        <div className="target1 target">target1</div>
+        <div className="target2 target">target2</div>
+        <div className="target3 target">target3</div>
+        <div className="target4 target">target4</div>
+        <Moveable
+            ref={ref}
+            snappable
+            snapGapRenderer={(m, gapGuidelines, type, [directionName, posName1, posName2, sizeName], snapDistFormat) => {
+                const {
+                    snapDigit = 0,
+                    isDisplaySnapDigit = true,
+                } = m.props;
+            
+                const otherType = type === "vertical" ? "horizontal" : "vertical";
+                const [index, otherIndex] = type === "vertical" ? [0, 1] : [1, 0];
+            
+                return gapGuidelines.map(({ renderPos, gap }, i) => {
+                    const absGap = Math.abs(gap!);
+                    const snapSize = isDisplaySnapDigit ? parseFloat(absGap.toFixed(snapDigit)) : 0;
+            
+                    return <div className={prefix(
+                        "line",
+                        directionName,
+                        "guideline",
+                        "gap",
+                    )}
+                    data-size={snapSize > 0 ? snapDistFormat(snapSize) : ""}
+                        key={`${otherType}GapGuideline${i}`} style={{
+                            [posName1]: `${renderPos[index]}px`,
+                            [posName2]: `${renderPos[otherIndex]}px`,
+                            [sizeName]: `${absGap}px`,
+                        }}>
+                            Custom Content Here
+                        </div>
+                });
+            }}
+            snapThreshold={5}
+            elementGuidelines={elementGuidelines}
+            target={target}
+            draggable={true}
+            onDragStart={e => {
+                e.set(frame.translate);
+            }}
+            onDrag={e => {
+                frame.translate = e.beforeTranslate;
+            }}
+            onRender={e => {
+                const { translate, rotate } = frame;
+
+                e.target.style.transform
+                    = `translate(${translate[0]}px, ${translate[1]}px)`
+                    + ` rotate(${rotate}deg)`;
+            }}
+        ></Moveable>
+    </div>
+
+
+}
+
 function RenderSVGOriginDraggable() {
     const [target, setTarget] = React.useState<HTMLElement>();
     const ref = React.useRef<Moveable>(null);
@@ -1221,6 +1298,7 @@ function RenderCustomAble() {
 }
 export default function App() {
     return <div>
+        <RenderSnappable />
         <RenderDraggable />
         <RenderDraggable2 />
         <RenderDraggableResizableRotatableSnappable />

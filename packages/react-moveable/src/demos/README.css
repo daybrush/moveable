@@ -75,3 +75,25 @@ p:not([data-no]) {
     top: 65%;
     left: 65%;
 }
+
+.target {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 10px;
+    text-align: center;
+    background: #ee8;
+    color: #333;
+    font-weight: bold;
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
+
+.target3 {
+    bottom: 0;
+    width: 100px;
+}
+
+.target4 {
+    right: 0;
+}

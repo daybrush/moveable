@@ -1,6 +1,7 @@
 import { IObject } from "@daybrush/utils";
 import Gesto, * as GestoTypes from "gesto";
 import CustomGesto from "./gesto/CustomGesto";
+import {renderGapGuidelines} from './ables/Snappable';
 import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
 
 export interface MoveableClientRect {
@@ -1379,6 +1380,7 @@ export interface SnappableOptions {
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
     snapDistFormat?: (distance: number) => number | string;
+    snapGapRenderer?: typeof renderGapGuidelines;
 }
 
 /**
