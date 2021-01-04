@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.0] - 2020
+## [1.0.0] - 2021-??-??
 * `moveable` 1.0.0
 * `react-moveable` 1.0.0
 * `preact-moveable` 1.0.0
@@ -17,6 +17,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+
+## [0.22.1] - 2021-01-04
+* `moveable` 0.22.1
+* `react-moveable` 0.25.0
+* `preact-moveable` 0.24.0
+* `ngx-moveable` 0.18.1
+* `svelte-moveable` 0.13.1
+
+### Fixed
+* Fix number type rendering #386
 
 
 ## [0.22.0] - 2020-12-22
