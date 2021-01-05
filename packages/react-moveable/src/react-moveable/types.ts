@@ -350,7 +350,7 @@ export interface OnEndEvent extends OnEvent {
  * @property - `index` is the sequence of functions used in the event.
  */
 export interface OnTransformStartEvent {
-    setTransform(transform: string | string[], index: number): void;
+    setTransform(transform: string | string[], index?: number): void;
     setTransformIndex(transformIndex: number): void;
 }
 /**

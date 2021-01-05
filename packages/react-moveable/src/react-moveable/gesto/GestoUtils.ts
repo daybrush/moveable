@@ -83,8 +83,10 @@ export function resolveTransformEvent(event: any, functionName: string) {
     datas.beforeFunctionTexts = result.beforeFunctionTexts;
     datas.afterFunctionTexts = result.afterFunctionTexts;
     datas.beforeTransform = result.beforeFunctionMatrix;
+    datas.beforeTransform2 = result.beforeFunctionMatrix2;
     datas.targetTansform = result.targetFunctionMatrix;
     datas.afterTransform = result.afterFunctionMatrix;
+    datas.afterTransform2 = result.afterFunctionMatrix2;
     datas.targetAllTransform = result.allFunctionMatrix;
 
     if (targetFunction.functionName === matFunctionName) {
@@ -112,6 +114,8 @@ export function getTransfromMatrix(datas: any, targetMatrix: number[], isAfter?:
     const {
         beforeTransform,
         afterTransform,
+        beforeTransform2,
+        afterTransform2,
         targetAllTransform,
     } = datas;
 
@@ -124,10 +128,10 @@ export function getTransfromMatrix(datas: any, targetMatrix: number[], isAfter?:
         : multiply(targetMatrix, targetAllTransform, 4);
 
     // res1 = B-1 * nextTargetMatrix
-    const res1 = multiply(invert(beforeTransform, 4), nextTargetMatrix, 4);
+    const res1 = multiply(invert(isAfter ? beforeTransform2 : beforeTransform, 4), nextTargetMatrix, 4);
 
     // res3 = res2 * A-1
-    const afterTargetMatrix = multiply(res1, invert(afterTransform, 4), 4);
+    const afterTargetMatrix = multiply(res1, invert(isAfter ? afterTransform2 : afterTransform, 4), 4);
 
     return afterTargetMatrix;
 }

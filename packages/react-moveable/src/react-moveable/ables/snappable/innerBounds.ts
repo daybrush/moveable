@@ -272,7 +272,7 @@ export function getInnerBoundDragInfo(
     poses: number[][],
     datas: any,
 ) {
-    const lines = getCheckSnapLines(poses, [0, 0], false).map(([sign, pos1, pos2]) => {
+    const lines = getCheckInnerBoundLines(poses, [0, 0], false).map(([sign, pos1, pos2]) => {
         return [
             sign.map(dir => Math.abs(dir) * 2),
             pos1,
@@ -352,7 +352,7 @@ export function getCheckSnapLineDirections(
 
     return lineDirections;
 }
-export function getCheckSnapLines(
+export function getCheckInnerBoundLines(
     poses: number[][],
     direction: number[],
     keepRatio: boolean,

@@ -1277,14 +1277,22 @@ export function invertObject<T extends IObject<any>>(obj: T): InvertTypes<T> {
 
 export function getTransform(transforms: string[], index: number) {
     const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
+    const beforeFunctionTexts2 = transforms.slice(0, index < 0 ? undefined : index + 1);
     const targetFunctionText = transforms[index] || "";
     const afterFunctionTexts = index < 0 ? [] : transforms.slice(index);
+    const afterFunctionTexts2 = index < 0 ? [] : transforms.slice(index + 1);
+
     const beforeFunctions = parse(beforeFunctionTexts);
+    const beforeFunctions2 = parse(beforeFunctionTexts2);
     const targetFunctions = parse([targetFunctionText]);
     const afterFunctions = parse(afterFunctionTexts);
+    const afterFunctions2 = parse(afterFunctionTexts2);
+
 
     const beforeFunctionMatrix = toMat(beforeFunctions);
+    const beforeFunctionMatrix2 = toMat(beforeFunctions2);
     const afterFunctionMatrix = toMat(afterFunctions);
+    const afterFunctionMatrix2 = toMat(afterFunctions2);
     const allFunctionMatrix = multiply(
         beforeFunctionMatrix,
         afterFunctionMatrix,
@@ -1293,15 +1301,21 @@ export function getTransform(transforms: string[], index: number) {
     return {
         transforms,
         beforeFunctionMatrix,
+        beforeFunctionMatrix2,
         targetFunctionMatrix: toMat(targetFunctions),
         afterFunctionMatrix,
+        afterFunctionMatrix2,
         allFunctionMatrix,
         beforeFunctions,
+        beforeFunctions2,
         targetFunction: targetFunctions[0],
         afterFunctions,
+        afterFunctions2,
         beforeFunctionTexts,
+        beforeFunctionTexts2,
         targetFunctionText,
         afterFunctionTexts,
+        afterFunctionTexts2,
     };
 }
 
