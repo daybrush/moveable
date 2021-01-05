@@ -101,6 +101,14 @@ export function getOffsetInfo(
         }
         target = target.parentElement;
         position = "relative";
+
+        if (target && target.tagName.toLowerCase() === "svg") {
+            const svgStyle = getComputedStyle(target);
+
+            position = svgStyle.position!;
+
+            break;
+        }
     }
     return {
         isStatic: position === "static",
@@ -530,11 +538,12 @@ export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 
     return `${is3d ? "matrix3d" : "matrix"}(${convertMatrixtoCSS(matrix, !is3d).join(",")})`;
 }
 export function getSVGViewBox(el: SVGSVGElement) {
-    if (!el) {
-        return { x: 0, y: 0, width: 0, height: 0 };
-    }
     const clientWidth = el.clientWidth;
     const clientHeight = el.clientHeight;
+
+    if (!el) {
+        return { x: 0, y: 0, width: 0, height: 0, clientWidth, clientHeight };
+    }
     const viewBox = el.viewBox;
     const baseVal = (viewBox && viewBox.baseVal) || { x: 0, y: 0, width: 0, height: 0 };
 
@@ -543,17 +552,19 @@ export function getSVGViewBox(el: SVGSVGElement) {
         y: baseVal.y,
         width: baseVal.width || clientWidth,
         height: baseVal.height || clientHeight,
+        clientWidth,
+        clientHeight,
     };
 }
 export function getSVGMatrix(
     el: SVGSVGElement,
     n: number,
 ) {
-    const clientWidth = el.clientWidth;
-    const clientHeight = el.clientHeight;
     const {
         width: viewBoxWidth,
         height: viewBoxHeight,
+        clientWidth,
+        clientHeight,
     } = getSVGViewBox(el);
     const scaleX = clientWidth / viewBoxWidth;
     const scaleY = clientHeight / viewBoxHeight;

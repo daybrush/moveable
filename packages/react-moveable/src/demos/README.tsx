@@ -3,7 +3,22 @@ import Moveable, { ElementGuidelineValue } from "../react-moveable";
 import Selecto from "react-selecto";
 import "./README.css";
 import { useEffect } from "react";
+function RenderSVG() {
+    const ref = React.useRef<SVGPathElement>(null);
+    return <div className="container">
 
+        <svg version="1.2" baseProfile="tiny" id="Logo" xmlns="http://www.w3.org/2000/svg"x="0px" y="0px" viewBox="50 50 150 150">
+            <text id="text" transform="matrix(1 0 0 1 31.1271 199.1222)" fill="#561010" font-family="'Roboto-Regular'" font-size="25.3945px">Nom d’entreprise</text>
+            <g>
+                <path transform="matrix(1 0 0 1 0 0)" fill="#000" d="M51.75,55.77c-0.27-0.39,3.97-5.2,10.38-7.74c1.79-0.71,11.97-4.75,21.31,0.8 c8.61,5.12,11.99,15.71,10.53,24.27c-2.38,13.95-17.76,23.37-22.24,20.72c-0.97-0.57-1.32-2.75-1.99-7.09 c-1.81-11.84-1.68-20.54-1.68-20.54c0.05-3.05,0.19-4.38-0.61-6.25c-1.42-3.32-4.9-6.23-8.62-6.47 C54.84,53.21,51.97,56.08,51.75,55.77z"
+                ref={ref}></path>
+            </g>
+        </svg>
+        <Moveable
+            target={ref}
+        ></Moveable>
+    </div>;
+}
 function RenderDraggable() {
     const ref = React.useRef<HTMLDivElement>(null);
     return <div className="container draggable">
@@ -117,6 +132,7 @@ function RenderDraggableResizableRotatableSnappable() {
             // snapCenter={true}
             elementGuidelines={elementGuidelines}
             snapGap={true}
+            snapCenter={false}
             // verticalGuidelines={[0, 100]}
             horizontalGuidelines={[0]}
             // verticalGuidelines={[0, 100, 200, 400]}
@@ -136,8 +152,8 @@ function RenderDraggableResizableRotatableSnappable() {
             }}
             onResizeStart={e => {
                 e.dragStart && e.dragStart.setTransformIndex(0);
-                e.setMin([300, 150])
-                e.setRatio(1.2);
+                // e.setMin([300, 150])
+                // e.setRatio(1.2);
             }}
             onResize={e => {
                 e.target.style.width = `${e.width}px`;
@@ -389,9 +405,10 @@ function RenderWarpable() {
             //     e.setTransform("rotate(30deg) translate(30px, 30px)  scale(2, 2) translate(10px, 10px)");
             // }}
             onWarpStart={e => {
-                e.setTransform(warpMatrix, 1);
+                e.setTransform(warpMatrix, 4);
             }}
             onWarp={e => {
+                console.log(e.transform, );
                 e.target.style.transform = e.transform;
             }}
             onWarpEnd={e => {
@@ -1221,6 +1238,7 @@ function RenderCustomAble() {
 }
 export default function App() {
     return <div>
+        <RenderSVG />
         <RenderDraggable />
         <RenderDraggable2 />
         <RenderDraggableResizableRotatableSnappable />

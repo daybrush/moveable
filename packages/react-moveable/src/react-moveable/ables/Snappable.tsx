@@ -47,7 +47,7 @@ import { dragControlCondition as rotatableDragControlCondtion } from "./Rotatabl
 import { TINY_NUM } from "../consts";
 import {
     getInnerBoundInfo,
-    getCheckSnapLines,
+    getCheckInnerBoundLines,
     getInnerBoundDragInfo,
     checkRotateInnerBounds,
     checkInnerBoundPoses,
@@ -678,7 +678,7 @@ export function getSizeOffsetInfo(
     datas: any
 ) {
     const directions = getCheckSnapDirections(direction, keepRatio);
-    const lines = getCheckSnapLines(poses, direction, keepRatio);
+    const lines = getCheckInnerBoundLines(poses, direction, keepRatio);
     const offsets = [
         ...getSnapBoundInfo(
             moveable,
