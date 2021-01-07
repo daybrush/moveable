@@ -19,3 +19,4 @@ statistics/
 .scene_cache
 *.mp4
 demo/storybook
+dist/
