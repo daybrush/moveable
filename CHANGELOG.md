@@ -18,6 +18,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+
+## [0.22.2] - 2021-01-08
+* `moveable` 0.22.2
+* `react-moveable` 0.25.1
+* `preact-moveable` 0.24.1
+* `ngx-moveable` 0.18.2
+* `svelte-moveable` 0.13.2
+
+### Fixed
+* Fix SVG position #390
+* Fix Warpable matrix
+
+
 ## [0.22.1] - 2021-01-04
 * `moveable` 0.22.1
 * `react-moveable` 0.25.0
