@@ -4,6 +4,7 @@ export default {
         target: Object,
         dragTarget: Object,
         container: Object,
+        portalContainer: Object,
         rootContainer: Object,
         zoom: Number,
         transformOrigin: Array,

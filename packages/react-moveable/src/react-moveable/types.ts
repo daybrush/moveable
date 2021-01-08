@@ -33,7 +33,8 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @memberof Moveable
  * @property - The target(s) to indicate Moveable Control Box. (default: null)
  * @property - The target(s) to drag Moveable target(s) (default: target)
- * @property - Moveable Container. (default: parentElement)
+ * @property - Moveable Container. Don't set it. (default: parentElement)
+ * @property - Moveable Portal Container to support other frameworks. Don't set it. (default: container)
  * @property - Moveable Root Container (No Transform Container). (default: container)
  * @property - Zooms in the elements of a moveable. (default: 1)
  * @property - The default transformOrigin of the target can be set in advance. (default: "")
@@ -52,6 +53,7 @@ export interface DefaultOptions {
     target?: SVGElement | HTMLElement | null;
     dragTarget?: SVGElement | HTMLElement | null;
     container?: SVGElement | HTMLElement | null;
+    portalContainer?: HTMLElement | null;
     rootContainer?: HTMLElement | null;
     zoom?: number;
     transformOrigin?: Array<string | number> | string | "";

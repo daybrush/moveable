@@ -36,6 +36,7 @@ export default class MoveableManager<T = {}>
         parentMoveable: null,
         wrapperMoveable: null,
         parentPosition: null,
+        portalContainer: null,
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
@@ -85,6 +86,7 @@ export default class MoveableManager<T = {}>
             zoom, cspNonce,
             translateZ,
             cssStyled: ControlBoxElement,
+            portalContainer,
         } = props;
 
         this.checkUpdate();
@@ -109,6 +111,7 @@ export default class MoveableManager<T = {}>
                 className={`${prefix("control-box", direction === -1
                     ? "reverse" : "", isDragging ? "dragging" : "")} ${className}`}
                 {...ableAttributes}
+                portalContainer={portalContainer}
                 style={{
                     "position": "absolute",
                     "display": isDisplay ? "block" : "none",
