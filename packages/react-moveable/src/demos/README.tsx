@@ -5,11 +5,15 @@ import "./README.css";
 import { useEffect } from "react";
 function RenderSVG() {
     const ref = React.useRef<SVGPathElement>(null);
-    return <div className="container">
+    return <div className="container" style={{
+        textAlign: "center",
+    }}>
 
-        <svg version="1.2" baseProfile="tiny" id="Logo" xmlns="http://www.w3.org/2000/svg"x="0px" y="0px" viewBox="50 50 150 150">
+        <svg version="1.2" baseProfile="tiny" id="Logo" xmlns="http://www.w3.org/2000/svg"x="0px" y="0px" viewBox="50 50 150 150" style={{
+            width: "50%",
+        }}>
             <text id="text" transform="matrix(1 0 0 1 31.1271 199.1222)" fill="#561010" font-family="'Roboto-Regular'" font-size="25.3945px">Nom d’entreprise</text>
-            <g>
+            <g className="draggable" transform="matrix(1 0 0 1 0 0)">
                 <path transform="matrix(1 0 0 1 0 0)" fill="#000" d="M51.75,55.77c-0.27-0.39,3.97-5.2,10.38-7.74c1.79-0.71,11.97-4.75,21.31,0.8 c8.61,5.12,11.99,15.71,10.53,24.27c-2.38,13.95-17.76,23.37-22.24,20.72c-0.97-0.57-1.32-2.75-1.99-7.09 c-1.81-11.84-1.68-20.54-1.68-20.54c0.05-3.05,0.19-4.38-0.61-6.25c-1.42-3.32-4.9-6.23-8.62-6.47 C54.84,53.21,51.97,56.08,51.75,55.77z"
                 ref={ref}></path>
             </g>

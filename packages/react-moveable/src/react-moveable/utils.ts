@@ -96,19 +96,11 @@ export function getOffsetInfo(
         const transform = style.transform;
         position = style.position!;
 
-        if (position !== "static" || (transform && transform !== "none")) {
+        if (target.tagName.toLowerCase() === "svg" || position !== "static" || (transform && transform !== "none")) {
             break;
         }
         target = target.parentElement;
         position = "relative";
-
-        if (target && target.tagName.toLowerCase() === "svg") {
-            const svgStyle = getComputedStyle(target);
-
-            position = svgStyle.position!;
-
-            break;
-        }
     }
     return {
         isStatic: position === "static",
