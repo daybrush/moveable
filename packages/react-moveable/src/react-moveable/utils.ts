@@ -139,19 +139,15 @@ export function getOffsetPosInfo(
         targetOrigin = origin.slice();
         hasOffset = true;
 
-        if (tagName === "g") {
-            offsetLeft = 0;
-            offsetTop = 0;
-        } else {
-            [
-                offsetLeft, offsetTop, origin[0], origin[1],
-            ] = getSVGGraphicsOffset(el as SVGGraphicsElement, origin);
-        }
+        [
+            offsetLeft, offsetTop, origin[0], origin[1],
+        ] = getSVGGraphicsOffset(el as SVGGraphicsElement, origin);
     } else {
         origin = getTransformOrigin(style).map(pos => parseFloat(pos));
         targetOrigin = origin.slice();
     }
     return {
+        tagName,
         isSVG,
         hasOffset,
         offset: [offsetLeft || 0, offsetTop || 0],
@@ -211,7 +207,6 @@ export function getMatrixStackInfo(
 
     while (el && !isEnd) {
         const style: CSSStyleDeclaration = getComputedStyle(el);
-        const tagName = el.tagName.toLowerCase();
         const position = style.position;
         const isFixed = position === "fixed";
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style.transform!));
@@ -231,6 +226,7 @@ export function getMatrixStackInfo(
             matrix = convertDimension(matrix, 3, 4);
         }
         const {
+            tagName,
             hasOffset,
             isSVG,
             origin,
@@ -247,6 +243,9 @@ export function getMatrixStackInfo(
                 getSVGMatrix(el as SVGSVGElement, n),
                 createIdentityMatrix(n),
             );
+        } else if (tagName === "g" && target !== el) {
+            offsetLeft = 0;
+            offsetTop = 0;
         }
         const {
             offsetParent,
