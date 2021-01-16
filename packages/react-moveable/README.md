@@ -16,9 +16,6 @@
     <a href="https://github.com/daybrush/scena" target="_blank"><strong>Main Project</strong></a>
 </p>
 
-<p align="middle">
-  <a href="https://codesandbox.io/s/react-moveable-demo-jl69c" target="_blank"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" /></a>
-</p>
 
 
 <table width="100%" align="center">

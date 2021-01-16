@@ -15,9 +15,6 @@
     <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
     <a href="https://github.com/daybrush/scena" target="_blank"><strong>Main Project</strong></a>
 </p>
-<p align="middle">
-  <a href="https://codesandbox.io/s/preact-moveable-demo-s2ygu" target="_blank"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" /></a>
-</p>
 
 <table width="100%" align="center">
 <tr>
