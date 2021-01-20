@@ -47,12 +47,12 @@ export const MOVEABLE_CSS = `
     z-index: 0;
 }
 .line, .control {
+    position: absolute;
 	left: 0;
     top: 0;
     will-change: transform;
 }
 .control {
-	position: absolute;
 	width: 14px;
 	height: 14px;
 	border-radius: 50%;
@@ -74,7 +74,6 @@ export const MOVEABLE_CSS = `
     transform-origin: 0 0;
 }
 .line {
-	position: absolute;
 	width: 1px;
     height: 1px;
     background: #4af;

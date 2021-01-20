@@ -1,11 +1,12 @@
 import {
     SnapInfo, SnappableProps, SnappableState,
-    Guideline, ResizableProps, ScalableProps, SnapOffsetInfo, MoveableManagerInterface, MoveableClientRect} from "../../types";
+    Guideline, ResizableProps, ScalableProps, SnapOffsetInfo, MoveableManagerInterface, MoveableClientRect, ElementGuidelineValue} from "../../types";
 import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy, getTinyDist, calculateInversePosition, calculatePosition, roundSign } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
+import { diff } from "@egjs/children-differ";
 
 export function calculateContainerPos(
     rootMatrix: number[],
@@ -43,11 +44,13 @@ export function getGapGuidelines(
         const elementStart = guideline1.pos[index];
         const elementEnd = elementStart + guideline1.sizes![index];
 
-        elementGuidelines.forEach(({
-            pos: guideline2Pos,
-            sizes: guideline2Sizes,
-            element: guideline2Element,
-        }) => {
+        elementGuidelines.forEach(guideline2 => {
+            const {
+                pos: guideline2Pos,
+                sizes: guideline2Sizes,
+                element: guideline2Element,
+                className: guidline2ClassName,
+            } = guideline2;
             const targetStart = guideline2Pos[index];
             const targetEnd = targetStart + guideline2Sizes![index];
             let pos = 0;
@@ -83,6 +86,7 @@ export function getGapGuidelines(
                     size: 0,
                     type: otherType,
                     gap,
+                    className: guidline2ClassName,
                     gapGuidelines: elementGuidelines,
                 });
             }
@@ -93,6 +97,7 @@ export function getGapGuidelines(
                 if (throttle(start - (centerPos - snapThreshold), 0.1) >= 0) {
                     totalGuidelines.push({
                         pos: otherType === "vertical" ? [centerPos, guideline2Pos[1]] : [guideline2Pos[0], centerPos],
+                        className: guidline2ClassName,
                         element: guideline2Element,
                         sizes: guideline2Sizes,
                         size: 0,
@@ -123,26 +128,19 @@ export function addGuidelines(
     });
     return totalGuidelines;
 }
-export function getElementGuidelines(
+export function caculateElementGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
-    isRefresh: boolean,
+    values: ElementGuidelineValue[],
 ) {
     const guidelines: Guideline[] = [];
-    const state = moveable.state;
 
-    if (isRefresh && state.guidelines && state.guidelines.length) {
+    if (!values.length) {
         return guidelines;
     }
-
+    const state = moveable.state;
     const {
-        elementGuidelines = [],
         snapCenter,
     } = moveable.props;
-
-    if (!elementGuidelines.length) {
-        return guidelines;
-    }
-
     const {
         containerClientRect,
         targetClientRect: {
@@ -164,22 +162,14 @@ export function getElementGuidelines(
         clientTop - containerTop,
     ], n)).map(pos => roundSign(pos));
 
-    elementGuidelines.map(el => {
-        if ("parentElement" in el) {
-            return {
-                element: el,
-            };
-        }
-        return el;
-    }).filter(value => {
-        return (value.refresh && isRefresh) || (!value.refresh && !isRefresh);
-    }).forEach(value => {
+    values.forEach(value => {
         const {
             element,
             top: topValue,
             left: leftValue,
             right: rightValue,
             bottom: bottomValue,
+            className,
         } = value;
         const rect = element.getBoundingClientRect();
         const left = rect.left - containerLeft;
@@ -200,6 +190,7 @@ export function getElementGuidelines(
                     elementTop,
                 ], size: height,
                 sizes,
+                className,
             });
         }
 
@@ -211,6 +202,7 @@ export function getElementGuidelines(
                     elementTop,
                 ], size: height,
                 sizes,
+                className,
             });
         }
 
@@ -222,6 +214,7 @@ export function getElementGuidelines(
                     throttle(elementTop + distTop, 0.1),
                 ], size: width,
                 sizes,
+                className,
             });
         }
 
@@ -233,6 +226,7 @@ export function getElementGuidelines(
                     throttle(elementBottom + distTop, 0.1),
                 ], size: width,
                 sizes,
+                className,
             });
         }
 
@@ -247,6 +241,7 @@ export function getElementGuidelines(
                 size: height,
                 sizes,
                 center: true,
+                className,
             });
             guidelines.push({
                 type: "horizontal",
@@ -258,10 +253,51 @@ export function getElementGuidelines(
                 size: width,
                 sizes,
                 center: true,
+                className,
             });
         }
     });
     return guidelines;
+}
+export function getElementGuidelines(
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
+    isRefresh: boolean,
+    prevGuidelines: Guideline[] = [],
+) {
+    const guidelines: Guideline[] = [];
+    const state = moveable.state;
+
+    if (isRefresh && state.guidelines && state.guidelines.length) {
+        return guidelines;
+    }
+
+    const {
+        elementGuidelines = [],
+    } = moveable.props;
+
+    if (!elementGuidelines.length) {
+        return guidelines;
+    }
+
+    const prevValues = state.elementGuidelineValues || [];
+    const nextValues = elementGuidelines.map(el => {
+        if ("parentElement" in el) {
+            return {
+                element: el,
+            };
+        }
+        return el;
+    });
+
+    state.elementGuidelineValues = nextValues;
+
+    const { added, removed } = diff(prevValues.map(v => v.element), nextValues.map(v => v.element));
+    const removedElements = removed.map(index => prevValues[index].element);
+    const addedGuidelines = caculateElementGuidelines(moveable, added.map(index => nextValues[index]).filter(value => {
+        return (value.refresh && isRefresh) || (!value.refresh && !isRefresh);
+    }));
+
+    return [...prevGuidelines.filter(guideline => removedElements.indexOf(guideline.element!) === -1), ...addedGuidelines];
 }
 export function getTotalGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,

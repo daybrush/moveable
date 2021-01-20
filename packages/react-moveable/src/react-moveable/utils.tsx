@@ -16,7 +16,7 @@ import {
 } from "@scena/matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
-    MoveableProps, ControlPose, InvertTypes, ArrayFormat, MoveableRefType
+    MoveableProps, ControlPose, InvertTypes, ArrayFormat, MoveableRefType, RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo
 } from "./types";
 import { parse, toMat } from "css-to-mat";
 
@@ -1394,4 +1394,30 @@ export function getAbsoluteRotation(pos1: number[], pos2: number[], direction: n
     deg = deg >= 0 ? deg : 360 + deg;
 
     return deg;
+}
+
+
+export function renderGuideline(info: RenderGuidelineInfo, React: Renderer): any {
+    const { direction, classNames, size, pos, zoom, key } = info;
+    const isHorizontal = direction === "horizontal";
+    const scaleDirection = isHorizontal ? "Y" : "X";
+    // const scaleDirection2 = isHorizontal ? "Y" : "X";
+
+    return <div
+        key={key}
+        className={classNames.join(" ")}
+        style={{
+            [isHorizontal ? "width" : "height"]: `${size}`,
+            transform: `translate(${pos[0]}, ${pos[1]}) translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
+        }}
+    />
+}
+
+export function renderInnerGuideline(info: RenderGuidelineInnerInfo, React: Renderer): any {
+    return renderGuideline({
+        ...info,
+        classNames: [prefix("line", "guideline", info.direction), ...info.classNames].filter(className => className) as string[],
+        size: info.size || `${info.sizeValue}px`,
+        pos: info.pos || info.posValue.map(v => `${v}px`),
+    }, React);
 }
