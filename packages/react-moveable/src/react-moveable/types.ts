@@ -141,6 +141,7 @@ export interface Guideline {
     center?: boolean;
     pos: number[];
     size: number;
+    className?: string;
     sizes?: number[];
     gap?: number;
     gapGuidelines?: Guideline[];
@@ -178,6 +179,31 @@ export interface SnapGuidelineInfo {
     dist: number;
     offset: number;
     guideline: Guideline;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface RenderGuidelineInfo {
+    key?: string;
+    direction: string;
+    classNames: string[];
+    size: string;
+    pos: string[];
+    sizeValue: number;
+    posValue: number[];
+    zoom: number;
+}
+export interface RenderGuidelineInnerInfo {
+    key?: string;
+    direction: string;
+    classNames: Array<string | undefined>;
+    size?: string;
+    pos?: string[];
+    sizeValue: number;
+    posValue: number[];
+    zoom: number;
 }
 export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, U>>;
 
@@ -1392,6 +1418,7 @@ export interface SnappableOptions {
  * @property - Whether to snap the right of the element (default: true)
  * @property - Whether to snap the bottom of the element (default: true)
  * @property - Whether to update the guideline every render (default: false)
+ * @property - class names to add to guideline (default: "")
  */
 export interface ElementGuidelineValue {
     element: Element;
@@ -1400,6 +1427,7 @@ export interface ElementGuidelineValue {
     right?: boolean;
     bottom?: boolean;
     refresh?: boolean;
+    className?: string;
 }
 export interface SnappableEvents {
     onSnap: OnSnap;
@@ -1442,9 +1470,11 @@ export interface BoundType {
 }
 export interface SnappableState {
     staticGuidelines: Guideline[];
+    elementGuidelineValues: ElementGuidelineValue[];
     guidelines: Guideline[];
     snapRenderInfo?: SnapRenderInfo | null;
     enableSnap: boolean;
+
 }
 export interface SnapRenderInfo {
     direction?: number[];
