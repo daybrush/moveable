@@ -1,46 +1,47 @@
 import { prefix, getControlTransform, throttle, getLineStyle } from "./utils";
-import { ResizableProps, ScalableProps, WarpableProps, Renderer, MoveableManagerInterface } from "./types";
+import { Renderer, MoveableManagerInterface, RenderDirections } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
 import { IObject, getRad } from "@daybrush/utils";
 
 export function renderControls(
-    moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     defaultDirections: string[],
     React: Renderer,
 ): any[] {
     const {
         renderPoses,
-        rotation,
-    } = moveable.state;
-    const {
-        renderDirections: directions = defaultDirections,
-        zoom,
-    } = moveable.props;
-    const {
+        rotation: radRotation,
         direction,
     } = moveable.state;
+    const {
+        renderDirections: directions = true,
+        zoom,
+    } = moveable.props;
 
     const directionMap: IObject<boolean> = {};
-    directions.forEach(dir => {
+
+    if (!directions) {
+        return [];
+    }
+    const sign = (direction > 0 ? 1 : -1);
+    const renderDirections = directions === true ? defaultDirections : directions;
+    const degRotation = radRotation / Math.PI * 180;
+
+    renderDirections.forEach(dir => {
         directionMap[dir] = true;
     });
-    return directions.map(dir => {
+    return renderDirections.map(dir => {
         const indexes = DIRECTION_INDEXES[dir];
 
         if (!indexes || !directionMap[dir]) {
             return null;
         }
-        let directionRotation = throttle(rotation / Math.PI * 180, 15) + DIRECTION_ROTATIONS[dir];
-
-        if (direction < 1) {
-            directionRotation = 360 - directionRotation;
-        }
-        directionRotation %= 180;
+        const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
         return (
             <div className={prefix("control", "direction", dir)}
                 data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
-                style={getControlTransform(rotation, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
+                style={getControlTransform(radRotation, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });
 }
@@ -58,13 +59,13 @@ export function renderLine(
         data-direction={direction} style={getLineStyle(pos1, pos2, zoom, rad)}></div>;
 }
 export function renderAllDirections(
-    moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     React: Renderer,
 ) {
     return renderControls(moveable, DIRECTIONS, React);
 }
 export function renderDiagonalDirections(
-    moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps & WarpableProps>>,
+    moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     React: Renderer,
 ): any[] {
     return renderControls(moveable, ["nw", "ne", "sw", "se"], React);
