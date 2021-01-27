@@ -19,7 +19,7 @@ import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, 
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
 import { getKeys, IObject } from "@daybrush/utils";
-import { renderLine } from "./renderDirection";
+import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
 import styled from "react-css-styled";

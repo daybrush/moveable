@@ -1,6 +1,6 @@
 import {
     throttle, prefix, triggerEvent, fillParams,
-    calculatePosition, fillEndParams, getRotationRad
+    calculatePosition, fillEndParams, getRotationRad, getRefTargets
 } from "../utils";
 import { IObject, hasClass, getRad } from "@daybrush/utils";
 import {
@@ -25,6 +25,7 @@ import {
     resolveTransformEvent,
     getTransformDirection,
 } from "../gesto/GestoUtils";
+import { renderControls } from "../renderDirections";
 
 /**
  * @namespace Rotatable
@@ -155,6 +156,9 @@ export function getRotationPositions(
     [pos1, pos2, pos3, pos4]: number[][],
     direction: number,
 ) {
+    if (rotationPosition === "none") {
+        return;
+    }
     const [dir1, dir2] = (rotationPosition || "top").split("-");
     let radPoses = [pos1, pos2];
 
@@ -187,11 +191,26 @@ export function getRotationPositions(
     return [pos, rad] as const;
 }
 
-export function dragControlCondition(e: any) {
+export function dragControlCondition(e: any, moveable: MoveableManagerInterface<RotatableProps>) {
     if (e.isRequest) {
         return e.requestAble === "rotatable";
     }
-    return hasClass(e.inputEvent.target, prefix("rotation-control"));
+    const target = e.inputEvent.target as HTMLElement;
+    if (hasClass(target, prefix("rotation-control"))) {
+        return true;
+    }
+    const rotationTarget = moveable.props.rotationTarget;
+
+    if (rotationTarget) {
+        console.log(getRefTargets(rotationTarget, true));
+        return getRefTargets(rotationTarget, true).some(element => {
+            if (!element) {
+                return false;
+            }
+            return target === element || target.contains(element);
+        });
+    }
+    return false;
 }
 
 export default {
@@ -201,6 +220,8 @@ export default {
         rotatable: Boolean,
         rotationPosition: String,
         throttleRotate: Number,
+        renderDirections: Object,
+        rotationTarget: Object,
     } as const,
     events: {
         onRotateStart: "rotateStart",
@@ -240,6 +261,7 @@ export default {
             rotatable,
             rotationPosition,
             zoom,
+            renderDirections,
         } = moveable.props;
         const {
             renderPoses,
@@ -248,21 +270,32 @@ export default {
         if (!rotatable) {
             return null;
         }
-        const [pos, rad] = getRotationPositions(rotationPosition!, renderPoses, direction);
+        const positions = getRotationPositions(rotationPosition!, renderPoses, direction);
 
-        return (
-            <div key="rotation" className={prefix("rotation")} style={{
-                // tslint:disable-next-line: max-line-length
-                transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad)`,
-            }}>
-                <div className={prefix("line rotation-line")} style={{
-                    transform: `scaleX(${zoom})`,
-                }}></div>
-                <div className={prefix("control rotation-control")} style={{
-                    transform: `translate(0.5px) scale(${zoom})`,
-                }}></div>
-            </div>
-        );
+        const jsxs = [];
+
+        if (positions) {
+            const [pos, rad] = positions;
+            jsxs.push(
+                <div key="rotation" className={prefix("rotation")} style={{
+                    // tslint:disable-next-line: max-line-length
+                    transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad)`,
+                }}>
+                    <div className={prefix("line rotation-line")} style={{
+                        transform: `scaleX(${zoom})`,
+                    }}></div>
+                    <div className={prefix("control rotation-control")} style={{
+                        transform: `translate(0.5px) scale(${zoom})`,
+                    }}></div>
+                </div>
+            );
+        }
+        if (renderDirections) {
+            jsxs.push(...renderControls(moveable, [], React));
+        }
+
+
+        return jsxs;
     },
     dragControlCondition,
     dragControlStart(

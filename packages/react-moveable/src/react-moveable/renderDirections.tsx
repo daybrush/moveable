@@ -14,7 +14,7 @@ export function renderControls(
         direction,
     } = moveable.state;
     const {
-        renderDirections: directions = true,
+        renderDirections: directions = defaultDirections,
         zoom,
     } = moveable.props;
 
@@ -24,7 +24,7 @@ export function renderControls(
         return [];
     }
     const sign = (direction > 0 ? 1 : -1);
-    const renderDirections = directions === true ? defaultDirections : directions;
+    const renderDirections = directions === true ? DIRECTIONS : directions;
     const degRotation = radRotation / Math.PI * 180;
 
     renderDirections.forEach(dir => {

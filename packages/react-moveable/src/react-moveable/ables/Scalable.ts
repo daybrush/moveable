@@ -13,7 +13,7 @@ import {
     setDefaultTransformIndex,
     getAbsolutePosition,
 } from "../gesto/GestoUtils";
-import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
+import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
     ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
     Renderer, OnScaleGroupStart, DraggableProps, OnDragStart,

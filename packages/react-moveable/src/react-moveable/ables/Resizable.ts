@@ -14,7 +14,7 @@ import {
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
     OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
 } from "../types";
-import { renderAllDirections, renderDiagonalDirections } from "../renderDirection";
+import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
     fillChildEvents,
     triggerChildAble,

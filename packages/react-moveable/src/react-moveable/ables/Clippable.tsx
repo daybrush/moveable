@@ -16,7 +16,7 @@ import {
     getRadiusValues,
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos
 } from "./roundable/borderRadius";
-import { renderLine } from "../renderDirection";
+import { renderLine } from "../renderDirections";
 import { addGuidelines, checkSnapBoundPriority } from "./snappable/snap";
 import { checkSnapBounds } from "./Snappable";
 

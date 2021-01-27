@@ -22,7 +22,7 @@ import {
     OnWarpStart, OnWarp, OnWarpEnd, MoveableManagerInterface,
 } from "../types";
 import { hasClass, dot, getRad } from "@daybrush/utils";
-import { renderAllDirections } from "../renderDirection";
+import { renderAllDirections } from "../renderDirections";
 import { hasGuidelines, checkMoveableSnapBounds } from "./Snappable";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {

@@ -1217,16 +1217,14 @@ export interface RoundableState {
 /**
  * @typedef
  * @memberof Moveable.Resizable
+ * @extends Moveable.RenderDirections
  * @property - Whether or not target can be resized. (default: false)
  * @property - throttle of width, height when resize. (default: 0)
- * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
-
  * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
  */
-export interface ResizableOptions {
+export interface ResizableOptions extends RenderDirections {
     resizable?: boolean;
     throttleResize?: number;
-    renderDirections?: string[];
     keepRatio?: boolean;
 }
 export interface ResizableEvents {
@@ -1243,15 +1241,14 @@ export interface ResizableProps extends ResizableOptions, EventInterface<Resizab
 /**
  * @typedef
  * @memberof Moveable.Scalable
+ * @extends Moveable.RenderDirections
  * @property - Whether or not target can be scaled. (default: false)
  * @property - throttle of scaleX, scaleY when scale. (default: 0)
- * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
  * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
  */
-export interface ScalableOptions {
+export interface ScalableOptions extends RenderDirections {
     scalable?: boolean;
     throttleScale?: number;
-    renderDirections?: string[];
     keepRatio?: boolean;
 }
 export interface ScalableEvents {
@@ -1273,22 +1270,34 @@ export interface ScalableProps extends ScalableOptions, EventInterface<ScalableE
 export interface GapGuideline extends Guideline {
     renderPos: number[];
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @property - Set directions to show the control box. (default: false if rotatable, ["n", "nw", "ne", "s", "se", "sw", "e", "w"] otherwise)
+ */
+export interface RenderDirections {
+    renderDirections?: boolean | string[];
+}
 /**
  * @typedef
  * @memberof Moveable.Rotatable
+ * @extends Moveable.RenderDirections
  * @property - Whether or not target can be rotated. (default: false)
  * @property - You can specify the position of the rotation. (default: "top")
  * @property - throttle of angle(degree) when rotate. (default: 0)
  */
-export interface RotatableOptions {
+export interface RotatableOptions extends RenderDirections {
     rotatable?: boolean;
     rotationPosition?:
     "top" | "bottom" | "left" | "right"
     | "top-right" | "top-left"
     | "bottom-right" | "bottom-left"
     | "left-top" | "left-bottom"
-    | "right-top" | "right-bottom";
+    | "right-top" | "right-bottom"
+    | "none";
     throttleRotate?: number;
+    rotationTarget?: MoveableRefType | ArrayFormat<MoveableRefType> | false;
 }
 export interface RotatableEvents {
     onRotateStart: OnRotateStart;
@@ -1309,7 +1318,7 @@ export interface RotatableProps extends RotatableOptions, EventInterface<Rotatab
  */
 export interface WarpableOptions {
     warpable?: boolean;
-    renderDirections?: string[];
+    renderDirections?: boolean | string[];
 }
 
 export interface WarpableEvents {

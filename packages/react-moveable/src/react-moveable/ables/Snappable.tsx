@@ -1986,8 +1986,8 @@ export default {
     ) {
         this.unset(moveable);
     },
-    dragControlCondition(e: any) {
-        if (directionCondition(e) || rotatableDragControlCondtion(e)) {
+    dragControlCondition(e: any, moveable: MoveableManagerInterface) {
+        if (directionCondition(e) || rotatableDragControlCondtion(e, moveable)) {
             return true;
         }
         if (!e.isRequest && e.inputEvent) {

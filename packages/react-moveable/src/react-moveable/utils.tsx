@@ -1329,7 +1329,7 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
 }
 
 export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector: true): T | null;
-export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector?: false): T | string | null;
+export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector?: boolean): T | string | null;
 export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
     target: MoveableRefType<T>,
     isSelector?: boolean,
@@ -1352,13 +1352,21 @@ export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | 
     return target;
 }
 
-export function getRefTargets(targets: MoveableRefType | MoveableRefType[]) {
+export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector: true): Array<HTMLElement | SVGElement | null>;
+export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector?: boolean): Array<HTMLElement | SVGElement | string | null>;
+export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector?: boolean) {
     if (!targets) {
         return [];
     }
     const userTargets = isArrayFormat(targets) ? [].slice.call(targets) : [targets];
 
-    return userTargets.map(target => getRefTarget(target)) as Array<SVGElement | HTMLElement | string | null | undefined>;
+    return userTargets.reduce((prev, target) => {
+        if (isString(target) && isSelector) {
+            return [...prev, ...[].slice.call(document.querySelectorAll<HTMLElement>(target))];
+        }
+        prev.push(getRefTarget(target, isSelector));
+        return prev;
+    }, [] as Array<SVGElement | HTMLElement | string | null | undefined>);
 }
 
 export function getElementTargets(
