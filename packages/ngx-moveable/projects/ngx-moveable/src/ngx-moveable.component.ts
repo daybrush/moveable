@@ -3,7 +3,7 @@ import {
   OnInit, OnChanges, SimpleChanges, EventEmitter, Output
 } from '@angular/core';
 import Moveable, {
-  PROPERTIES, EVENTS, MoveableOptions, MoveableEventsParameters,
+  PROPERTIES, EVENTS, MoveableOptions, MoveableEventsParameters, ArrayFormat, MoveableRefObject,
 } from 'moveable';
 import { IObject } from '@daybrush/utils';
 import { NgxMoveableEvents, RequiredMoveableOptions } from './types';
@@ -105,7 +105,8 @@ export class NgxMoveableComponent
 
   @Input() public props!: RequiredMoveableOptions['props'];
   @Input() public individualGroupable!: RequiredMoveableOptions['individualGroupable'];
-
+  @Input() portalContainer!: RequiredMoveableOptions['portalContainer'];
+  @Input() rotationTarget!: RequiredMoveableOptions['rotationTarget'];
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;
@@ -188,6 +189,7 @@ export class NgxMoveableComponent
       this[name] = new EventEmitter<unknown>();
     });
   }
+
 
 
   ngOnInit(): void {

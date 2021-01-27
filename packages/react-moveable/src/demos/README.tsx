@@ -533,6 +533,9 @@ function RenderRotatable() {
                 pinchOutside={true}
                 rotatable={true}
                 origin={true}
+                rotationPosition={"none"}
+                renderDirections={true}
+                rotationTarget={".moveable-direction"}
                 onBeforeRenderStart={(e) => {
                     e.setTransform(
                         "rotate(30deg) translate(30px, 30px)  scale(2, 2) translate(10px, 10px)"
