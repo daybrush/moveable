@@ -1286,6 +1286,7 @@ export interface RenderDirections {
  * @property - Whether or not target can be rotated. (default: false)
  * @property - You can specify the position of the rotation. (default: "top")
  * @property - throttle of angle(degree) when rotate. (default: 0)
+ * @property - Set additional rotationTargets.
  */
 export interface RotatableOptions extends RenderDirections {
     rotatable?: boolean;
