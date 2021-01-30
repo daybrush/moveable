@@ -61,8 +61,8 @@
         "@types/react": "^16.0.0"
     },
     "dependencies": {
-        "react-compat-css-styled": "^1.0.0",
+        "react-compat-css-styled": "^1.0.5",
         "react-moveable": "^0.26.0",
-        "react-simple-compat": "^1.0.0"
+        "react-simple-compat": "^1.1.0"
     }
 }
