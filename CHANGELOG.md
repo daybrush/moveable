@@ -19,6 +19,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+## [0.23.0] - 2021-01-28
+* `moveable` 0.23.0
+* `react-moveable` 0.26.0
+* `preact-moveable` 0.25.0
+* `ngx-moveable` 0.19.0
+* `svelte-moveable` 0.14.0
+
+### Added
+* Add `rotationTarget` prop #381
+* Add `portalContainer` prop #391
+* Add `className` property in elementGuidelines #397
+
+### Fixed
+* Support svg's `g` tag #407
+* Fix rotation cursor #406
+* Update element guidelines during drag #404
+
 ## [0.22.2] - 2021-01-08
 * `moveable` 0.22.2
 * `react-moveable` 0.25.1
