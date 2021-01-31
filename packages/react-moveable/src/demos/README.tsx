@@ -36,6 +36,9 @@ function RenderSVGG() {
                     console.log(e.transform);
                     e.target.style.transform = e.transform;
                 }}
+                onDragEnd={() => {
+                    console.log("end");
+                }}
             ></Moveable>
         </div>
     );
@@ -901,6 +904,9 @@ function RenderDragGroup() {
 
                         ev.target.style.transform = ev.transform;
                     });
+                }}
+                onDragGroupEnd={() => {
+                    console.log("?aa");
                 }}
             ></Moveable>
         </div>
