@@ -19,7 +19,7 @@ const story = storiesOf("Basic", module);
 
 story.addDecorator(withKnobs).addDecorator(withPreview);
 
-story.add("Cliappable", () => {
+story.add("Clippable", () => {
     return <ClippableApp key={Math.random()}
         description={<p className="description">You can clip the target. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Clippable.html" target="_blank">See Clippable API</a>)</p>}
         {...CLIPPABLE_PROPS_TEMPLATE()}

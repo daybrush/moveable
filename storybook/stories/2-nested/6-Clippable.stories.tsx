@@ -19,7 +19,7 @@ const story = storiesOf("Nested Transform", module);
 
 story.addDecorator(withKnobs).addDecorator(withPreview);
 
-story.add("Cliappable", () => {
+story.add("Clippable", () => {
     return <ClippableApp key={Math.random()}
         description={<p className="description">No matter how many transforms are layered, you can clip the target properly. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Clippable.html" target="_blank">See Clippable API</a>)</p>}
         children={NESTED_JSX}

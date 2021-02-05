@@ -19,7 +19,7 @@ const story = storiesOf("Use state at the last event.", module);
 
 story.addDecorator(withKnobs).addDecorator(withPreview);
 
-story.add("Cliappable", () => {
+story.add("Clippable", () => {
     return <ClippableApp key={Math.random()}
         description={<p className="description">At the end of the event, you can store it only once in the state using the lastEvent property. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Clippable.html" target="_blank">See Clippable API</a>)</p>}
         {...CLIPPABLE_PROPS_TEMPLATE()}
