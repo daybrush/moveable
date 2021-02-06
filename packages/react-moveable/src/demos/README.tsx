@@ -1,8 +1,66 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Moveable, { ElementGuidelineValue } from "../react-moveable";
 import Selecto from "react-selecto";
 import "./README.css";
 import { useEffect } from "react";
+
+function SnapDemoApp() {
+    const [position, setPosition] = useState([100, 200]);
+    const moveable = useRef<Moveable | null>();
+    const target = useRef<HTMLDivElement | null>(null);
+
+    return (
+        <div className="container" style={{
+            position: "static",
+        }}>
+            <div
+                className="test snappable"
+                style={{ position: "relative", height: "100%", width: "100%" }}
+            >
+                <div
+                    className="tesx snappable"
+                    style={{
+                        position: "absolute",
+                        height: "100px",
+                        width: "100px",
+                        left: "50px",
+                        top: "50px",
+                        border: "2px solid black"
+                    }}
+                />
+                <div
+                    id="target"
+                    ref={target}
+                    style={{
+                        position: "absolute",
+                        height: "100px",
+                        width: "100px",
+                        left: position[0],
+                        top: position[1],
+                        border: "2px solid black"
+                    }}
+                />
+            </div>
+            <Moveable
+                ref={(moveableRef: Moveable) => {
+                    moveable.current = moveableRef;
+                }}
+                draggable
+                target={target}
+                snappable
+                elementGuidelines={Array.from(document.querySelectorAll(".test.snappable"))}
+                onDrag={({ target, translate }) => {
+                    target.style.transform = `translate(${translate[0]}px, ${translate[1]}px)`;
+                }}
+                onDragEnd={({ target, lastEvent }) => {
+                    target.style.transform = "";
+                    lastEvent && setPosition([lastEvent.left, lastEvent.top]);
+                }}
+            />
+        </div>
+    );
+}
+
 function RenderSVGG() {
     const ref = React.useRef<SVGPathElement>(null);
     return (
@@ -1667,6 +1725,7 @@ function RenderCustomAble() {
 export default function App() {
     return (
         <div>
+            <SnapDemoApp />
             <RenderSVGG />
             <RenderSVG />
             <RenderDraggable />

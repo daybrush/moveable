@@ -902,13 +902,30 @@ export function resetClientRect(): MoveableClientRect {
     };
 }
 export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean) {
-    const { left, width, top, bottom, right, height } = el.getBoundingClientRect();
+    let left = 0;
+    let top = 0;
+    let width = 0;
+    let height = 0;
+
+    if (el === document.body || el === document.documentElement) {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        left = -(document.documentElement.scrollLeft || document.body.scrollLeft);
+        top = -(document.documentElement.scrollTop || document.body.scrollTop);
+    } else {
+        const clientRect = el.getBoundingClientRect();
+
+        left = clientRect.left;
+        top = clientRect.top;
+        width = clientRect.width;
+        height = clientRect.height;
+    }
 
     const rect: MoveableClientRect = {
         left,
-        right,
+        right: left + width,
         top,
-        bottom,
+        bottom: top + height,
         width,
         height,
     };
