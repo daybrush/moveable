@@ -82,17 +82,13 @@
         "@daybrush/utils": "^1.4.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
-        "@scena/dragscroll": "^0.3.1",
+        "@scena/dragscroll": "^1.0.0",
         "@scena/matrix": "^1.1.1",
         "css-to-mat": "^1.0.2",
-        "framework-utils": "^0.3.4",
+        "framework-utils": "^1.0.0",
         "gesto": "^1.2.1",
         "overlap-area": "^1.0.0",
         "react-css-styled": "^1.0.1"
-    },
-    "peerDependencies": {
-        "framework-utils": ">=0.3.4",
-        "@scena/dragscroll": ">=0.3.1"
     },
     "browserslist": {
         "production": [

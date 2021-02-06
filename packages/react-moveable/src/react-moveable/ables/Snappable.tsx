@@ -92,6 +92,7 @@ export function snapStart(
     if (state.guidelines && state.guidelines.length) {
         return;
     }
+    state.elementGuidelineValues = [];
     state.staticGuidelines = getElementGuidelines(moveable, false);
     state.guidelines = getTotalGuidelines(moveable);
     state.enableSnap = true;
@@ -1530,7 +1531,6 @@ function renderGapGuidelines(
         const snapSize = isDisplaySnapDigit
             ? parseFloat(absGap.toFixed(snapDigit))
             : 0;
-        // console.log(posName1, renderPos[type === "vertical" ? 0 : 1], "left", renderPos[0]);
         return (
             <div
                 key={`${direction}GapGuideline${i}`}
