@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `ngx-moveable` 0.19.1
 * `svelte-moveable` 0.14.1
 
+### Fixed
 * Snap guideline disappear after left changed #415 #416
 
 
