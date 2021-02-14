@@ -19,6 +19,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+
+## [0.23.1] - 2021-02-14
+* `moveable` 0.23.1
+* `react-moveable` 0.26.2
+* `preact-moveable` 0.25.2
+* `ngx-moveable` 0.19.1
+* `svelte-moveable` 0.14.1
+
+* Snap guideline disappear after left changed #415 #416
+
+
 ## [0.23.0] - 2021-01-28
 * `moveable` 0.23.0
 * `react-moveable` 0.26.0
