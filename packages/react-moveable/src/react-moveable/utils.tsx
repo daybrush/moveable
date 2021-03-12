@@ -1,5 +1,5 @@
 import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
-import { prefixNames } from "framework-utils";
+import { prefixNames, InvertObject } from "framework-utils";
 import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString, getRad, getShapeDirection, isFunction } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -16,7 +16,7 @@ import {
 } from "@scena/matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
-    MoveableProps, ControlPose, InvertTypes, ArrayFormat, MoveableRefType, RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo
+    MoveableProps, ControlPose, ArrayFormat, MoveableRefType, RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo
 } from "./types";
 import { parse, toMat } from "css-to-mat";
 
@@ -1285,7 +1285,7 @@ export function directionCondition(e: any) {
     return hasClass(e.inputEvent.target, prefix("direction"));
 }
 
-export function invertObject<T extends IObject<any>>(obj: T): InvertTypes<T> {
+export function invertObject<T extends IObject<any>>(obj: T): InvertObject<T> {
     const nextObj: IObject<any> = {};
 
     for (const name in obj) {

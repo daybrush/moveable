@@ -578,12 +578,14 @@ export interface OnRoundEnd extends OnEndEvent {
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
  * @property - Set a fixed direction to resize. (default: Opposite direction)
+ * @property - Set the ratio of width and height. (default: offsetWidth / offsetHeight)
  */
 export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
     direction: number[];
     dragStart: OnDragStart | false;
     set: (scale: number[]) => void;
     setFixedDirection: (fixedDirection: number[]) => void;
+    setRatio: (ratio: number) => any;
 }
 /**
  * @typedef
@@ -1749,16 +1751,7 @@ export interface ControlPose {
     raw?: number;
     direction?: "n" | "e" | "s" | "w" | "nw" | "ne" | "sw" | "se" | "nesw";
 }
-export type Entries<T> = {
-    [key in keyof T]: { key: key, value: Readonly<T[key]> }
-};
-export type InferKey<E, V> = E extends { key: infer U, value: V } ? U & string : never;
-export type InvertTypes<
-    T extends IObject<any>,
-    En extends IObject<any> = Entries<T>
-    > = {
-        [key in En[keyof En]["value"]]: InferKey<En[keyof En], key>
-    };
+
 export type AnyProps<T extends IObject<any>> = Required<{ [key in keyof T]: any }>;
 export type UnionToIntersection<U> =
     (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never;
@@ -1769,7 +1762,7 @@ export type MoveableEvents = {
 };
 
 export type MoveableProperties = {
-    [key in keyof typeof MOVEABLE_PROPS_MAP]: MoveableProps[key];
+    -readonly [key in keyof typeof MOVEABLE_PROPS_MAP]: MoveableProps[key];
 };
 
 export interface SnappableRenderType {

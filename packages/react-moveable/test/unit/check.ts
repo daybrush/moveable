@@ -1,6 +1,6 @@
 import { IObject } from "@daybrush/utils";
 import {
-    InvertTypes, DraggableEvents, ResizableEvents,
+    DraggableEvents, ResizableEvents,
     ScalableEvents, RotatableEvents, DraggableOptions,
     ResizableOptions, ScalableOptions, RotatableOptions, WarpableOptions,
     WarpableEvents, GroupableOptions, SnappableEvents, SnappableOptions,
