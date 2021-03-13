@@ -85,7 +85,7 @@ export function getOffsetInfo(
 ) {
     const body = document.body;
     let target = !el || isParent ? el : el.parentElement;
-    let isEnd = false;
+    let isEnd = el === lastParent || target === lastParent;
     let position = "relative";
 
     while (target && target !== body) {
@@ -1054,6 +1054,7 @@ export function fillEndParams<T extends IObject<any>>(
     return {
         isDrag,
         ...params,
+        moveable,
         target: moveable.state.target,
         clientX: e.clientX,
         clientY: e.clientY,
