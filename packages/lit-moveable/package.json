@@ -1,0 +1,62 @@
+{
+    "name": "lit-selecto",
+    "version": "0.1.0",
+    "description": "A Lit Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
+    "types": "declaration/index.d.ts",
+    "main": "dist/moveable.cjs.js",
+    "module": "dist/moveable.esm.js",
+    "sideEffects": false,
+    "keywords": [
+        "moveable",
+        "resizable",
+        "scalable",
+        "draggable",
+        "rotatable",
+        "warpable",
+        "pinchable",
+        "groupable",
+        "snappable",
+        "scrollable",
+        "movable",
+        "throttle",
+        "scroll",
+        "ratio",
+        "dom",
+        "resize",
+        "scale",
+        "drag",
+        "move",
+        "rotate",
+        "react",
+        "warp",
+        "snap",
+        "pinch",
+        "lit",
+        "lit-html",
+        "lit-element"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/daybrush/moveable/blob/master/packages/lit-moveable"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/moveable/issues"
+    },
+    "homepage": "https://daybrush.com/moveable",
+    "scripts": {
+        "start": "rollup -c rollup.demo.config.js -w",
+        "build": "rollup -c && npm run declaration",
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
+    },
+    "devDependencies": {
+        "@daybrush/builder": "^0.1.2",
+        "lit-element": "^2.2.1",
+        "tslint": "^5.20.1",
+        "typescript": "3.6.4"
+    },
+    "dependencies": {
+        "moveable": "^0.24.0"
+    }
+}
