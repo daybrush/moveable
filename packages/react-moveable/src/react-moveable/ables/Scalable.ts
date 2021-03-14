@@ -28,7 +28,7 @@ import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus, minus } from "@scena/matrix";
 import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapScale } from "./Snappable";
-import { isArray, IObject, getRad } from "@daybrush/utils";
+import { isArray, IObject, getRad, getDist } from "@daybrush/utils";
 
 /**
  * @namespace Scalable
@@ -75,6 +75,9 @@ export default {
             height,
             targetTransform,
             target,
+            pos1,
+            pos2,
+            pos4,
         } = moveable.state;
 
         if (!direction || !target) {
@@ -98,11 +101,16 @@ export default {
         datas.isWidth = isWidth;
 
 
+        function setRatio(ratio: number) {
+            datas.ratio = ratio && isFinite(ratio) ? ratio : 0;
+        }
+
         function setFixedDirection(fixedDirection: number[]) {
             datas.fixedDirection = fixedDirection;
             datas.fixedPosition = getAbsolutePosition(moveable, fixedDirection);
         }
 
+        setRatio(getDist(pos1, pos2) / getDist(pos2, pos4));
         setFixedDirection([-direction[0], -direction[1]]);
 
         const params = fillParams<OnScaleStart>(moveable, e, {
@@ -110,6 +118,7 @@ export default {
             set: (scale: number[]) => {
                 datas.startValue = scale;
             },
+            setRatio,
             setFixedDirection,
             ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
@@ -151,6 +160,7 @@ export default {
             isScale,
             startValue,
             isWidth,
+            ratio,
             fixedDirection,
         } = datas;
 
@@ -167,11 +177,10 @@ export default {
         if (!direction[0] && !direction[1]) {
             sizeDirection = [1, 1];
         }
-        const keepRatio = moveable.props.keepRatio || parentKeepRatio;
+        const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
         const state = moveable.state;
-        const startWidth = width * startValue[0];
-        const startHeight = height * startValue[1];
-        const ratio = startWidth / startHeight;
+        // const startWidth = width * startValue[0];
+        // const startHeight = height * startValue[1];
 
         let scaleX: number = 1;
         let scaleY: number = 1;
@@ -205,22 +214,20 @@ export default {
             if (keepRatio && width && height) {
                 const rad = getRad([0, 0], dragDist);
                 const standardRad = getRad([0, 0], sizeDirection);
-                const ratioRad = getRad([0, 0], [startWidth, startHeight]);
                 const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
                 if (!sizeDirection[0]) {
                     // top, bottom
                     distHeight = signSize;
-                    distWidth = distHeight * ratio;
+                    distWidth = distHeight / ratio;
                 } else if (!sizeDirection[1]) {
                     // left, right
                     distWidth = signSize;
-                    distHeight = distWidth / ratio;
+                    distHeight = distWidth * ratio;
                 } else {
                     // two-way
-                    distWidth = Math.cos(ratioRad) * signSize;
-                    distHeight = Math.sin(ratioRad) * signSize;
+                    distHeight = distWidth * ratio;
                 }
             }
             scaleX = (width + distWidth) / width;
