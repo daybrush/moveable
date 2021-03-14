@@ -27,6 +27,9 @@
         "./src/**/*.ts",
         "./src/**/*.tsx",
         "./test/**/*.ts",
-        "./test/**/*.tsx"
+        "./test/**/*.tsx",
+        "./global.d.ts",
+        "./stories/**/*.ts",
+        "./stories/**/*.tsx"
     ]
 }
