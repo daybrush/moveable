@@ -18,6 +18,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+## [0.24.1] - 2021-03-15
+* `moveable` 0.24.1
+* `react-moveable` 0.27.0
+* `preact-moveable` 0.26.0
+* `ngx-moveable` 0.20.1
+* `svelte-moveable` 0.15.1
+* `lit-moveable` 0.1.1
+
+### Added
+* add setRatio function property on scaleStart
+
+### Fixed
+* can't resize more than 100px if max-width/height set to 100% #430
+* Cannot assign to 'x' because it is a read-only property. #429
+* If the container is scaled, call Moveable.request("draggable") translate error React #428
+* Scale is not accurately following the cursor when aspect ratio is fixed and the target isn't scaled 1:1 #426
 
 
 ## [0.23.1] - 2021-02-14

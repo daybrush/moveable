@@ -1,6 +1,6 @@
 {
     "name": "react-moveable",
-    "version": "0.26.2",
+    "version": "0.27.0",
     "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -9,7 +9,7 @@
     "scripts": {
         "lint": "tslint -c tslint.json 'src/react-moveable/**/*.ts' 'src/react-moveable/**/*.tsx'",
         "storybook": "start-storybook -p 6006",
-        "build:storybook": "build-storybook -o ./build",
+        "build:storybook": "build-storybook -o ../../demo/storybook",
         "start": "react-scripts start",
         "build": "rollup -c && npm run declaration && print-sizes ./dist ",
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
@@ -46,7 +46,8 @@
         "react",
         "warp",
         "snap",
-        "pinch"
+        "pinch",
+        "react"
     ],
     "repository": {
         "type": "git",

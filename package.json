@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.23.1",
+  "version": "0.24.1",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -18,9 +18,9 @@
     "release:init": "npm run release:before && release -i --dirs=dist,doc",
     "deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
     "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
-    "packages:update": "pvu --update=svelte-moveable,ngx-moveable/projects/ngx-moveable",
-    "packages:build": "pvu --build=svelte-moveable,ngx-moveable",
-    "packages:publish": "pvu --publish=svelte-moveable,ngx-moveable/dist/ngx-moveable"
+    "packages:update": "pvu --update=svelte-moveable,ngx-moveable/projects/ngx-moveable,lit-moveable",
+    "packages:build": "pvu --build=svelte-moveable,ngx-moveable,lit-moveable",
+    "packages:publish": "pvu --publish=svelte-moveable,ngx-moveable/dist/ngx-moveable,lit-moveable"
   },
   "keywords": [
     "moveable",
@@ -63,7 +63,7 @@
   "homepage": "https://github.com/daybrush/moveable#readme",
   "dependencies": {
     "@scena/event-emitter": "^1.0.3",
-    "react-compat-moveable": "^0.11.2"
+    "react-compat-moveable": "^0.12.1"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",
