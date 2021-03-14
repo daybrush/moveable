@@ -23,7 +23,7 @@ import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus } from "@scena/matrix";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapSize } from "./Snappable";
-import { calculateBoundSize, IObject, isString, getRad } from "@daybrush/utils";
+import { calculateBoundSize, IObject, isString, getRad, convertUnitSize } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
 /**
@@ -100,13 +100,40 @@ export default {
         if (!parentFlag) {
             const style = window.getComputedStyle(target);
 
+            const {
+                position,
+                minWidth,
+                minHeight,
+                maxWidth,
+                maxHeight,
+            } = style;
+            const isParentElement = position === "static" || position === "relative";
+            const container = isParentElement
+                ? target.parentElement
+                : (target as HTMLElement).offsetParent;
+
+            let containerWidth = width;
+            let containerHeight = height;
+
+            if (container) {
+                containerWidth = container!.clientWidth;
+                containerHeight = container!.clientHeight;
+
+                if (isParentElement) {
+                    const containerStyle = window.getComputedStyle(container!);
+
+                    containerWidth -= parseFloat(containerStyle.paddingLeft) || 0;
+                    containerHeight -= parseFloat(containerStyle.paddingTop) || 0;
+                }
+            }
+
             datas.minSize = plus([
-                parseFloat(style.minWidth!) || 0,
-                parseFloat(style.minHeight!) || 0,
+                convertUnitSize(minWidth, containerWidth),
+                convertUnitSize(minHeight, containerHeight),
             ], padding);
             datas.maxSize = plus([
-                parseFloat(style.maxWidth!) || Infinity,
-                parseFloat(style.maxHeight!) || Infinity,
+                convertUnitSize(maxWidth, containerWidth) || Infinity,
+                convertUnitSize(maxHeight, containerHeight) || Infinity,
             ], padding);
         }
         const transformOrigin = moveable.props.transformOrigin || "% %";
@@ -244,10 +271,10 @@ export default {
             if (keepRatio && startOffsetWidth && startOffsetHeight) {
                 const rad = getRad([0, 0], dist);
                 const standardRad = getRad([0, 0], sizeDirection);
-                const ratioRad = getRad([0, 0], [startOffsetWidth, startOffsetHeight]);
                 const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
+                console.log("prev", distWidth, distHeight);
                 if (!sizeDirection[0]) {
                     // top, bottom
                     distHeight = signSize;
@@ -258,9 +285,12 @@ export default {
                     distHeight = distWidth * ratio;
                 } else {
                     // two-way
-                    distWidth = Math.cos(ratioRad) * signSize;
-                    distHeight = Math.sin(ratioRad) * signSize;
+                    const ratioRad = getRad([0, 0], [ratio, 1]);
+
+                    distWidth = Math.cos(ratioRad) * (signSize < 0 ? -size : size);
+                    distHeight = Math.sin(ratioRad) * (signSize < 0 ? -size : size);
                 }
+                console.log("next", distWidth, distHeight, size);
             } else if (!keepRatio) {
                 const nextDirection = [...direction];
 
