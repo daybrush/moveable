@@ -167,7 +167,10 @@ export default {
                 datas.minSize = minSize;
             },
             setMax: (maxSize: number[]) => {
-                datas.maxSize = maxSize;
+                datas.maxSize = [
+                    maxSize[0] || Infinity,
+                    maxSize[1] || Infinity,
+                ];
             },
             setRatio,
             setFixedDirection,
@@ -274,7 +277,6 @@ export default {
                 const size = getDistSize([distWidth, distHeight]);
                 const signSize = Math.cos(rad - standardRad) * size;
 
-                console.log("prev", distWidth, distHeight);
                 if (!sizeDirection[0]) {
                     // top, bottom
                     distHeight = signSize;
@@ -285,12 +287,15 @@ export default {
                     distHeight = distWidth * ratio;
                 } else {
                     // two-way
+                    const startWidthSize = sizeDirection[0] * 2 * startOffsetWidth;
+                    const startHeightSize = sizeDirection[1] * 2 * startOffsetHeight;
+                    const distSize = getDistSize([startWidthSize + dist[0], startHeightSize + dist[1]])
+                        - getDistSize([startWidthSize, startHeightSize]);
                     const ratioRad = getRad([0, 0], [ratio, 1]);
 
-                    distWidth = Math.cos(ratioRad) * (signSize < 0 ? -size : size);
-                    distHeight = Math.sin(ratioRad) * (signSize < 0 ? -size : size);
+                    distWidth = Math.cos(ratioRad) * distSize;
+                    distHeight = Math.sin(ratioRad) * distSize;
                 }
-                console.log("next", distWidth, distHeight, size);
             } else if (!keepRatio) {
                 const nextDirection = [...direction];
 
@@ -375,10 +380,10 @@ export default {
                 nextWidth = nextHeight * ratio;
             }
         } else {
-            if (startOffsetWidth + distWidth < -snapThreshold)  {
+            if (startOffsetWidth + distWidth < -snapThreshold) {
                 snapDist[0] = 0;
             }
-            if (startOffsetWidth + distHeight < -snapThreshold)  {
+            if (startOffsetWidth + distHeight < -snapThreshold) {
                 snapDist[1] = 0;
             }
             nextWidth += snapDist[0];
@@ -407,11 +412,11 @@ export default {
         datas.prevHeight = distHeight;
 
         const inverseDelta = getResizeDist(
-                moveable,
-                nextWidth, nextHeight,
-                fixedDirection, fixedPosition,
-                transformOrigin,
-            );
+            moveable,
+            nextWidth, nextHeight,
+            fixedDirection, fixedPosition,
+            transformOrigin,
+        );
 
         if (!parentMoveable && delta.every(num => !num) && inverseDelta.every(num => !num)) {
             return;
@@ -771,50 +776,50 @@ export default {
  * });
  */
 
- /**
- * When the group resize starts, the `resizeGroupStart` event is called.
- * @memberof Moveable.Resizable
- * @event resizeGroupStart
- * @param {Moveable.Resizable.OnResizeGroupStart} - Parameters for the `resizeGroupStart` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     resizable: true
- * });
- * moveable.on("resizeGroupStart", ({ targets }) => {
- *     console.log("onResizeGroupStart", targets);
- * });
- */
+/**
+* When the group resize starts, the `resizeGroupStart` event is called.
+* @memberof Moveable.Resizable
+* @event resizeGroupStart
+* @param {Moveable.Resizable.OnResizeGroupStart} - Parameters for the `resizeGroupStart` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     resizable: true
+* });
+* moveable.on("resizeGroupStart", ({ targets }) => {
+*     console.log("onResizeGroupStart", targets);
+* });
+*/
 
- /**
- * When the group resize, the `resizeGroup` event is called.
- * @memberof Moveable.Resizable
- * @event resizeGroup
- * @param {Moveable.Resizable.onResizeGroup} - Parameters for the `resizeGroup` event
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     target: [].slice.call(document.querySelectorAll(".target")),
- *     resizable: true
- * });
- * moveable.on("resizeGroup", ({ targets, events }) => {
- *     console.log("onResizeGroup", targets);
- *     events.forEach(ev => {
- *         const offset = [
- *             direction[0] < 0 ? -ev.delta[0] : 0,
- *             direction[1] < 0 ? -ev.delta[1] : 0,
- *         ];
- *         // ev.drag is a drag event that occurs when the group resize.
- *         const left = offset[0] + ev.drag.beforeDist[0];
- *         const top = offset[1] + ev.drag.beforeDist[1];
- *         const width = ev.width;
- *         const top = ev.top;
- *     });
- * });
- */
+/**
+* When the group resize, the `resizeGroup` event is called.
+* @memberof Moveable.Resizable
+* @event resizeGroup
+* @param {Moveable.Resizable.onResizeGroup} - Parameters for the `resizeGroup` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     resizable: true
+* });
+* moveable.on("resizeGroup", ({ targets, events }) => {
+*     console.log("onResizeGroup", targets);
+*     events.forEach(ev => {
+*         const offset = [
+*             direction[0] < 0 ? -ev.delta[0] : 0,
+*             direction[1] < 0 ? -ev.delta[1] : 0,
+*         ];
+*         // ev.drag is a drag event that occurs when the group resize.
+*         const left = offset[0] + ev.drag.beforeDist[0];
+*         const top = offset[1] + ev.drag.beforeDist[1];
+*         const width = ev.width;
+*         const top = ev.top;
+*     });
+* });
+*/
 
 /**
  * When the group resize finishes, the `resizeGroupEnd` event is called.
