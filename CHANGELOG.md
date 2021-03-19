@@ -18,6 +18,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+
+## [0.24.3] - 2021-03-20
+* `moveable` 0.24.3
+* `react-moveable` 0.27.2
+* `preact-moveable` 0.26.2
+* `ngx-moveable` 0.20.3
+* `svelte-moveable` 0.15.3
+* `lit-moveable` 0.1.3
+
+### Fixed
+* Resizable not working if the immediate parent of the target has 'display:flex' #430
+
+
+
+
 ## [0.24.2] - 2021-03-20
 * `moveable` 0.24.2
 * `react-moveable` 0.27.1
