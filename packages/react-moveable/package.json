@@ -1,6 +1,6 @@
 {
     "name": "react-moveable",
-    "version": "0.27.0",
+    "version": "0.27.1",
     "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -17,10 +17,11 @@
         "test:chrome": "karma start --chrome",
         "coverage": "karma start --coverage && print-coveralls --sort=desc",
         "coveralls": "cat ./coverage/lcov.info | coveralls",
-        "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
+        "packages": "npm run packages:update && npm run packages:build && npm run packages:publish && npm run packages:vanilla",
         "packages:update": "pvu --path=../ --update=preact-moveable,react-compat-moveable",
         "packages:build": "pvu --path=../ --build=preact-moveable,react-compat-moveable",
-        "packages:publish": "pvu --path=../  --publish=preact-moveable,react-compat-moveable"
+        "packages:publish": "pvu --path=../ --publish=preact-moveable,react-compat-moveable",
+        "packages:vanilla": "cd ../react-compat-moveable && npm run packages:update"
     },
     "keywords": [
         "moveable",
@@ -86,7 +87,7 @@
         "keycon": "^1.0.0",
         "postcss-loader": "^4.1.0",
         "print-sizes": "0.0.4",
-        "pvu": "^0.5.0",
+        "pvu": "^0.5.1",
         "raw-loader": "^4.0.2",
         "react": "^16.8.6",
         "react-docgen-typescript-loader": "^3.3.0",
