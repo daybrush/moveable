@@ -130,8 +130,8 @@ export default {
             }
 
             datas.minSize = plus([
-                convertUnitSize(minWidth, containerWidth),
-                convertUnitSize(minHeight, containerHeight),
+                convertUnitSize(minWidth, containerWidth) || 0,
+                convertUnitSize(minHeight, containerHeight) || 0,
             ], padding);
             datas.maxSize = plus([
                 convertUnitSize(maxWidth, containerWidth) || Infinity,
