@@ -28,3 +28,18 @@ html, body {
     border: 1px solid #333;
     box-sizing: border-box;
 }
+
+.target1 {
+    left: 120px;
+    top: 120px;
+}
+
+.target2 {
+    left: 300px;
+    top: 140px;
+}
+
+.target3 {
+    left: 180px;
+    top: 250px;
+}

@@ -86,7 +86,7 @@
         "keycon": "^1.0.0",
         "postcss-loader": "^4.1.0",
         "print-sizes": "0.0.4",
-        "pvu": "^0.3.1",
+        "pvu": "^0.5.0",
         "raw-loader": "^4.0.2",
         "react": "^16.8.6",
         "react-docgen-typescript-loader": "^3.3.0",
