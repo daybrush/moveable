@@ -32,8 +32,8 @@ export function makeArgs(argTypes: any) {
     }, {} as Record<string, any>);
 }
 
-export function convertPath(text: string) {
-    return text.replace("../../src/react-moveable", "react-moveable");
+export function convertPath(text: string, findName: string = "react-moveable", moduleName = findName) {
+    return text.replace(new RegExp(`"[a-zA-Z0-9./_-]*${findName}[a-zA-Z0-9./_-]*"`, "g"), `"${moduleName}"`);
 }
 export function convertTemplate(text: string) {
     const previewText = text.replace(/App\([^)]*\)/g, "App()");
@@ -46,7 +46,7 @@ export function convertTemplate(text: string) {
     let strings: string[] = [];
     let values: string[] = [];
 
-    while(result = regex.exec(previewText)) {
+    while (result = regex.exec(previewText)) {
         const nextIndex = result.index;
 
         strings.push(previewText.slice(index, nextIndex));

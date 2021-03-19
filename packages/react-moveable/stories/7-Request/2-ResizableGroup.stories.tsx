@@ -12,7 +12,7 @@ import { DEFAULT_RESIZABLE_GROUP_CONTROLS } from "../controls/group";
 
 export const ResizableGroupTemplate = App as any;
 
-ResizableGroupTemplate.storyName = "Resizable";
+ResizableGroupTemplate.storyName = "Resizable Group";
 ResizableGroupTemplate.argTypes = {
     ...DEFAULT_RESIZABLE_CONTROLS,
     ...DEFAULT_RESIZABLE_GROUP_CONTROLS,
