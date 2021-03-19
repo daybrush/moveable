@@ -65,7 +65,7 @@ export interface DefaultOptions {
     triggerAblesSimultaneously?: boolean;
     checkInput?: boolean;
     cspNonce?: string;
-    translateZ?: number;
+    translateZ?: number | string;
     props?: Record<string, any>;
 }
 /**
