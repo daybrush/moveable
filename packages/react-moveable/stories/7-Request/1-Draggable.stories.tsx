@@ -4,19 +4,16 @@ import { DEFAULT_REACT_CODESANDBOX, previewTemplate } from "storybook-addon-prev
 import "../common.css";
 import "../basic.css";
 import { convertPath, convertTemplate, makeArgs, makeArgType } from "../utils";
-import App from "./DraggableApp";
-import RawApp from "!!raw-loader!./DraggableApp";
+import App from "./apps/DraggableApp";
+import RawApp from "!!raw-loader!./apps/DraggableApp";
 import { DEFAULT_DRAGGABLE_CONTROLS } from "../controls/default";
 
 
-export default {
-    title: "Request ables through a method",
-};
 
-export const Template = App as any;
+export const DraggableTemplate = App as any;
 
-Template.storyName = "Draggable";
-Template.argTypes = {
+DraggableTemplate.storyName = "Draggable";
+DraggableTemplate.argTypes = {
     containerScale: makeArgType({
         type: "number",
         description: `<a href="#" target="_blank">Container's scale</a>`,
@@ -24,12 +21,12 @@ Template.argTypes = {
     }),
     ...DEFAULT_DRAGGABLE_CONTROLS,
 };
-Template.args = {
-    ...makeArgs(Template.argTypes),
+DraggableTemplate.args = {
+    ...makeArgs(DraggableTemplate.argTypes),
 };
 
 
-Template.parameters = {
+DraggableTemplate.parameters = {
     preview: [
         {
             tab: "React",
