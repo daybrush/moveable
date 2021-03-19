@@ -50,7 +50,7 @@ export default class MoveableManager<T = {}>
         checkInput: false,
         groupable: false,
         cspNonce: "",
-        translateZ: 50,
+        translateZ: 0,
         cssStyled: null,
         customStyledMap: {},
         props: {},
@@ -115,8 +115,8 @@ export default class MoveableManager<T = {}>
                 style={{
                     "position": "absolute",
                     "display": isDisplay ? "block" : "none",
-                    "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, 0)`,
-                    "--zoom": zoom, 
+                    "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, ${translateZ})`,
+                    "--zoom": zoom,
                     "--zoompx": `${zoom}px`,
                 }}>
                 {this.renderAbles()}
