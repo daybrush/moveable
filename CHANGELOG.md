@@ -18,6 +18,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+## [0.24.2] - 2021-03-20
+* `moveable` 0.24.2
+* `react-moveable` 0.27.1
+* `preact-moveable` 0.26.1
+* `ngx-moveable` 0.20.2
+* `svelte-moveable` 0.15.2
+* `lit-moveable` 0.1.2
+
+### Fixed
+* Change Moveable control box to use translate3d for z-index support in Safari #433
+* groups request("resizable") TypeError: Cannot read property 'target' of undefined #432
+* Fix resizable ratio
+
+
+
 ## [0.24.1] - 2021-03-15
 * `moveable` 0.24.1
 * `react-moveable` 0.27.0
