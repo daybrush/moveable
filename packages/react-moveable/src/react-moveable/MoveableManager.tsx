@@ -115,8 +115,8 @@ export default class MoveableManager<T = {}>
                 style={{
                     "position": "absolute",
                     "display": isDisplay ? "block" : "none",
-                    "transform": `translate(${left - parentLeft}px, ${top - parentTop}px, 0)`,
-                    "--zoom": zoom,
+                    "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, 0)`,
+                    "--zoom": zoom, 
                     "--zoompx": `${zoom}px`,
                 }}>
                 {this.renderAbles()}
