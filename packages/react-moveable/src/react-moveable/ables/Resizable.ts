@@ -74,6 +74,8 @@ export default {
             parentFlag,
         } = e;
 
+
+        console.log(e);
         const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
 
         const { target, width, height } = moveable.state;
@@ -239,7 +241,6 @@ export default {
         }
         const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
 
-
         let fixedPosition = dragClient;
         let {
             startOffsetWidth,
@@ -257,6 +258,14 @@ export default {
         if (parentDist) {
             distWidth = parentDist[0];
             distHeight = parentDist[1];
+
+            if (keepRatio) {
+                if (!distWidth) {
+                    distWidth = distHeight * ratio;
+                } else if (!distHeight) {
+                    distHeight = distWidth / ratio;
+                }
+            }
         } else if (parentScale) {
             distWidth = (parentScale[0] - 1) * startOffsetWidth;
             distHeight = (parentScale[1] - 1) * startOffsetHeight;

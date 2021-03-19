@@ -15,28 +15,15 @@ export function fillChildEvents(
     groupableDatas.childDatas = groupableDatas.childDatas || [];
 
     const childDatas = groupableDatas.childDatas;
-    const {
-        inputEvent,
-        isPinch,
-        clientX,
-        clientY,
-        distX,
-        distY,
-    } = e;
 
     return moveable.moveables.map((_, i) => {
         childDatas[i] = childDatas[i] || {};
         childDatas[i][name] = childDatas[i][name] || {};
 
         return {
-            inputEvent,
+            ...e,
             datas: childDatas[i][name],
             originalDatas: childDatas[i],
-            isPinch,
-            clientX,
-            clientY,
-            distX,
-            distY,
         };
     });
 }
