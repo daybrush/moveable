@@ -24,4 +24,6 @@ storybook/
 src/
 public/
 groupable.md
-
+test/
+src/
+public/

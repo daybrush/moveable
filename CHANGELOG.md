@@ -19,6 +19,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+## [0.24.4] - 2021-03-22
+* `moveable` 0.24.4
+* `react-moveable` 0.27.4
+* `preact-moveable` 0.26.3
+* `ngx-moveable` 0.20.4
+* `svelte-moveable` 0.15.4
+* `lit-moveable` 0.1.4
+
+### Fixed
+* remove console.log #430
+
+
+
+
 ## [0.24.3] - 2021-03-20
 * `moveable` 0.24.3
 * `react-moveable` 0.27.2
