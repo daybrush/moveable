@@ -1,13 +1,12 @@
+/* eslint-disable */
 import * as React from "react";
-import Moveable, { ClippableProps } from "../react-moveable";
+import Moveable from "../react-moveable";
 import logo from "./logo.svg";
 import "./App.css";
 import { ref } from "framework-utils";
 import KeyController from "keycon";
 import { setAlias, Frame } from "scenejs";
-import { IObject } from "@daybrush/utils";
 import Guides from "@scena/react-guides";
-import Clippable from "../react-moveable/ables/Clippable";
 
 setAlias("tx", ["transform", "translateX"]);
 setAlias("ty", ["transform", "translateY"]);
@@ -37,7 +36,7 @@ class App extends React.Component<any, any> {
         emo: null,
     };
     private itemMap: Map<HTMLElement |SVGElement, Frame> = new Map();
-    private items: IObject<Frame> = {};
+    // private items: IObject<Frame> = {};
     private guides1!: Guides;
     private guides2!: Guides;
     public render() {
@@ -45,7 +44,7 @@ class App extends React.Component<any, any> {
             return (<div></div>);
         }
         const selectedTarget = this.state.target;
-        const isResizable = this.state.isResizable;
+        // const isResizable = this.state.isResizable;
         const item = this.itemMap.get(selectedTarget)!;
 
         (window as any).a = this;

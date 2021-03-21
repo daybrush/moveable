@@ -30,13 +30,9 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
                     wrapperMoveable={this}
                 />;
             })}
-        </ControlBoxElement>
+        </ControlBoxElement>;
     }
-    // public componentDidMount() {
-    //     console.log(this.controlBox.getElement().parentElement);
-    //     this.controlBox.getElement();
-    // }
-    public componentDidUpdate() { }
+    public componentDidUpdate() {}
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         this.moveables.forEach(moveable => {
             moveable.updateRect(type, isTarget, isSetState);

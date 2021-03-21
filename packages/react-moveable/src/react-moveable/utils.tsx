@@ -1,6 +1,10 @@
 import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
 import { prefixNames, InvertObject } from "framework-utils";
-import { splitBracket, isUndefined, isObject, splitUnit, IObject, hasClass, isArray, isString, getRad, getShapeDirection, isFunction } from "@daybrush/utils";
+import {
+    splitBracket, isUndefined, isObject, splitUnit,
+    IObject, hasClass, isArray, isString, getRad,
+    getShapeDirection, isFunction,
+} from "@daybrush/utils";
 import {
     multiply, invert,
     convertDimension, createIdentityMatrix,
@@ -16,7 +20,8 @@ import {
 } from "@scena/matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
-    MoveableProps, ControlPose, ArrayFormat, MoveableRefType, RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo
+    MoveableProps, ControlPose, ArrayFormat, MoveableRefType,
+    RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo, ExcludeKeys,
 } from "./types";
 import { parse, toMat } from "css-to-mat";
 
@@ -156,7 +161,7 @@ export function getOffsetPosInfo(
     };
 }
 export function getBodyOffset(
-    el: HTMLElement| SVGElement,
+    el: HTMLElement | SVGElement,
     isSVG: boolean,
     style: CSSStyleDeclaration = window.getComputedStyle(el),
 ) {
@@ -324,8 +329,8 @@ export function calculateElementInfo(
     // const prevMatrix = state ? state.beforeMatrix : undefined;
     // const prevRootMatrix = state ? state.rootMatrix : undefined;
     // const prevN = state ? (state.is3d ? 4 : 3) : undefined;
-    let width: number = 0;
-    let height: number = 0;
+    let width = 0;
+    let height = 0;
     let rotation = 0;
     let allResult: {} = {};
 
@@ -1006,11 +1011,13 @@ export function unset(self: any, name: string) {
         self[name] = null;
     }
 }
+type ExcludeParams<T> = ExcludeKeys<T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">;
+type ExcludeEndParams<T> = ExcludeKeys<T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget" | "lastEvent" | "isDrag" | "isDouble">;
 
 export function fillParams<T extends IObject<any>>(
     moveable: any,
     e: any,
-    params: Pick<T, Exclude<keyof T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">>,
+    params: ExcludeParams<T>,
 ): T {
     const datas = e.datas;
 
@@ -1038,11 +1045,7 @@ export function fillParams<T extends IObject<any>>(
 export function fillEndParams<T extends IObject<any>>(
     moveable: any,
     e: any,
-    params: Pick<T, Exclude<
-        keyof T,
-        "moveable" | "target" | "clientX" | "clientY" | "inputEvent" |
-        "datas" | "currentTarget" | "lastEvent" | "isDrag" | "isDouble">
-    > & { isDrag?: boolean },
+    params: ExcludeEndParams<T> & { isDrag?: boolean },
 ): T {
     const datas = e.datas;
     const isDrag = "isDrag" in params ? params.isDrag : e.isDrag;
@@ -1346,8 +1349,10 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
     return isArray(arr) || "length" in arr;
 }
 
-export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector: true): T | null;
-export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(target: MoveableRefType<T>, isSelector?: boolean): T | string | null;
+export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
+    target: MoveableRefType<T>, isSelector: true): T | null;
+export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
+    target: MoveableRefType<T>, isSelector?: boolean): T | string | null;
 export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
     target: MoveableRefType<T>,
     isSelector?: boolean,
@@ -1370,8 +1375,12 @@ export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | 
     return target;
 }
 
-export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector: true): Array<HTMLElement | SVGElement | null>;
-export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector?: boolean): Array<HTMLElement | SVGElement | string | null>;
+export function getRefTargets(
+    targets: MoveableRefType | ArrayFormat<MoveableRefType>,
+    isSelector: true): Array<HTMLElement | SVGElement | null>;
+export function getRefTargets(
+    targets: MoveableRefType | ArrayFormat<MoveableRefType>,
+    isSelector?: boolean): Array<HTMLElement | SVGElement | string | null>;
 export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector?: boolean) {
     if (!targets) {
         return [];
@@ -1429,20 +1438,23 @@ export function renderGuideline(info: RenderGuidelineInfo, React: Renderer): any
     const scaleDirection = isHorizontal ? "Y" : "X";
     // const scaleDirection2 = isHorizontal ? "Y" : "X";
 
-    return <div
-        key={key}
-        className={classNames.join(" ")}
-        style={{
+    return React.createElement("div", {
+        key,
+        className: classNames.join(" "),
+        style: {
             [isHorizontal ? "width" : "height"]: `${size}`,
             transform: `translate(${pos[0]}, ${pos[1]}) translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
-        }}
-    />
+        },
+    });
 }
 
 export function renderInnerGuideline(info: RenderGuidelineInnerInfo, React: Renderer): any {
     return renderGuideline({
         ...info,
-        classNames: [prefix("line", "guideline", info.direction), ...info.classNames].filter(className => className) as string[],
+        classNames: [
+            prefix("line", "guideline", info.direction),
+            ...info.classNames,
+        ].filter(className => className) as string[],
         size: info.size || `${info.sizeValue}px`,
         pos: info.pos || info.posValue.map(v => `${v}px`),
     }, React);

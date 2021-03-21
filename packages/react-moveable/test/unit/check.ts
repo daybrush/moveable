@@ -11,7 +11,7 @@ import {
     ScrollableOptions, MoveableProps, ScrollableProps, PinchableProps, DragAreaProps,
     OriginDraggableProps, ClippableProps, RoundableProps, SnappableProps, WarpableProps,
     RotatableProps, ScalableProps, ResizableProps, DraggableProps, OriginOptions,
-    PaddingOptions, GroupableProps, ExcludeKey, OriginDraggableOptions, MoveableOptions, MoveableEvents, BeforeRenderableEvents
+    PaddingOptions, GroupableProps, ExcludeKeys, OriginDraggableOptions, MoveableOptions, MoveableEvents, BeforeRenderableEvents
 } from "../../src/react-moveable";
 import Draggable from "../../src/react-moveable/ables/Draggable";
 import Resizable from "../../src/react-moveable/ables/Resizable";
@@ -92,7 +92,7 @@ export type PP9 = MatchTypes<
     & typeof Pinchable["props"], PinchableProps>;
 
 export type P10 = MatchTypes<typeof Groupable["props"], GroupableOptions>;
-export type PP10 = MatchTypes<typeof Groupable["props"], ExcludeKey<GroupableProps, "targets" | "updateGroup">>;
+export type PP10 = MatchTypes<typeof Groupable["props"], ExcludeKeys<GroupableProps, "targets" | "updateGroup">>;
 
 export type E11 = MatchTypes<typeof Snappable["events"], SnappableEvents>;
 export type P11 = MatchTypes<typeof Snappable["props"], SnappableOptions>;

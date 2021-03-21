@@ -1,6 +1,6 @@
 import {
     throttle, prefix, triggerEvent, fillParams,
-    calculatePosition, fillEndParams, getRotationRad, getRefTargets
+    calculatePosition, fillEndParams, getRotationRad, getRefTargets,
 } from "../utils";
 import { IObject, hasClass, getRad } from "@daybrush/utils";
 import {
@@ -202,7 +202,6 @@ export function dragControlCondition(e: any, moveable: MoveableManagerInterface<
     const rotationTarget = moveable.props.rotationTarget;
 
     if (rotationTarget) {
-        console.log(getRefTargets(rotationTarget, true));
         return getRefTargets(rotationTarget, true).some(element => {
             if (!element) {
                 return false;
@@ -326,7 +325,7 @@ export default {
         datas.absoluteInfo = {
             origin: rect.origin,
             startValue: rect.rotation,
-        }
+        };
         setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, origin, moveableClientRect);
         if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
@@ -641,7 +640,7 @@ export default {
         const startRotation = moveable.getRotation();
         return {
             isControl: true,
-            requestStart(e: IObject<any>) {
+            requestStart() {
                 return { datas };
             },
             request(e: IObject<any>) {

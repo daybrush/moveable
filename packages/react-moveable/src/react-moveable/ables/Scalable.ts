@@ -182,8 +182,8 @@ export default {
         // const startWidth = width * startValue[0];
         // const startHeight = height * startValue[1];
 
-        let scaleX: number = 1;
-        let scaleY: number = 1;
+        let scaleX = 1;
+        let scaleY = 1;
         let fixedPosition = dragClient;
 
         if (!dragClient) {
@@ -252,7 +252,7 @@ export default {
             const stateDirection = snapRenderInfo.direction;
 
             if (isArray(stateDirection) && (stateDirection[0] || stateDirection[1])) {
-                state.snapRenderInfo = { direction, request: e.isRequest, };
+                state.snapRenderInfo = { direction, request: e.isRequest };
             }
         }
         let snapDist = [0, 0];
@@ -426,7 +426,7 @@ export default {
                     ev.setFixedDirection(fixedDirection);
                     setDist(moveable.moveables[i], originalEvents[i]);
                 });
-            }
+            },
         };
         const result = triggerEvent(moveable, "onScaleGroupStart", nextParams);
 

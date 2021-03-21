@@ -6,12 +6,12 @@ import {
 } from "@scena/matrix";
 import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
-    calculatePosition, calculateInversePosition, getTransform, calculateMoveablePosition
+    calculatePosition, calculateInversePosition, getTransform, calculateMoveablePosition,
 } from "../utils";
 import { splitUnit, isArray, splitSpace, average } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
-    OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag
+    OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag,
 } from "../types";
 import Draggable from "../ables/Draggable";
 import { setCustomDrag } from "./CustomGesto";
@@ -124,8 +124,8 @@ export function getTransfromMatrix(datas: any, targetMatrix: number[], isAfter?:
     // nextTargetMatrix = (targetMatrix * targetAllTransform)
     const nextTargetMatrix
         = isAfter
-        ? multiply(targetAllTransform, targetMatrix, 4)
-        : multiply(targetMatrix, targetAllTransform, 4);
+            ? multiply(targetAllTransform, targetMatrix, 4)
+            : multiply(targetMatrix, targetAllTransform, 4);
 
     // res1 = B-1 * nextTargetMatrix
     const res1 = multiply(invert(isAfter ? beforeTransform2 : beforeTransform, 4), nextTargetMatrix, 4);
@@ -361,7 +361,7 @@ export function scaleMatrix(
 export function fillTransformStartEvent(e: any): OnTransformStartEvent {
     const originalDatas = e.originalDatas.beforeRenderable;
     return {
-        setTransform: (transform: string | string[], index: number = -1) => {
+        setTransform: (transform: string | string[], index = -1) => {
             originalDatas.startTransforms = isArray(transform) ? transform : splitSpace(transform);
             setTransformIndex(e, index);
         },

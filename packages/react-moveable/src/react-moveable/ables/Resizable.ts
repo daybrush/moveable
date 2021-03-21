@@ -74,8 +74,6 @@ export default {
             parentFlag,
         } = e;
 
-
-        console.log(e);
         const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
 
         const { target, width, height } = moveable.state;
@@ -221,6 +219,8 @@ export default {
             maxSize,
             ratio,
             isWidth,
+            startOffsetWidth,
+            startOffsetHeight,
         } = datas;
 
         if (!isResize) {
@@ -233,19 +233,15 @@ export default {
         } = moveable.props;
         let direction = datas.direction;
         let sizeDirection = direction;
-        let distWidth: number = 0;
-        let distHeight: number = 0;
+        let distWidth = 0;
+        let distHeight = 0;
 
         if (!direction[0] && !direction[1]) {
             sizeDirection = [1, 1];
         }
         const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
-
         let fixedPosition = dragClient;
-        let {
-            startOffsetWidth,
-            startOffsetHeight,
-        } = datas;
+
 
         if (!dragClient) {
             if (!parentFlag && isPinch) {
@@ -544,7 +540,7 @@ export default {
                     ev.setFixedDirection(fixedDirection);
                     setDist(moveable.moveables[i], originalEvents[i]);
                 });
-            }
+            },
         };
         const result = triggerEvent<ResizableProps>(moveable, "onResizeGroupStart", nextParams);
 

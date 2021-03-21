@@ -1,6 +1,6 @@
 import {
     MoveableManagerInterface, MoveableGroupInterface,
-    ClickableProps, OnClick, OnClickGroup
+    ClickableProps, OnClick, OnClickGroup,
 } from "../types";
 import { triggerEvent, fillParams } from "../utils";
 import { findIndex } from "@daybrush/utils";

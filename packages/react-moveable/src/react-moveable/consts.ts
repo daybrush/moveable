@@ -9,14 +9,15 @@ function getCursorCSS(degree: number) {
     const x1 = getSVGCursor(1, degree);
     const x2 = getSVGCursor(2, degree);
     const degree45 = (Math.round(degree / 45) * 45) % 180;
-    const defaultCursor
-        = degree45 === 135
-        ? "nwse-resize"
-        : degree45 === 45
-        ? "nesw-resize"
-        : degree45 === 90
-        ? "ew-resize"
-        : "ns-resize"; // 135
+    let defaultCursor = "ns-resize";
+
+    if (degree45 === 135) {
+        defaultCursor = "nwse-resize";
+    } else if (degree45 === 45) {
+        defaultCursor = "nesw-resize";
+    } else if (degree45 === 90) {
+        defaultCursor = "ew-resize";
+    }
 
     // tslint:disable-next-line: max-line-length
     return `cursor:${defaultCursor};cursor: url('${x1}') 16 16, ${defaultCursor};cursor: -webkit-image-set(url('${x1}') 1x, url('${x2}') 2x) 16 16, ${defaultCursor};`;

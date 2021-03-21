@@ -20,7 +20,7 @@ export default class EventManager {
             (able as any)[eventName]({
                 inputEvent: e,
             }, moveable);
-        })
+        });
     }
     public destroy() {
         this.target!.removeEventListener(this.eventName.toLowerCase(), this.onEvent);

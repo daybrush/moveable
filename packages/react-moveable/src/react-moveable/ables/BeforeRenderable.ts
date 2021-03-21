@@ -2,7 +2,7 @@ import {
     MoveableManagerInterface, BeforeRenderableProps,
     OnBeforeRenderStart, OnBeforeRender, OnBeforeRenderEnd,
     MoveableGroupInterface, OnBeforeRenderGroupStart,
-    OnBeforeRenderGroup, OnBeforeRenderGroupEnd
+    OnBeforeRenderGroup, OnBeforeRenderGroupEnd,
 } from "../types";
 import { fillParams, triggerEvent } from "../utils";
 import { convertMatrixtoCSS } from "@scena/matrix";

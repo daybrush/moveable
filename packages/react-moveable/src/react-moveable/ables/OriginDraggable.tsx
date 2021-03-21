@@ -1,10 +1,10 @@
 import {
     prefix, triggerEvent,
-    fillParams, calculatePoses, getRect, fillEndParams, convertCSSSize
+    fillParams, calculatePoses, getRect, fillEndParams, convertCSSSize,
 } from "../utils";
 import {
     OnDragOriginStart, OnDragOrigin,
-    OnDragOriginEnd, MoveableManagerInterface, DraggableProps, OriginDraggableProps, MoveableGroupInterface
+    OnDragOriginEnd, MoveableManagerInterface, DraggableProps, OriginDraggableProps, MoveableGroupInterface,
 } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
 import { setDragStart, getDragDist, getNextMatrix } from "../gesto/GestoUtils";

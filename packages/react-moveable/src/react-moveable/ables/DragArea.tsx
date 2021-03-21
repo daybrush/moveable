@@ -4,7 +4,7 @@ import {
 import { ref } from "framework-utils";
 import { getRect, calculateInversePosition, makeMatrixCSS, prefix } from "../utils";
 import {
-    Renderer, GroupableProps, DragAreaProps, MoveableManagerInterface, MoveableGroupInterface
+    Renderer, GroupableProps, DragAreaProps, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
 import { AREA_PIECE, AVOID, AREA_PIECES } from "../classNames";
 import { addClass, removeClass } from "@daybrush/utils";
@@ -141,7 +141,7 @@ export default {
         moveable: MoveableGroupInterface<DragAreaProps>,
         e: any,
     ) {
-       return this.dragEnd(moveable, e);
+        return this.dragEnd(moveable, e);
     },
     unset(moveable: MoveableManagerInterface<DragAreaProps>) {
         restoreStyle(moveable);

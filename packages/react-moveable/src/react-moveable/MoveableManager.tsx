@@ -15,7 +15,10 @@ import {
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
-import { MoveableManagerProps, MoveableManagerState, Able, RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface } from "./types";
+import {
+    MoveableManagerProps, MoveableManagerState, Able,
+    RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
+} from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
 import { getKeys, IObject } from "@daybrush/utils";
@@ -69,7 +72,7 @@ export default class MoveableManager<T = {}>
     public areaElement!: HTMLElement;
     public targetGesto!: Gesto;
     public controlGesto!: Gesto;
-    public rotation: number = 0;
+    public rotation = 0;
     public scale: number[] = [1, 1];
     public isUnmounted = false;
     public events: Record<string, EventManager | null>  = {
@@ -597,7 +600,8 @@ export default class MoveableManager<T = {}>
             right = 0,
         } = (props.padding || {}) as PaddingBox;
         const n = is3d ? 4 : 3;
-        const absoluteOrigin = (props as any).groupable ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
+        const absoluteOrigin = (props as any).groupable
+            ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
 
         state.renderPoses = [
             plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),

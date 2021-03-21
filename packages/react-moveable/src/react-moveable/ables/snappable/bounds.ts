@@ -243,7 +243,7 @@ export function checkRotateBounds(
         [relativeRight, 0],
         [relativeTop, 1],
         [relativeBottom, 1],
-    ].forEach(([boundPos, index], i) => {
+    ].forEach(([boundPos, index]) => {
         nextPoses.forEach(nextPos => {
             const relativeRad1 = getRad([0, 0], nextPos);
 

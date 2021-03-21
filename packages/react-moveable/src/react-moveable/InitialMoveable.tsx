@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
     Able, MoveableInterface, GroupableProps, MoveableDefaultProps,
-    IndividualGroupableProps, MoveableManagerInterface
+    IndividualGroupableProps, MoveableManagerInterface,
 } from "./types";
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
@@ -43,7 +43,7 @@ export class InitialMoveable<T = {}>
         return [Default, Groupable, IndividualGroupable, DragArea, ...this.defaultAbles];
     }
     @withMethods(MOVEABLE_METHODS)
-    public moveable!: MoveableManager | MoveableGroup;
+    public moveable!: MoveableManager | MoveableGroup | MoveableIndividualGroup;
     public refTargets: Array<HTMLElement | SVGElement | string | undefined | null> = [];
     public selectorMap: IObject<Array<HTMLElement | SVGElement>> = {};
     public render() {
@@ -135,6 +135,7 @@ export class InitialMoveable<T = {}>
     }
 }
 export interface InitialMoveable<T = {}>
-    extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T>, MoveableInterface {
+    extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T>,
+    MoveableInterface {
     setState(state: any, callback?: () => any): any;
 }

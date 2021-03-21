@@ -205,7 +205,7 @@ export interface RenderGuidelineInnerInfo {
     posValue: number[];
     zoom: number;
 }
-export type ExcludeKey<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, U>>;
+export type ExcludeKeys<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, U>>;
 
 export interface MoveableProps extends
     MoveableDefaultProps,
@@ -217,7 +217,7 @@ export interface MoveableProps extends
     ScalableProps,
     WarpableProps,
     PinchableProps,
-    ExcludeKey<GroupableProps, "targets" | "updateGroup">,
+    ExcludeKeys<GroupableProps, "targets" | "updateGroup">,
     IndividualGroupableProps,
     SnappableProps,
     ScrollableProps,
@@ -232,7 +232,7 @@ export interface MoveableProps extends
  * @typedef
  * @extends Moveable.MoveableDefaultOptions
  */
-export interface MoveableDefaultProps extends ExcludeKey<MoveableDefaultOptions, "target"> {
+export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions, "target"> {
     target?: MoveableRefType | ArrayFormat<MoveableRefType>;
 }
 export type MoveableRefType<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>

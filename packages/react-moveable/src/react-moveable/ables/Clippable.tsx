@@ -1,7 +1,7 @@
 import {
     Renderer, ClippableProps, OnClip,
     ClippableState, OnClipEnd, OnClipStart,
-    ControlPose, MoveableManagerInterface
+    ControlPose, MoveableManagerInterface,
 } from "../types";
 import { splitBracket, splitComma, splitUnit, splitSpace, convertUnitSize, getRad } from "@daybrush/utils";
 import {
@@ -14,7 +14,7 @@ import { plus, minus } from "@scena/matrix";
 import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
 import {
     getRadiusValues,
-    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos
+    HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos,
 } from "./roundable/borderRadius";
 import { renderLine } from "../renderDirections";
 import { addGuidelines, checkSnapBoundPriority } from "./snappable/snap";
@@ -58,11 +58,7 @@ function getClipStyles(
     const isRect = clipType === "rect";
     const isCircle = clipType === "circle";
     if (clipType === "polygon") {
-        return poses.map(pos => `${
-            convertCSSSize(pos[0], width, clipRelative)
-            } ${
-            convertCSSSize(pos[1], height, clipRelative)
-            }`);
+        return poses.map(pos => `${convertCSSSize(pos[0], width, clipRelative)} ${convertCSSSize(pos[1], height, clipRelative)}`);
     } else if (isRect || clipType === "inset") {
         const top = poses[1][1];
         const right = poses[3][0];
@@ -180,8 +176,8 @@ function getClipPath(
             splitter,
         } as const;
     } else if (isCircle || clipPrefix === "ellipse") {
-        let xPos: string = "";
-        let yPos: string = "";
+        let xPos = "";
+        let yPos = "";
         let radiusX = 0;
         let radiusY = 0;
         const values = splitSpace(value!);
@@ -572,9 +568,7 @@ export default {
                     width: `${allWidth}px`,
                     height: `${allHeight}px`,
                     transform: `translate(${allLeft}px, ${allTop}px)`,
-                    clipPath: `polygon(${
-                        areaPoses.map(pos => `${pos[0] - allLeft}px ${pos[1] - allTop}px`).join(", ")
-                        })`,
+                    clipPath: `polygon(${areaPoses.map(pos => `${pos[0] - allLeft}px ${pos[1] - allTop}px`).join(", ")})`,
                 }}></div>);
             }
         }

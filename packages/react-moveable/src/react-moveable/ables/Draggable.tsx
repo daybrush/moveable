@@ -1,6 +1,6 @@
 import {
     setDragStart, getBeforeDragDist, getTransformDist,
-    convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex
+    convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex,
 } from "../gesto/GestoUtils";
 import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
 import { minus, plus } from "@scena/matrix";

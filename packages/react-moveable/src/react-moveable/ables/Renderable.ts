@@ -1,6 +1,7 @@
 import {
     MoveableManagerInterface, RenderableProps, OnRenderStart, OnRender,
-    OnRenderEnd, MoveableGroupInterface, OnRenderGroupStart, OnRenderGroup, OnRenderGroupEnd
+    OnRenderEnd, MoveableGroupInterface,
+    OnRenderGroupStart, OnRenderGroup, OnRenderGroupEnd,
 } from "../types";
 import { triggerEvent, fillParams } from "../utils";
 

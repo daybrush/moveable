@@ -1,7 +1,7 @@
 import {
     prefix, getLineStyle, getDirection, getAbsolutePosesByState,
     triggerEvent, fillParams, fillEndParams,
- } from "../utils";
+} from "../utils";
 import {
     convertDimension, invert, multiply,
     calculate,
@@ -14,7 +14,8 @@ import {
 import { NEARBY_POS } from "../consts";
 import {
     setDragStart, getDragDist, getPosIndexesByDirection, setDefaultTransformIndex,
-    fillTransformStartEvent, resolveTransformEvent, convertTransformFormat, fillOriginalTransform, getTransfromMatrix
+    fillTransformStartEvent, resolveTransformEvent,
+    convertTransformFormat, fillOriginalTransform, getTransfromMatrix,
 } from "../gesto/GestoUtils";
 import {
     WarpableProps, ScalableProps, ResizableProps,
@@ -84,10 +85,14 @@ export default {
         const linePosTo4 = getMiddleLinePos(pos4, pos2);
 
         return [
-            <div className={prefix("line")} key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1, zoom)}></div>,
-            <div className={prefix("line")} key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2, zoom)}></div>,
-            <div className={prefix("line")} key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3, zoom)}></div>,
-            <div className={prefix("line")} key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4, zoom)}></div>,
+            <div className={prefix("line")}
+                key="middeLine1" style={getLineStyle(linePosFrom1, linePosTo1, zoom)}></div>,
+            <div className={prefix("line")}
+                key="middeLine2" style={getLineStyle(linePosFrom2, linePosTo2, zoom)}></div>,
+            <div className={prefix("line")}
+                key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3, zoom)}></div>,
+            <div className={prefix("line")}
+                key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4, zoom)}></div>,
             ...renderAllDirections(moveable, React),
         ];
     },
@@ -273,19 +278,19 @@ export default {
  * moveable.warpable = true;
  */
 
- /**
- * Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
- * @name Moveable.Warpable#renderDirections
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *     warpable: true,
- *     renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
- * });
- *
- * moveable.renderDirections = ["nw", "ne", "sw", "se"];
- */
+/**
+* Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+* @name Moveable.Warpable#renderDirections
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     warpable: true,
+*     renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+* });
+*
+* moveable.renderDirections = ["nw", "ne", "sw", "se"];
+*/
 /**
 * When the warp starts, the warpStart event is called.
 * @memberof Moveable.Warpable

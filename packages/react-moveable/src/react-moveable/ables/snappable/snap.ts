@@ -1,7 +1,14 @@
 import {
     SnapInfo, SnappableProps, SnappableState,
-    Guideline, ResizableProps, ScalableProps, SnapOffsetInfo, MoveableManagerInterface, MoveableClientRect, ElementGuidelineValue} from "../../types";
-import { selectValue, throttle, getAbsolutePosesByState, getRect, groupBy, getTinyDist, calculateInversePosition, calculatePosition, roundSign } from "../../utils";
+    Guideline, ResizableProps, ScalableProps,
+    SnapOffsetInfo, MoveableManagerInterface, MoveableClientRect,
+    ElementGuidelineValue,
+} from "../../types";
+import {
+    selectValue, throttle, getAbsolutePosesByState,
+    getRect, groupBy, getTinyDist, calculateInversePosition,
+    calculatePosition, roundSign,
+} from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "@scena/matrix";
@@ -297,7 +304,10 @@ export function getElementGuidelines(
         return (value.refresh && isRefresh) || (!value.refresh && !isRefresh);
     }));
 
-    return [...prevGuidelines.filter(guideline => removedElements.indexOf(guideline.element!) === -1), ...addedGuidelines];
+    return [
+        ...prevGuidelines.filter(guideline => removedElements.indexOf(guideline.element!) === -1),
+        ...addedGuidelines,
+    ];
 }
 export function getTotalGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
@@ -402,10 +412,7 @@ export function checkSnapKeepRatio(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     startPos: number[],
     endPos: number[],
-): {
-    vertical: SnapOffsetInfo,
-    horizontal: SnapOffsetInfo,
-} {
+): { vertical: SnapOffsetInfo, horizontal: SnapOffsetInfo } {
     const [endX, endY] = endPos;
     const [startX, startY] = startPos;
     let [dx, dy] = minus(endPos, startPos);

@@ -1,6 +1,6 @@
 import {
     prefix, triggerEvent,
-    fillParams, fillEndParams, calculatePosition
+    fillParams, fillEndParams, calculatePosition,
 } from "../utils";
 import {
     Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd, MoveableManagerInterface,
@@ -230,7 +230,7 @@ export default {
             || (className.indexOf("moveable-line") > -1 && className.indexOf("moveable-direction") > -1);
     },
     dragControlStart(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, e: any) {
-        const { inputEvent, datas, } = e;
+        const { inputEvent, datas } = e;
         const inputTarget = inputEvent.target;
         const className = (inputTarget.getAttribute("class") || "");
         const isControl = className.indexOf("border-radius") > -1;
@@ -303,7 +303,7 @@ export default {
         // 0: [0] maxCount === 3
         // 1: [1, 3] maxCount === 3
 
-        const dists = controlPoses.map((pose, i) => {
+        const dists = controlPoses.map(pose => {
             const { horizontal, vertical } = pose;
             const poseDist = [
                 horizontal * selectedHorizontal * dist[0],

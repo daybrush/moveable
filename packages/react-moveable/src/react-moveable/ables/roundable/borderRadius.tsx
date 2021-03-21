@@ -23,8 +23,8 @@ export function getRadiusStyles(
     isRelative: boolean,
     width: number,
     height: number,
-    left: number = 0,
-    top: number = 0,
+    left = 0,
+    top = 0,
     right: number = width,
     bottom: number = height,
 ) {
@@ -60,7 +60,7 @@ export function getRadiusRange(controlPoses: ControlPose[]) {
     // [start, length]
     const horizontalRange = [0, 0];
     const verticalRange = [0, 0];
-    const length =  controlPoses.length;
+    const length = controlPoses.length;
 
     for (let i = 0; i < length; ++i) {
         const clipPose = controlPoses[i];
@@ -190,8 +190,8 @@ export function addRadiusPos(
     distY: number,
     right: number,
     bottom: number,
-    left: number = 0,
-    top: number = 0,
+    left = 0,
+    top = 0,
 ) {
     const {
         horizontalRange,
@@ -269,9 +269,9 @@ export function splitRadiusPoses(
     raws: number[] = controlPoses.map(pos => pos.raw!),
 ) {
     const horizontals = controlPoses
-    .map((pos , i) => pos.horizontal ? raws[i] : null).filter(pos => pos != null) as number[];
+        .map((pos, i) => pos.horizontal ? raws[i] : null).filter(pos => pos != null) as number[];
     const verticals = controlPoses
-        .map((pos , i) => pos.vertical ? raws[i] : null).filter(pos => pos != null) as number[];
+        .map((pos, i) => pos.vertical ? raws[i] : null).filter(pos => pos != null) as number[];
 
     return {
         horizontals,

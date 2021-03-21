@@ -20,3 +20,5 @@ outjs/
 .scene_cache
 *.mp3
 *.mp4
+stories/
+.storybook

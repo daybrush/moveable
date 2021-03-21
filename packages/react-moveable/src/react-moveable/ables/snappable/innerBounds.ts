@@ -62,7 +62,7 @@ function checkInnerBoundDot(
     start: number,
     end: number,
     isStart: boolean,
-    threshold: number = 0,
+    threshold = 0,
 ) {
     if (
         (isStart && start - threshold <= pos)
@@ -382,7 +382,7 @@ function isBoundRotate(
         [nextPoses[1], nextPoses[3]],
         [nextPoses[3], nextPoses[2]],
         [nextPoses[2], nextPoses[0]],
-    ].some((line, i) => !isSameStartLine(dots, line));
+    ].some(line => !isSameStartLine(dots, line));
 }
 function getDistPointLine([pos1, pos2]: number[][]) {
     // x = 0, y = 0
@@ -490,7 +490,7 @@ export function checkRotateInnerBounds(
                     rad + nextRad2 - lineRad,
                 ];
             })
-            .reduce<number[]>((prev, cur) => {
+            .reduce((prev, cur) => {
                 prev.push(...cur);
                 return prev;
             }, [])
