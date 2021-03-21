@@ -1,0 +1,136 @@
+.readme table {
+	border-spacing: 0;
+    border-collapse: collapse;
+}
+.readme * {
+	box-sizing: border-box;
+}
+.readme table th, .readme table td {
+	padding: 6px 13px;
+    border: 1px solid #ddd;
+}
+
+nav>ul>li:after {
+	content: "";
+	position: absolute;
+	right: 10px;
+	top: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	margin: auto 0px;
+	border-top: 7px solid #ccc;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+}
+nav li h4, nav li ul {
+	display: none;
+}
+
+.name.typescript {
+	background: #374E79;
+	font-size: 14px;
+}
+.name.typescript .signature {
+	color: #21de60;
+}
+.ts-params.typescript table .last {
+	display: none;
+}
+table.params th, table.params tr td , table.params tr td.type{
+	word-break: break-word;
+	white-space: normal;
+}
+
+nav .search {
+	position: relative;
+	margin: 0px 10px;
+	border: 3px solid #333;
+	height: 43px;
+}
+nav .search .input-area {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 35px;
+	height: 35px;
+}
+nav .search input {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	padding: 0;
+	text-indent: 10px;
+	font-weight: bold;
+	font-size: 14px;
+	outline: none;
+}
+nav .search button {
+	position: absolute;
+	top: 0;
+	right: 0px;
+	width: 35px;
+	height: 35px;
+	border: 0;
+	padding: 0;
+	outline: none;
+	cursor: pointer;
+}
+nav .search button:before {
+	position: absolute;
+	content: "";
+	width: 18px;
+	height: 18px;
+	top: 7px;
+	left: 7px;
+	border: 3px solid #333;
+	border-radius: 50%;
+	box-sizing: border-box;
+}
+nav .search button:after {
+	position: absolute;
+	content: "";
+	width: 3px;
+	height: 11px;
+	top: 21px;
+	left: 18px;
+	background: #333;
+	transform-origin: 50% 0%;
+	-ms-transform-origin: 50% 0%;
+	-webkit-transform-origin: 50% 0%;
+	transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+}
+
+nav.searching li:after {
+	display: none!important;
+}
+nav.searching li h4, nav.searching li ul {
+	display: block!important;
+}
+
+nav.searching .parent {
+	display: none;
+}
+nav.searching .parent ul li a {
+	display: none;
+}
+
+nav.searching .parent.module-targeting {
+	display: block;
+}
+nav.searching .parent.module-targeting ul li a {
+	display: none;
+}
+nav.searching .parent.module-targeting ul li a.targeting {
+	display: block;
+}
+nav.searching .parent.targeting ul li a {
+	display: block;
+}
+
+nav>h2.custom>a {
+	margin:12px 10px;
+}
