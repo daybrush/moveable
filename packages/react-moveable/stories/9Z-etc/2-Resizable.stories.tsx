@@ -1,28 +1,27 @@
 import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
-import "../basic.css";
+import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs } from "../utils";
-import App from "./apps/ResizableGroupApp";
-import RawApp from "!!raw-loader!./apps/ResizableGroupApp";
+import App from "./apps/ResizableApp";
+import RawApp from "!!raw-loader!./apps/ResizableApp";
 import {
     DEFAULT_RESIZABLE_CONTROLS,
 } from "../controls/default";
-import { DEFAULT_RESIZABLE_GROUP_CONTROLS } from "../controls/group";
 
 
-export const ResizableGroupTemplate = App as any;
 
-ResizableGroupTemplate.storyName = "Resizable";
-ResizableGroupTemplate.argTypes = {
+export const ResizableTemplate = App as any;
+
+ResizableTemplate.storyName = "Resizable with display: flex";
+ResizableTemplate.argTypes = {
     ...DEFAULT_RESIZABLE_CONTROLS,
-    ...DEFAULT_RESIZABLE_GROUP_CONTROLS,
 };
-ResizableGroupTemplate.args = {
-    ...makeArgs(ResizableGroupTemplate.argTypes),
+ResizableTemplate.args = {
+    ...makeArgs(ResizableTemplate.argTypes),
 };
 
 
-ResizableGroupTemplate.parameters = {
+ResizableTemplate.parameters = {
     preview: [
         {
             tab: "React",

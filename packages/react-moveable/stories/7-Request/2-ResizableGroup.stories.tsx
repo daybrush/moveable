@@ -1,6 +1,6 @@
 import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
-import "../basic.css";
+import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs } from "../utils";
 import App from "./apps/ResizableGroupApp";
 import RawApp from "!!raw-loader!./apps/ResizableGroupApp";

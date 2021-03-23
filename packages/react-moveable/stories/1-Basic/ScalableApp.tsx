@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable from "../../src/react-moveable";
+import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
     const [translate, setTranslate]  = React.useState([0, 0]);
@@ -41,4 +41,4 @@ export default function App(props: Record<string, any>) {
             </div>
         </div>
     );
-};
+}

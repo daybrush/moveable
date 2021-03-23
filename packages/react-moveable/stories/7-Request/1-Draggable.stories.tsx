@@ -1,8 +1,8 @@
 import * as React from "react";
-import Moveable from "../../src/react-moveable";
+import Moveable from "@/react-moveable";
 import { DEFAULT_REACT_CODESANDBOX, previewTemplate } from "storybook-addon-preview";
 import "../common.css";
-import "../basic.css";
+import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs, makeArgType } from "../utils";
 import App from "./apps/DraggableApp";
 import RawApp from "!!raw-loader!./apps/DraggableApp";

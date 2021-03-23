@@ -26,4 +26,4 @@ export const DEFAULT_RESIZABLE_GROUP_CONTROLS = {
         description: makeLink("Resizable", "keepRatio"),
         defaultValue: true,
     }),
-}
+};

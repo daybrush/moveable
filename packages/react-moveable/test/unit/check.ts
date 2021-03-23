@@ -11,7 +11,8 @@ import {
     ScrollableOptions, MoveableProps, ScrollableProps, PinchableProps, DragAreaProps,
     OriginDraggableProps, ClippableProps, RoundableProps, SnappableProps, WarpableProps,
     RotatableProps, ScalableProps, ResizableProps, DraggableProps, OriginOptions,
-    PaddingOptions, GroupableProps, ExcludeKeys, OriginDraggableOptions, MoveableOptions, MoveableEvents, BeforeRenderableEvents
+    PaddingOptions, GroupableProps, ExcludeKeys, OriginDraggableOptions,
+    MoveableOptions, BeforeRenderableEvents,
 } from "../../src/react-moveable";
 import Draggable from "../../src/react-moveable/ables/Draggable";
 import Resizable from "../../src/react-moveable/ables/Resizable";
@@ -36,8 +37,7 @@ import Clickable from "../../src/react-moveable/ables/Clickable";
 
 type MatchTypes<
     T extends { [key in keyof Required<E>]: any },
-    E extends IObject<any>,
-    > = {
+    E extends IObject<any>> = {
         [key in keyof Required<E>]: Required<T>[key]
     };
 type Writable<T> = { -readonly [key in keyof T]: any };
@@ -78,18 +78,18 @@ export type PP8 = MatchTypes<typeof Warpable["events"] & typeof Warpable["props"
 export type E9 = MatchTypes<typeof Pinchable["events"], PinchableEvents>;
 export type P9 = MatchTypes<typeof Pinchable["props"], PinchableOptions>;
 export type PP9 = MatchTypes<
-    typeof Resizable["events"]
-    & typeof Resizable["props"]
-    & typeof Draggable["events"]
-    & typeof Draggable["props"]
-    & typeof Scalable["events"]
-    & typeof Scalable["props"]
-    & typeof Rotatable["events"]
-    & typeof Rotatable["props"]
-    & typeof Pinchable["events"]
-    & typeof Pinchable["props"]
-    & typeof Pinchable["events"]
-    & typeof Pinchable["props"], PinchableProps>;
+    typeof Resizable["events"] &
+    typeof Resizable["props"] &
+    typeof Draggable["events"] &
+    typeof Draggable["props"] &
+    typeof Scalable["events"] &
+    typeof Scalable["props"] &
+    typeof Rotatable["events"] &
+    typeof Rotatable["props"] &
+    typeof Pinchable["events"] &
+    typeof Pinchable["props"] &
+    typeof Pinchable["events"] &
+    typeof Pinchable["props"], PinchableProps>;
 
 export type P10 = MatchTypes<typeof Groupable["props"], GroupableOptions>;
 export type PP10 = MatchTypes<typeof Groupable["props"], ExcludeKeys<GroupableProps, "targets" | "updateGroup">>;
