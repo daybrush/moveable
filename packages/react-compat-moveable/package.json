@@ -64,6 +64,7 @@
     },
     "dependencies": {
         "@daybrush/utils": "^1.4.0",
+        "@scena/dragscroll": "^1.0.1",
         "react-compat-css-styled": "^1.0.5",
         "react-moveable": "~0.27.4",
         "react-simple-compat": "^1.1.0"

@@ -2,6 +2,6 @@
 
 
 export default {
-    title: "HlSupport Tree Shaking",
+    title: "Support Tree Shaking",
 };
 export * from "./1-TreeShaking.stories";

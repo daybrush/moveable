@@ -54,8 +54,6 @@ export default {
             }
             triggerEvent(moveable, eventName, params);
         }).on("move", ({ offsetX, offsetY }) => {
-
-            console.log(offsetX, offsetY);
             moveable[gestoName].scrollBy(offsetX, offsetY, e.inputEvent, false);
         });
         dragScroll.dragStart(e, {

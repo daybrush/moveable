@@ -1,5 +1,13 @@
 import { makeArgType, makeLink } from "../utils";
 
+export const DEFAULT_CONTROLS = {
+    padding: makeArgType({
+        type: "object",
+        description: makeLink("Moveable", "padding"),
+        defaultValue: { left: 0, top: 0, right: 0, bottom: 0 },
+    }),
+};
+
 export const DEFAULT_DRAGGABLE_CONTROLS = {
     draggable: makeArgType({
         type: "boolean",
@@ -26,7 +34,8 @@ export const DEFAULT_DRAGGABLE_CONTROLS = {
         description: makeLink("Draggable", "startDragRotate"),
         defaultValue: 0,
     }),
-}
+};
+
 export const DEFAULT_RESIZABLE_CONTROLS = {
     resizable: makeArgType({
         type: "boolean",
@@ -66,9 +75,9 @@ export const DEFAULT_RESIZABLE_CONTROLS = {
     renderDirections: makeArgType({
         type: "array",
         description: makeLink("Resizable", "renderDirections"),
-        defaultValue: ["nw","n","ne","w","e","sw","s","se"],
+        defaultValue: ["nw", "n", "ne", "w", "e", "sw", "s", "se"],
     }),
-}
+};
 
 export const DEFAULT_SCALABLE_CONTROLS = {
     scalable: makeArgType({
@@ -89,6 +98,40 @@ export const DEFAULT_SCALABLE_CONTROLS = {
     renderDirections: makeArgType({
         type: "array",
         description: makeLink("Scalable", "renderDirections"),
-        defaultValue: ["nw","n","ne","w","e","sw","s","se"],
+        defaultValue: ["nw", "n", "ne", "w", "e", "sw", "s", "se"],
     }),
-}
+};
+
+export const DEFAULT_ROTATABLE_CONTROLS = {
+    rotatable: makeArgType({
+        type: "boolean",
+        description: makeLink("Rotatable", "rotatable"),
+        defaultValue: true,
+    }),
+    throttleRotate: makeArgType({
+        type: "number",
+        description: makeLink("Rotatable", "throttleRotate"),
+        defaultValue: 0,
+    }),
+    rotationPosition: makeArgType({
+        type: "inline-radio",
+        description: makeLink("Rotatable", "rotationPosition"),
+        defaultValue: "top",
+        control: {
+            options: [
+                "top",
+                "left",
+                "right",
+                "bottom",
+                "top-left",
+                "top-right",
+                "bottom-left",
+                "bottom-right",
+                "left-top",
+                "right-top",
+                "left-bottom",
+                "right-bottom",
+            ],
+        },
+    }),
+};
