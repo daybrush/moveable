@@ -17,6 +17,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+## [0.24.4] - 2021-03-30
+* `moveable` 0.24.4
+* `react-moveable` 0.27.4
+* `preact-moveable` 0.26.4
+* `ngx-moveable` 0.20.5
+* `svelte-moveable` 0.15.5
+* `lit-moveable` 0.1.5
+
+### Fixed
+* Update `@scena/dragscroll` #435
 
 
 ## [0.24.4] - 2021-03-22

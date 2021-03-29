@@ -1,6 +1,6 @@
 {
     "name": "lit-moveable",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "A Lit Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "types": "declaration/index.d.ts",
     "main": "dist/moveable.cjs.js",
@@ -57,6 +57,6 @@
         "typescript": "3.6.4"
     },
     "dependencies": {
-        "moveable": "~0.24.4"
+        "moveable": "~0.24.5"
     }
 }
