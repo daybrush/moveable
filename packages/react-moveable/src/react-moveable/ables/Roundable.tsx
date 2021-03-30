@@ -386,9 +386,9 @@ export default {
                     poses,
                 );
             }
-            triggerEvent<RoundableProps>(moveable, "onRoundEnd",
-                fillEndParams<OnRoundEnd>(moveable, e, {}));
         }
+        triggerEvent<RoundableProps>(moveable, "onRoundEnd",
+            fillEndParams<OnRoundEnd>(moveable, e, {}));
         state.borderRadiusState = "";
         return true;
     },
