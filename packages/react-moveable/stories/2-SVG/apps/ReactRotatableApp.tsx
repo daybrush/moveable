@@ -3,6 +3,7 @@ import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
     const [translate, setTranslate]  = React.useState([0, 0]);
+    const [rotate, setRotate]  = React.useState(0);
     const targetRef = React.useRef<HTMLDivElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
 
@@ -10,34 +11,31 @@ export default function App(props: Record<string, any>) {
         <div className="root">
             <div className="container">
                 <div className="target" ref={targetRef} style={{
-                    width: "200px",
-                    height: "100px",
-                    maxWidth: props.maxWidth,
-                    maxHeight: props.maxHeight,
-                    minWidth: props.minWidth,
-                    minHeight: props.minHeight,
+                    transform: "",
                 }}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
-                    resizable={props.resizable}
-                    keepRatio={props.keepRatio}
-                    throttleResize={props.throttleResize}
-                    onResizeStart={e => {
+                    resizable={true}
+                    rotatable={props.rotatable}
+                    throttleRotate={props.throttleRotate}
+                    rotationPosition={props.rotationPosition}
+                    onRotateStart={e => {
+                        e.set(rotate);
                         e.dragStart && e.dragStart.set(translate);
                     }}
-                    onResize={e => {
+                    onRotate={e => {
                         const beforeTranslate = e.drag.beforeTranslate;
+                        const rotate = e.rotate;
 
-                        e.target.style.width = `${e.width}px`;
-                        e.target.style.height = `${e.height}px`;
-                        e.target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+                        e.target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px) rotate(${rotate}deg)`;
                     }}
-                    onResizeEnd={e => {
+                    onRotateEnd={e => {
                         const lastEvent = e.lastEvent;
 
                         if (lastEvent) {
                             setTranslate(lastEvent.drag.beforeTranslate);
+                            setRotate(lastEvent.rotate);
                         }
                     }}
                 />

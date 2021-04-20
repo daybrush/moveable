@@ -2,29 +2,26 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs } from "../utils";
-import App from "./apps/ReactRotatableApp";
-import RawReactApp from "!!raw-loader!./apps/ReactRotatableApp";
+import App from "./apps/ReactBoundApp";
+import RawReactApp from "!!raw-loader!./apps/ReactBoundApp";
 import {
-    DEFAULT_ROTATABLE_CONTROLS,
+    DEFAULT_BOUNDS_CONTROLS,
+    DEFAULT_DRAGGABLE_CONTROLS,
 } from "../controls/default";
 
+export const BoundTemplate = App as any;
 
-export default {
-    title: "Basic",
+BoundTemplate.storyName = "Bound";
+BoundTemplate.argTypes = {
+    ...DEFAULT_DRAGGABLE_CONTROLS,
+    ...DEFAULT_BOUNDS_CONTROLS,
 };
-
-export const RotatableTemplate = App as any;
-
-RotatableTemplate.storyName = "Rotatable";
-RotatableTemplate.argTypes = {
-    ...DEFAULT_ROTATABLE_CONTROLS,
-};
-RotatableTemplate.args = {
-    ...makeArgs(RotatableTemplate.argTypes),
+BoundTemplate.args = {
+    ...makeArgs(BoundTemplate.argTypes),
 };
 
 
-RotatableTemplate.parameters = {
+BoundTemplate.parameters = {
     preview: [
         {
             tab: "React",

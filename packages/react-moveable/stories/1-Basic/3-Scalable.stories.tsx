@@ -2,8 +2,8 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs } from "../utils";
-import App from "./ScalableApp";
-import RawApp from "!!raw-loader!./ScalableApp";
+import App from "./apps/ReactScalableApp";
+import RawReactApp from "!!raw-loader!./apps/ReactScalableApp";
 import {
     DEFAULT_SCALABLE_CONTROLS,
 } from "../controls/default";
@@ -28,7 +28,7 @@ ScalableTemplate.parameters = {
     preview: [
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawApp)),
+            template: convertTemplate(convertPath(RawReactApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
             language: "tsx",
         },

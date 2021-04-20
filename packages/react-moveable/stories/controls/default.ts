@@ -1,5 +1,13 @@
 import { makeArgType, makeLink } from "../utils";
 
+export const SCALE_CONTROLS = {
+    "containerScale": makeArgType({
+        type: "number",
+        description: "container's scale",
+        defaultValue: 1,
+    }),
+};
+
 export const DEFAULT_CONTROLS = {
     padding: makeArgType({
         type: "object",
@@ -133,5 +141,18 @@ export const DEFAULT_ROTATABLE_CONTROLS = {
                 "right-bottom",
             ],
         },
+    }),
+};
+
+export const DEFAULT_BOUNDS_CONTROLS = {
+    snappable: makeArgType({
+        type: "boolean",
+        description: makeLink("Snappable", "snappable"),
+        defaultValue: true,
+    }),
+    bounds: makeArgType({
+        type: "object",
+        description: makeLink("Snappable", "bounds"),
+        defaultValue: { left: 0, top: 0, right: 500, bottom: 500 },
     }),
 };

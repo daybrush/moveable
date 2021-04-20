@@ -2,8 +2,8 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs } from "../utils";
-import App from "./ResizableApp";
-import RawApp from "!!raw-loader!./ResizableApp";
+import App from "./apps/ReactResizableApp";
+import RawReactApp from "!!raw-loader!./apps/ReactResizableApp";
 import {
     DEFAULT_RESIZABLE_CONTROLS,
 } from "../controls/default";
@@ -28,7 +28,7 @@ ResizableTemplate.parameters = {
     preview: [
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawApp)),
+            template: convertTemplate(convertPath(RawReactApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
             language: "tsx",
         },
