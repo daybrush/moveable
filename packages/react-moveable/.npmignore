@@ -27,3 +27,5 @@ groupable.md
 test/
 src/
 public/
+stories/
+.storybook

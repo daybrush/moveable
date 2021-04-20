@@ -17,6 +17,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+
+
+## [0.24.6] - 2021-04-21
+* `moveable` 0.24.6
+* `react-moveable` 0.27.7
+* `preact-moveable` 0.26.5
+* `ngx-moveable` 0.20.6
+* `svelte-moveable` 0.15.
+* `lit-moveable` 0.1.6
+
+### Fixed
+* Fix svg transform container #446
+* Fix onRoundEnd event #440
+
 ## [0.24.5] - 2021-03-30
 * `moveable` 0.24.5
 * `react-moveable` 0.27.5
