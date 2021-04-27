@@ -263,7 +263,7 @@ const frame = {
     translate: [0, 0],
 };
 moveable.on("resizeStart", ({ target, set, setOrigin, dragStart }) => {
-    // Set origin if transform-orgin use %.
+    // Set origin if transform-origin use %.
     setOrigin(["%", "%"]);
 
     // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
@@ -301,7 +301,7 @@ this.frame = {
     throttleResize={0}
     keepRatio={false}
     onResizeStart={({ target, set, setOrigin, dragStart }) => {
-        // Set origin if transform-orgin use %.
+        // Set origin if transform-origin use %.
         setOrigin(["%", "%"]);
 
         // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
@@ -355,7 +355,7 @@ export class AppComponent {
         translate: [0, 0],
     };
     onResizeStart({ target, set, setOrigin, dragStart }) {
-        // Set origin if transform-orgin use %.
+        // Set origin if transform-origin use %.
         setOrigin(["%", "%"]);
 
         // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
@@ -401,7 +401,7 @@ export class AppComponent {
     resizable={true}
     throttleResize={0}
     on:resizeStart={({ detail: {target, set, setOrigin, dragStart }}) => {
-        // Set origin if transform-orgin use %.
+        // Set origin if transform-origin use %.
         setOrigin(["%", "%"]);
 
         // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
@@ -1405,7 +1405,7 @@ moveable.on("resizeGroupStart", ({ events }) => {
     events.forEach((ev, i) => {
         const frame = frames[i];
 
-        // Set origin if transform-orgin use %.
+        // Set origin if transform-origin use %.
         ev.setOrigin(["%", "%"]);
 
         // If cssSize and offsetSize are different, set cssSize.
@@ -1452,7 +1452,7 @@ this.frames = targets.map(() => ({
         events.forEach((ev, i) => {
             const frame = this.frames[i];
 
-            // Set origin if transform-orgin use %.
+            // Set origin if transform-origin use %.
             ev.setOrigin(["%", "%"]);
 
             // If cssSize and offsetSize are different, set cssSize.
@@ -1520,7 +1520,7 @@ export class AppComponent implements OnInit {
         events.forEach((ev, i) => {
             const frame = this.frames[i];
 
-            // Set origin if transform-orgin use %.
+            // Set origin if transform-origin use %.
             ev.setOrigin(["%", "%"]);
 
             // If cssSize and offsetSize are different, set cssSize.
@@ -1580,7 +1580,7 @@ export class AppComponent implements OnInit {
         events.forEach((ev, i) => {
             const frame = frames[i];
 
-            // Set origin if transform-orgin use %.
+            // Set origin if transform-origin use %.
             ev.setOrigin(["%", "%"]);
 
             // If cssSize and offsetSize are different, set cssSize.
