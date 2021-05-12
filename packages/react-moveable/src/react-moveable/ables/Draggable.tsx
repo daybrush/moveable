@@ -89,7 +89,7 @@ export default {
         datas.startValue = [0, 0];
 
         setDragStart(moveable, e);
-        setDefaultTransformIndex(e);
+        setDefaultTransformIndex(e, "translate");
         startCheckSnapDrag(moveable, datas);
 
         datas.prevDist = [0, 0];

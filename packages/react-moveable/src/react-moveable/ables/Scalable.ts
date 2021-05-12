@@ -10,8 +10,8 @@ import {
     getScaleDist,
     fillTransformStartEvent,
     fillTransformEvent,
-    setDefaultTransformIndex,
     getAbsolutePosition,
+    setDefaultTransformIndex,
 } from "../gesto/GestoUtils";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
@@ -86,8 +86,6 @@ export default {
         if (!isPinch) {
             setDragStart(moveable, e);
         }
-        setDefaultTransformIndex(e);
-
         datas.datas = {};
         datas.transform = targetTransform;
         datas.prevDist = [1, 1];
@@ -95,8 +93,11 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startValue = [1, 1];
-
         const isWidth = (!direction[0] && !direction[1]) || direction[0] || !direction[1];
+
+        setDefaultTransformIndex(e, "scale");
+
+
 
         datas.isWidth = isWidth;
 

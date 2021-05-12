@@ -8,7 +8,7 @@ import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
     calculatePosition, calculateInversePosition, getTransform, calculateMoveablePosition,
 } from "../utils";
-import { splitUnit, isArray, splitSpace, average } from "@daybrush/utils";
+import { splitUnit, isArray, splitSpace, average, findIndex } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag,
@@ -370,12 +370,16 @@ export function fillTransformStartEvent(e: any): OnTransformStartEvent {
         },
     };
 }
-export function setDefaultTransformIndex(e: any) {
-    setTransformIndex(e, -1);
+export function setDefaultTransformIndex(e: any, property: string) {
+    const originalDatas = e.originalDatas.beforeRenderable;
+    const startTransforms = originalDatas.startTransforms;
+
+    setTransformIndex(e, findIndex<string>(startTransforms, func => func.indexOf(`${property}(`) === 0));
 }
 export function setTransformIndex(e: any, index: number) {
     const originalDatas = e.originalDatas.beforeRenderable;
     const datas = e.datas;
+
     datas.transformIndex = index;
     if (index === -1) {
         return;

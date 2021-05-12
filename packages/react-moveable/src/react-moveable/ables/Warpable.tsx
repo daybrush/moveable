@@ -131,7 +131,7 @@ export default {
         datas.top = top;
 
         setDragStart(moveable, e);
-        setDefaultTransformIndex(e);
+        setDefaultTransformIndex(e, "matrix3d");
 
         datas.poses = [
             [0, 0],

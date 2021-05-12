@@ -354,7 +354,7 @@ export default {
         datas.startValue = 0;
         datas.datas = {};
 
-        setDefaultTransformIndex(e);
+        setDefaultTransformIndex(e, "rotate");
 
         const params = fillParams<OnRotateStart>(moveable, e, {
             set: (rotatation: number) => {
