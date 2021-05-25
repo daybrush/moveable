@@ -6,17 +6,13 @@ export default function App(props: Record<string, any>) {
     const moveableRef = React.useRef<Moveable>(null);
 
     return (
-        <div className="root" style={{
-            height: "1000px",
-        }}>
+        <div className="root">
             <div className="container" style={{
                 width: "500px",
                 height: "500px",
                 border: "1px solid #ccc",
             }}>
-                <div className="target" ref={targetRef} style={{
-                    position: "fixed",
-                }}>Target</div>
+                <div className="target" ref={targetRef}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
@@ -25,14 +21,20 @@ export default function App(props: Record<string, any>) {
                     edgeDraggable={props.edgeDraggable}
                     startDragRotate={props.startDragRotate}
                     throttleDragRotate={props.throttleDragRotate}
+                    resizable={props.resizable}
+                    keepRatio={props.keepRatio}
                     snappable={props.snappable}
                     bounds={props.bounds}
                     onBeforeRenderStart={e => {
                         e.setTransform(e.target.style.transform);
                     }}
                     onDrag={e => {
-                        console.log(e.transform);
                         e.target.style.transform = e.transform;
+                    }}
+                    onResize={e => {
+                        e.target.style.width = `${e.width}px`;
+                        e.target.style.height = `${e.height}px`;
+                        e.target.style.transform = e.drag.transform;
                     }}
                 />
             </div>

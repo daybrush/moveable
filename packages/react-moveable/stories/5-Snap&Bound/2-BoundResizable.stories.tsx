@@ -2,26 +2,28 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertTemplate, makeArgs } from "../utils";
-import App from "./apps/ReactBoundApp";
-import RawReactApp from "!!raw-loader!./apps/ReactBoundApp";
+import App from "./apps/ReactBoundResizableApp";
+import RawReactApp from "!!raw-loader!./apps/ReactBoundResizableApp";
 import {
     DEFAULT_BOUNDS_CONTROLS,
     DEFAULT_DRAGGABLE_CONTROLS,
+    DEFAULT_RESIZABLE_CONTROLS,
 } from "../controls/default";
 
-export const BoundTemplate = App as any;
+export const BoundResizableTemplate = App as any;
 
-BoundTemplate.storyName = "Bound";
-BoundTemplate.argTypes = {
+BoundResizableTemplate.storyName = "Bound (Draggable & Resizable)";
+BoundResizableTemplate.argTypes = {
     ...DEFAULT_DRAGGABLE_CONTROLS,
+    ...DEFAULT_RESIZABLE_CONTROLS,
     ...DEFAULT_BOUNDS_CONTROLS,
 };
-BoundTemplate.args = {
-    ...makeArgs(BoundTemplate.argTypes),
+BoundResizableTemplate.args = {
+    ...makeArgs(BoundResizableTemplate.argTypes),
 };
 
 
-BoundTemplate.parameters = {
+BoundResizableTemplate.parameters = {
     preview: [
         {
             tab: "React",

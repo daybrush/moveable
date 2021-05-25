@@ -12,7 +12,9 @@ export default function App(props: Record<string, any>) {
                 height: "500px",
                 border: "1px solid #ccc",
             }}>
-                <div className="target" ref={targetRef}>Target</div>
+                <div className="target" ref={targetRef} style={{
+                    transform: "scale(1.5, 1)",
+                }}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
@@ -21,14 +23,19 @@ export default function App(props: Record<string, any>) {
                     edgeDraggable={props.edgeDraggable}
                     startDragRotate={props.startDragRotate}
                     throttleDragRotate={props.throttleDragRotate}
+                    scalable={props.scalable}
+                    keepRatio={props.keepRatio}
+                    throttleScale={props.throttleScale}
                     snappable={props.snappable}
                     bounds={props.bounds}
                     onBeforeRenderStart={e => {
                         e.setTransform(e.target.style.transform);
                     }}
                     onDrag={e => {
-                        console.log(e.transform);
                         e.target.style.transform = e.transform;
+                    }}
+                    onScale={e => {
+                        e.target.style.transform = e.drag.transform;
                     }}
                 />
             </div>
