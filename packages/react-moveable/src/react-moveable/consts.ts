@@ -158,6 +158,7 @@ export const NEARBY_POS = [
     [3, 1, 2],
 ];
 
+export const FLOAT_POINT_NUM = 0.0001;
 export const TINY_NUM = 0.0000001;
 export const MIN_SCALE = 0.000000001;
 export const MAX_NUM = Math.pow(10, 10);

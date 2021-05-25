@@ -36,7 +36,7 @@ import {
     directionCondition,
     renderInnerGuideline,
 } from "../utils";
-import { IObject, find, findIndex, hasClass, getRad } from "@daybrush/utils";
+import { IObject, find, findIndex, hasClass, getRad, getDist } from "@daybrush/utils";
 import {
     getPosByReverseDirection,
     getDragDist,
@@ -45,7 +45,7 @@ import {
 } from "../gesto/GestoUtils";
 import { minus, rotate, plus } from "@scena/matrix";
 import { dragControlCondition as rotatableDragControlCondtion } from "./Rotatable";
-import { TINY_NUM } from "../consts";
+import { FLOAT_POINT_NUM, TINY_NUM } from "../consts";
 import {
     getInnerBoundInfo,
     getCheckInnerBoundLines,
@@ -147,15 +147,26 @@ function solveNextOffset(
     const sizeOffset = solveEquation(pos1, pos2, offset, isVertical);
 
     if (!sizeOffset) {
-        return [0, 0];
+        return {
+            isOutside: false,
+            offset: [0, 0],
+        };
     }
+    const size = getDist(pos1, pos2);
+    const dist1 = getDist(sizeOffset, pos1);
+    const dist2 = getDist(sizeOffset, pos2);
+
+    const isOutside = dist1 > size || dist2 > size;
     const [widthOffset, heightOffset] = getDragDist({
         datas,
         distX: sizeOffset[0],
         distY: sizeOffset[1],
     });
 
-    return [widthOffset, heightOffset];
+    return {
+        offset: [widthOffset, heightOffset],
+        isOutside,
+    };
 }
 function getNextFixedPoses(
     matrix: number[],
@@ -380,13 +391,6 @@ export function checkMaxBounds(
             const isCheckVertical = otherDirection[0] !== fixedDirection[0];
             const isCheckHorizontal = otherDirection[1] !== fixedDirection[1];
             const otherPos = getPosByDirection(poses, otherDirection);
-
-            const verticalDirection = normalized(
-                otherDirection[1] - fixedDirection[1]
-            );
-            const horizontalDirection = normalized(
-                otherDirection[0] - fixedDirection[0]
-            );
             const deg = (getRad(fixedPosition, otherPos) * 360) / Math.PI;
 
             if (isCheckHorizontal) {
@@ -395,7 +399,10 @@ export function checkMaxBounds(
                 if (Math.abs(deg - 360) < 2 || Math.abs(deg - 180) < 2) {
                     nextOtherPos[1] = fixedPosition[1];
                 }
-                const [, heightOffset] = solveNextOffset(
+                const {
+                    offset: [, heightOffset],
+                    isOutside: isHeightOutside,
+                } = solveNextOffset(
                     fixedPosition,
                     nextOtherPos,
                     (fixedPosition[1] < otherPos[1] ? bottom : top) -
@@ -404,7 +411,7 @@ export function checkMaxBounds(
                     datas
                 );
                 if (!isNaN(heightOffset)) {
-                    maxHeight = height + verticalDirection * heightOffset;
+                    maxHeight = height + (isHeightOutside ? 1 : -1) * Math.abs(heightOffset);
                 }
             }
             if (isCheckVertical) {
@@ -413,16 +420,18 @@ export function checkMaxBounds(
                 if (Math.abs(deg - 90) < 2 || Math.abs(deg - 270) < 2) {
                     nextOtherPos[0] = fixedPosition[0];
                 }
-                const [widthOffset] = solveNextOffset(
+                const {
+                    offset: [widthOffset],
+                    isOutside: isWidthOutside,
+                } = solveNextOffset(
                     fixedPosition,
                     nextOtherPos,
-                    (fixedPosition[0] < otherPos[0] ? right : left) -
-                    otherPos[0],
+                    (fixedPosition[0] < otherPos[0] ? right : left) - otherPos[0],
                     true,
                     datas
                 );
                 if (!isNaN(widthOffset)) {
-                    maxWidth = width + horizontalDirection * widthOffset;
+                    maxWidth = width + (isWidthOutside ? 1 : -1) * Math.abs(widthOffset);
                 }
             }
         });
@@ -543,8 +552,8 @@ function getSnapBoundInfo(
             otherEndPos,
             -(isVertical ? otherVerticalOffset : otherHorizontalOffset),
             isVertical,
-            datas
-        ).map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
+            datas,
+        ).offset.map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
 
         return {
             sign: multiple,
@@ -732,7 +741,6 @@ export function recheckSizeByTwoDirection(
             distX: -verticalOffset,
             distY: -horizontalOffset,
         });
-
         const nextWidth = Math.min(
             maxWidth || Infinity,
             width + direction[0] * nextWidthOffset
@@ -825,7 +833,7 @@ export function checkSizeDist(
 
         const [nextWidthOffset, nextHeightOffset] = recheckSizeByTwoDirection(
             moveable,
-            getNextPoses(widthOffset, heightOffset),
+            getNextPoses(widthOffset, heightOffset).map(pos => pos.map(p => throttle(p, FLOAT_POINT_NUM))),
             width + widthOffset,
             height + heightOffset,
             maxWidth,
@@ -874,7 +882,7 @@ export function checkSnapRotate(
         return rotation;
     }
 }
-export function checkSnapSize(
+export function checkSnapResize(
     moveable: MoveableManagerInterface<{}, {}>,
     width: number,
     height: number,
@@ -925,7 +933,7 @@ export function checkSnapScale(
             return getNextFixedPoses(
                 scaleMatrix(
                     datas,
-                    plus(scale, [widthOffset / width, heightOffset / height])
+                    plus(scale, [widthOffset / width, heightOffset / height]),
                 ),
                 width,
                 height,
@@ -1382,8 +1390,8 @@ function getGapGuidelinesToStart(
             const nextPos = gapPos[index];
 
             if (
-                throttle(nextPos + gapSizes![index], 0.0001) ===
-                throttle(start - absGap, 0.0001)
+                throttle(nextPos + gapSizes![index], FLOAT_POINT_NUM) ===
+                throttle(start - absGap, FLOAT_POINT_NUM)
             ) {
                 start = nextPos;
                 return true;
@@ -1424,7 +1432,7 @@ function getGapGuidelinesToEnd(
             const nextPos = gapPos[index];
 
             if (
-                throttle(nextPos, 0.0001) === throttle(start + absGap, 0.0001)
+                throttle(nextPos, FLOAT_POINT_NUM) === throttle(start + absGap, FLOAT_POINT_NUM)
             ) {
                 start = nextPos + gapSizes![index];
                 return true;

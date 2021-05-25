@@ -22,7 +22,7 @@ import {
 import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus } from "@scena/matrix";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
-import { checkSnapSize } from "./Snappable";
+import { checkSnapResize } from "./Snappable";
 import { calculateBoundSize, IObject, isString, getRad, convertUnitSize } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
@@ -340,7 +340,7 @@ export default {
         let snapDist = [0, 0];
 
         if (!isPinch) {
-            snapDist = checkSnapSize(
+            snapDist = checkSnapResize(
                 moveable, nextWidth,
                 nextHeight, direction,
                 fixedPosition,

@@ -93,7 +93,14 @@ export default {
         datas.width = width;
         datas.height = height;
         datas.startValue = [1, 1];
+
+        const scaleWidth = getDist(pos1, pos2);
+        const scaleHeight = getDist(pos2, pos4);
         const isWidth = (!direction[0] && !direction[1]) || direction[0] || !direction[1];
+
+
+        datas.scaleX = scaleWidth / width;
+        datas.scaleY = scaleHeight / height;
 
         setDefaultTransformIndex(e, "scale");
 
@@ -180,8 +187,6 @@ export default {
         }
         const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
         const state = moveable.state;
-        // const startWidth = width * startValue[0];
-        // const startHeight = height * startValue[1];
 
         let scaleX = 1;
         let scaleY = 1;
@@ -208,31 +213,35 @@ export default {
             }
         } else {
             const dragDist = getDragDist({ datas, distX, distY });
-
-            let distWidth = sizeDirection[0] * dragDist[0];
-            let distHeight = sizeDirection[1] * dragDist[1];
+            const scaleXRatio = datas.scaleX;
+            const scaleYRatio = datas.scaleY;
+            let distScaleWidth = sizeDirection[0] * dragDist[0] * scaleXRatio;
+            let distScaleHeight = sizeDirection[1] * dragDist[1] * scaleYRatio;
 
             if (keepRatio && width && height) {
-                const rad = getRad([0, 0], dragDist);
-                const standardRad = getRad([0, 0], sizeDirection);
-                const size = getDistSize([distWidth, distHeight]);
-                const signSize = Math.cos(rad - standardRad) * size;
-
                 if (!sizeDirection[0]) {
                     // top, bottom
-                    distHeight = signSize;
-                    distWidth = distHeight / ratio;
+                    // distHeight = signSize;
+                    distScaleWidth = distScaleHeight * ratio;
                 } else if (!sizeDirection[1]) {
                     // left, right
-                    distWidth = signSize;
-                    distHeight = distWidth * ratio;
+                    // distWidth = signSize;
+                    distScaleHeight = distScaleWidth / ratio;
                 } else {
+                    const scaleSize = getDistSize([scaleXRatio, scaleYRatio]);
+                    const size = getDistSize([distScaleWidth, distScaleHeight]);
+
                     // two-way
-                    distHeight = distWidth * ratio;
+                    const dragRad = getRad([0, 0], dragDist);
+                    const standardRad = getRad([0, 0], sizeDirection);
+                    const signSize = Math.cos(dragRad - standardRad) * size;
+
+                    distScaleWidth = scaleXRatio / scaleSize * signSize;
+                    distScaleHeight = scaleYRatio / scaleSize * signSize;
                 }
             }
-            scaleX = (width + distWidth) / width;
-            scaleY = (height + distHeight) / height;
+            scaleX = (width + (distScaleWidth / scaleXRatio)) / width;
+            scaleY = (height + (distScaleHeight / scaleYRatio)) / height;
         }
 
         scaleX = sizeDirection[0] || keepRatio ? scaleX * startValue[0] : startValue[0];
@@ -256,6 +265,7 @@ export default {
                 state.snapRenderInfo = { direction, request: e.isRequest };
             }
         }
+
         let snapDist = [0, 0];
 
         if (!isPinch) {
