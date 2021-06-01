@@ -99,8 +99,10 @@ export default {
         const isWidth = (!direction[0] && !direction[1]) || direction[0] || !direction[1];
 
 
-        datas.scaleX = scaleWidth / width;
-        datas.scaleY = scaleHeight / height;
+        datas.scaleWidth = scaleWidth;
+        datas.scaleHeight = scaleHeight;
+        datas.scaleXRatio = scaleWidth / width;
+        datas.scaleYRatio = scaleHeight / height;
 
         setDefaultTransformIndex(e, "scale");
 
@@ -170,6 +172,8 @@ export default {
             isWidth,
             ratio,
             fixedDirection,
+            scaleXRatio,
+            scaleYRatio,
         } = datas;
 
         if (!isScale) {
@@ -213,8 +217,6 @@ export default {
             }
         } else {
             const dragDist = getDragDist({ datas, distX, distY });
-            const scaleXRatio = datas.scaleX;
-            const scaleYRatio = datas.scaleY;
             let distScaleWidth = sizeDirection[0] * dragDist[0] * scaleXRatio;
             let distScaleHeight = sizeDirection[1] * dragDist[1] * scaleYRatio;
 
@@ -228,16 +230,16 @@ export default {
                     // distWidth = signSize;
                     distScaleHeight = distScaleWidth / ratio;
                 } else {
-                    const scaleSize = getDistSize([scaleXRatio, scaleYRatio]);
                     const size = getDistSize([distScaleWidth, distScaleHeight]);
 
                     // two-way
                     const dragRad = getRad([0, 0], dragDist);
                     const standardRad = getRad([0, 0], sizeDirection);
                     const signSize = Math.cos(dragRad - standardRad) * size;
+                    const ratioRad = getRad([0, 0], [ratio, 1]);
 
-                    distScaleWidth = scaleXRatio / scaleSize * signSize;
-                    distScaleHeight = scaleYRatio / scaleSize * signSize;
+                    distScaleWidth = Math.cos(ratioRad) * signSize;
+                    distScaleHeight = Math.sin(ratioRad) * signSize;
                 }
             }
             scaleX = (width + (distScaleWidth / scaleXRatio)) / width;
@@ -281,7 +283,7 @@ export default {
 
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
-                if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
+                if (Math.abs(snapDist[0] * width) > Math.abs(snapDist[1] * height)) {
                     snapDist[1] = 0;
                 } else {
                     snapDist[0] = 0;
@@ -297,7 +299,6 @@ export default {
                     dist[1] = throttle(dist[1] * startValue[1], throttleScale!) / startValue[1];
                 }
             }
-
             if (
                 (sizeDirection[0] && !sizeDirection[1])
                 || (snapDist[0] && !snapDist[1])

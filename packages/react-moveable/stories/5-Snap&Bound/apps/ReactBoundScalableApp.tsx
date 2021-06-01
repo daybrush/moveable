@@ -13,6 +13,8 @@ export default function App(props: Record<string, any>) {
                 border: "1px solid #ccc",
             }}>
                 <div className="target" ref={targetRef} style={{
+                    width: "200px",
+                    height: "150px",
                     transform: "scale(1.5, 1)",
                 }}>Target</div>
                 <Moveable
