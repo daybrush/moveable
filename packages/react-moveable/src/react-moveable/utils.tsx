@@ -1307,7 +1307,7 @@ export function getTinyDist(v: number) {
     return Math.abs(v) <= TINY_NUM ? 0 : v;
 }
 
-export function directionCondition(e: any) {
+export function directionCondition(moveable: any, e: any) {
     if (e.isRequest) {
         if (e.requestAble === "resizable" || e.requestAble === "scalable") {
             return e.parentDirection!;

@@ -607,7 +607,7 @@ export default {
             ...lines,
         ];
     },
-    dragControlCondition(e: any) {
+    dragControlCondition(moveable: any, e: any) {
         return e.inputEvent && (e.inputEvent.target.getAttribute("class") || "").indexOf("clip") > -1;
     },
     dragStart(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {

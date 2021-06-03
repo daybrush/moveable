@@ -34,7 +34,7 @@ export const MOVEABLE_ABLES = /*#__PURE__*/[
 ] as const;
 
 export const MOVEABLE_EVENTS_PROPS_MAP = /*#__PURE__*/MOVEABLE_ABLES.reduce((current, able) => {
-    return {...current, ...able.events};
+    return {...current, ...("events" in able ? able.events : {})};
 }, {}) as UnionToIntersection<typeof MOVEABLE_ABLES[number]["events"]>;
 export const MOVEABLE_PROPS_MAP = /*#__PURE__*/MOVEABLE_ABLES.reduce((current, able) => {
     return {...current, ...able.props};

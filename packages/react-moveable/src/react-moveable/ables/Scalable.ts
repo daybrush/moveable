@@ -22,7 +22,7 @@ import {
 } from "../types";
 import {
     fillChildEvents,
-    triggerChildAble,
+    triggerChildAbles,
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus, minus } from "@scena/matrix";
@@ -418,7 +418,7 @@ export default {
 
         datas.moveableScale = moveable.scale;
 
-        const events = triggerChildAble(
+        const events = triggerChildAbles(
             moveable,
             this,
             "dragControlStart",
@@ -465,7 +465,7 @@ export default {
 
         const fixedPosition = datas.fixedPosition;
 
-        const events = triggerChildAble(
+        const events = triggerChildAbles(
             moveable,
             this,
             "dragControl",
@@ -506,7 +506,7 @@ export default {
             return;
         }
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAbles(moveable, this, "dragControlEnd", e);
 
         const nextParams = fillEndParams<OnScaleGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,

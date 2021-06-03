@@ -10,7 +10,7 @@ import {
     SnappableState, MoveableManagerInterface, MoveableGroupInterface, DraggableProps,
     OnDragStart,
 } from "../types";
-import { triggerChildAble } from "../groupUtils";
+import { triggerChildAbles } from "../groupUtils";
 import Draggable from "./Draggable";
 import { minus, plus, rotate as rotateMatrix } from "@scena/matrix";
 import CustomGesto from "../gesto/CustomGesto";
@@ -191,7 +191,7 @@ export function getRotationPositions(
     return [pos, rad] as const;
 }
 
-export function dragControlCondition(e: any, moveable: MoveableManagerInterface<RotatableProps>) {
+export function dragControlCondition(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
     if (e.isRequest) {
         return e.requestAble === "rotatable";
     }
@@ -515,7 +515,7 @@ export default {
 
         params.set(datas.beforeDirection * moveable.rotation);
 
-        const events = triggerChildAble(
+        const events = triggerChildAbles(
             moveable,
             this,
             "dragControlStart",
@@ -559,7 +559,7 @@ export default {
         const deg = params.beforeDelta;
         const rad = deg / 180 * Math.PI;
 
-        const events = triggerChildAble(
+        const events = triggerChildAbles(
             moveable,
             this,
             "dragControl",
@@ -596,7 +596,7 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAbles(moveable, this, "dragControlEnd", e);
 
         const nextParams = fillEndParams<OnRotateGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,

@@ -2,7 +2,7 @@ import { Able, MoveableGroupInterface, MoveableManagerInterface } from "./types"
 import CustomGesto, { setCustomDrag } from "./gesto/CustomGesto";
 
 export function fillChildEvents(
-    moveable: MoveableGroupInterface,
+    moveable: MoveableGroupInterface<any, any>,
     name: string,
     e: any,
 ): any[] {
@@ -66,7 +66,7 @@ export function triggerChildGesto(
     }
     return childs;
 }
-export function triggerChildAble<T extends Able>(
+export function triggerChildAbles<T extends Able>(
     moveable: MoveableGroupInterface<any, any>,
     able: T,
     type: keyof T & string,

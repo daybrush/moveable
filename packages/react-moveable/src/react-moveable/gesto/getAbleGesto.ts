@@ -40,7 +40,7 @@ export function triggerAble(
     if (eventType === "" && !isAfter && !isRequest) {
         convertDragDist(moveable.state, e);
     }
-    const isGroup = eventAffix.indexOf("Group") > -1;
+    // const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType].slice(), Renderable];
 
     if (isRequest) {
@@ -73,7 +73,7 @@ export function triggerAble(
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
         if (isStart) {
-            nextDatas.isEventStart = !able[conditionName] || able[conditionName](e, moveable);
+            nextDatas.isEventStart = !able[conditionName] || able[conditionName](moveable, e);
         }
 
         if (nextDatas.isEventStart) {
@@ -103,11 +103,7 @@ export function triggerAble(
         return false;
     }
     if ((!isStart && isUpdate && !requestInstant) || isEnd) {
-        if (results.some(able => able.updateRect) && !isGroup) {
-            moveable.updateRect(eventType, false, false);
-        } else {
-            moveable.updateRect(eventType, true, false);
-        }
+        moveable.updateRect(eventType, true, false);
         moveable.forceUpdate();
     }
     if (!isStart && !isEnd && !isAfter && isUpdate && !requestInstant) {

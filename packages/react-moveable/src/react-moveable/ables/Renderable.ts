@@ -6,7 +6,7 @@ import {
 import { triggerEvent, fillParams } from "../utils";
 
 export default {
-    name: "Renderable",
+    name: "renderable",
     props: {
     } as const,
     events: {

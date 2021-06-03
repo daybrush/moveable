@@ -33,7 +33,7 @@ export default {
     pointer-events: auto;
 }`,
     ],
-    dragControlCondition(e: any) {
+    dragControlCondition(_: any, e: any) {
         if (e.isRequest) {
             return e.requestAble === "originDraggable";
         }
@@ -141,8 +141,8 @@ export default {
             fillEndParams<OnDragOriginEnd>(moveable, e, {}));
         return true;
     },
-    dragGroupControlCondition(e: any) {
-        return this.dragControlCondition(e);
+    dragGroupControlCondition(moveable: any, e: any) {
+        return this.dragControlCondition(moveable, e);
     },
     dragGroupControlStart(moveable: MoveableGroupInterface<OriginDraggableProps>, e: any) {
         const params = this.dragControlStart(moveable, e);

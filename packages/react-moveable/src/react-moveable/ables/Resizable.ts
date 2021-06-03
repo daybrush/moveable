@@ -17,7 +17,7 @@ import {
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
     fillChildEvents,
-    triggerChildAble,
+    triggerChildAbles,
 } from "../groupUtils";
 import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus } from "@scena/matrix";
@@ -35,7 +35,6 @@ import { TINY_NUM } from "../consts";
 export default {
     name: "resizable",
     ableGroup: "size",
-    updateRect: true,
     canPinch: true,
     props: {
         resizable: Boolean,
@@ -520,7 +519,7 @@ export default {
 
             return ev;
         }
-        const events = triggerChildAble(
+        const events = triggerChildAbles(
             moveable,
             this,
             "dragControlStart",
@@ -569,7 +568,7 @@ export default {
         ];
         const fixedPosition = datas.fixedPosition;
 
-        const events = triggerChildAble(
+        const events = triggerChildAbles(
             moveable,
             this,
             "dragControl",
@@ -611,7 +610,7 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAble(moveable, this, "dragControlEnd", e);
+        triggerChildAbles(moveable, this, "dragControlEnd", e);
 
         const nextParams: OnResizeGroupEnd = fillEndParams<OnResizeGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,

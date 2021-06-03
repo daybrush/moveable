@@ -96,7 +96,7 @@ export default {
             ...renderAllDirections(moveable, React),
         ];
     },
-    dragControlCondition(e: any) {
+    dragControlCondition(moveable: any, e: any) {
         if (e.isRequest) {
             return false;
         }

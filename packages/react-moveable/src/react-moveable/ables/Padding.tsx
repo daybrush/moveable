@@ -1,13 +1,9 @@
 import { prefix, makeMatrixCSS } from "../utils";
 import { Renderer, MoveableManagerInterface } from "../types";
 import { createWarpMatrix } from "@scena/matrix";
+import { makeAble } from "./AbleManager";
 
-export default {
-    name: "padding",
-    props: {
-        padding: Object,
-    } as const,
-    events: {} as const,
+export default makeAble("padding", {
     render(moveable: MoveableManagerInterface, React: Renderer): any[] {
         const props = moveable.props;
         if (props.dragArea) {
@@ -67,7 +63,7 @@ export default {
             }}></div>);
         });
     },
-};
+});
 
 /**
  * Add padding around the target to increase the drag area. (default: null)

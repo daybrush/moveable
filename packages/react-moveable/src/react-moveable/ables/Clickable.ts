@@ -4,10 +4,10 @@ import {
 } from "../types";
 import { triggerEvent, fillParams } from "../utils";
 import { findIndex } from "@daybrush/utils";
+import { makeAble } from "./AbleManager";
 
-export default {
-    name: "clickable",
-    props: {} as const,
+export default makeAble("clickable", {
+    props: {},
     events: {
         onClick: "click",
         onClickGroup: "clickGroup",
@@ -69,7 +69,7 @@ export default {
             containsTarget,
         }));
     },
-} as const;
+});
 
 /**
  * When you click on the element, the `click` event is called.

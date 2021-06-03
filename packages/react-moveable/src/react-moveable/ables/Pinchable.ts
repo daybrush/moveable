@@ -1,3 +1,4 @@
+import { makeAble } from "./AbleManager";
 import { triggerEvent, fillParams, fillEndParams } from "../utils";
 import {
     PinchableProps, Able, SnappableState,
@@ -8,12 +9,7 @@ import {
  * @namespace Moveable.Pinchable
  * @description Whether or not target can be pinched with draggable, resizable, scalable, rotatable (default: false)
  */
-export default {
-    name: "pinchable",
-    updateRect: true,
-    props: {
-        pinchable: Boolean,
-    } as const,
+export default makeAble("pinchable", {
     events: {
         onPinchStart: "pinchStart",
         onPinch: "pinch",
@@ -152,15 +148,15 @@ export default {
         return isPinch;
     },
     pinchGroupStart(moveable: MoveableGroupInterface<any, any>, e: any) {
-        return this.pinchStart(moveable, { ...e, targets: moveable.props.targets });
+        return this.pinchStart!(moveable, { ...e, targets: moveable.props.targets });
     },
     pinchGroup(moveable: MoveableGroupInterface, e: any) {
-        return this.pinch(moveable, { ...e, targets: moveable.props.targets });
+        return this.pinch!(moveable, { ...e, targets: moveable.props.targets });
     },
     pinchGroupEnd(moveable: MoveableGroupInterface, e: any) {
-        return this.pinchEnd(moveable, { ...e, targets: moveable.props.targets });
+        return this.pinchEnd!(moveable, { ...e, targets: moveable.props.targets });
     },
-};
+});
 
 /**
  * Whether or not target can be pinched with draggable, resizable, scalable, rotatable (default: false)

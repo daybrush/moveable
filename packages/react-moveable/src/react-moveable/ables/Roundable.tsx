@@ -220,7 +220,7 @@ export default {
                 }}></div>;
         });
     },
-    dragControlCondition(e: any) {
+    dragControlCondition(moveable: any, e: any) {
         if (!e.inputEvent || e.isRequest) {
             return false;
         }

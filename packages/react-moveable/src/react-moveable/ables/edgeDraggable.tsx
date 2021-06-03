@@ -2,6 +2,7 @@ import { hasClass } from "@daybrush/utils";
 import { DraggableProps, MoveableGroupInterface, MoveableManagerInterface } from "../types";
 import { prefix } from "../utils";
 import Draggable from "./Draggable";
+import { makeAble } from "./AbleManager";
 
 function getDraggableEvent(e: any) {
     let datas = e.originalDatas.draggable;
@@ -11,13 +12,8 @@ function getDraggableEvent(e: any) {
     }
     return { ...e, datas };
 }
-export default {
-    name: "edgeDraggable",
-    props: {
-        edgeDraggable: Boolean,
-    } as const,
-    events: {} as const,
-    dragControlCondition(e: any, moveable: MoveableManagerInterface<DraggableProps>) {
+export default makeAble("edgeDraggable", {
+    dragControlCondition(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         if (!moveable.props.edgeDraggable || !e.inputEvent) {
             return false;
         }
@@ -33,7 +29,7 @@ export default {
     dragControlEnd(moveable: MoveableManagerInterface<DraggableProps, any>, e: any) {
         return Draggable.dragEnd(moveable, getDraggableEvent(e));
     },
-    dragGroupControlCondition(e: any, moveable: MoveableGroupInterface<DraggableProps>) {
+    dragGroupControlCondition(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
         if (!moveable.props.edgeDraggable || !e.inputEvent) {
             return false;
         }
@@ -52,7 +48,7 @@ export default {
     unset(moveable: any) {
         moveable.state.dragInfo = null;
     },
-} as const;
+});
 
 /**
  * Whether to move by dragging the edge line (default: false)
