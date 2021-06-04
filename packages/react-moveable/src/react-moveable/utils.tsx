@@ -1378,11 +1378,11 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
     return isArray(arr) || "length" in arr;
 }
 
-export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
+export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
     target: MoveableRefType<T>, isSelector: true): T | null;
-export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
+export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
     target: MoveableRefType<T>, isSelector?: boolean): T | string | null;
-export function getRefTarget<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>(
+export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
     target: MoveableRefType<T>,
     isSelector?: boolean,
 ): any {

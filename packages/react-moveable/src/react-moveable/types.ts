@@ -241,9 +241,9 @@ export interface MoveableProps extends
 export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions, "target"> {
     target?: MoveableRefType | ArrayFormat<MoveableRefType>;
 }
-export type MoveableRefType<T extends HTMLElement | SVGElement = HTMLElement | SVGElement>
+export type MoveableRefType<T extends Element = HTMLElement | SVGElement>
     = string |(() => T) | MoveableRefObject<T> | T | null | undefined;
-export interface MoveableRefObject<T extends HTMLElement | SVGElement = HTMLElement | SVGElement> {
+export interface MoveableRefObject<T extends Element = HTMLElement | SVGElement> {
     current: T | undefined | null;
 }
 /**
@@ -1405,6 +1405,8 @@ export interface GroupableProps extends GroupableOptions {
  * @property - When you drag, make the snap in the element guidelines. (default: true)
  * @property - When you drag, make the gap snap in the element guidelines. (default: true)
  * @property - Distance value that can snap to guidelines. (default: 5)
+ * @property - If width size is greater than 0, you can vertical snap to the grid. (default: 0)
+ * @property - If height size is greater than 0, you can horizontal snap to the grid. (default: 0)
  * @property - snap distance digits (default: 0)
  * @property - Whether to show snap distance (default: true)
  * @property - Add guidelines in the horizontal direction. (default: [])
@@ -1423,10 +1425,12 @@ export interface SnappableOptions {
     snapGap?: boolean;
     snapThreshold?: number;
     snapDigit?: number;
+    snapGridWidth?: number;
+    snapGridHeight?: number;
     isDisplaySnapDigit?: boolean;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
-    elementGuidelines?: Array<ElementGuidelineValue | Element>;
+    elementGuidelines?: Array<ElementGuidelineValue | MoveableRefType<Element>>;
     bounds?: BoundType;
     innerBounds?: InnerBoundType;
     snapDistFormat?: (distance: number) => number | string;

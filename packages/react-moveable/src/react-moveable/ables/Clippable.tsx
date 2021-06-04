@@ -17,7 +17,7 @@ import {
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos,
 } from "./roundable/borderRadius";
 import { renderLine } from "../renderDirections";
-import { addGuidelines, checkSnapBoundPriority } from "./snappable/snap";
+import { getDefaultGuidelines, checkSnapBoundPriority } from "./snappable/snap";
 import { checkSnapBounds } from "./Snappable";
 
 const CLIP_DIRECTIONS = [
@@ -734,11 +734,10 @@ export default {
             dists.push([1, 0]);
         }
 
-        const guidelines = addGuidelines(
-            [],
-            width!, height!,
+        const guidelines = getDefaultGuidelines(
             (props.clipHorizontalGuidelines || []).map(v => convertUnitSize(`${v}`, height)),
             (props.clipVerticalGuidelines || []).map(v => convertUnitSize(`${v}`, width)),
+            width!, height!,
         );
         let guideXPoses: number[] = [];
         let guideYPoses: number[] = [];

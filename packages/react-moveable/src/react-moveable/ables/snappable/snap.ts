@@ -1,19 +1,20 @@
 import {
     SnapInfo, SnappableProps, SnappableState,
-    Guideline, ResizableProps, ScalableProps,
+    SnapGuideline, ResizableProps, ScalableProps,
     SnapOffsetInfo, MoveableManagerInterface, MoveableClientRect,
     ElementGuidelineValue,
 } from "../../types";
 import {
     selectValue, throttle, getAbsolutePosesByState,
     getRect, groupBy, getTinyDist, calculateInversePosition,
-    calculatePosition, roundSign,
+    calculatePosition, roundSign, getRefTarget,
 } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
 import { diff } from "@egjs/children-differ";
+import { isObject } from "@daybrush/utils";
 
 export function calculateContainerPos(
     rootMatrix: number[],
@@ -30,14 +31,14 @@ export function calculateContainerPos(
 }
 
 export function getGapGuidelines(
-    guidelines: Guideline[],
+    guidelines: SnapGuideline[],
     type: "vertical" | "horizontal",
     snapThreshold: number,
     index: number,
     [start, end]: number[],
     [otherStart, otherEnd]: number[],
 ) {
-    const totalGuidelines: Guideline[] = [];
+    const totalGuidelines: SnapGuideline[] = [];
     const otherIndex = index ? 0 : 1;
     const otherType = type === "vertical" ? "horizontal" : "vertical";
 
@@ -118,28 +119,28 @@ export function getGapGuidelines(
     });
     return totalGuidelines;
 }
-export function addGuidelines(
-    totalGuidelines: Guideline[],
+export function getDefaultGuidelines(
+    horizontalGuidelines: number[] | false,
+    verticalGuidelines: number[] | false,
     width: number,
     height: number,
-    horizontalGuidelines?: number[] | false,
-    verticalGuidelines?: number[] | false,
     clientLeft = 0,
     clientTop = 0,
-): Guideline[] {
+): SnapGuideline[] {
+    const guidelines: SnapGuideline[] = [];
     horizontalGuidelines && horizontalGuidelines!.forEach(pos => {
-        totalGuidelines.push({ type: "horizontal", pos: [0, throttle(pos - clientTop, 0.1)], size: width! });
+        guidelines.push({ type: "horizontal", pos: [0, throttle(pos - clientTop, 0.1)], size: width! });
     });
     verticalGuidelines && verticalGuidelines!.forEach(pos => {
-        totalGuidelines.push({ type: "vertical", pos: [throttle(pos - clientLeft, 0.1), 0], size: height! });
+        guidelines.push({ type: "vertical", pos: [throttle(pos - clientLeft, 0.1), 0], size: height! });
     });
-    return totalGuidelines;
+    return guidelines;
 }
 export function caculateElementGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     values: ElementGuidelineValue[],
 ) {
-    const guidelines: Guideline[] = [];
+    const guidelines: SnapGuideline[] = [];
 
     if (!values.length) {
         return guidelines;
@@ -269,9 +270,9 @@ export function caculateElementGuidelines(
 export function getElementGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     isRefresh: boolean,
-    prevGuidelines: Guideline[] = [],
+    prevGuidelines: SnapGuideline[] = [],
 ) {
-    const guidelines: Guideline[] = [];
+    const guidelines: SnapGuideline[] = [];
     const state = moveable.state;
 
     if (isRefresh && state.guidelines && state.guidelines.length) {
@@ -288,13 +289,15 @@ export function getElementGuidelines(
 
     const prevValues = state.elementGuidelineValues || [];
     const nextValues = elementGuidelines.map(el => {
-        if ("parentElement" in el) {
-            return {
-                element: el,
-            };
+        if (isObject(el) && "element" in el) {
+            return el;
         }
-        return el;
-    });
+        return {
+            element: getRefTarget(el, true)!,
+        };
+    }).filter(value => {
+        return value.element;
+    }) as ElementGuidelineValue[];
 
     state.elementGuidelineValues = nextValues;
 
@@ -324,7 +327,6 @@ export function getTotalGuidelines(
             clientTop,
         },
     } = moveable.state;
-    const props = moveable.props;
     const {
         snapHorizontal = true,
         snapVertical = true,
@@ -332,8 +334,10 @@ export function getTotalGuidelines(
         verticalGuidelines,
         horizontalGuidelines,
         snapThreshold = 5,
-    } = props;
-    const totalGuidelines: Guideline[] = [...staticGuidelines, ...getElementGuidelines(moveable, true)];
+        snapGridWidth = 0,
+        snapGridHeight = 0,
+    } = moveable.props;
+    const totalGuidelines: SnapGuideline[] = [...staticGuidelines, ...getElementGuidelines(moveable, true)];
 
     if (snapGap) {
         const { top, left, bottom, right } = getRect(getAbsolutePosesByState(moveable.state));
@@ -355,18 +359,57 @@ export function getTotalGuidelines(
             [left, right],
         ));
     }
-
-    addGuidelines(
-        totalGuidelines,
+    totalGuidelines.push(...getGridGuidelines(
+        snapGridWidth,
+        snapGridHeight,
         overflow ? containerWidth! : containerClientWidth!,
         overflow ? containerHeight! : containerClientHeight!,
-        snapHorizontal && horizontalGuidelines,
-        snapVertical && verticalGuidelines,
         clientLeft,
         clientTop,
-    );
+    ));
+
+    totalGuidelines.push(...getDefaultGuidelines(
+        (snapHorizontal && horizontalGuidelines) || false,
+        (snapVertical && verticalGuidelines) || false,
+        overflow ? containerWidth! : containerClientWidth!,
+        overflow ? containerHeight! : containerClientHeight!,
+        clientLeft,
+        clientTop,
+    ));
 
     return totalGuidelines;
+}
+export function getGridGuidelines(
+    snapGridWidth: number,
+    snapGridHeight: number,
+    containerWidth: number,
+    containerHeight: number,
+    clientLeft = 0,
+    clientTop = 0,
+): SnapGuideline[] {
+    const guidelines: SnapGuideline[] = [];
+
+    if (snapGridHeight) {
+        for (let pos = 0; pos < containerHeight; pos += snapGridHeight) {
+            guidelines.push({
+                type: "horizontal",
+                pos: [0, throttle(pos - clientTop, 0.1)],
+                size: containerWidth!,
+                hide: true,
+            });
+        }
+    }
+    if (snapGridWidth) {
+        for (let pos = 0; pos < containerWidth; pos += snapGridWidth) {
+            guidelines.push({
+                type: "vertical",
+                pos: [throttle(pos - clientLeft, 0.1), 0],
+                size: containerHeight!,
+                hide: true,
+            });
+        }
+    }
+    return guidelines;
 }
 export function checkMoveableSnapPoses(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
@@ -394,7 +437,7 @@ export function checkMoveableSnapPoses(
 }
 
 export function checkSnapPoses(
-    guidelines: Guideline[],
+    guidelines: SnapGuideline[],
     posesX: number[],
     posesY: number[],
     options: {
@@ -574,7 +617,7 @@ export function getNearestSnapGuidelineInfo(
 }
 
 function checkSnap(
-    guidelines: Guideline[],
+    guidelines: SnapGuideline[],
     targetType: "horizontal" | "vertical",
     targetPoses: number[],
     {

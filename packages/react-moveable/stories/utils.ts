@@ -68,6 +68,11 @@ export function convertAngularTemplate(text: string) {
 
     return convertTemplate(previewText, /([a-zA-Z_0-9]+) = ([a-zA-Z_0-9]+);/g, true);
 }
+export function convertReactTemplate(text: string) {
+    const previewText = text.replace(/@\//g, "");
+
+    return convertTemplate(previewText);
+}
 
 export function convertTemplate(text: string, regex = /props\.([a-zA-Z0-9_]+)/g, includePrefix = false) {
     const previewText = text.replace(/App\([^)]*\)/g, "App()");
