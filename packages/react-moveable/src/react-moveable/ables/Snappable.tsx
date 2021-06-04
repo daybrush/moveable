@@ -1892,7 +1892,6 @@ export default {
             true
         );
 
-        console.log(gapVerticalGuidelines, gapHorizontalGuidelines);
         return [
             ...renderGapGuidelines(
                 moveable,

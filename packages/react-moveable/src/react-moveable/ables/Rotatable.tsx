@@ -25,7 +25,7 @@ import {
     resolveTransformEvent,
     getTransformDirection,
 } from "../gesto/GestoUtils";
-import { renderControls } from "../renderDirections";
+import { renderDirectionControls } from "../renderDirections";
 
 /**
  * @namespace Rotatable
@@ -290,7 +290,7 @@ export default {
             );
         }
         if (renderDirections) {
-            jsxs.push(...renderControls(moveable, [], React));
+            jsxs.push(...renderDirectionControls(moveable, [], React, "rotation-control"));
         }
 
 

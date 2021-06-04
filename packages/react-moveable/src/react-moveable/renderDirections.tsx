@@ -3,10 +3,11 @@ import { Renderer, MoveableManagerInterface, RenderDirections } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
 import { IObject, getRad } from "@daybrush/utils";
 
-export function renderControls(
+export function renderDirectionControls(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     defaultDirections: string[],
     React: Renderer,
+    additionalClassName: string = "",
 ): any[] {
     const {
         renderPoses,
@@ -39,7 +40,7 @@ export function renderControls(
         const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
         return (
-            <div className={prefix("control", "direction", dir)}
+            <div className={prefix("control", "direction", dir, additionalClassName)}
                 data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
                 style={getControlTransform(radRotation, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
         );
@@ -62,11 +63,11 @@ export function renderAllDirections(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     React: Renderer,
 ) {
-    return renderControls(moveable, DIRECTIONS, React);
+    return renderDirectionControls(moveable, DIRECTIONS, React);
 }
 export function renderDiagonalDirections(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     React: Renderer,
 ): any[] {
-    return renderControls(moveable, ["nw", "ne", "sw", "se"], React);
+    return renderDirectionControls(moveable, ["nw", "ne", "sw", "se"], React);
 }
