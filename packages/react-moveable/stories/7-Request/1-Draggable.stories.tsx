@@ -1,9 +1,9 @@
 import * as React from "react";
 import Moveable from "@/react-moveable";
-import { DEFAULT_REACT_CODESANDBOX, previewTemplate } from "storybook-addon-preview";
+import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
-import { convertPath, convertTemplate, makeArgs, makeArgType } from "../utils";
+import { convertPath, convertReactTemplate, makeArgs, makeArgType } from "../utils";
 import App from "./apps/DraggableApp";
 import RawApp from "!!raw-loader!./apps/DraggableApp";
 import { DEFAULT_DRAGGABLE_CONTROLS } from "../controls/default";
@@ -30,7 +30,7 @@ DraggableTemplate.parameters = {
     preview: [
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawApp)),
+            template: convertReactTemplate(convertPath(RawApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
             language: "tsx",
         },

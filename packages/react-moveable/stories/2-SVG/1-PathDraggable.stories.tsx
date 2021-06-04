@@ -1,7 +1,7 @@
 import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
-import { convertPath, convertTemplate, makeArgs } from "../utils";
+import { convertPath, convertReactTemplate, makeArgs } from "../utils";
 import App from "./apps/ReactPathDraggableApp";
 import RawReactApp from "!!raw-loader!./apps/ReactPathDraggableApp";
 import {
@@ -24,7 +24,7 @@ PathDraggableTemplate.parameters = {
     preview: [
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawReactApp)),
+            template: convertReactTemplate(convertPath(RawReactApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
             language: "tsx",
         },

@@ -2,30 +2,28 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertReactTemplate, makeArgs } from "../utils";
-import App from "./apps/ReactDraggableApp";
-import RawReactApp from "!!raw-loader!./apps/ReactDraggableApp";
+import App from "./apps/ReactBoundScalableApp";
+import RawReactApp from "!!raw-loader!./apps/ReactBoundScalableApp";
 import {
-    DEFAULT_DRAGGABLE_CONTROLS, SCALE_CONTROLS,
+    DEFAULT_BOUNDS_CONTROLS,
+    DEFAULT_DRAGGABLE_CONTROLS,
+    DEFAULT_SCALABLE_CONTROLS,
 } from "../controls/default";
 
+export const BoundTemplate = App as any;
 
-export default {
-    title: "Basic",
-};
-
-export const DraggableTemplate = App as any;
-
-DraggableTemplate.storyName = "Draggable";
-DraggableTemplate.argTypes = {
-    ...SCALE_CONTROLS,
+BoundTemplate.storyName = "Bound (Draggable & Scalable)";
+BoundTemplate.argTypes = {
     ...DEFAULT_DRAGGABLE_CONTROLS,
+    ...DEFAULT_SCALABLE_CONTROLS,
+    ...DEFAULT_BOUNDS_CONTROLS,
 };
-DraggableTemplate.args = {
-    ...makeArgs(DraggableTemplate.argTypes),
+BoundTemplate.args = {
+    ...makeArgs(BoundTemplate.argTypes),
 };
 
 
-DraggableTemplate.parameters = {
+BoundTemplate.parameters = {
     preview: [
         {
             tab: "React",

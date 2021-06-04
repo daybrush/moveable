@@ -4,7 +4,7 @@ import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
 import App from "./apps/ScrollableApp";
 import RawApp from "!!raw-loader!./apps/ScrollableApp";
 import SCROLL_CSS_TEMPLATE from "!!raw-loader!./scroll.css";
-import { convertTemplate, convertPath } from "../utils";
+import { convertReactTemplate, convertPath } from "../utils";
 
 export const TreeShakingTemplate = App as any;
 
@@ -22,7 +22,7 @@ TreeShakingTemplate.parameters = {
         },
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawApp)),
+            template: convertReactTemplate(convertPath(RawApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "moveable-helper", "react-infinite-viewer"]),
             language: "tsx",
         },

@@ -1,7 +1,7 @@
 import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../templates/default.css";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
-import { convertTemplate, convertPath } from "../utils";
+import { convertReactTemplate, convertPath } from "../utils";
 import App from "./apps/TreeShakingApp";
 import RawApp from "!!raw-loader!./apps/TreeShakingApp";
 
@@ -23,7 +23,7 @@ TreeShakingTemplate.parameters = {
         },
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawApp)),
+            template: convertReactTemplate(convertPath(RawApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "moveable-helper"]),
             language: "tsx",
         },

@@ -3,7 +3,7 @@ import "../templates/default.css";
 import App from "./apps/DimensionViewableApp";
 import RawApp from "!!raw-loader!./apps/DimensionViewableApp";
 import { DEFAULT_CSS_TEMPLATE } from "@/stories/templates/default";
-import { convertTemplate, convertPath } from "../utils";
+import { convertReactTemplate, convertPath } from "../utils";
 
 
 export const DimensionViewableTemplate = App as any;
@@ -21,7 +21,7 @@ DimensionViewableTemplate.parameters = {
         },
         {
             tab: "React",
-            template: convertTemplate(convertPath(RawApp)),
+            template: convertReactTemplate(convertPath(RawApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "moveable-helper"]),
             language: "tsx",
         },

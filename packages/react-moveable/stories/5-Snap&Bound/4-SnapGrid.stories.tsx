@@ -2,30 +2,28 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertReactTemplate, makeArgs } from "../utils";
-import App from "./apps/ReactDraggableApp";
-import RawReactApp from "!!raw-loader!./apps/ReactDraggableApp";
+import App from "./apps/ReactSnapGridApp";
+import RawReactApp from "!!raw-loader!./apps/ReactSnapGridApp";
 import {
-    DEFAULT_DRAGGABLE_CONTROLS, SCALE_CONTROLS,
+    DEFAULT_SNAP_GRID_CONTROLS,
+    DEFAULT_DRAGGABLE_CONTROLS,
+    DEFAULT_SCALABLE_CONTROLS,
 } from "../controls/default";
 
+export const SnapGridTemplate = App as any;
 
-export default {
-    title: "Basic",
-};
-
-export const DraggableTemplate = App as any;
-
-DraggableTemplate.storyName = "Draggable";
-DraggableTemplate.argTypes = {
-    ...SCALE_CONTROLS,
+SnapGridTemplate.storyName = "Snap Grid";
+SnapGridTemplate.argTypes = {
     ...DEFAULT_DRAGGABLE_CONTROLS,
+    ...DEFAULT_SCALABLE_CONTROLS,
+    ...DEFAULT_SNAP_GRID_CONTROLS,
 };
-DraggableTemplate.args = {
-    ...makeArgs(DraggableTemplate.argTypes),
+SnapGridTemplate.args = {
+    ...makeArgs(SnapGridTemplate.argTypes),
 };
 
 
-DraggableTemplate.parameters = {
+SnapGridTemplate.parameters = {
     preview: [
         {
             tab: "React",
