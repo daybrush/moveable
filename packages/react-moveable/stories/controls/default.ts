@@ -207,6 +207,11 @@ export const DEFAULT_SNAPPABLE_ELEMENTS_CONTROLS = {
         description: makeLink("Snappable", "isDisplaySnapDigit"),
         defaultValue: true,
     }),
+    isDisplayInnerSnapDigit: makeArgType({
+        type: "boolean",
+        description: makeLink("Snappable", "isDisplayInnerSnapDigit"),
+        defaultValue: false,
+    }),
     snapDigit: makeArgType({
         type: "number",
         description: makeLink("Snappable", "snapDigit"),

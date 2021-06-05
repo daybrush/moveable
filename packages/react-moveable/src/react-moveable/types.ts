@@ -1282,6 +1282,7 @@ export interface ScalableProps extends ScalableOptions, EventInterface<ScalableE
  */
 export interface GapGuideline extends SnapGuideline {
     renderPos: number[];
+    inner?: boolean;
 }
 
 /**
@@ -1409,6 +1410,7 @@ export interface GroupableProps extends GroupableOptions {
  * @property - If height size is greater than 0, you can horizontal snap to the grid. (default: 0)
  * @property - snap distance digits (default: 0)
  * @property - Whether to show snap distance (default: true)
+ * @property - Whether to show element inner snap distance (default: false)
  * @property - Add guidelines in the horizontal direction. (default: [])
  * @property - Add guidelines in the vertical direction. (default: [])
  * @property - Add guidelines for the element. (default: [])
@@ -1428,6 +1430,7 @@ export interface SnappableOptions {
     snapGridWidth?: number;
     snapGridHeight?: number;
     isDisplaySnapDigit?: boolean;
+    isDisplayInnerSnapDigit?: boolean;
     horizontalGuidelines?: number[];
     verticalGuidelines?: number[];
     elementGuidelines?: Array<ElementGuidelineValue | MoveableRefType<Element>>;
