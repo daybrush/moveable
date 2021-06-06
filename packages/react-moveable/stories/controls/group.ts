@@ -27,3 +27,11 @@ export const DEFAULT_RESIZABLE_GROUP_CONTROLS = {
         defaultValue: true,
     }),
 };
+
+export const DEFAULT_SCALABLE_GROUP_CONTROLS = {
+    keepRatio: makeArgType({
+        type: "boolean",
+        description: makeLink("Scalable", "keepRatio"),
+        defaultValue: true,
+    }),
+};

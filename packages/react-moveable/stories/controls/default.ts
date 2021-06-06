@@ -139,23 +139,23 @@ export const DEFAULT_ROTATABLE_CONTROLS = {
                 "right-top",
                 "left-bottom",
                 "right-bottom",
+                "none",
             ],
         },
     }),
 };
-// snapCenter: Boolean,
-// snapHorizontal: Boolean,
-// snapVertical: Boolean,
-// snapElement: Boolean,
-// snapGap: Boolean,
-// snapGridWidth: Number,
-// snapGridHeight: Number,
-// isDisplaySnapDigit: Boolean,
-// snapDigit: Number,
-// snapThreshold: Number,
-// horizontalGuidelines: Array,
-// verticalGuidelines: Array,
-// elementGuidelines: Array,
+export const DEFAULT_WARPABLE_CONTROLS = {
+    warpable: makeArgType({
+        type: "boolean",
+        description: makeLink("Warpable", "warpable"),
+        defaultValue: true,
+    }),
+    renderDirections: makeArgType({
+        type: "array",
+        description: makeLink("Warpable", "renderDirections"),
+        defaultValue: ["nw", "n", "ne", "w", "e", "sw", "s", "se"],
+    }),
+};
 
 export const DEFAULT_SNAPPABLE_CONTROLS = {
     snappable: makeArgType({
@@ -257,5 +257,20 @@ export const DEFAULT_INNER_BOUNDS_CONTROLS = {
         type: "object",
         description: makeLink("Snappable", "bounds"),
         defaultValue: { left: 0, top: 0, right: 500, bottom: 500 },
+    }),
+};
+
+
+
+export const DEFAULT_ORIGIN_DRAGGABLE_CONTROLS = {
+    originDraggable: makeArgType({
+        type: "boolean",
+        description: makeLink("OriginDraggable", "originDraggable"),
+        defaultValue: true,
+    }),
+    originRelative: makeArgType({
+        type: "boolean",
+        description: makeLink("OriginDraggable", "originRelative"),
+        defaultValue: true,
     }),
 };

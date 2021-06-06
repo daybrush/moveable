@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createElement } from "react";
 import { PREFIX } from "./consts";
 import {
     prefix,
@@ -699,7 +700,7 @@ export default class MoveableManager<T = {}>
         const props = this.props as any;
         const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
         const Renderer = {
-            createElement: React.createElement,
+            createElement,
         };
 
         return groupByMap(flat<any>(

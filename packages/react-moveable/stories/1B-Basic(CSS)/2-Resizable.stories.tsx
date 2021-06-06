@@ -2,30 +2,26 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertReactTemplate, makeArgs } from "../utils";
-import App from "./apps/ReactDraggableApp";
-import RawReactApp from "!!raw-loader!./apps/ReactDraggableApp";
+import App from "./apps/ReactResizableApp";
+import RawReactApp from "!!raw-loader!./apps/ReactResizableApp";
 import {
-    DEFAULT_DRAGGABLE_CONTROLS, SCALE_CONTROLS,
+    DEFAULT_RESIZABLE_CONTROLS,
 } from "../controls/default";
 
 
-export default {
-    title: "Basic",
-};
 
-export const DraggableTemplate = App as any;
+export const ResizableTemplate = App as any;
 
-DraggableTemplate.storyName = "Draggable";
-DraggableTemplate.argTypes = {
-    ...SCALE_CONTROLS,
-    ...DEFAULT_DRAGGABLE_CONTROLS,
+ResizableTemplate.storyName = "Resizable";
+ResizableTemplate.argTypes = {
+    ...DEFAULT_RESIZABLE_CONTROLS,
 };
-DraggableTemplate.args = {
-    ...makeArgs(DraggableTemplate.argTypes),
+ResizableTemplate.args = {
+    ...makeArgs(ResizableTemplate.argTypes),
 };
 
 
-DraggableTemplate.parameters = {
+ResizableTemplate.parameters = {
     preview: [
         {
             tab: "React",

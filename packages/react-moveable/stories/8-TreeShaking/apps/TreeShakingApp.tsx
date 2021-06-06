@@ -18,6 +18,7 @@ export default function App() {
     });
     const targetRef = React.useRef<HTMLDivElement>(null);
     return <div className="container">
+        <p>Use only Draggable, Resizable, Rotatable (30% size reduction)</p>
         <div className="target" ref={targetRef}>Target</div>
         <Moveable
             target={targetRef}

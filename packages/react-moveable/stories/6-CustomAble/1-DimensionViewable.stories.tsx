@@ -15,15 +15,15 @@ DimensionViewableTemplate.args = {};
 DimensionViewableTemplate.parameters = {
     preview: [
         {
-            tab: "CSS",
-            template: DEFAULT_CSS_TEMPLATE,
-            language: "css",
-        },
-        {
             tab: "React",
             template: convertReactTemplate(convertPath(RawApp)),
             codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "moveable-helper"]),
             language: "tsx",
+        },
+        {
+            tab: "CSS",
+            template: DEFAULT_CSS_TEMPLATE,
+            language: "css",
         },
     ],
 };

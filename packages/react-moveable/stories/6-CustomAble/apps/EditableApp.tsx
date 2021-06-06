@@ -1,6 +1,5 @@
 import * as React from "react";
 import Moveable, { MoveableManagerInterface, Renderer } from "@/react-moveable";
-import MoveableHelper from "moveable-helper";
 
 const Editable = {
     name: "editable",
@@ -46,9 +45,6 @@ const Editable = {
 } as const;
 
 export default function App() {
-    const [helper] = React.useState(() => {
-        return new MoveableHelper();
-    });
     const targetRef = React.useRef<HTMLDivElement>(null);
     return <div className="container">
         <div className="target" ref={targetRef}>Target</div>
@@ -61,12 +57,17 @@ export default function App() {
             draggable={true}
             resizable={true}
             rotatable={true}
-            onDragStart={helper.onDragStart}
-            onDrag={helper.onDrag}
-            onResizeStart={helper.onResizeStart}
-            onResize={helper.onResize}
-            onRotateStart={helper.onRotateStart}
-            onRotate={helper.onRotate}
+            onDrag={e => {
+                e.target.style.transform = e.transform;
+            }}
+            onResize={e => {
+                e.target.style.width = `${e.width}px`;
+                e.target.style.height = `${e.height}px`;
+                e.target.style.transform = e.drag.transform;
+            }}
+            onRotate={e => {
+                e.target.style.transform = e.drag.transform;
+            }}
         />
     </div>;
 }

@@ -21,7 +21,7 @@ import {
 import {
     MoveableManagerState, Able, MoveableClientRect,
     MoveableProps, ControlPose, ArrayFormat, MoveableRefType,
-    ExcludeKeys, MatrixInfo,
+    MatrixInfo, ExcludeEndParams, ExcludeParams,
 } from "./types";
 import { parse, toMat } from "css-to-mat";
 
@@ -1040,8 +1040,7 @@ export function unset(self: any, name: string) {
         self[name] = null;
     }
 }
-type ExcludeParams<T> = ExcludeKeys<T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">;
-type ExcludeEndParams<T> = ExcludeKeys<T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget" | "lastEvent" | "isDrag" | "isDouble">;
+
 
 export function fillParams<T extends IObject<any>>(
     moveable: any,

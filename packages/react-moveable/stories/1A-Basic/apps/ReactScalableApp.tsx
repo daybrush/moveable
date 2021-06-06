@@ -16,9 +16,10 @@ export default function App(props: Record<string, any>) {
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
-                    scalable={true}
+                    scalable={props.scalable}
                     keepRatio={props.keepRatio}
                     throttleScale={props.throttleScale}
+                    renderDirections={props.renderDirections}
                     onScaleStart={e => {
                         e.set(scale);
                         e.dragStart && e.dragStart.set(translate);

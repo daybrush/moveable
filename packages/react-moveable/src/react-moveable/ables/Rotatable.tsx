@@ -290,7 +290,7 @@ export default {
             );
         }
         if (renderDirections) {
-            jsxs.push(...renderDirectionControls(moveable, [], React, "rotation-control"));
+            jsxs.push(...renderDirectionControls(moveable, [], React));
         }
 
 

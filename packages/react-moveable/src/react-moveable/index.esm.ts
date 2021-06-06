@@ -53,5 +53,7 @@ export {
 export {
     default as Pinchable,
 } from "./ables/Pinchable";
-
+export {
+    makeAble,
+} from "./ables/AbleManager";
 export default Moveable;

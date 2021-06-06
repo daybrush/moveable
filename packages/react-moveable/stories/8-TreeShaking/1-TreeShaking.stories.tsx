@@ -9,7 +9,7 @@ import RawApp from "!!raw-loader!./apps/TreeShakingApp";
 
 export const TreeShakingTemplate = App as any;
 
-TreeShakingTemplate.storyName = "Use only Draggable, Resizable, Rotatable(30% size reduction)";
+TreeShakingTemplate.storyName = "Use only Draggable, Resizable, Rotatable";
 TreeShakingTemplate.argTypes = {};
 TreeShakingTemplate.args = {};
 

@@ -10,12 +10,19 @@ export default function App(props: Record<string, any>) {
     return (
         <div className="root">
             <div className="container">
-                <div className="target" ref={targetRef}>Target</div>
+                <div className="target" ref={targetRef} style={{
+                    maxWidth: props.maxWidth,
+                    maxHeight: props.maxHeight,
+                    minWidth: props.minWidth,
+                    minHeight: props.minHeight,
+                }}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
                     resizable={props.resizable}
                     keepRatio={props.keepRatio}
+                    throttleResize={props.throttleResize}
+                    renderDirections={props.renderDirections}
                     onResizeStart={e => {
                         e.dragStart && e.dragStart.set(translate);
                     }}

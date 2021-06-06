@@ -242,7 +242,7 @@ export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions
     target?: MoveableRefType | ArrayFormat<MoveableRefType>;
 }
 export type MoveableRefType<T extends Element = HTMLElement | SVGElement>
-    = string |(() => T) | MoveableRefObject<T> | T | null | undefined;
+    = string | (() => T) | MoveableRefObject<T> | T | null | undefined;
 export interface MoveableRefObject<T extends Element = HTMLElement | SVGElement> {
     current: T | undefined | null;
 }
@@ -1789,3 +1789,10 @@ export interface SnappableRenderType {
     type: "snap" | "bounds";
     pos: number;
 }
+
+export type ExcludeParams<T>
+    = ExcludeKeys<T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">;
+export type ExcludeEndParams<T>
+    = ExcludeKeys<ExcludeParams<T>, "lastEvent" | "isDrag" | "isDouble">;
+export type DefaultProps<Name extends string, AbleObject extends Partial<Able<any, any>>>
+    = AbleObject extends { props: {} } ? AbleObject["props"] : { readonly [key in Name]: BooleanConstructor; };
