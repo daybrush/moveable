@@ -23,7 +23,7 @@ import {
     MoveableProps, ControlPose, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
 } from "./types";
-import { parse, toMat } from "css-to-mat";
+import { parse, toMat, calculateMatrixDist } from "css-to-mat";
 
 export function round(num: number) {
     return Math.round(num);
@@ -1457,4 +1457,24 @@ export function getAbsoluteRotation(pos1: number[], pos2: number[], direction: n
     deg = deg >= 0 ? deg : 360 + deg;
 
     return deg;
+}
+
+
+export function getDragDistByState(state: MoveableManagerState, dist: number[]) {
+    const {
+        beforeMatrix,
+        is3d,
+    } = state;
+    const n = is3d ? 4 : 3;
+
+    let inverseMatrix = invert(beforeMatrix, n);
+
+    if (!is3d) {
+        inverseMatrix = convertDimension(inverseMatrix, 3, 4);
+    }
+    inverseMatrix[12] = 0;
+    inverseMatrix[13] = 0;
+    inverseMatrix[14] = 0;
+
+    return calculateMatrixDist(inverseMatrix, dist);
 }

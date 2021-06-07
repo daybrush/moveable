@@ -33,6 +33,9 @@ import {
     triggerEvent,
     calculateInversePosition,
     directionCondition,
+    getClientRect,
+    getRefTarget,
+    getDragDistByState,
 } from "../utils";
 import { IObject, find, findIndex, hasClass, getRad, getDist } from "@daybrush/utils";
 import {
@@ -55,6 +58,7 @@ import {
     checkBoundPoses,
     checkRotateBounds,
     checkBoundKeepRatio,
+    getBounds,
 } from "./snappable/bounds";
 import {
     checkSnaps,
@@ -88,6 +92,41 @@ export function snapStart(
     if (state.guidelines && state.guidelines.length) {
         return;
     }
+    const container = moveable.state.container;
+    const snapContainer = moveable.props.snapContainer || container!;
+
+    const containerClientRect = state.containerClientRect;
+    let snapContainerRect = state.containerClientRect;
+    const snapOffset = {
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0,
+    };
+
+    if (container !== snapContainer) {
+        const snapContainerTarget = getRefTarget(snapContainer, true);
+
+        if (snapContainerTarget) {
+            snapContainerRect = getClientRect(snapContainerTarget, true);
+            const offset1 = getDragDistByState(state, [
+                snapContainerRect.left - containerClientRect.left,
+                snapContainerRect.top - containerClientRect.top,
+            ]);
+            const offset2 = getDragDistByState(state, [
+                snapContainerRect.right - containerClientRect.right,
+                snapContainerRect.bottom - containerClientRect.bottom,
+            ]);
+            snapOffset.left = offset1[0];
+            snapOffset.top = offset1[1];
+            snapOffset.right = offset2[0];
+            snapOffset.bottom = offset2[1];
+
+        }
+    }
+
+    state.snapOffset = snapOffset;
+    state.snapContainerRect = snapContainerRect;
     state.elementGuidelineValues = [];
     state.staticGuidelines = getElementGuidelines(moveable, false);
     state.guidelines = getTotalGuidelines(moveable);
@@ -247,7 +286,7 @@ export function checkMoveableSnapBounds(
         horizontal: horizontalBoundInfos,
         vertical: verticalBoundInfos,
     } = checkBoundPoses(
-        moveable.props.bounds,
+        getBounds(moveable),
         boundPoses.map((pos) => pos[0]),
         boundPoses.map((pos) => pos[1])
     );
@@ -1372,7 +1411,7 @@ function addBoundGuidelines(
         vertical: verticalBoundInfos,
         horizontal: horizontalBoundInfos,
     } = checkBoundPoses(
-        externalBounds || moveable.props.bounds,
+        getBounds(moveable, externalBounds),
         verticalPoses,
         horizontalPoses
     );
@@ -1437,6 +1476,7 @@ export default {
     name: "snappable",
     props: {
         snappable: [Boolean, Array],
+        snapContainer: Object,
         snapCenter: Boolean,
         snapHorizontal: Boolean,
         snapVertical: Boolean,
@@ -1598,7 +1638,7 @@ export default {
                     horizontal: { posInfos: horizontalPosInfos },
                 } = snapInfo;
                 verticalSnapPoses.push(
-                    ...verticalPosInfos.filter(({ guidelineInfos }) =>{
+                    ...verticalPosInfos.filter(({ guidelineInfos }) => {
                         return guidelineInfos.some(({ guideline }) => !guideline.hide);
                     }).map(
                         (posInfo) => ({
@@ -1608,7 +1648,7 @@ export default {
                     )
                 );
                 horizontalSnapPoses.push(
-                    ...horizontalPosInfos.filter(({ guidelineInfos }) =>{
+                    ...horizontalPosInfos.filter(({ guidelineInfos }) => {
                         return guidelineInfos.some(({ guideline }) => !guideline.hide);
                     }).map(
                         (posInfo) => ({
@@ -1885,6 +1925,16 @@ export default {
  * const moveable = new Moveable(document.body);
  *
  * moveable.snappable = true;
+ */
+/**
+ *  A snap container that is the basis for snap, bounds, and innerBounds. (default: null = container)
+ * @name Moveable.Snappable#snapContainer
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.querySelector(".container"));
+ *
+ * moveable.snapContainer = document.body;
  */
 /**
  * When you drag, make the snap in the center of the target. (default: false)

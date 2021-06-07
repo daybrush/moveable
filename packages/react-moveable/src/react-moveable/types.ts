@@ -1400,6 +1400,7 @@ export interface GroupableProps extends GroupableOptions {
  * @typedef
  * @memberof Moveable.Snappable
  * @property - Whether or not target can be snapped to the guideline. (default: false)
+ * @property - A snap container that is the basis for snap, bounds, and innerBounds. (default: null = container)
  * @property - When you drag, make the snap in the center of the target. (default: false)
  * @property - When you drag, make the snap in the horizontal guidelines. (default: true)
  * @property - When you drag, make the snap in the vertical guidelines. (default: true)
@@ -1420,6 +1421,7 @@ export interface GroupableProps extends GroupableOptions {
  */
 export interface SnappableOptions {
     snappable?: boolean | string[];
+    snapContainer?: MoveableRefType<HTMLElement>;
     snapCenter?: boolean;
     snapHorizontal?: boolean;
     snapVertical?: boolean;
@@ -1491,8 +1493,10 @@ export interface InnerBoundType {
 /**
  * @typedef
  * @memberof Moveable.Snappable
+ * @property - If position is css, right and bottom are calculated as css right and css bottom of container. (default: "client")
  */
 export interface BoundType {
+    position?: "client" | "css";
     left?: number;
     top?: number;
     right?: number;
@@ -1500,11 +1504,12 @@ export interface BoundType {
 }
 export interface SnappableState {
     staticGuidelines: SnapGuideline[];
+    snapContainerRect: MoveableClientRect;
     elementGuidelineValues: ElementGuidelineValue[];
     guidelines: SnapGuideline[];
+    snapOffset: { left: number, top: number, bottom: number, right: number }
     snapRenderInfo?: SnapRenderInfo | null;
     enableSnap: boolean;
-
 }
 export interface SnapRenderInfo {
     direction?: number[];

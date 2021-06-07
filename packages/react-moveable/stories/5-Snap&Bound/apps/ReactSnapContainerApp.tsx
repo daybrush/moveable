@@ -6,15 +6,22 @@ export default function App(props: Record<string, any>) {
     const moveableRef = React.useRef<Moveable>(null);
 
     return (
-        <div className="root">
+        <div className="root" style={{
+            position: "relative",
+            border: "1px solid black",
+        }}>
             <div className="container" style={{
+                position: "relative",
+                top: "50px",
+                left: "50px",
+                border: "1px solid red",
                 width: "500px",
                 height: "500px",
-                border: "1px solid #ccc",
             }}>
                 <div className="target" ref={targetRef} style={{
                     width: "200px",
                     height: "150px",
+                    transform: "scale(1.5, 1)",
                 }}>Target</div>
                 <Moveable
                     ref={moveableRef}
@@ -34,6 +41,8 @@ export default function App(props: Record<string, any>) {
                     snapThreshold={props.snapThreshold}
                     verticalGuidelines={props.verticalGuidelines}
                     horizontalGuidelines={props.horizontalGuidelines}
+                    snapContainer={".root"}
+                    bounds={props.bounds}
                     onBeforeRenderStart={e => {
                         e.setTransform(e.target.style.transform);
                     }}

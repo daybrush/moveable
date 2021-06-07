@@ -1,5 +1,8 @@
 import { getRad } from "@daybrush/utils";
-import { BoundInfo, SnappableProps, BoundType, RotatableProps, MoveableManagerInterface } from "../../types";
+import {
+    BoundInfo, SnappableProps, BoundType,
+    RotatableProps, MoveableManagerInterface, SnappableState,
+} from "../../types";
 import { rotate, minus } from "@scena/matrix";
 import { getDistSize, throttle } from "../../utils";
 import { TINY_NUM } from "../../consts";
@@ -10,30 +13,73 @@ export function checkBoundPoses(
     horizontalPoses: number[],
 ) {
     const {
+        position = "client",
         left = -Infinity,
         top = -Infinity,
         right = Infinity,
         bottom = Infinity,
     } = bounds || {};
-    const nextBounds = { left, top, right, bottom };
+    const nextBounds = {
+        position,
+        left,
+        top,
+        right,
+        bottom,
+    };
 
     return {
         vertical: checkBounds(nextBounds, verticalPoses, true),
         horizontal: checkBounds(nextBounds, horizontalPoses, false),
     };
 }
+export function getBounds(
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
+    externalBounds?: BoundType | false | null,
+) {
+    const state = moveable.state;
+    const {
+        left: snapOffsetLeft,
+        top: snapOffsetTop,
+    } = state.snapOffset;
+    const bounds = externalBounds || moveable.props.bounds || {} as BoundType;
+    const position = bounds.position || "client";
+    const isCSS = position === "css";
+    const {
+        left = -Infinity,
+        top = -Infinity,
+    } = bounds;
+    let {
+        right = isCSS ? -Infinity : Infinity,
+        bottom = isCSS ? -Infinity : Infinity,
+    } = bounds;
 
+    if (isCSS) {
+        const {
+            clientHeight: containerHeight,
+            clientWidth: containerWidth,
+        } = state.snapContainerRect;
+        right = containerWidth! - right;
+        bottom = containerHeight! - bottom;
+    }
+
+    return {
+        left: left + snapOffsetLeft,
+        right: right + snapOffsetLeft,
+        top: top + snapOffsetTop,
+        bottom: bottom + snapOffsetTop,
+    };
+}
 export function checkBoundKeepRatio(
-    moveable: MoveableManagerInterface<SnappableProps>,
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     startPos: number[],
     endPos: number[],
 ) {
     const {
-        left = -Infinity,
-        top = -Infinity,
-        right = Infinity,
-        bottom = Infinity,
-    } = moveable.props.bounds || {};
+        left,
+        top,
+        right,
+        bottom,
+    } = getBounds(moveable);
 
     const [endX, endY] = endPos;
     let [dx, dy] = minus(endPos, startPos);
@@ -204,24 +250,23 @@ export function boundRotate(
 }
 
 export function checkRotateBounds(
-    moveable: MoveableManagerInterface<SnappableProps & RotatableProps, any>,
+    moveable: MoveableManagerInterface<SnappableProps & RotatableProps, SnappableState>,
     prevPoses: number[][],
     nextPoses: number[][],
     origin: number[],
     rotation: number,
 ) {
-    const bounds = moveable.props.bounds;
-    const rad = rotation * Math.PI / 180;
-
-    if (!bounds) {
+    if (!moveable.props.bounds) {
         return [];
     }
+    const rad = rotation * Math.PI / 180;
+
     const {
-        left = -Infinity,
-        top = -Infinity,
-        right = Infinity,
-        bottom = Infinity,
-    } = bounds;
+        left,
+        top,
+        right,
+        bottom,
+    } = getBounds(moveable);
 
     const relativeLeft = left - origin[0];
     const relativeRight = right - origin[0];

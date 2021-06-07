@@ -126,17 +126,29 @@ export function getDefaultGuidelines(
     height: number,
     clientLeft = 0,
     clientTop = 0,
+    snapOffset = { left: 0, top: 0, right: 0, bottom: 0 },
 ): SnapGuideline[] {
     const guidelines: SnapGuideline[] = [];
+    const {
+        left: snapOffsetLeft,
+        top: snapOffsetTop,
+    } = snapOffset;
+
     horizontalGuidelines && horizontalGuidelines!.forEach(pos => {
-        guidelines.push({ type: "horizontal", pos: [0, throttle(pos - clientTop, 0.1)], size: width! });
+        guidelines.push({ type: "horizontal", pos: [
+            snapOffsetLeft,
+            throttle(pos - clientTop + snapOffsetTop, 0.1),
+        ], size: width! });
     });
     verticalGuidelines && verticalGuidelines!.forEach(pos => {
-        guidelines.push({ type: "vertical", pos: [throttle(pos - clientLeft, 0.1), 0], size: height! });
+        guidelines.push({ type: "vertical", pos: [
+            throttle(pos - clientLeft + snapOffsetLeft, 0.1),
+            snapOffsetTop,
+        ], size: height! });
     });
     return guidelines;
 }
-export function caculateElementGuidelines(
+export function calculateElementGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     values: ElementGuidelineValue[],
 ) {
@@ -303,7 +315,7 @@ export function getElementGuidelines(
 
     const { added, removed } = diff(prevValues.map(v => v.element), nextValues.map(v => v.element));
     const removedElements = removed.map(index => prevValues[index].element);
-    const addedGuidelines = caculateElementGuidelines(moveable, added.map(index => nextValues[index]).filter(value => {
+    const addedGuidelines = calculateElementGuidelines(moveable, added.map(index => nextValues[index]).filter(value => {
         return (value.refresh && isRefresh) || (!value.refresh && !isRefresh);
     }));
 
@@ -316,13 +328,16 @@ export function getTotalGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
 ) {
     const {
+        snapOffset,
         staticGuidelines,
-        containerClientRect: {
+        snapContainerRect: {
+            overflow,
             scrollHeight: containerHeight,
             scrollWidth: containerWidth,
             clientHeight: containerClientHeight,
             clientWidth: containerClientWidth,
-            overflow,
+        },
+        containerClientRect: {
             clientLeft,
             clientTop,
         },
@@ -375,6 +390,7 @@ export function getTotalGuidelines(
         overflow ? containerHeight! : containerClientHeight!,
         clientLeft,
         clientTop,
+        snapOffset,
     ));
 
     return totalGuidelines;
