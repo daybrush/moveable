@@ -1462,12 +1462,12 @@ export function getAbsoluteRotation(pos1: number[], pos2: number[], direction: n
 
 export function getDragDistByState(state: MoveableManagerState, dist: number[]) {
     const {
-        beforeMatrix,
+        rootMatrix,
         is3d,
     } = state;
     const n = is3d ? 4 : 3;
 
-    let inverseMatrix = invert(beforeMatrix, n);
+    let inverseMatrix = invert(rootMatrix, n);
 
     if (!is3d) {
         inverseMatrix = convertDimension(inverseMatrix, 3, 4);

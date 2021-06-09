@@ -96,7 +96,6 @@ export function snapStart(
     const snapContainer = moveable.props.snapContainer || container!;
 
     const containerClientRect = state.containerClientRect;
-    let snapContainerRect = state.containerClientRect;
     const snapOffset = {
         left: 0,
         top: 0,
@@ -108,7 +107,7 @@ export function snapStart(
         const snapContainerTarget = getRefTarget(snapContainer, true);
 
         if (snapContainerTarget) {
-            snapContainerRect = getClientRect(snapContainerTarget, true);
+            const snapContainerRect = getClientRect(snapContainerTarget);
             const offset1 = getDragDistByState(state, [
                 snapContainerRect.left - containerClientRect.left,
                 snapContainerRect.top - containerClientRect.top,
@@ -117,16 +116,14 @@ export function snapStart(
                 snapContainerRect.right - containerClientRect.right,
                 snapContainerRect.bottom - containerClientRect.bottom,
             ]);
-            snapOffset.left = offset1[0];
-            snapOffset.top = offset1[1];
-            snapOffset.right = offset2[0];
-            snapOffset.bottom = offset2[1];
-
+            snapOffset.left = throttle(offset1[0], 0.1);
+            snapOffset.top = throttle(offset1[1], 0.1);
+            snapOffset.right = throttle(offset2[0], 0.1);
+            snapOffset.bottom = throttle(offset2[1], 0.1);
         }
     }
 
     state.snapOffset = snapOffset;
-    state.snapContainerRect = snapContainerRect;
     state.elementGuidelineValues = [];
     state.staticGuidelines = getElementGuidelines(moveable, false);
     state.guidelines = getTotalGuidelines(moveable);
@@ -302,7 +299,6 @@ export function checkMoveableSnapBounds(
         poses.map((pos) => pos[1]),
         moveable.props.snapCenter
     );
-
     const horizontalOffset = getSnapBound(
         horizontalBoundInfos[0],
         horizontalSnapInfo
@@ -1415,7 +1411,6 @@ function addBoundGuidelines(
         verticalPoses,
         horizontalPoses
     );
-
     verticalBoundInfos.forEach((info) => {
         if (info.isBound) {
             verticalSnapPoses.push({
@@ -1788,6 +1783,20 @@ export default {
                 snapDistFormat,
                 React
             ),
+            ...renderGuidelines(
+                moveable,
+                "horizontal",
+                nextHorizontalGuidelines,
+                [targetLeft, targetTop],
+                React
+            ),
+            ...renderGuidelines(
+                moveable,
+                "vertical",
+                nextVerticalGuidelines,
+                [targetLeft, targetTop],
+                React
+            ),
             ...renderSnapPoses(
                 moveable,
                 "horizontal",
@@ -1806,20 +1815,6 @@ export default {
                 targetLeft,
                 height,
                 1,
-                React
-            ),
-            ...renderGuidelines(
-                moveable,
-                "horizontal",
-                nextHorizontalGuidelines,
-                [targetLeft, targetTop],
-                React
-            ),
-            ...renderGuidelines(
-                moveable,
-                "vertical",
-                nextVerticalGuidelines,
-                [targetLeft, targetTop],
                 React
             ),
         ];

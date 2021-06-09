@@ -1421,7 +1421,7 @@ export interface GroupableProps extends GroupableOptions {
  */
 export interface SnappableOptions {
     snappable?: boolean | string[];
-    snapContainer?: MoveableRefType<HTMLElement>;
+    snapContainer?: MoveableRefType<HTMLElement | SVGElement>;
     snapCenter?: boolean;
     snapHorizontal?: boolean;
     snapVertical?: boolean;
@@ -1504,7 +1504,6 @@ export interface BoundType {
 }
 export interface SnappableState {
     staticGuidelines: SnapGuideline[];
-    snapContainerRect: MoveableClientRect;
     elementGuidelineValues: ElementGuidelineValue[];
     guidelines: SnapGuideline[];
     snapOffset: { left: number, top: number, bottom: number, right: number }

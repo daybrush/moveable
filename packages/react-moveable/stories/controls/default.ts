@@ -235,6 +235,14 @@ export const DEFAULT_SNAP_GRID_CONTROLS = {
         defaultValue: 10,
     }),
 };
+
+export const DEFAULT_SNAP_CONTAINER_CONTROLS = {
+    snapContainer: makeArgType({
+        type: "text",
+        description: makeLink("Snappable", "snapContainer"),
+        defaultValue: ".snapContainer",
+    }),
+};
 export const DEFAULT_BOUNDS_CONTROLS = {
     snappable: makeArgType({
         type: "boolean",

@@ -8,6 +8,7 @@ import {
     DEFAULT_BOUNDS_CONTROLS,
     DEFAULT_DRAGGABLE_CONTROLS,
     DEFAULT_SNAPPABLE_CONTROLS,
+    DEFAULT_SNAP_CONTAINER_CONTROLS,
     DEFAULT_SNAPPABLE_GUIDELINES_CONTROLS,
 } from "../controls/default";
 
@@ -15,10 +16,11 @@ export const SnapContainerTemplate = App as any;
 
 SnapContainerTemplate.storyName = "Use snapContainer";
 SnapContainerTemplate.argTypes = {
-    ...DEFAULT_DRAGGABLE_CONTROLS,
     ...DEFAULT_SNAPPABLE_CONTROLS,
+    ...DEFAULT_SNAP_CONTAINER_CONTROLS,
     ...DEFAULT_SNAPPABLE_GUIDELINES_CONTROLS,
     ...DEFAULT_BOUNDS_CONTROLS,
+    ...DEFAULT_DRAGGABLE_CONTROLS,
 };
 SnapContainerTemplate.args = {
     ...makeArgs(SnapContainerTemplate.argTypes),

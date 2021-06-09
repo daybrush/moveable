@@ -36,11 +36,20 @@ export function getBounds(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     externalBounds?: BoundType | false | null,
 ) {
-    const state = moveable.state;
     const {
-        left: snapOffsetLeft,
-        top: snapOffsetTop,
-    } = state.snapOffset;
+        containerClientRect: {
+            clientHeight: containerHeight,
+            clientWidth: containerWidth,
+            clientLeft,
+            clientTop,
+        },
+        snapOffset: {
+            left: snapOffsetLeft,
+            top: snapOffsetTop,
+            right: snapOffsetRight,
+            bottom: snapOffsetBottom,
+        },
+    } = moveable.state;
     const bounds = externalBounds || moveable.props.bounds || {} as BoundType;
     const position = bounds.position || "client";
     const isCSS = position === "css";
@@ -54,19 +63,15 @@ export function getBounds(
     } = bounds;
 
     if (isCSS) {
-        const {
-            clientHeight: containerHeight,
-            clientWidth: containerWidth,
-        } = state.snapContainerRect;
-        right = containerWidth! - right;
-        bottom = containerHeight! - bottom;
+        right = containerWidth! + snapOffsetRight - snapOffsetLeft - right;
+        bottom = containerHeight! + snapOffsetBottom - snapOffsetTop - bottom;
     }
 
     return {
-        left: left + snapOffsetLeft,
-        right: right + snapOffsetLeft,
-        top: top + snapOffsetTop,
-        bottom: bottom + snapOffsetTop,
+        left: left + snapOffsetLeft - clientLeft!,
+        right: right + snapOffsetLeft - clientLeft!,
+        top: top + snapOffsetTop - clientTop!,
+        bottom: bottom + snapOffsetTop - clientTop!,
     };
 }
 export function checkBoundKeepRatio(

@@ -132,19 +132,23 @@ export function getDefaultGuidelines(
     const {
         left: snapOffsetLeft,
         top: snapOffsetTop,
+        bottom: snapOffsetBottom,
+        right: snapOffsetRight,
     } = snapOffset;
+    const snapWidth = width! + snapOffsetRight - snapOffsetLeft;
+    const snapHeight = height! + snapOffsetBottom - snapOffsetTop;
 
     horizontalGuidelines && horizontalGuidelines!.forEach(pos => {
         guidelines.push({ type: "horizontal", pos: [
             snapOffsetLeft,
             throttle(pos - clientTop + snapOffsetTop, 0.1),
-        ], size: width! });
+        ], size: snapWidth });
     });
     verticalGuidelines && verticalGuidelines!.forEach(pos => {
         guidelines.push({ type: "vertical", pos: [
             throttle(pos - clientLeft + snapOffsetLeft, 0.1),
             snapOffsetTop,
-        ], size: height! });
+        ], size: snapHeight });
     });
     return guidelines;
 }
@@ -330,14 +334,12 @@ export function getTotalGuidelines(
     const {
         snapOffset,
         staticGuidelines,
-        snapContainerRect: {
+        containerClientRect: {
             overflow,
             scrollHeight: containerHeight,
             scrollWidth: containerWidth,
             clientHeight: containerClientHeight,
             clientWidth: containerClientWidth,
-        },
-        containerClientRect: {
             clientLeft,
             clientTop,
         },

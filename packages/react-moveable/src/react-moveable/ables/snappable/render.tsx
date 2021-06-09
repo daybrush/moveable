@@ -3,7 +3,7 @@ import {
     MoveableManagerInterface, SnappableProps, SnapGuideline,
     SnappableOptions, SnappableRenderType, GapGuideline, SnappableState,
 } from "../../types";
-import { prefix, flat } from "../../utils";
+import { prefix, flat, throttle } from "../../utils";
 
 const DIRECTION_NAMES = {
     horizontal: [
@@ -61,7 +61,7 @@ export function renderInnerGuideline(info: RenderGuidelineInnerInfo, React: Rend
             ...info.classNames,
         ].filter(className => className) as string[],
         size: info.size || `${info.sizeValue}px`,
-        pos: info.pos || info.posValue.map(v => `${v}px`),
+        pos: info.pos || info.posValue.map(v => `${throttle(v, 0.1)}px`),
     }, React);
 }
 

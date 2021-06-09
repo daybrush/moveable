@@ -18,11 +18,23 @@ export default function App(props: Record<string, any>) {
                 width: "500px",
                 height: "500px",
             }}>
-                <div className="target" ref={targetRef} style={{
-                    width: "200px",
-                    height: "150px",
-                    transform: "scale(1.5, 1)",
-                }}>Target</div>
+                <div className="snapContainer"
+                    style={{
+                        position: "relative",
+                        top: "50px",
+                        left: "50px",
+                        border: "1px solid #ccc",
+                        width: "400px",
+                        height: "400px",
+                        transform: "scale(0.7, 0.7)",
+                    }}
+                >
+                    <div className="target" ref={targetRef} style={{
+                        width: "200px",
+                        height: "150px",
+                        transform: "translate(0px, 0px) scale(1.5, 1)",
+                    }}>Target</div>
+                </div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
@@ -41,7 +53,7 @@ export default function App(props: Record<string, any>) {
                     snapThreshold={props.snapThreshold}
                     verticalGuidelines={props.verticalGuidelines}
                     horizontalGuidelines={props.horizontalGuidelines}
-                    snapContainer={".root"}
+                    snapContainer={props.snapContainer}
                     bounds={props.bounds}
                     onBeforeRenderStart={e => {
                         e.setTransform(e.target.style.transform);
