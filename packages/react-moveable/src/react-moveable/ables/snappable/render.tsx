@@ -1,9 +1,10 @@
+import { find } from "@daybrush/utils";
 import {
     RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo,
     MoveableManagerInterface, SnappableProps, SnapGuideline,
     SnappableOptions, SnappableRenderType, GapGuideline, SnappableState,
 } from "../../types";
-import { prefix, flat, throttle } from "../../utils";
+import { prefix, flat, throttle, groupBy } from "../../utils";
 
 const DIRECTION_NAMES = {
     horizontal: [
@@ -18,6 +19,43 @@ const DIRECTION_NAMES = {
     ] as const,
 } as const;
 
+export function groupByElementGuidelines(
+    guidelines: SnapGuideline[],
+    clientPos: number,
+    size: number,
+    index: number
+) {
+    const groupInfos: Array<[Element, number, any]> = [];
+
+    const group = groupBy(
+        guidelines.filter(({ element, gap }) => element && !gap),
+        ({ element, pos }) => {
+            const elementPos = pos[index];
+            const sign = Math.min(0, elementPos - clientPos) < 0 ? -1 : 1;
+            const groupKey = `${sign}_${pos[index ? 0 : 1]}`;
+            const groupInfo = find(groupInfos, ([groupElement, groupPos]) => {
+                return element === groupElement && elementPos === groupPos;
+            });
+            if (groupInfo) {
+                return groupInfo[2];
+            }
+            groupInfos.push([element!, elementPos, groupKey]);
+            return groupKey;
+        }
+    );
+    group.forEach((elementGuidelines) => {
+        elementGuidelines.sort((a, b) => {
+            const result =
+                getElementGuidelineDist(a.pos[index], a.size, clientPos, size)
+                    .size -
+                getElementGuidelineDist(b.pos[index], a.size, clientPos, size)
+                    .size;
+
+            return result || a.pos[index ? 0 : 1] - b.pos[index ? 0 : 1];
+        });
+    });
+    return group;
+}
 export function getElementGuidelineDist(
     elementPos: number,
     elementSize: number,
@@ -65,7 +103,7 @@ export function renderInnerGuideline(info: RenderGuidelineInnerInfo, React: Rend
     }, React);
 }
 
-export function renderElementGroup(
+export function renderElementGroups(
     moveable: MoveableManagerInterface<SnappableProps>,
     direction: "vertical" | "horizontal",
     groups: SnapGuideline[][],
@@ -176,43 +214,102 @@ export function filterElementInnerGuidelines(
     guidelines: SnapGuideline[],
     index: number,
     targetPos: number[],
+    clientPos: number[],
     targetSizes: number[],
 ) {
     const { isDisplayInnerSnapDigit } = moveable.props;
     const innerGuidelines: SnapGuideline[] = [];
-    const gapGuidelines: GapGuideline[] = [];
-    const nextGuidelines =  guidelines.filter(guideline => {
+    const otherIndex = index ? 0 : 1;
+    const targetContentPos = targetPos[index];
+    const targetContentSize = targetSizes[index];
+    let gapGuidelines: GapGuideline[] = [];
+    let nextGuidelines = guidelines.filter(guideline => {
         const { element, pos, size } = guideline;
 
         if (
             isDisplayInnerSnapDigit && element
-            && pos[index] < targetPos[index] && targetPos[index] + targetSizes[index] < pos[index] + size
+            && pos[index] < targetContentPos && targetContentPos + targetContentSize < pos[index] + size
         ) {
             innerGuidelines.push(guideline);
 
-            const startPos = pos[index] - targetPos[index];
-            const endPos = targetSizes[index];
-            const contentPos = index ? pos[0] - targetPos[0] : pos[1] - targetPos[1];
+            const contentPos = pos[index] - targetContentPos;
+            const inlinePos = pos[otherIndex] - targetPos[otherIndex];
 
             gapGuidelines.push({
                 ...guideline,
                 inner: true,
-                gap: startPos,
-                renderPos: index ? [contentPos, startPos] : [startPos, contentPos],
+                gap: inlinePos,
+                renderPos: index ? [inlinePos, contentPos] : [contentPos, inlinePos],
             });
             gapGuidelines.push({
                 ...guideline,
                 inner: true,
-                gap: pos[index] + size - targetPos[index] - targetSizes[index],
-                renderPos: index ? [contentPos, endPos] : [endPos, contentPos],
+                gap: pos[index] + size - targetContentPos - targetContentSize,
+                renderPos: index ? [inlinePos, targetContentSize] : [targetContentSize, inlinePos],
             });
             return false;
         }
         return true;
     });
 
+    nextGuidelines = nextGuidelines.filter(guideline1 => {
+        const {
+            element: element1,
+            pos: pos1,
+            size: size1,
+        } = guideline1;
+        const contentPos1 = pos1[index];
+
+        if (!element1) {
+            return true;
+        }
+        return nextGuidelines.every(guideline2 => {
+            const {
+                element: element2,
+                pos: pos2,
+                size: size2,
+            } = guideline2;
+            const contentPos2 = pos2[index];
+            if (!element2 || guideline1 === guideline2) {
+                return true;
+            }
+            return contentPos1 + size1 <= contentPos2
+                || contentPos2 + size2 <= contentPos1
+                || (contentPos1 < contentPos2 && contentPos2 + size2 < contentPos1 + size1);
+        });
+    });
+    const groups = groupByElementGuidelines(
+        nextGuidelines,
+        clientPos[index],
+        targetContentSize,
+        index,
+    );
+    gapGuidelines = gapGuidelines.filter(guideline => {
+        const gap = guideline.gap!;
+        const inlinePos = guideline.pos[otherIndex];
+
+        return groups.every(group => {
+            return group.every(groupGuideline => {
+                const groupPos = groupGuideline.pos;
+                const renderPos = -targetContentPos + groupPos[index];
+
+                if (groupPos[otherIndex] !== inlinePos) {
+                    return true;
+                }
+                if (gap < 0 && renderPos < 0) {
+                    return false;
+                }
+                if (gap > 0 && renderPos > targetSizes[index]) {
+                    return false;
+                }
+                return true;
+            });
+        });
+    });
+
     return {
         guidelines: nextGuidelines,
+        groups,
         gapGuidelines,
     };
 }
@@ -278,7 +375,7 @@ export function renderGapGuidelines(
                 {renderInnerGuideline(
                     {
                         direction: direction,
-                        classNames: [prefix(inner ? "bold" : "gap"), className],
+                        classNames: [prefix(inner ? "dashed" : "gap"), className],
                         size: "100%",
                         posValue: [0, 0],
                         sizeValue: absGap,

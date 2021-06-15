@@ -37,7 +37,7 @@ import {
     getRefTarget,
     getDragDistByState,
 } from "../utils";
-import { IObject, find, findIndex, hasClass, getRad, getDist } from "@daybrush/utils";
+import { IObject, findIndex, hasClass, getRad, getDist } from "@daybrush/utils";
 import {
     getPosByReverseDirection,
     getDragDist,
@@ -73,7 +73,7 @@ import {
     getTotalGuidelines,
 } from "./snappable/snap";
 import {
-    getElementGuidelineDist, renderElementGroup, renderSnapPoses,
+    renderElementGroups, renderSnapPoses,
     renderGuidelines, renderGapGuidelines,
     filterElementInnerGuidelines,
 } from "./snappable/render";
@@ -1210,44 +1210,6 @@ function getSnapGuidelines(posInfos: SnapPosInfo[]) {
 }
 
 
-function groupByElementGuidelines(
-    guidelines: SnapGuideline[],
-    clientPos: number,
-    size: number,
-    index: number
-) {
-    const groupInfos: Array<[Element, number, any]> = [];
-
-    const group = groupBy(
-        guidelines.filter(({ element, gap }) => element && !gap),
-        ({ element, pos }) => {
-            const elementPos = pos[index];
-            const sign = Math.min(0, elementPos - clientPos) < 0 ? -1 : 1;
-            const groupKey = `${sign}_${pos[index ? 0 : 1]}`;
-            const groupInfo = find(groupInfos, ([groupElement, groupPos]) => {
-                return element === groupElement && elementPos === groupPos;
-            });
-            if (groupInfo) {
-                return groupInfo[2];
-            }
-            groupInfos.push([element!, elementPos, groupKey]);
-            return groupKey;
-        }
-    );
-    group.forEach((elementGuidelines) => {
-        elementGuidelines.sort((a, b) => {
-            const result =
-                getElementGuidelineDist(a.pos[index], a.size, clientPos, size)
-                    .size -
-                getElementGuidelineDist(b.pos[index], a.size, clientPos, size)
-                    .size;
-
-            return result || a.pos[index ? 0 : 1] - b.pos[index ? 0 : 1];
-        });
-    });
-    return group;
-}
-
 function getGapGuidelinesToStart(
     guidelines: SnapGuideline[],
     index: number,
@@ -1674,30 +1636,14 @@ export default {
                 snapRenderInfo.externalBounds
             );
         }
-        const elementHorizontalGroup = groupByElementGuidelines(
-            horizontalGuidelines,
-            clientLeft,
-            width,
-            0
-        );
-        const elementVerticalGroup = groupByElementGuidelines(
-            verticalGuidelines,
-            clientTop,
-            height,
-            1
-        );
+
 
         const gapHorizontalGuidelines = getGapGuidelines(
             verticalGuidelines,
             "vertical",
             [targetLeft, targetTop],
             [width, height]
-        ).filter(({ renderPos, element }) => {
-            return !horizontalGuidelines.some(guideline => {
-                return element === guideline.element && -targetTop + guideline.pos[1] === renderPos[1];
-            });
-
-        });
+        );
         const gapVerticalGuidelines = getGapGuidelines(
             horizontalGuidelines,
             "horizontal",
@@ -1721,22 +1667,26 @@ export default {
         );
         const {
             guidelines: nextHorizontalGuidelines,
+            groups: elementHorizontalGroups,
             gapGuidelines: innerGapHorizontalGuidelines,
         } = filterElementInnerGuidelines(
             moveable,
             horizontalGuidelines,
             0,
             [targetLeft, targetTop],
+            [clientLeft, clientTop],
             [width, height],
         );
         const {
             guidelines: nextVerticalGuidelines,
-            gapGuidelines: innerGapVerticalGuideliens,
+            groups: elementVerticalGroups,
+            gapGuidelines: innerGapVerticalGuidelines,
         } = filterElementInnerGuidelines(
             moveable,
             verticalGuidelines,
             1,
             [targetLeft, targetTop],
+            [clientLeft, clientTop],
             [width, height],
         );
 
@@ -1744,7 +1694,7 @@ export default {
             ...renderGapGuidelines(
                 moveable,
                 "vertical",
-                [...gapVerticalGuidelines, ...innerGapVerticalGuideliens],
+                [...gapVerticalGuidelines, ...innerGapVerticalGuidelines],
                 snapDistFormat,
                 React
             ),
@@ -1755,10 +1705,10 @@ export default {
                 snapDistFormat,
                 React
             ),
-            ...renderElementGroup(
+            ...renderElementGroups(
                 moveable,
                 "horizontal",
-                elementHorizontalGroup,
+                elementHorizontalGroups,
                 minLeft,
                 clientLeft,
                 width,
@@ -1769,10 +1719,10 @@ export default {
                 snapDistFormat,
                 React
             ),
-            ...renderElementGroup(
+            ...renderElementGroups(
                 moveable,
                 "vertical",
-                elementVerticalGroup,
+                elementVerticalGroups,
                 minTop,
                 clientTop,
                 height,
