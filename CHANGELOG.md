@@ -18,6 +18,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+## [0.25.2] - 2021-06-16
+* `moveable` 0.25.2
+* `react-moveable` 0.28.2
+* `preact-moveable` 0.27.2
+* `ngx-moveable` 0.21.2
+* `svelte-moveable` 0.16.2
+* `lit-moveable` 0.2.2
+
+### Fixed
+* Fixed the problem that left and top dashed guidelines were not visible
+
 
 ## [0.25.1] - 2021-06-16
 * `moveable` 0.25.1
