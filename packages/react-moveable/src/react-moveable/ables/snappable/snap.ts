@@ -418,7 +418,7 @@ export function getGridGuidelines(
         }
     }
     if (snapGridWidth) {
-        for (let pos = 0; pos < containerWidth; pos += snapGridWidth) {
+        for (let pos = 0; pos <= containerWidth; pos += snapGridWidth) {
             guidelines.push({
                 type: "vertical",
                 pos: [throttle(pos - clientLeft, 0.1), 0],
