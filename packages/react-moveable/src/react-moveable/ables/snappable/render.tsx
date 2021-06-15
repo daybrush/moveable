@@ -238,7 +238,7 @@ export function filterElementInnerGuidelines(
             gapGuidelines.push({
                 ...guideline,
                 inner: true,
-                gap: inlinePos,
+                gap: contentPos,
                 renderPos: index ? [inlinePos, contentPos] : [contentPos, inlinePos],
             });
             gapGuidelines.push({
