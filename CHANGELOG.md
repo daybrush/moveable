@@ -19,6 +19,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 
+## [0.25.1] - 2021-06-16
+* `moveable` 0.25.1
+* `react-moveable` 0.28.1
+* `preact-moveable` 0.27.1
+* `ngx-moveable` 0.21.1
+* `svelte-moveable` 0.16.1
+* `lit-moveable` 0.2.1
+
+### Added
+* Add `snapContainer` prop #487
+* Add `snapGridWidth`, `snapGridHeight` props #482
+* Add `isDisplayInnerSnapDigit` prop #456
+
+
+### Fixed
+* Support svg able #462
+* Support start transform for 1.0.0
+* Remove overlapping guidelines
+
+
 ## [0.24.6] - 2021-04-21
 * `moveable` 0.24.6
 * `react-moveable` 0.27.7

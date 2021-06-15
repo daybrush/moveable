@@ -105,8 +105,13 @@ export class NgxMoveableComponent
 
   @Input() public props!: RequiredMoveableOptions['props'];
   @Input() public individualGroupable!: RequiredMoveableOptions['individualGroupable'];
-  @Input() portalContainer!: RequiredMoveableOptions['portalContainer'];
-  @Input() rotationTarget!: RequiredMoveableOptions['rotationTarget'];
+  @Input() public portalContainer!: RequiredMoveableOptions['portalContainer'];
+  @Input() public rotationTarget!: RequiredMoveableOptions['rotationTarget'];
+
+  @Input() public snapContainer!: RequiredMoveableOptions['snapContainer'];
+  @Input() public snapGridWidth!: RequiredMoveableOptions['snapGridWidth'];
+  @Input() public snapGridHeight!: RequiredMoveableOptions['snapGridHeight'];
+  @Input() public isDisplayInnerSnapDigit!: RequiredMoveableOptions['isDisplayInnerSnapDigit'];
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;
@@ -189,6 +194,7 @@ export class NgxMoveableComponent
       this[name] = new EventEmitter<unknown>();
     });
   }
+
 
 
 
