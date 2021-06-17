@@ -408,7 +408,7 @@ export function getGridGuidelines(
     const guidelines: SnapGuideline[] = [];
 
     if (snapGridHeight) {
-        for (let pos = 0; pos < containerHeight; pos += snapGridHeight) {
+        for (let pos = 0; pos <= containerHeight; pos += snapGridHeight) {
             guidelines.push({
                 type: "horizontal",
                 pos: [0, throttle(pos - clientTop, 0.1)],
