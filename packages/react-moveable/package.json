@@ -9,9 +9,9 @@
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
         "storybook": "start-storybook -p 6006",
-        "build:storybook": "build-storybook -o ../../demo/storybook",
         "start": "react-scripts start",
         "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
+        "build:storybook": "build-storybook -o ../../demo/storybook2",
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
         "test": "karma start",
         "test:chrome": "karma start --chrome",
