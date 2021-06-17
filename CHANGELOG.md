@@ -18,6 +18,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+## [0.25.3] - 2021-06-18
+* `moveable` 0.25.3
+* `react-moveable` 0.28.3
+* `preact-moveable` 0.27.3
+* `ngx-moveable` 0.21.3
+* `svelte-moveable` 0.16.3
+* `lit-moveable` 0.2.3
+
+### Fixed
+* Fix snap to grid (bottom) #491
+* Prevent click event #490
+* Fix Native Event for dragArea or group
+* Fix start original transform
+
+
 ## [0.25.2] - 2021-06-16
 * `moveable` 0.25.2
 * `react-moveable` 0.28.2
