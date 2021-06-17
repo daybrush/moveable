@@ -115,6 +115,7 @@ export default class MoveableManager<T = {}>
                 className={`${prefix("control-box", direction === -1
                     ? "reverse" : "", isDragging ? "dragging" : "")} ${className}`}
                 {...ableAttributes}
+                onClick={this.onPreventClick}
                 portalContainer={portalContainer}
                 style={{
                     "position": "absolute",
@@ -710,6 +711,9 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
+    }
+    protected onPreventClick = (e: any) => {
+        e.stopPropagation();
     }
 }
 
