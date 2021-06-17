@@ -108,6 +108,7 @@ export type MoveableManagerState<T = {}> = {
     beforeDirection: number;
     direction: number;
     renderPoses: number[][];
+    disableNativeEvent: boolean;
     pos1: number[];
     pos2: number[];
     pos3: number[];

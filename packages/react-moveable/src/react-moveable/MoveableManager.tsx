@@ -64,6 +64,7 @@ export default class MoveableManager<T = {}>
         target: null,
         gesto: null,
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
+        disableNativeEvent: false,
         ...getTargetInfo(null),
     };
     public enabledAbles: Able[] = [];

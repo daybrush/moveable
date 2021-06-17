@@ -80,12 +80,13 @@ export default {
         }
         datas.isDragArea = false;
         const areaElement = moveable.areaElement;
+        const state = moveable.state;
         const {
             moveableClientRect,
             renderPoses,
             rootMatrix,
             is3d,
-        } = moveable.state;
+        } = state;
         const { left, top } = moveableClientRect;
         const {
             left: relativeLeft,
@@ -111,9 +112,11 @@ export default {
                 = `left: ${rect.left}px;top: ${rect.top}px; width: ${rect.width}px; height: ${rect.height}px;`;
         });
         addClass(areaElement, AVOID);
+        state.disableNativeEvent = true;
         return;
     },
     drag(moveable: MoveableManagerInterface, { datas, inputEvent }: any) {
+        this.enableNativeEvent(moveable);
         if (!inputEvent) {
             return false;
         }
@@ -123,6 +126,7 @@ export default {
         }
     },
     dragEnd(moveable: MoveableManagerInterface<DragAreaProps>, e: any) {
+        this.enableNativeEvent(moveable);
         const { inputEvent, datas } = e;
         if (!inputEvent) {
             return false;
@@ -145,6 +149,15 @@ export default {
     },
     unset(moveable: MoveableManagerInterface<DragAreaProps>) {
         restoreStyle(moveable);
+        moveable.state.disableNativeEvent = false;
+    },
+    enableNativeEvent(moveable: MoveableManagerInterface<DragAreaProps>) {
+        const state = moveable.state;
+        if (state.disableNativeEvent) {
+            requestAnimationFrame(() => {
+                state.disableNativeEvent = false;
+            });
+        }
     },
 };
 

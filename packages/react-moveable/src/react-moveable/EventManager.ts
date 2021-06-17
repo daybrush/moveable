@@ -14,12 +14,15 @@ export default class EventManager {
     }
     public onEvent = (e: Event) => {
         const eventName = this.eventName;
-        const moveable = this.moveable;
+        const moveable = this.moveable!;
 
+        if (moveable.state.disableNativeEvent) {
+            return;
+        }
         this.ables.forEach(able => {
-            (able as any)[eventName]({
+            (able as any)[eventName](moveable, {
                 inputEvent: e,
-            }, moveable);
+            });
         });
     }
     public destroy() {
