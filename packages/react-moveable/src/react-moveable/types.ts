@@ -35,7 +35,7 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @property - The target(s) to drag Moveable target(s) (default: target)
  * @property - Moveable Container. Don't set it. (default: parentElement)
  * @property - Moveable Portal Container to support other frameworks. Don't set it. (default: container)
- * @property - Moveable Root Container (No Transform Container). (default: container)
+ * @property - Moveable Root Container (No Transformed Container). (default: container)
  * @property - Zooms in the elements of a moveable. (default: 1)
  * @property - The default transformOrigin of the target can be set in advance. (default: "")
  * @property - Whether to scale and resize through edge lines. (default: false)
@@ -343,6 +343,11 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     mouseEnter?(moveable: any, e: any): any;
     // mouse leave event
     mouseLeave?(moveable: any, e: any): any;
+
+    // mouse enter event for group
+    mouseGroupEnter?(moveable: any, e: any): any;
+    // mouse leave event for group
+    mouseGroupLeave?(moveable: any, e: any): any;
 
 
     // Execute the operation of able for external request

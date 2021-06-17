@@ -9,6 +9,7 @@ import {
     fillParams, triggerEvent,
     makeMatrixCSS, getRect, fillEndParams,
     convertCSSSize, moveControlPos,
+    getComputedStyle,
 } from "../utils";
 import { plus, minus } from "@scena/matrix";
 import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";

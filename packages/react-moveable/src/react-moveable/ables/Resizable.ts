@@ -2,6 +2,7 @@ import {
     throttle, getDirection, triggerEvent,
     fillParams, getCSSSize,
     getDistSize, fillEndParams, directionCondition,
+    getComputedStyle,
 } from "../utils";
 import {
     setDragStart,
@@ -97,7 +98,7 @@ export default {
         datas.maxSize = [Infinity, Infinity];
 
         if (!parentFlag) {
-            const style = window.getComputedStyle(target);
+            const style = getComputedStyle(target);
 
             const {
                 position,
@@ -119,7 +120,7 @@ export default {
                 containerHeight = container!.clientHeight;
 
                 if (isParentElement) {
-                    const containerStyle = window.getComputedStyle(container!);
+                    const containerStyle = getComputedStyle(container!);
 
                     containerWidth -= parseFloat(containerStyle.paddingLeft) || 0;
                     containerHeight -= parseFloat(containerStyle.paddingTop) || 0;

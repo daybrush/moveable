@@ -25,12 +25,14 @@ export default {
     setTransform(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         const {
             is3d,
+            target,
             targetMatrix,
         } = moveable.state;
+        const transform = target?.style.transform;
         const cssMatrix = is3d
             ? `matrix3d(${targetMatrix.join(",")})`
             : `matrix(${convertMatrixtoCSS(targetMatrix, true)})`;
-        e.datas.startTransforms = [cssMatrix];
+        e.datas.startTransforms = !transform || transform === "none" ? [cssMatrix] : splitSpace(transform);
     },
     resetTransform(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         e.datas.nextTransforms = e.datas.startTransforms;

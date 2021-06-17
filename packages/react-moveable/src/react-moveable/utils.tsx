@@ -163,9 +163,9 @@ export function getOffsetPosInfo(
 export function getBodyOffset(
     el: HTMLElement | SVGElement,
     isSVG: boolean,
-    style: CSSStyleDeclaration = window.getComputedStyle(el),
+    style: CSSStyleDeclaration = getComputedStyle(el),
 ) {
-    const bodyStyle = window.getComputedStyle(document.body);
+    const bodyStyle = getComputedStyle(document.body);
     const bodyPosition = bodyStyle.position;
     if (!isSVG && (!bodyPosition || bodyPosition === "static")) {
         return [0, 0];
@@ -817,7 +817,7 @@ export function getControlTransform(rotation: number, zoom: number, ...poses: nu
     };
 }
 export function getCSSSize(target: SVGElement | HTMLElement) {
-    const style = window.getComputedStyle(target);
+    const style = getComputedStyle(target);
 
     return [
         parseFloat(style.width!),
@@ -826,7 +826,7 @@ export function getCSSSize(target: SVGElement | HTMLElement) {
 }
 export function getSize(
     target: SVGElement | HTMLElement,
-    style: CSSStyleDeclaration = window.getComputedStyle(target),
+    style: CSSStyleDeclaration = getComputedStyle(target),
     isOffset?: boolean,
     isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
 ) {
@@ -1106,7 +1106,7 @@ export function triggerEvent<T extends IObject<any> = MoveableProps, U extends k
     return moveable.triggerEvent(name, params, isManager);
 }
 
-export function getComputedStyle(el: HTMLElement | SVGElement, pseudoElt?: string | null) {
+export function getComputedStyle(el: Element, pseudoElt?: string | null) {
     return window.getComputedStyle(el, pseudoElt);
 }
 

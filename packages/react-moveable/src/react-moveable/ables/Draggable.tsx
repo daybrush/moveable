@@ -2,7 +2,11 @@ import {
     setDragStart, getBeforeDragDist, getTransformDist,
     convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex,
 } from "../gesto/GestoUtils";
-import { throttleArray, triggerEvent, fillParams, throttle, getDistSize, prefix, fillEndParams } from "../utils";
+import {
+    throttleArray, triggerEvent, fillParams,
+    throttle, getDistSize, prefix,
+    fillEndParams, getComputedStyle,
+} from "../utils";
 import { minus, plus } from "@scena/matrix";
 import {
     DraggableProps, OnDrag, OnDragGroup,
@@ -79,7 +83,7 @@ export default {
             return false;
         }
         state.gesto = parentGesto || moveable.targetGesto;
-        const style = window.getComputedStyle(target!);
+        const style = getComputedStyle(target!);
 
         datas.datas = {};
         datas.left = parseFloat(style.left || "") || 0;
