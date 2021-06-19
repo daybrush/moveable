@@ -22,7 +22,7 @@ import {
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { getKeys, IObject } from "@daybrush/utils";
+import { getKeys, IObject, removeEvent } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
@@ -652,6 +652,11 @@ export default class MoveableManager<T = {}>
         }
         return customStyleMap[key];
     }
+    public onPreventClick = (e: any) => {
+        e.stopPropagation();
+
+        removeEvent(window, "click", this.onPreventClick);
+    }
     protected unsetAbles() {
         if (this.targetAbles.filter(able => {
             if (able.unset) {
@@ -712,9 +717,6 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
-    }
-    protected onPreventClick = (e: any) => {
-        e.stopPropagation();
     }
 }
 

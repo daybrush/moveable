@@ -3,7 +3,7 @@ import {
     ClickableProps, OnClick, OnClickGroup,
 } from "../types";
 import { triggerEvent, fillParams } from "../utils";
-import { findIndex } from "@daybrush/utils";
+import { addEvent, findIndex, removeEvent } from "@daybrush/utils";
 import { makeAble } from "./AbleManager";
 
 export default makeAble("clickable", {
@@ -13,11 +13,20 @@ export default makeAble("clickable", {
         onClickGroup: "clickGroup",
     } as const,
     always: true,
-    dragStart() {},
+    dragStart(moveable: MoveableManagerInterface) {
+        addEvent(window, "click", moveable.onPreventClick, {
+            capture: true,
+        });
+    },
+    dragControlStart(moveable: MoveableManagerInterface) {
+        this.dragStart(moveable);
+    },
     dragGroupStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
+        this.dragStart(moveable);
         e.datas.inputTarget = e.inputEvent && e.inputEvent.target;
     },
     dragEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
+        this.unset(moveable);
         const target = moveable.state.target!;
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
@@ -39,6 +48,7 @@ export default makeAble("clickable", {
         }));
     },
     dragGroupEnd(moveable: MoveableGroupInterface<ClickableProps>, e: any) {
+        this.unset(moveable);
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
 
@@ -68,6 +78,15 @@ export default makeAble("clickable", {
             isTarget,
             containsTarget,
         }));
+    },
+    dragControlEnd(moveable: MoveableManagerInterface<ClickableProps>) {
+        this.unset(moveable);
+    },
+    dragGroupControlEnd(moveable: MoveableManagerInterface<ClickableProps>) {
+        this.unset(moveable);
+    },
+    unset(moveable: MoveableManagerInterface<ClickableProps>) {
+        removeEvent(window, "click", moveable.onPreventClick);
     },
 });
 

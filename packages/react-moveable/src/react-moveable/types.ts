@@ -1751,6 +1751,7 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     getRotation(): number;
     forceUpdate(): any;
     triggerEvent(name: string, params: IObject<any>, isManager?: boolean): any;
+    onPreventClick(e: any): void;
 }
 export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {
     moveables: MoveableManagerInterface[];
