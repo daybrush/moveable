@@ -14,7 +14,8 @@ const defaultOptions = {
 export default buildHelper([
     {
         ...defaultOptions,
-        output: "dist/moveable.cjs.js",
+        input: './src/index.umd.js',
+        output: "dist/moveable.umd.js",
         format: "cjs",
     },
     {

@@ -5,7 +5,7 @@ import InnerMoveable from "./InnerMoveable";
 import {
     MoveableInterface,
     MoveableOptions, MoveableProperties,
-} from "react-moveable/declaration/types";
+} from "react-moveable/types";
 import { camelize, isArray } from "@daybrush/utils";
 import { MoveableEventsParameters } from "./types";
 import { PROPERTIES, EVENTS, METHODS } from "./consts";

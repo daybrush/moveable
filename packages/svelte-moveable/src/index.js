@@ -18,3 +18,5 @@ export default /*#__PURE__*/ (() => {
     });
     return Moveable;
 })();
+
+export * from "moveable";

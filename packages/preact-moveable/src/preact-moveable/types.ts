@@ -1,4 +1,4 @@
-import { MoveableProps, MoveableState, MoveableInterface } from "react-moveable/declaration/types";
+import { MoveableProps, MoveableState, MoveableInterface } from "react-moveable/types";
 import { Component } from "preact";
 
 export type PreactMoveableInterface = {

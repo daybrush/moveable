@@ -1,6 +1,6 @@
 import {
     MoveableEvents,
-} from "react-moveable/declaration/types";
+} from "react-moveable/types";
 
 export interface WithEventStop {
     stop: () => any;
@@ -8,3 +8,4 @@ export interface WithEventStop {
 export type MoveableEventsParameters = {
     [key in keyof MoveableEvents]: MoveableEvents[key] & WithEventStop;
 };
+export * from "react-moveable/types";

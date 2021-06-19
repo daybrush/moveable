@@ -45,7 +45,7 @@ export default builder([
         uglify: true,
     },
     {
-        input: "src/index.esm.ts",
+        input: "src/index.ts",
         output: "./dist/moveable.esm.js",
         exports: "named",
         format: "es",

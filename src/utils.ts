@@ -1,4 +1,4 @@
-import { Able, DefaultProps } from "react-moveable/declaration/types";
+import { Able, DefaultProps } from "react-moveable/types";
 import { getElementInfo as getElementInfoFunction, makeAble as makeAbleFunction } from "react-moveable";
 
 export function getElementInfo(
