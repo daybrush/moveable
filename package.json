@@ -60,7 +60,7 @@
   "bugs": {
     "url": "https://github.com/daybrush/moveable/issues"
   },
-  "homepage": "https://github.com/daybrush/moveable#readme",
+  "homepage": "https://daybrush.com/moveable/",
   "dependencies": {
     "@scena/event-emitter": "^1.0.3",
     "react-compat-moveable": "~0.13.3"
