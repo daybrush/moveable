@@ -29,9 +29,14 @@ html, body {
     border: 1px solid #333;
     box-sizing: border-box;
 }
+.test {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
 
 </style>
-<div class="test" contenteditable="true">Test</div>
+<div class="test" >Test</div>
 <!-- <script src="https://daybrush.com/moveable/release/latest/dist/moveable.js"></script> -->
 <script src="../dist/moveable.js"></script>
 <script>
@@ -44,9 +49,10 @@ html, body {
         snapThreshold: 5,
         padding: { top: 10 },
     }).on("dragStart", e => {
-        if (e.inputEvent && e.inputEvent.target.className === "test") e.stop();
+        // if (e.inputEvent && e.inputEvent.target.className === "test") e.stop();
     }).on("drag", e => {
-        e.target.style.cssText = `top: ${e.top}px; left: ${e.left}px;`;
+        console.log(e.transform);
+        e.target.style.transform = e.transform;
     });
 
     window.addEventListener("keyup", e => {
