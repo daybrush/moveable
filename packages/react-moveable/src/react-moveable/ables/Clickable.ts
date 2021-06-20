@@ -13,20 +13,20 @@ export default makeAble("clickable", {
         onClickGroup: "clickGroup",
     } as const,
     always: true,
-    dragStart(moveable: MoveableManagerInterface) {
-        addEvent(window, "click", moveable.onPreventClick, {
-            capture: true,
-        });
+    dragStart(moveable: MoveableManagerInterface, e: any) {
+        if (!e.isRequest) {
+            addEvent(window, "click", moveable.onPreventClick, true);
+        }
     },
-    dragControlStart(moveable: MoveableManagerInterface) {
-        this.dragStart(moveable);
+    dragControlStart(moveable: MoveableManagerInterface, e: any) {
+        this.dragStart(moveable, e);
     },
     dragGroupStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
-        this.dragStart(moveable);
+        this.dragStart(moveable, e);
         e.datas.inputTarget = e.inputEvent && e.inputEvent.target;
     },
     dragEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
-        this.unset(moveable);
+        this.endEvent(moveable);
         const target = moveable.state.target!;
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
@@ -48,7 +48,7 @@ export default makeAble("clickable", {
         }));
     },
     dragGroupEnd(moveable: MoveableGroupInterface<ClickableProps>, e: any) {
-        this.unset(moveable);
+        this.endEvent(moveable);
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
 
@@ -80,13 +80,18 @@ export default makeAble("clickable", {
         }));
     },
     dragControlEnd(moveable: MoveableManagerInterface<ClickableProps>) {
-        this.unset(moveable);
+        this.endEvent(moveable);
     },
     dragGroupControlEnd(moveable: MoveableManagerInterface<ClickableProps>) {
-        this.unset(moveable);
+        this.endEvent(moveable);
+    },
+    endEvent(moveable: MoveableManagerInterface<ClickableProps>) {
+        requestAnimationFrame(() => {
+            this.unset(moveable);
+        });
     },
     unset(moveable: MoveableManagerInterface<ClickableProps>) {
-        removeEvent(window, "click", moveable.onPreventClick);
+        removeEvent(window, "click", moveable.onPreventClick, true);
     },
 });
 
