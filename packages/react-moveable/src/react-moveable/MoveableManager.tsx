@@ -654,8 +654,7 @@ export default class MoveableManager<T = {}>
     }
     public onPreventClick = (e: any) => {
         e.stopPropagation();
-
-        removeEvent(window, "click", this.onPreventClick);
+        removeEvent(window, "click", this.onPreventClick, true);
     }
     protected unsetAbles() {
         if (this.targetAbles.filter(able => {

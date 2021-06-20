@@ -3,8 +3,8 @@ import {
     convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex,
 } from "../gesto/GestoUtils";
 import {
-    throttleArray, triggerEvent, fillParams,
-    throttle, getDistSize, prefix,
+    triggerEvent, fillParams,
+    getDistSize, prefix,
     fillEndParams, getComputedStyle,
 } from "../utils";
 import { minus, plus } from "@scena/matrix";
@@ -15,7 +15,7 @@ import {
 } from "../types";
 import { triggerChildGesto } from "../groupUtils";
 import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
-import { IObject, getRad } from "@daybrush/utils";
+import { IObject, getRad, throttle, throttleArray } from "@daybrush/utils";
 
 /**
  * @namespace Draggable

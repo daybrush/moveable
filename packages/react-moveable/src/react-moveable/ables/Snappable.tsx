@@ -24,7 +24,6 @@ import {
     getRect,
     getAbsolutePosesByState,
     getAbsolutePoses,
-    throttle,
     getDistSize,
     groupBy,
     flat,
@@ -37,7 +36,10 @@ import {
     getRefTarget,
     getDragDistByState,
 } from "../utils";
-import { IObject, findIndex, hasClass, getRad, getDist } from "@daybrush/utils";
+import {
+    IObject, findIndex, hasClass, getRad, getDist,
+    throttle,
+} from "@daybrush/utils";
 import {
     getPosByReverseDirection,
     getDragDist,

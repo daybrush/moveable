@@ -1,7 +1,7 @@
-import { prefix, getControlTransform, throttle, getLineStyle } from "./utils";
+import { prefix, getControlTransform, getLineStyle } from "./utils";
 import { Renderer, MoveableManagerInterface, RenderDirections } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
-import { IObject, getRad } from "@daybrush/utils";
+import { IObject, throttle, getRad } from "@daybrush/utils";
 
 export function renderDirectionControls(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,

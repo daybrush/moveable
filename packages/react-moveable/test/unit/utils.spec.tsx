@@ -3,11 +3,11 @@ import * as ReactDOM from "react-dom";
 import {
     getTransformMatrix, getAbsoluteMatrix,
     getSize, calculateMatrixStack,
-    throttle, throttleArray, getElementInfo,
+    getElementInfo,
 } from "../../src/react-moveable/utils";
 import { multiply, invert, transpose, createWarpMatrix, calculate } from "@scena/matrix";
-import { getRad } from "@daybrush/utils";
-import { helperInvert, helperMultiply, helperCreateWarpMatrix, helperCalculate } from "./TestHelper";
+import { getRad, throttle, throttleArray } from "@daybrush/utils";
+import { helperInvert, helperMultiply } from "./TestHelper";
 
 describe("test utils", () => {
     beforeEach(() => {

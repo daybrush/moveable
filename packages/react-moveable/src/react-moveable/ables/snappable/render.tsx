@@ -1,10 +1,10 @@
-import { find } from "@daybrush/utils";
+import { find, throttle } from "@daybrush/utils";
 import {
     RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo,
     MoveableManagerInterface, SnappableProps, SnapGuideline,
     SnappableOptions, SnappableRenderType, GapGuideline, SnappableState,
 } from "../../types";
-import { prefix, flat, throttle, groupBy } from "../../utils";
+import { prefix, flat, groupBy } from "../../utils";
 
 const DIRECTION_NAMES = {
     horizontal: [

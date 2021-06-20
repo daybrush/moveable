@@ -5,7 +5,7 @@ import {
     ElementGuidelineValue,
 } from "../../types";
 import {
-    selectValue, throttle, getAbsolutePosesByState,
+    selectValue, getAbsolutePosesByState,
     getRect, groupBy, getTinyDist, calculateInversePosition,
     calculatePosition, roundSign, getRefTarget,
 } from "../../utils";
@@ -14,7 +14,7 @@ import { TINY_NUM } from "../../consts";
 import { minus } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
 import { diff } from "@egjs/children-differ";
-import { isObject } from "@daybrush/utils";
+import { isObject, throttle } from "@daybrush/utils";
 
 export function calculateContainerPos(
     rootMatrix: number[],

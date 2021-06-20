@@ -1021,19 +1021,6 @@ export function getAbsolutePosesByState({
 export function roundSign(num: number) {
     return Math.round(num % 1 === -0.5 ? num - 1 : num);
 }
-export function throttle(num: number, unit: number) {
-    if (!unit) {
-        return num;
-    }
-    return Math.round(num / unit) * unit;
-}
-export function throttleArray(nums: number[], unit: number) {
-    nums.forEach((_, i) => {
-        nums[i] = throttle(nums[i], unit);
-    });
-    return nums;
-}
-
 export function unset(self: any, name: string) {
     if (self[name]) {
         self[name].unset();

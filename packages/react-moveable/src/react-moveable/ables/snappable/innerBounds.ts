@@ -1,6 +1,6 @@
-import { average, getRad } from "@daybrush/utils";
+import { average, getRad, throttle } from "@daybrush/utils";
 import { rotate } from "@scena/matrix";
-import { maxOffset, getDistSize, throttle, getTinyDist } from "../../utils";
+import { maxOffset, getDistSize, getTinyDist } from "../../utils";
 
 import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../gesto/GestoUtils";

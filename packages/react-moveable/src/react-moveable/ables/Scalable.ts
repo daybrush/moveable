@@ -1,5 +1,5 @@
 import {
-    throttle, getDirection, triggerEvent, multiply2,
+    getDirection, triggerEvent, multiply2,
     fillParams, getDistSize, fillEndParams, directionCondition,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
@@ -28,7 +28,10 @@ import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus, minus } from "@scena/matrix";
 import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapScale } from "./Snappable";
-import { isArray, IObject, getRad, getDist } from "@daybrush/utils";
+import {
+    isArray, IObject, getRad, getDist,
+    throttle,
+} from "@daybrush/utils";
 
 /**
  * @namespace Scalable

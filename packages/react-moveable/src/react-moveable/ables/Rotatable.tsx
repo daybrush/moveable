@@ -1,8 +1,11 @@
 import {
-    throttle, prefix, triggerEvent, fillParams,
+    prefix, triggerEvent, fillParams,
     calculatePosition, fillEndParams, getRotationRad, getRefTargets,
 } from "../utils";
-import { IObject, hasClass, getRad } from "@daybrush/utils";
+import {
+    IObject, hasClass, getRad,
+    throttle,
+} from "@daybrush/utils";
 import {
     RotatableProps, OnRotateGroup, OnRotateGroupEnd,
     Renderer, OnRotateGroupStart, OnRotateStart, OnRotate,

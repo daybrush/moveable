@@ -1,10 +1,10 @@
-import { getRad } from "@daybrush/utils";
+import { getRad, throttle } from "@daybrush/utils";
 import {
     BoundInfo, SnappableProps, BoundType,
     RotatableProps, MoveableManagerInterface, SnappableState,
 } from "../../types";
 import { rotate, minus } from "@scena/matrix";
-import { getDistSize, throttle } from "../../utils";
+import { getDistSize } from "../../utils";
 import { TINY_NUM } from "../../consts";
 
 export function checkBoundPoses(

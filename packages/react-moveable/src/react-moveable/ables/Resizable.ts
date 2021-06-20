@@ -1,5 +1,5 @@
 import {
-    throttle, getDirection, triggerEvent,
+    getDirection, triggerEvent,
     fillParams, getCSSSize,
     getDistSize, fillEndParams, directionCondition,
     getComputedStyle,
@@ -24,7 +24,11 @@ import Draggable from "./Draggable";
 import { calculate, createRotateMatrix, plus } from "@scena/matrix";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapResize } from "./Snappable";
-import { calculateBoundSize, IObject, isString, getRad, convertUnitSize } from "@daybrush/utils";
+import {
+    calculateBoundSize, IObject,
+    isString, getRad, convertUnitSize,
+    throttle,
+} from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
 /**
