@@ -1,15 +1,11 @@
 import * as React from "react";
 import Moveable from "@/react-moveable";
-import { useEffect } from "react";
 
 export default function App(props: Record<string, any>) {
     const [translate, setTranslate]  = React.useState([0, 0]);
     const targetRef = React.useRef<SVGSVGElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
 
-    useEffect(() => {
-        (window as any).aa = moveableRef;
-    });
     return (
         <div className="root">
             <div className="container" style={{
@@ -43,9 +39,11 @@ export default function App(props: Record<string, any>) {
                     }}
                     onDragEnd={e => {
                         const lastEvent = e.lastEvent;
-                        lastEvent && setTranslate(lastEvent.beforeTranslate);
+                        if (lastEvent) {
+                            setTranslate(lastEvent.beforeTranslate);
+                        }
                     }}
-                />
+                ></Moveable>
             </div>
         </div>
     );

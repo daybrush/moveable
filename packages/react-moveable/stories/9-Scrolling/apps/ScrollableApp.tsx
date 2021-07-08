@@ -11,10 +11,12 @@ export default function App() {
     const targetRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        viewerRef.current!.scrollCenter();
-    });
-    return <div className="container">
-        <button onClick={() => {
+        setTimeout(() => {
+            viewerRef.current!.scrollCenter();
+        }, 100);
+    }, []);
+    return (<div className="container">
+        <button className="button" onClick={() => {
             viewerRef.current!.scrollCenter();
         }} style={{
             position: "absolute",
@@ -52,8 +54,8 @@ export default function App() {
                     onResize={helper.onResize}
                     onRotateStart={helper.onRotateStart}
                     onRotate={helper.onRotate}
-                />
+                ></Moveable>
             </div>
         </InfiniteViewer>
-    </div>;
+    </div>);
 }

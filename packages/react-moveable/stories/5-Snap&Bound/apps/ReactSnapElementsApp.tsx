@@ -16,11 +16,13 @@ export default function App(props: Record<string, any>) {
                     width: "100px",
                     height: "100px",
                     left: "0px",
+                    top: "120px",
                 }}>Element1</div>
                 <div className="target element2" style={{
                     width: "100px",
                     height: "100px",
                     left: "400px",
+                    top: "120px",
                 }}>Element2</div>
                 <div className="target element3" style={{
                     width: "300px",

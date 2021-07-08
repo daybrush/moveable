@@ -60,7 +60,9 @@ export default function App(props: Record<string, any>) {
                     }}
                     onDragEnd={e => {
                         const lastEvent = e.lastEvent;
-                        lastEvent && setTranslate(lastEvent.beforeTranslate);
+                        if (lastEvent) {
+                            setTranslate(lastEvent.beforeTranslate);
+                        }
 
                         requestAnimationFrame(() => {
                             const rect = e.moveable.getRect();

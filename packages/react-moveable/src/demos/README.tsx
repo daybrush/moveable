@@ -651,7 +651,9 @@ function RenderWarpable() {
                     e.target.style.transform = e.transform;
                 }}
                 onWarpEnd={(e) => {
-                    e.lastEvent && setWarpMatrix(e.lastEvent.transform);
+                    if (e.lastEvent) {
+                        setWarpMatrix(e.lastEvent.transform);
+                    }
                 }}
             ></Moveable>
         </div>
