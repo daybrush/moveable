@@ -7,7 +7,10 @@ const defaultOptions = {
     exports: "named",
     plugins: [
         vuePlugin(),
-    ]
+    ],
+    external: {
+        "vue": "Vue",
+    },
 };
 export default buildHelper([
     {
