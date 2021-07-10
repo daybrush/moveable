@@ -7,7 +7,10 @@ export default function App(props: Record<string, any>) {
     const moveableRef = React.useRef<Moveable>(null);
 
     return (
-        <div className="root">
+        <div className="root" style={{
+            paddingLeft: "100px",
+            paddingTop: "100px",
+        }}>
             <div className="container" style={{
                 transformOrigin: "0 0",
                 transform: `scale(${props.containerScale})`,

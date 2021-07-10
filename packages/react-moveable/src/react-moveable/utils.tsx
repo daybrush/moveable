@@ -201,7 +201,7 @@ export function getMatrixStackInfo(
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
-    let isEnd = false;
+    let isEnd =  target === container;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -472,7 +472,6 @@ export function calculateMatrixStack(
     const isNext3d = isAbsolute3d || isRoot3d || is3d;
     const n = isNext3d ? 4 : 3;
     const isSVGGraphicElement = target.tagName.toLowerCase() !== "svg" && "ownerSVGElement" in target;
-    const originalContainer = container || document.body;
     let targetMatrix = prevTargetMatrix;
     // let allMatrix = prevMatrix ? convertDimension(prevMatrix, prevN!, n) : createIdentityMatrix(n);
     // let rootMatrix = prevRootMatrix ? convertDimension(prevRootMatrix, prevN!, n) : createIdentityMatrix(n);
@@ -482,7 +481,8 @@ export function calculateMatrixStack(
     let beforeMatrix = createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
-    const endContainer = getOffsetInfo(originalContainer, originalContainer, true).offsetParent;
+    const originalRootContainer = rootContainer || document.body;
+    const endContainer = getOffsetInfo(originalRootContainer, originalRootContainer, true).offsetParent;
 
     rootMatrixes.reverse();
     matrixes.reverse();
@@ -689,6 +689,7 @@ export function getSVGOffset(
     if (container === document.body) {
         margin = getBodyOffset(target, true);
     }
+
     const rect = target.getBoundingClientRect();
     const rectLeft
         = rect.left - containerClientRect.left + container.scrollLeft
@@ -698,6 +699,7 @@ export function getSVGOffset(
         - (container.clientTop || 0) + margin[1];
     const rectWidth = rect.width;
     const rectHeight = rect.height;
+
     const mat = multiplies(
         n,
         beforeMatrix,
