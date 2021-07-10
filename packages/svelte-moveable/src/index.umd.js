@@ -1,4 +1,5 @@
-import Moveable, * as modules from "./index";
+import Moveable from "./index.js";
+import * as modules from "moveable";
 
 for (const name in modules) {
     Moveable[name] = modules[name];
