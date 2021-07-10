@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "removeComments": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "declaration"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
+}

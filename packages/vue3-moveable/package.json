@@ -1,0 +1,63 @@
+{
+    "name": "vue3-moveable",
+    "version": "0.0.0",
+    "description": "A Vue 3 Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
+    "types": "declaration/index.d.ts",
+    "main": "dist/moveable.cjs.js",
+    "module": "dist/moveable.esm.js",
+    "sideEffects": false,
+    "scripts": {
+        "serve": "vue-cli-service serve demo",
+        "build": "rm -rf dist && rollup -c && npm run declaration",
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json && cp ./src/Moveable.vue.d.ts ./declaration",
+        "lint": "vue-cli-service lint --no-fix"
+    },
+    "keywords": [
+        "moveable",
+        "resizable",
+        "scalable",
+        "draggable",
+        "rotatable",
+        "warpable",
+        "pinchable",
+        "groupable",
+        "snappable",
+        "scrollable",
+        "movable",
+        "throttle",
+        "scroll",
+        "ratio",
+        "dom",
+        "resize",
+        "scale",
+        "drag",
+        "move",
+        "rotate",
+        "vue",
+        "warp",
+        "snap",
+        "pinch"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/daybrush/moveable/blob/master/packages/vue-moveable"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/moveable/issues"
+    },
+    "homepage": "https://daybrush.com/moveable",
+    "dependencies": {
+        "moveable": "^0.25.4-beta.0"
+    },
+    "devDependencies": {
+        "@daybrush/builder": "^0.1.2",
+        "@vue/cli-plugin-typescript": "~4.5.0",
+        "@vue/cli-service": "~4.5.0",
+        "@vue/compiler-sfc": "^3.0.0",
+        "rollup-plugin-vue": "^6.0.0",
+        "typescript": "^3.4.3",
+        "vue": "^3.1.1"
+    }
+}
