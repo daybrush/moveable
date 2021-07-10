@@ -15,7 +15,7 @@
     src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
 <a href="https://github.com/daybrus/moveable/tree/master/packages/vue3-moveable" target="_blank"><img
     alt="Vue 3"
-    src="https://img.shields.io/static/v1.svg?label=&message=Vue&nbsp;3&style=flat-square&color=3fb984"></a>
+    src="https://img.shields.io/static/v1.svg?label=&message=Vue%203&style=flat-square&color=3fb984"></a>
 <a href="https://github.com/daybrush/moveable/tree/master/packages/svelte-moveable" target="_blank"><img alt="Svelte" src="https://img.shields.io/static/v1.svg?label=&message=Svelte&style=flat-square&color=C82B38"></a>
 <a href="https://github.com/daybrush/moveable/tree/master/packages/lit-moveable" target="_blank"><img alt="Lit" src="https://img.shields.io/static/v1.svg?label=&message=Lit&style=flat-square&color=61daeb"></a>
 </p>
