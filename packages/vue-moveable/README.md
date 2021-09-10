@@ -114,6 +114,7 @@ If you want to check the methods and events, please refer to the [**API document
         @scale="onScale"
         @rotate="onRotate"
     />
+</div>
 </template>
 <script>
 import Moveable from 'vue-moveable';
