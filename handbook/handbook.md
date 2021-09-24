@@ -119,14 +119,14 @@ const moveable = new Moveable(document.body, {
 const frame = {
     translate: [0, 0],
 };
-moveable.on("dragStart", ({ set }) => {
-    set(frame.translate);
-}).on("drag", ({ target, beforeTranslate }) => {
-    frame.translate = beforeTranslate;
-    target.style.transform
-        = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-}).on("dragEnd", ({ target, isDrag, clientX, clientY }) => {
-    console.log("onDragEnd", target, isDrag);
+moveable.on("dragStart", e => {
+    e.set(frame.translate);
+}).on("drag", e => {
+    frame.translate = e.beforeTranslate;
+    e.target.style.transform
+        = `translate(${e.beforeTranslate[0]}px, ${e.beforeTranslate[1]}px)`;
+}).on("dragEnd", e => {
+    console.log("onDragEnd", e.target, e.isDrag);
 });
 ```
 
@@ -264,26 +264,26 @@ const frame = {
 };
 moveable.on("resizeStart", ({ target, set, setOrigin, dragStart }) => {
     // Set origin if transform-origin use %.
-    setOrigin(["%", "%"]);
+    e.setOrigin(["%", "%"]);
 
     // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
-    const style = window.getComputedStyle(target);
+    const style = window.getComputedStyle(e.target);
     const cssWidth = parseFloat(style.width);
     const cssHeight = parseFloat(style.height);
-    set([cssWidth, cssHeight]);
+    e.set([cssWidth, cssHeight]);
 
     // If a drag event has already occurred, there is no dragStart.
     dragStart && dragStart.set(frame.translate);
-}).on("resize", ({ target, width, height, drag }) => {
-    target.style.width = `${width}px`;
-    target.style.height = `${height}px`;
+}).on("resize", e => {
+    e.target.style.width = `${e.width}px`;
+    e.target.style.height = `${e.height}px`;
 
     // get drag event
-    frame.translate = drag.beforeTranslate;
-    target.style.transform
-        = `translate(${drag.beforeTranslate[0]}px, ${drag.beforeTranslate[1]}px)`;
-}).on("resizeEnd", ({ target, isDrag, clientX, clientY }) => {
-    console.log("onResizeEnd", target, isDrag);
+    frame.translate = e.drag.beforeTranslate;
+    e.target.style.transform
+        = `translate(${e.drag.beforeTranslate[0]}px, ${e.drag.beforeTranslate[1]}px)`;
+}).on("resizeEnd", e => {
+    console.log("onResizeEnd", e.target, e.isDrag);
 });
 ```
 
