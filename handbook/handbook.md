@@ -262,7 +262,7 @@ const moveable = new Moveable(document.body, {
 const frame = {
     translate: [0, 0],
 };
-moveable.on("resizeStart", ({ target, set, setOrigin, dragStart }) => {
+moveable.on("resizeStart", e => {
     // Set origin if transform-origin use %.
     e.setOrigin(["%", "%"]);
 
