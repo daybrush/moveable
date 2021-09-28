@@ -14,7 +14,7 @@ const methods: Record<string, any> = {};
 
 METHODS.forEach((name) => {
   methods[name] = function (this: any, ...args: any[]) {
-    this.moveable[name](...args);
+    this.$_moveable[name](...args);
   };
 });
 const watch: Record<string, any> = {};
