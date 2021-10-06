@@ -10,7 +10,6 @@
     onDestroy,
     createEventDispatcher,
     beforeUpdate,
-    afterUpdate,
     tick
   } from "svelte";
 
@@ -58,7 +57,7 @@
     });
   });
   onDestroy(() => {
-    moveable.destroy();
+    moveable && moveable.destroy();
   });
 
   export function getInstance() {
