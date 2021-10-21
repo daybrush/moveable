@@ -61,7 +61,6 @@ export default class MoveableManager<T = {}>
     };
     public state: MoveableManagerState = {
         container: null,
-        target: null,
         gesto: null,
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         disableNativeEvent: false,

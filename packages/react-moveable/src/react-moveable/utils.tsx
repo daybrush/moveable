@@ -197,11 +197,12 @@ export function convert3DMatrixes(matrixes: MatrixInfo[]) {
 export function getMatrixStackInfo(
     target: SVGElement | HTMLElement,
     container?: SVGElement | HTMLElement | null,
+    checkContainer?: boolean,
     // prevMatrix?: number[],
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
-    let isEnd =  target === container;
+    let isEnd = !checkContainer && target === container;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -374,7 +375,10 @@ export function calculateElementInfo(
 
     if (target) {
         const result = calculateMatrixStack(
-            target, container, rootContainer, isAbsolute3d,
+            target,
+            container,
+            rootContainer,
+            isAbsolute3d,
             // prevMatrix, prevRootMatrix, prevN,
         );
         const position = calculateMoveablePosition(
@@ -464,7 +468,7 @@ export function calculateMatrixStack(
     const {
         matrixes: rootMatrixes,
         is3d: isRoot3d,
-    } = getMatrixStackInfo(offsetContainer, rootContainer); // prevRootMatrix
+    } = getMatrixStackInfo(offsetContainer, rootContainer, true); // prevRootMatrix
 
     // if (rootContainer === document.body) {
     //     console.log(offsetContainer, rootContainer, rootMatrixes);
@@ -875,6 +879,7 @@ export function getRotationRad(
 ) {
     return getRad(direction > 0 ? poses[0] : poses[1], direction > 0 ? poses[1] : poses[0]);
 }
+
 export function getTargetInfo(
     moveableElement?: HTMLElement | null,
     target?: HTMLElement | SVGElement | null,
