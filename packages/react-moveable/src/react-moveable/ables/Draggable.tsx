@@ -99,6 +99,8 @@ export default {
         datas.prevDist = [0, 0];
         datas.prevBeforeDist = [0, 0];
         datas.isDrag = false;
+        datas.deltaOffset = [0, 0];
+        datas.distOffset = [0, 0];
 
         const params = fillParams<OnDragStart>(moveable, e, {
             set: (translate: number[]) => {
@@ -124,15 +126,20 @@ export default {
         moveable: MoveableManagerInterface<DraggableProps, any>,
         e: any,
     ): OnDrag | undefined {
+        if (!e) {
+            return;
+        }
         resolveTransformEvent(e, "translate");
 
         const { datas, parentEvent, parentFlag, isPinch, isRequest } = e;
         let { distX, distY } = e;
-        const { isDrag, prevDist, prevBeforeDist, startValue } = datas;
+        const { isDrag, prevDist, prevBeforeDist, startValue, distOffset } = datas;
 
         if (!isDrag) {
             return;
         }
+        distX += distOffset[0];
+        distY += distOffset[1];
         const props = moveable.props;
 
         const parentMoveable = props.parentMoveable;
@@ -230,6 +237,24 @@ export default {
 
         !parentEvent && triggerEvent(moveable, "onDrag", params);
         return params;
+    },
+    dragAfter(
+        moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
+        e: any,
+    ) {
+        const datas = e.datas;
+        const {
+            deltaOffset,
+            distOffset,
+        } = e.datas;
+
+        if (deltaOffset[0] || deltaOffset[1]) {
+            datas.deltaOffset = [0, 0];
+            distOffset[0] += deltaOffset[0];
+            distOffset[1] += deltaOffset[1];
+            return this.drag(moveable, e);
+        }
+        return false;
     },
     dragEnd(
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,

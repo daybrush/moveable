@@ -26,7 +26,8 @@ function getCursorCSS(degree: number) {
 export const agent = getAgent();
 export const IS_WEBKIT = agent.browser.webkit;
 export const IS_WEBKIT605 = IS_WEBKIT && (() => {
-    const res = /applewebkit\/([^\s]+)/g.exec(navigator.userAgent.toLowerCase());
+    const navi = typeof window === "undefined" ? { userAgent: "" } : window.navigator;
+    const res = /applewebkit\/([^\s]+)/g.exec(navi.userAgent.toLowerCase());
 
     return res ? parseFloat(res[1]) < 605 : false;
 })();

@@ -1,7 +1,7 @@
 import {
     Renderer, ClippableProps, OnClip,
     ClippableState, OnClipEnd, OnClipStart,
-    ControlPose, MoveableManagerInterface,
+    ControlPose, MoveableManagerInterface, DraggableProps,
 } from "../types";
 import { splitBracket, splitComma, splitUnit, splitSpace, convertUnitSize, getRad } from "@daybrush/utils";
 import {
@@ -12,7 +12,7 @@ import {
     getComputedStyle,
 } from "../utils";
 import { plus, minus } from "@scena/matrix";
-import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
+import { getDragDist, calculatePointerDist, setDragStart } from "../gesto/GestoUtils";
 import {
     getRadiusValues,
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos,
@@ -663,7 +663,7 @@ export default {
 
         return true;
     },
-    dragControl(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
+    dragControl(moveable: MoveableManagerInterface<ClippableProps & DraggableProps, ClippableState>, e: any) {
         const { datas, originalDatas } = e;
 
         if (!datas.isClipStart) {
@@ -756,6 +756,8 @@ export default {
             guideXPoses = guidePoses.filter((_, i) => dists[i][0]).map(pos => pos[0]);
             guideYPoses = guidePoses.filter((_, i) => dists[i][1]).map(pos => pos[1]);
         }
+        const boundDelta = [0, 0];
+
         for (let i = 0; i < 2; ++i) {
             const {
                 horizontal: horizontalSnapInfo,
@@ -772,6 +774,12 @@ export default {
             const snapOffsetY = horizontalSnapInfo.offset;
             const snapOffsetX = verticalSnapInfo.offset;
 
+            if (horizontalSnapInfo.isBound) {
+                boundDelta[1] += snapOffsetY;
+            }
+            if (verticalSnapInfo.isBound) {
+                boundDelta[0] += snapOffsetX;
+            }
             if ((isEllipse || isCircle) && dists[0][0] === 0 && dists[0][1] === 0) {
                 const guideRect = getRect(nextPoses);
                 let cy = guideRect.bottom - guideRect.top;
@@ -836,6 +844,10 @@ export default {
             },
         );
 
+
+        if (originalDatas.draggable) {
+            originalDatas.draggable.deltaOffset = boundDelta;
+        }
         triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
             clipEventType: "changed",
             clipType,
