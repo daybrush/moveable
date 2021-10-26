@@ -110,7 +110,7 @@
         "@daybrush/utils": "^1.6.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
-        "@scena/dragscroll": "^1.0.1",
+        "@scena/dragscroll": "^1.0.3",
         "@scena/matrix": "^1.1.1",
         "css-to-mat": "^1.0.3",
         "framework-utils": "^1.1.0",

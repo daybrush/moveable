@@ -8,11 +8,6 @@ import {
     DEFAULT_WARPABLE_CONTROLS,
 } from "../controls/default";
 
-
-export default {
-    title: "Basic",
-};
-
 export const WarpableTemplate = App as any;
 
 WarpableTemplate.storyName = "Warpable";

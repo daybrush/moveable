@@ -282,3 +282,46 @@ export const DEFAULT_ORIGIN_DRAGGABLE_CONTROLS = {
         defaultValue: true,
     }),
 };
+
+
+export const DEFAULT_CLIPPABLE_CONTROLS = {
+    clippable: makeArgType({
+        type: "boolean",
+        description: makeLink("Clippable", "clippable"),
+        defaultValue: true,
+    }),
+    clipRelative: makeArgType({
+        type: "boolean",
+        description: makeLink("Clippable", "clipRelative"),
+        defaultValue: false,
+    }),
+    clipArea: makeArgType({
+        type: "boolean",
+        description: makeLink("Clippable", "clipArea"),
+        defaultValue: false,
+    }),
+    dragWithClip: makeArgType({
+        type: "boolean",
+        description: makeLink("Clippable", "dragWithClip"),
+        defaultValue: 0,
+    }),
+    defaultClipPath: makeArgType({
+        type: "inline-radio",
+        description: makeLink("Clippable", "defaultClipPath"),
+        defaultValue: "inset",
+        control: {
+            options: [
+                "circle",
+                "inset",
+                "ellipse",
+                "rect",
+                "polygon",
+            ],
+        },
+    }),
+    clipTargetBounds: makeArgType({
+        type: "boolean",
+        description: makeLink("Clippable", "clipTargetBounds"),
+        defaultValue: false,
+    }),
+};

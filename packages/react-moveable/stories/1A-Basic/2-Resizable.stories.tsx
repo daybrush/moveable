@@ -9,10 +9,6 @@ import {
 } from "../controls/default";
 
 
-export default {
-    title: "Basic",
-};
-
 export const ResizableTemplate = App as any;
 
 ResizableTemplate.storyName = "Resizable";

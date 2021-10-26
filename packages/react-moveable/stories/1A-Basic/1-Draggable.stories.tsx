@@ -11,11 +11,6 @@ import {
 } from "../controls/default";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
 
-
-export default {
-    title: "Basic",
-};
-
 export const DraggableTemplate = App as any;
 
 DraggableTemplate.storyName = "Draggable";

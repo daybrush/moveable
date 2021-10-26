@@ -7,3 +7,4 @@ export * from "./2-Resizable.stories";
 export * from "./3-Scalable.stories";
 export * from "./4-Rotatable.stories";
 export * from "./5-Warpable.stories";
+export * from "./6-Clippable.stories";

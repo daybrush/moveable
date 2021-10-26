@@ -9,9 +9,6 @@ import {
 } from "../controls/default";
 
 
-export default {
-    title: "Basic",
-};
 
 export const RotatableTemplate = App as any;
 

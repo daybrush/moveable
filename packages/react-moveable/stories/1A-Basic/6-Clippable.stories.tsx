@@ -2,25 +2,27 @@ import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
 import { convertPath, convertReactTemplate, makeArgs } from "../utils";
-import App from "./apps/ReactScalableApp";
-import RawReactApp from "!!raw-loader!./apps/ReactScalableApp";
+import App from "./apps/ReactClippableApp";
+import RawReactApp from "!!raw-loader!./apps/ReactClippableApp";
 import {
-    DEFAULT_SCALABLE_CONTROLS,
+    DEFAULT_DRAGGABLE_CONTROLS,
+    DEFAULT_CLIPPABLE_CONTROLS,
 } from "../controls/default";
 
 
-export const ScalableTemplate = App as any;
+export const ClippableTemplate = App as any;
 
-ScalableTemplate.storyName = "Scalable";
-ScalableTemplate.argTypes = {
-    ...DEFAULT_SCALABLE_CONTROLS,
+ClippableTemplate.storyName = "Clippable";
+ClippableTemplate.argTypes = {
+    ...DEFAULT_DRAGGABLE_CONTROLS,
+    ...DEFAULT_CLIPPABLE_CONTROLS,
 };
-ScalableTemplate.args = {
-    ...makeArgs(ScalableTemplate.argTypes),
+ClippableTemplate.args = {
+    ...makeArgs(ClippableTemplate.argTypes),
 };
 
 
-ScalableTemplate.parameters = {
+ClippableTemplate.parameters = {
     preview: [
         {
             tab: "React",
