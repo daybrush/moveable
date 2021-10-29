@@ -12,7 +12,14 @@ export default function App(props: Record<string, any>) {
                 transformOrigin: "0 0",
                 transform: `scale(${props.containerScale})`,
             }}>
-                <div className="target" ref={targetRef}>Target</div>
+                <div style={{
+                    position: "relative",
+                    transform: "translate3d(0px, 0px, 100px)",
+                }}>
+                    <div className="target" ref={targetRef} style={{
+                        transform: "translate(0px, 0px)",
+                    }}>Target</div>
+                </div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}

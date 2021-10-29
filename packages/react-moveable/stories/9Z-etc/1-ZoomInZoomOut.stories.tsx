@@ -1,7 +1,7 @@
-import { DEFAULT_REACT_CODESANDBOX, DEFAULT_VANILLA_CODESANDBOX } from "storybook-addon-preview";
+import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
-import { convertPath, convertReactTemplate, convertTemplate, convertVanillaTemplate, makeArgs } from "../utils";
+import { convertPath, convertReactTemplate, makeArgs } from "../utils";
 import App from "./apps/ReactZoomInZoomOutApp";
 import RawReactApp from "!!raw-loader!./apps/ReactZoomInZoomOutApp";
 import {

@@ -233,6 +233,9 @@ export function getMatrixStackInfo(
             n = 4;
 
             convert3DMatrixes(matrixes);
+            if (targetMatrix) {
+                targetMatrix = convertDimension(targetMatrix, 3, 4);
+            }
         }
         if (is3d && length === 9) {
             matrix = convertDimension(matrix, 3, 4);
