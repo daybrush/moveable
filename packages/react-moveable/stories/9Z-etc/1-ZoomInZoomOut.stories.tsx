@@ -9,10 +9,6 @@ import {
 } from "../controls/default";
 
 
-export default {
-    title: "Basic",
-};
-
 export const ZoomInZoomOutTemplate = App as any;
 
 ZoomInZoomOutTemplate.storyName = "Zoom with Moveable";

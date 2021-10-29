@@ -31,6 +31,10 @@ export default makeAble("clickable", {
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
 
+        if (!e.isDrag) {
+            this.unset(moveable);
+        }
+
         if (
             !inputEvent || !inputTarget || e.isDrag
             || moveable.isMoveableElement(inputTarget)
