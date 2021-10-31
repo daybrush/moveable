@@ -182,10 +182,7 @@ export default {
             distX += verticalOffset;
             distY += horizontalOffset;
         }
-        datas.passDeltaX = distX - (datas.passDistX || 0);
-        datas.passDeltaY = distY - (datas.passDistY || 0);
-        datas.passDistX = distX;
-        datas.passDistY = distY;
+
         const beforeTranslate = plus(getBeforeDragDist({ datas, distX, distY }), startValue);
         const translate = plus(getTransformDist({ datas, distX, distY }), startValue);
 
@@ -201,6 +198,12 @@ export default {
 
         datas.prevDist = dist;
         datas.prevBeforeDist = beforeDist;
+
+
+        datas.passDelta = delta; //distX - (datas.passDistX || 0);
+        // datas.passDeltaY = distY - (datas.passDistY || 0);
+        datas.passDist = dist; //distX;
+        // datas.passDistY = distY;
 
         const left = datas.left + beforeDist[0];
         const top = datas.top + beforeDist[1];
@@ -302,8 +305,8 @@ export default {
             return;
         }
         const params = this.drag(moveable, e);
-        const { passDeltaX, passDeltaY } = e.datas;
-        const events = triggerChildGesto(moveable, this, "drag", [passDeltaX, passDeltaY], e, false);
+        const { passDelta } = e.datas;
+        const events = triggerChildGesto(moveable, this, "drag", passDelta, e, false);
 
         if (!params) {
             return;
