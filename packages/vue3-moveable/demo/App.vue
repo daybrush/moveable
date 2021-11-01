@@ -1,6 +1,6 @@
 <template>
   <div class="root">
-    <div class="container">
+    <div class="container" style="position: relative">
       <div class="target">Target</div>
       <button @click="toggleDraggable">Toggle {{draggable}}</button>
       <moveable
