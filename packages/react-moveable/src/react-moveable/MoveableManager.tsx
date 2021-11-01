@@ -53,6 +53,7 @@ export default class MoveableManager<T = {}>
         pinchOutside: true,
         checkInput: false,
         groupable: false,
+        hideDefaultLines: false,
         cspNonce: "",
         translateZ: 0,
         cssStyled: null,
@@ -76,7 +77,7 @@ export default class MoveableManager<T = {}>
     public rotation = 0;
     public scale: number[] = [1, 1];
     public isUnmounted = false;
-    public events: Record<string, EventManager | null>  = {
+    public events: Record<string, EventManager | null> = {
         "mouseEnter": null,
         "mouseLeave": null,
     };
@@ -85,7 +86,7 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const state = this.state;
         const {
-            edge, parentPosition, className,
+            parentPosition, className,
             target: propsTarget,
             zoom, cspNonce,
             translateZ,
@@ -97,14 +98,11 @@ export default class MoveableManager<T = {}>
         this.updateRenderPoses();
 
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
-        const { left, top, target: stateTarget, direction, renderPoses } = state;
+        const { left, top, target: stateTarget, direction } = state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
         const isDragging = this.isDragging();
         const ableAttributes: IObject<boolean> = {};
-        const Renderer = {
-            createElement: React.createElement,
-        };
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
@@ -125,10 +123,7 @@ export default class MoveableManager<T = {}>
                     "--zoompx": `${zoom}px`,
                 }}>
                 {this.renderAbles()}
-                {renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], zoom!, 0)}
-                {renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], zoom!, 1)}
-                {renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2)}
-                {renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3)}
+                {this._renderLines()}
             </ControlBoxElement>
         );
     }
@@ -715,6 +710,28 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
+    }
+    private _renderLines() {
+        const props = this.props;
+        const {
+            edge,
+            zoom,
+            hideDefaultLines,
+        } = props;
+
+        if (hideDefaultLines) {
+            return [];
+        }
+        const renderPoses = this.state.renderPoses;
+        const Renderer = {
+            createElement,
+        };
+        return [
+            renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], zoom!, 0),
+            renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], zoom!, 1),
+            renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2),
+            renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3),
+        ];
     }
 }
 

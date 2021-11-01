@@ -17,6 +17,7 @@ export default {
         checkInput: Boolean,
         cspNonce: String,
         translateZ: Number,
+        hideDefaultLines: Boolean,
         props: Object,
     } as const,
     events: {} as const,

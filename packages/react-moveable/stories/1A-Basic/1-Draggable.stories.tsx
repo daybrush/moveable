@@ -7,6 +7,7 @@ import RawHTMLApp from "!!raw-loader!./apps/vanilla/DraggableApp.html";
 import RawVanillaApp from "!!raw-loader!./apps/vanilla/DraggableApp.ts_txt";
 import RawReactApp from "!!raw-loader!./apps/ReactDraggableApp";
 import {
+    DEFAULT_CONTROLS,
     DEFAULT_DRAGGABLE_CONTROLS, SCALE_CONTROLS,
 } from "../controls/default";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
@@ -16,6 +17,7 @@ export const DraggableTemplate = App as any;
 DraggableTemplate.storyName = "Draggable";
 DraggableTemplate.argTypes = {
     ...SCALE_CONTROLS,
+    ...DEFAULT_CONTROLS,
     ...DEFAULT_DRAGGABLE_CONTROLS,
 };
 DraggableTemplate.args = {

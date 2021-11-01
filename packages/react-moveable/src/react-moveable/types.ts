@@ -46,7 +46,8 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
  * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
  * @property - add nonce property to style for CSP (default: "")
- * @property - You can set the translateZ value of moveable (default: 50)
+ * @property - You can set the translateZ value of moveable. (default: 50)
+ * @property - Whether to hide the line corresponding to the rect of the target. (default: false)
  * @property - You can use props in object format or custom props. (default: object)
  */
 export interface DefaultOptions {
@@ -66,6 +67,7 @@ export interface DefaultOptions {
     checkInput?: boolean;
     cspNonce?: string;
     translateZ?: number | string;
+    hideDefaultLines?: boolean;
     props?: Record<string, any>;
 }
 /**

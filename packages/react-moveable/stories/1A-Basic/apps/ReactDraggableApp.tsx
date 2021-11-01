@@ -16,6 +16,8 @@ export default function App(props: Record<string, any>) {
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
+                    padding={props.padding}
+                    hideDefaultLines={props.hideDefaultLines}
                     draggable={props.draggable}
                     throttleDrag={props.throttleDrag}
                     edgeDraggable={props.edgeDraggable}

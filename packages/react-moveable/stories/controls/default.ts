@@ -14,6 +14,11 @@ export const DEFAULT_CONTROLS = {
         description: makeLink("Moveable", "padding"),
         defaultValue: { left: 0, top: 0, right: 0, bottom: 0 },
     }),
+    hideDefaultLines: makeArgType({
+        type: "boolean",
+        description: makeLink("Moveable", "hideDefaultLines"),
+        defaultValue: false,
+    }),
 };
 
 export const DEFAULT_DRAGGABLE_CONTROLS = {
