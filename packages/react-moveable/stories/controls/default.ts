@@ -168,20 +168,10 @@ export const DEFAULT_SNAPPABLE_CONTROLS = {
         description: makeLink("Snappable", "snappable"),
         defaultValue: true,
     }),
-    snapCenter: makeArgType({
-        type: "boolean",
-        description: makeLink("Snappable", "snapCenter"),
-        defaultValue: false,
-    }),
-    snapHorizontal: makeArgType({
-        type: "boolean",
-        description: makeLink("Snappable", "snapHorizontal"),
-        defaultValue: true,
-    }),
-    snapVertical: makeArgType({
-        type: "boolean",
-        description: makeLink("Snappable", "snapVertical"),
-        defaultValue: true,
+    snapDirections: makeArgType({
+        type: "object",
+        description: makeLink("Snappable", "snapDirections"),
+        defaultValue: { top: true, left: true, bottom: true, right: true },
     }),
     snapThreshold: makeArgType({
         type: "number",
@@ -202,6 +192,16 @@ export const DEFAULT_SNAPPABLE_GUIDELINES_CONTROLS = {
     }),
 };
 export const DEFAULT_SNAPPABLE_ELEMENTS_CONTROLS = {
+    snapDirections: makeArgType({
+        type: "object",
+        description: makeLink("Snappable", "snapDirections"),
+        defaultValue: { top: true, left: true, bottom: true, right: true, center: true, middle: true },
+    }),
+    elementSnapDirections: makeArgType({
+        type: "object",
+        description: makeLink("Snappable", "elementSnapDirections"),
+        defaultValue: { top: true, left: true, bottom: true, right: true, center: true, middle: true },
+    }),
     snapGap: makeArgType({
         type: "boolean",
         description: makeLink("Snappable", "snapGap"),

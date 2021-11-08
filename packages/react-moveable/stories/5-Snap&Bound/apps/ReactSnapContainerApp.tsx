@@ -47,9 +47,8 @@ export default function App(props: Record<string, any>) {
                     keepRatio={props.keepRatio}
                     throttleScale={props.throttleScale}
                     snappable={props.snappable}
-                    snapCenter={props.snapCenter}
-                    snapHorizontal={props.snapHorizontal}
-                    snapVertical={props.snapVertical}
+                    snapDirections={props.snapDirections}
+                    elementSnapDirections={props.elementSnapDirections}
                     snapThreshold={props.snapThreshold}
                     verticalGuidelines={props.verticalGuidelines}
                     horizontalGuidelines={props.horizontalGuidelines}

@@ -147,13 +147,20 @@ export interface SnapGuideline {
     type: "horizontal" | "vertical";
     hide?: boolean;
     element?: Element | null;
-    center?: boolean;
+
+    isStart?: boolean;
+    isEnd?: boolean;
+    isCenter?: boolean;
+    isInner?: boolean;
+
     pos: number[];
     size: number;
     className?: string;
     sizes?: number[];
+
     gap?: number;
-    gapGuidelines?: SnapGuideline[];
+    elementRect?: SnapElementRect;
+    gapRects?: SnapElementRect[];
 }
 export interface SnapBoundInfo {
     isBound: boolean;
@@ -1409,10 +1416,8 @@ export interface GroupableProps extends GroupableOptions {
  * @memberof Moveable.Snappable
  * @property - Whether or not target can be snapped to the guideline. (default: false)
  * @property - A snap container that is the basis for snap, bounds, and innerBounds. (default: null = container)
- * @property - When you drag, make the snap in the center of the target. (default: false)
- * @property - When you drag, make the snap in the horizontal guidelines. (default: true)
- * @property - When you drag, make the snap in the vertical guidelines. (default: true)
- * @property - When you drag, make the snap in the element guidelines. (default: true)
+ * @property - You can specify the directions to snap to the target. (default: { left: true, top: true, right: true, bottom: true })
+ * @property - You can specify the snap directions of elements. (default: { left: true, top: true, right: true, bottom: true })
  * @property - When you drag, make the gap snap in the element guidelines. (default: true)
  * @property - Distance value that can snap to guidelines. (default: 5)
  * @property - If width size is greater than 0, you can vertical snap to the grid. (default: 0)
@@ -1430,10 +1435,10 @@ export interface GroupableProps extends GroupableOptions {
 export interface SnappableOptions {
     snappable?: boolean | string[];
     snapContainer?: MoveableRefType<HTMLElement | SVGElement>;
-    snapCenter?: boolean;
-    snapHorizontal?: boolean;
-    snapVertical?: boolean;
-    snapElement?: boolean;
+
+    snapDirections?: boolean | SnapDirections;
+    elementSnapDirections?: boolean | SnapDirections;
+
     snapGap?: boolean;
     snapThreshold?: number;
     snapDigit?: number;
@@ -1452,20 +1457,43 @@ export interface SnappableOptions {
 /**
  * @typedef
  * @memberof Moveable.Snappable
- * @property - guideline element
  * @property - Whether to snap the top of the element (default: true)
  * @property - Whether to snap the left of the element (default: true)
  * @property - Whether to snap the right of the element (default: true)
  * @property - Whether to snap the bottom of the element (default: true)
- * @property - Whether to update the guideline every render (default: false)
- * @property - class names to add to guideline (default: "")
+ * @property - Whether to snap the center((left + right) / 2) of the element (default: false)
+ * @property - Whether to snap the middle((top + bottom) / 2) of the element (default: false)
  */
-export interface ElementGuidelineValue {
-    element: Element;
-    top?: boolean;
+export interface SnapDirections {
     left?: boolean;
+    top?: boolean;
     right?: boolean;
     bottom?: boolean;
+    center?: boolean;
+    middle?: boolean;
+}
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ * @extends Moveable.Snappable.SnapDirections
+ * @property - guideline element
+ * @property - class names to add to guideline (default: "")
+ */
+export interface ElementGuidelineValue extends SnapDirections {
+    element: Element;
+    refresh?: boolean;
+    className?: string;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ * @extends Moveable.Snappable.SnapDirections
+ * @property - guideline element
+ * @property - class names to add to guideline (default: "")
+ */
+export interface ElementGuidelineValue extends SnapDirections {
+    element: Element;
     refresh?: boolean;
     className?: string;
 }
@@ -1485,8 +1513,8 @@ export interface SnappableProps extends SnappableOptions, EventInterface<Snappab
  */
 export interface OnSnap {
     guidelines: SnapGuideline[];
-    elements: SnapGuideline[][];
-    gaps: GapGuideline[];
+    elements: SnapGuideline[];
+    gaps: SnapGuideline[];
 }
 /**
  * @typedef
@@ -1510,9 +1538,22 @@ export interface BoundType {
     right?: number;
     bottom?: number;
 }
+
+export interface SnapDirectionPoses {
+    left?: number;
+    top?: number;
+    right?: number;
+    bottom?: number;
+    center?: number;
+    middle?: number;
+}
+
+export interface SnapElementRect extends ElementGuidelineValue {
+    rect: SnapDirectionPoses;
+}
 export interface SnappableState {
     staticGuidelines: SnapGuideline[];
-    elementGuidelineValues: ElementGuidelineValue[];
+    elementRects: SnapElementRect[];
     guidelines: SnapGuideline[];
     snapOffset: { left: number, top: number, bottom: number, right: number }
     snapRenderInfo?: SnapRenderInfo | null;

@@ -1,92 +1,25 @@
-import { find, throttle } from "@daybrush/utils";
+import { throttle } from "@daybrush/utils";
 import {
     RenderGuidelineInfo, Renderer, RenderGuidelineInnerInfo,
     MoveableManagerInterface, SnappableProps, SnapGuideline,
-    SnappableOptions, SnappableRenderType, GapGuideline, SnappableState,
+    SnappableRenderType, SnappableState,
+    SnapDirectionPoses,
 } from "../../types";
-import { prefix, flat, groupBy } from "../../utils";
-
-const DIRECTION_NAMES = {
-    horizontal: [
-        "left",
-        "top",
-        "width",
-        "Y",
-        "X",
-    ] as const,
-    vertical: [
-        "top", "left", "height", "X", "Y",
-    ] as const,
-} as const;
-
-export function groupByElementGuidelines(
-    guidelines: SnapGuideline[],
-    clientPos: number,
-    size: number,
-    index: number
-) {
-    const groupInfos: Array<[Element, number, any]> = [];
-
-    const group = groupBy(
-        guidelines.filter(({ element, gap }) => element && !gap),
-        ({ element, pos }) => {
-            const elementPos = pos[index];
-            const sign = Math.min(0, elementPos - clientPos) < 0 ? -1 : 1;
-            const groupKey = `${sign}_${pos[index ? 0 : 1]}`;
-            const groupInfo = find(groupInfos, ([groupElement, groupPos]) => {
-                return element === groupElement && elementPos === groupPos;
-            });
-            if (groupInfo) {
-                return groupInfo[2];
-            }
-            groupInfos.push([element!, elementPos, groupKey]);
-            return groupKey;
-        }
-    );
-    group.forEach((elementGuidelines) => {
-        elementGuidelines.sort((a, b) => {
-            const result =
-                getElementGuidelineDist(a.pos[index], a.size, clientPos, size)
-                    .size -
-                getElementGuidelineDist(b.pos[index], a.size, clientPos, size)
-                    .size;
-
-            return result || a.pos[index ? 0 : 1] - b.pos[index ? 0 : 1];
-        });
-    });
-    return group;
-}
-export function getElementGuidelineDist(
-    elementPos: number,
-    elementSize: number,
-    targetPos: number,
-    targetSize: number
-) {
-    // relativePos < 0  => element(l)  ---  (r)target
-    // relativePos > 0  => target(l)   ---  (r)element
-    const relativePos = elementPos - targetPos;
-    const startPos = relativePos < 0 ? relativePos + elementSize : targetSize;
-    const endPos = relativePos < 0 ? 0 : relativePos;
-    const size = endPos - startPos;
-
-    return {
-        size,
-        pos: startPos,
-    };
-}
+import { prefix, groupBy } from "../../utils";
+import { HORIZONTAL_NAMES_MAP, VERTICAL_NAMES_MAP } from "./utils";
 
 export function renderGuideline(info: RenderGuidelineInfo, React: Renderer): any {
     const { direction, classNames, size, pos, zoom, key } = info;
     const isHorizontal = direction === "horizontal";
-    const scaleDirection = isHorizontal ? "Y" : "X";
-    // const scaleDirection2 = isHorizontal ? "Y" : "X";
+    const scaleType = isHorizontal ? "Y" : "X";
+    // const scaleType2 = isHorizontal ? "Y" : "X";
 
     return React.createElement("div", {
         key,
         className: classNames.join(" "),
         style: {
             [isHorizontal ? "width" : "height"]: `${size}`,
-            transform: `translate(${pos[0]}, ${pos[1]}) translate${scaleDirection}(-50%) scale${scaleDirection}(${zoom})`,
+            transform: `translate(${pos[0]}, ${pos[1]}) translate${scaleType}(-50%) scale${scaleType}(${zoom})`,
         },
     });
 }
@@ -103,82 +36,6 @@ export function renderInnerGuideline(info: RenderGuidelineInnerInfo, React: Rend
     }, React);
 }
 
-export function renderElementGroups(
-    moveable: MoveableManagerInterface<SnappableProps>,
-    direction: "vertical" | "horizontal",
-    groups: SnapGuideline[][],
-    minPos: number,
-    clientPos: number,
-    clientSize: number,
-    targetPos: number,
-    snapThreshold: number,
-    snapDigit: number,
-    index: number,
-    snapDistFormat: Required<SnappableOptions>["snapDistFormat"],
-    React: Renderer
-) {
-    const { zoom, isDisplaySnapDigit = true } = moveable.props;
-    const [posName1, posName2, sizeName, , scaleDirection] = DIRECTION_NAMES[direction];
-    return flat(
-        groups.map((elementGuidelines, i) => {
-            let isFirstRenderSize = true;
-
-            return elementGuidelines.map(({ pos, size }, j) => {
-                const {
-                    pos: linePos,
-                    size: lineSize,
-                } = getElementGuidelineDist(
-                    pos[index],
-                    size,
-                    clientPos,
-                    clientSize
-                );
-
-                if (lineSize < snapThreshold) {
-                    return null;
-                }
-                const isRenderSize = isFirstRenderSize;
-
-                isFirstRenderSize = false;
-                const snapSize =
-                    isDisplaySnapDigit && isRenderSize
-                        ? parseFloat(lineSize.toFixed(snapDigit))
-                        : 0;
-                return (
-                    <div
-                        key={`${direction}LinkGuideline${i}-${j}`}
-                        className={prefix("guideline-group", direction)}
-                        style={{
-                            [posName1]: `${minPos + linePos}px`,
-                            [posName2]: `${-targetPos + pos[index ? 0 : 1]}px`,
-                            [sizeName]: `${lineSize}px`,
-                        }}
-                    >
-                        {renderInnerGuideline(
-                            {
-                                direction: direction,
-                                classNames: [prefix("dashed")],
-                                size: "100%",
-                                posValue: [0, 0],
-                                sizeValue: lineSize,
-                                zoom: zoom!,
-                            },
-                            React
-                        )}
-                        <div
-                            className={prefix("size-value")}
-                            style={{
-                                transform: `translate${scaleDirection}(-50%) scale(${zoom})`,
-                            }}
-                        >
-                            {snapSize > 0 ? snapDistFormat(snapSize) : ""}
-                        </div>
-                    </div>
-                );
-            });
-        })
-    );
-}
 export function renderSnapPoses(
     moveable: MoveableManagerInterface,
     direction: string,
@@ -209,121 +66,32 @@ export function renderSnapPoses(
         );
     });
 }
-export function filterElementInnerGuidelines(
-    moveable: MoveableManagerInterface<SnappableProps>,
-    guidelines: SnapGuideline[],
-    index: number,
-    targetPos: number[],
-    clientPos: number[],
-    targetSizes: number[],
-) {
-    const { isDisplayInnerSnapDigit } = moveable.props;
-    const innerGuidelines: SnapGuideline[] = [];
-    const otherIndex = index ? 0 : 1;
-    const targetContentPos = targetPos[index];
-    const targetContentSize = targetSizes[index];
-    let gapGuidelines: GapGuideline[] = [];
-    let nextGuidelines = guidelines.filter(guideline => {
-        const { element, pos, size } = guideline;
-
-        if (
-            isDisplayInnerSnapDigit && element
-            && pos[index] < targetContentPos && targetContentPos + targetContentSize < pos[index] + size
-        ) {
-            innerGuidelines.push(guideline);
-
-            const contentPos = pos[index] - targetContentPos;
-            const inlinePos = pos[otherIndex] - targetPos[otherIndex];
-
-            gapGuidelines.push({
-                ...guideline,
-                inner: true,
-                gap: contentPos,
-                renderPos: index ? [inlinePos, contentPos] : [contentPos, inlinePos],
-            });
-            gapGuidelines.push({
-                ...guideline,
-                inner: true,
-                gap: pos[index] + size - targetContentPos - targetContentSize,
-                renderPos: index ? [inlinePos, targetContentSize] : [targetContentSize, inlinePos],
-            });
-            return false;
-        }
-        return true;
-    });
-
-    nextGuidelines = nextGuidelines.filter(guideline1 => {
-        const {
-            element: element1,
-            pos: pos1,
-            size: size1,
-        } = guideline1;
-        const contentPos1 = pos1[index];
-
-        if (!element1) {
-            return true;
-        }
-        return nextGuidelines.every(guideline2 => {
-            const {
-                element: element2,
-                pos: pos2,
-                size: size2,
-            } = guideline2;
-            const contentPos2 = pos2[index];
-            if (!element2 || guideline1 === guideline2) {
-                return true;
-            }
-            return contentPos1 + size1 <= contentPos2
-                || contentPos2 + size2 <= contentPos1
-                || (contentPos1 < contentPos2 && contentPos2 + size2 < contentPos1 + size1);
-        });
-    });
-    const groups = groupByElementGuidelines(
-        nextGuidelines,
-        clientPos[index],
-        targetContentSize,
-        index,
-    );
-    gapGuidelines = gapGuidelines.filter(guideline => {
-        const gap = guideline.gap!;
-        const inlinePos = guideline.pos[otherIndex];
-
-        return groups.every(group => {
-            return group.every(groupGuideline => {
-                const groupPos = groupGuideline.pos;
-                const renderPos = -targetContentPos + groupPos[index];
-
-                if (groupPos[otherIndex] !== inlinePos) {
-                    return true;
-                }
-                if (gap < 0 && renderPos < 0) {
-                    return false;
-                }
-                if (gap > 0 && renderPos > targetSizes[index]) {
-                    return false;
-                }
-                return true;
-            });
-        });
-    });
-
-    return {
-        guidelines: nextGuidelines,
-        groups,
-        gapGuidelines,
-    };
-}
 export function renderGuidelines(
     moveable: MoveableManagerInterface<SnappableProps>,
-    direction: string,
+    type: "vertical" | "horizontal",
     guidelines: SnapGuideline[],
     targetPos: number[],
+    targetRect: SnapDirectionPoses,
     React: Renderer
 ) {
-    const { zoom } = moveable.props;
+    const { zoom, isDisplayInnerSnapDigit } = moveable.props;
 
-    return guidelines.filter(({ hide }) => {
-        return !hide;
+    const mainNames = type === "horizontal" ? VERTICAL_NAMES_MAP : HORIZONTAL_NAMES_MAP;
+    const targetStart = targetRect[mainNames.start]!;
+    const targetEnd = targetRect[mainNames.end]!;
+    return guidelines.filter(({ hide, elementRect }) => {
+        if (hide) {
+            return false;
+        }
+        if (isDisplayInnerSnapDigit && elementRect) {
+            // inner
+            const rect = elementRect.rect;
+
+            if (rect[mainNames.start]! <= targetStart && targetEnd <= rect[mainNames.end]!) {
+                return false;
+            }
+        }
+        return true;
     }).map((guideline, i) => {
         const { pos, size, element } = guideline;
 
@@ -334,9 +102,9 @@ export function renderGuidelines(
 
         return renderInnerGuideline(
             {
-                key: `${direction}Guideline${i}`,
+                key: `${type}-default-guideline-${i}`,
                 classNames: element ? [prefix("bold")] : [],
-                direction: direction,
+                direction: type,
                 posValue: renderPos,
                 sizeValue: size,
                 zoom: zoom!,
@@ -346,52 +114,296 @@ export function renderGuidelines(
     });
 }
 
+export function renderDigitLine(
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
+    type: "vertical" | "horizontal",
+    lineType: "dashed" | "gap",
+    index: number,
+    gap: number,
+    renderPos: number[],
+    className: string | undefined,
+    React: Renderer,
+) {
+    const {
+        snapDigit = 0,
+        isDisplaySnapDigit = true,
+        snapDistFormat = (v: number) => v,
+        zoom,
+    } = moveable.props;
+    const scaleType = type === "horizontal" ? "X" : "Y";
+    const sizeName = type === "vertical" ? "height" : "width";
+    const absGap = Math.abs(gap!);
+    const snapSize = isDisplaySnapDigit
+        ? parseFloat(absGap.toFixed(snapDigit))
+        : 0;
+    return <div
+        key={`${type}-${lineType}-guideline-${index}`}
+        className={prefix("guideline-group", type)}
+        style={{
+            left: `${renderPos[0]}px`,
+            top: `${renderPos[1]}px`,
+            [sizeName]: `${absGap}px`,
+        }}
+    >
+        {renderInnerGuideline(
+            {
+                direction: type,
+                classNames: [prefix(lineType), className],
+                size: "100%",
+                posValue: [0, 0],
+                sizeValue: absGap,
+                zoom: zoom!,
+            },
+            React
+        )}
+        <div
+            className={prefix("size-value", "gap")}
+            style={{
+                transform: `translate${scaleType}(-50%) scale(${zoom})`,
+            }}
+        >
+            {snapSize > 0 ? snapDistFormat(snapSize) : ""}
+        </div>
+    </div>;
+}
+
+export function groupByElementGuidelines(
+    type: "vertical" | "horizontal",
+    guidelines: SnapGuideline[],
+    targetRect: SnapDirectionPoses,
+    isDisplayInnerSnapDigit: boolean,
+) {
+    const index = type === "vertical" ? 0 : 1;
+    const otherIndex = type === "vertical" ? 1 : 0;
+    const names = index ? VERTICAL_NAMES_MAP : HORIZONTAL_NAMES_MAP;
+    const targetStart = targetRect[names.start]!;
+    const targetEnd = targetRect[names.end]!;
+    return groupBy(guidelines, (guideline) => {
+        return guideline.pos[index];
+    }).map(nextGuidelines => {
+        const start: SnapGuideline[] = [];
+        const end: SnapGuideline[] = [];
+        const inner: SnapGuideline[] = [];
+
+        nextGuidelines.forEach(guideline => {
+            const element = guideline.element!;
+            const rect = guideline.elementRect!.rect;
+            if (rect[names.end]! < targetStart) {
+                start.push(guideline);
+            } else if (targetEnd < rect[names.start]!) {
+                end.push(guideline);
+            } else if (rect[names.start]! <= targetStart && targetEnd <= rect[names.end]! && isDisplayInnerSnapDigit) {
+                const pos = guideline.pos;
+                const elementRect1 = { element, rect: { ...rect, [names.end]: rect[names.start]! } };
+                const elementRect2 = { element, rect: { ...rect, [names.start]: rect[names.end]! } };
+                const nextPos1 = [0, 0];
+                const nextPos2 = [0, 0];
+                nextPos1[index] = pos[index];
+                nextPos1[otherIndex] = pos[otherIndex];
+
+                nextPos2[index] = pos[index];
+                nextPos2[otherIndex] = pos[otherIndex] + guideline.size;
+
+
+                start.push({
+                    type,
+                    pos: nextPos1,
+                    size: 0,
+                    elementRect: elementRect1,
+                });
+                end.push({
+                    type,
+                    pos: nextPos2,
+                    size: 0,
+                    elementRect: elementRect2,
+                });
+                // inner.push(guideline);
+            }
+        });
+
+        start.sort((a, b) => {
+            return b.pos[otherIndex] - a.pos[otherIndex];
+        });
+        end.sort((a, b) => {
+            return a.pos[otherIndex] - b.pos[otherIndex];
+        });
+        return {
+            total: nextGuidelines,
+            start,
+            end,
+            inner,
+        };
+    });
+}
+export function renderDashedGuidelines(
+    moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
+    guidelines: SnapGuideline[],
+    targetPos: number[],
+    targetRect: SnapDirectionPoses,
+    React: Renderer,
+) {
+    const {
+        isDisplayInnerSnapDigit,
+    } = moveable.props;
+    const rendered: any[] = [];
+
+    (["vertical", "horizontal"] as const).forEach(type => {
+        const nextGuidelines = guidelines.filter(guideline => guideline.type === type);
+        const index = type === "vertical" ? 1 : 0;
+        const otherIndex = index ? 0 : 1;
+
+        const groups = groupByElementGuidelines(type, nextGuidelines, targetRect, isDisplayInnerSnapDigit!);
+        const mainNames = index ? HORIZONTAL_NAMES_MAP : VERTICAL_NAMES_MAP;
+        const sideNames = index ? VERTICAL_NAMES_MAP : HORIZONTAL_NAMES_MAP;
+        const targetStart = targetRect[mainNames.start]!;
+        const targetEnd = targetRect[mainNames.end]!;
+
+
+        groups.forEach(({ total, start, end, inner }) => {
+            const sidePos = targetPos[otherIndex] + total[0].pos[otherIndex] - targetRect[sideNames.start]!;
+
+            let prevRect = targetRect;
+
+            start.forEach(guideline => {
+                const nextRect = guideline.elementRect!.rect;
+                const size = prevRect[mainNames.start]! - nextRect[mainNames.end]!;
+                const renderPos = [0, 0];
+
+                renderPos[index] = targetPos[index] + prevRect[mainNames.start]! - targetStart - size;
+                renderPos[otherIndex] = sidePos;
+
+                rendered.push(renderDigitLine(
+                    moveable,
+                    type,
+                    "dashed",
+                    rendered.length,
+                    size,
+                    renderPos,
+                    guideline.className,
+                    React
+                ));
+                prevRect = nextRect;
+            });
+
+            prevRect = targetRect;
+            end.forEach(guideline => {
+                const nextRect = guideline.elementRect!.rect;
+                const size = nextRect[mainNames.start]! - prevRect[mainNames.end]!;
+                const renderPos = [0, 0];
+
+                renderPos[index] = targetPos[index] + prevRect[mainNames.end]! - targetStart;
+                renderPos[otherIndex] = sidePos;
+
+                rendered.push(renderDigitLine(
+                    moveable,
+                    type,
+                    "dashed",
+                    rendered.length,
+                    size,
+                    renderPos,
+                    guideline.className,
+                    React
+                ));
+                prevRect = nextRect;
+            });
+
+            inner.forEach(guideline => {
+                const nextRect = guideline.elementRect!.rect;
+
+                const size1 = targetStart - nextRect[mainNames.start]!;
+                const size2 = nextRect[mainNames.end]! - targetEnd;
+                const renderPos1 = [0, 0];
+                const renderPos2 = [0, 0];
+
+                renderPos1[index] = targetPos[index] - size1;
+                renderPos1[otherIndex] = sidePos;
+
+                renderPos2[index] = targetPos[index] + targetEnd - targetStart;
+                renderPos2[otherIndex] = sidePos;
+
+                rendered.push(renderDigitLine(
+                    moveable,
+                    type,
+                    "dashed",
+                    rendered.length,
+                    size1,
+                    renderPos1,
+                    guideline.className,
+                    React
+                ));
+                rendered.push(renderDigitLine(
+                    moveable,
+                    type,
+                    "dashed",
+                    rendered.length,
+                    size2,
+                    renderPos2,
+                    guideline.className,
+                    React
+                ));
+            });
+        });
+    });
+    return rendered;
+}
 export function renderGapGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
-    direction: "vertical" | "horizontal",
-    gapGuidelines: GapGuideline[],
-    snapDistFormat: Required<SnappableOptions>["snapDistFormat"],
+    guidelines: SnapGuideline[],
+    targetPos: number[],
+    targetRect: SnapDirectionPoses,
     React: any
 ): any[] {
-    const { snapDigit = 0, isDisplaySnapDigit = true, zoom } = moveable.props;
-    const scaleDirection = direction === "horizontal" ? "X" : "Y";
-    const sizeName = direction === "horizontal" ? "width" : "height";
+    const rendered: any[] = [];
+    (["horizontal", "vertical"] as const).forEach(type => {
+        const nextGuidelines = guidelines.filter(guideline => guideline.type === type);
+        const index = type === "vertical" ? 0 : 1;
+        const otherIndex = index ? 0 : 1;
+        const mainNames = index ? HORIZONTAL_NAMES_MAP : VERTICAL_NAMES_MAP;
+        const sideNames = index ? VERTICAL_NAMES_MAP : HORIZONTAL_NAMES_MAP;
+        const targetStart = targetRect[mainNames.start]!;
+        const targetEnd = targetRect[mainNames.end]!;
+        const targetSideStart = targetRect[sideNames.start]!;
+        const targetSideEnd = targetRect[sideNames.end]!;
 
-    return gapGuidelines.map(({ renderPos, gap, className, inner }, i) => {
-        const absGap = Math.abs(gap!);
-        const snapSize = isDisplaySnapDigit
-            ? parseFloat(absGap.toFixed(snapDigit))
-            : 0;
-        return (
-            <div
-                key={`${direction}GapGuideline${i}`}
-                className={prefix("guideline-group", direction)}
-                style={{
-                    left: `${renderPos[0]}px`,
-                    top: `${renderPos[1]}px`,
-                    [sizeName]: `${absGap}px`,
-                }}
-            >
-                {renderInnerGuideline(
-                    {
-                        direction: direction,
-                        classNames: [prefix(inner ? "dashed" : "gap"), className],
-                        size: "100%",
-                        posValue: [0, 0],
-                        sizeValue: absGap,
-                        zoom: zoom!,
-                    },
+
+        nextGuidelines.forEach(({ gap, gapRects, className }) => {
+            const sideStartPos = Math.max(
+                targetSideStart,
+                ...gapRects!.map(({ rect }) => rect[sideNames.start]!),
+            );
+            const sideEndPos = Math.min(
+                targetSideEnd,
+                ...gapRects!.map(({ rect }) => rect[sideNames.end]!),
+            );
+            const sideCenterPos = (sideStartPos + sideEndPos) / 2;
+
+            if (sideStartPos === sideEndPos || sideCenterPos === (targetSideStart + targetSideEnd)/ 2) {
+                return;
+            }
+            gapRects!.forEach(({ rect }) => {
+                const renderPos = [targetPos[0], targetPos[1]];
+
+                if (rect[mainNames.end]! < targetStart) {
+                    renderPos[index] += rect[mainNames.end]! - targetStart;
+                } else if (targetEnd < rect[mainNames.start]!) {
+                    renderPos[index] += rect[mainNames.start]! - targetStart - gap!;
+                } else {
+                    return;
+                }
+
+                renderPos[otherIndex] += sideCenterPos - targetSideStart;
+                rendered.push(renderDigitLine(
+                    moveable,
+                    index ? "vertical" : "horizontal",
+                    "gap",
+                    rendered.length,
+                    gap!,
+                    renderPos,
+                    className,
                     React
-                )}
-                <div
-                    className={prefix("size-value", "gap")}
-                    style={{
-                        transform: `translate${scaleDirection}(-50%) scale(${zoom})`,
-                    }}
-                >
-                    {snapSize > 0 ? snapDistFormat(snapSize) : ""}
-                </div>
-            </div>
-        );
+                ));
+            });
+        });
     });
+    return rendered;
 }

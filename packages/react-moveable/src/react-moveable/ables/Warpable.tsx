@@ -24,7 +24,8 @@ import {
 } from "../types";
 import { hasClass, dot, getRad } from "@daybrush/utils";
 import { renderAllDirections } from "../renderDirections";
-import { hasGuidelines, checkMoveableSnapBounds } from "./Snappable";
+import { hasGuidelines } from "./snappable/utils";
+import { checkMoveableSnapBounds } from "./snappable/snapBounds";
 
 function getMiddleLinePos(pos1: number[], pos2: number[]) {
     return pos1.map((pos, i) => dot(pos, pos2[i], 1, 2));
@@ -195,7 +196,10 @@ export default {
             } = checkMoveableSnapBounds(
                 moveable,
                 isRequest,
-                selectedPoses.map(pos => [pos[0] + distX, pos[1] + distY]),
+                {
+                    horizontal: selectedPoses.map(pos => pos[1] + distY),
+                    vertical: selectedPoses.map(pos => pos[0] + distX),
+                },
             );
 
             distY -= horizontalSnapInfo.offset;

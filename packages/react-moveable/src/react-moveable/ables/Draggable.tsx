@@ -14,8 +14,9 @@ import {
     Renderer, OnDragGroupEnd, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
 import { triggerChildGesto } from "../groupUtils";
-import { checkSnapDrag, startCheckSnapDrag } from "./Snappable";
+import { startCheckSnapDrag } from "./Snappable";
 import { IObject, getRad, throttle, throttleArray } from "@daybrush/utils";
+import { checkSnapBoundsDrag } from "./snappable/snapBounds";
 
 /**
  * @namespace Draggable
@@ -164,7 +165,7 @@ export default {
         }
 
         if (!isPinch && !parentEvent && !parentFlag && (!throttleDragRotate || distX || distY)) {
-            const [verticalInfo, horizontalInfo] = checkSnapDrag(
+            const [verticalInfo, horizontalInfo] = checkSnapBoundsDrag(
                 moveable, distX, distY, throttleDragRotate, isRequest, datas,
             );
             const {

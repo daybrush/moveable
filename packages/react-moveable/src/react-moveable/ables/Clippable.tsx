@@ -18,8 +18,10 @@ import {
     HORIZONTAL_RADIUS_ORDER, VERTICAL_RADIUS_ORDER, getRadiusStyles, addRadiusPos, removeRadiusPos,
 } from "./roundable/borderRadius";
 import { renderLine } from "../renderDirections";
-import { getDefaultGuidelines, checkSnapBoundPriority } from "./snappable/snap";
-import { checkSnapBounds } from "./Snappable";
+import { checkSnapBoundPriority } from "./snappable/snap";
+import { checkSnapBounds } from "./snappable/snapBounds";
+import { getDefaultGuidelines } from "./snappable/utils";
+
 
 const CLIP_DIRECTIONS = [
     [0, -1, "n"],
@@ -767,9 +769,7 @@ export default {
                 props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
                 guideXPoses,
                 guideYPoses,
-                {
-                    snapThreshold: 5,
-                },
+                5,
             );
             const snapOffsetY = horizontalSnapInfo.offset;
             const snapOffsetX = verticalSnapInfo.offset;
@@ -839,9 +839,7 @@ export default {
             props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
             guideXPoses,
             guideYPoses,
-            {
-                snapThreshold: 1,
-            },
+            1,
         );
 
 
