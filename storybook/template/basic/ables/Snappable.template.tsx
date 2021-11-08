@@ -10,10 +10,8 @@ export const SNAP_PROPS = [
     "snapThreshold",
     "isDisplaySnapDigit",
     "snapGap",
-    "snapElement",
-    "snapVertical",
-    "snapHorizontal",
-    "snapCenter",
+    "snapDirections",
+    "elementSnapDirections",
     "snapDigit",
 ];
 
@@ -32,10 +30,8 @@ export const SNAP_PROPS_TEMPLATE = () => ({
     snapThreshold: number("snapThreshold", 5),
     isDisplaySnapDigit: boolean("isDisplaySnapDigit", true),
     snapGap: boolean("snapGap", true),
-    snapElement: boolean("snapElement", true),
-    snapVertical: boolean("snapVertical", true),
-    snapHorizontal: boolean("snapHorizontal", true),
-    snapCenter: boolean("snapCenter", false),
+    snapDirections: object("snapDirections", { top: true, right: true, bottom: true, left: true }),
+    elementSnapDirections: object("elementSnapDirections", { top: true, right: true, bottom: true, left: true }),
     snapDigit: number("snapDigit", 0),
 });
 
