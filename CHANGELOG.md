@@ -17,6 +17,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+
+## [0.27.0] - 2021-11-09
+* `moveable` 0.27.0
+* `react-moveable` 0.30.0
+* `preact-moveable` 0.29.0
+* `ngx-moveable` 0.23.0
+* `svelte-moveable` 0.18.0
+* `lit-moveable` 0.4.0
+* `vue-moveable` 2.0.0-beta.2
+* `vue3-moveable` 0.2.0
+
+### Added
+* add `hideDefaultLines` prop #521
+* add `snapDirections`, `elementSnapDirections` #511
+
+### Fixed
+* fix `throttleDrag` for group #542
+* fix property order #540
+* fix target transform #533
+* trigger click event #543
+* `clipTargetBounds` ignores `dragWithClip` #520
+* fix zoom matrix #519
+
+### Removed
+* Remove `snapCenter`, `snapHorizontal`, `snapVertical`, `snapElement` (Use `snapDirections`, `elementSnapDirections`)
+    * `snapCenter: true` same as `snapDirections: { center: true, middle: true }`, `elementSnapDirections: { center: true, middle: true }`
+    * `snapHorizontal: true` same as `snapDirections: { top: true, bottom: true }`,
+    * `snapVertical: true` same as `snapDirections: { left: true, right: true }`,
+
+
 ## [0.26.0] - 2021-07-11
 * `moveable` 0.26.0
 * `react-moveable` 0.29.0

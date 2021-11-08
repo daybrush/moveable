@@ -37,10 +37,7 @@ export class NgxMoveableComponent
   @Input() public keepRatio!: boolean;
   @Input() public edge!: boolean;
   @Input() public pinchThreshold!: number;
-  @Input() public snapCenter!: boolean;
-  @Input() public snapVertical!: boolean;
-  @Input() public snapElement!: boolean;
-  @Input() public snapHorizontal!: boolean;
+
   @Input() public snapThreshold!: number;
   @Input() public horizontalGuidelines!: number[];
   @Input() public verticalGuidelines!: number[];
@@ -112,6 +109,9 @@ export class NgxMoveableComponent
   @Input() public snapGridWidth!: RequiredMoveableOptions['snapGridWidth'];
   @Input() public snapGridHeight!: RequiredMoveableOptions['snapGridHeight'];
   @Input() public isDisplayInnerSnapDigit!: RequiredMoveableOptions['isDisplayInnerSnapDigit'];
+  @Input() public snapDirections!: RequiredMoveableOptions['snapDirections'];
+  @Input() public elementSnapDirections!: RequiredMoveableOptions['elementSnapDirections'];
+  @Input() public hideDefaultLines!: RequiredMoveableOptions['hideDefaultLines'];
 
   @Output() public dragStart!: EventEmitter<MoveableEventsParameters['dragStart']>;
   @Output() public drag!: EventEmitter<MoveableEventsParameters['drag']>;

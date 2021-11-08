@@ -1416,8 +1416,8 @@ export interface GroupableProps extends GroupableOptions {
  * @memberof Moveable.Snappable
  * @property - Whether or not target can be snapped to the guideline. (default: false)
  * @property - A snap container that is the basis for snap, bounds, and innerBounds. (default: null = container)
- * @property - You can specify the directions to snap to the target. (default: { left: true, top: true, right: true, bottom: true })
- * @property - You can specify the snap directions of elements. (default: { left: true, top: true, right: true, bottom: true })
+ * @property - You can specify the directions to snap to the target. (default: true)
+ * @property - You can specify the snap directions of elements. (default: true)
  * @property - When you drag, make the gap snap in the element guidelines. (default: true)
  * @property - Distance value that can snap to guidelines. (default: 5)
  * @property - If width size is greater than 0, you can vertical snap to the grid. (default: 0)
