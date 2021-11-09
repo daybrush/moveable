@@ -851,6 +851,7 @@ export default {
         state.enableSnap = false;
         state.guidelines = [];
         state.snapRenderInfo = null;
+        state.elementRects = [];
     },
 };
 
