@@ -202,7 +202,8 @@ export function getMatrixStackInfo(
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
-    let isEnd = !checkContainer && target === container;
+    let requestEnd = !checkContainer && target === container;
+    let isEnd = requestEnd;
     let is3d = false;
     let n = 3;
     let transformOrigin!: number[];
@@ -221,6 +222,7 @@ export function getMatrixStackInfo(
     // }
 
     while (el && !isEnd) {
+        isEnd = requestEnd;
         const style: CSSStyleDeclaration = getComputedStyle(el);
         const position = style.position;
         const isFixed = position === "fixed";
@@ -277,7 +279,7 @@ export function getMatrixStackInfo(
         if (IS_WEBKIT && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
             offsetLeft -= offsetParent.offsetLeft;
             offsetTop -= offsetParent.offsetTop;
-            isEnd = isEnd || isOffsetEnd;
+            requestEnd = requestEnd || isOffsetEnd;
         }
         let parentClientLeft = 0;
         let parentClientTop = 0;
@@ -328,7 +330,10 @@ export function getMatrixStackInfo(
             break;
         } else {
             el = offsetParent;
-            isEnd = isOffsetEnd;
+            requestEnd = isOffsetEnd;
+        }
+        if (!checkContainer || el === document.body) {
+            isEnd = requestEnd;
         }
     }
     if (!targetMatrix) {
