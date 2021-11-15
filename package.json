@@ -63,7 +63,8 @@
   "homepage": "https://daybrush.com/moveable/",
   "dependencies": {
     "@scena/event-emitter": "^1.0.3",
-    "react-compat-moveable": "~0.15.1"
+    "react-compat-moveable": "~0.15.1",
+    "react-simple-compat": "^1.2.1"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",
