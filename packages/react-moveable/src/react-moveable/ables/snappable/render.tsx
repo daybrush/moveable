@@ -258,7 +258,6 @@ export function renderDashedGuidelines(
         const targetStart = targetRect[mainNames.start]!;
         const targetEnd = targetRect[mainNames.end]!;
 
-
         groups.forEach(({ total, start, end, inner }) => {
             const sidePos = targetPos[otherIndex] + total[0].pos[otherIndex] - targetRect[sideNames.start]!;
 
@@ -267,21 +266,24 @@ export function renderDashedGuidelines(
             start.forEach(guideline => {
                 const nextRect = guideline.elementRect!.rect;
                 const size = prevRect[mainNames.start]! - nextRect[mainNames.end]!;
-                const renderPos = [0, 0];
 
-                renderPos[index] = targetPos[index] + prevRect[mainNames.start]! - targetStart - size;
-                renderPos[otherIndex] = sidePos;
+                if (size > 0) {
+                    const renderPos = [0, 0];
 
-                rendered.push(renderDigitLine(
-                    moveable,
-                    type,
-                    "dashed",
-                    rendered.length,
-                    size,
-                    renderPos,
-                    guideline.className,
-                    React
-                ));
+                    renderPos[index] = targetPos[index] + prevRect[mainNames.start]! - targetStart - size;
+                    renderPos[otherIndex] = sidePos;
+
+                    rendered.push(renderDigitLine(
+                        moveable,
+                        type,
+                        "dashed",
+                        rendered.length,
+                        size,
+                        renderPos,
+                        guideline.className,
+                        React
+                    ));
+                }
                 prevRect = nextRect;
             });
 
@@ -289,21 +291,24 @@ export function renderDashedGuidelines(
             end.forEach(guideline => {
                 const nextRect = guideline.elementRect!.rect;
                 const size = nextRect[mainNames.start]! - prevRect[mainNames.end]!;
-                const renderPos = [0, 0];
 
-                renderPos[index] = targetPos[index] + prevRect[mainNames.end]! - targetStart;
-                renderPos[otherIndex] = sidePos;
+                if (size > 0) {
+                    const renderPos = [0, 0];
 
-                rendered.push(renderDigitLine(
-                    moveable,
-                    type,
-                    "dashed",
-                    rendered.length,
-                    size,
-                    renderPos,
-                    guideline.className,
-                    React
-                ));
+                    renderPos[index] = targetPos[index] + prevRect[mainNames.end]! - targetStart;
+                    renderPos[otherIndex] = sidePos;
+
+                    rendered.push(renderDigitLine(
+                        moveable,
+                        type,
+                        "dashed",
+                        rendered.length,
+                        size,
+                        renderPos,
+                        guideline.className,
+                        React
+                    ));
+                }
                 prevRect = nextRect;
             });
 

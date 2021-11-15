@@ -41,7 +41,7 @@ export function triggerAble(
         convertDragDist(moveable.state, e);
     }
     // const isGroup = eventAffix.indexOf("Group") > -1;
-    const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType].slice(), Renderable];
+    const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType], Renderable];
 
     if (isRequest) {
         const requestAble = e.requestAble;
