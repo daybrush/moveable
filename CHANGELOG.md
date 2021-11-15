@@ -17,6 +17,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+
+## [0.27.2] - 2021-11-16
+* `moveable` 0.27.2
+* `react-moveable` 0.30.2
+* `preact-moveable` 0.29.2
+* `ngx-moveable` 0.23.2
+* `svelte-moveable` 0.18.2
+* `lit-moveable` 0.4.2
+* `vue-moveable` 2.0.0-beta.5
+* `vue3-moveable` 0.2.2
+
+
+### Fixed
+* fix dependencies #553
+* fix elementGuidelines #555
+* fix vue types #557
+
+
 ## [0.27.1] - 2021-11-10
 * `moveable` 0.27.1
 * `react-moveable` 0.30.1

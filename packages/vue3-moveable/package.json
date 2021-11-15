@@ -1,6 +1,6 @@
 {
     "name": "vue3-moveable",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "A Vue 3 Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "types": "declaration/index.d.ts",
     "main": "dist/moveable.cjs.js",
@@ -49,7 +49,7 @@
     },
     "homepage": "https://daybrush.com/moveable",
     "dependencies": {
-        "moveable": "~0.27.1"
+        "moveable": "~0.27.2"
     },
     "devDependencies": {
         "@daybrush/builder": "^0.1.2",
