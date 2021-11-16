@@ -24,30 +24,29 @@ export class NgxMoveableComponent
   @Input() public scalable!: RequiredMoveableOptions['scalable'];
   @Input() public rotatable!: RequiredMoveableOptions['rotatable'];
   @Input() public warpable!: RequiredMoveableOptions['warpable'];
-  @Input() public pinchable!: boolean | Array<'rotatable' | 'resizable' | 'scalable'>;
-  @Input() public snappable!: boolean | string[];
-  @Input() public origin!: boolean;
-  @Input() public target!: SVGElement | HTMLElement | Array<SVGElement | HTMLElement>;
-  @Input() public container!: SVGElement | HTMLElement | null;
-  @Input() public throttleDrag!: number;
-  @Input() public throttleDragRotate!: number;
-  @Input() public throttleResize!: number;
-  @Input() public throttleScale!: number;
-  @Input() public throttleRotate!: number;
-  @Input() public keepRatio!: boolean;
-  @Input() public edge!: boolean;
-  @Input() public pinchThreshold!: number;
+  @Input() public pinchable!: RequiredMoveableOptions['pinchable'];
+  @Input() public snappable!: RequiredMoveableOptions['snappable'];
+  @Input() public origin!: RequiredMoveableOptions['origin'];
+  @Input() public target!: RequiredMoveableOptions['target'];
+  @Input() public container!: RequiredMoveableOptions['container'];
+  @Input() public throttleDrag!: RequiredMoveableOptions['throttleDrag'];
+  @Input() public throttleDragRotate!: RequiredMoveableOptions['throttleDragRotate'];
+  @Input() public throttleResize!: RequiredMoveableOptions['throttleResize'];
+  @Input() public throttleScale!: RequiredMoveableOptions['throttleScale'];
+  @Input() public throttleRotate!: RequiredMoveableOptions['throttleRotate'];
+  @Input() public keepRatio!: RequiredMoveableOptions['keepRatio'];
+  @Input() public edge!: RequiredMoveableOptions['edge'];
+  @Input() public pinchThreshold!: RequiredMoveableOptions['pinchThreshold'];
 
-  @Input() public snapThreshold!: number;
-  @Input() public horizontalGuidelines!: number[];
-  @Input() public verticalGuidelines!: number[];
-  @Input() public elementGuidelines!: Element[];
-  @Input() public bounds!: { left?: number, top?: number, right?: number, bottom?: number };
-  @Input() public dragArea!: boolean;
-  @Input() public rotationPosition!: 'top' | 'bottom' | 'left' | 'right';
-  @Input() public baseDirection!: number[];
-  @Input() public defaultGroupRotate!: number;
-  @Input() public ables!: Able[];
+  @Input() public snapThreshold!: RequiredMoveableOptions['snapThreshold'];
+  @Input() public horizontalGuidelines!: RequiredMoveableOptions['horizontalGuidelines'];
+  @Input() public verticalGuidelines!: RequiredMoveableOptions['verticalGuidelines'];
+  @Input() public elementGuidelines!: RequiredMoveableOptions['elementGuidelines'];
+  @Input() public bounds!: RequiredMoveableOptions['bounds'];
+  @Input() public dragArea!: RequiredMoveableOptions['dragArea'];
+  @Input() public rotationPosition!: RequiredMoveableOptions['rotationPosition'];
+  @Input() public defaultGroupRotate!: RequiredMoveableOptions['defaultGroupRotate'];
+  @Input() public ables!: RequiredMoveableOptions['ables'];
   @Input() public edgeDraggable!: RequiredMoveableOptions['edgeDraggable'];
 
 
@@ -58,11 +57,11 @@ export class NgxMoveableComponent
   @Input() public clipHorizontalGuidelines!: RequiredMoveableOptions['clipHorizontalGuidelines'];
   @Input() public clipSnapThreshold!: RequiredMoveableOptions['clipSnapThreshold'];
 
-  @Input() public className!: string;
-  @Input() public renderDirections!: string[];
-  @Input() public scrollable!: boolean;
-  @Input() public scrollContainer!: HTMLElement;
-  @Input() public scrollThreshold!: number;
+  @Input() public className!: RequiredMoveableOptions['className'];
+  @Input() public renderDirections!: RequiredMoveableOptions['renderDirections'];
+  @Input() public scrollable!: RequiredMoveableOptions['scrollable'];
+  @Input() public scrollContainer!: RequiredMoveableOptions['scrollContainer'];
+  @Input() public scrollThreshold!: RequiredMoveableOptions['scrollThreshold'];
   @Input() public getScrollPosition!: RequiredMoveableOptions['getScrollPosition'];
 
   @Input() public rootContainer!: RequiredMoveableOptions['rootContainer'];
