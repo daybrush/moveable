@@ -104,9 +104,10 @@ If you want to check the methods and events, please refer to the [**API document
 ```vue
 <template>
 <div class="container">
-    <span>Vue Moveable</span>
+    <div class="target">Vue Moveable</div>
     <Moveable
         className="moveable"
+        v-bind:target="['.target']"
         v-bind:draggable="true"
         v-bind:scalable="true"
         v-bind:rotatable="true"
@@ -114,6 +115,7 @@ If you want to check the methods and events, please refer to the [**API document
         @scale="onScale"
         @rotate="onRotate"
     />
+</div>
 </template>
 <script>
 import Moveable from "vue3-moveable";

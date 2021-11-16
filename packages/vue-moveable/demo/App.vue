@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <div class="container">
-      <div class="target">Target</div>
+      <div class="target" ref="target">Target</div>
       <button @click="toggleDraggable">Toggle {{draggable}}</button>
       <moveable
         v-bind:target="['.target']"
@@ -26,6 +26,9 @@ export default {
         return {
             draggable: true,
         };
+    },
+    mounted() {
+        console.log(this);
     },
     methods: {
         onDrag(e) {
