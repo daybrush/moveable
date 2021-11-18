@@ -503,7 +503,7 @@ export default {
                 className={prefix("control", "clip-control", "snap-control")}
                 data-clip-index={i}
                 style={{
-                    transform: `translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad) scale(${zoom})`,
+                    transform: `translate(${pos[0]}px, ${pos[1]}px) scale(${zoom})`,
                 }}></div>;
         });
 
@@ -513,7 +513,7 @@ export default {
                     className={prefix("control", "clip-control", "clip-radius", "snap-control")}
                     data-clip-index={8 + i}
                     style={{
-                        transform: `translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad) scale(${zoom})`,
+                        transform: `translate(${pos[0]}px, ${pos[1]}px) scale(${zoom})`,
                     }}></div>;
             }));
         }
