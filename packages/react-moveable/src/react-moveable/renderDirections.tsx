@@ -11,7 +11,7 @@ export function renderDirectionControls(
 ): any[] {
     const {
         renderPoses,
-        rotation: radRotation,
+        rotation: rotationRad,
         direction,
     } = moveable.state;
     const {
@@ -26,7 +26,7 @@ export function renderDirectionControls(
     }
     const sign = (direction > 0 ? 1 : -1);
     const renderDirections = directions === true ? DIRECTIONS : directions;
-    const degRotation = radRotation / Math.PI * 180;
+    const degRotation = rotationRad / Math.PI * 180;
 
     renderDirections.forEach(dir => {
         directionMap[dir] = true;
@@ -42,7 +42,7 @@ export function renderDirectionControls(
         return (
             <div className={prefix("control", "direction", dir, additionalClassName)}
                 data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
-                style={getControlTransform(radRotation, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
+                style={getControlTransform(rotationRad, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });
 }
