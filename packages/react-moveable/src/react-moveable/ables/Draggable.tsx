@@ -1,6 +1,7 @@
 import {
     setDragStart, getBeforeDragDist, getTransformDist,
-    convertTransformFormat, resolveTransformEvent, fillTransformStartEvent, setDefaultTransformIndex,
+    convertTransformFormat, resolveTransformEvent, fillTransformStartEvent,
+    setDefaultTransformIndex, fillOriginalTransform,
 } from "../gesto/GestoUtils";
 import {
     triggerEvent, fillParams,
@@ -212,6 +213,8 @@ export default {
         const bottom = datas.bottom - beforeDist[1];
         const nextTransform = convertTransformFormat(datas,
             `translate(${translate[0]}px, ${translate[1]}px)`, `translate(${dist[0]}px, ${dist[1]}px)`);
+
+        fillOriginalTransform(e, nextTransform);
 
         moveable.state.dragInfo.dist = parentEvent ? [0, 0] : dist;
         if (!parentEvent && !parentMoveable && delta.every(num => !num) && beforeDelta.some(num => !num)) {

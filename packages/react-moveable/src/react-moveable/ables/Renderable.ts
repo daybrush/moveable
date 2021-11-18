@@ -1,3 +1,5 @@
+import { getNextTransformText } from "../gesto/GestoUtils";
+import { fillChildEvents } from "../groupUtils";
 import {
     MoveableManagerInterface, RenderableProps, OnRenderStart, OnRender,
     OnRenderEnd, MoveableGroupInterface,
@@ -23,15 +25,10 @@ export default {
         }));
     },
     drag(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
-        triggerEvent(moveable, `onRender`, fillParams<OnRender>(moveable, e, {
-            isPinch: !!e.isPinch,
-        }));
+        triggerEvent(moveable, `onRender`, this.fillDragParams(moveable, e));
     },
     dragEnd(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
-        triggerEvent(moveable, `onRenderEnd`, fillParams<OnRenderEnd>(moveable, e, {
-            isPinch: !!e.isPinch,
-            isDrag: e.isDrag,
-        }));
+        triggerEvent(moveable, `onRenderEnd`, this.fillDragEndParams(moveable, e));
     },
     dragGroupStart(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
         triggerEvent(moveable, `onRenderGroupStart`, fillParams<OnRenderGroupStart>(moveable, e, {
@@ -40,16 +37,35 @@ export default {
         }));
     },
     dragGroup(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
+        const events = fillChildEvents(moveable, "beforeRenderable", e);
+        const moveables = moveable.moveables;
+        const params = events.map((childEvent, i) => {
+            const childMoveable = moveables[i];
+
+            return this.fillDragParams(childMoveable, childEvent);
+        });
+
         triggerEvent(moveable, `onRenderGroup`, fillParams<OnRenderGroup>(moveable, e, {
             isPinch: !!e.isPinch,
             targets: moveable.props.targets,
+            transform: getNextTransformText(e),
+            events: params,
         }));
     },
     dragGroupEnd(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
+        const events = fillChildEvents(moveable, "beforeRenderable", e);
+        const moveables = moveable.moveables;
+        const params = events.map((childEvent, i) => {
+            const childMoveable = moveables[i];
+
+            return this.fillDragEndParams(childMoveable, childEvent);
+        });
+
         triggerEvent(moveable, `onRenderGroupEnd`, fillParams<OnRenderGroupEnd>(moveable, e, {
             isPinch: !!e.isPinch,
             isDrag: e.isDrag,
             targets: moveable.props.targets,
+            events: params,
         }));
     },
     dragControlStart(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
@@ -69,5 +85,17 @@ export default {
     },
     dragGroupControlEnd(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
         return this.dragGroupEnd(moveable, e);
+    },
+    fillDragParams(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
+        return fillParams<OnRender>(moveable, e, {
+            isPinch: !!e.isPinch,
+            transform: getNextTransformText(e),
+        });
+    },
+    fillDragEndParams(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
+        return fillParams<OnRenderEnd>(moveable, e, {
+            isPinch: !!e.isPinch,
+            isDrag: e.isDrag,
+        });
     },
 } as const;

@@ -401,6 +401,16 @@ export function fillOriginalTransform(
 
     originalDatas.nextTransforms = splitSpace(transform);
 }
+
+export function getNextTransformText(e: any) {
+    const {
+        originalDatas: {
+            beforeRenderable: originalDatas,
+        },
+    } = e;
+
+    return originalDatas.nextTransforms.join(" ");
+}
 export function fillTransformEvent(
     moveable: MoveableManagerInterface<DraggableProps>,
     nextTransform: string,

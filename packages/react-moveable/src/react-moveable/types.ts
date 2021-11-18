@@ -1071,9 +1071,11 @@ export interface OnRenderStart extends OnEvent {
  * @typedef - `render` event occurs before the target is drawn on the screen.
  * @memberof Moveable
  * @extends Moveable.OnEvent
+ * @property - a target's next transform string value.
  * @property - Whether or not it is being pinched.
  */
 export interface OnRender extends OnEvent {
+    transform: string;
     isPinch: boolean;
 }
 
@@ -1130,9 +1132,11 @@ export interface OnRenderGroupStart extends OnRenderStart {
  * @memberof Moveable
  * @extends Moveable.OnRender
  * @property - targets set to group.
+ * @property - Each `render` event on the targets
  */
 export interface OnRenderGroup extends OnRender {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnRender[];
 }
 
 /**
@@ -1140,9 +1144,11 @@ export interface OnRenderGroup extends OnRender {
  * @memberof Moveable
  * @extends Moveable.OnRenderEnd
  * @property - targets set to group.
+ * @property - Each `renderEnd` event on the targets
  */
 export interface OnRenderGroupEnd extends OnRenderEnd {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnRenderEnd[];
 }
 
 /**

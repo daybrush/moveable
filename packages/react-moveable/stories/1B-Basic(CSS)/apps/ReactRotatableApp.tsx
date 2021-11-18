@@ -12,7 +12,6 @@ export default function App(props: Record<string, any>) {
                 }}>Target</div>
                 <Moveable
                     target={targetRef}
-                    resizable={true}
                     rotatable={props.rotatable}
                     throttleRotate={props.throttleRotate}
                     rotationPosition={props.rotationPosition}

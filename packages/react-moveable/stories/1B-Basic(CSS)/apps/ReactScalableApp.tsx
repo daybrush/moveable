@@ -7,9 +7,7 @@ export default function App(props: Record<string, any>) {
     return (
         <div className="root">
             <div className="container">
-                <div className="target" ref={targetRef} style={{
-                    transform: "scale(2, 1)",
-                }}>Target</div>
+                <div className="target" ref={targetRef}>Target</div>
                 <Moveable
                     target={targetRef}
                     scalable={true}
