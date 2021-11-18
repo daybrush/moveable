@@ -5,10 +5,16 @@ import {
     OnBeforeRenderGroup, OnBeforeRenderGroupEnd,
 } from "../types";
 import { fillParams, triggerEvent } from "../utils";
-import { convertMatrixtoCSS } from "@scena/matrix";
+import { convertMatrixtoCSS, createIdentityMatrix } from "@scena/matrix";
 import { isArray, splitSpace } from "@daybrush/utils";
 import { fillChildEvents } from "../groupUtils";
 
+
+function isIdentityMatrix(matrix: string, is3d?: boolean) {
+    const value = is3d ? `matrix3d(${createIdentityMatrix(4)}` : `matrix(${createIdentityMatrix(3)})`;
+
+    return matrix === value || matrix === `matrix(1,0,0,1,0,0)`;
+}
 export default {
     isPinch: true,
     name: "beforeRenderable",
@@ -32,9 +38,11 @@ export default {
         const cssMatrix = is3d
             ? `matrix3d(${targetMatrix.join(",")})`
             : `matrix(${convertMatrixtoCSS(targetMatrix, true)})`;
-        e.datas.startTransforms = !transform || transform === "none" ? [cssMatrix] : splitSpace(transform);
+        const startTransform = !transform || transform === "none" ? cssMatrix : transform;
+
+        e.datas.startTransforms = isIdentityMatrix(startTransform, is3d) ? [] : splitSpace(startTransform);
     },
-    resetTransform(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
+    resetTransform(e: any) {
         e.datas.nextTransforms = e.datas.startTransforms;
         e.datas.nextTransformAppendedIndexes = [];
     },
@@ -57,7 +65,7 @@ export default {
         triggerEvent(moveable, `onBeforeRenderStart`, this.fillDragStartParams(moveable, e));
     },
     drag(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
-        this.resetTransform(moveable, e);
+        this.resetTransform(e);
 
         triggerEvent(moveable, `onBeforeRender`, fillParams<OnBeforeRender>(moveable, e, {
             isPinch: !!e.isPinch,
@@ -95,7 +103,7 @@ export default {
         const params = events.map((childEvent, i) => {
             const childMoveable = moveables[i];
 
-            this.resetTransform(childMoveable, childEvent);
+            this.resetTransform(childEvent);
             return this.fillDragParams(childMoveable, childEvent);
         });
 
