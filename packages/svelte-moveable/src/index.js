@@ -4,6 +4,9 @@ import { METHODS } from "moveable";
 export default /*#__PURE__*/ (() => {
     const prototype = Moveable.prototype;
 
+    if (!prototype) {
+        return Moveable;
+    }
     METHODS.forEach(name => {
         prototype[name] = function (...args) {
             const self = this.getInstance();

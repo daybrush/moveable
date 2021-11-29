@@ -1,6 +1,6 @@
 {
   "name": "svelte-moveable",
-  "version": "0.19.2",
+  "version": "0.19.3",
   "description": "A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "svelte": "./src/index.js",
   "main": "./dist/moveable.cjs.js",
