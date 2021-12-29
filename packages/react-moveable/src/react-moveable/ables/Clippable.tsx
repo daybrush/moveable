@@ -655,9 +655,14 @@ export default {
             datas.isClipStart = false;
             return false;
         }
-        datas.isControl = className.indexOf("clip-control") > -1;
-        datas.isLine = className.indexOf("clip-line") > -1;
-        datas.isArea = className.indexOf("clip-area") > -1 || className.indexOf("clip-ellipse") > -1;
+        datas.isControl =
+            className !== null && className.indexOf("clip-control") > -1;
+        datas.isLine =
+            className !== null && className.indexOf("clip-line") > -1;
+        datas.isArea =
+            className !== null &&
+            (className.indexOf("clip-area") > -1 ||
+                className.indexOf("clip-ellipse") > -1);
         datas.index = inputTarget ? parseInt(inputTarget.getAttribute("data-clip-index"), 10) : -1;
         datas.clipPath = clipPath;
         datas.isClipStart = true;
