@@ -637,7 +637,7 @@ export default {
         const { defaultClipPath, customClipPath } = moveable.props;
         const { target, width, height } = state;
         const inputTarget = e.inputEvent ? e.inputEvent.target : null;
-        const className = inputTarget ? inputTarget.getAttribute("class") : "";
+        const className = (inputTarget && inputTarget.getAttribute("class")) || "";
         const datas = e.datas;
         const clipPath = getClipPath(target!, width, height, defaultClipPath || "inset", customClipPath);
 
@@ -655,14 +655,9 @@ export default {
             datas.isClipStart = false;
             return false;
         }
-        datas.isControl =
-            className !== null && className.indexOf("clip-control") > -1;
-        datas.isLine =
-            className !== null && className.indexOf("clip-line") > -1;
-        datas.isArea =
-            className !== null &&
-            (className.indexOf("clip-area") > -1 ||
-                className.indexOf("clip-ellipse") > -1);
+        datas.isControl = className && className.indexOf("clip-control") > -1;
+        datas.isLine = className.indexOf("clip-line") > -1;
+        datas.isArea = className.indexOf("clip-area") > -1 || className.indexOf("clip-ellipse") > -1;
         datas.index = inputTarget ? parseInt(inputTarget.getAttribute("data-clip-index"), 10) : -1;
         datas.clipPath = clipPath;
         datas.isClipStart = true;
