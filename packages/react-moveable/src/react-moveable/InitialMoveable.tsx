@@ -138,4 +138,5 @@ export interface InitialMoveable<T = {}>
     extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T>,
     MoveableInterface {
     setState(state: any, callback?: () => any): any;
+    forceUpdate(state?: any, callback?: () => any): any;
 }

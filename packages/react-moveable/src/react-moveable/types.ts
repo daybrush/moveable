@@ -1798,7 +1798,6 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     useCSS(tag: string, css: string): any;
     getContainer(): HTMLElement | SVGElement;
     getRotation(): number;
-    forceUpdate(): any;
     triggerEvent(name: string, params: IObject<any>, isManager?: boolean): any;
     onPreventClick(e: any): void;
 }
@@ -1820,6 +1819,7 @@ export interface MoveableInterface {
     isDragging(): boolean;
     hitTest(el: Element | HitRect): number;
     setState(state: any, callback?: () => any): any;
+    forceUpdate(state?: any, callback?: () => any): any;
 }
 
 export interface ControlPose {
@@ -1840,7 +1840,6 @@ export type MoveableEvents = {
     [key in keyof typeof MOVEABLE_EVENTS_MAP]: Parameters<Required<MoveableProps>[typeof MOVEABLE_EVENTS_MAP[key]]>[0];
 };
 
-type a = keyof typeof MOVEABLE_PROPS_MAP;
 export type MoveableProperties = {
     -readonly [key in keyof typeof MOVEABLE_PROPS_MAP]: MoveableProps[key];
 };
