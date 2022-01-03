@@ -52,7 +52,7 @@ class MoveableManager extends EventEmitter<MoveableEventsParameters> {
      */
     constructor(parentElement: HTMLElement | SVGElement, options: MoveableOptions = {}) {
         super();
-        const nextOptions = { container: parentElement || document.body, ...options };
+        const nextOptions = { ...options };
 
         const events: any = {};
 

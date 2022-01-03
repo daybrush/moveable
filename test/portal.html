@@ -1,0 +1,59 @@
+<style>
+html, body {
+    position: relative;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.description {
+    padding: 10px;
+}
+.root {
+    position: relative;
+}
+.container {
+    position: relative;
+    margin-top: 50px;
+}
+.target {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 150px;
+    left: 100px;
+    line-height: 100px;
+    text-align: center;
+    background: #ee8;
+    color: #333;
+    font-weight: bold;
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
+.test {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+</style>
+<div class="root">
+    <div class="container" style="transform-origin: 0 0; transform: scale(0.5)">
+        <div style="position: relative;transform: translate3d(0px, 0px, 100px)">
+            <div class="target">Target</div>
+        </div>
+        <div class="moveable"></div>
+    </div>
+</div>
+<script src="../dist/moveable.js"></script>
+<script>
+    const moveable = new Moveable(document.querySelector(".moveable"), {
+        draggable: true,
+        target: document.querySelector(".target"),
+        portalContainer: document.querySelector(".moveable"),
+    }).on("dragStart", e => {
+        // if (e.inputEvent && e.inputEvent.target.class === "test") e.stop();
+    }).on("drag", e => {
+        console.log(e.transform);
+        e.target.style.transform = e.transform;
+    });
+</script>

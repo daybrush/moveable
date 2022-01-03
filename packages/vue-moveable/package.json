@@ -49,7 +49,7 @@
     },
     "homepage": "https://daybrush.com/moveable",
     "dependencies": {
-        "moveable": "~0.27.2"
+        "moveable": "~0.27.3"
     },
     "devDependencies": {
         "@daybrush/builder": "^0.1.2",
