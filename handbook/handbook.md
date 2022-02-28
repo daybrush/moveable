@@ -236,7 +236,7 @@ export class AppComponent {
 
 
 ### Events
-* [onReiszeStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeStart): When the resize starts, the resizeStart event is called.
+* [onResizeStart](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeStart): When the resize starts, the resizeStart event is called.
 * [onResize](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resize): When resizing, the resize event is called.
 * [onResizeEnd](https://daybrush.com/moveable/release/latest/doc/Moveable.html#.event:resizeEnd): When the resize finishes, the resizeEnd event is called.
 
