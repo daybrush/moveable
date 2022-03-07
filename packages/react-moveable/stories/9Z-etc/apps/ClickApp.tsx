@@ -15,8 +15,12 @@ export default function App(props: Record<string, any>) {
                     ref={moveableRef}
                     target={targetRef}
                     draggable={true}
+                    dragArea={true}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
+                    }}
+                    onClick={() => {
+                        alert("Click DragArea");
                     }}
                 />
             </div>
