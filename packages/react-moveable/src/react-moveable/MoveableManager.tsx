@@ -82,6 +82,9 @@ export default class MoveableManager<T = {}>
         "mouseLeave": null,
     };
 
+    private _prevTarget: HTMLElement | SVGElement | null | undefined= null;
+    private _prevDragArea = false;
+
     public render() {
         const props = this.props;
         const state = this.state;
@@ -132,16 +135,20 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const { parentMoveable, container, wrapperMoveable } = props;
 
-        this.updateEvent(props);
-        this.updateNativeEvents(props);
+        this._updateTargets();
+        this._updateNativeEvents();
+        this._updateEvents();
+
         if (!container && !parentMoveable && !wrapperMoveable) {
             this.updateRect("", false, true);
         }
         this.updateCheckInput();
     }
-    public componentDidUpdate(prevProps: MoveableManagerProps) {
-        this.updateNativeEvents(prevProps);
-        this.updateEvent(prevProps);
+    public componentDidUpdate() {
+        this._updateNativeEvents();
+        this._updateEvents();
+        this._updateTargets();
+
         this.updateCheckInput();
     }
     public componentWillUnmount() {
@@ -317,79 +324,6 @@ export default class MoveableManager<T = {}>
             ),
             parentMoveable ? false : isSetState,
         );
-    }
-    public isTargetChanged(prevProps: MoveableManagerProps, useDragArea?: boolean) {
-        const props = this.props;
-        const target = props.dragTarget || props.target;
-        const prevTarget = prevProps.dragTarget || prevProps.target;
-        const dragArea = props.dragArea;
-        const prevDragArea = prevProps.dragArea;
-        const isTargetChanged = !dragArea && prevTarget !== target;
-
-        return isTargetChanged || ((useDragArea || dragArea) && prevDragArea !== dragArea);
-    }
-    public updateNativeEvents(prevProps: MoveableManagerProps) {
-        const props = this.props;
-        const target = props.dragArea ? this.areaElement : this.state.target;
-        const events = this.events;
-        const eventKeys = getKeys(events);
-
-        if (this.isTargetChanged(prevProps)) {
-            for (const eventName in events) {
-                const manager = events[eventName];
-                manager && manager.destroy();
-                events[eventName] = null;
-            }
-        }
-        if (!target) {
-            return;
-        }
-        const enabledAbles = this.enabledAbles;
-        eventKeys.forEach(eventName => {
-            const ables = filterAbles(enabledAbles, [eventName] as any);
-            const hasAbles = ables.length > 0;
-            let manager = events[eventName];
-
-            if (!hasAbles) {
-                if (manager) {
-                    manager.destroy();
-                    events[eventName] = null;
-                }
-                return;
-            }
-            if (!manager) {
-                manager = new EventManager(target, this, eventName);
-                events[eventName] = manager;
-            }
-            manager.setAbles(ables);
-        });
-    }
-    public updateEvent(prevProps: MoveableManagerProps) {
-        const controlBoxElement = this.controlBox.getElement();
-        const hasTargetAble = this.targetAbles.length;
-        const hasControlAble = this.controlAbles.length;
-        const props = this.props;
-        const target = props.dragTarget || props.target;
-        const isTargetChanged = this.isTargetChanged(prevProps, true);
-        const isUnset = (!hasTargetAble && this.targetGesto) || isTargetChanged;
-
-        if (isUnset) {
-            unset(this, "targetGesto");
-            this.updateState({ gesto: null });
-        }
-        if (!hasControlAble) {
-            unset(this, "controlGesto");
-        }
-
-        if (target && hasTargetAble && !this.targetGesto) {
-            this.targetGesto = getTargetAbleGesto(this, target!, "");
-        }
-        if (!this.controlGesto && hasControlAble) {
-            this.controlGesto = getAbleGesto(this, controlBoxElement, "controlAbles", "Control");
-        }
-        if (isUnset) {
-            this.unsetAbles();
-        }
     }
     /**
      * Check if the moveable state is being dragged.
@@ -627,10 +561,14 @@ export default class MoveableManager<T = {}>
         if (!isChanged) {
             return;
         }
+        const moveableContainer = container || this.controlBox;
 
+        if (moveableContainer) {
+            this.unsetAbles();
+        }
         this.updateState({ target, container });
 
-        if (!parentMoveable && (container || this.controlBox)) {
+        if (!parentMoveable && moveableContainer) {
             this.updateRect("End", false, false);
         }
     }
@@ -654,15 +592,11 @@ export default class MoveableManager<T = {}>
         removeEvent(window, "click", this.onPreventClick, true);
     }
     protected unsetAbles() {
-        if (this.targetAbles.filter(able => {
+        this.targetAbles.forEach(able => {
             if (able.unset) {
                 able.unset(this);
-                return true;
             }
-            return false;
-        }).length) {
-            this.forceUpdate();
-        }
+        });
     }
     protected updateAbles(
         ables: Able[] = this.props.ables!,
@@ -735,6 +669,85 @@ export default class MoveableManager<T = {}>
             renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2),
             renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3),
         ];
+    }
+    private _updateTargets() {
+        const props = this.props;
+
+        this._prevTarget = props.dragTarget || props.target;
+        this._prevDragArea = props.dragArea!;
+    }
+    private _isTargetChanged(useDragArea?: boolean) {
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const prevTarget = this._prevTarget;
+        const prevDragArea = this._prevDragArea;
+        const dragArea = props.dragArea;
+
+        // check target without dragArea
+        const isTargetChanged = !dragArea && prevTarget !== target;
+        const isDragAreaChanged = (useDragArea || dragArea) && prevDragArea !== dragArea;
+
+        return isTargetChanged || isDragAreaChanged;
+    }
+    private _updateEvents() {
+        const controlBoxElement = this.controlBox.getElement();
+        const hasTargetAble = this.targetAbles.length;
+        const hasControlAble = this.controlAbles.length;
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const isUnset = (!hasTargetAble && this.targetGesto)
+            || this._isTargetChanged(true);
+
+        if (isUnset) {
+            unset(this, "targetGesto");
+            this.updateState({ gesto: null });
+        }
+        if (!hasControlAble) {
+            unset(this, "controlGesto");
+        }
+
+        if (target && hasTargetAble && !this.targetGesto) {
+            this.targetGesto = getTargetAbleGesto(this, target!, "");
+        }
+        if (!this.controlGesto && hasControlAble) {
+            this.controlGesto = getAbleGesto(this, controlBoxElement, "controlAbles", "Control");
+        }
+    }
+    private _updateNativeEvents() {
+        const props = this.props;
+        const target = props.dragArea ? this.areaElement : this.state.target;
+        const events = this.events;
+        const eventKeys = getKeys(events);
+
+        if (this._isTargetChanged()) {
+            for (const eventName in events) {
+                const manager = events[eventName];
+                manager && manager.destroy();
+                events[eventName] = null;
+            }
+        }
+        if (!target) {
+            return;
+        }
+        const enabledAbles = this.enabledAbles;
+        eventKeys.forEach(eventName => {
+            const ables = filterAbles(enabledAbles, [eventName] as any);
+            const hasAbles = ables.length > 0;
+            let manager = events[eventName];
+
+            if (!hasAbles) {
+                if (manager) {
+                    manager.destroy();
+                    events[eventName] = null;
+                }
+                return;
+            }
+            if (!manager) {
+                manager = new EventManager(target, this, eventName);
+                events[eventName] = manager;
+            }
+            manager.setAbles(ables);
+        });
     }
 }
 

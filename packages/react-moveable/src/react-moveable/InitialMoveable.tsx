@@ -57,10 +57,8 @@ export class InitialMoveable<T = {}>
             props: userProps,
             ...props
         } = this.props;
-        const refTargets = getRefTargets((props.target || props.targets) as any);
+        const refTargets = this._updateRefs(true);
         const elementTargets = getElementTargets(refTargets, this.selectorMap);
-
-        this.refTargets = refTargets;
 
         const isGroup = elementTargets.length > 1;
         const totalAbles = moveableContructor.getTotalAbles();
@@ -94,13 +92,17 @@ export class InitialMoveable<T = {}>
         }
     }
     public componentDidMount() {
-        this.updateRefs();
+        this._updateRefs();
     }
     public componentDidUpdate() {
-        this.updateRefs();
+        this._updateRefs();
     }
-    public updateRefs(isReset?: boolean) {
+    public getManager(): MoveableManagerInterface<any, any> {
+        return this.moveable;
+    }
+    private _updateRefs(isRender?: boolean) {
         const refTargets = getRefTargets((this.props.target || this.props.targets) as any);
+        const isBrowser = typeof document !== "undefined";
         let isUpdate = this.refTargets.some((target, i) => {
             const nextTarget = refTargets[i];
 
@@ -111,11 +113,11 @@ export class InitialMoveable<T = {}>
             }
             return false;
         });
-        const selectorMap = isReset ? {} : this.selectorMap;
+        const selectorMap = this.selectorMap;
         const nextSelectorMap: IObject<Array<HTMLElement | SVGElement>> = {};
         this.refTargets.forEach(target => {
             if (isString(target)) {
-                if (!selectorMap[target]) {
+                if (!selectorMap[target] && isBrowser) {
                     isUpdate = true;
                     nextSelectorMap[target] = [].slice.call(document.querySelectorAll(target));
                 } else {
@@ -126,12 +128,10 @@ export class InitialMoveable<T = {}>
 
         this.selectorMap = nextSelectorMap;
 
-        if (isUpdate) {
+        if (!isRender && isUpdate) {
             this.forceUpdate();
         }
-    }
-    public getManager(): MoveableManagerInterface<any, any> {
-        return this.moveable;
+        return refTargets;
     }
 }
 export interface InitialMoveable<T = {}>

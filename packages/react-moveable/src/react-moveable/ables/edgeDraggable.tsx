@@ -46,7 +46,7 @@ export default makeAble("edgeDraggable", {
         return Draggable.dragGroupEnd(moveable, getDraggableEvent(e));
     },
     unset(moveable: any) {
-        moveable.state.dragInfo = null;
+        return Draggable.unset(moveable);
     },
 });
 

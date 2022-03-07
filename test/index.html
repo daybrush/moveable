@@ -36,18 +36,57 @@ html, body {
 }
 
 </style>
-<div class="test" >Test</div>
+<div class="test test1" >Test</div>
+<div class="test test2 " >Test</div>
 <!-- <script src="https://daybrush.com/moveable/release/latest/dist/moveable.js"></script> -->
 <script src="../dist/moveable.js"></script>
 <script>
+    const DimensionViewable = {
+        name: 'dimensionViewable',
+        props: {},
+        events: {},
+        render: (moveable, render) => {
+            const rect = moveable.getRect();
+
+            const style = {
+                position: 'absolute',
+                top: `${rect.height + 20}px`,
+                left: `${rect.width / 2}px`,
+                background: 'blue',
+                borderRadius: '5px',
+                padding: '3px 9px',
+                color: 'white',
+                fontSize: '13px',
+                whiteSpace: 'nowrap',
+                fontWeight: '500',
+                willChange: 'transform',
+                transform: 'translate(-50%, 0px)',
+            };
+
+            const props = {
+                style,
+                key: 'dimension-viewer',
+                class: 'moveable-dimension',
+            };
+
+            const text = `${rect.offsetWidth} x ${rect.offsetHeight}`;
+
+            console.log(rect);
+            return render.createElement('div', props, [text]);
+        },
+    };
     const moveable = new Moveable(document.body, {
         draggable: true,
-        target: document.querySelector(".test"),
+        target: document.querySelector(".test1"),
         snappable: true,
         // verticalGuidelines: [200],
         bounds: { bottom: 200, right: 200 },
         snapThreshold: 5,
         padding: { top: 10 },
+        ables: [DimensionViewable],
+        props: {
+            dimensionViewable: true,
+        },
     }).on("dragStart", e => {
         // if (e.inputEvent && e.inputEvent.target.className === "test") e.stop();
     }).on("drag", e => {
@@ -55,8 +94,8 @@ html, body {
         e.target.style.transform = e.transform;
     });
 
-    window.addEventListener("keyup", e => {
-        moveable.updateRect();
-        moveable.request("draggable", { deltaX: 0, deltaY: 0 }, true);
-    })
+    // window.addEventListener("keyup", e => {
+    //     moveable.updateRect();
+    //     moveable.request("draggable", { deltaX: 0, deltaY: 0 }, true);
+    // })
 </script>
