@@ -7,7 +7,7 @@ function getSVGCursor(scale: number, degree: number) {
 }
 function getCursorCSS(degree: number) {
     const x1 = getSVGCursor(1, degree);
-    const x2 = getSVGCursor(2, degree);
+    // const x2 = getSVGCursor(2, degree);
     const degree45 = (Math.round(degree / 45) * 45) % 180;
     let defaultCursor = "ns-resize";
 
@@ -20,7 +20,7 @@ function getCursorCSS(degree: number) {
     }
 
     // tslint:disable-next-line: max-line-length
-    return `cursor:${defaultCursor};cursor: url('${x1}') 16 16, ${defaultCursor};cursor: -webkit-image-set(url('${x1}') 1x, url('${x2}') 2x) 16 16, ${defaultCursor};`;
+    return `cursor:${defaultCursor};cursor: url('${x1}') 16 16, ${defaultCursor};`;
 }
 
 export const agent = getAgent();
