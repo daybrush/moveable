@@ -179,7 +179,10 @@ export default class MoveableManager<T = {}>
      * });
      */
     public isMoveableElement(target: Element) {
-        return target && ((target.getAttribute("class") || "").indexOf(PREFIX) > -1);
+        return target && (
+            (target.getAttribute("class") || "").indexOf(PREFIX) > -1
+            || this.controlBox.getElement().contains(target)
+        );
     }
     /**
      * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)

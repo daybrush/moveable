@@ -114,7 +114,7 @@
         "@scena/matrix": "^1.1.1",
         "css-to-mat": "^1.0.3",
         "framework-utils": "^1.1.0",
-        "gesto": "^1.2.1",
+        "gesto": "^1.5.1",
         "overlap-area": "^1.0.0",
         "react-css-styled": "^1.0.3"
     },
