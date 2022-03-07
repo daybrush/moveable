@@ -90,7 +90,6 @@ html, body {
     }).on("dragStart", e => {
         // if (e.inputEvent && e.inputEvent.target.className === "test") e.stop();
     }).on("drag", e => {
-        console.log(e.transform);
         e.target.style.transform = e.transform;
     });
 
