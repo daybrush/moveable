@@ -101,10 +101,12 @@ export class InitialMoveable<T = {}>
         return this.moveable;
     }
     private _updateRefs(isRender?: boolean) {
-        const refTargets = getRefTargets((this.props.target || this.props.targets) as any);
+        const prevRefTargets = this.refTargets;
+        const nextRefTargets = getRefTargets((this.props.target || this.props.targets) as any);
         const isBrowser = typeof document !== "undefined";
-        let isUpdate = this.refTargets.some((target, i) => {
-            const nextTarget = refTargets[i];
+
+        let isUpdate = (prevRefTargets.length !== nextRefTargets.length) || prevRefTargets.some((target, i) => {
+            const nextTarget = nextRefTargets[i];
 
             if (!target && !nextTarget) {
                 return false;
@@ -126,12 +128,13 @@ export class InitialMoveable<T = {}>
             }
         });
 
+        this.refTargets = nextRefTargets;
         this.selectorMap = nextSelectorMap;
 
         if (!isRender && isUpdate) {
             this.forceUpdate();
         }
-        return refTargets;
+        return nextRefTargets;
     }
 }
 export interface InitialMoveable<T = {}>

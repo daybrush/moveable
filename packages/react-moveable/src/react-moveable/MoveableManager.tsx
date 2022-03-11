@@ -82,7 +82,7 @@ export default class MoveableManager<T = {}>
         "mouseLeave": null,
     };
 
-    private _prevTarget: HTMLElement | SVGElement | null | undefined= null;
+    private _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     private _prevDragArea = false;
 
     public render() {
@@ -186,10 +186,7 @@ export default class MoveableManager<T = {}>
      * });
      */
     public isMoveableElement(target: Element) {
-        return target && (
-            (target.getAttribute("class") || "").indexOf(PREFIX) > -1
-            || this.controlBox.getElement().contains(target)
-        );
+        return target && (target.getAttribute("class") || "").indexOf(PREFIX) > -1;
     }
     /**
      * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
@@ -604,7 +601,9 @@ export default class MoveableManager<T = {}>
     ) {
         const props = this.props as any;
         const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
-        const enabledAbles = ables!.filter(able => able && (able.always || props[able.name]));
+        const enabledAbles = ables!.filter(able => able && (
+            (able.always && props[able.name] !== false)
+            || props[able.name]));
 
         const dragStart = `drag${eventAffix}Start` as "dragStart";
         const pinchStart = `pinch${eventAffix}Start` as "pinchStart";
