@@ -8,14 +8,10 @@ export default function App(props: Record<string, any>) {
     return (
         <div className="root">
             <div className="container">
-                <div className="target" ref={targetRef} onClick={() => {
-                    alert("Click");
-                }}>Target</div>
+                <div className="target" ref={targetRef}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
-                    draggable={true}
-                    dragArea={true}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}

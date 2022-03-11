@@ -271,6 +271,7 @@ export interface MoveableRefObject<T extends Element = HTMLElement | SVGElement>
  * @extends Moveable.Clippable.ClippableOptions
  * @extends Moveable.OriginDraggable.OriginDraggableOptions
  * @extends Moveable.Roundable.RoundableOptions
+ * @extends Moveable.Clickable.ClickableOptions
  */
 export interface MoveableOptions extends
     MoveableDefaultProps,
@@ -287,7 +288,8 @@ export interface MoveableOptions extends
     SnappableOptions,
     ScrollableOptions,
     ClippableOptions,
-    RoundableOptions {
+    RoundableOptions,
+    ClickableOptions {
 }
 
 export type MoveableState = MoveableManagerState;
@@ -307,9 +309,14 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     updateRect?: boolean;
     canPinch?: boolean;
     css?: string[];
-    // Fired when the event is cleared
+    dragRelation?: "strong" | "weak" | undefined | null | false,
+    /**
+     * Fired when the event is cleared
+     */
     unset?(moveable: any): any;
-    // Renders the React DOM structure for the able.
+    /**
+     * Renders the React DOM structure for the able.
+     */
     render?(moveable: any, renderer: Renderer): any;
 
     // Operates when a drag event occurs for the single target.
@@ -1607,7 +1614,10 @@ export interface DragAreaOptions {
 }
 export interface DragAreaProps extends DragAreaOptions {
 }
-
+/**
+ * @typedef
+ * @memberof Moveable.Clickable
+ */
 export interface ClickableEvents {
     onClick: OnClick;
     onClickGroup: OnClickGroup;
@@ -1617,7 +1627,20 @@ export interface ArrayFormat<T = any> {
     length: number;
     [key: number]: T;
 }
-export interface ClickableProps extends EventInterface<ClickableEvents> {
+/**
+ * @typedef
+ * @memberof Moveable.Clickable
+ */
+export interface ClickableOptions {
+    clickable?: boolean;
+}
+/**
+ * @memberof Moveable.Clickable
+ * @extends Moveable.Clickable.ClickableEvents
+ * @extends Moveable.Clickable.ClickableOptions
+ * @typedef
+ */
+export interface ClickableProps extends EventInterface<ClickableEvents>, ClickableOptions {
 }
 export interface BeforeRenderableEvents {
     onBeforeRenderStart: OnBeforeRenderStart;

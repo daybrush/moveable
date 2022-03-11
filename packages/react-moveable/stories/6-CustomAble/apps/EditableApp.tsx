@@ -19,7 +19,7 @@ const Editable = {
             will-change: transform;
             transform-origin: 0px 0px;
         }
-        .moveable-button {
+        .custom-button {
             width: 24px;
             height: 24px;
             margin-bottom: 4px;
@@ -34,10 +34,10 @@ const Editable = {
         return <EditableViewer key={"editable-viewer"} className={"moveable-editable"} style={{
             transform: `translate(${pos2[0]}px, ${pos2[1]}px) rotate(${rect.rotation}deg) translate(10px)`,
         }}>
-            <button className="moveable-button" onClick={() => {
+            <button className="custom-button" onClick={() => {
                 alert("+");
             }}>+</button>
-            <button className="moveable-button" onClick={() => {
+            <button className="custom-button" onClick={() => {
                 alert("-");
             }}>-</button>
         </EditableViewer>;

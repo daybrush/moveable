@@ -41,23 +41,24 @@ export function triggerAble(
         convertDragDist(moveable.state, e);
     }
     // const isGroup = eventAffix.indexOf("Group") > -1;
-    const ables: Able[] = [BeforeRenderable, ...(moveable as any)[ableType], Renderable];
+    let ables: Able[] = [...(moveable as any)[ableType]];
 
     if (isRequest) {
         const requestAble = e.requestAble;
+
         if (!ables.some(able => able.name === requestAble)) {
             ables.push(...moveable.props.ables!.filter(able => able.name === requestAble));
         }
     }
-
     if (!ables.length) {
         return false;
     }
-    const events = ables.filter((able: any) => able[eventName]);
+    ables = [BeforeRenderable, ...ables, Renderable];
+    const eventAbles = ables.filter((able: any) => able[eventName]);
     const datas = e.datas;
 
     if (isFirstStart) {
-        events.forEach(able => {
+        eventAbles.forEach(able => {
             able.unset && able.unset(moveable);
         });
     }
@@ -68,7 +69,7 @@ export function triggerAble(
     if (isEnd && inputEvent) {
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
-    const results = events.filter((able: any) => {
+    const results = eventAbles.filter((able: any) => {
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
@@ -77,14 +78,39 @@ export function triggerAble(
         }
 
         if (nextDatas.isEventStart) {
-            return able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas, inputTarget });
+            const result = able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas, inputTarget });
+
+            if (isStart && result === false) {
+                nextDatas.isEventStart = false;
+            }
+            return result;
         }
         return false;
     });
 
     const isUpdate = results.length;
-    const isForceEnd = isStart && events.length && !isUpdate;
+    let isForceEnd = false;
 
+    // end ables
+    if (isStart && eventAbles.length && !isUpdate) {
+        isForceEnd = eventAbles.filter(able => {
+            const ableName = able.name;
+            const nextDatas = datas[ableName];
+
+            if (nextDatas.isEventStart) {
+                if (able.dragRelation === "strong") {
+                    // cancel drag
+                    nextDatas.isEventStart = false;
+
+                    return false;
+                }
+                // start drag
+                return true;
+            }
+            // cancel event
+            return false;
+        }).length === 0;
+    }
     if (isEnd || isForceEnd) {
         moveable.state.gesto = null;
 
@@ -95,9 +121,12 @@ export function triggerAble(
         }
     }
     if (isFirstStart && isForceEnd) {
-        events.forEach(able => {
+        eventAbles.forEach(able => {
             able.unset && able.unset(moveable);
         });
+    }
+    if (isStart && !isRequest && isUpdate) {
+        e?.preventDefault();
     }
     if (moveable.isUnmounted || isForceEnd) {
         return false;
@@ -131,7 +160,7 @@ export function getTargetAbleGesto(
         const areaElement = moveable.areaElement;
 
         return eventTarget === areaElement
-            || !moveable.isMoveableElement(eventTarget)
+            || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.getElement().contains(eventTarget))
             || hasClass(eventTarget, "moveable-area")
             || hasClass(eventTarget, "moveable-padding");
     };
@@ -153,6 +182,7 @@ export function getAbleGesto(
         pinchThreshold,
     } = moveable.props;
     const options: IObject<any> = {
+        preventDefault: false,
         container: window,
         pinchThreshold,
         pinchOutside,

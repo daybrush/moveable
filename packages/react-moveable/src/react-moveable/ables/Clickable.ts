@@ -7,13 +7,16 @@ import { addEvent, findIndex, removeEvent } from "@daybrush/utils";
 import { makeAble } from "./AbleManager";
 
 export default makeAble("clickable", {
-    props: {},
+    props: {
+        clickable: Boolean,
+    },
     events: {
         onClick: "click",
         onClickGroup: "clickGroup",
     } as const,
     always: true,
-    dragStart(moveable: MoveableManagerInterface, e: any) {
+    dragRelation: "weak",
+    dragStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
         if (!e.isRequest) {
             addEvent(window, "click", moveable.onPreventClick, true);
         }
@@ -31,13 +34,17 @@ export default makeAble("clickable", {
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
 
-        if (!e.isDrag) {
+        const isMoveableElement = moveable.isMoveableElement(inputTarget);
+        const containsElement = !isMoveableElement && moveable.controlBox.getElement().contains(inputTarget);
+
+        if (!e.isDrag || containsElement) {
+
             this.unset(moveable);
         }
-
         if (
             !inputEvent || !inputTarget || e.isDrag
             || moveable.isMoveableElement(inputTarget)
+            || containsElement
             // External event duplicate target or dragAreaElement
         ) {
             return;
@@ -83,11 +90,11 @@ export default makeAble("clickable", {
             containsTarget,
         }));
     },
-    dragControlEnd(moveable: MoveableManagerInterface<ClickableProps>) {
-        this.endEvent(moveable);
+    dragControlEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
+        this.dragEnd(moveable, e);
     },
-    dragGroupControlEnd(moveable: MoveableManagerInterface<ClickableProps>) {
-        this.endEvent(moveable);
+    dragGroupControlEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
+        this.dragEnd(moveable, e);
     },
     endEvent(moveable: MoveableManagerInterface<ClickableProps>) {
         requestAnimationFrame(() => {

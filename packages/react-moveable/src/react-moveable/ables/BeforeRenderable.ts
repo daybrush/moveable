@@ -28,6 +28,7 @@ export default {
         onBeforeRenderGroup: "beforeRenderGroup",
         onBeforeRenderGroupEnd: "beforeRenderGroupEnd",
     } as const,
+    dragRelation: "weak",
     setTransform(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         const {
             is3d,

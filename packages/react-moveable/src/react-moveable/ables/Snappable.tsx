@@ -516,6 +516,7 @@ function addBoundGuidelines(
  */
 export default {
     name: "snappable",
+    dragRelation: "strong",
     props: {
         snappable: [Boolean, Array],
         snapContainer: Object,

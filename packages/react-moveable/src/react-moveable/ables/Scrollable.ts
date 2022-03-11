@@ -28,6 +28,7 @@ export default {
         onScroll: "scroll",
         onScrollGroup: "scrollGroup",
     } as const,
+    dragRelation: "strong",
     dragStart(moveable: MoveableManagerInterface<ScrollableProps>, e: any) {
         const props = moveable.props;
         const {

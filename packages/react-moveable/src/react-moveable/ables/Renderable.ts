@@ -19,6 +19,7 @@ export default {
         onRenderGroup: "renderGroup",
         onRenderGroupEnd: "renderGroupEnd",
     } as const,
+    dragRelation: "weak",
     dragStart(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         triggerEvent(moveable, `onRenderStart`, fillParams<OnRenderStart>(moveable, e, {
             isPinch: !!e.isPinch,
