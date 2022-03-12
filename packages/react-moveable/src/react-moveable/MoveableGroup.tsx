@@ -108,37 +108,6 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public moveables: MoveableManager[] = [];
     public transformOrigin = "50% 50%";
 
-    public updateEvent(prevProps: MoveableManagerProps<GroupableProps>) {
-        const state = this.state;
-        const props = this.props;
-
-        const prevTarget = prevProps.dragTarget || state.target;
-        const nextTarget = props.dragTarget || this.areaElement;
-
-        if (prevTarget !== nextTarget) {
-            unset(this, "targetGesto");
-            unset(this, "controlGesto");
-            state.target = null;
-        }
-
-        if (!state.target) {
-            state.target = this.areaElement;
-
-            this.controlBox.getElement().style.display = "block";
-            this.targetGesto = getTargetAbleGesto(this, nextTarget, "Group");
-            this.controlGesto = getAbleGesto(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
-        }
-        const isContainerChanged = !equals(prevProps.container, props.container);
-
-        if (isContainerChanged) {
-            state.container = props.container;
-        }
-        const { added, changed, removed } = this.differ.update(props.targets!);
-
-        if (isContainerChanged || added.length || changed.length || removed.length) {
-            this.updateRect();
-        }
-    }
     public checkUpdate() {
         this.updateAbles();
     }
@@ -233,6 +202,41 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     }
     protected updateAbles() {
         super.updateAbles([...this.props.ables!, Groupable], "Group");
+    }
+    protected _updateTargets() {
+        super._updateTargets();
+        this._prevTarget = this.props.dragTarget || this.areaElement;
+    }
+    protected _updateEvents() {
+        const state = this.state;
+        const props = this.props;
+
+        const prevTarget = this._prevTarget;
+        const nextTarget = props.dragTarget || this.areaElement;
+
+        if (prevTarget !== nextTarget) {
+            unset(this, "targetGesto");
+            unset(this, "controlGesto");
+            state.target = null;
+        }
+
+        if (!state.target) {
+            state.target = this.areaElement;
+
+            this.controlBox.getElement().style.display = "block";
+            this.targetGesto = getTargetAbleGesto(this, nextTarget, "Group");
+            this.controlGesto = getAbleGesto(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
+        }
+        const isContainerChanged = !equals(state.container, props.container);
+
+        if (isContainerChanged) {
+            state.container = props.container;
+        }
+        const { added, changed, removed } = this.differ.update(props.targets!);
+
+        if (isContainerChanged || added.length || changed.length || removed.length) {
+            this.updateRect();
+        }
     }
 }
 

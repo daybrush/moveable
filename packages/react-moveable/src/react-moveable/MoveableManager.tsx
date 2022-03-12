@@ -82,8 +82,8 @@ export default class MoveableManager<T = {}>
         "mouseLeave": null,
     };
 
-    private _prevTarget: HTMLElement | SVGElement | null | undefined = null;
-    private _prevDragArea = false;
+    protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
+    protected _prevDragArea = false;
 
     public render() {
         const props = this.props;
@@ -148,7 +148,6 @@ export default class MoveableManager<T = {}>
         this._updateNativeEvents();
         this._updateEvents();
         this._updateTargets();
-
         this.updateCheckInput();
     }
     public componentWillUnmount() {
@@ -647,48 +646,7 @@ export default class MoveableManager<T = {}>
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
     }
-    private _renderLines() {
-        const props = this.props;
-        const {
-            edge,
-            zoom,
-            hideDefaultLines,
-        } = props;
-
-        if (hideDefaultLines) {
-            return [];
-        }
-        const renderPoses = this.state.renderPoses;
-        const Renderer = {
-            createElement,
-        };
-        return [
-            renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], zoom!, 0),
-            renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], zoom!, 1),
-            renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2),
-            renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3),
-        ];
-    }
-    private _updateTargets() {
-        const props = this.props;
-
-        this._prevTarget = props.dragTarget || props.target;
-        this._prevDragArea = props.dragArea!;
-    }
-    private _isTargetChanged(useDragArea?: boolean) {
-        const props = this.props;
-        const target = props.dragTarget || props.target;
-        const prevTarget = this._prevTarget;
-        const prevDragArea = this._prevDragArea;
-        const dragArea = props.dragArea;
-
-        // check target without dragArea
-        const isTargetChanged = !dragArea && prevTarget !== target;
-        const isDragAreaChanged = (useDragArea || dragArea) && prevDragArea !== dragArea;
-
-        return isTargetChanged || isDragAreaChanged;
-    }
-    private _updateEvents() {
+    protected _updateEvents() {
         const controlBoxElement = this.controlBox.getElement();
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
@@ -711,6 +669,47 @@ export default class MoveableManager<T = {}>
         if (!this.controlGesto && hasControlAble) {
             this.controlGesto = getAbleGesto(this, controlBoxElement, "controlAbles", "Control");
         }
+    }
+    protected _updateTargets() {
+        const props = this.props;
+
+        this._prevTarget = props.dragTarget || props.target;
+        this._prevDragArea = props.dragArea!;
+    }
+    private _renderLines() {
+        const props = this.props;
+        const {
+            edge,
+            zoom,
+            hideDefaultLines,
+        } = props;
+
+        if (hideDefaultLines) {
+            return [];
+        }
+        const renderPoses = this.state.renderPoses;
+        const Renderer = {
+            createElement,
+        };
+        return [
+            renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], zoom!, 0),
+            renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], zoom!, 1),
+            renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2),
+            renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3),
+        ];
+    }
+    private _isTargetChanged(useDragArea?: boolean) {
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const prevTarget = this._prevTarget;
+        const prevDragArea = this._prevDragArea;
+        const dragArea = props.dragArea;
+
+        // check target without dragArea
+        const isTargetChanged = !dragArea && prevTarget !== target;
+        const isDragAreaChanged = (useDragArea || dragArea) && prevDragArea !== dragArea;
+
+        return isTargetChanged || isDragAreaChanged;
     }
     private _updateNativeEvents() {
         const props = this.props;
