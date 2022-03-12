@@ -73,8 +73,14 @@ export function resolveTransformEvent(event: any, functionName: string) {
     const index = datas.transformIndex;
     const nextTransforms = originalDatas.nextTransforms;
     const nextTransformAppendedIndexes = originalDatas.nextTransformAppendedIndexes;
-    const nextIndex = index === -1 ? nextTransforms.length
-        : index + nextTransformAppendedIndexes.filter((i: number) => i < index).length;
+    let nextIndex = 0;
+
+    if (index === -1) {
+        nextIndex = nextTransforms.length;
+        datas.transformIndex = nextIndex;
+    } else {
+        nextIndex = index + nextTransformAppendedIndexes.filter((i: number) => i < index).length;
+    }
 
     const result = getTransform(nextTransforms, nextIndex);
     const targetFunction = result.targetFunction;

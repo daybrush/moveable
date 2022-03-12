@@ -11,7 +11,7 @@ import {
     convertCSSSize, moveControlPos,
     getComputedStyle,
 } from "../utils";
-import { plus, minus } from "@scena/matrix";
+import { plus, minus, multiply } from "@scena/matrix";
 import { getDragDist, calculatePointerDist, setDragStart } from "../gesto/GestoUtils";
 import {
     getRadiusValues,
@@ -672,7 +672,6 @@ export default {
         if (!datas.isClipStart) {
             return false;
         }
-        const draggableData = (originalDatas && originalDatas.draggable) || {};
         const { isControl, isLine, isArea, index, clipPath } = datas as {
             clipPath: ReturnType<typeof getClipPath>,
             [key: string]: any,
@@ -680,7 +679,7 @@ export default {
         if (!clipPath) {
             return false;
         }
-        let [distX, distY] = draggableData.isDrag ? draggableData.prevDist : getDragDist(e);
+        let [distX, distY] = getDragDist(e);
         const props = moveable.props;
         const state = moveable.state;
         const { width, height } = state;
@@ -843,8 +842,14 @@ export default {
             1,
         );
 
-
         if (originalDatas.draggable) {
+            const {
+                is3d,
+                allMatrix,
+            } = state;
+            const n = is3d ? 4 : 3;
+
+            [boundDelta[0], boundDelta[1]] = multiply(allMatrix, [boundDelta[0], boundDelta[1], 0, 0], n);
             originalDatas.draggable.deltaOffset = boundDelta;
         }
         triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {

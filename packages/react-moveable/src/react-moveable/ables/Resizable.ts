@@ -483,8 +483,7 @@ export default {
             datas.prevHeight += errorHeight;
         }
         if (isErrorWidth || isErrorHeight) {
-            this.dragControl(moveable, e);
-            return true;
+            return this.dragControl(moveable, e);
         }
     },
     dragControlEnd(

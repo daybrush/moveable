@@ -28,6 +28,11 @@ export default {
     drag(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         triggerEvent(moveable, `onRender`, this.fillDragParams(moveable, e));
     },
+    dragAfter(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
+        if (e.resultCount) {
+            return this.drag(moveable, e);
+        }
+    },
     dragEnd(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         triggerEvent(moveable, `onRenderEnd`, this.fillDragEndParams(moveable, e));
     },
@@ -74,6 +79,9 @@ export default {
     },
     dragControl(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         return this.drag(moveable, e);
+    },
+    dragControlAfter(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
+        return this.dragAfter(moveable, e);
     },
     dragControlEnd(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         return this.dragEnd(moveable, e);

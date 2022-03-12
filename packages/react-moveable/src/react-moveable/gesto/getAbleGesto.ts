@@ -25,10 +25,11 @@ export function triggerAble(
     ) {
         return false;
     }
+    // "drag" "Control" "After"
     const eventName = `${eventOperation}${eventAffix}${eventType}`;
     const conditionName = `${eventOperation}${eventAffix}Condition`;
     const isEnd = eventType === "End";
-    const isAfter = eventType.indexOf("After") > -1;
+    const isAfter = eventType === "After";
     const isFirstStart = isStart && (
         !moveable.targetGesto || !moveable.controlGesto
         || (!moveable.targetGesto.isFlag() || !moveable.controlGesto.isFlag())
@@ -37,11 +38,11 @@ export function triggerAble(
     if (isFirstStart) {
         moveable.updateRect(eventType, true, false);
     }
-    if (eventType === "" && !isAfter && !isRequest) {
+    if (eventType === "" && !isRequest) {
         convertDragDist(moveable.state, e);
     }
     // const isGroup = eventAffix.indexOf("Group") > -1;
-    let ables: Able[] = [...(moveable as any)[ableType]];
+    const ables: Able[] = [...(moveable as any)[ableType]];
 
     if (isRequest) {
         const requestAble = e.requestAble;
@@ -53,8 +54,7 @@ export function triggerAble(
     if (!ables.length) {
         return false;
     }
-    ables = [BeforeRenderable, ...ables, Renderable];
-    const eventAbles = ables.filter((able: any) => able[eventName]);
+    const eventAbles: Able[] = [BeforeRenderable, ...ables, Renderable].filter((able: any) => able[eventName]);
     const datas = e.datas;
 
     if (isFirstStart) {
@@ -69,6 +69,7 @@ export function triggerAble(
     if (isEnd && inputEvent) {
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
+    let resultCount = 0;
     const results = eventAbles.filter((able: any) => {
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
@@ -78,11 +79,18 @@ export function triggerAble(
         }
 
         if (nextDatas.isEventStart) {
-            const result = able[eventName](moveable, { ...e, datas: nextDatas, originalDatas: datas, inputTarget });
+            const result = able[eventName](moveable, {
+                ...e,
+                resultCount,
+                datas: nextDatas,
+                originalDatas: datas,
+                inputTarget,
+            });
 
             if (isStart && result === false) {
                 nextDatas.isEventStart = false;
             }
+            resultCount += result ? 1 : 0;
             return result;
         }
         return false;
@@ -132,7 +140,7 @@ export function triggerAble(
         return false;
     }
     if ((!isStart && isUpdate && !requestInstant) || isEnd) {
-        moveable.updateRect(eventType, true, false);
+        moveable.updateRect(isEnd ? eventType : "", true, false);
         moveable.forceUpdate();
     }
     if (!isStart && !isEnd && !isAfter && isUpdate && !requestInstant) {

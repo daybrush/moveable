@@ -257,8 +257,8 @@ export default {
 
         if (deltaOffset[0] || deltaOffset[1]) {
             datas.deltaOffset = [0, 0];
-            distOffset[0] += deltaOffset[0];
-            distOffset[1] += deltaOffset[1];
+            distOffset[0] = deltaOffset[0];
+            distOffset[1] = deltaOffset[1];
             return this.drag(moveable, e);
         }
         return false;

@@ -323,6 +323,7 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     dragStart?(moveable: any, e: GestoTypes.OnDragStart): any;
     drag?(moveable: any, e: GestoTypes.OnDrag): any;
     dragEnd?(moveable: any, e: GestoTypes.OnDragEnd): any;
+    dragAfter?(moveable: any, e: GestoTypes.OnDrag): any;
 
     // Operates when a pinch event occurs for the single target.
     pinchStart?(moveable: any, e: GestoTypes.OnPinchStart): any;
@@ -335,6 +336,7 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     dragControlStart?(moveable: any, e: GestoTypes.OnDragStart): any;
     dragControl?(moveable: any, e: GestoTypes.OnDrag): any;
     dragControlEnd?(moveable: any, e: GestoTypes.OnDragEnd): any;
+    dragControlAfter?(moveable: any, e: GestoTypes.OnDrag): any;
 
     // Condition that occurs dragGroup
     dragGroupCondition?(moveable: any, e: any): boolean;
