@@ -198,7 +198,6 @@ export function getMatrixStackInfo(
     target: SVGElement | HTMLElement,
     container?: SVGElement | HTMLElement | null,
     checkContainer?: boolean,
-    // prevMatrix?: number[],
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
@@ -211,15 +210,6 @@ export function getMatrixStackInfo(
     let targetMatrix!: number[];
 
     const offsetContainer = getOffsetInfo(container, container, true).offsetParent;
-
-    // if (prevMatrix) {
-    //     isEnd = target === container;
-    //     if (prevMatrix.length > 10) {
-    //         is3d = true;
-    //         n = 4;
-    //     }
-    //     container = target.parentElement;
-    // }
 
     while (el && !isEnd) {
         isEnd = requestEnd;
@@ -360,11 +350,7 @@ export function calculateElementInfo(
     container?: SVGElement | HTMLElement | null,
     rootContainer: HTMLElement | SVGElement | null | undefined = container,
     isAbsolute3d?: boolean,
-    // state?: Partial<MoveableManagerState> | false,
 ) {
-    // const prevMatrix = state ? state.beforeMatrix : undefined;
-    // const prevRootMatrix = state ? state.rootMatrix : undefined;
-    // const prevN = state ? (state.is3d ? 4 : 3) : undefined;
     let width = 0;
     let height = 0;
     let rotation = 0;
@@ -493,8 +479,6 @@ export function calculateMatrixStack(
     let beforeMatrix = createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
-    const originalRootContainer = rootContainer || document.body;
-    const endContainer = getOffsetInfo(originalRootContainer, originalRootContainer, true).offsetParent;
 
     rootMatrixes.reverse();
     matrixes.reverse();
@@ -509,14 +493,19 @@ export function calculateMatrixStack(
     }
 
     // rootMatrix = (...) -> container -> offset -> absolute -> offset -> absolute(targetMatrix)
+    // rootMatrixBeforeOffset = lastOffsetMatrix -> (...) -> container
     // beforeMatrix = (... -> container -> offset -> absolute) -> offset -> absolute(targetMatrix)
     // offsetMatrix = (... -> container -> offset -> absolute -> offset) -> absolute(targetMatrix)
 
-    // if (!prevRootMatrix) {
     rootMatrixes.forEach(info => {
         rootMatrix = multiply(rootMatrix, info.matrix!, n);
     });
-    // }
+    const originalRootContainer = rootContainer || document.body;
+    const endContainer = rootMatrixes[0]?.target
+        || getOffsetInfo(originalRootContainer, originalRootContainer, true).offsetParent;
+    const rootMatrixBeforeOffset = rootMatrixes.slice(1).reduce((matrix, info) => {
+        return multiply(matrix, info.matrix!, n);
+    }, createIdentityMatrix(n));
     matrixes.forEach((info, i) => {
         if (length - 2 === i) {
             // length - 3
@@ -530,12 +519,13 @@ export function calculateMatrixStack(
         // calculate for SVGElement
         if (!info.matrix) {
             const nextInfo = matrixes[i + 1];
+
             const offset = getSVGOffset(
                 info,
                 nextInfo,
                 endContainer,
                 n,
-                multiply(rootMatrix, allMatrix, n),
+                multiply(rootMatrixBeforeOffset, allMatrix, n),
             );
             info.matrix = createOriginMatrix(offset, n);
         }
