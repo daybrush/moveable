@@ -17,6 +17,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+## [0.28.0] - 2022-03-14
+* `moveable` 0.28.0
+* `react-moveable` 0.31.1
+* `preact-moveable` 0.30.0
+* `ngx-moveable` 0.24.0
+* `svelte-moveable` 0.18.0
+* `lit-moveable` 0.5.0
+* `vue-moveable` 2.0.0-beta.6
+* `vue3-moveable` 0.3.0
+
+### Added
+* add `events` property for groupEnd events #610
+* add `useResizeObserver` prop #603
+* add `forceUpdate` method #568
+* add `transform` property on render events
+
+### Fixed
+* fix ngx-moveable's inputs, outputs
+* fix clippable transform #608
+* fix svg matrix #602
+* prevent click event #600
+* optimize the update #568
+* fix custom ables' class name #583
+* fix zoomed cursor #589 #591
+* fix scaled container for frameworks #578
+* fix className is null and crushing clippable with svg without classes (#584)
+* fix svelt ssr #513
+* fix Clippable's rotationRad
+* fix rotation for custom defined handlers
+
+
 
 ## [0.27.2] - 2021-11-16
 * `moveable` 0.27.2

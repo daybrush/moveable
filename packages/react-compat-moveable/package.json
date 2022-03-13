@@ -1,6 +1,6 @@
 {
     "name": "react-compat-moveable",
-    "version": "0.15.2",
+    "version": "0.16.0",
     "description": "A React Compat Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -65,9 +65,17 @@
         "typescript": "^3.4.5"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.6.0",
-        "@scena/dragscroll": "^1.0.1",
         "react-compat-css-styled": "^1.0.8",
-        "react-moveable": "~0.30.3"
+        "react-moveable": "~0.31.0",
+        "@daybrush/utils": "^1.6.0",
+        "@egjs/agent": "^2.2.1",
+        "@egjs/children-differ": "^1.0.1",
+        "@scena/dragscroll": "^1.1.1",
+        "@scena/matrix": "^1.1.1",
+        "css-to-mat": "^1.0.3",
+        "framework-utils": "^1.1.0",
+        "gesto": "^1.7.0",
+        "overlap-area": "^1.0.0",
+        "react-css-styled": "^1.0.3"
     }
 }

@@ -86,8 +86,9 @@ export default class MoveableManager<T = {}>
 
     protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _prevDragArea = false;
-    protected _observer: ResizeObserver | null = null;
-    protected _observerId = 0;
+
+    private _observer: ResizeObserver | null = null;
+    private _observerId = 0;
 
     public render() {
         const props = this.props;
