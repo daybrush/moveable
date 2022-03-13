@@ -1027,10 +1027,8 @@ export function roundSign(num: number) {
     return Math.round(num % 1 === -0.5 ? num - 1 : num);
 }
 export function unset(self: any, name: string) {
-    if (self[name]) {
-        self[name].unset();
-        self[name] = null;
-    }
+    self[name]?.unset();
+    self[name] = null;
 }
 
 

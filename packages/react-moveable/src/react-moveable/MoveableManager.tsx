@@ -19,10 +19,11 @@ import { ref } from "framework-utils";
 import {
     MoveableManagerProps, MoveableManagerState, Able,
     RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
+    MoveableDefaultOptions,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { getKeys, IObject, removeEvent } from "@daybrush/utils";
+import { cancelAnimationFrame, getKeys, IObject, removeEvent, requestAnimationFrame } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
@@ -41,6 +42,7 @@ export default class MoveableManager<T = {}>
         wrapperMoveable: null,
         parentPosition: null,
         portalContainer: null,
+        useResizeObserver: false,
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
@@ -84,6 +86,8 @@ export default class MoveableManager<T = {}>
 
     protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _prevDragArea = false;
+    protected _observer: ResizeObserver | null = null;
+    protected _observerId = 0;
 
     public render() {
         const props = this.props;
@@ -143,12 +147,14 @@ export default class MoveableManager<T = {}>
             this.updateRect("", false, true);
         }
         this.updateCheckInput();
+        this._updateObserver(this.props);
     }
-    public componentDidUpdate() {
+    public componentDidUpdate(prevProps: any) {
         this._updateNativeEvents();
         this._updateEvents();
         this._updateTargets();
         this.updateCheckInput();
+        this._updateObserver(prevProps);
     }
     public componentWillUnmount() {
         this.isUnmounted = true;
@@ -587,6 +593,24 @@ export default class MoveableManager<T = {}>
         e.stopPropagation();
         removeEvent(window, "click", this.onPreventClick, true);
     }
+    public checkUpdateRect = () => {
+        if (this.isDragging()) {
+            return;
+        }
+        const parentMoveable = this.props.parentMoveable;
+
+        if (parentMoveable) {
+            (parentMoveable as MoveableManager).checkUpdateRect();
+            return;
+        }
+        cancelAnimationFrame(this._observerId);
+        this._observerId = requestAnimationFrame(() => {
+            if (this.isDragging()) {
+                return;
+            }
+            this.updateRect();
+        });
+    }
     protected unsetAbles() {
         this.targetAbles.forEach(able => {
             if (able.unset) {
@@ -645,6 +669,29 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
+    }
+    protected _updateObserver(prevProps: MoveableDefaultOptions) {
+        const props = this.props;
+        const target = props.target;
+
+        if (!window.ResizeObserver || !target || !props.useResizeObserver) {
+            this._observer?.disconnect();
+            return;
+        }
+
+
+        if (prevProps.target === target && this._observer) {
+            return;
+        }
+
+        const observer = new ResizeObserver(this.checkUpdateRect);
+
+        observer.observe(target!, {
+            box: "border-box",
+        });
+        this._observer = observer;
+
+        return;
     }
     protected _updateEvents() {
         const controlBoxElement = this.controlBox.getElement();
@@ -759,13 +806,25 @@ export default class MoveableManager<T = {}>
  * moveable.target = document.querySelector(".target");
  */
 /**
- * Zooms in the elements of a moveable. (default: 1)
+ * Zooms in the elements of a moveable.
  * @name Moveable#zoom
+ * @default 1
  * @example
  * import Moveable from "moveable";
  *
  * const moveable = new Moveable(document.body);
  * moveable.zoom = 2;
+ */
+
+/**
+ * Whether the target size is detected and updated whenever it changes.
+ * @name Moveable#zoom
+ * @default false
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.useResizeObserver = true;
  */
 
 /**
@@ -779,8 +838,9 @@ export default class MoveableManager<T = {}>
  */
 
 /**
- * You can specify the className of the moveable controlbox. (default: "")
+ * You can specify the className of the moveable controlbox.
  * @name Moveable#className
+ * @default ""
  * @example
  * import Moveable from "moveable";
  *
@@ -792,8 +852,9 @@ export default class MoveableManager<T = {}>
  */
 
 /**
- * The target(s) to drag Moveable target(s) (default: target)
+ * The target(s) to drag Moveable target(s)
  * @name Moveable#dragTarget
+ * @default target
  * @example
  * import Moveable from "moveable";
  *

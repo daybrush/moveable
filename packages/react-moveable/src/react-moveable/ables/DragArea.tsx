@@ -7,7 +7,7 @@ import {
     Renderer, GroupableProps, DragAreaProps, MoveableManagerInterface, MoveableGroupInterface,
 } from "../types";
 import { AREA_PIECE, AVOID, AREA_PIECES } from "../classNames";
-import { addClass, removeClass } from "@daybrush/utils";
+import { addClass, removeClass, requestAnimationFrame } from "@daybrush/utils";
 
 function restoreStyle(moveable: MoveableManagerInterface) {
     const el = moveable.areaElement;

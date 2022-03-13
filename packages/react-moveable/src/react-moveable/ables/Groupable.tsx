@@ -16,6 +16,7 @@ export default {
         moveable.moveables = [];
         const { left, top } = moveable.state;
         const position = { left, top };
+        const props = moveable.props;
 
         return targets.map((target, i) => {
             return <MoveableManager
@@ -23,8 +24,9 @@ export default {
                 ref={refs(moveable, "moveables", i)}
                 target={target}
                 origin={false}
-                cssStyled={moveable.props.cssStyled}
-                customStyledMap={moveable.props.customStyledMap}
+                cssStyled={props.cssStyled}
+                customStyledMap={props.customStyledMap}
+                useResizeObserver={props.useResizeObserver}
                 parentMoveable={moveable}
                 parentPosition={position}
             />;

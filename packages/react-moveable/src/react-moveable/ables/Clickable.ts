@@ -3,7 +3,7 @@ import {
     ClickableProps, OnClick, OnClickGroup,
 } from "../types";
 import { triggerEvent, fillParams } from "../utils";
-import { addEvent, findIndex, removeEvent } from "@daybrush/utils";
+import { addEvent, findIndex, removeEvent, requestAnimationFrame } from "@daybrush/utils";
 import { makeAble } from "./AbleManager";
 
 export default makeAble("clickable", {

@@ -1,5 +1,5 @@
 import MoveableManager from "./MoveableManager";
-import { GroupableProps, MoveableManagerProps, RectInfo } from "./types";
+import { GroupableProps, RectInfo } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
@@ -238,6 +238,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             this.updateRect();
         }
     }
+    protected _updateObserver() {}
 }
 
 /**

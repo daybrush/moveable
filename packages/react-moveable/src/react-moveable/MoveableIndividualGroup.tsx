@@ -67,10 +67,11 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
         return false;
     }
     public updateRenderPoses() { }
-    public updateEvent() { }
     public checkUpdate() { }
     public triggerEvent() { }
     protected updateAbles() { }
+    protected _updateEvents() { }
+    protected _updateObserver() {}
 }
 
 /**

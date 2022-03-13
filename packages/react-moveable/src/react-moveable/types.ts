@@ -36,6 +36,7 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
  * @property - Moveable Container. Don't set it. (default: parentElement)
  * @property - Moveable Portal Container to support other frameworks. Don't set it. (default: container)
  * @property - Moveable Root Container (No Transformed Container). (default: container)
+ * @property - Whether the target size is detected and updated whenever it changes. (default: false)
  * @property - Zooms in the elements of a moveable. (default: 1)
  * @property - The default transformOrigin of the target can be set in advance. (default: "")
  * @property - Whether to scale and resize through edge lines. (default: false)
@@ -56,6 +57,7 @@ export interface DefaultOptions {
     container?: SVGElement | HTMLElement | null;
     portalContainer?: HTMLElement | null;
     rootContainer?: HTMLElement | null;
+    useResizeObserver?: boolean;
     zoom?: number;
     transformOrigin?: Array<string | number> | string | "";
     edge?: boolean;
