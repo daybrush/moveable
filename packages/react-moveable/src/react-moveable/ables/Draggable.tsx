@@ -267,7 +267,7 @@ export default {
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         e: any,
     ) {
-        const { parentEvent, datas, isDrag } = e;
+        const { parentEvent, datas } = e;
 
         moveable.state.gesto = null;
         moveable.state.dragInfo = null;
@@ -275,8 +275,9 @@ export default {
             return;
         }
         datas.isDrag = false;
-        !parentEvent && triggerEvent(moveable, "onDragEnd", fillEndParams<OnDragEnd>(moveable, e, {}));
-        return isDrag;
+        const param = fillEndParams<OnDragEnd>(moveable, e, {});
+        !parentEvent && triggerEvent(moveable, "onDragEnd", param);
+        return param;
     },
     dragGroupStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas, clientX, clientY } = e;
@@ -331,9 +332,10 @@ export default {
             return;
         }
         this.dragEnd(moveable, e);
-        triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false);
+        const events = triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false);
         triggerEvent(moveable, "onDragGroupEnd", fillEndParams<OnDragGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
+            events,
         }));
 
         return isDrag;

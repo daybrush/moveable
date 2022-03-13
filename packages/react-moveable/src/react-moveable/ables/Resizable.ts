@@ -490,15 +490,15 @@ export default {
         moveable: MoveableManagerInterface<ResizableProps & DraggableProps>,
         e: any,
     ) {
-        const { datas, isDrag } = e;
+        const { datas } = e;
         if (!datas.isResize) {
-            return false;
+            return;
         }
         datas.isResize = false;
 
         const params = fillEndParams<OnResizeEnd>(moveable, e, {});
         triggerEvent<ResizableProps>(moveable, "onResizeEnd", params);
-        return isDrag;
+        return params;
     },
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
@@ -614,10 +614,11 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAbles(moveable, this, "dragControlEnd", e);
+        const events = triggerChildAbles(moveable, this, "dragControlEnd", e);
 
         const nextParams: OnResizeGroupEnd = fillEndParams<OnResizeGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
+            events,
         });
 
         triggerEvent<ResizableProps>(moveable, "onResizeGroupEnd", nextParams);

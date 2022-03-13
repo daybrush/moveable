@@ -509,10 +509,11 @@ export default {
             return;
         }
         this.dragControlEnd(moveable, e);
-        triggerChildAbles(moveable, this, "dragControlEnd", e);
+        const events = triggerChildAbles(moveable, this, "dragControlEnd", e);
 
         const nextParams = fillEndParams<OnScaleGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
+            events,
         });
 
         triggerEvent(moveable, "onScaleGroupEnd", nextParams);

@@ -491,15 +491,17 @@ export default {
         return params;
     },
     dragControlEnd(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
-        const { datas, isDrag } = e;
+        const { datas } = e;
 
         if (!datas.isRotate) {
-            return false;
+            return;
         }
         datas.isRotate = false;
 
-        triggerEvent(moveable, "onRotateEnd", fillEndParams<OnRotateEnd>(moveable, e, {}));
-        return isDrag;
+        const params = fillEndParams<OnRotateEnd>(moveable, e, {});
+
+        triggerEvent(moveable, "onRotateEnd", params);
+        return params;
     },
     dragGroupControlCondition: dragControlCondition,
     dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
@@ -599,10 +601,11 @@ export default {
         }
 
         this.dragControlEnd(moveable, e);
-        triggerChildAbles(moveable, this, "dragControlEnd", e);
+        const events = triggerChildAbles(moveable, this, "dragControlEnd", e);
 
         const nextParams = fillEndParams<OnRotateGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
+            events,
         });
 
         triggerEvent(moveable, "onRotateGroupEnd", nextParams);

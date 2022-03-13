@@ -825,9 +825,11 @@ export interface OnDragGroup extends OnDrag {
  * @memberof Moveable.Draggable
  * @extends Moveable.OnDragEnd
  * @property - The drag finished targets
+ * @property - Each `dragEnd` event on the targets
  */
 export interface OnDragGroupEnd extends OnDragEnd {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnDragEnd[];
 }
 
 /**
@@ -835,11 +837,11 @@ export interface OnDragGroupEnd extends OnDragEnd {
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotateStart
  * @property - targets to rotate
- * @property - Each `rotateStart` & `dragStart` event on the targets
+ * @property - Each `rotateStart` event on the targets
  */
 export interface OnRotateGroupStart extends OnRotateStart {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotateStart & { dragStart: OnDragStart | false }>;
+    events: OnRotateStart[];
 }
 
 /**
@@ -847,12 +849,12 @@ export interface OnRotateGroupStart extends OnRotateStart {
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotate
  * @property - The rotating targets
- * @property - Each `rotate` & `drag` event on the targets
+ * @property - Each `rotate` event on the targets
  * @property - You can set the current rotate value.
  */
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnRotate & { drag: OnDrag }>;
+    events: OnRotate[];
     set: (rotation: number) => any;
 }
 
@@ -861,9 +863,11 @@ export interface OnRotateGroup extends OnRotate {
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotateEnd
  * @property - The rotate finished targets
+ * @property - Each `rotateEnd` event on the targets
  */
 export interface OnRotateGroupEnd extends OnRotateEnd {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnRotateEnd[];
 }
 
 /**
@@ -883,11 +887,11 @@ export interface OnResizeGroupStart extends OnResizeStart {
  * @memberof Moveable.Resizable
  * @extends Moveable.OnResize
  * @property - The resizing targets
- * @property - Each `resize` & `drag `event on the targets
+ * @property - Each `resize`event on the targets
  */
 export interface OnResizeGroup extends OnResize {
     targets: Array<HTMLElement | SVGElement>;
-    events: Array<OnResize & { drag: OnDrag }>;
+    events: OnResize[];
 }
 
 /**
@@ -895,9 +899,11 @@ export interface OnResizeGroup extends OnResize {
  * @memberof Moveable.Resizable
  * @extends Moveable.OnResizeEnd
  * @property - The resize finished targets
+ * @property - Each `resizeEnd` event on the targets
  */
 export interface OnResizeGroupEnd extends OnResizeEnd {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnResizeEnd[];
 }
 
 /**
@@ -929,9 +935,11 @@ export interface OnScaleGroup extends OnScale {
  * @memberof Moveable.Scalable
  * @extends Moveable.OnScaleEnd
  * @property - The scale finished targets
+ * @property - Each `scaleEnd` event on the targets
  */
 export interface OnScaleGroupEnd extends OnScaleEnd {
     targets: Array<HTMLElement | SVGElement>;
+    events: OnScaleEnd[];
 }
 
 /**
