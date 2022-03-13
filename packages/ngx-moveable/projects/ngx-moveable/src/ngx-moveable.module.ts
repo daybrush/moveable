@@ -8,4 +8,3 @@ import { NgxMoveableComponent } from './ngx-moveable.component';
   exports: [NgxMoveableComponent],
 })
 export class NgxMoveableModule { }
-export { NgxMoveableComponent };

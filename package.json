@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.27.3",
+  "version": "0.28.0",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -18,7 +18,8 @@
     "release:init": "npm run release:before && release -i --dirs=dist,doc",
     "deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
     "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
-    "packages:update": "pvu --update=svelte-moveable,ngx-moveable/projects/ngx-moveable,lit-moveable,vue3-moveable,vue-moveable",
+    "packages:update": "pvu --update=svelte-moveable,ngx-moveable/projects/ngx-moveable,lit-moveable,vue3-moveable,vue-moveable && npm run packages:update-angular-consts",
+    "packages:update-angular-consts": "node ./config/update-type-consts.js",
     "packages:build": "pvu --build=svelte-moveable,ngx-moveable,lit-moveable,vue3-moveable,vue-moveable",
     "packages:publish": "pvu --publish=svelte-moveable,ngx-moveable/dist/ngx-moveable,lit-moveable,vue3-moveable"
   },
@@ -63,13 +64,13 @@
   "homepage": "https://daybrush.com/moveable/",
   "dependencies": {
     "@scena/event-emitter": "^1.0.3",
-    "react-compat-moveable": "~0.15.2",
+    "react-compat-moveable": "~0.16.0",
     "react-simple-compat": "^1.2.1"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",
     "@daybrush/demo": "0.0.2",
-    "@daybrush/jsdoc": "^0.3.7",
+    "@daybrush/jsdoc": "^0.3.12",
     "@daybrush/release": "^0.2.4",
     "@types/karma-chai": "^0.1.2",
     "@types/mocha": "^5.2.7",
@@ -78,12 +79,12 @@
     "daybrush-jsdoc-template": "^1.6.0",
     "gh-pages": "^2.0.1",
     "print-sizes": "0.0.4",
-    "pvu": "^0.5.1",
+    "pvu": "^0.6.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "rollup-plugin-css-bundle": "^1.0.4",
     "rollup-plugin-react-compat": "^0.1.0",
     "tslint": "^6.1.3",
-    "typescript": "^3.9.7"
+    "typescript": "^4.2.4"
   }
 }
