@@ -118,7 +118,7 @@ If you want to check the methods and events, please refer to the [**API document
 </div>
 </template>
 <script>
-import Moveable from 'vue-moveable';
+import Moveable from 'vue3-moveable';
 
 export default {
   name: 'app',
