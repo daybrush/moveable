@@ -1364,6 +1364,9 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
     if (!arr || !isObject(arr)) {
         return false;
     }
+    if (arr instanceof Element) {
+        return false;
+    }
     return isArray(arr) || "length" in arr;
 }
 

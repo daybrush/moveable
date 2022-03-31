@@ -119,11 +119,13 @@ export class InitialMoveable<T = {}>
         const nextSelectorMap: IObject<Array<HTMLElement | SVGElement>> = {};
         this.refTargets.forEach(target => {
             if (isString(target)) {
-                if (!selectorMap[target] && isBrowser) {
+                const selectorTarget = selectorMap[target];
+
+                if (selectorTarget) {
+                    nextSelectorMap[target] = selectorMap[target];
+                } else if (isBrowser) {
                     isUpdate = true;
                     nextSelectorMap[target] = [].slice.call(document.querySelectorAll(target));
-                } else {
-                    nextSelectorMap[target] = selectorMap[target];
                 }
             }
         });
