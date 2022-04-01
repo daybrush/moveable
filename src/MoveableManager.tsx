@@ -77,6 +77,9 @@ class MoveableManager extends EventEmitter<MoveableEventsParameters> {
     public setState(state: Partial<MoveableOptions>, callback?: () => any) {
         this.innerMoveable!.setState(state, callback);
     }
+    public forceUpdate(callback?: () => any) {
+        this.innerMoveable!.forceUpdate(callback);
+    }
     public destroy() {
         render(null as any, this.tempElement!);
         this.off();

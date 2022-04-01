@@ -1854,7 +1854,7 @@ export interface MoveableInterface {
     isDragging(): boolean;
     hitTest(el: Element | HitRect): number;
     setState(state: any, callback?: () => any): any;
-    forceUpdate(state?: any, callback?: () => any): any;
+    forceUpdate(callback?: () => any): any;
 }
 
 export interface ControlPose {
