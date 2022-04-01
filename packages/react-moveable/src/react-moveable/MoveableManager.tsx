@@ -210,8 +210,10 @@ export default class MoveableManager<T = {}>
      * });
      */
     public dragStart(e: MouseEvent | TouchEvent) {
-        if (this.targetGesto) {
-            this.targetGesto.triggerDragStart(e);
+        const targetGesto = this.targetGesto;
+
+        if (targetGesto && !targetGesto.isFlag()) {
+            targetGesto.triggerDragStart(e);
         }
         return this;
     }

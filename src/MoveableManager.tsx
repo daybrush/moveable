@@ -80,6 +80,13 @@ class MoveableManager extends EventEmitter<MoveableEventsParameters> {
     public forceUpdate(callback?: () => any) {
         this.innerMoveable!.forceUpdate(callback);
     }
+    public dragStart(e: MouseEvent | TouchEvent) {
+        const innerMoveable = this.innerMoveable;
+        if ((innerMoveable as any).$_timer) {
+            this.forceUpdate();
+        }
+        this.getMoveable().dragStart(e);
+    }
     public destroy() {
         render(null as any, this.tempElement!);
         this.off();
