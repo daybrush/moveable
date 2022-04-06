@@ -342,115 +342,115 @@ export function getNearOffsetInfo<T extends { offset: number[], isBound: boolean
 
 export function getCheckSnapDirections(
     direction: number[],
+    fixedDirection: number[],
     keepRatio: boolean
 ) {
     const directions: number[][][] = [];
-    const fixedDirection = [-direction[0], -direction[1]];
+    // const fixedDirection = [-direction[0], -direction[1]];
 
-    if (direction[0] && direction[1]) {
-        directions.push(
-            [fixedDirection, [direction[0], -direction[1]]],
-            [fixedDirection, [-direction[0], direction[1]]]
-        );
-        if (keepRatio) {
-            // pass two direction condition
-            directions.push([fixedDirection, direction]);
-        }
-    } else if (direction[0]) {
-        // vertcal
-        if (keepRatio) {
+    if (keepRatio) {
+        if (Math.abs(fixedDirection[0]) !== 1 || Math.abs(fixedDirection[1]) !== 1) {
             directions.push(
-                [fixedDirection, [fixedDirection[0], -1]],
-                [fixedDirection, [fixedDirection[0], 1]],
-                [fixedDirection, [direction[0], -1]],
+                [fixedDirection, [-1, -1]],
+                [fixedDirection, [-1, 1]],
+                [fixedDirection, [1, -1]],
+                [fixedDirection, [1, 1]],
+            );
+        } else {
+            directions.push(
+                [fixedDirection, [direction[0], -direction[1]]],
+                [fixedDirection, [-direction[0], direction[1]]],
                 [fixedDirection, direction],
-                [fixedDirection, [direction[0], 1]]
-            );
-        } else {
-            directions.push(
-                [
-                    [fixedDirection[0], -1],
-                    [direction[0], -1],
-                ],
-                [
-                    [fixedDirection[0], 0],
-                    [direction[0], 0],
-                ],
-                [
-                    [fixedDirection[0], 1],
-                    [direction[0], 1],
-                ]
             );
         }
-    } else if (direction[1]) {
-        // horizontal
-        if (keepRatio) {
-            directions.push(
-                [fixedDirection, [-1, fixedDirection[1]]],
-                [fixedDirection, [1, fixedDirection[1]]],
-                [fixedDirection, [-1, direction[1]]],
-                [fixedDirection, [1, direction[1]]],
-                [fixedDirection, direction]
-            );
-        } else {
-            directions.push(
-                [
-                    [-1, fixedDirection[1]],
-                    [-1, direction[1]],
-                ],
-                [
-                    [0, fixedDirection[1]],
-                    [0, direction[1]],
-                ],
-                [
-                    [1, fixedDirection[1]],
-                    [1, direction[1]],
-                ]
-            );
-        }
+        directions.push([fixedDirection, direction]);
     } else {
-        // [0, 0] to all direction
-        directions.push(
-            [fixedDirection, [1, 0]],
-            [fixedDirection, [-1, 0]],
-            [fixedDirection, [0, -1]],
-            [fixedDirection, [0, 1]],
+        if (direction[0] && direction[1]) {
+            directions.push(
+                [fixedDirection, [direction[0], -direction[1]]],
+                [fixedDirection, [-direction[0], direction[1]]]
+            );
+        } else if (direction[0]) {
+            const signs = Math.abs(fixedDirection[0]) === 1 ? [1] : [1, -1];
 
-            [
-                [1, 0],
-                [1, -1],
-            ],
-            [
-                [1, 0],
-                [1, 1],
-            ],
-            [
-                [0, 1],
-                [1, 1],
-            ],
-            [
-                [0, 1],
-                [-1, 1],
-            ],
+            signs.forEach(sign => {
+                directions.push(
+                    [
+                        [fixedDirection[0], -1],
+                        [sign * direction[0], -1],
+                    ],
+                    [
+                        [fixedDirection[0], 0],
+                        [sign * direction[0], 0],
+                    ],
+                    [
+                        [fixedDirection[0], 1],
+                        [sign * direction[0], 1],
+                    ]
+                );
+            });
+        } else if (direction[1]) {
+            const signs = Math.abs(fixedDirection[1]) === 1 ? [1] : [1, -1];
 
-            [
-                [-1, 0],
-                [-1, -1],
-            ],
-            [
-                [-1, 0],
-                [-1, 1],
-            ],
-            [
-                [0, -1],
-                [1, -1],
-            ],
-            [
-                [0, -1],
-                [-1, -1],
-            ]
-        );
+            signs.forEach(sign => {
+                directions.push(
+                    [
+                        [-1, fixedDirection[1]],
+                        [-1, sign * direction[1]],
+                    ],
+                    [
+                        [0, fixedDirection[1]],
+                        [0, sign * direction[1]],
+                    ],
+                    [
+                        [1, fixedDirection[1]],
+                        [1, sign * direction[1]],
+                    ]
+                );
+            });
+        } else {
+            // [0, 0] to all direction
+            directions.push(
+                [fixedDirection, [1, 0]],
+                [fixedDirection, [-1, 0]],
+                [fixedDirection, [0, -1]],
+                [fixedDirection, [0, 1]],
+
+                [
+                    [1, 0],
+                    [1, -1],
+                ],
+                [
+                    [1, 0],
+                    [1, 1],
+                ],
+                [
+                    [0, 1],
+                    [1, 1],
+                ],
+                [
+                    [0, 1],
+                    [-1, 1],
+                ],
+
+                [
+                    [-1, 0],
+                    [-1, -1],
+                ],
+                [
+                    [-1, 0],
+                    [-1, 1],
+                ],
+                [
+                    [0, -1],
+                    [1, -1],
+                ],
+                [
+                    [0, -1],
+                    [-1, -1],
+                ]
+            );
+        }
     }
-
     return directions;
 }

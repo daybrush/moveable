@@ -29,7 +29,6 @@ import {
     findIndex, hasClass, throttle,
 } from "@daybrush/utils";
 import {
-    getPosByReverseDirection,
     getDragDist,
     scaleMatrix,
     getPosByDirection,
@@ -124,14 +123,14 @@ function getNextFixedPoses(
     matrix: number[],
     width: number,
     height: number,
+    fixedDirection: number[],
     fixedPos: number[],
-    direction: number[],
     is3d: boolean
 ) {
     const nextPoses = calculatePoses(matrix, width, height, is3d ? 4 : 3);
-    const nextPos = getPosByReverseDirection(nextPoses, direction);
+    const nextFixedPos = getPosByDirection(nextPoses, fixedDirection);
 
-    return getAbsolutePoses(nextPoses, minus(fixedPos, nextPos));
+    return getAbsolutePoses(nextPoses, minus(fixedPos, nextFixedPos));
 }
 
 export function normalized(value: number) {
@@ -147,7 +146,8 @@ export function getSizeOffsetInfo(
     isRequest: boolean,
     datas: any
 ) {
-    const directions = getCheckSnapDirections(direction, keepRatio);
+    const { fixedDirection } = datas;
+    const directions = getCheckSnapDirections(direction, fixedDirection, keepRatio);
     const lines = getCheckInnerBoundLines(poses, direction, keepRatio);
     const offsets = [
         ...getSnapBoundInfo(
@@ -359,6 +359,7 @@ export function checkSnapResize(
     if (!hasGuidelines(moveable, "resizable")) {
         return [0, 0];
     }
+    const { fixedDirection } = datas;
     const { allMatrix, is3d } = moveable.state;
     return checkSizeDist(
         moveable,
@@ -367,8 +368,8 @@ export function checkSnapResize(
                 allMatrix,
                 width + widthOffset,
                 height + heightOffset,
+                fixedDirection,
                 fixedPosition,
-                direction,
                 is3d
             );
         },
@@ -387,7 +388,7 @@ export function checkSnapScale(
     isRequest: boolean,
     datas: any
 ) {
-    const { width, height, fixedPosition } = datas;
+    const { width, height, fixedPosition, fixedDirection } = datas;
     if (!hasGuidelines(moveable, "scalable")) {
         return [0, 0];
     }
@@ -402,8 +403,8 @@ export function checkSnapScale(
                 ),
                 width,
                 height,
+                fixedDirection,
                 fixedPosition,
-                direction,
                 is3d
             );
         },
@@ -414,7 +415,6 @@ export function checkSnapScale(
         isRequest,
         datas
     );
-
     return [sizeDist[0] / width, sizeDist[1] / height];
 }
 
