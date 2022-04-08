@@ -55,7 +55,6 @@ function getParentDeg(
     moveableRect: any,
     datas: IObject<any>,
     parentDist: number,
-    direction: number,
     startValue: number,
 ) {
     const {
@@ -424,11 +423,11 @@ export default {
             const parentDist = e.parentDist;
 
             [delta, dist, rotate]
-                = getParentDeg(moveable, rect, afterInfo, parentDist, direction, startDeg);
+                = getParentDeg(moveable, rect, afterInfo, parentDist, startDeg);
             [beforeDelta, beforeDist, beforeRotate]
-                = getParentDeg(moveable, rect, beforeInfo, parentDist, beforeDirection, startDeg);
+                = getParentDeg(moveable, rect, beforeInfo, parentDist, startDeg);
             [absoluteDelta, absoluteDist, absoluteRotate]
-                = getParentDeg(moveable, rect, absoluteInfo, parentDist, direction, absoluteStartDeg);
+                = getParentDeg(moveable, rect, absoluteInfo, parentDist, absoluteStartDeg);
         } else if (isPinch || parentFlag) {
             [delta, dist, rotate]
                 = getDeg(moveable, rect, afterInfo, parentRotate, direction, startDeg, throttleRotate);
@@ -465,6 +464,8 @@ export default {
         );
         datas.prevInverseDist = inverseDist;
 
+        datas.requestValue = null;
+
         const params = fillParams<OnRotate>(moveable, e, {
             delta,
             dist,
@@ -478,6 +479,9 @@ export default {
             absoluteDelta,
             absoluteRotate,
             isPinch: !!isPinch,
+            // setValue(pos: number) {
+            //     datas.requestValue = pos;
+            // },
             ...fillTransformEvent(
                 moveable,
                 nextTransform,
@@ -489,6 +493,13 @@ export default {
         triggerEvent(moveable, "onRotate", params);
 
         return params;
+    },
+    dragControlAfter(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
+        const requestValue = e.datas.requestValue;
+
+        if (requestValue != null) {
+            // return this.dragControl(moveable, {...e, parentDist: });
+        }
     },
     dragControlEnd(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
         const { datas } = e;
