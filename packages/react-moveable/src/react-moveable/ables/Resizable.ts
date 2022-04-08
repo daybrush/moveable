@@ -3,12 +3,14 @@ import {
     fillParams, getCSSSize,
     getDistSize, fillEndParams, directionCondition,
     getComputedStyle,
+    getAbsolutePosesByState,
 } from "../utils";
 import {
     setDragStart,
     getDragDist,
     getResizeDist,
     getAbsolutePosition,
+    getPosByDirection,
 } from "../gesto/GestoUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -49,10 +51,12 @@ export default {
     } as const,
     events: {
         onResizeStart: "resizeStart",
+        onBeforeResize: "beforeResize",
         onResize: "resize",
         onResizeEnd: "resizeEnd",
 
         onResizeGroupStart: "resizeGroupStart",
+        onBeforeResizeGroup: "beforeResizeGroup",
         onResizeGroup: "resizeGroup",
         onResizeGroupEnd: "resizeGroupEnd",
     } as const,
@@ -153,14 +157,17 @@ export default {
         }
 
 
+        datas.startPositions = getAbsolutePosesByState(moveable.state);
+
         function setFixedDirection(fixedDirection: number[]) {
             datas.fixedDirection = fixedDirection;
-            datas.fixedPosition = getAbsolutePosition(moveable, fixedDirection);
+            datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
         }
 
         setRatio(width / height);
         setFixedDirection([-direction[0], -direction[1]]);
 
+        datas.setFixedDirection = setFixedDirection;
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
             set: ([startWidth, startHeight]: number[]) => {
@@ -509,10 +516,10 @@ export default {
             return false;
         }
         const originalEvents = fillChildEvents(moveable, "resizable", e);
-        function setDist(child: MoveableManagerInterface, ev: any) {
+        function setDist(ev: any) {
             const fixedDirection = datas.fixedDirection;
             const fixedPosition = datas.fixedPosition;
-            const pos = getAbsolutePosition(child, fixedDirection);
+            const pos = getPosByDirection(ev.datas.startPositions, fixedDirection);
             const [originalX, originalY] = calculate(
                 createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                 [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
@@ -529,21 +536,24 @@ export default {
             "dragControlStart",
             e,
             (child, ev) => {
-                return setDist(child, ev);
+                return setDist(ev);
             },
         );
+        const setFixedDirection = (fixedDirection: number[]) => {
+            params.setFixedDirection(fixedDirection);
+            events.forEach((ev, i) => {
+                ev.setFixedDirection(fixedDirection);
+                setDist(originalEvents[i]);
+            });
+        };
+
+        datas.setFixedDirectionGroup = setFixedDirection;
 
         const nextParams: OnResizeGroupStart = {
             ...params,
             targets: moveable.props.targets!,
             events,
-            setFixedDirection(fixedDirection: number[]) {
-                params.setFixedDirection(fixedDirection);
-                events.forEach((ev, i) => {
-                    ev.setFixedDirection(fixedDirection);
-                    setDist(moveable.moveables[i], originalEvents[i]);
-                });
-            },
+            setFixedDirection,
         };
         const result = triggerEvent<ResizableProps>(moveable, "onResizeGroupStart", nextParams);
 

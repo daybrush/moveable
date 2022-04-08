@@ -1,6 +1,6 @@
 import {
     getDirection, triggerEvent, multiply2,
-    fillParams, getDistSize, fillEndParams, directionCondition,
+    fillParams, getDistSize, fillEndParams, directionCondition, getAbsolutePosesByState,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -12,6 +12,7 @@ import {
     fillTransformEvent,
     getAbsolutePosition,
     setDefaultTransformIndex,
+    getPosByDirection,
 } from "../gesto/GestoUtils";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
@@ -50,9 +51,11 @@ export default {
     } as const,
     events: {
         onScaleStart: "scaleStart",
+        onBeforeScale: "beforeScale",
         onScale: "scale",
         onScaleEnd: "scaleEnd",
         onScaleGroupStart: "scaleGroupStart",
+        onBeforeScaleGroup: "beforeScaleGroup",
         onScaleGroup: "scaleGroup",
         onScaleGroupEnd: "scaleGroupEnd",
     } as const,
@@ -118,9 +121,10 @@ export default {
             datas.ratio = ratio && isFinite(ratio) ? ratio : 0;
         }
 
+        datas.startPositions = getAbsolutePosesByState(moveable.state);
         function setFixedDirection(fixedDirection: number[]) {
             datas.fixedDirection = fixedDirection;
-            datas.fixedPosition = getAbsolutePosition(moveable, fixedDirection);
+            datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
         }
 
         setRatio(getDist(pos1, pos2) / getDist(pos2, pos4));
@@ -182,6 +186,10 @@ export default {
         if (!isScale) {
             return false;
         }
+
+        triggerEvent<ScalableProps>(moveable, "onBeforeScale", {
+            setFixedDirecion: datas.setFixedDirecion,
+        });
 
         const {
             throttleScale,
@@ -361,10 +369,6 @@ export default {
             offsetHeight: height,
             direction,
 
-            // beforeScale,
-            // beforeDist,
-            // beforeDelta,
-
             scale,
             dist,
             delta,
@@ -404,10 +408,10 @@ export default {
         }
         const originalEvents = fillChildEvents(moveable, "resizable", e);
 
-        function setDist(child: MoveableManagerInterface, ev: any) {
+        function setDist(ev: any) {
             const fixedDirection = datas.fixedDirection;
             const fixedPosition = datas.fixedPosition;
-            const pos = getAbsolutePosition(child, fixedDirection);
+            const pos = getPosByDirection(ev.datas.startPositions, fixedDirection);
             const [originalX, originalY] = calculate(
                 createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                 [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
@@ -427,21 +431,24 @@ export default {
             "dragControlStart",
             e,
             (child, ev) => {
-                return setDist(child, ev);
+                return setDist(ev);
             },
         );
 
+        const setFixedDirection = (fixedDirection: number[]) => {
+            params.setFixedDirection(fixedDirection);
+            events.forEach((ev, i) => {
+                ev.setFixedDirection(fixedDirection);
+                setDist(originalEvents[i]);
+            });
+        };
+
+        datas.setFixedDirectionGroup = setFixedDirection;
         const nextParams: OnScaleGroupStart = {
             ...params,
             targets: moveable.props.targets!,
             events,
-            setFixedDirection(fixedDirection: number[]) {
-                params.setFixedDirection(fixedDirection);
-                events.forEach((ev, i) => {
-                    ev.setFixedDirection(fixedDirection);
-                    setDist(moveable.moveables[i], originalEvents[i]);
-                });
-            },
+            setFixedDirection,
         };
         const result = triggerEvent(moveable, "onScaleGroupStart", nextParams);
 
@@ -453,6 +460,10 @@ export default {
         if (!datas.isScale) {
             return;
         }
+        triggerEvent<ScalableProps>(moveable, "onBeforeScaleGroup", {
+            setFixedDirecion: datas.setFixedDirecion,
+        });
+
         const params = this.dragControl(moveable, e);
         if (!params) {
             return;

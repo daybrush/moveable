@@ -614,16 +614,28 @@ export interface OnRoundEnd extends OnEndEvent {
  * @property - The direction of scale.
  * @property - scale causes a `dragStart` event.
  * @property - You can set the start scale value.
- * @property - Set a fixed direction to resize. (default: Opposite direction)
+ * @property - Set a fixed direction to scale. (default: Opposite direction)
  * @property - Set the ratio of width and height. (default: offsetWidth / offsetHeight)
  */
 export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
     direction: number[];
     dragStart: OnDragStart | false;
     set: (scale: number[]) => void;
-    setFixedDirection: (fixedDirection: number[]) => void;
+    setFixedDirection: (startDirecition: number[]) => void;
     setRatio: (ratio: number) => any;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable.Scalable
+ * @extends Moveable.OnEvent
+ * @property - Set a fixed direction to scale. (default: Opposite direction)
+ */
+export interface OnBeforeScale extends OnEvent {
+    setFixedDirection: (startDirecition: number[]) => void;
+}
+
+
 /**
  * @typedef
  * @memberof Moveable.Scalable
@@ -635,7 +647,6 @@ export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
  * @property - a target's scale
  * @property - The distance of scale
  * @property - The delta of scale
- *
  * @property - Whether or not it is being pinched.
  */
 export interface OnScale extends OnEvent, OnTransformEvent {
@@ -680,6 +691,17 @@ export interface OnResizeStart extends OnEvent {
     setFixedDirection: (startDirecition: number[]) => any;
     setRatio: (ratio: number) => any;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable.Resizable
+ * @extends Moveable.OnEvent
+ * @property - Set a fixed direction to resize. (default: Opposite direction)
+ */
+export interface OnBeforeResize extends OnEvent {
+    setFixedDirection: (startDirecition: number[]) => void;
+}
+
 /**
  * @typedef
  * @memberof Moveable.Resizable
@@ -885,6 +907,15 @@ export interface OnResizeGroupStart extends OnResizeStart {
 /**
  * @typedef
  * @memberof Moveable.Resizable
+ * @extends Moveable.OnBeforeResize
+ */
+export interface OnBeforeResizeGroup extends OnBeforeResize {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Resizable
  * @extends Moveable.OnResize
  * @property - The resizing targets
  * @property - Each `resize`event on the targets
@@ -916,6 +947,16 @@ export interface OnResizeGroupEnd extends OnResizeEnd {
 export interface OnScaleGroupStart extends OnScaleStart {
     targets: Array<HTMLElement | SVGElement>;
     events: OnScaleStart[];
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Scalable
+ * @extends Moveable.OnBeforeScale
+ * @property - The scaling targets
+ */
+export interface OnBeforeScaleGroup extends OnBeforeScale {
+    targets: Array<HTMLElement | SVGElement>;
 }
 
 /**
@@ -1282,10 +1323,12 @@ export interface ResizableOptions extends RenderDirections {
 }
 export interface ResizableEvents {
     onResizeStart: OnResizeStart;
+    onBeforeResize: OnBeforeResize;
     onResize: OnResize;
     onResizeEnd: OnResizeEnd;
 
     onResizeGroupStart: OnResizeGroupStart;
+    onBeforeResizeGroup: OnBeforeResizeGroup;
     onResizeGroup: OnResizeGroup;
     onResizeGroupEnd: OnResizeGroupEnd;
 }
@@ -1306,10 +1349,12 @@ export interface ScalableOptions extends RenderDirections {
 }
 export interface ScalableEvents {
     onScaleStart: OnScaleStart;
+    onBeforeScale: OnBeforeScale;
     onScale: OnScale;
     onScaleEnd: OnScaleEnd;
 
     onScaleGroupStart: OnScaleGroupStart;
+    onBeforeScaleGroup: OnBeforeScaleGroup;
     onScaleGroup: OnScaleGroup;
     onScaleGroupEnd: OnScaleGroupEnd;
 }
