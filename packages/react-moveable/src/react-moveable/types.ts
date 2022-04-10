@@ -1315,11 +1315,13 @@ export interface RoundableState {
  * @property - Whether or not target can be resized. (default: false)
  * @property - throttle of width, height when resize. (default: 0)
  * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
+ * @property - Whether to get the size as rounded size. (default: true)
  */
 export interface ResizableOptions extends RenderDirections {
     resizable?: boolean;
     throttleResize?: number;
     keepRatio?: boolean;
+    useRoundedSize?: boolean;
 }
 export interface ResizableEvents {
     onResizeStart: OnResizeStart;

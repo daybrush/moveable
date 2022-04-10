@@ -50,6 +50,7 @@ export default {
         throttleResize: Number,
         renderDirections: Array,
         keepRatio: Boolean,
+        useRoundedSize: Boolean,
     } as const,
     events: {
         onResizeStart: "resizeStart",
@@ -249,6 +250,7 @@ export default {
             throttleResize = 0,
             parentMoveable,
             snapThreshold = 5,
+            useRoundedSize = true,
         } = moveable.props;
         let direction = datas.direction;
         let sizeDirection = direction;
@@ -425,8 +427,9 @@ export default {
             maxSize,
             keepRatio,
         );
-        nextWidth = Math.round(nextWidth);
-        nextHeight = Math.round(nextHeight);
+
+        nextWidth = useRoundedSize ? Math.round(nextWidth) : nextWidth;
+        nextHeight = useRoundedSize ? Math.round(nextHeight) : nextHeight;
         distWidth = nextWidth - startOffsetWidth;
         distHeight = nextHeight - startOffsetHeight;
 
@@ -720,8 +723,9 @@ export default {
 };
 
 /**
- * Whether or not target can be resized. (default: false)
+ * Whether or not target can be resized.
  * @name Moveable.Resizable#resizable
+ * @default false
  * @example
  * import Moveable from "moveable";
  *
@@ -735,6 +739,7 @@ export default {
 /**
  * throttle of width, height when resize.
  * @name Moveable.Resizable#throttleResize
+ * @default 0
  * @example
  * import Moveable from "moveable";
  *
@@ -746,8 +751,9 @@ export default {
  * moveable.throttleResize = 1;
  */
 /**
- * When resize or scale, keeps a ratio of the width, height. (default: false)
+ * When resize or scale, keeps a ratio of the width, height.
  * @name Moveable.Resizable#keepRatio
+ * @default false
  * @example
  * import Moveable from "moveable";
  *
@@ -758,8 +764,9 @@ export default {
  * moveable.keepRatio = true;
  */
 /**
- * Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
+ * Set directions to show the control box.
  * @name Moveable.Resizable#renderDirections
+ * @default ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
  * @example
  * import Moveable from "moveable";
  *
@@ -769,6 +776,21 @@ export default {
  * });
  *
  * moveable.renderDirections = ["nw", "ne", "sw", "se"];
+ */
+
+/**
+ * Whether to get the size as rounded size.
+ * @name Moveable.Resizable#useRoundedSize
+ * @default true
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ *   useRoundedSize: true,
+ * });
+ *
+ * moveable.useRoundedSize = false
  */
 
 /**
@@ -784,6 +806,7 @@ export default {
  *     console.log(target);
  * });
  */
+
 /**
  * When resizing, the resize event is called.
  * @memberof Moveable.Resizable
