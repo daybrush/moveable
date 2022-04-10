@@ -1,7 +1,11 @@
 import * as React from "react";
+import keycon from "keycon";
 import Moveable from "../../../src/react-moveable";
 
-export default function App(props: Record<string, any>) {
+
+keycon.setGlobal();
+
+export default function App() {
     return (
         <div className="root">
             <div className="container" style={{
@@ -26,13 +30,20 @@ export default function App(props: Record<string, any>) {
                     resizable={true}
                     keepRatio={true}
                     draggable={true}
-                    snappable={true}
+                    // snappable={true}
                     bounds={{left: 0, top: 0, bottom: 0, right: 0, position: "css" }}
                     onResizeStart={e => {
                         e.setFixedDirection([0, 0]);
                     }}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
+                    }}
+                    onBeforeResize={e => {
+                        if (keycon.global.shiftKey) {
+                            e.setFixedDirection([-1, -1]);
+                        } else {
+                            e.setFixedDirection([0, 0]);
+                        }
                     }}
                     onResize={e => {
                         e.target.style.cssText += `width: ${e.width}px; height: ${e.height}px`;
@@ -51,6 +62,13 @@ export default function App(props: Record<string, any>) {
                     }}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
+                    }}
+                    onBeforeScale={e => {
+                        if (keycon.global.shiftKey) {
+                            e.setFixedDirection([-1, -1]);
+                        } else {
+                            e.setFixedDirection([0, 0]);
+                        }
                     }}
                     onScale={e => {
                         e.target.style.transform = e.drag.transform;

@@ -16,6 +16,7 @@ import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
     OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
+    OnBeforeResize,
 } from "../types";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
@@ -32,6 +33,7 @@ import {
     throttle,
 } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
+import { OnBeforeResizeGroup } from "..";
 
 /**
  * @namespace Resizable
@@ -193,7 +195,7 @@ export default {
                 new CustomGesto().dragStart([0, 0], e),
             ),
         });
-        const result = triggerEvent<ResizableProps>(moveable, "onResizeStart", params);
+        const result = triggerEvent(moveable, "onResizeStart", params);
         if (result !== false) {
             datas.isResize = true;
             moveable.state.snapRenderInfo = {
@@ -237,6 +239,12 @@ export default {
         if (!isResize) {
             return;
         }
+        const prevFixedPosition = datas.prevFixedPostion || datas.fixedPosition;
+
+        triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
+            setFixedDirection: datas.setFixedDirection,
+        }));
+
         const {
             throttleResize = 0,
             parentMoveable,
@@ -430,7 +438,9 @@ export default {
         const inverseDelta = getResizeDist(
             moveable,
             nextWidth, nextHeight,
-            fixedDirection, fixedPosition,
+            prevFixedPosition,
+            fixedDirection,
+            fixedPosition,
             transformOrigin,
         );
 
@@ -451,7 +461,7 @@ export default {
                 setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false),
             ) as OnDrag,
         });
-        triggerEvent<ResizableProps>(moveable, "onResize", params);
+        triggerEvent(moveable, "onResize", params);
         return params;
     },
     dragControlAfter(
@@ -504,7 +514,7 @@ export default {
         datas.isResize = false;
 
         const params = fillEndParams<OnResizeEnd>(moveable, e, {});
-        triggerEvent<ResizableProps>(moveable, "onResizeEnd", params);
+        triggerEvent(moveable, "onResizeEnd", params);
         return params;
     },
     dragGroupControlCondition: directionCondition,
@@ -555,7 +565,7 @@ export default {
             events,
             setFixedDirection,
         };
-        const result = triggerEvent<ResizableProps>(moveable, "onResizeGroupStart", nextParams);
+        const result = triggerEvent(moveable, "onResizeGroupStart", nextParams);
 
         datas.isResize = result !== false;
         return datas.isResize ? params : false;
@@ -565,6 +575,13 @@ export default {
         if (!datas.isResize) {
             return;
         }
+        datas.prevFixedPostion = datas.fixedPosition;
+
+        triggerEvent(moveable, "onBeforeResizeGroup", fillParams<OnBeforeResizeGroup>(moveable, e, {
+            setFixedDirection: datas.setFixedDirection,
+            targets: moveable.props.targets!,
+        }));
+
         const params = this.dragControl(moveable, e);
 
         if (!params) {
@@ -613,7 +630,7 @@ export default {
             ...params,
         };
 
-        triggerEvent<ResizableProps>(moveable, "onResizeGroup", nextParams);
+        triggerEvent(moveable, "onResizeGroup", nextParams);
         return nextParams;
     },
     dragGroupControlEnd(moveable: MoveableGroupInterface<any, any>, e: any) {
@@ -631,7 +648,7 @@ export default {
             events,
         });
 
-        triggerEvent<ResizableProps>(moveable, "onResizeGroupEnd", nextParams);
+        triggerEvent(moveable, "onResizeGroupEnd", nextParams);
         return isDrag;
     },
     /**

@@ -51,7 +51,7 @@ export default makeAble("clickable", {
         }
         const containsTarget = target.contains(inputTarget);
 
-        triggerEvent<ClickableProps>(moveable, "onClick", fillParams<OnClick>(moveable, e, {
+        triggerEvent(moveable, "onClick", fillParams<OnClick>(moveable, e, {
             isDouble: e.isDouble,
             inputTarget,
             isTarget: target === inputTarget,
@@ -81,7 +81,7 @@ export default makeAble("clickable", {
             containsTarget = targetIndex > -1;
         }
 
-        triggerEvent<ClickableProps>(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
+        triggerEvent(moveable, "onClickGroup", fillParams<OnClickGroup>(moveable, e, {
             isDouble: e.isDouble,
             targets,
             inputTarget,

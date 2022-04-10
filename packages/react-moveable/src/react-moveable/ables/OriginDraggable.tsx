@@ -50,8 +50,7 @@ export default {
                 new CustomGesto().dragStart([0, 0], e),
             ),
         });
-        const result = triggerEvent<OriginDraggableProps>(
-            moveable, "onDragOriginStart", params);
+        const result = triggerEvent(moveable, "onDragOriginStart", params);
 
         datas.startOrigin = moveable.state.transformOrigin;
         datas.startTargetOrigin = moveable.state.targetOrigin;
@@ -128,7 +127,7 @@ export default {
                 setCustomDrag(e, moveable.state, dragDelta, !!isPinch, false),
             )!,
         });
-        triggerEvent<OriginDraggableProps>(moveable, "onDragOrigin", params);
+        triggerEvent(moveable, "onDragOrigin", params);
         return params;
     },
     dragControlEnd(moveable: MoveableManagerInterface<OriginDraggableProps>, e: any) {
@@ -137,7 +136,7 @@ export default {
         if (!datas.isDragOrigin) {
             return false;
         }
-        triggerEvent<OriginDraggableProps>(moveable, "onDragOriginEnd",
+        triggerEvent(moveable, "onDragOriginEnd",
             fillEndParams<OnDragOriginEnd>(moveable, e, {}));
         return true;
     },

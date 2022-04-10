@@ -134,7 +134,7 @@ function triggerRoundEvent(
     const borderRadius = styles.join(" ");
 
     state.borderRadiusState = borderRadius;
-    triggerEvent<RoundableProps>(moveable, "onRound", fillParams<OnRound>(moveable, e, {
+    triggerEvent(moveable, "onRound", fillParams<OnRound>(moveable, e, {
         horizontals,
         verticals,
         borderRadius,
@@ -243,7 +243,7 @@ export default {
             return false;
         }
 
-        const result = triggerEvent<RoundableProps>(
+        const result = triggerEvent(
             moveable, "onRoundStart", fillParams<OnRoundStart>(moveable, e, {}));
 
         if (result === false) {
@@ -388,7 +388,7 @@ export default {
                 );
             }
         }
-        triggerEvent<RoundableProps>(moveable, "onRoundEnd",
+        triggerEvent(moveable, "onRoundEnd",
             fillEndParams<OnRoundEnd>(moveable, e, {}));
         state.borderRadiusState = "";
         return true;

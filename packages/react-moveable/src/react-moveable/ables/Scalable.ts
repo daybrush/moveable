@@ -20,6 +20,7 @@ import {
     Renderer, OnScaleGroupStart, DraggableProps, OnDragStart,
     SnappableState, GroupableProps, OnScaleStart,
     OnScale, OnScaleEnd, MoveableManagerInterface, MoveableGroupInterface,
+    OnBeforeScale, OnBeforeScaleGroup,
 } from "../types";
 import {
     fillChildEvents,
@@ -127,6 +128,8 @@ export default {
             datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
         }
 
+
+        datas.setFixedDirection = setFixedDirection;
         setRatio(getDist(pos1, pos2) / getDist(pos2, pos4));
         setFixedDirection([-direction[0], -direction[1]]);
 
@@ -143,7 +146,7 @@ export default {
                 new CustomGesto().dragStart([0, 0], e),
             ) as OnDragStart,
         });
-        const result = triggerEvent<ScalableProps, "onScaleStart">(moveable, "onScaleStart", params);
+        const result = triggerEvent(moveable, "onScaleStart", params);
 
         if (result !== false) {
             datas.isScale = true;
@@ -187,9 +190,11 @@ export default {
             return false;
         }
 
-        triggerEvent<ScalableProps>(moveable, "onBeforeScale", {
-            setFixedDirecion: datas.setFixedDirecion,
-        });
+        const prevFixedPosition = datas.prevFixedPosition || datas.fixedPosition;
+
+        triggerEvent(moveable, "onBeforeScale", fillParams<OnBeforeScale>(moveable, e, {
+            setFixedDirection: datas.setFixedDirection,
+        }));
 
         const {
             throttleScale,
@@ -348,8 +353,7 @@ export default {
         const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
         scale = multiply2(dist, startValue);
 
-        const inverseDist = getScaleDist(moveable, dist, fixedDirection, fixedPosition, datas);
-
+        const inverseDist = getScaleDist(moveable, dist, prevFixedPosition, fixedDirection, fixedPosition, datas);
         const inverseDelta = minus(inverseDist, datas.prevInverseDist || [0, 0]);
 
         datas.prevDist = dist;
@@ -460,9 +464,13 @@ export default {
         if (!datas.isScale) {
             return;
         }
-        triggerEvent<ScalableProps>(moveable, "onBeforeScaleGroup", {
-            setFixedDirecion: datas.setFixedDirecion,
-        });
+
+        datas.prevFixedPosition = datas.fixedPosition;
+
+        triggerEvent(moveable, "onBeforeScaleGroup", fillParams<OnBeforeScaleGroup>(moveable, e, {
+            targets: moveable.props.targets!,
+            setFixedDirection: datas.setFixedDirectionGroup,
+        }));
 
         const params = this.dragControl(moveable, e);
         if (!params) {

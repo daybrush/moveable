@@ -1930,7 +1930,7 @@ export interface SnappableRenderType {
 }
 
 export type ExcludeParams<T>
-    = ExcludeKeys<T, "moveable" | "target" | "clientX" | "clientY" | "inputEvent" | "datas" | "currentTarget">;
+    = ExcludeKeys<T, keyof OnEvent>;
 export type ExcludeEndParams<T>
     = ExcludeKeys<ExcludeParams<T>, "lastEvent" | "isDrag" | "isDouble">;
 export type DefaultProps<Name extends string, AbleObject extends Partial<Able<any, any>>>

@@ -1087,10 +1087,10 @@ export function fillEndParams<T extends IObject<any>>(
     } as any;
 }
 
-export function triggerEvent<T extends IObject<any> = MoveableProps, U extends keyof T = string>(
+export function triggerEvent<EventName extends keyof Props, Props extends IObject<any> = MoveableProps>(
     moveable: any,
-    name: U,
-    params: T[U] extends ((e: infer P) => any) | undefined ? P : IObject<any>,
+    name: EventName,
+    params: Props[EventName] extends ((e: infer P) => any) | undefined ? P : IObject<any>,
     isManager?: boolean,
 ): any {
     return moveable.triggerEvent(name, params, isManager);
