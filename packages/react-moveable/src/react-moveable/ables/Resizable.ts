@@ -4,6 +4,7 @@ import {
     getDistSize, fillEndParams, directionCondition,
     getComputedStyle,
     getAbsolutePosesByState,
+    catchEvent,
 } from "../utils";
 import {
     setDragStart,
@@ -16,7 +17,7 @@ import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
     OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
-    OnBeforeResize,
+    OnBeforeResize, OnBeforeResizeGroup,
 } from "../types";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
@@ -33,7 +34,6 @@ import {
     throttle,
 } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
-import { OnBeforeResizeGroup } from "..";
 
 /**
  * @namespace Resizable
@@ -50,7 +50,7 @@ export default {
         throttleResize: Number,
         renderDirections: Array,
         keepRatio: Boolean,
-        useRoundedSize: Boolean,
+        resizeFormat: Function,
     } as const,
     events: {
         onResizeStart: "resizeStart",
@@ -224,7 +224,6 @@ export default {
         const {
             isResize,
             transformOrigin,
-            fixedDirection,
             startWidth,
             startHeight,
             prevWidth,
@@ -240,17 +239,12 @@ export default {
         if (!isResize) {
             return;
         }
-        const prevFixedPosition = datas.prevFixedPostion || datas.fixedPosition;
-
-        triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
-            setFixedDirection: datas.setFixedDirection,
-        }));
 
         const {
-            throttleResize = 0,
+            resizeFormat,
+            throttleResize = 1,
             parentMoveable,
             snapThreshold = 5,
-            useRoundedSize = true,
         } = moveable.props;
         let direction = datas.direction;
         let sizeDirection = direction;
@@ -261,16 +255,7 @@ export default {
             sizeDirection = [1, 1];
         }
         const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
-        let fixedPosition = dragClient;
 
-
-        if (!dragClient) {
-            if (!parentFlag && isPinch) {
-                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
-            } else {
-                fixedPosition = datas.fixedPosition;
-            }
-        }
 
         if (parentDist) {
             distWidth = parentDist[0];
@@ -358,6 +343,25 @@ export default {
                 nextWidth = nextHeight * ratio;
             }
         }
+        triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
+            setFixedDirection: datas.setFixedDirection,
+            boundingWidth: nextWidth,
+            boundingHeight: nextHeight,
+            setSize(size: number[]) {
+                [nextWidth, nextHeight] = size;
+            },
+        }));
+
+        let fixedPosition = dragClient;
+
+        if (!dragClient) {
+            if (!parentFlag && isPinch) {
+                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
+            } else {
+                fixedPosition = datas.fixedPosition;
+            }
+        }
+
         let snapDist = [0, 0];
 
         if (!isPinch) {
@@ -414,12 +418,6 @@ export default {
             }
             nextWidth += snapDist[0];
             nextHeight += snapDist[1];
-            if (!snapDist[0]) {
-                nextWidth = throttle(nextWidth, throttleResize!);
-            }
-            if (!snapDist[1]) {
-                nextHeight = throttle(nextHeight, throttleResize!);
-            }
         }
         [nextWidth, nextHeight] = calculateBoundSize(
             [nextWidth, nextHeight],
@@ -427,9 +425,12 @@ export default {
             maxSize,
             keepRatio,
         );
+        if (resizeFormat) {
+            [nextWidth, nextHeight] = resizeFormat([nextWidth, nextHeight]);
+        }
+        nextWidth = throttle(nextWidth, throttleResize!);
+        nextHeight = throttle(nextHeight, throttleResize!);
 
-        nextWidth = useRoundedSize ? Math.round(nextWidth) : nextWidth;
-        nextHeight = useRoundedSize ? Math.round(nextHeight) : nextHeight;
         distWidth = nextWidth - startOffsetWidth;
         distHeight = nextHeight - startOffsetHeight;
 
@@ -440,9 +441,9 @@ export default {
 
         const inverseDelta = getResizeDist(
             moveable,
-            nextWidth, nextHeight,
-            prevFixedPosition,
-            fixedDirection,
+            nextWidth,
+            nextHeight,
+            datas.fixedDirection,
             fixedPosition,
             transformOrigin,
         );
@@ -453,8 +454,10 @@ export default {
         const params = fillParams<OnResize>(moveable, e, {
             width: startWidth + distWidth,
             height: startHeight + distHeight,
-            offsetWidth: nextWidth,
-            offsetHeight: nextHeight,
+            offsetWidth: Math.round(nextWidth),
+            offsetHeight: Math.round(nextHeight),
+            boundingWidth: nextWidth,
+            boundingHeight: nextHeight,
             direction,
             dist: [distWidth, distHeight],
             delta,
@@ -578,12 +581,15 @@ export default {
         if (!datas.isResize) {
             return;
         }
-        datas.prevFixedPostion = datas.fixedPosition;
 
-        triggerEvent(moveable, "onBeforeResizeGroup", fillParams<OnBeforeResizeGroup>(moveable, e, {
-            setFixedDirection: datas.setFixedDirection,
-            targets: moveable.props.targets!,
-        }));
+        catchEvent(moveable, "onBeforeResize", parentEvent => {
+            triggerEvent(moveable, "onBeforeResizeGroup", fillParams<OnBeforeResizeGroup>(moveable, e, {
+                ...parentEvent,
+                setFixedDirection: datas.setFixedDirection,
+                targets: moveable.props.targets!,
+            }));
+        });
+
 
         const params = this.dragControl(moveable, e);
 
@@ -591,14 +597,16 @@ export default {
             return;
         }
         const {
-            offsetWidth, offsetHeight, dist,
+            boundingWidth,
+            boundingHeight,
+            dist,
         } = params;
 
         const keepRatio = moveable.props.keepRatio;
 
         const parentScale = [
-            offsetWidth / (offsetWidth - dist[0]),
-            offsetHeight / (offsetHeight - dist[1]),
+            boundingWidth / (boundingWidth - dist[0]),
+            boundingHeight / (boundingHeight - dist[1]),
         ];
         const fixedPosition = datas.fixedPosition;
 
@@ -737,18 +745,18 @@ export default {
  */
 
 /**
- * throttle of width, height when resize.
+ * throttle of width, height when resize. If throttleResize is set to less than 1, the target may shake.
  * @name Moveable.Resizable#throttleResize
- * @default 0
+ * @default 1
  * @example
  * import Moveable from "moveable";
  *
  * const moveable = new Moveable(document.body, {
  *   resizable: true,
- *   throttleResize: 0,
+ *   throttleResize: 1,
  * });
  *
- * moveable.throttleResize = 1;
+ * moveable.throttleResize = 0;
  */
 /**
  * When resize or scale, keeps a ratio of the width, height.
@@ -779,18 +787,18 @@ export default {
  */
 
 /**
- * Whether to get the size as rounded size.
- * @name Moveable.Resizable#useRoundedSize
- * @default true
+ * Function to convert size for resize
+ * @name Moveable.Resizable#resizeFormat
+ * @default oneself
  * @example
  * import Moveable from "moveable";
  *
  * const moveable = new Moveable(document.body, {
  *   resizable: true,
- *   useRoundedSize: true,
+ *   resizeFormat: v => v,
  * });
  *
- * moveable.useRoundedSize = false
+ * moveable.resizeFormat = (size: number[]) => ([Math.trunc(size[0]), Math.trunc(size[1])];
  */
 
 /**
@@ -804,6 +812,27 @@ export default {
  * const moveable = new Moveable(document.body, { resizable: true });
  * moveable.on("resizeStart", ({ target }) => {
  *     console.log(target);
+ * });
+ */
+
+/**
+ * When resizing, `beforeResize` is called before `resize` occurs. In `beforeResize`, you can get and set the pre-value before resizing.
+ * @memberof Moveable.Resizable
+ * @event beforeResize
+ * @param {Moveable.Resizable.OnBeforeResize} - Parameters for the `beforeResize` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("beforeResize", ({ setFixedDirection }) => {
+ *     if (shiftKey) {
+ *        setFixedDirection([0, 0]);
+ *     }
+ * });
+ * moveable.on("resize", ({ target, width, height, drag }) => {
+ *     target.style.width = `${width}px`;
+ *     target.style.height = `${height}px`;
+ *     target.style.transform = drag.transform;
  * });
  */
 

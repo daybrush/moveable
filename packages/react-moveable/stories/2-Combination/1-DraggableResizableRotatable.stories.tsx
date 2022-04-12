@@ -7,6 +7,7 @@ import RawReactApp from "!!raw-loader!./apps/ReactDraggableResizableRotatableApp
 import {
     DEFAULT_DRAGGABLE_CONTROLS,
     DEFAULT_RESIZABLE_CONTROLS,
+    DEFAULT_ROTATABLE_CONTROLS,
 } from "../controls/default";
 
 
@@ -16,6 +17,7 @@ DraggableResizableRotatableTemplate.storyName = "Draggable & Resizable & Rotatab
 DraggableResizableRotatableTemplate.argTypes = {
     ...DEFAULT_DRAGGABLE_CONTROLS,
     ...DEFAULT_RESIZABLE_CONTROLS,
+    ...DEFAULT_ROTATABLE_CONTROLS,
 };
 DraggableResizableRotatableTemplate.args = {
     ...makeArgs(DraggableResizableRotatableTemplate.argTypes),

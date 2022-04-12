@@ -1,6 +1,6 @@
 import {
     getDirection, triggerEvent, multiply2,
-    fillParams, getDistSize, fillEndParams, directionCondition, getAbsolutePosesByState,
+    fillParams, getDistSize, fillEndParams, directionCondition, getAbsolutePosesByState, catchEvent,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -181,7 +181,6 @@ export default {
             startValue,
             isWidth,
             ratio,
-            fixedDirection,
             scaleXRatio,
             scaleYRatio,
         } = datas;
@@ -189,12 +188,6 @@ export default {
         if (!isScale) {
             return false;
         }
-
-        const prevFixedPosition = datas.prevFixedPosition || datas.fixedPosition;
-
-        triggerEvent(moveable, "onBeforeScale", fillParams<OnBeforeScale>(moveable, e, {
-            setFixedDirection: datas.setFixedDirection,
-        }));
 
         const {
             throttleScale,
@@ -210,15 +203,6 @@ export default {
 
         let scaleX = 1;
         let scaleY = 1;
-        let fixedPosition = dragClient;
-
-        if (!dragClient) {
-            if (!parentFlag && isPinch) {
-                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
-            } else {
-                fixedPosition = datas.fixedPosition;
-            }
-        }
 
         if (parentDist) {
             scaleX = (width + parentDist[0]) / width;
@@ -272,7 +256,7 @@ export default {
             scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
 
-        const dist = [scaleX / startValue[0], scaleY / startValue[1]];
+        let dist = [scaleX / startValue[0], scaleY / startValue[1]];
         let scale = [scaleX, scaleY];
 
         if (!isPinch && moveable.props.groupable) {
@@ -284,8 +268,25 @@ export default {
             }
         }
 
+        triggerEvent(moveable, "onBeforeScale", fillParams<OnBeforeScale>(moveable, e, {
+            scale,
+            setFixedDirection: datas.setFixedDirection,
+            setScale(nextScale: number[]) {
+                scale = nextScale;
+                dist = [scale[0] / startValue[0], scale[1] / startValue[1]];
+            },
+        }));
+
+        let fixedPosition = dragClient;
         let snapDist = [0, 0];
 
+        if (!dragClient) {
+            if (!parentFlag && isPinch) {
+                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
+            } else {
+                fixedPosition = datas.fixedPosition;
+            }
+        }
         if (!isPinch) {
             snapDist = checkSnapScale(
                 moveable,
@@ -353,7 +354,7 @@ export default {
         const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
         scale = multiply2(dist, startValue);
 
-        const inverseDist = getScaleDist(moveable, dist, prevFixedPosition, fixedDirection, fixedPosition, datas);
+        const inverseDist = getScaleDist(moveable, dist, datas.fixedDirection, fixedPosition, datas);
         const inverseDelta = minus(inverseDist, datas.prevInverseDist || [0, 0]);
 
         datas.prevDist = dist;
@@ -465,12 +466,13 @@ export default {
             return;
         }
 
-        datas.prevFixedPosition = datas.fixedPosition;
-
-        triggerEvent(moveable, "onBeforeScaleGroup", fillParams<OnBeforeScaleGroup>(moveable, e, {
-            targets: moveable.props.targets!,
-            setFixedDirection: datas.setFixedDirectionGroup,
-        }));
+        catchEvent(moveable, "onBeforeScale", parentEvent => {
+            triggerEvent(moveable, "onBeforeScaleGroup", fillParams<OnBeforeScaleGroup>(moveable, e, {
+                ...parentEvent,
+                targets: moveable.props.targets!,
+                setFixedDirection: datas.setFixedDirectionGroup,
+            }));
+        });
 
         const params = this.dragControl(moveable, e);
         if (!params) {
@@ -585,8 +587,10 @@ export default {
 };
 
 /**
- * Whether or not target can scaled. (default: false)
+ * Whether or not target can scaled.
+ *
  * @name Moveable.Scalable#scalable
+ * @default false
  * @example
  * import Moveable from "moveable";
  *
@@ -644,10 +648,29 @@ export default {
  * });
  */
 /**
- * When scaling, the scale event is called.
+ * When scaling, `beforeScale` is called before `scale` occurs. In `beforeScale`, you can get and set the pre-value before scaling.
+ * @memberof Moveable.Scalable
+ * @event beforeScale
+ * @param {Moveable.Scalable.OnBeforeScale} - Parameters for the `beforeScale` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { scalable: true });
+ * moveable.on("beforeScale", ({ setFixedDirection }) => {
+ *     if (shiftKey) {
+ *        setFixedDirection([0, 0]);
+ *     }
+ * });
+ * moveable.on("scale", ({ target, transform, dist }) => {
+ *     target.style.transform = transform;
+ * });
+ */
+
+/**
+ * When scaling, the `scale` event is called.
  * @memberof Moveable.Scalable
  * @event scale
- * @param {Moveable.Scalable.OnScale} - Parameters for the scale event
+ * @param {Moveable.Scalable.OnScale} - Parameters for the `scale` event
  * @example
  * import Moveable from "moveable";
  *
@@ -657,10 +680,10 @@ export default {
  * });
  */
 /**
- * When the scale finishes, the scaleEnd event is called.
+ * When the scale finishes, the `scaleEnd` event is called.
  * @memberof Moveable.Scalable
  * @event scaleEnd
- * @param {Moveable.Scalable.OnScaleEnd} - Parameters for the scaleEnd event
+ * @param {Moveable.Scalable.OnScaleEnd} - Parameters for the `scaleEnd` event
  * @example
  * import Moveable from "moveable";
  *

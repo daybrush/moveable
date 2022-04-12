@@ -87,6 +87,7 @@ export function triggerAble(
                 inputTarget,
             });
 
+            (moveable as any)._emitter.off();
             if (isStart && result === false) {
                 nextDatas.isEventStart = false;
             }

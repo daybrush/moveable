@@ -457,7 +457,6 @@ export function getTranslateDist(
 export function getScaleDist(
     moveable: MoveableManagerInterface<any>,
     scaleDist: number[],
-    prevFixedPosition: number[],
     fixedDirection: number[],
     fixedPosition: number[],
     datas: any,
@@ -470,7 +469,7 @@ export function getScaleDist(
         datas,
     );
 
-    return plus(dist, minus(prevFixedPosition, fixedPosition));
+    return dist;
 }
 export function getOriginDirection(moveable: MoveableManagerInterface<any>) {
     const {
@@ -519,7 +518,6 @@ export function getResizeDist(
     moveable: MoveableManagerInterface<any>,
     width: number,
     height: number,
-    prevFixedPosition: number[],
     fixedDirection: number[],
     fixedPosition: number[],
     transformOrigin: string[],
@@ -553,7 +551,7 @@ export function getResizeDist(
 
     const dist = getDist(fixedPosition, nextMatrix, width, height, n, fixedDirection);
 
-    return plus(minus(dist, [groupLeft, groupTop]), minus(prevFixedPosition, fixedPosition));
+    return minus(dist, [groupLeft, groupTop]);
 }
 export function getAbsolutePosition(
     moveable: MoveableManagerInterface<ResizableProps>,

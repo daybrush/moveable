@@ -87,36 +87,36 @@ describe("test utils", () => {
             -10, -50, 1,
         ]);
     });
-    it("test getSize", () => {
-        // Given
-        ReactDOM.render(
-            <div className="c1" style={{ position: "relative", width: "500px", height: "500px", border: "2px solid black" }}>
-                <svg data-target="svg" viewBox="0 0 150 110" style={{ width: "300px", border: "1px solid #fff" }}>
-                    <path data-target="path1" d="M 74 53.64101615137753 L 14.000000000000027 88.28203230275507 L 14 19 L 74 53.64101615137753 Z" fill="#f55" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#5f5" origin="50% 50%" />
-                    <path data-target="path2" d="M 84 68.64101615137753 L 24.00000000000003 103.28203230275507 L 24 34 L 84 68.64101615137753 Z" fill="#55f" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#333" origin="50% 50%" />
-                    <g style={{ transform: "translate(40px, 10px)" }}>
-                        <path data-target="pathline" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
-            c13,4.667,13.167,38.724,39.667,7.39" fill="transparent" stroke="#ff5" />
-                        <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{ fill: "yellow", stroke: "purple", strokeWidth: 2 }} />
-                    </g>
-                </svg></div>, document.querySelector(".container"));
+    // it("test getSize", () => {
+    //     // Given
+    //     ReactDOM.render(
+    //         <div className="c1" style={{ position: "relative", width: "500px", height: "500px", border: "2px solid black" }}>
+    //             <svg data-target="svg" viewBox="0 0 150 110" style={{ width: "300px", border: "1px solid #fff" }}>
+    //                 <path data-target="path1" d="M 74 53.64101615137753 L 14.000000000000027 88.28203230275507 L 14 19 L 74 53.64101615137753 Z" fill="#f55" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#5f5" origin="50% 50%" />
+    //                 <path data-target="path2" d="M 84 68.64101615137753 L 24.00000000000003 103.28203230275507 L 24 34 L 84 68.64101615137753 Z" fill="#55f" stroke-linejoin="round" stroke-width="8" opacity="1" stroke="#333" origin="50% 50%" />
+    //                 <g style={{ transform: "translate(40px, 10px)" }}>
+    //                     <path data-target="pathline" d="M3,19.333C3,17.258,9.159,1.416,21,5.667
+    //         c13,4.667,13.167,38.724,39.667,7.39" fill="transparent" stroke="#ff5" />
+    //                     <ellipse data-target="ellipse" cx="40" cy="80" rx="40" ry="10" style={{ fill: "yellow", stroke: "purple", strokeWidth: 2 }} />
+    //                 </g>
+    //             </svg></div>, document.querySelector(".container"));
 
-        const c1 = document.querySelector(".c1")! as HTMLElement;
-        const c2 = document.querySelector("svg")! as SVGElement;
+    //     const c1 = document.querySelector(".c1")! as HTMLElement;
+    //     const c2 = document.querySelector("svg")! as SVGElement;
 
-        // When
-        const size1 = getSize(c1, undefined, true);
-        const size2 = getSize(c1, undefined, false);
-        const size3 = getSize(c2, undefined, true);
-        const size4 = getSize(c2, undefined, false);
+    //     // When
+    //     const size1 = getSize(c1, undefined, true);
+    //     const size2 = getSize(c1, undefined, false);
+    //     const size3 = getSize(c2, undefined, true);
+    //     const size4 = getSize(c2, undefined, false);
 
-        // Then
-        expect(size1).to.be.deep.equals([504, 504]);
-        expect(size2).to.be.deep.equals([500, 500]);
-        // 300 + 2, 220 + 2
-        expect(size3).to.be.deep.equals([302, 222]);
-        expect(size4).to.be.deep.equals([300, 220]);
-    });
+    //     // Then
+    //     expect(size1).to.be.deep.equals([504, 504]);
+    //     expect(size2).to.be.deep.equals([500, 500]);
+    //     // 300 + 2, 220 + 2
+    //     expect(size3).to.be.deep.equals([302, 222]);
+    //     expect(size4).to.be.deep.equals([300, 220]);
+    // });
     it("test getRad", () => {
         // Given, When
         const deg1 = getRad([0, 0], [10, 0]) / Math.PI * 180;

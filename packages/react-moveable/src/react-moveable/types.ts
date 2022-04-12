@@ -630,9 +630,13 @@ export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
  * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
  * @property - Set a fixed direction to scale. (default: Opposite direction)
+ * @property - Set target's scale to scaling.
+ * @property - a target's scale before snap and throttle and format
  */
 export interface OnBeforeScale extends OnEvent {
     setFixedDirection: (startDirecition: number[]) => void;
+    setScale: (scale: number[]) => void;
+    scale: number[];
 }
 
 
@@ -696,10 +700,16 @@ export interface OnResizeStart extends OnEvent {
  * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
- * @property - Set a fixed direction to resize. (default: Opposite direction)
+ * @property - Set a fixed direction to resize.
+ * @property - Set the bounding size to resizing.
+ * @property - a target's bounding width before snap and throttle and format
+ * @property - a target's bounding height before snap and throttle and format
  */
 export interface OnBeforeResize extends OnEvent {
     setFixedDirection: (startDirecition: number[]) => void;
+    setSize: (size: number[]) => void;
+    boundingWidth: number;
+    boundingHeight: number;
 }
 
 /**
@@ -709,8 +719,10 @@ export interface OnBeforeResize extends OnEvent {
  * @property - The direction of resize.
  * @property - a target's cssWidth
  * @property - a target's cssHeight
- * @property - a target's offsetWidth
- * @property - a target's offsetHeight
+ * @property - a target's offset width as an integer with bounding width
+ * @property - a target's offset height as an integer with bounding height
+ * @property - a target's bounding width
+ * @property - a target's bounding height
  * @property - The distance of [width, height]
  * @property - The delta of [width, height]
  * @property - Whether or not it is being pinched.
@@ -722,6 +734,8 @@ export interface OnResize extends OnEvent {
     height: number;
     offsetWidth: number;
     offsetHeight: number;
+    boundingWidth: number;
+    boundingHeight: number;
     dist: number[];
     delta: number[];
     isPinch: boolean;
@@ -1315,13 +1329,13 @@ export interface RoundableState {
  * @property - Whether or not target can be resized. (default: false)
  * @property - throttle of width, height when resize. (default: 0)
  * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
- * @property - Whether to get the size as rounded size. (default: true)
+ * @property - Function to convert size for resize (default: oneself)
  */
 export interface ResizableOptions extends RenderDirections {
     resizable?: boolean;
     throttleResize?: number;
     keepRatio?: boolean;
-    useRoundedSize?: boolean;
+    resizeFormat?: (size: number[]) => number[];
 }
 export interface ResizableEvents {
     onResizeStart: OnResizeStart;

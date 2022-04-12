@@ -65,7 +65,7 @@ export const RESIZABLE_TEMPLATE_OPTIONS = {
 export const RESIZABLE_PROPS_TEMPLATE = () => ({
     reisizable: boolean("resizable", true),
     keepRatio: boolean("keepRatio", false),
-    throttleResize: number("throttleResize", 0),
+    throttleResize: number("throttleResize", 1),
     renderDirections: array("renderDirections", [
         "nw", "n", "ne", "w", "e", "sw", "s", "se",
     ]),

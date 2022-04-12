@@ -22,7 +22,7 @@ story.add("Resizable", () => {
     return <ResizableApp
         description={<p className="description">You can resize the target. (<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html" target="_blank">See Resizable API</a>)</p>}
         keepRatio={boolean("keepRatio", false)}
-        throttleResize={number("throttleResize", 0)}
+        throttleResize={number("throttleResize", 1)}
         renderDirections={array("renderDirections", [
             "nw", "n", "ne", "w", "e", "sw", "s", "se",
         ])}

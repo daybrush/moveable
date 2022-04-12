@@ -198,6 +198,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public triggerEvent(name: string, e: any, isManager?: boolean): any {
         if (isManager || name.indexOf("Group") > -1) {
             return super.triggerEvent(name as any, e);
+        } else {
+            this._emitter.trigger(name, e);
         }
     }
     protected updateAbles() {

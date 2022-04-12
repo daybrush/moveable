@@ -28,6 +28,7 @@ import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
 import styled from "react-css-styled";
+import EventEmitter from "@scena/event-emitter";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -84,6 +85,7 @@ export default class MoveableManager<T = {}>
         "mouseLeave": null,
     };
 
+    protected _emitter: EventEmitter = new EventEmitter();
     protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _prevDragArea = false;
 
@@ -159,6 +161,7 @@ export default class MoveableManager<T = {}>
     }
     public componentWillUnmount() {
         this.isUnmounted = true;
+        this._emitter.off();
         unset(this, "targetGesto");
         unset(this, "controlGesto");
 
@@ -578,6 +581,7 @@ export default class MoveableManager<T = {}>
         }
     }
     public triggerEvent(name: string, e: any): any {
+        this._emitter.trigger(name, e);
         const callback = (this.props as any)[name];
 
         return callback && callback(e);

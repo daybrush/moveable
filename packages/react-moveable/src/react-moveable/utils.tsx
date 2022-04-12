@@ -357,14 +357,13 @@ export function calculateElementInfo(
     let allResult: {} = {};
 
     if (target) {
-        const style = getComputedStyle(target);
+        const {
+            offsetWidth,
+            offsetHeight,
+        } = getSize(target);
 
-        width = (target as HTMLElement).offsetWidth;
-        height = (target as HTMLElement).offsetHeight;
-
-        if (isUndefined(width)) {
-            [width, height] = getSize(target, style, true);
-        }
+        width = offsetWidth;
+        height = offsetHeight;
     }
 
     if (target) {
@@ -684,7 +683,10 @@ export function getSVGOffset(
     const target = offsetInfo.target;
     const origin = offsetInfo.origin!;
     const targetMatrix = targetInfo.matrix!;
-    const [width, height] = getSize(target, undefined, true);
+    const {
+        offsetWidth: width,
+        offsetHeight: height,
+    } = getSize(target);
     const containerClientRect = container.getBoundingClientRect();
     let margin = [0, 0];
 
@@ -828,47 +830,81 @@ export function getCSSSize(target: SVGElement | HTMLElement) {
         parseFloat(style.height!),
     ];
 }
+
+interface ElementSizes {
+    svg: boolean;
+    offsetWidth: number;
+    offsetHeight: number;
+    clientWidth: number;
+    clientHeight: number;
+    cssWidth: number;
+    cssHeight: number;
+}
 export function getSize(
     target: SVGElement | HTMLElement,
     style: CSSStyleDeclaration = getComputedStyle(target),
-    isOffset?: boolean,
-    isBoxSizing: boolean = isOffset || style.boxSizing === "border-box",
-) {
-    let width = (target as HTMLElement).offsetWidth;
-    let height = (target as HTMLElement).offsetHeight;
-    const hasOffset = !isUndefined(width);
+): ElementSizes {
+    const hasOffset = !isUndefined((target as any).offsetWidth);
 
-    if ((isOffset || isBoxSizing) && hasOffset) {
-        return [width, height];
-    }
     if (!hasOffset && target.tagName.toLowerCase() !== "svg") {
         const bbox = (target as SVGGraphicsElement).getBBox();
-        return [bbox.width, bbox.height];
-    }
 
-    width = target.clientWidth;
-    height = target.clientHeight;
+        const offsetWidth = bbox.width;
+        const offsetHeight = bbox.height;
 
-    if (isOffset || isBoxSizing) {
+        return {
+            svg: true,
+            offsetWidth,
+            offsetHeight,
+            clientWidth: offsetWidth,
+            clientHeight: offsetHeight,
+            cssWidth: offsetWidth,
+            cssHeight: offsetHeight,
+        };
+    } else {
+        const boxSizing = style.boxSizing === "border-box";
         const borderLeft = parseFloat(style.borderLeftWidth!) || 0;
         const borderRight = parseFloat(style.borderRightWidth!) || 0;
         const borderTop = parseFloat(style.borderTopWidth!) || 0;
         const borderBottom = parseFloat(style.borderBottomWidth!) || 0;
-
-        return [
-            width + borderLeft + borderRight,
-            height + borderTop + borderBottom,
-        ];
-    } else {
         const paddingLeft = parseFloat(style.paddingLeft!) || 0;
         const paddingRight = parseFloat(style.paddingRight!) || 0;
         const paddingTop = parseFloat(style.paddingTop!) || 0;
         const paddingBottom = parseFloat(style.paddingBottom!) || 0;
 
-        return [
-            width - paddingLeft - paddingRight,
-            height - paddingTop - paddingBottom,
-        ];
+        let cssWidth = parseFloat(style.width);
+        let cssHeight = parseFloat(style.height);
+        let offsetWidth = cssWidth;
+        let offsetHeight = cssHeight;
+        let clientWidth = cssWidth;
+        let clientHeight = cssHeight;
+
+        const horizontalPadding = paddingLeft + paddingRight;
+        const verticalPadding = paddingTop + paddingBottom;
+        const horizontalBorder = borderLeft + borderRight;
+        const verticalBorder = borderTop + borderBottom;
+        const horizontalOffset = horizontalPadding + horizontalBorder;
+        const verticalOffset = verticalPadding + verticalBorder;
+
+        if (boxSizing) {
+            cssWidth = offsetWidth - horizontalOffset;
+            cssHeight = offsetHeight - verticalOffset;
+        } else {
+            offsetWidth = cssWidth + horizontalOffset;
+            offsetHeight = cssHeight + verticalOffset;
+        }
+        clientWidth = cssWidth + horizontalPadding;
+        clientHeight = cssHeight + verticalPadding;
+
+        return {
+            svg: false,
+            offsetWidth,
+            offsetHeight,
+            clientWidth,
+            clientHeight,
+            cssWidth,
+            cssHeight,
+        };
     }
 }
 export function getRotationRad(
@@ -1085,6 +1121,13 @@ export function fillEndParams<T extends IObject<any>>(
         isDouble: e.isDouble,
         datas: datas.datas,
     } as any;
+}
+export function catchEvent<EventName extends keyof Props, Props extends IObject<any> = MoveableProps>(
+    moveable: any,
+    name: EventName,
+    callback: (e: Props[EventName] extends ((e: infer P) => any) | undefined ? P : IObject<any>) => void,
+): any {
+    moveable._emitter.on(name, callback);
 }
 
 export function triggerEvent<EventName extends keyof Props, Props extends IObject<any> = MoveableProps>(
