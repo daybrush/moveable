@@ -11,6 +11,10 @@ import { addClass, removeClass, requestAnimationFrame } from "@daybrush/utils";
 
 function restoreStyle(moveable: MoveableManagerInterface) {
     const el = moveable.areaElement;
+
+    if (!el) {
+        return;
+    }
     const { width, height } = moveable.state;
 
     removeClass(el, AVOID);
