@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable from "../../../src/react-moveable";
+import Moveable, { ResizableRequestParam } from "../../../src/react-moveable";
 
 export default function App(props: Record<string, any>) {
     const widthInputRef = React.useRef<HTMLInputElement>(null);
@@ -7,7 +7,7 @@ export default function App(props: Record<string, any>) {
     const moveableRef = React.useRef<Moveable>(null);
     const [requestCallbacks] = React.useState(() => {
         function request() {
-            moveableRef.current!.request("resizable", {
+            moveableRef.current!.request<ResizableRequestParam>("resizable", {
                 offsetWidth: parseInt(widthInputRef.current!.value),
                 offsetHeight: parseInt(heightInputRef.current!.value),
             }, true);
@@ -33,8 +33,8 @@ export default function App(props: Record<string, any>) {
 
     return <div className="root">
         <div>
-            width: <input ref={widthInputRef} type="number" defaultValue="280" {...requestCallbacks}></input>&nbsp;
-            height: <input ref={heightInputRef} type="number" defaultValue="230" {...requestCallbacks}></input>
+            width: <input ref={widthInputRef} type="number" defaultValue="100" {...requestCallbacks}></input>&nbsp;
+            height: <input ref={heightInputRef} type="number" defaultValue="100" {...requestCallbacks}></input>
         </div>
         <div className="container">
             <div className="target">Target1</div>

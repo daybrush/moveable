@@ -17,7 +17,7 @@ import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
     Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
     OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
-    OnBeforeResize, OnBeforeResizeGroup,
+    OnBeforeResize, OnBeforeResizeGroup, ResizableRequestParam,
 } from "../types";
 import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
 import {
@@ -29,7 +29,7 @@ import { calculate, createRotateMatrix, plus } from "@scena/matrix";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapResize } from "./Snappable";
 import {
-    calculateBoundSize, IObject,
+    calculateBoundSize,
     isString, getRad, convertUnitSize,
     throttle,
 } from "@daybrush/utils";
@@ -240,12 +240,13 @@ export default {
             return;
         }
 
+        const props = moveable.props;
         const {
             resizeFormat,
             throttleResize = 1,
             parentMoveable,
             snapThreshold = 5,
-        } = moveable.props;
+        } = props;
         let direction = datas.direction;
         let sizeDirection = direction;
         let distWidth = 0;
@@ -254,8 +255,7 @@ export default {
         if (!direction[0] && !direction[1]) {
             sizeDirection = [1, 1];
         }
-        const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
-
+        const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
 
         if (parentDist) {
             distWidth = parentDist[0];
@@ -664,13 +664,7 @@ export default {
     },
     /**
      * @method Moveable.Resizable#request
-     * @param {object} [e] - the Resizable's request parameter
-     * @param {number} [e.direction=[1, 1]] - Direction to resize
-     * @param {number} [e.deltaWidth] - delta number of width
-     * @param {number} [e.deltaHeight] - delta number of height
-     * @param {number} [e.offsetWidth] - offset number of width
-     * @param {number} [e.offsetHeight] - offset number of height
-     * @param {number} [e.isInstant] - Whether to execute the request instantly
+     * @param {Moveable.Resizable.ResizableRequestParam} e - the Resizable's request parameter
      * @return {Moveable.Requester} Moveable Requester
      * @example
 
@@ -706,22 +700,22 @@ export default {
 
         return {
             isControl: true,
-            requestStart(e: IObject<any>) {
+            requestStart(e: ResizableRequestParam) {
                 return { datas, parentDirection: e.direction || [1, 1] };
             },
-            request(e: IObject<any>) {
+            request(e: ResizableRequestParam) {
                 if ("offsetWidth" in e) {
-                    distWidth = e.offsetWidth - rect.offsetWidth;
+                    distWidth = e.offsetWidth! - rect.offsetWidth;
                 } else if ("deltaWidth" in e) {
-                    distWidth += e.deltaWidth;
+                    distWidth += e.deltaWidth!;
                 }
                 if ("offsetHeight" in e) {
-                    distHeight = e.offsetHeight - rect.offsetHeight;
+                    distHeight = e.offsetHeight! - rect.offsetHeight;
                 } else if ("deltaHeight" in e) {
-                    distHeight += e.deltaHeight;
+                    distHeight += e.deltaHeight!;
                 }
 
-                return { datas, parentDist: [distWidth, distHeight] };
+                return { datas, parentDist: [distWidth, distHeight], parentKeepRatio: e.keepRatio };
             },
             requestEnd() {
                 return { datas, isDrag: true };

@@ -526,9 +526,11 @@ export interface OnTransformEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Run the request instantly. (requestStart, request, requestEnd happen at the same time)
  */
 export interface AbleRequestParam {
+    /**
+     * Run the request instantly. (requestStart, request, requestEnd happen at the same time)
+     */
     isInstant?: boolean;
     [key: string]: any;
 }
@@ -543,10 +545,11 @@ export interface AbleRequestParam {
  * @property - Continue executing the request.
  * @property - End the request.
  */
-export interface Requester {
-    request(param: IObject<any>): this;
+export interface Requester<RequestParam extends {} = AbleRequestParam> {
+    request(param: RequestParam): this;
     requestEnd(): this;
 }
+
 export interface AbleRequester {
     isControl: boolean;
     requestStart(param: IObject<any>): IObject<any>;
@@ -1607,6 +1610,40 @@ export interface ResizableOptions extends RenderDirections {
      */
     resizeFormat?: (size: number[]) => number[];
 }
+/**
+ * @typedef
+ * @memberof Moveable.Resizable
+ * @extends Moveable.AbleRequestParam
+ * @description the Resizable's request parameter
+ */
+export interface ResizableRequestParam extends AbleRequestParam {
+    /**
+     * Direction to resize
+     * @default [1, 1]
+     */
+    direction?: number[];
+    /**
+     * Whether to force keepRatio to resize
+     */
+    keepRatio?: boolean;
+    /**
+     * delta number of width
+     */
+    deltaWidth?: number;
+    /**
+     * delta number of height
+     */
+    deltaHeight?: number;
+    /**
+     * offset number of width
+     */
+    offsetWidth?: number;
+    /**
+     * offset number of height
+     */
+    offsetHeight?: number;
+}
+
 export interface ResizableEvents {
     onResizeStart: OnResizeStart;
     onBeforeResize: OnBeforeResize;
@@ -1618,8 +1655,10 @@ export interface ResizableEvents {
     onResizeGroup: OnResizeGroup;
     onResizeGroupEnd: OnResizeGroupEnd;
 }
+
 export interface ResizableProps extends ResizableOptions, EventInterface<ResizableEvents> {
 }
+
 /**
  * @typedef
  * @memberof Moveable.Scalable
@@ -1641,6 +1680,33 @@ export interface ScalableOptions extends RenderDirections {
      * @default false
      */
     keepRatio?: boolean;
+}
+
+
+/**
+ * @typedef
+ * @memberof Moveable.Scalable
+ * @extends Moveable.AbleRequestParam
+ * @description the Scalable's request parameter
+ */
+export interface ScalableRequestParam extends AbleRequestParam {
+    /**
+     * Direction to scale
+     * @default [1, 1]
+     */
+    direction?: number[];
+    /**
+     * Whether to force keepRatio to resize
+     */
+    keepRatio?: boolean;
+    /**
+     * delta number of width
+     */
+    deltaWidth?: number;
+    /**
+     * delta number of height
+     */
+    deltaHeight?: number;
 }
 export interface ScalableEvents {
     onScaleStart: OnScaleStart;
@@ -2339,7 +2405,8 @@ export interface MoveableInterface {
     isMoveableElement(target: Element): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
-    request(ableName: string, params?: IObject<any>, isInstant?: boolean): Requester;
+    request<RequestParam extends {} = AbleRequestParam>(
+        ableName: string, params?: RequestParam, isInstant?: boolean): Requester<RequestParam>;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;

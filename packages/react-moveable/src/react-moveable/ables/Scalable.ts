@@ -189,16 +189,17 @@ export default {
             return false;
         }
 
+        const props = moveable.props;
         const {
             throttleScale,
             parentMoveable,
-        } = moveable.props;
+        } = props;
         let sizeDirection = direction;
 
         if (!direction[0] && !direction[1]) {
             sizeDirection = [1, 1];
         }
-        const keepRatio = ratio && (moveable.props.keepRatio || parentKeepRatio);
+        const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
         const state = moveable.state;
 
         let scaleX = 1;
@@ -542,10 +543,7 @@ export default {
     },
     /**
      * @method Moveable.Scalable#request
-     * @param {object} [e] - the Resizable's request parameter
-     * @param {number} [e.direction=[1, 1]] - Direction to scale
-     * @param {number} [e.deltaWidth] - delta number of width
-     * @param {number} [e.deltaHeight] - delta number of height
+     * @param {Moveable.Scalable.ScalableRequestParam} e - the Scalable's request parameter
      * @return {Moveable.Requester} Moveable Requester
      * @example
 
@@ -577,7 +575,7 @@ export default {
                 distWidth += e.deltaWidth;
                 distHeight += e.deltaHeight;
 
-                return { datas, parentDist: [distWidth, distHeight] };
+                return { datas, parentDist: [distWidth, distHeight], parentKeepRatio: e.keepRatio };
             },
             requestEnd() {
                 return { datas, isDrag: true };
