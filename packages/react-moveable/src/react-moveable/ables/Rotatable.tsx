@@ -1,6 +1,6 @@
 import {
     prefix, triggerEvent, fillParams,
-    calculatePosition, fillEndParams, getRotationRad, getRefTargets,
+    calculatePosition, fillEndParams, getRotationRad, getRefTargets, catchEvent,
 } from "../utils";
 import {
     IObject, hasClass, getRad,
@@ -11,7 +11,9 @@ import {
     Renderer, OnRotateGroupStart, OnRotateStart, OnRotate,
     OnRotateEnd, MoveableClientRect, SnappableProps,
     SnappableState, MoveableManagerInterface, MoveableGroupInterface, DraggableProps,
+    OnBeforeRotate,
     OnDragStart,
+    OnBeforeRotateGroup,
 } from "../types";
 import { triggerChildAbles } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -46,95 +48,83 @@ function setRotateStartInfo(
 
     datas.startAbsoluteOrigin = startAbsoluteOrigin;
     datas.prevDeg = getRad(startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180;
-    datas.prevSnapDeg = datas.prevDeg;
-    datas.startDeg = datas.prevDeg;
+    datas.defaultDeg = datas.prevDeg;
+    datas.prevSnapDeg = 0;
     datas.loop = 0;
 }
-function getParentDeg(
-    moveable: MoveableManagerInterface<any, any>,
-    moveableRect: any,
-    datas: IObject<any>,
-    parentDist: number,
-    startValue: number,
-) {
-    const {
-        prevDeg,
-    } = datas;
 
-    // const absoluteDeg = startValue + parentDist;
-    const dist = checkSnapRotate(
-        moveable,
-        moveableRect,
-        datas.origin,
-        parentDist,
-    );
-    datas.prevDeg = dist;
-
-    const delta = dist - prevDeg;
-
-    return [delta, dist, startValue + dist];
-}
-function getDeg(
-    moveable: MoveableManagerInterface<any, any>,
-    moveableRect: any,
-    datas: IObject<any>,
+function getAbsoluteDist(
     deg: number,
     direction: number,
-    startValue: number,
-    throttleRotate: number,
-    isSnap?: boolean,
+    datas: IObject<any>,
 ) {
     const {
+        defaultDeg,
         prevDeg,
-        prevSnapDeg,
-        startDeg,
-        loop: prevLoop,
     } = datas;
 
-    if (prevDeg > deg && prevDeg > 270 && deg < 90) {
+
+    let normalizedPrevDeg = prevDeg % 360;
+    let loop = Math.floor(prevDeg / 360);
+
+    if (normalizedPrevDeg < 0) {
+        normalizedPrevDeg += 360;
+    }
+
+    if (normalizedPrevDeg > deg && normalizedPrevDeg > 270 && deg < 90) {
         // 360 => 0
-        ++datas.loop;
-    } else if (prevDeg < deg && prevDeg < 90 && deg > 270) {
+        ++loop;
+    } else if (normalizedPrevDeg < deg && normalizedPrevDeg < 90 && deg > 270) {
         // 0 => 360
-        --datas.loop;
+        --loop;
     }
-    const loop = datas.loop;
-    const absolutePrevSnapDeg = prevLoop * 360 + prevSnapDeg - startDeg + startValue;
-    let absoluteDeg = loop * 360 + deg - startDeg + startValue;
+    const dist = direction * (loop * 360 + deg - defaultDeg);
 
-    datas.prevDeg = absoluteDeg - loop * 360 + startDeg - startValue;
+    datas.prevDeg = defaultDeg + dist;
 
-    absoluteDeg = throttle(absoluteDeg, throttleRotate);
-    let dist = direction * (absoluteDeg - startValue);
-    if (isSnap) {
-        dist = checkSnapRotate(moveable, moveableRect, datas.origin, dist);
-        absoluteDeg = dist / direction + startValue;
-    }
-    datas.prevSnapDeg = absoluteDeg - loop * 360 + startDeg - startValue;
+    return dist;
+}
+function getAbsoluteDistByClient(
+    clientX: number, clientY: number,
+    direction: number,
+    datas: IObject<any>,
+) {
+    return getAbsoluteDist(
 
-    const delta = direction * (absoluteDeg - absolutePrevSnapDeg);
-
-    return [delta, dist, startValue + dist];
+        getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
+        direction,
+        datas,
+    );
 }
 function getRotateInfo(
     moveable: MoveableManagerInterface<any, any>,
     moveableRect: any,
     datas: IObject<any>,
-    direction: number,
-    clientX: number, clientY: number,
+    dist: number,
     startValue: number,
-    throttleRotate: number,
+    isSnap?: boolean,
 ) {
-    return getDeg(
-        moveable,
-        moveableRect,
-        datas,
-        getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
-        direction,
-        startValue,
-        throttleRotate,
-        true,
-    );
+    const {
+        throttleRotate = 0,
+    } = moveable.props;
+    let nextDist = dist;
+
+    const prevSnapDeg = datas.prevSnapDeg;
+
+
+
+    if (isSnap) {
+        nextDist = checkSnapRotate(moveable, moveableRect, datas.origin, nextDist);
+    }
+
+    const snapRotation = throttle(startValue + nextDist, throttleRotate);
+    const snapDeg = snapRotation - startValue;
+
+    datas.prevSnapDeg = snapDeg;
+
+    return [snapDeg - prevSnapDeg, nextDist, snapRotation];
+
+
 }
 
 export function getReversePositionX(dir: string) {
@@ -226,9 +216,11 @@ export default {
     } as const,
     events: {
         onRotateStart: "rotateStart",
+        onBeforeRotate: "beforeRotate",
         onRotate: "rotate",
         onRotateEnd: "rotateEnd",
         onRotateGroupStart: "rotateGroupStart",
+        onBeforeRotateGroup: "beforeRotateGroup",
         onRotateGroup: "rotateGroup",
         onRotateGroupEnd: "rotateGroupEnd",
     } as const,
@@ -324,31 +316,36 @@ export default {
         datas.left = left;
         datas.top = top;
         datas.fixedPosition = getDirectionOffset(moveable, getOriginDirection(moveable));
-        datas.absoluteInfo = {
-            origin: rect.origin,
-            startValue: rect.rotation,
-        };
-        setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, origin, moveableClientRect);
+
         if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
 
             datas.beforeInfo = {
                 origin: rect.beforeOrigin,
                 prevDeg: externalRotate,
-                startDeg: externalRotate,
-                prevSnapDeg: externalRotate, loop: 0,
+                defaultDeg: externalRotate,
+                prevSnapDeg: 0,
             };
             datas.afterInfo = {
+                ...datas.beforeInfo,
                 origin: rect.origin,
-                prevDeg: externalRotate, startDeg: externalRotate,
-                prevSnapDeg: externalRotate, loop: 0,
+            };
+            datas.absoluteInfo = {
+                ...datas.beforeInfo,
+                origin: rect.origin,
+                startValue: externalRotate,
             };
         } else {
             datas.beforeInfo = { origin: rect.beforeOrigin };
             datas.afterInfo = { origin: rect.origin };
+            datas.absoluteInfo = {
+                origin: rect.origin,
+                startValue: rect.rotation,
+            };
 
             setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, beforeOrigin, moveableClientRect);
             setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, origin, moveableClientRect);
+            setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, origin, moveableClientRect);
         }
 
         datas.direction = direction;
@@ -400,61 +397,82 @@ export default {
         const targetDirection = getTransformDirection(e);
         const direction = beforeDirection * targetDirection;
         const {
-            throttleRotate = 0,
             parentMoveable,
         } = moveable.props;
 
-        let delta: number;
-        let dist: number;
-        let rotate: number;
 
-        let beforeDelta: number;
+        let beforeDelta = 0;
         let beforeDist: number;
-        let beforeRotate: number;
+        let beforeRotation: number;
 
-        let absoluteDelta: number;
+        let delta = 0;
+        let dist: number;
+        let rotation: number;
+
+        let absoluteDelta = 0;
         let absoluteDist: number;
-        let absoluteRotate: number;
+        let absoluteRotation: number;
 
-        const startDeg = 180 / Math.PI * startValue;
-        const absoluteStartDeg = absoluteInfo.startValue;
+        const startRotation = 180 / Math.PI * startValue;
+        const absoluteStartRotation = absoluteInfo.startValue;
+        let isSnap = false;
 
         if (!parentFlag && "parentDist" in e) {
             const parentDist = e.parentDist;
 
-            [delta, dist, rotate]
-                = getParentDeg(moveable, rect, afterInfo, parentDist, startDeg);
-            [beforeDelta, beforeDist, beforeRotate]
-                = getParentDeg(moveable, rect, beforeInfo, parentDist, startDeg);
-            [absoluteDelta, absoluteDist, absoluteRotate]
-                = getParentDeg(moveable, rect, absoluteInfo, parentDist, absoluteStartDeg);
+            beforeDist = parentDist;
+            dist = parentDist;
+            absoluteDist = parentDist;
+
         } else if (isPinch || parentFlag) {
-            [delta, dist, rotate]
-                = getDeg(moveable, rect, afterInfo, parentRotate, direction, startDeg, throttleRotate);
-            [beforeDelta, beforeDist, beforeRotate]
-                = getDeg(moveable, rect, beforeInfo, parentRotate, beforeDirection, startDeg, throttleRotate);
-            [absoluteDelta, absoluteDist, absoluteRotate]
-                = getDeg(moveable, rect, absoluteInfo, parentRotate, direction, absoluteStartDeg, throttleRotate);
+            beforeDist = getAbsoluteDist(parentRotate, beforeDirection, beforeInfo);
+            dist = getAbsoluteDist(parentRotate, direction, afterInfo);
+            absoluteDist = getAbsoluteDist(parentRotate, direction, absoluteInfo);
         } else {
-            [delta, dist, rotate]
-                = getRotateInfo(moveable, rect, afterInfo, direction, clientX, clientY, startDeg, throttleRotate);
-            [beforeDelta, beforeDist, beforeRotate] = getRotateInfo(
-                moveable, rect, beforeInfo, beforeDirection, clientX, clientY,
-                startDeg, throttleRotate,
-            );
-            [absoluteDelta, absoluteDist, absoluteRotate]
-                = getRotateInfo(
-                    moveable, rect, absoluteInfo, direction, clientX, clientY,
-                    absoluteStartDeg, throttleRotate,
-                );
+            beforeDist = getAbsoluteDistByClient(clientX, clientY, beforeDirection, beforeInfo);
+            dist = getAbsoluteDistByClient(clientX, clientY, direction, afterInfo);
+            absoluteDist = getAbsoluteDistByClient(clientX, clientY, direction, absoluteInfo);
+            isSnap = true;
         }
+        beforeRotation = startRotation + beforeDist;
+        rotation = startRotation + dist;
+        absoluteRotation = absoluteStartRotation + absoluteDist;
+
+
+        triggerEvent(moveable, "onBeforeRotate", fillParams<OnBeforeRotate>(moveable, e, {
+            beforeRotation,
+            rotation,
+            absoluteRotation,
+            setRotation(nextRotation: number) {
+                dist = nextRotation - startRotation;
+                beforeDist = dist;
+                absoluteDist = dist;
+            },
+        }));
+        [
+            beforeDelta,
+            beforeDist,
+            beforeRotation,
+        ] = getRotateInfo(moveable, rect, beforeInfo, beforeDist, startRotation, isSnap);
+
+        [
+            delta,
+            dist,
+            rotation,
+        ] = getRotateInfo(moveable, rect, afterInfo, dist, startRotation, isSnap);
+
+        [
+            absoluteDelta,
+            absoluteDist,
+            absoluteRotation,
+        ] = getRotateInfo(moveable, rect, absoluteInfo, absoluteDist, absoluteStartRotation, isSnap);
 
         if (!absoluteDelta && !delta && !beforeDelta && !parentMoveable) {
             return;
         }
 
         const nextTransform = convertTransformFormat(
-            datas, `rotate(${rotate}deg)`, `rotate(${dist}deg)`,
+            datas, `rotate(${rotation}deg)`, `rotate(${dist}deg)`,
         );
 
         const inverseDist = getRotateDist(moveable, dist, datas.fixedPosition, datas);
@@ -469,15 +487,19 @@ export default {
         const params = fillParams<OnRotate>(moveable, e, {
             delta,
             dist,
-            rotate,
+            rotate: rotation,
+            rotation,
 
             beforeDist,
             beforeDelta,
-            beforeRotate,
+            beforeRotate: beforeRotation,
+            beforeRotation,
 
             absoluteDist,
             absoluteDelta,
-            absoluteRotate,
+            absoluteRotate: absoluteRotation,
+            absoluteRotation,
+
             isPinch: !!isPinch,
             // setValue(pos: number) {
             //     datas.requestValue = pos;
@@ -565,6 +587,13 @@ export default {
         if (!datas.isRotate) {
             return;
         }
+
+        catchEvent(moveable, "onBeforeRotate", parentEvent => {
+            triggerEvent(moveable, "onBeforeRotateGroup", fillParams<OnBeforeRotateGroup>(moveable, e, {
+                ...parentEvent,
+                targets: moveable.props.targets!,
+            }));
+        });
         const params = this.dragControl(moveable, e);
 
         if (!params) {
@@ -586,16 +615,18 @@ export default {
                 const delta = [clientX - prevX, clientY - prevY];
 
                 ev.datas.groupClient = [clientX, clientY];
-
                 return { ...ev, parentRotate, groupDelta: delta };
             },
         );
-        moveable.rotation = direction * params.beforeRotate;
+        moveable.rotation = direction * params.beforeRotation;
 
         const nextParams: OnRotateGroup = {
             targets: moveable.props.targets!,
             events,
-            set: (rotation: number) => {
+            set(rotation: number) {
+                moveable.rotation = rotation;
+            },
+            setGroupRotation(rotation: number) {
                 moveable.rotation = rotation;
             },
             ...params,

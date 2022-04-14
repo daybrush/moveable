@@ -1,6 +1,7 @@
 import * as React from "react";
 import keycon from "keycon";
 import Moveable from "../../../src/react-moveable";
+import { throttle } from "@daybrush/utils";
 
 
 keycon.setGlobal();
@@ -30,7 +31,7 @@ export default function App() {
                     resizable={true}
                     keepRatio={true}
                     draggable={true}
-                    // snappable={true}
+                    rotatable={true}
                     bounds={{left: 0, top: 0, bottom: 0, right: 0, position: "css" }}
                     onResizeStart={e => {
                         e.setFixedDirection([0, 0]);
@@ -47,6 +48,12 @@ export default function App() {
                     }}
                     onResize={e => {
                         e.target.style.cssText += `width: ${e.width}px; height: ${e.height}px`;
+                        e.target.style.transform = e.drag.transform;
+                    }}
+                    onBeforeRotate={e => {
+                        e.setRotation(throttle(e.rotation, 45));
+                    }}
+                    onRotate={e => {
                         e.target.style.transform = e.drag.transform;
                     }}
                 />

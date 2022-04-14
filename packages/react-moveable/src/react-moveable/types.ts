@@ -447,21 +447,35 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
 /**
  * @typedef
  * @memberof Moveable
- * @property - The Moveable instance
- * @property - The Moveable instance
- * @property - The Moveable target
- * @property - The horizontal coordinate within the application's client area at which the event occurred.
- * @property - The vertical coordinate within the application's client area at which the event occurred.
- * @property - Objects that can send information to the following events.
- * @property - The mouse or touch input event that is invoking the moveable event
  */
 export interface OnEvent {
+    /**
+     * The Moveable instance
+     */
     currentTarget: MoveableManagerInterface<any, any>;
+    /**
+     * The Moveable instance
+     */
     moveable: MoveableManagerInterface<any, any>;
+    /**
+     * The Moveable's target
+     */
     target: HTMLElement | SVGElement;
+    /**
+     * The horizontal coordinate within the application's client area at which the event occurred.
+     */
     clientX: number;
+    /**
+     * The vertical coordinate within the application's client area at which the event occurred.
+     */
     clientY: number;
+    /**
+     * Objects that can send information to the following events.
+     */
     datas: IObject<any>;
+    /**
+     * The mouse or touch input event that is invoking the moveable event
+     */
     inputEvent: any;
 }
 /**
@@ -480,7 +494,6 @@ export interface OnEndEvent extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @property - `index` is the sequence of functions used in the event.
  */
 export interface OnTransformStartEvent {
     /**
@@ -499,11 +512,15 @@ export interface OnTransformStartEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @property - a target's next transform string value.
- * @property - transform events causes a `drag` event.
  */
 export interface OnTransformEvent {
+    /**
+     * a target's next transform string value.
+     */
     transform: string;
+    /**
+     * transform events causes a `drag` event.
+     */
     drag: OnDrag;
 }
 /**
@@ -852,85 +869,100 @@ export interface OnResizeEnd extends OnEndEvent {
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
  * @extends Moveable.OnTransformStartEvent
- * @property - You can set the start rotate value.
- * @property - rotate causes a `dragStart` event.
  */
 export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
+    /**
+     * You can set the start rotate value.
+     */
     set: (rotate: number) => void;
+    /**
+     * rotate causes a `dragStart` event.
+     */
     dragStart: OnDragStart | false;
 }
 /**
  * @typedef
+ * @description Parameters for the `beforeRotate` event
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
- * @property - Set a fixed direction to scale. (default: Opposite direction)
- * @property - Set target's scale to scaling.
- * @property - a target's scale before snap and throttle and format
  */
 export interface OnBeforeRotate extends OnEvent {
+    /**
+     * The rotation degree before transform is applied before snap and throttle and format
+     */
     beforeRotation: number;
+    /**
+     * The rotation degree before snap and throttle and format
+     */
     rotation: number;
+    /**
+     * The client rotation degree before snap and throttle and format
+     */
     absoluteRotation: number;
+    /**
+     * You can set the value of `rotation`.
+     */
     setRotation(nextRotation: number): void;
 }
 
 
 /**
  * @typedef
+ * @description Parameters for the `rotate` event
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
  * @extends Moveable.OnTransformEvent
  */
 export interface OnRotate extends OnEvent {
     /**
-     * The distance of rotation rad before transform is applied
+     * The distance of rotation degree before transform is applied
      */
     beforeDist: number;
     /**
-     * The delta of rotation rad before transform is applied
+     * The delta of rotation degree before transform is applied
      */
     beforeDelta: number;
     /**
-     * The now rotation rad before transform is applied
+     * The now rotation degree before transform is applied
      * @deprecated
      */
     beforeRotate: number;
     /**
-     * The now rotation rad before transform is applied
+     * The now rotation degree before transform is applied
      */
     beforeRotation: number;
     /**
-     * The distance of rotation rad
+     * The distance of rotation degree
      */
     dist: number;
     /**
-     * The delta of rotation rad
+     * The delta of rotation degree
      */
     delta: number;
     /**
-     * The now rotation rad
+     * The now rotation degree
      * @deprecated
      */
     rotate: number;
     /**
-     * The now rotation rad
+     * The now rotation degree
      */
     rotation: number;
     /**
-     * The distance of client rotation rad
+     * The distance of client rotation degree
      */
     absoluteDist: number;
     /**
-     * The delta of client rotation rad
+     * The delta of client rotation degree
      */
     absoluteDelta: number;
     /**
-     * The now client rotation rad
+     * The now client rotation degree
      * @deprecated
      */
     absoluteRotate: number;
     /**
-     * The now client rotation rad
+     * The now client rotation degree
      */
     absoluteRotation: number;
     /**
@@ -1036,14 +1068,30 @@ export interface OnRotateGroupStart extends OnRotateStart {
 
 /**
  * @typedef
+ * @description Parameters for the `beforeRotateGroup` event
+ * @memberof Moveable.Rotatable
+ * @extends Moveable.OnBeforeRotate
+ */
+export interface OnBeforeRotateGroup extends OnBeforeRotate {
+    /**
+     * The rotating targets
+     */
+    targets: Array<HTMLElement | SVGElement>;
+}
+/**
+ * @typedef
  * @description Parameters for the `rotateGroup` event
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotate
- * @property - The rotating targets
- * @property - Each `rotate` event on the targets
  */
 export interface OnRotateGroup extends OnRotate {
+    /**
+     * The rotating targets
+     */
     targets: Array<HTMLElement | SVGElement>;
+    /**
+     * Each `rotate` event on the targets
+     */
     events: OnRotate[];
     /**
      * You can set the group's rotation.
@@ -1668,6 +1716,7 @@ export interface RotatableEvents {
     onRotateEnd: OnRotateEnd;
 
     onRotateGroupStart: OnRotateGroupStart;
+    onBeforeRotateGroup: OnBeforeRotateGroup;
     onRotateGroup: OnRotateGroup;
     onRotateGroupEnd: OnRotateGroupEnd;
 }
@@ -1731,6 +1780,7 @@ export interface GroupableOptions {
     /**
      * Sets the initial rotation of the group.
      * @default 0
+     * @deprecated
      */
     defaultGroupRotate?: number;
     /**
@@ -2053,6 +2103,11 @@ export interface ArrayFormat<T = any> {
  * @memberof Moveable.Clickable
  */
 export interface ClickableOptions {
+    /**
+     * Whether to trigger the moveable's click event.
+     * If true, the event is not propagated to the target's parent element.
+     * @default true
+     */
     clickable?: boolean;
 }
 /**
