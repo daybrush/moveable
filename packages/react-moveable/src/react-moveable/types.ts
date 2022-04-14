@@ -31,45 +31,105 @@ export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
 /**
  * @typedef
  * @memberof Moveable
- * @property - The target(s) to indicate Moveable Control Box. (default: null)
- * @property - The target(s) to drag Moveable target(s) (default: target)
- * @property - Moveable Container. Don't set it. (default: parentElement)
- * @property - Moveable Portal Container to support other frameworks. Don't set it. (default: container)
- * @property - Moveable Root Container (No Transformed Container). (default: container)
- * @property - Whether the target size is detected and updated whenever it changes. (default: false)
- * @property - Zooms in the elements of a moveable. (default: 1)
- * @property - The default transformOrigin of the target can be set in advance. (default: "")
- * @property - Whether to scale and resize through edge lines. (default: false)
- * @property - You can add your custom able. (default: [])
- * @property - You can specify the className of the moveable controlbox. (default: "")
- * @property - Minimum distance to pinch. (default: 20)
- * @property - Whether the container containing the target becomes a pinch. (default: true)
- * @property - Lets generate events of ables at the same time. (like Resizable, Scalable) (default: false)
- * @property - Checks whether this is an element to input text or contentEditable, and prevents dragging. (default: false)
- * @property - add nonce property to style for CSP (default: "")
- * @property - You can set the translateZ value of moveable. (default: 50)
- * @property - Whether to hide the line corresponding to the rect of the target. (default: false)
- * @property - You can use props in object format or custom props. (default: object)
  */
 export interface DefaultOptions {
+    /**
+     * The target(s) to indicate Moveable Control Box.
+     * @default null
+     */
     target?: SVGElement | HTMLElement | null;
+    /**
+     * The target(s) to drag Moveable target(s)
+     * @default target
+     */
     dragTarget?: SVGElement | HTMLElement | null;
+    /**
+     * Moveable Container. Don't set it.
+     * @private
+     * @default parentElement
+     */
     container?: SVGElement | HTMLElement | null;
+    /**
+     * Moveable Portal Container to support other frameworks. Don't set it.
+     * @private
+     * @default parentElement
+     */
     portalContainer?: HTMLElement | null;
+    /**
+     * Moveable Root Container (No Transformed Container)
+     * @default parentElement
+     */
     rootContainer?: HTMLElement | null;
+    /**
+     * Whether the target size is detected and updated whenever it changes.
+     * @default false
+     */
     useResizeObserver?: boolean;
+    /**
+     * Zooms in the elements of a moveable.
+     * @default 1
+     */
     zoom?: number;
+    /**
+     * The default transformOrigin of the target can be set in advance.
+     * @default ""
+     */
     transformOrigin?: Array<string | number> | string | "";
+    /**
+     * Whether to scale and resize through edge lines.
+     * @default false
+     */
     edge?: boolean;
+    /**
+     * You can add your custom able.
+     * @default []
+     */
     ables?: Able[];
+    /**
+     * You can specify the className of the moveable controlbox.
+     * @default ""
+     */
     className?: string;
+    /**
+     * Minimum distance to pinch.
+     * @default 20
+     */
     pinchThreshold?: number;
+    /**
+     * Whether the container containing the target becomes a pinch.
+     * @default true
+     */
     pinchOutside?: boolean;
+    /**
+     * Lets generate events of ables at the same time. (like Resizable, Scalable)
+     * @default false
+     */
     triggerAblesSimultaneously?: boolean;
+    /**
+     * Checks whether this is an element to input text or contentEditable, and prevents dragging.
+     * @default false
+     */
     checkInput?: boolean;
+    /**
+     * add nonce property to style for CSP.
+     * @deprecated
+     * @default ""
+     */
     cspNonce?: string;
+    /**
+     * You can set the translateZ value of moveable.
+     * @default 50
+     */
     translateZ?: number | string;
+    /**
+     * Whether to hide the line corresponding to the rect of the target.
+     * @default false
+     */
     hideDefaultLines?: boolean;
+    /**
+     * You can use props in object format or custom props.
+     * @default empty object
+     */
     props?: Record<string, any>;
 }
 /**
@@ -253,8 +313,16 @@ export interface MoveableProps extends
 export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions, "target"> {
     target?: MoveableRefType | ArrayFormat<MoveableRefType>;
 }
+/**
+ * @memberof Moveable
+ * @typedef
+ */
 export type MoveableRefType<T extends Element = HTMLElement | SVGElement>
     = string | (() => T) | MoveableRefObject<T> | T | null | undefined;
+/**
+ * @memberof Moveable
+ * @typedef
+ */
 export interface MoveableRefObject<T extends Element = HTMLElement | SVGElement> {
     current: T | undefined | null;
 }
@@ -268,10 +336,10 @@ export interface MoveableRefObject<T extends Element = HTMLElement | SVGElement>
  * @extends Moveable.Rotatable.RotatableOptions
  * @extends Moveable.Warpable.WarpableOptions
  * @extends Moveable.Pinchable.PinchableOptions
- * @extends Moveable.Scrollable.ScrollableOptions
  * @extends Moveable.Group.GroupableOptions
- * @extends Moveable.Clippable.ClippableOptions
  * @extends Moveable.OriginDraggable.OriginDraggableOptions
+ * @extends Moveable.Scrollable.ScrollableOptions
+ * @extends Moveable.Clippable.ClippableOptions
  * @extends Moveable.Roundable.RoundableOptions
  * @extends Moveable.Clickable.ClickableOptions
  */
@@ -297,7 +365,8 @@ export interface MoveableOptions extends
 export type MoveableState = MoveableManagerState;
 
 /**
- * @typedef - You can make Able that can work in Moveable.
+ * You can make Able that can work in Moveable.
+ * @typedef
  * In Able, you can manage drag events, props, state, fire event props, and render elements.
  * @memberof Moveable
  */
@@ -411,11 +480,20 @@ export interface OnEndEvent extends OnEvent {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Set your original transform. `index` is the sequence of functions used in the event. If you use `setTransform`, you don't need to use `set` function.
  * @property - `index` is the sequence of functions used in the event.
  */
 export interface OnTransformStartEvent {
-    setTransform(transform: string | string[], index?: number): void;
+    /**
+     * Set your original transform.
+     * `transformIndex` is the sequence of functions used in the event.
+     * If you use `setTransform`, you don't need to use `set` function.
+     * @default transform of target's inline style
+     */
+    setTransform(transform: string | string[], transformIndex?: number): void;
+    /**
+     * `transformIndex` is the sequence of functions used in the event.
+     * @default index with that property in transform or last
+     */
     setTransformIndex(transformIndex: number): void;
 }
 /**
@@ -480,13 +558,16 @@ export interface OnPinch extends OnEvent {
  */
 export interface OnPinchEnd extends OnEndEvent { }
 /**
+ * When the drag starts, the dragStart event is called.
  * @typedef
  * @memberof Moveable.Draggable
  * @extends Moveable.OnEvent
  * @extends Moveable.OnTransformStartEvent
- * @property - You can set the start translate value.
  */
 export interface OnDragStart extends OnEvent, OnTransformStartEvent {
+    /**
+     * You can set the start translate value.
+     */
     set: (translate: number[]) => void;
 }
 /**
@@ -611,17 +692,29 @@ export interface OnRoundEnd extends OnEndEvent {
  * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
  * @extends Moveable.OnTransformStartEvent
- * @property - The direction of scale.
- * @property - scale causes a `dragStart` event.
- * @property - You can set the start scale value.
- * @property - Set a fixed direction to scale. (default: Opposite direction)
- * @property - Set the ratio of width and height. (default: offsetWidth / offsetHeight)
  */
 export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
+    /**
+     * The direction of scale.
+     */
     direction: number[];
+    /**
+     * scale causes a `dragStart` event.
+     */
     dragStart: OnDragStart | false;
+    /**
+     * You can set the start scale value.
+     */
     set: (scale: number[]) => void;
+    /**
+     * Set a fixed direction to scale.
+     * @default Opposite direction
+     */
     setFixedDirection: (startDirecition: number[]) => void;
+    /**
+     * Set the ratio of width and height.
+     * @default offsetWidth / offsetHeight
+     */
     setRatio: (ratio: number) => any;
 }
 
@@ -629,13 +722,19 @@ export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
  * @typedef
  * @memberof Moveable.Scalable
  * @extends Moveable.OnEvent
- * @property - Set a fixed direction to scale. (default: Opposite direction)
- * @property - Set target's scale to scaling.
- * @property - a target's scale before snap and throttle and format
  */
 export interface OnBeforeScale extends OnEvent {
+    /**
+     * Set a fixed direction to scale.
+     */
     setFixedDirection: (startDirecition: number[]) => void;
+    /**
+     * Set target's scale to scaling.
+     */
     setScale: (scale: number[]) => void;
+    /**
+     * a target's scale before snap and throttle and format
+     */
     scale: number[];
 }
 
@@ -764,32 +863,87 @@ export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
  * @typedef
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnEvent
+ * @property - Set a fixed direction to scale. (default: Opposite direction)
+ * @property - Set target's scale to scaling.
+ * @property - a target's scale before snap and throttle and format
+ */
+export interface OnBeforeRotate extends OnEvent {
+    beforeRotation: number;
+    rotation: number;
+    absoluteRotation: number;
+    setRotation(nextRotation: number): void;
+}
+
+
+/**
+ * @typedef
+ * @memberof Moveable.Rotatable
+ * @extends Moveable.OnEvent
  * @extends Moveable.OnTransformEvent
- * @property - The distance of rotation rad before transform is applied
- * @property - The delta of rotation rad before transform is applied
- * @property - The now rotation rad before transform is applied
- * @property - The distance of rotation rad
- * @property - The delta of rotation rad
- * @property - The now rotation rad
- * @property - a target's transform
- * @property - Whether or not it is being pinched.
- * @property - rotate causes a `drag` event.
  */
 export interface OnRotate extends OnEvent {
+    /**
+     * The distance of rotation rad before transform is applied
+     */
     beforeDist: number;
+    /**
+     * The delta of rotation rad before transform is applied
+     */
     beforeDelta: number;
+    /**
+     * The now rotation rad before transform is applied
+     * @deprecated
+     */
     beforeRotate: number;
-
+    /**
+     * The now rotation rad before transform is applied
+     */
+    beforeRotation: number;
+    /**
+     * The distance of rotation rad
+     */
     dist: number;
+    /**
+     * The delta of rotation rad
+     */
     delta: number;
+    /**
+     * The now rotation rad
+     * @deprecated
+     */
     rotate: number;
-
+    /**
+     * The now rotation rad
+     */
+    rotation: number;
+    /**
+     * The distance of client rotation rad
+     */
     absoluteDist: number;
+    /**
+     * The delta of client rotation rad
+     */
     absoluteDelta: number;
+    /**
+     * The now client rotation rad
+     * @deprecated
+     */
     absoluteRotate: number;
-
+    /**
+     * The now client rotation rad
+     */
+    absoluteRotation: number;
+    /**
+     * a target's transform
+     */
     transform: string;
+    /**
+     * Whether or not it is being pinched.
+     */
     isPinch: boolean;
+    /**
+     * rotate causes a `drag` event.
+     */
     drag: OnDrag;
 }
 /**
@@ -882,16 +1036,24 @@ export interface OnRotateGroupStart extends OnRotateStart {
 
 /**
  * @typedef
+ * @description Parameters for the `rotateGroup` event
  * @memberof Moveable.Rotatable
  * @extends Moveable.OnRotate
  * @property - The rotating targets
  * @property - Each `rotate` event on the targets
- * @property - You can set the current rotate value.
  */
 export interface OnRotateGroup extends OnRotate {
     targets: Array<HTMLElement | SVGElement>;
     events: OnRotate[];
+    /**
+     * You can set the group's rotation.
+     * @deprecated
+     */
     set: (rotation: number) => any;
+    /**
+     * You can set the group's rotation.
+     */
+    setGroupRotation: (rotation: number) => any;
 }
 
 /**
@@ -1064,7 +1226,8 @@ export interface OnClickGroup extends OnEvent {
 }
 
 /**
- * @typedef - `beforeRenderStart` event occurs before the first start of all events.
+ * `beforeRenderStart` event occurs before the first start of all events.
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.
@@ -1076,7 +1239,8 @@ export interface OnBeforeRenderStart extends OnEvent {
 }
 
 /**
- * @typedef - `beforeRender` event occurs before the dragging of all events.
+ * `beforeRender` event occurs before the dragging of all events.
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.
@@ -1086,7 +1250,8 @@ export interface OnBeforeRender extends OnEvent {
 }
 
 /**
- * @typedef - `beforeRenderEnd` event occurs before the end of all events.
+ * `beforeRenderEnd` event occurs before the end of all events.
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being dragged.
@@ -1132,7 +1297,8 @@ export interface OnBeforeRenderGroupEnd extends OnBeforeRenderEnd {
 }
 
 /**
- * @typedef - `renderStart` event occurs at the first start of all events.
+ * `renderStart` event occurs at the first start of all events.
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being pinched.
@@ -1142,7 +1308,8 @@ export interface OnRenderStart extends OnEvent {
 }
 
 /**
- * @typedef - `render` event occurs before the target is drawn on the screen.
+ * `render` event occurs before the target is drawn on the screen.
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - a target's next transform string value.
@@ -1154,7 +1321,8 @@ export interface OnRender extends OnEvent {
 }
 
 /**
- * @typedef - `renderEnd` event occurs at the end of all events.
+ * `renderEnd` event occurs at the end of all events.
+ * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @property - Whether or not it is being dragged.
@@ -1228,17 +1396,32 @@ export interface OnRenderGroupEnd extends OnRenderEnd {
 /**
  * @typedef
  * @memberof Moveable.Draggable
- * @property - Whether or not target can be dragged. (default: false)
- * @property - throttle of x, y when drag. (default: 0)
- * @property - throttle of angle(degree) of x,y when drag. (default: 0)
- * @property - start angle(degree) of x,y for throttleDragRotate when drag. (default: 0)
- * @property - Whether to move by dragging the edge line
  */
 export interface DraggableOptions {
+    /**
+     * Whether or not target can be dragged.
+     * @default false
+     */
     draggable?: boolean;
+    /**
+     * throttle of x, y when drag.
+     * @default 0
+     */
     throttleDrag?: number;
+    /**
+     * throttle of angle(degree) of x,y when drag.
+     * @default 0
+     */
     throttleDragRotate?: number;
+    /**
+     * start angle(degree) of x,y for throttleDragRotate when drag.
+     * @default 0
+     */
     startDragRotate?: number;
+    /**
+     * Whether to move by dragging the edge line
+     * @default false
+     */
     edgeDraggable?: boolean;
 }
 export interface DraggableEvents {
@@ -1263,27 +1446,39 @@ export interface DraggableState {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Add padding around the target to increase the drag area. (default: null)
  */
 export interface PaddingOptions {
+    /**
+     * Add padding around the target to increase the drag area.
+     * @default null
+     */
     padding?: PaddingBox;
 }
 /**
  * @typedef
  * @memberof Moveable
- * @property - Whether or not the origin control box will be visible or not (default: true)
  */
 export interface OriginOptions {
+    /**
+     * Whether or not the origin control box will be visible or not.
+     * @default true
+     */
     origin?: boolean;
 }
 /**
  * @typedef
  * @memberof Moveable.OriginDraggable
- * @property - * Whether to drag origin (default: false)
- * @property - % Can be used instead of the absolute px (default: true)
  */
 export interface OriginDraggableOptions {
+    /**
+     * Whether to drag origin.
+     * @default false
+     */
     originDraggable?: boolean;
+    /**
+     * % Can be used instead of the absolute px.
+     * @default true
+     */
     originRelative?: boolean;
 }
 export interface OriginDraggableEvents {
@@ -1297,17 +1492,32 @@ export interface OriginDraggableProps extends OriginDraggableOptions, EventInter
 /**
  * @typedef
  * @memberof Moveable.Roundable
- * @property - Whether to show and drag border-radius
- * @property - % Can be used instead of the absolute px
- * @property - Minimum number of round controls. It moves in proportion by control. [horizontal, vertical] (default: [0, 0])
- * @property - Maximum number of round controls. It moves in proportion by control. [horizontal, vertical] (default: [4, 4])
- * @property - Whether you can add/delete round controls by double-clicking a line or control. (default: true)
  */
 export interface RoundableOptions {
+    /**
+     * Whether to show and drag border-radius.
+     * @default false
+     */
     roundable?: boolean;
+    /**
+     * % Can be used instead of the absolute px
+     * @default false
+     */
     roundRelative?: boolean;
+    /**
+     * Minimum number of round controls. It moves in proportion by control. [horizontal, vertical]
+     * @default [0, 0]
+     */
     minRoundControls?: number[];
+    /**
+     * Maximum number of round controls. It moves in proportion by control. [horizontal, vertical]
+     * @default [4, 4]
+     */
     maxRoundControls?: number[];
+    /**
+     * Whether you can add/delete round controls by double-clicking a line or control.
+     * @default true
+     */
     roundClickable?: boolean;
 }
 
@@ -1326,15 +1536,27 @@ export interface RoundableState {
  * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.RenderDirections
- * @property - Whether or not target can be resized. (default: false)
- * @property - throttle of width, height when resize. (default: 0)
- * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
- * @property - Function to convert size for resize (default: oneself)
  */
 export interface ResizableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be resized.
+     * @default false
+     */
     resizable?: boolean;
+    /**
+     * throttle of width, height when resize.
+     * @default 1
+     */
     throttleResize?: number;
+    /**
+     * When resize or scale, keeps a ratio of the width, height.
+     * @default false
+     */
     keepRatio?: boolean;
+    /**
+     * Function to convert size for resize.
+     * @default oneself
+     */
     resizeFormat?: (size: number[]) => number[];
 }
 export interface ResizableEvents {
@@ -1354,13 +1576,22 @@ export interface ResizableProps extends ResizableOptions, EventInterface<Resizab
  * @typedef
  * @memberof Moveable.Scalable
  * @extends Moveable.RenderDirections
- * @property - Whether or not target can be scaled. (default: false)
- * @property - throttle of scaleX, scaleY when scale. (default: 0)
- * @property - When resize or scale, keeps a ratio of the width, height. (default: false)
  */
 export interface ScalableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be scaled.
+     * @default false
+     */
     scalable?: boolean;
+    /**
+     * throttle of scaleX, scaleY when scale.
+     * @default 0
+     */
     throttleScale?: number;
+    /**
+     * When resize or scale, keeps a ratio of the width, height.
+     * @default false
+     */
     keepRatio?: boolean;
 }
 export interface ScalableEvents {
@@ -1389,22 +1620,29 @@ export interface GapGuideline extends SnapGuideline {
 /**
  * @typedef
  * @memberof Moveable
- * @property - Set directions to show the control box. (default: false if rotatable, ["n", "nw", "ne", "s", "se", "sw", "e", "w"] otherwise)
  */
 export interface RenderDirections {
+    /**
+     * Set directions to show the control box.
+     * @default false if rotatable, ["n", "nw", "ne", "s", "se", "sw", "e", "w"] otherwise
+     */
     renderDirections?: boolean | string[];
 }
 /**
  * @typedef
  * @memberof Moveable.Rotatable
  * @extends Moveable.RenderDirections
- * @property - Whether or not target can be rotated. (default: false)
- * @property - You can specify the position of the rotation. (default: "top")
- * @property - throttle of angle(degree) when rotate. (default: 0)
- * @property - Set additional rotationTargets.
  */
 export interface RotatableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be rotated.
+     * @default false
+     */
     rotatable?: boolean;
+    /**
+     * You can specify the position of the rotation.
+     * @default "top"
+     */
     rotationPosition?:
     "top" | "bottom" | "left" | "right"
     | "top-right" | "top-left"
@@ -1412,11 +1650,20 @@ export interface RotatableOptions extends RenderDirections {
     | "left-top" | "left-bottom"
     | "right-top" | "right-bottom"
     | "none";
+    /**
+     * throttle of angle(degree) when rotate.
+     * @default 0
+     */
     throttleRotate?: number;
+    /**
+     * Set additional rotationTargets.
+     * @default null
+     */
     rotationTarget?: MoveableRefType | ArrayFormat<MoveableRefType> | false;
 }
 export interface RotatableEvents {
     onRotateStart: OnRotateStart;
+    onBeforeRotate: OnBeforeRotate;
     onRotate: OnRotate;
     onRotateEnd: OnRotateEnd;
 
@@ -1429,11 +1676,17 @@ export interface RotatableProps extends RotatableOptions, EventInterface<Rotatab
 /**
  * @typedef
  * @memberof Moveable.Warpable
- * @property - Whether or not target can be warped. (default: false)
- * @property - Set directions to show the control box. (default: ["n", "nw", "ne", "s", "se", "sw", "e", "w"])
  */
 export interface WarpableOptions {
+    /**
+     * Whether or not target can be warped.
+     * @default false
+     */
     warpable?: boolean;
+    /**
+     * Set directions to show the control box.
+     * @default ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+     */
     renderDirections?: boolean | string[];
 }
 
@@ -1448,9 +1701,12 @@ export interface WarpableProps extends WarpableOptions, EventInterface<WarpableE
 /**
  * @typedef
  * @memberof Moveable.Pinchable
- * @property - Whether or not target can be pinched with draggable, resizable, scalable, rotatable. (default: false)
  */
 export interface PinchableOptions {
+    /**
+     * Whether or not target can be pinched with draggable, resizable, scalable, rotatable.
+     * @default false
+     */
     pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
 }
 export interface PinchableEvents {
@@ -1470,12 +1726,21 @@ export interface PinchableProps
 /**
  * @typedef
  * @memberof Moveable.Group
- * @property - Sets the initial rotation of the group. (default 0)
- * @property - Sets the initial transform origin of the group. (default "50% 50%")
  */
 export interface GroupableOptions {
+    /**
+     * Sets the initial rotation of the group.
+     * @default 0
+     */
     defaultGroupRotate?: number;
+    /**
+     * Sets the initial transform origin of the group.
+     * @default  "50% 50%"
+     */
     defaultGroupOrigin?: string;
+    /**
+     * @private
+     */
     groupable?: boolean;
 }
 
@@ -1500,89 +1765,154 @@ export interface GroupableProps extends GroupableOptions {
 /**
  * @typedef
  * @memberof Moveable.Snappable
- * @property - Whether or not target can be snapped to the guideline. (default: false)
- * @property - A snap container that is the basis for snap, bounds, and innerBounds. (default: null = container)
- * @property - You can specify the directions to snap to the target. (default: true)
- * @property - You can specify the snap directions of elements. (default: true)
- * @property - When you drag, make the gap snap in the element guidelines. (default: true)
- * @property - Distance value that can snap to guidelines. (default: 5)
- * @property - If width size is greater than 0, you can vertical snap to the grid. (default: 0)
- * @property - If height size is greater than 0, you can horizontal snap to the grid. (default: 0)
- * @property - snap distance digits (default: 0)
- * @property - Whether to show snap distance (default: true)
- * @property - Whether to show element inner snap distance (default: false)
- * @property - Add guidelines in the horizontal direction. (default: [])
- * @property - Add guidelines in the vertical direction. (default: [])
- * @property - Add guidelines for the element. (default: [])
- * @property - You can set up boundaries. (default: null)
- * @property - You can set up inner boundaries. (default: null)
- * @property - You can set the text format of the distance shown in the guidelines. (default: self)
  */
 export interface SnappableOptions {
+    /**
+     * Whether or not target can be snapped to the guideline.
+     * @default false
+     */
     snappable?: boolean | string[];
+    /**
+     * A snap container that is the basis for snap, bounds, and innerBounds.
+     * @default null
+     */
     snapContainer?: MoveableRefType<HTMLElement | SVGElement>;
-
+    /**
+     * You can specify the directions to snap to the target.
+     * @default true (true is all directions)
+     */
     snapDirections?: boolean | SnapDirections;
+    /**
+     * You can specify the snap directions of elements.
+     * @default true (true is all directions)
+     */
     elementSnapDirections?: boolean | SnapDirections;
-
+    /**
+     * When you drag, make the gap snap in the element guidelines.
+     * @default true
+     */
     snapGap?: boolean;
+    /**
+    /**
+     * Distance value that can snap to guidelines.
+     * @default 5
+     */
     snapThreshold?: number;
+    /**
+     * snap distance digits.
+     * @default 0
+     */
     snapDigit?: number;
+    /**
+     * If width size is greater than 0, you can vertical snap to the grid.
+     * @default 0 (0 is not used)
+     */
     snapGridWidth?: number;
+    /**
+     * If height size is greater than 0, you can horizontal snap to the grid.
+     * @default 0 (0 is not used)
+     */
     snapGridHeight?: number;
+    /**
+     * Whether to show snap distance.
+     * @default true
+     */
     isDisplaySnapDigit?: boolean;
+    /**
+     * Whether to show element inner snap distance
+     * @default false
+     */
     isDisplayInnerSnapDigit?: boolean;
+    /**
+     * Add guidelines in the horizontal direction.
+     * @default []
+     */
     horizontalGuidelines?: number[];
+    /**
+     * Add guidelines in the vertical direction.
+     * @default []
+     */
     verticalGuidelines?: number[];
+    /**
+     * Add guidelines for the element.
+     * @default []
+     */
     elementGuidelines?: Array<ElementGuidelineValue | MoveableRefType<Element>>;
-    bounds?: BoundType;
-    innerBounds?: InnerBoundType;
+    /**
+     * You can set up boundaries.
+     * @default null
+     */
+    bounds?: BoundType | null;
+    /**
+     * You can set up inner boundaries.
+     * @default null
+     */
+    innerBounds?: InnerBoundType | null;
+    /**
+     * You can set the text format of the distance shown in the guidelines.
+     * @default oneself
+     */
     snapDistFormat?: (distance: number) => number | string;
 }
 
 /**
  * @typedef
  * @memberof Moveable.Snappable
- * @property - Whether to snap the top of the element (default: true)
- * @property - Whether to snap the left of the element (default: true)
- * @property - Whether to snap the right of the element (default: true)
- * @property - Whether to snap the bottom of the element (default: true)
- * @property - Whether to snap the center((left + right) / 2) of the element (default: false)
- * @property - Whether to snap the middle((top + bottom) / 2) of the element (default: false)
  */
 export interface SnapDirections {
+    /**
+     * Whether to snap the top of the element
+     * @default true
+     */
     left?: boolean;
+    /**
+     * Whether to snap the left of the element
+     * @default true
+     */
     top?: boolean;
+    /**
+     * Whether to snap the right of the element
+     * @default true
+     */
     right?: boolean;
+    /**
+     * Whether to snap the bottom of the element
+     * @default true
+     */
     bottom?: boolean;
+    /**
+     * Whether to snap the center((left + right) / 2) of the element
+     * @default false
+     */
     center?: boolean;
+    /**
+     * Whether to snap the middle((top + bottom) / 2) of the element
+     * @default false
+     */
     middle?: boolean;
 }
 /**
  * @typedef
  * @memberof Moveable.Snappable
  * @extends Moveable.Snappable.SnapDirections
- * @property - guideline element
- * @property - class names to add to guideline (default: "")
  */
 export interface ElementGuidelineValue extends SnapDirections {
+    /**
+     * guideline element
+     */
     element: Element;
-    refresh?: boolean;
+    /**
+     * class names to add to guideline
+     * @default ""
+     */
     className?: string;
+    /**
+     * Whether to update the element size at every render
+     * @default false
+     */
+    refresh?: boolean;
 }
 
-/**
- * @typedef
- * @memberof Moveable.Snappable
- * @extends Moveable.Snappable.SnapDirections
- * @property - guideline element
- * @property - class names to add to guideline (default: "")
- */
-export interface ElementGuidelineValue extends SnapDirections {
-    element: Element;
-    refresh?: boolean;
-    className?: string;
-}
 export interface SnappableEvents {
     onSnap: OnSnap;
 }
@@ -1657,15 +1987,27 @@ export interface SnapRenderInfo {
 /**
  * @typedef
  * @memberof Moveable.Scrollable
- * @property - Whether or not target can be scrolled to the scroll container (default: false)
- * @property - The container to which scroll is applied (default: container)
- * @property - Expand the range of the scroll check area. (default: 0)
- * @property - Sets a function to get the scroll position. (default: Function)
  */
 export interface ScrollableOptions {
+    /**
+     * Whether or not target can be scrolled to the scroll container
+     * @default false
+     */
     scrollable?: boolean;
+    /**
+     * The container to which scroll is applied
+     * @default container
+     */
     scrollContainer?: MoveableRefType<HTMLElement>;
+    /**
+     * Expand the range of the scroll check area.
+     * @default 0
+     */
     scrollThreshold?: number;
+    /**
+     * Sets a function to get the scroll position.
+     * @default scrollContainer's scrollTop, scrollLeft
+     */
     getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
 }
 export interface ScrollableEvents {
@@ -1678,11 +2020,17 @@ export interface ScrollableProps extends ScrollableOptions, EventInterface<Scrol
 /**
  * @typedef
  * @memberof Moveable
- * @property - Instead of firing an event on the target, we add it to the moveable control element. You can use click and clickGroup events. (default: if group, true, else false)
- * @property - Set `pointerEvents: none;` css to pass events in dragArea.
  */
 export interface DragAreaOptions {
+    /**
+     * Instead of firing an event on the target, we add it to the moveable control element. You can use click and clickGroup events.
+     * @default if group, true, else fals
+     */
     dragArea?: boolean;
+    /**
+     * Set `pointerEvents: none;` css to pass events in dragArea.
+     * @default false
+     */
     passDragArea?: boolean;
 }
 export interface DragAreaProps extends DragAreaOptions {
@@ -1739,27 +2087,55 @@ export interface RenderableProps extends EventInterface<RenderableEvents> {
 /**
  * @typedef
  * @memberof Moveable.Clippable
- * @property - Whether to clip the target.
- * @property - You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
- * @property - If clippath is not set, the default value can be set. (defaultClipPath < style < customClipPath < dragging clipPath)
- * @property - % Can be used instead of the absolute px (`rect` not possible) (default: false)
- * @property - When dragging the target, the clip also moves. (default: true)
- * @property - You can drag the clip by setting clipArea. (default: false)
- * @property - Whether the clip is bound to the target. (default: false)
- * @property - Add clip guidelines in the vertical direction. (default: [])
- * @property - Add clip guidelines in the horizontal direction. (default: [])
- * @property - Distance value that can snap to clip guidelines. (default: 5)
  */
 export interface ClippableOptions {
+    /**
+     * Whether to clip the target.
+     * @default false
+     */
     clippable?: boolean;
+    /**
+     * You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
+     */
     customClipPath?: string;
+    /**
+     * If clippath is not set, the default value can be set. (defaultClipPath < style < customClipPath < dragging clipPath)
+     */
     defaultClipPath?: string;
+    /**
+     * % Can be used instead of the absolute px (`rect` not possible)
+     * @default false
+     */
     clipRelative?: boolean;
+    /**
+     * When dragging the target, the clip also moves.
+     * @default true
+     */
     dragWithClip?: boolean;
+    /**
+     * You can drag the clip by setting clipArea.
+     * @default false
+     */
     clipArea?: boolean;
+    /**
+     * Whether the clip is bound to the target.
+     * @default false
+     */
     clipTargetBounds?: boolean;
+    /**
+     * Add clip guidelines in the vertical direction.
+     * @default []
+     */
     clipVerticalGuidelines?: Array<string | number>;
+    /**
+     * Add clip guidelines in the horizontal direction.
+     * @default []
+     */
     clipHorizontalGuidelines?: Array<string | number>;
+    /**
+     * Distance value that can snap to clip guidelines.
+     * @default 5
+     */
     clipSnapThreshold?: number;
 }
 export interface ClippableEvents {

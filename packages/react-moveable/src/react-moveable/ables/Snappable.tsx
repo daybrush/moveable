@@ -917,8 +917,6 @@ export default {
  *
  * const moveable = new Moveable(document.body, {
  *   snappable: true,
- *   snapVertical: true,
- *   snapHorizontal: true,
  *   snapElement: true,
  *   snapGap: true,
  * });
@@ -974,9 +972,10 @@ export default {
  * ];
  */
 /**
- * You can set up boundaries. (default: null)
+ * You can set up boundaries.
  * @name Moveable.Snappable#bounds
  * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Snappable.html#.SnappableOptions}
+ * @default null
  * @example
  * import Moveable from "moveable";
  *
@@ -985,9 +984,10 @@ export default {
  * moveable.bounds = { left: 0, right: 1000, top: 0, bottom: 1000};
  */
 /**
- * You can set up inner boundaries. (default: null)
+ * You can set up inner boundaries.
  * @name Moveable.Snappable#innerBounds
  * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Snappable.html#.SnappableOptions}
+ * @default null
  * @example
  * import Moveable from "moveable";
  *

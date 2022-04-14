@@ -66,8 +66,9 @@ export default makeAble("padding", {
 });
 
 /**
- * Add padding around the target to increase the drag area. (default: null)
+ * Add padding around the target to increase the drag area.
  * @name Moveable#padding
+ * @default null
  * @example
  * import Moveable from "moveable";
  *
