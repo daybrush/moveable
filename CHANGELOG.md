@@ -17,6 +17,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add `setTransform`, `setTransformIndex` event properties.
 * Expand the functions of `translate` and `rotate` properties.
 
+
+
+## [0.29.0] - 2022-04-15
+* `moveable` 0.29.0
+* `react-moveable` 0.32.0
+* `preact-moveable` 0.31.0
+* `ngx-moveable` 0.25.0
+* `svelte-moveable` 0.19.0
+* `lit-moveable` 0.6.0
+* `vue-moveable` 2.0.0-beta.7
+* `vue3-moveable` 0.4.0
+
+### Added
+* add `keepRatio` in `Resizable`, `Scalable` request #638
+* add `beforeScale`, `beforeResize` events #623 #624
+* add `resizeFormat` option #624
+* add `beforeRotate`, `beforeRoateGroup` events
+
+### Fixed
+* fix dragArea is null #636
+* fix dragStart method #629
+* fix fixedDirection #624
+* fix form element select #631
+* fix forceUpdate types
+* remove useless param
+
 ## [0.28.0] - 2022-03-14
 * `moveable` 0.28.0
 * `react-moveable` 0.31.1

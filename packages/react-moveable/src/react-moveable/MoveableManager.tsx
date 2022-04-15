@@ -648,6 +648,9 @@ export default class MoveableManager<T = {}>
     }
     protected updateState(nextState: any, isSetState?: boolean) {
         if (isSetState) {
+            if (this.isUnmounted) {
+                return;
+            }
             this.setState(nextState);
         } else {
             const state = this.state;
