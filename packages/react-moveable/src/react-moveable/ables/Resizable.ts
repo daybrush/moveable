@@ -377,6 +377,14 @@ export default {
             !parentDist[0] && (snapDist[0] = 0);
             !parentDist[1] && (snapDist[1] = 0);
         }
+
+        function computeSize() {
+            if (resizeFormat) {
+                [nextWidth, nextHeight] = resizeFormat([nextWidth, nextHeight]);
+            }
+            nextWidth = throttle(nextWidth, throttleResize!);
+            nextHeight = throttle(nextHeight, throttleResize!);
+        }
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
                 if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
@@ -388,11 +396,8 @@ export default {
             const isNoSnap = !snapDist[0] && !snapDist[1];
 
             if (isNoSnap) {
-                if (isWidth) {
-                    nextWidth = throttle(nextWidth, throttleResize!);
-                } else {
-                    nextHeight = throttle(nextHeight, throttleResize!);
-                }
+                // pre-compute before maintaining the ratio
+                computeSize();
             }
             if (
                 (sizeDirection[0] && !sizeDirection[1])
@@ -425,11 +430,8 @@ export default {
             maxSize,
             keepRatio,
         );
-        if (resizeFormat) {
-            [nextWidth, nextHeight] = resizeFormat([nextWidth, nextHeight]);
-        }
-        nextWidth = throttle(nextWidth, throttleResize!);
-        nextHeight = throttle(nextHeight, throttleResize!);
+
+        computeSize();
 
         distWidth = nextWidth - startOffsetWidth;
         distHeight = nextHeight - startOffsetHeight;
