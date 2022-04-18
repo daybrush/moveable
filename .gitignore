@@ -20,4 +20,4 @@ statistics/
 *.mp4
 demo/storybook
 demo/storybook2
-
+dist/
