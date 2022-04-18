@@ -138,6 +138,7 @@ export default class MoveableManager<T = {}>
         );
     }
     public componentDidMount() {
+        this.isUnmounted = false;
         this.controlBox.getElement();
         const props = this.props;
         const { parentMoveable, container, wrapperMoveable } = props;

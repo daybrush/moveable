@@ -97,6 +97,10 @@ export class InitialMoveable<T = {}>
     public componentDidUpdate() {
         this._updateRefs();
     }
+    public componentWillUnmount() {
+        this.selectorMap = {};
+        this.refTargets = [];
+    }
     public getManager(): MoveableManagerInterface<any, any> {
         return this.moveable;
     }
@@ -117,6 +121,7 @@ export class InitialMoveable<T = {}>
         });
         const selectorMap = this.selectorMap;
         const nextSelectorMap: IObject<Array<HTMLElement | SVGElement>> = {};
+
         this.refTargets.forEach(target => {
             if (isString(target)) {
                 const selectorTarget = selectorMap[target];
