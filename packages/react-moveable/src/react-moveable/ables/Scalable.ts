@@ -1,11 +1,10 @@
 import {
     getDirection, triggerEvent, multiply2,
-    fillParams, getDistSize, fillEndParams, directionCondition, getAbsolutePosesByState, catchEvent,
+    fillParams, fillEndParams, directionCondition, getAbsolutePosesByState, catchEvent, getOffsetSizeDist,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
-    setDragStart, getDragDist,
-    resolveTransformEvent,
+    setDragStart, resolveTransformEvent,
     convertTransformFormat,
     getScaleDist,
     fillTransformStartEvent,
@@ -20,7 +19,8 @@ import {
     Renderer, OnScaleGroupStart, DraggableProps, OnDragStart,
     SnappableState, GroupableProps, OnScaleStart,
     OnScale, OnScaleEnd, MoveableManagerInterface, MoveableGroupInterface,
-    OnBeforeScale, OnBeforeScaleGroup,
+    OnBeforeScaleGroup,
+    OnBeforeScale,
 } from "../types";
 import {
     fillChildEvents,
@@ -31,7 +31,7 @@ import { calculate, createRotateMatrix, plus, minus } from "@scena/matrix";
 import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapScale } from "./Snappable";
 import {
-    isArray, IObject, getRad, getDist,
+    isArray, IObject, getDist,
     throttle,
 } from "@daybrush/utils";
 
@@ -97,8 +97,8 @@ export default {
         datas.transform = targetTransform;
         datas.prevDist = [1, 1];
         datas.direction = direction;
-        datas.width = width;
-        datas.height = height;
+        datas.startOffsetWidth = width;
+        datas.startOffsetHeight = height;
         datas.startValue = [1, 1];
 
         const scaleWidth = getDist(pos1, pos2);
@@ -163,26 +163,21 @@ export default {
         e: any) {
         resolveTransformEvent(e, "scale");
         const {
-            datas, distX, distY,
-            parentScale,
-            parentDistance,
+            datas,
             parentKeepRatio,
             parentFlag, isPinch,
             dragClient,
-            parentDist,
             isRequest,
         } = e;
         const {
             prevDist,
             direction,
-            width,
-            height,
+            startOffsetWidth,
+            startOffsetHeight,
             isScale,
             startValue,
             isWidth,
             ratio,
-            scaleXRatio,
-            scaleYRatio,
         } = datas;
 
         if (!isScale) {
@@ -202,63 +197,30 @@ export default {
         const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
         const state = moveable.state;
 
-        let scaleX = 1;
-        let scaleY = 1;
+        function getNextScale() {
+            const {
+                distWidth,
+                distHeight,
+            } = getOffsetSizeDist(sizeDirection, keepRatio, datas, e);
 
-        if (parentDist) {
-            scaleX = (width + parentDist[0]) / width;
-            scaleY = (height + parentDist[1]) / height;
-        } else if (parentScale) {
-            scaleX = parentScale[0];
-            scaleY = parentScale[1];
-        } else if (isPinch) {
-            if (parentDistance) {
-                scaleX = (width + parentDistance) / width;
-                scaleY = (height + parentDistance * height / width) / height;
+
+            let scaleX = (startOffsetWidth + distWidth) / startOffsetWidth;
+            let scaleY = (startOffsetHeight + distHeight) / startOffsetHeight;
+
+            scaleX = sizeDirection[0] || keepRatio ? scaleX * startValue[0] : startValue[0];
+            scaleY = sizeDirection[1] || keepRatio ? scaleY * startValue[1] : startValue[1];
+
+            if (scaleX === 0) {
+                scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
             }
-        } else {
-            const dragDist = getDragDist({ datas, distX, distY });
-            let distScaleWidth = sizeDirection[0] * dragDist[0] * scaleXRatio;
-            let distScaleHeight = sizeDirection[1] * dragDist[1] * scaleYRatio;
-
-            if (keepRatio && width && height) {
-                if (!sizeDirection[0]) {
-                    // top, bottom
-                    // distHeight = signSize;
-                    distScaleWidth = distScaleHeight * ratio;
-                } else if (!sizeDirection[1]) {
-                    // left, right
-                    // distWidth = signSize;
-                    distScaleHeight = distScaleWidth / ratio;
-                } else {
-                    const size = getDistSize([distScaleWidth, distScaleHeight]);
-
-                    // two-way
-                    const dragRad = getRad([0, 0], dragDist);
-                    const standardRad = getRad([0, 0], sizeDirection);
-                    const signSize = Math.cos(dragRad - standardRad) * size;
-                    const ratioRad = getRad([0, 0], [ratio, 1]);
-
-                    distScaleWidth = Math.cos(ratioRad) * signSize;
-                    distScaleHeight = Math.sin(ratioRad) * signSize;
-                }
+            if (scaleY === 0) {
+                scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
             }
-            scaleX = (width + (distScaleWidth / scaleXRatio)) / width;
-            scaleY = (height + (distScaleHeight / scaleYRatio)) / height;
+            return [scaleX, scaleY];
         }
 
-        scaleX = sizeDirection[0] || keepRatio ? scaleX * startValue[0] : startValue[0];
-        scaleY = sizeDirection[1] || keepRatio ? scaleY * startValue[1] : startValue[1];
 
-        if (scaleX === 0) {
-            scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
-        }
-        if (scaleY === 0) {
-            scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
-        }
-
-        let dist = [scaleX / startValue[0], scaleY / startValue[1]];
-        let scale = [scaleX, scaleY];
+        let scale = getNextScale();
 
         if (!isPinch && moveable.props.groupable) {
             const snapRenderInfo = state.snapRenderInfo || {};
@@ -271,15 +233,22 @@ export default {
 
         triggerEvent(moveable, "onBeforeScale", fillParams<OnBeforeScale>(moveable, e, {
             scale,
-            setFixedDirection: datas.setFixedDirection,
+            setFixedDirection(nextFixedDirection: number[]) {
+                datas.setFixedDirection(nextFixedDirection);
+
+                scale = getNextScale();
+
+                return scale;
+            },
             setScale(nextScale: number[]) {
                 scale = nextScale;
-                dist = [scale[0] / startValue[0], scale[1] / startValue[1]];
             },
         }));
 
+        const dist = [scale[0] / startValue[0], scale[1] / startValue[1]];
         let fixedPosition = dragClient;
         let snapDist = [0, 0];
+
 
         if (!dragClient) {
             if (!parentFlag && isPinch) {
@@ -298,10 +267,9 @@ export default {
             );
         }
 
-
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
-                if (Math.abs(snapDist[0] * width) > Math.abs(snapDist[1] * height)) {
+                if (Math.abs(snapDist[0] * startOffsetWidth) > Math.abs(snapDist[1] * startOffsetHeight)) {
                     snapDist[1] = 0;
                 } else {
                     snapDist[0] = 0;
@@ -323,18 +291,18 @@ export default {
                 || (isNoSnap && isWidth)
             ) {
                 dist[0] += snapDist[0];
-                const snapHeight = width * dist[0] * startValue[0] / ratio;
+                const snapHeight = startOffsetWidth * dist[0] * startValue[0] / ratio;
 
-                dist[1] = snapHeight / height / startValue[1];
+                dist[1] = snapHeight / startOffsetHeight / startValue[1];
             } else if (
                 (!sizeDirection[0] && sizeDirection[1])
                 || (!snapDist[0] && snapDist[1])
                 || (isNoSnap && !isWidth)
             ) {
                 dist[1] += snapDist[1];
-                const snapWidth = height * dist[1] * startValue[1] * ratio;
+                const snapWidth = startOffsetHeight * dist[1] * startValue[1] * ratio;
 
-                dist[0] = snapWidth / width / startValue[0];
+                dist[0] = snapWidth / startOffsetWidth / startValue[0];
             }
         } else {
             dist[0] += snapDist[0];
@@ -346,6 +314,7 @@ export default {
                 dist[1] = throttle(dist[1] * startValue[1], throttleScale!) / startValue[1];
             }
         }
+
         if (dist[0] === 0) {
             dist[0] = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
         }
@@ -361,18 +330,19 @@ export default {
         datas.prevDist = dist;
         datas.prevInverseDist = inverseDist;
         if (
-            scaleX === prevDist[0] && scaleY === prevDist[1]
+            scale[0] === prevDist[0] && scale[1] === prevDist[1]
             && inverseDelta.every(num => !num)
             && !parentMoveable
         ) {
             return false;
         }
 
+
         const nextTransform = convertTransformFormat(
             datas, `scale(${scale.join(", ")})`, `scale(${dist.join(", ")})`);
         const params = fillParams<OnScale>(moveable, e, {
-            offsetWidth: width,
-            offsetHeight: height,
+            offsetWidth: startOffsetWidth,
+            offsetHeight: startOffsetHeight,
             direction,
 
             scale,
@@ -450,7 +420,7 @@ export default {
             });
         };
 
-        datas.setFixedDirectionGroup = setFixedDirection;
+        datas.setFixedDirection = setFixedDirection;
         const nextParams: OnScaleGroupStart = {
             ...params,
             targets: moveable.props.targets!,
@@ -472,7 +442,6 @@ export default {
             triggerEvent(moveable, "onBeforeScaleGroup", fillParams<OnBeforeScaleGroup>(moveable, e, {
                 ...parentEvent,
                 targets: moveable.props.targets!,
-                setFixedDirection: datas.setFixedDirectionGroup,
             }));
         });
 

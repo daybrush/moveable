@@ -388,34 +388,33 @@ export function checkSnapScale(
     isRequest: boolean,
     datas: any
 ) {
-    const { width, height, fixedPosition, fixedDirection } = datas;
     if (!hasGuidelines(moveable, "scalable")) {
         return [0, 0];
     }
-    const is3d = datas.is3d;
+    const { startOffsetWidth, startOffsetHeight, fixedPosition, fixedDirection, is3d } = datas;
     const sizeDist = checkSizeDist(
         moveable,
         (widthOffset: number, heightOffset: number) => {
             return getNextFixedPoses(
                 scaleMatrix(
                     datas,
-                    plus(scale, [widthOffset / width, heightOffset / height]),
+                    plus(scale, [widthOffset / startOffsetWidth, heightOffset / startOffsetHeight]),
                 ),
-                width,
-                height,
+                startOffsetWidth,
+                startOffsetHeight,
                 fixedDirection,
                 fixedPosition,
                 is3d
             );
         },
-        width,
-        height,
+        startOffsetWidth,
+        startOffsetHeight,
         direction,
         fixedPosition,
         isRequest,
         datas
     );
-    return [sizeDist[0] / width, sizeDist[1] / height];
+    return [sizeDist[0] / startOffsetWidth, sizeDist[1] / startOffsetHeight];
 }
 
 export function startCheckSnapDrag(

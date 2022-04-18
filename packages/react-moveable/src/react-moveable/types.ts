@@ -746,8 +746,9 @@ export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
 export interface OnBeforeScale extends OnEvent {
     /**
      * Set a fixed direction to scale.
+     * If fixedDirection is set, the scale values can be changed and can be reconfirmed as a return value.
      */
-    setFixedDirection: (startDirecition: number[]) => void;
+    setFixedDirection: (startDirecition: number[]) => number[];
     /**
      * Set target's scale to scaling.
      */
