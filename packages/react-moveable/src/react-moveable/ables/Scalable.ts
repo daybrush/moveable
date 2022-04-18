@@ -414,10 +414,11 @@ export default {
         }
         const originalEvents = fillChildEvents(moveable, "resizable", e);
 
-        function setDist(ev: any) {
+        function setDist(child: MoveableManagerInterface, ev: any) {
             const fixedDirection = datas.fixedDirection;
             const fixedPosition = datas.fixedPosition;
-            const pos = getPosByDirection(ev.datas.startPositions, fixedDirection);
+            const startPositions = ev.datas.startPositions || getAbsolutePosesByState(child.state);
+            const pos = getPosByDirection(startPositions, fixedDirection);
             const [originalX, originalY] = calculate(
                 createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
                 [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
@@ -437,7 +438,7 @@ export default {
             "dragControlStart",
             e,
             (child, ev) => {
-                return setDist(ev);
+                return setDist(child, ev);
             },
         );
 
@@ -445,7 +446,7 @@ export default {
             params.setFixedDirection(fixedDirection);
             events.forEach((ev, i) => {
                 ev.setFixedDirection(fixedDirection);
-                setDist(originalEvents[i]);
+                setDist(ev.moveable, originalEvents[i]);
             });
         };
 

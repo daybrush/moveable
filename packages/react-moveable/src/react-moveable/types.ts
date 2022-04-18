@@ -819,15 +819,24 @@ export interface OnResizeStart extends OnEvent {
  * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
- * @property - Set a fixed direction to resize.
- * @property - Set the bounding size to resizing.
- * @property - a target's bounding width before snap and throttle and format
- * @property - a target's bounding height before snap and throttle and format
  */
 export interface OnBeforeResize extends OnEvent {
-    setFixedDirection: (startDirecition: number[]) => void;
+    /**
+     * Set a fixed direction to resize.
+     * If fixedDirection is set, the boundingWidth and boundingHeight values can be changed and can be reconfirmed as a return value.
+     */
+    setFixedDirection: (startDirecition: number[]) => number[];
+    /**
+     * Set the bounding size to resizing.
+     */
     setSize: (size: number[]) => void;
+    /**
+     * a target's bounding width before snap and throttle and format
+     */
     boundingWidth: number;
+    /**
+     * a target's bounding height before snap and throttle and format
+     */
     boundingHeight: number;
 }
 
@@ -1137,6 +1146,9 @@ export interface OnResizeGroupStart extends OnResizeStart {
  * @extends Moveable.OnBeforeResize
  */
 export interface OnBeforeResizeGroup extends OnBeforeResize {
+    /**
+     * The resizing targets
+     */
     targets: Array<HTMLElement | SVGElement>;
 }
 
