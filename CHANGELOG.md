@@ -18,6 +18,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Expand the functions of `translate` and `rotate` properties.
 
 
+
+## [0.29.2] - 2022-04-18
+* `moveable` 0.29.2
+* `react-moveable` 0.32.2
+* `preact-moveable` 0.31.2
+* `ngx-moveable` 0.25.2
+* `svelte-moveable` 0.19.2
+* `lit-moveable` 0.6.2
+* `vue-moveable` 2.0.0-beta.9
+* `vue3-moveable` 0.4.2
+
+### Fixed
+* fix `setFixedDirection` for group #624
+* fix `dist` for group #639
+
 ## [0.29.1] - 2022-04-16
 * `moveable` 0.29.1
 * `react-moveable` 0.32.1
