@@ -6,8 +6,7 @@
   "main": "index.js",
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "build": "npm i react-moveable@latest && build-storybook -o ../demo/storybook",
-    "refresh": "npm i react-moveable@latest && npm run storybook"
+    "build": "build-storybook -o ../../demo/storybook"
   },
   "author": "Daybrush",
   "license": "MIT",

@@ -46,6 +46,7 @@
     "tslib": "^2.0.1"
   },
   "dependencies": {
+    "framework-utils": "^1.1.0",
     "moveable": "~0.29.3"
   }
 }
