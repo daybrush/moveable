@@ -18,6 +18,7 @@ rollup-plugin-visualizer/
 statistics/
 .scene_cache
 *.mp4
+lerna-debug.log
 demo/storybook
 demo/storybook2
 dist/

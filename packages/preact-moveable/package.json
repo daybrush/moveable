@@ -10,8 +10,7 @@
         "lint": "tslint -c tslint.json 'src/**/*.ts'",
         "start": "open ./demo/index.html && rollup -c rollup.config.demo.js -w",
         "build": "rollup -c && npm run declaration && print-sizes ./dist ",
-        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-        "packages": "pvu --path=../../ --update=./"
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
     },
     "keywords": [
         "moveable",

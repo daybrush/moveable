@@ -13,6 +13,7 @@
     "e2e": "ng e2e"
   },
   "private": true,
+  "lernaHelperPublishPath": "./dist/ngx-moveable",
   "dependencies": {
     "@angular/animations": "~12.0.0",
     "@angular/common": "~12.0.0",

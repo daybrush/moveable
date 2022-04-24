@@ -1,21 +1,12 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-
-## [1.0.0] - 2021-??-??
-* `moveable` 1.0.0
-* `react-moveable` 1.0.0
-* `preact-moveable` 1.0.0
-* `ngx-moveable` 1.0.0
-* `svelte-moveable` 1.0.0
-
-### Added
-* Support Original Transform
-* Add `onBeforeRenderStart`, `onBeforeRender`, `onBeforeRenderEnd` events.
-* Add `onBeforeRenderGroupStart`, `onBeforeRenderGroup`, `onBeforeRenderGroupEnd` events.
-* Add `setTransform`, `setTransformIndex` event properties.
-* Expand the functions of `translate` and `rotate` properties.
 
 
 ## [0.29.3] - 2022-04-19

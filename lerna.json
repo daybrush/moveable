@@ -1,0 +1,31 @@
+{
+    "packages": [
+        "packages/react-moveable",
+        "packages/react-compat-moveable",
+        "packages/moveable",
+        "packages/vue-moveable",
+        "packages/vue3-moveable",
+        "packages/svelte-moveable",
+        "packages/lit-moveable",
+        "packages/ngx-moveable",
+        "packages/storybook",
+        "packages/ngx-moveable/projects/ngx-moveable"
+    ],
+    "version": "independent",
+    "command": {
+        "version": {
+            "push": false,
+            "commitHooks": false,
+            "private": false,
+            "gitTagVersion": false,
+            "preid": "beta"
+        }
+    },
+    "lernaHelperScripts": [
+        "npm run packages:dependencies",
+        "npm run packages:publish",
+        "npm run demo:build",
+        "npm run demo:deploy",
+        "npm run release"
+    ]
+}

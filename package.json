@@ -1,28 +1,7 @@
 {
-  "name": "moveable",
-  "version": "0.29.3",
-  "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
-  "main": "./dist/moveable.cjs.js",
-  "module": "./dist/moveable.esm.js",
-  "sideEffects": false,
-  "types": "declaration/index.d.ts",
-  "scripts": {
-    "start": "rollup -c -w",
-    "build": "rollup -c && npm run declaration && print-sizes ./dist",
-    "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-    "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
-    "storybook": "cd storybook && npm run build && cd ../",
-    "prerelease": "npm run doc && npm run build&& prerelease --dirs=dist,doc",
-    "release:before": "npm run build && npm run doc && npm run storybook",
-    "release": "npm run release:before && release --dirs=dist,doc",
-    "release:init": "npm run release:before && release -i --dirs=dist,doc",
-    "deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
-    "packages": "npm run packages:update && npm run packages:build && npm run packages:publish",
-    "packages:update": "pvu --update=svelte-moveable,ngx-moveable/projects/ngx-moveable,lit-moveable,vue3-moveable,vue-moveable && npm run packages:update-angular-consts",
-    "packages:update-angular-consts": "node ./config/update-type-consts.js",
-    "packages:build": "pvu --build=svelte-moveable,ngx-moveable,lit-moveable,vue3-moveable,vue-moveable",
-    "packages:publish": "pvu --publish=svelte-moveable,ngx-moveable/dist/ngx-moveable,lit-moveable,vue3-moveable"
-  },
+  "name": "moveable-root",
+  "version": "0.30.0",
+  "private": true,
   "keywords": [
     "moveable",
     "resizable",
@@ -62,30 +41,35 @@
     "url": "https://github.com/daybrush/moveable/issues"
   },
   "homepage": "https://daybrush.com/moveable/",
-  "dependencies": {
-    "@scena/event-emitter": "^1.0.3",
-    "react-compat-moveable": "~0.17.3",
-    "react-simple-compat": "^1.2.1"
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "storybook": "npm run storybook --prefix ./packages/react-moveable",
+    "build": "npm run build --prefix ./packages/react-moveable",
+    "packages:update": "lerna version --conventional-commits --yes",
+    "package:update-dependencies": "lerna-helper dependencies",
+    "packages:build": "lerna run build --ignore ngx-moveable --ignore moveable-storybook",
+    "packages:publish": "lerna-helper publish --ignore ngx-moveable",
+    "changelog": "lerna-helper changelog --type root --pkg moveable",
+    "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
+    "build:storybook": "npm run build --preifx ./packages/storybook",
+    "build:storybook2": "npm run build:storybook --preifx ./packages/react-moveable",
+    "demo:build": "npm run packages:build && cpx 'packages/moveable/dist/*' dist  && npm run doc && npm run build:storybook && npm run build:storybook",
+    "demo:deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
+    "release": "lerna-helper release --pkg moveable"
   },
   "devDependencies": {
-    "@daybrush/builder": "^0.1.2",
-    "@daybrush/demo": "0.0.2",
     "@daybrush/jsdoc": "^0.4.0",
-    "@daybrush/release": "^0.2.4",
-    "@types/karma-chai": "^0.1.2",
-    "@types/mocha": "^5.2.7",
-    "@types/react": "^16.9.17",
-    "@types/react-dom": "^16.9.4",
-    "ast-parser": "^0.2.0",
+    "@daybrush/release": "0.3.0-beta.2",
+    "cpx": "1.5.0",
     "daybrush-jsdoc-template": "^1.7.0",
     "gh-pages": "^2.0.1",
-    "print-sizes": "0.0.4",
-    "pvu": "^0.6.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "rollup-plugin-css-bundle": "^1.0.4",
-    "rollup-plugin-react-compat": "^0.1.0",
-    "tslint": "^6.1.3",
-    "typescript": "^4.2.4"
+    "intercept-stdout": "0.1.2",
+    "lerna": "^4.0.0",
+    "lerna-changelog": "2.2.0",
+    "typescript": "4.6.3"
+  },
+  "dependencies": {
+    "@daybrush/utils": "^1.6.0",
+    "framework-utils": "^1.1.0"
   }
 }

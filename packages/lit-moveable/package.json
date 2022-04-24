@@ -57,6 +57,8 @@
         "typescript": "3.6.4"
     },
     "dependencies": {
+        "@daybrush/utils": "^1.6.0",
+        "framework-utils": "^1.1.0",
         "moveable": "~0.29.3"
     }
 }

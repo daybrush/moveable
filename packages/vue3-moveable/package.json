@@ -49,6 +49,7 @@
     },
     "homepage": "https://daybrush.com/moveable",
     "dependencies": {
+        "framework-utils": "^1.1.0",
         "moveable": "~0.29.3"
     },
     "devDependencies": {

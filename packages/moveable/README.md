@@ -233,6 +233,7 @@ moveable.on("pinchStart", ({ target, clientX, clientY }) => {
 
 
 ## 📦 Packages
+* [**moveable**](https://github.com/daybrush/moveable/blob/master/packages/moveable): A Vanilla Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 * [**react-moveable**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable): A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 * [**preact-moveable**](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable): A Preact Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 * [**ngx-moveable**](https://github.com/daybrush/moveable/blob/master/packages/ngx-moveable): An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
@@ -242,22 +243,22 @@ moveable.on("pinchStart", ({ target, clientX, clientY }) => {
 * [**vue3-moveable**](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable): A Vue 3 Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 
 ## ⚙️ Developments
-### `npm start`
+The `moveable` repo is managed as a [monorepo](https://github.com/lerna/lerna).
 
 The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
 
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
 
+### `npm run storybook`
 
-```bash
-$ cd packages/react-moveable
+```
 $ npm i
-$ npm start
+$ npm run bootstrap
+$ npm run storybook
 ```
 
-
 Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:6006](http://localhost:6006) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
