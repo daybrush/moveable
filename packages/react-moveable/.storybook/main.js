@@ -1,21 +1,28 @@
 const path = require("path");
 
 module.exports = {
+    typescript: {
+        reactDocgen: "react-docgen-typescript",
+        reactDocgenTypescriptOptions: {
+            shouldExtractLiteralValuesFromEnum: true,
+            propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+        },
+    },
     webpackFinal: config => {
-        config.module.rules.push(...[
-            {
-                test: /\.(ts|tsx)$/,
-                use: [
-                    {
-                        loader: require.resolve('awesome-typescript-loader'),
-                    },
-                    // Optional
-                    {
-                        loader: require.resolve('react-docgen-typescript-loader'),
-                    },
-                ],
-            },
-        ]);
+        // config.module.rules.push(...[
+        //     {
+        //         test: /\.(ts|tsx)$/,
+        //         use: [
+        //             {
+        //                 loader: require.resolve('awesome-typescript-loader'),
+        //             },
+        //             // Optional
+        //             {
+        //                 loader: require.resolve('react-docgen-typescript-loader'),
+        //             },
+        //         ],
+        //     },
+        // ]);
 
         config.resolve.alias["@/stories"] = path.resolve(__dirname, "../stories");
         config.resolve.alias["moveable-helper"] = path.resolve(__dirname, "../stories/moveable-helper");
@@ -33,4 +40,5 @@ module.exports = {
         "storybook-addon-preview/register",
         "storybook-dark-mode/register",
     ],
+    "framework": "@storybook/react",
 };

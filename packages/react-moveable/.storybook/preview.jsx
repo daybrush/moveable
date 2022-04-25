@@ -7,13 +7,12 @@ import {
 
 import {
     Title,
-    Description,
     Primary,
     PRIMARY_STORY,
     ArgsTable,
     DocsContainer,
     DocsContext,
-} from "@storybook/addon-docs/blocks";
+} from "@storybook/addon-docs";
 
 // or global addParameters
 export const parameters = {

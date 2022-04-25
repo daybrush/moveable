@@ -6,7 +6,7 @@ import {
 } from "@scena/matrix";
 import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
-    calculatePosition, calculateInversePosition, getTransform, calculateMoveablePosition,
+    calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo,
 } from "../utils";
 import { splitUnit, isArray, splitSpace, average, findIndex } from "@daybrush/utils";
 import {
@@ -82,7 +82,7 @@ export function resolveTransformEvent(event: any, functionName: string) {
         nextIndex = index + nextTransformAppendedIndexes.filter((i: number) => i < index).length;
     }
 
-    const result = getTransform(nextTransforms, nextIndex);
+    const result = convertTransformInfo(nextTransforms, nextIndex);
     const targetFunction = result.targetFunction;
     const matFunctionName = functionName === "rotate" ? "rotateZ" : functionName;
 
