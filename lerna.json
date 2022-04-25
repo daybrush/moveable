@@ -5,8 +5,7 @@
     ],
     "version": "independent",
     "lernaHelperScripts": [
-        "npm run packages:dependencies",
-        "npm run packages:publish",
+        "npm run packages:build",
         "npm run demo:build",
         "npm run demo:deploy",
         "npm run release"
