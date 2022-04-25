@@ -7,12 +7,17 @@ export default class EventManager {
         private moveable: MoveableManagerInterface | null,
         private eventName: string,
     ) {
-        this.target!.addEventListener(this.eventName.toLowerCase(), this.onEvent);
+        target!.addEventListener(eventName.toLowerCase(), this._onEvent);
     }
     public setAbles(ables: Able[]) {
         this.ables = ables;
     }
-    public onEvent = (e: Event) => {
+    public destroy() {
+        this.target!.removeEventListener(this.eventName.toLowerCase(), this._onEvent);
+        this.target = null;
+        this.moveable = null;
+    }
+    private _onEvent = (e: Event) => {
         const eventName = this.eventName;
         const moveable = this.moveable!;
 
@@ -24,10 +29,5 @@ export default class EventManager {
                 inputEvent: e,
             });
         });
-    }
-    public destroy() {
-        this.target!.removeEventListener(this.eventName.toLowerCase(), this.onEvent);
-        this.target = null;
-        this.moveable = null;
     }
 }
