@@ -22,3 +22,5 @@ lerna-debug.log
 demo/storybook
 demo/storybook2
 dist/
+*.lerna_backup
+test.js

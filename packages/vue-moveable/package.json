@@ -6,6 +6,7 @@
     "main": "dist/moveable.cjs.js",
     "module": "dist/moveable.esm.js",
     "sideEffects": false,
+    "lernaHelperPrerelease": true,
     "scripts": {
         "serve": "vue-cli-service serve demo",
         "build": "rm -rf dist && rollup -c && npm run declaration",
