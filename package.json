@@ -46,7 +46,6 @@
     "storybook": "npm run storybook --prefix ./packages/react-moveable",
     "build": "npm run build --prefix ./packages/react-moveable",
     "packages:update": "lerna-helper version",
-    "package:update-dependencies": "lerna-helper dependencies",
     "packages:build": "lerna run build --ignore ngx-moveable --ignore moveable-storybook",
     "packages:publish": "lerna-helper publish --ignore ngx-moveable",
     "changelog": "lerna-helper changelog --type all --base moveable",
@@ -59,7 +58,7 @@
   },
   "devDependencies": {
     "@daybrush/jsdoc": "^0.4.0",
-    "@daybrush/release": "0.3.0-beta.8",
+    "@daybrush/release": "0.3.0-beta.16",
     "cpx": "1.5.0",
     "daybrush-jsdoc-template": "^1.7.0",
     "gh-pages": "^2.0.1",

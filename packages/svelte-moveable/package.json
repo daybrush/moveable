@@ -58,7 +58,7 @@
     "svelte-guides": "^0.3.3",
     "svelte-preprocess": "^3.2.2",
     "tslib": "^1.10.0",
-    "typescript": "^3.6.4"
+    "typescript": "^4.6.3"
   },
   "dependencies": {
     "framework-utils": "^1.1.0",
