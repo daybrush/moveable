@@ -1,7 +1,7 @@
 import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
 import { prefixNames, InvertObject } from "framework-utils";
 import {
-    splitBracket, isUndefined, isObject, splitUnit,
+    isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
     getShapeDirection, isFunction,
 } from "@daybrush/utils";
@@ -23,7 +23,7 @@ import {
     MoveableProps, ControlPose, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
 } from "./types";
-import { parse, toMat, calculateMatrixDist } from "css-to-mat";
+import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getDragDist } from "./gesto/GestoUtils";
 
 export function round(num: number) {
@@ -51,8 +51,7 @@ export function getTransformMatrix(transform: string | number[]) {
     if (isObject(transform)) {
         return transform;
     }
-    const value = splitBracket(transform).value!;
-    return value.split(/s*,\s*/g).map(v => parseFloat(v));
+    return parseMat(transform);
 }
 export function getAbsoluteMatrix(matrix: number[], n: number, origin: number[]) {
     return multiplies(
@@ -84,6 +83,39 @@ export function getTransformOrigin(style: CSSStyleDeclaration) {
 
     return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
 }
+export function getElementTransform(
+    target: HTMLElement | SVGElement,
+    computedStyle = getComputedStyle(target),
+) {
+    const computedTransform = computedStyle.transform;
+
+    if (computedTransform && computedTransform !== "none") {
+        return computedStyle.transform;
+    }
+    if ("transform" in target) {
+        const list = (target as any).transform as SVGAnimatedTransformList;
+        const baseVal = list.baseVal;
+
+        if (!baseVal) {
+            return "";
+        }
+        const length = baseVal.length;
+
+        if (!length) {
+            return "";
+        }
+
+        const matrixs: string[] = [];
+
+        for (let i = 0; i < length; ++i) {
+            const matrix = baseVal[0].matrix;
+
+            matrixs.push(`matrix(${(["a", "b", "c", "d", "e", "f"] as const).map(chr => matrix[chr]).join(", ")})`);
+        }
+        return matrixs.join(" ");
+    }
+    return "";
+}
 export function getOffsetInfo(
     el: SVGElement | HTMLElement | null | undefined,
     lastParent: SVGElement | HTMLElement | null | undefined,
@@ -99,10 +131,11 @@ export function getOffsetInfo(
             isEnd = true;
         }
         const style = getComputedStyle(target);
-        const transform = style.transform;
+        const tagName = target.tagName.toLowerCase();
+        const transform = getElementTransform(target as SVGElement, style);
         position = style.position!;
 
-        if (target.tagName.toLowerCase() === "svg" || position !== "static" || (transform && transform !== "none")) {
+        if (tagName === "svg" || position !== "static" || (transform && transform !== "none")) {
             break;
         }
         target = target.parentElement;
@@ -195,6 +228,8 @@ export function convert3DMatrixes(matrixes: MatrixInfo[]) {
         }
     });
 }
+
+
 export function getMatrixStackInfo(
     target: SVGElement | HTMLElement,
     container?: SVGElement | HTMLElement | null,
@@ -217,7 +252,9 @@ export function getMatrixStackInfo(
         const style: CSSStyleDeclaration = getComputedStyle(el);
         const position = style.position;
         const isFixed = position === "fixed";
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(style.transform!));
+        const transform = getElementTransform(el, style);
+
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
 
         // convert 3 to 4
         const length = matrix.length;
@@ -1360,7 +1397,7 @@ export function invertObject<T extends IObject<any>>(obj: T): InvertObject<T> {
     return nextObj as any;
 }
 
-export function getTransform(transforms: string[], index: number) {
+export function convertTransformInfo(transforms: string[], index: number) {
     const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
     const beforeFunctionTexts2 = transforms.slice(0, index < 0 ? undefined : index + 1);
     const targetFunctionText = transforms[index] || "";
