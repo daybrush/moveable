@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.4](https://github.com/daybrush/moveable/compare/0.29.3...0.29.4) (2022-04-26)
+### :sparkles: Packages
+* `lit-moveable` 0.6.4
+* `moveable` 0.29.4
+* `preact-moveable` 0.31.4
+* `react-compat-moveable` 0.17.4
+* `react-moveable` 0.32.4
+* `svelte-moveable` 0.21.4
+* `vue-moveable` 2.0.0-beta.11
+* `vue3-moveable` 0.4.4
+* `ngx-moveable` 0.26.4
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix svg transform #643 ([82233ca](https://github.com/daybrush/moveable/commit/82233ca351c4600dea58c6558ccfeaca6a1e8295))
+
+
+### :memo: Documentation
+
+* fix CHANGELOG ([f6886d6](https://github.com/daybrush/moveable/commit/f6886d6dfc52c6d46cb51289862293d6ac3fd50d))
+
+
+### :house: Code Refactoring
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `preact-moveable`, `moveable`, `lit-moveable`
+    * apply `lerna` ([a06c1e2](https://github.com/daybrush/moveable/commit/a06c1e20d11a9e01cef1afebc3dcedfcd243fd79))
+* `react-moveable`, `react-compat-moveable`, `ngx-moveable`, `moveable`
+    * move core, storybook packages ([2bc3409](https://github.com/daybrush/moveable/commit/2bc340992c5b414ac887b6a1a90e2a3b4949833e))
+
+
+### :mega: Other
+
+* All
+    * update packages versions ([a62ee58](https://github.com/daybrush/moveable/commit/a62ee58b9bc32f06edc95d55ea28b60c20881ac4))
+* `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `lit-moveable`
+    * upgrade storybook and typescript ([eff23fd](https://github.com/daybrush/moveable/commit/eff23fd7340964ed0e3e6f5930e56558c4d91d18))
+* `vue-moveable`
+    * fix lerna scripts ([8041d2b](https://github.com/daybrush/moveable/commit/8041d2b20f542681bf5abd4792c95531e53b741d))
+* `react-moveable`
+    * update typescript version ([a63ee9f](https://github.com/daybrush/moveable/commit/a63ee9f575d701f24748d48ac92484f6c259577f))
+* Other
+    * fix lerna scripts ([c348e99](https://github.com/daybrush/moveable/commit/c348e9998f471a475a36e884bf2f73b26ca58e64))
+    * fix release script ([2de407a](https://github.com/daybrush/moveable/commit/2de407a1e5aca0c196bc545c47f1fce721f5a77f))
+    * Release 0.29.3 ([657c900](https://github.com/daybrush/moveable/commit/657c90008181d1ba1567cfcb119bbda51b395130))
+    * update lerna module ([0c87482](https://github.com/daybrush/moveable/commit/0c8748245e5735bdfe2a7c141782c07b940755a1))
+
+
+
 
 ## [0.29.3] - 2022-04-19
 * `moveable` 0.29.3
