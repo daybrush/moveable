@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>react-moveable/src/react-moveable/ables/Roundable.tsx - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
+    <link type="text/css" rel="stylesheet" href="styles/custom.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="react-moveable/src/react-moveable/ables/Roundable.tsx - Documentation"/>
+
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h2 class="custom"><a href="https://github.com/daybrush/moveable" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><div class="search"><div class="input-area"><input type="text"/></div><button></button></div><ul class="classes"><li file="moveable" class="parent"><a href="Moveable.html">Moveable</a><h4><a href="Moveable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.html#className">className</a></li><li data-type='method'><a href="Moveable.html#dragArea">dragArea</a></li><li data-type='method'><a href="Moveable.html#dragTarget">dragTarget</a></li><li data-type='method'><a href="Moveable.html#edge">edge</a></li><li data-type='method'><a href="Moveable.html#origin">origin</a></li><li data-type='method'><a href="Moveable.html#padding">padding</a></li><li data-type='method'><a href="Moveable.html#passDragArea">passDragArea</a></li><li data-type='method'><a href="Moveable.html#target">target</a></li><li data-type='method'><a href="Moveable.html#zoom">zoom</a></li><li data-type='method'><a href="Moveable.html#zoom">zoom</a></li></ul><h4><a href="Moveable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.html#destroy">destroy</a></li><li data-type='method'><a href="Moveable.html#dragStart">dragStart</a></li><li data-type='method'><a href="Moveable.html#emit">emit</a></li><li data-type='method'><a href="Moveable.html#getManager">getManager</a></li><li data-type='method'><a href="Moveable.html#getRect">getRect</a></li><li data-type='method'><a href="Moveable.html#hitTest">hitTest</a></li><li data-type='method'><a href="Moveable.html#isDragging">isDragging</a></li><li data-type='method'><a href="Moveable.html#isInside">isInside</a></li><li data-type='method'><a href="Moveable.html#isMoveableElement">isMoveableElement</a></li><li data-type='method'><a href="Moveable.html#off">off</a></li><li data-type='method'><a href="Moveable.html#on">on</a></li><li data-type='method'><a href="Moveable.html#once">once</a></li><li data-type='method'><a href="Moveable.html#request">request</a></li><li data-type='method'><a href="Moveable.html#trigger">trigger</a></li><li data-type='method'><a href="Moveable.html#updateRect">updateRect</a></li><li data-type='method'><a href="Moveable.html#updateTarget">updateTarget</a></li></ul><h4><a href="Moveable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.html#.event:click">click</a></li><li data-type='event'><a href="Moveable.html#.event:clickGroup">clickGroup</a></li><li data-type='event'><a href="Moveable.html#.event:render">render</a></li><li data-type='event'><a href="Moveable.html#.event:renderEnd">renderEnd</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroup">renderGroup</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroupEnd">renderGroupEnd</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroupStart">renderGroupStart</a></li><li data-type='event'><a href="Moveable.html#.event:renderStart">renderStart</a></li></ul><h4><a href="Moveable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.html#.AbleRequestParam">AbleRequestParam</a></li><li data-type='typddef'><a href="Moveable.html#.DefaultOptions">DefaultOptions</a></li><li data-type='typddef'><a href="Moveable.html#.DragAreaOptions">DragAreaOptions</a></li><li data-type='typddef'><a href="Moveable.html#.HitRect">HitRect</a></li><li data-type='typddef'><a href="Moveable.html#.In">In</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableDefaultProps">MoveableDefaultProps</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableOptions">MoveableOptions</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefObject">MoveableRefObject</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefType">MoveableRefType</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRender">OnBeforeRender</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderEnd">OnBeforeRenderEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroup">OnBeforeRenderGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroupEnd">OnBeforeRenderGroupEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroupStart">OnBeforeRenderGroupStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderStart">OnBeforeRenderStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnClick">OnClick</a></li><li data-type='typddef'><a href="Moveable.html#.OnClickGroup">OnClickGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnEndEvent">OnEndEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnEvent">OnEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnRender">OnRender</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderEnd">OnRenderEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroup">OnRenderGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroupEnd">OnRenderGroupEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroupStart">OnRenderGroupStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderStart">OnRenderStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnTransformEvent">OnTransformEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnTransformStartEvent">OnTransformStartEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OriginOptions">OriginOptions</a></li><li data-type='typddef'><a href="Moveable.html#.PaddingBox">PaddingBox</a></li><li data-type='typddef'><a href="Moveable.html#.PaddingOptions">PaddingOptions</a></li><li data-type='typddef'><a href="Moveable.html#.RectInfo">RectInfo</a></li><li data-type='typddef'><a href="Moveable.html#.RenderDirections">RenderDirections</a></li><li data-type='typddef'><a href="Moveable.html#.Requester">Requester</a></li></ul></li><li file="eventemitter" class="parent"><a href="EventEmitter.html">EventEmitter</a><h4><a href="EventEmitter.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="EventEmitter.html#emit">emit</a></li><li data-type='method'><a href="EventEmitter.html#off">off</a></li><li data-type='method'><a href="EventEmitter.html#on">on</a></li><li data-type='method'><a href="EventEmitter.html#once">once</a></li><li data-type='method'><a href="EventEmitter.html#trigger">trigger</a></li><li data-type='method'><a href="EventEmitter.html#trigger">trigger</a></li></ul><h4><a href="EventEmitter.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="EventEmitter.html#.EmitterParam">EmitterParam</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventHash">EventHash</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventInfo">EventInfo</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventListener">EventListener</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventOptions">EventOptions</a></li><li data-type='typddef'><a href="EventEmitter.html#.OnEvent">OnEvent</a></li><li data-type='typddef'><a href="EventEmitter.html#.TargetParam">TargetParam</a></li></ul></li></ul><ul class="namespaces"><li file="snappable" class="parent"><a href="Moveable.Snappable.html">Moveable.Snappable</a><h4><a href="Moveable.Snappable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Snappable.html#bounds">bounds</a></li><li data-type='method'><a href="Moveable.Snappable.html#elementGuidelines">elementGuidelines</a></li><li data-type='method'><a href="Moveable.Snappable.html#elementSnapDirections">elementSnapDirections</a></li><li data-type='method'><a href="Moveable.Snappable.html#horizontalGuidelines">horizontalGuidelines</a></li><li data-type='method'><a href="Moveable.Snappable.html#innerBounds">innerBounds</a></li><li data-type='method'><a href="Moveable.Snappable.html#isDisplayInnerSnapDigit">isDisplayInnerSnapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#isDisplaySnapDigit">isDisplaySnapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapContainer">snapContainer</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDigit">snapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDirections">snapDirections</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDistFormat">snapDistFormat</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGap">snapGap</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGridHeight">snapGridHeight</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGridWidth">snapGridWidth</a></li><li data-type='method'><a href="Moveable.Snappable.html#snappable">snappable</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapThreshold">snapThreshold</a></li><li data-type='method'><a href="Moveable.Snappable.html#verticalGuidelines">verticalGuidelines</a></li></ul><h4><a href="Moveable.Snappable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Snappable.html#.event:snap">snap</a></li></ul><h4><a href="Moveable.Snappable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Snappable.html#.BoundType">BoundType</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValue">ElementGuidelineValue</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.GapGuideline">GapGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.InnerBoundType">InnerBoundType</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.OnSnap">OnSnap</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.RenderGuidelineInfo">RenderGuidelineInfo</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnapDirections">SnapDirections</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnapGuideline">SnapGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnappableOptions">SnappableOptions</a></li></ul></li><li file="warpable" class="parent"><a href="Moveable.Warpable.html">Moveable.Warpable</a><h4><a href="Moveable.Warpable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Warpable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Warpable.html#warpable">warpable</a></li></ul><h4><a href="Moveable.Warpable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Warpable.html#.event:warp">warp</a></li><li data-type='event'><a href="Moveable.Warpable.html#.event:warpEnd">warpEnd</a></li><li data-type='event'><a href="Moveable.Warpable.html#.event:warpStart">warpStart</a></li></ul><h4><a href="Moveable.Warpable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarp">OnWarp</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarpEnd">OnWarpEnd</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarpStart">OnWarpStart</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.WarpableOptions">WarpableOptions</a></li></ul></li><li file="scrollable" class="parent"><a href="Moveable.Scrollable.html">Moveable.Scrollable</a><h4><a href="Moveable.Scrollable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Scrollable.html#getScrollPosition">getScrollPosition</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollable">scrollable</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollContainer">scrollContainer</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollThreshold">scrollThreshold</a></li></ul><h4><a href="Moveable.Scrollable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Scrollable.html#.event:scroll">scroll</a></li><li data-type='event'><a href="Moveable.Scrollable.html#.event:scrollGroup">scrollGroup</a></li></ul><h4><a href="Moveable.Scrollable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Scrollable.html#.OnScroll">OnScroll</a></li><li data-type='typddef'><a href="Moveable.Scrollable.html#.OnScrollGroup">OnScrollGroup</a></li><li data-type='typddef'><a href="Moveable.Scrollable.html#.ScrollableOptions">ScrollableOptions</a></li></ul></li><li file="scalable" class="parent"><a href="Moveable.Scalable.html">Moveable.Scalable</a><h4><a href="Moveable.Scalable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Scalable.html#keepRatio">keepRatio</a></li><li data-type='method'><a href="Moveable.Scalable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Scalable.html#scalable">scalable</a></li><li data-type='method'><a href="Moveable.Scalable.html#throttleScale">throttleScale</a></li></ul><h4><a href="Moveable.Scalable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Scalable.html#request">request</a></li></ul><h4><a href="Moveable.Scalable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Scalable.html#.event:beforeScale">beforeScale</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scale">scale</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleEnd">scaleEnd</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroup">scaleGroup</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroupEnd">scaleGroupEnd</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroupStart">scaleGroupStart</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleStart">scaleStart</a></li></ul><h4><a href="Moveable.Scalable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Scalable.html#.OnBeforeScale">OnBeforeScale</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnBeforeScaleGroup">OnBeforeScaleGroup</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScale">OnScale</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleEnd">OnScaleEnd</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroup">OnScaleGroup</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroupEnd">OnScaleGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroupStart">OnScaleGroupStart</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleStart">OnScaleStart</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.ScalableOptions">ScalableOptions</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.ScalableRequestParam">ScalableRequestParam</a></li></ul></li><li file="roundable" class="parent"><a href="Moveable.Roundable.html">Moveable.Roundable</a><h4><a href="Moveable.Roundable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Roundable.html#maxRoundControls">maxRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#minRoundControls">minRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundable">roundable</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundClickable">roundClickable</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundRelative">roundRelative</a></li></ul><h4><a href="Moveable.Roundable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Roundable.html#.event:round">round</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundEnd">roundEnd</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundStart">roundStart</a></li></ul><h4><a href="Moveable.Roundable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRound">OnRound</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundEnd">OnRoundEnd</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundStart">OnRoundStart</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.RoundableOptions">RoundableOptions</a></li></ul></li><li file="rotatable" class="parent"><a href="Moveable.Rotatable.html">Moveable.Rotatable</a><h4><a href="Moveable.Rotatable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Rotatable.html#rotatable">rotatable</a></li><li data-type='method'><a href="Moveable.Rotatable.html#rotationPosition">rotationPosition</a></li><li data-type='method'><a href="Moveable.Rotatable.html#throttleRotate">throttleRotate</a></li></ul><h4><a href="Moveable.Rotatable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Rotatable.html#request">request</a></li></ul><h4><a href="Moveable.Rotatable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotate">rotate</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateEnd">rotateEnd</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroup">rotateGroup</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroupEnd">rotateGroupEnd</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroupStart">rotateGroupStart</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateStart">rotateStart</a></li></ul><h4><a href="Moveable.Rotatable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnBeforeRotate">OnBeforeRotate</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnBeforeRotateGroup">OnBeforeRotateGroup</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotate">OnRotate</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateEnd">OnRotateEnd</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroup">OnRotateGroup</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroupEnd">OnRotateGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroupStart">OnRotateGroupStart</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateStart">OnRotateStart</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.RotatableOptions">RotatableOptions</a></li></ul></li><li file="resizable" class="parent"><a href="Moveable.Resizable.html">Moveable.Resizable</a><h4><a href="Moveable.Resizable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Resizable.html#keepRatio">keepRatio</a></li><li data-type='method'><a href="Moveable.Resizable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Resizable.html#resizable">resizable</a></li><li data-type='method'><a href="Moveable.Resizable.html#resizeFormat">resizeFormat</a></li><li data-type='method'><a href="Moveable.Resizable.html#throttleResize">throttleResize</a></li></ul><h4><a href="Moveable.Resizable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Resizable.html#request">request</a></li></ul><h4><a href="Moveable.Resizable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Resizable.html#.event:beforeResize">beforeResize</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resize">resize</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeEnd">resizeEnd</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroup">resizeGroup</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroupEnd">resizeGroupEnd</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroupStart">resizeGroupStart</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeStart">resizeStart</a></li></ul><h4><a href="Moveable.Resizable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Resizable.html#.OnBeforeResize">OnBeforeResize</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnBeforeResizeGroup">OnBeforeResizeGroup</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResize">OnResize</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeEnd">OnResizeEnd</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroup">OnResizeGroup</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroupEnd">OnResizeGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroupStart">OnResizeGroupStart</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeStart">OnResizeStart</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.ResizableOptions">ResizableOptions</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.ResizableRequestParam">ResizableRequestParam</a></li></ul></li><li file="pinchable" class="parent"><a href="Moveable.Pinchable.html">Moveable.Pinchable</a><h4><a href="Moveable.Pinchable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Pinchable.html#pinchable">pinchable</a></li></ul><h4><a href="Moveable.Pinchable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinch">pinch</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchEnd">pinchEnd</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroup">pinchGroup</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroupEnd">pinchGroupEnd</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroupStart">pinchGroupStart</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchStart">pinchStart</a></li></ul><h4><a href="Moveable.Pinchable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinch">OnPinch</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchEnd">OnPinchEnd</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroup">OnPinchGroup</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroupEnd">OnPinchGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroupStart">OnPinchGroupStart</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchStart">OnPinchStart</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.PinchableOptions">PinchableOptions</a></li></ul></li><li file="origindraggable" class="parent"><a href="Moveable.OriginDraggable.html">Moveable.OriginDraggable</a><h4><a href="Moveable.OriginDraggable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.OriginDraggable.html#originDraggable">originDraggable</a></li><li data-type='method'><a href="Moveable.OriginDraggable.html#originRelative">originRelative</a></li></ul><h4><a href="Moveable.OriginDraggable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.OriginDraggable.html#request">request</a></li></ul><h4><a href="Moveable.OriginDraggable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOrigin">dragOrigin</a></li><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOriginEnd">dragOriginEnd</a></li><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOriginStart">dragOriginStart</a></li></ul><h4><a href="Moveable.OriginDraggable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOrigin">OnDragOrigin</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOriginEnd">OnDragOriginEnd</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOriginStart">OnDragOriginStart</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OriginDraggableOptions">OriginDraggableOptions</a></li></ul></li><li file="group" class="parent"><a href="Moveable.Group.html">Moveable.Group</a><h4><a href="Moveable.Group.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Group.html#defaultGroupOrigin">defaultGroupOrigin</a></li><li data-type='method'><a href="Moveable.Group.html#defaultGroupRotate">defaultGroupRotate</a></li></ul><h4><a href="Moveable.Group.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Group.html#.GroupableOptions">GroupableOptions</a></li></ul></li><li file="draggable" class="parent"><a href="Moveable.Draggable.html">Moveable.Draggable</a><h4><a href="Moveable.Draggable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Draggable.html#draggable">draggable</a></li><li data-type='method'><a href="Moveable.Draggable.html#edgeDraggable">edgeDraggable</a></li><li data-type='method'><a href="Moveable.Draggable.html#startDragRotate">startDragRotate</a></li><li data-type='method'><a href="Moveable.Draggable.html#throttleDrag">throttleDrag</a></li><li data-type='method'><a href="Moveable.Draggable.html#throttleDragRotate">throttleDragRotate</a></li></ul><h4><a href="Moveable.Draggable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Draggable.html#request">request</a></li></ul><h4><a href="Moveable.Draggable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Draggable.html#.event:drag">drag</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragEnd">dragEnd</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroup">dragGroup</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroupEnd">dragGroupEnd</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroupStart">dragGroupStart</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragStart">dragStart</a></li></ul><h4><a href="Moveable.Draggable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Draggable.html#.DraggableOptions">DraggableOptions</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDrag">OnDrag</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragEnd">OnDragEnd</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroup">OnDragGroup</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroupEnd">OnDragGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroupStart">OnDragGroupStart</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragStart">OnDragStart</a></li></ul></li><li file="clippable" class="parent"><a href="Moveable.Clippable.html">Moveable.Clippable</a><h4><a href="Moveable.Clippable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Clippable.html#clipArea">clipArea</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipHorizontalGuidelines">clipHorizontalGuidelines</a></li><li data-type='method'><a href="Moveable.Clippable.html#clippable">clippable</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipRelative">clipRelative</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipSnapThreshold">clipSnapThreshold</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipTargetBounds">clipTargetBounds</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipVerticalGuidelines">clipVerticalGuidelines</a></li><li data-type='method'><a href="Moveable.Clippable.html#customClipPath">customClipPath</a></li><li data-type='method'><a href="Moveable.Clippable.html#defaultClipPath">defaultClipPath</a></li><li data-type='method'><a href="Moveable.Clippable.html#dragWithClip">dragWithClip</a></li></ul><h4><a href="Moveable.Clippable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Clippable.html#.event:clip">clip</a></li><li data-type='event'><a href="Moveable.Clippable.html#.event:clipEnd">clipEnd</a></li><li data-type='event'><a href="Moveable.Clippable.html#.event:clipStart">clipStart</a></li></ul><h4><a href="Moveable.Clippable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Clippable.html#.ClippableOptions">ClippableOptions</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClip">OnClip</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClipEnd">OnClipEnd</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClipStart">OnClipStart</a></li></ul></li></ul><ul class="global"><li file="global"  class="parent"><a href="global.html">Global</a><h4><a href="global.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typedef'><a href="global.html#MoveableDefaultOptions">MoveableDefaultOptions</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">react-moveable/src/react-moveable/ables/Roundable.tsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+    prefix, triggerEvent,
+    fillParams, fillEndParams, calculatePosition,
+    getComputedStyle,
+} from "../utils";
+import {
+    Renderer, RoundableProps, OnRoundStart, RoundableState, OnRound, ControlPose, OnRoundEnd, MoveableManagerInterface,
+} from "../types";
+import { splitSpace } from "@daybrush/utils";
+import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
+import { minus, plus } from "@scena/matrix";
+import {
+    getRadiusValues, getRadiusStyles, removeRadiusPos,
+    addRadiusPos, splitRadiusPoses,
+} from "./roundable/borderRadius";
+
+function addBorderRadius(
+    controlPoses: ControlPose[],
+    poses: number[][],
+    lineIndex: number,
+    distX: number,
+    distY: number,
+    width: number,
+    height: number,
+) {
+    const {
+        horizontals,
+        verticals,
+    } = splitRadiusPoses(controlPoses);
+    const horizontalsLength = horizontals.length;
+    const verticalsLength = verticals.length;
+    // lineIndex
+    // 0 top
+    // 1 right
+    // 2 left
+    // 3 bottom
+
+    // 0 top - left
+    // 1 top - right
+    // 2 bottom - right
+    // 3 bottom - left
+    // 0 left - top
+    // 1 right - top
+    // 2 right - bottom
+    // 3 left - bottom
+    let horizontalIndex = -1;
+    let verticalIndex = -1;
+
+    if (lineIndex === 0) {
+        if (horizontalsLength === 0) {
+            horizontalIndex = 0;
+        } else if (horizontalsLength === 1) {
+            horizontalIndex = 1;
+        }
+    } else if (lineIndex === 3) {
+        if (horizontalsLength &lt;= 2) {
+            horizontalIndex = 2;
+        } else if (horizontalsLength &lt;= 3) {
+            horizontalIndex = 3;
+        }
+    }
+    if (lineIndex === 2) {
+        if (verticalsLength === 0) {
+            verticalIndex = 0;
+        } else if (verticalsLength &lt; 4) {
+            verticalIndex = 3;
+        }
+    } else if (lineIndex === 1) {
+        if (verticalsLength &lt;= 1) {
+            verticalIndex = 1;
+        } else if (verticalsLength &lt;= 2) {
+            verticalIndex = 2;
+        }
+    }
+
+    addRadiusPos(
+        controlPoses, poses, 0,
+        horizontalIndex, verticalIndex,
+        distX, distY, width, height,
+    );
+}
+function getBorderRadius(
+    target: HTMLElement | SVGElement,
+    width: number, height: number,
+    minCounts: number[] = [0, 0],
+    state?: string,
+) {
+    let borderRadius: string;
+    let values: string[] = [];
+
+    if (!state) {
+        const style = getComputedStyle(target);
+
+        borderRadius = (style &amp;&amp; style.borderRadius) || "";
+    } else {
+        borderRadius = state;
+    }
+    if (!borderRadius || (!state &amp;&amp; borderRadius === "0px")) {
+        values = [];
+    } else {
+        values = splitSpace(borderRadius);
+    }
+
+    return getRadiusValues(values, width, height, 0, 0, minCounts);
+}
+
+function triggerRoundEvent(
+    moveable: MoveableManagerInterface&lt;RoundableProps, RoundableState>,
+    e: any,
+    dist: number[],
+    delta: number[],
+    controlPoses: ControlPose[],
+    nextPoses: number[][],
+) {
+    const state = moveable.state;
+    const {
+        width,
+        height,
+    } = state;
+    const {
+        raws,
+        styles,
+    } = getRadiusStyles(
+        nextPoses,
+        controlPoses,
+        moveable.props.roundRelative!,
+        width,
+        height,
+    );
+    const {
+        horizontals,
+        verticals,
+    } = splitRadiusPoses(controlPoses, raws);
+    const borderRadius = styles.join(" ");
+
+    state.borderRadiusState = borderRadius;
+    triggerEvent(moveable, "onRound", fillParams&lt;OnRound>(moveable, e, {
+        horizontals,
+        verticals,
+        borderRadius,
+        width,
+        height,
+        delta,
+        dist,
+    }));
+}
+
+/**
+ * @namespace Moveable.Roundable
+ * @description Whether to show and drag or double click border-radius
+ */
+
+export default {
+    name: "roundable",
+    props: {
+        roundable: Boolean,
+        roundRelative: Boolean,
+        minRoundControls: Array,
+        maxRoundControls: Array,
+        roundClickable: Boolean,
+    } as const,
+    events: {
+        onRoundStart: "roundStart",
+        onRound: "round",
+        onRoundEnd: "roundEnd",
+    } as const,
+    css: [
+        `.control.border-radius {
+    background: #d66;
+    cursor: pointer;
+}`,
+        `:host[data-able-roundable] .line.direction {
+    cursor: pointer;
+}`,
+    ],
+    render(moveable: MoveableManagerInterface&lt;RoundableProps, RoundableState>, React: Renderer): any {
+        const {
+            target,
+            width,
+            height,
+            allMatrix,
+            is3d,
+            left,
+            top,
+            borderRadiusState,
+        } = moveable.state;
+        const {
+            minRoundControls = [0, 0],
+            maxRoundControls = [4, 4],
+            zoom,
+        } = moveable.props;
+
+        if (!target) {
+            return null;
+        }
+
+        const n = is3d ? 4 : 3;
+        const radiusValues = getBorderRadius(
+            target, width, height, minRoundControls, borderRadiusState);
+
+        if (!radiusValues) {
+            return null;
+        }
+        let verticalCount = 0;
+        let horizontalCount = 0;
+
+        return radiusValues.map((v, i) => {
+            horizontalCount += Math.abs(v.horizontal);
+            verticalCount += Math.abs(v.vertical);
+            const pos = minus(calculatePosition(allMatrix, v.pos, n), [left, top]);
+            const isDisplay = v.vertical
+                ? verticalCount &lt;= maxRoundControls[1]
+                : horizontalCount &lt;= maxRoundControls[0];
+
+            return &lt;div key={`borderRadiusControl${i}`}
+                className={prefix("control", "border-radius")}
+                data-radius-index={i}
+                style={{
+                    display: isDisplay ? "block" : "none",
+                    transform: `translate(${pos[0]}px, ${pos[1]}px) scale(${zoom})`,
+                }}>&lt;/div>;
+        });
+    },
+    dragControlCondition(moveable: any, e: any) {
+        if (!e.inputEvent || e.isRequest) {
+            return false;
+        }
+        const className = (e.inputEvent.target.getAttribute("class") || "");
+
+        return className.indexOf("border-radius") > -1
+            || (className.indexOf("moveable-line") > -1 &amp;&amp; className.indexOf("moveable-direction") > -1);
+    },
+    dragControlStart(moveable: MoveableManagerInterface&lt;RoundableProps, RoundableState>, e: any) {
+        const { inputEvent, datas } = e;
+        const inputTarget = inputEvent.target;
+        const className = (inputTarget.getAttribute("class") || "");
+        const isControl = className.indexOf("border-radius") > -1;
+        const isLine = className.indexOf("moveable-line") > -1 &amp;&amp; className.indexOf("moveable-direction") > -1;
+        const controlIndex = isControl ? parseInt(inputTarget.getAttribute("data-radius-index"), 10) : -1;
+        const lineIndex = isLine ? parseInt(inputTarget.getAttribute("data-line-index"), 10) : -1;
+
+        if (!isControl &amp;&amp; !isLine) {
+            return false;
+        }
+
+        const result = triggerEvent(
+            moveable, "onRoundStart", fillParams&lt;OnRoundStart>(moveable, e, {}));
+
+        if (result === false) {
+            return false;
+        }
+
+        datas.lineIndex = lineIndex;
+        datas.controlIndex = controlIndex;
+        datas.isControl = isControl;
+        datas.isLine = isLine;
+
+        setDragStart(moveable, e);
+
+        const {
+            roundRelative,
+            minRoundControls = [0, 0],
+        } = moveable.props;
+        const state = moveable.state;
+        const {
+            target,
+            width,
+            height,
+        } = state;
+
+        datas.isRound = true;
+        datas.prevDist = [0, 0];
+        const controlPoses = getBorderRadius(target!, width, height, minRoundControls) || [];
+
+        datas.controlPoses = controlPoses;
+
+        state.borderRadiusState = getRadiusStyles(
+            controlPoses.map(pos => pos.pos), controlPoses, roundRelative!, width, height).styles.join(" ");
+        return true;
+    },
+    dragControl(moveable: MoveableManagerInterface&lt;RoundableProps, RoundableState>, e: any) {
+        const { datas } = e;
+
+        if (!datas.isRound || !datas.isControl || !datas.controlPoses.length) {
+            return false;
+        }
+        const index = datas.controlIndex as number;
+        const controlPoses = datas.controlPoses as ControlPose[];
+        const [distX, distY] = getDragDist(e);
+        const dist = [distX, distY];
+        const delta = minus(dist, datas.prevDist);
+        const {
+            maxRoundControls = [4, 4],
+        } = moveable.props;
+        const { width, height } = moveable.state;
+        const selectedControlPose = controlPoses[index];
+        const selectedVertical = selectedControlPose.vertical;
+        const selectedHorizontal = selectedControlPose.horizontal;
+
+        // 0: [0, 1, 2, 3] maxCount === 1
+        // 0: [0, 2] maxCount === 2
+        // 1: [1, 3] maxCount === 2
+
+        // 0: [0] maxCount === 3
+        // 1: [1, 3] maxCount === 3
+
+        const dists = controlPoses.map(pose => {
+            const { horizontal, vertical } = pose;
+            const poseDist = [
+                horizontal * selectedHorizontal * dist[0],
+                vertical * selectedVertical * dist[1],
+            ];
+            if (horizontal) {
+                if (maxRoundControls[0] === 1) {
+                    return poseDist;
+                } else if (maxRoundControls[0] &lt; 4 &amp;&amp; horizontal !== selectedHorizontal) {
+                    return poseDist;
+                }
+            } else if (maxRoundControls[1] === 0) {
+                poseDist[1] = vertical * selectedHorizontal * dist[0] / width * height;
+
+                return poseDist;
+            } else if (selectedVertical) {
+                if (maxRoundControls[1] === 1) {
+                    return poseDist;
+                } else if (maxRoundControls[1] &lt; 4 &amp;&amp; vertical !== selectedVertical) {
+                    return poseDist;
+                }
+            }
+            return [0, 0];
+        });
+        dists[index] = dist;
+        const nextPoses = controlPoses.map((pos, i) => plus(pos.pos, dists[i]));
+
+        datas.prevDist = [distX, distY];
+
+        triggerRoundEvent(
+            moveable,
+            e,
+            dist,
+            delta,
+            controlPoses,
+            nextPoses,
+        );
+        return true;
+    },
+    dragControlEnd(moveable: MoveableManagerInterface&lt;RoundableProps, RoundableState>, e: any) {
+        const state = moveable.state;
+
+        state.borderRadiusState = "";
+        const { datas, isDouble } = e;
+        if (!datas.isRound) {
+            return false;
+        }
+        const {
+            width,
+            height,
+        } = state;
+        const {
+            isControl,
+            controlIndex,
+            isLine,
+            lineIndex,
+        } = datas;
+        const controlPoses = datas.controlPoses as ControlPose[];
+        const poses = controlPoses.map(pos => pos.pos);
+        const length = poses.length;
+        const {
+            roundClickable = true,
+        } = moveable.props;
+
+        if (isDouble &amp;&amp; roundClickable) {
+            if (isControl) {
+                removeRadiusPos(controlPoses, poses, controlIndex, 0);
+            } else if (isLine) {
+                const [distX, distY] = calculatePointerDist(moveable, e);
+
+                addBorderRadius(controlPoses, poses, lineIndex, distX, distY, width, height);
+            }
+            if (length !== controlPoses.length) {
+                triggerRoundEvent(
+                    moveable,
+                    e,
+                    [0, 0],
+                    [0, 0],
+                    controlPoses,
+                    poses,
+                );
+            }
+        }
+        triggerEvent(moveable, "onRoundEnd",
+            fillEndParams&lt;OnRoundEnd>(moveable, e, {}));
+        state.borderRadiusState = "";
+        return true;
+    },
+    unset(moveable: MoveableManagerInterface&lt;RoundableProps, RoundableState>) {
+        moveable.state.borderRadiusState = "";
+    },
+};
+/**
+ * Whether to show and drag or double click border-radius, (default: false)
+ * @name Moveable.Roundable#roundable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * % Can be used instead of the absolute px
+ * @name Moveable.Roundable#roundRelative
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * Minimum number of round controls. It moves in proportion by control. [horizontal, vertical] (default: [0, 0])
+ * @name Moveable.Roundable#minRoundControls
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ *     minRoundControls: [0, 0],
+ * });
+ * moveable.maxRoundControls = [1, 0];
+ */
+/**
+ * Maximum number of round controls. It moves in proportion by control. [horizontal, vertical] (default: [4, 4])
+ * @name Moveable.Roundable#maxRoundControls
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ *     maxRoundControls: [4, 4],
+ * });
+ * moveable.maxRoundControls = [1, 0];
+ */
+/**
+ * @property - Whether you can add/delete round controls by double-clicking a line or control. (default: true)
+ * @name Moveable.Roundable#roundClickable
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ *     roundClickable: true,
+ * });
+ * moveable.roundClickable = false;
+ */
+
+/**
+ * When drag start the clip area or controls, the `roundStart` event is called.
+ * @memberof Moveable.Roundable
+ * @event roundStart
+ * @param {Moveable.Roundable.OnRoundStart} - Parameters for the `roundStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag or double click the border area or controls, the `round` event is called.
+ * @memberof Moveable.Roundable
+ * @event round
+ * @param {Moveable.Roundable.OnRound} - Parameters for the `round` event
+ * @example
+  * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+/**
+ * When drag end the border area or controls, the `roundEnd` event is called.
+ * @memberof Moveable.Roundable
+ * @event roundEnd
+ * @param {Moveable.Roundable.onRoundEnd} - Parameters for the `roundEnd` event
+ * @example
+  * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     roundable: true,
+ *     roundRelative: false,
+ * });
+ * moveable.on("roundStart", e => {
+ *     console.log(e);
+ * }).on("round", e => {
+ *     e.target.style.borderRadius = e.borderRadius;
+ * }).on("roundEnd", e => {
+ *     console.log(e);
+ * });
+ */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+<style>
+
+
+nav li[file="react-moveable/src/react-moveable/ables/roundable"]:after {
+    display: none;
+}
+nav li[file="react-moveable/src/react-moveable/ables/roundable"] h4, nav li[file="react-moveable/src/react-moveable/ables/roundable"] ul {
+    display: block;
+}
+</style>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.4.0</a> on Tue Apr 26 2022 15:25:18 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/utils.min.js"></script>
+<script src="scripts/search.js"></script>
+<script src="scripts/custom.js"></script>
+</body>
+</html>
