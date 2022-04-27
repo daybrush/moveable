@@ -23,7 +23,7 @@
     "@angular/platform-browser": "~12.0.0",
     "@angular/platform-browser-dynamic": "~12.0.0",
     "@angular/router": "~12.0.0",
-    "moveable": "~0.29.5",
+    "moveable": "~0.29.6",
     "rxjs": "~6.6.2",
     "scenejs": "1.2.0",
     "tslib": "^2.0.1",
