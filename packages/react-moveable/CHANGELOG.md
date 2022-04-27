@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.32.4...react-moveable@0.32.4) (2022-04-27)
+
+
+### :bug: Bug Fix
+
+* fix clip bug with draggable, snappable ([b5477ee](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b5477ee6a05067a3506bfefac30c36839b264c83))
+
+
+
 ## [0.32.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.32.3...react-moveable@0.32.4) (2022-04-26)
 
 

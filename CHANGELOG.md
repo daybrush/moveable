@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.5](https://github.com/daybrush/moveable/compare/0.29.4...0.29.5) (2022-04-27)
+### :sparkles: Packages
+* `lit-moveable` 0.6.5
+* `moveable` 0.29.5
+* `preact-moveable` 0.31.5
+* `react-compat-moveable` 0.17.5
+* `react-moveable` 0.32.4
+* `svelte-moveable` 0.21.5
+* `vue-moveable` 2.0.0-beta.12
+* `vue3-moveable` 0.4.5
+* `ngx-moveable` 0.26.5
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix clip bug with draggable, snappable ([b5477ee](https://github.com/daybrush/moveable/commit/b5477ee6a05067a3506bfefac30c36839b264c83))
+* `react-compat-moveable`
+    * fix rollup config #650 ([72c9f99](https://github.com/daybrush/moveable/commit/72c9f99a2d82ebdbc9de6a99ea6ede817a2c1773))
+    * fix rollup config #650 ([b8d1bc7](https://github.com/daybrush/moveable/commit/b8d1bc79ff484e57fcdec43f25c043d8d9b7e7df))
+
+
+### :memo: Documentation
+
+* fix README ([b56937c](https://github.com/daybrush/moveable/commit/b56937c50054d1b30a038cb29f7290b3e7ca8e8f))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * update packages versions ([5cd2398](https://github.com/daybrush/moveable/commit/5cd2398dbb4dbbda24032641fe5bf111780b75fc))
+* `vue-moveable`
+    * fix lerna-helper field ([faff016](https://github.com/daybrush/moveable/commit/faff016bbaf2da46b4e5633a0a883c2da99b106b))
+* Other
+    * fix lerna scripts ([f7840c4](https://github.com/daybrush/moveable/commit/f7840c422ff2c627d357ca6cbfaf244f8e6d64c1))
+
+
+
 ## [0.29.4](https://github.com/daybrush/moveable/compare/0.29.3...0.29.4) (2022-04-26)
 ### :sparkles: Packages
 * `lit-moveable` 0.6.4

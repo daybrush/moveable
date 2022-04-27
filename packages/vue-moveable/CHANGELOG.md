@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-beta.12](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/compare/vue-moveable@2.0.0-beta.11...vue-moveable@2.0.0-beta.12) (2022-04-27)
+
+
+### :mega: Other
+
+* fix lerna-helper field ([faff016](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/commit/faff016bbaf2da46b4e5633a0a883c2da99b106b))
+* update packages versions ([5cd2398](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/commit/5cd2398dbb4dbbda24032641fe5bf111780b75fc))
+
+
+
 ## [2.0.0-beta.11](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/compare/vue-moveable@2.0.0-beta.10...vue-moveable@2.0.0-beta.11) (2022-04-26)
 
 
