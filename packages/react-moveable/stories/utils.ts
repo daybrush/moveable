@@ -11,10 +11,8 @@ export function makeArgType(param: {
     table?: Record<string, any>;
 }) {
     return {
-        control: {
-            type: param.type,
-            ...(param.control || {}),
-        },
+        control: param.type,
+        ...(param.control || {}),
         table: {
             defaultValue: { summary: param.defaultValue },
             category: param.category,

@@ -16,6 +16,14 @@ import {
 
 // or global addParameters
 export const parameters = {
+    options: {
+        storySort: (a, b) => {
+
+            return a[1].kind === b[1].kind
+                ? 0
+                : a[2].fileName.localeCompare(b[2].fileName, undefined, { numeric: true });
+        },
+    },
     docs: {
         container: DocsContainer,
         page: () => {
