@@ -52,14 +52,14 @@
     "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
     "build:storybook": "npm run build --preifx ./packages/storybook",
     "build:storybook2": "npm run build:storybook --preifx ./packages/react-moveable",
-    "demo:build": "npm run packages:build && npm run doc && npm run build:storybook && npm run build:storybook",
+    "demo:build": "npm run packages:build && npm run doc && npm run build:storybook && npm run build:storybook2",
     "demo:deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
     "deploy": "lerna-helper deploy --base moveable",
     "release": "lerna-helper release --base moveable"
   },
   "devDependencies": {
     "@daybrush/jsdoc": "^0.4.0",
-    "@daybrush/release": "^0.3.0-beta.18",
+    "@daybrush/release": "^0.3.0-beta.19",
     "cpx": "1.5.0",
     "daybrush-jsdoc-template": "^1.7.0",
     "gh-pages": "^2.0.1",

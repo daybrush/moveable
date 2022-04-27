@@ -20,7 +20,7 @@
             ]
         }
     ],
-    "lernaHelperScripts": [
+    "lernaHelperBeforeRelease": [
         "npm run packages:build",
         "npm run demo:build",
         "npm run deploy"
