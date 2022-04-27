@@ -102,7 +102,6 @@ export default {
         datas.prevBeforeDist = [0, 0];
         datas.isDrag = false;
         datas.deltaOffset = [0, 0];
-        datas.distOffset = [0, 0];
 
         const params = fillParams<OnDragStart>(moveable, e, {
             set: (translate: number[]) => {
@@ -133,15 +132,18 @@ export default {
         }
         resolveTransformEvent(e, "translate");
 
-        const { datas, parentEvent, parentFlag, isPinch, isRequest } = e;
+        const { datas, parentEvent, parentFlag, isPinch, isRequest, deltaOffset } = e;
         let { distX, distY } = e;
-        const { isDrag, prevDist, prevBeforeDist, startValue, distOffset } = datas;
+        const { isDrag, prevDist, prevBeforeDist, startValue } = datas;
 
         if (!isDrag) {
             return;
         }
-        distX += distOffset[0];
-        distY += distOffset[1];
+
+        if (deltaOffset) {
+            distX += deltaOffset[0];
+            distY += deltaOffset[1];
+        }
         const props = moveable.props;
 
         const parentMoveable = props.parentMoveable;
@@ -167,7 +169,7 @@ export default {
 
         if (!isPinch && !parentEvent && !parentFlag && (!throttleDragRotate || distX || distY)) {
             const [verticalInfo, horizontalInfo] = checkSnapBoundsDrag(
-                moveable, distX, distY, throttleDragRotate, isRequest, datas,
+                moveable, distX, distY, throttleDragRotate, isRequest || deltaOffset, datas,
             );
             const {
                 isSnap: isVerticalSnap,
@@ -252,14 +254,11 @@ export default {
         const datas = e.datas;
         const {
             deltaOffset,
-            distOffset,
-        } = e.datas;
+        } = datas;
 
         if (deltaOffset[0] || deltaOffset[1]) {
             datas.deltaOffset = [0, 0];
-            distOffset[0] = deltaOffset[0];
-            distOffset[1] = deltaOffset[1];
-            return this.drag(moveable, e);
+            return this.drag(moveable, {...e, deltaOffset });
         }
         return false;
     },

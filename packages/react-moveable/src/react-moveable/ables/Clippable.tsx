@@ -627,7 +627,7 @@ export default {
         return this.dragControlStart(moveable, e);
     },
     drag(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
-        return this.dragControl(moveable, e);
+        return this.dragControl(moveable, {...e, isDragTarget: true });
     },
     dragEnd(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
         return this.dragControlEnd(moveable, e);
@@ -667,7 +667,7 @@ export default {
         return true;
     },
     dragControl(moveable: MoveableManagerInterface<ClippableProps & DraggableProps, ClippableState>, e: any) {
-        const { datas, originalDatas } = e;
+        const { datas, originalDatas, isDragTarget } = e;
 
         if (!datas.isClipStart) {
             return false;
@@ -679,7 +679,19 @@ export default {
         if (!clipPath) {
             return false;
         }
-        let [distX, distY] = getDragDist(e);
+        let distX = 0;
+        let distY = 0;
+
+        const originalDraggable = originalDatas.draggable;
+        const originalDist = getDragDist(e);
+
+        if (isDragTarget && originalDraggable) {
+            [distX, distY] = originalDraggable.prevBeforeDist;
+        } else {
+            [distX, distY] = originalDist;
+        }
+
+        const firstDist = [distX, distY];
         const props = moveable.props;
         const state = moveable.state;
         const { width, height } = state;
@@ -842,15 +854,22 @@ export default {
             1,
         );
 
-        if (originalDatas.draggable) {
+        if (originalDraggable) {
             const {
                 is3d,
                 allMatrix,
             } = state;
             const n = is3d ? 4 : 3;
 
-            [boundDelta[0], boundDelta[1]] = multiply(allMatrix, [boundDelta[0], boundDelta[1], 0, 0], n);
-            originalDatas.draggable.deltaOffset = boundDelta;
+            let dragDist = boundDelta;
+
+            if (isDragTarget) {
+                dragDist = [
+                    firstDist[0] + boundDelta[0] - originalDist[0],
+                    firstDist[1] + boundDelta[1] - originalDist[1],
+                ];
+            }
+            originalDraggable.deltaOffset = multiply(allMatrix, [dragDist[0], dragDist[1], 0, 0], n);
         }
         triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
             clipEventType: "changed",
