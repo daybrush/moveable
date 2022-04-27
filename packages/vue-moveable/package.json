@@ -6,6 +6,7 @@
     "main": "dist/moveable.cjs.js",
     "module": "dist/moveable.esm.js",
     "sideEffects": false,
+    "lernaHelperReleaseType": "prerelease",
     "lernaHelperPrerelease": true,
     "scripts": {
         "serve": "vue-cli-service serve demo",
@@ -51,7 +52,8 @@
     "homepage": "https://daybrush.com/moveable",
     "dependencies": {
         "framework-utils": "^1.1.0",
-        "moveable": "~0.29.3"
+        "moveable": "~0.29.3",
+        "tslib": "^2.4.0"
     },
     "devDependencies": {
         "@daybrush/builder": "^0.1.2",
