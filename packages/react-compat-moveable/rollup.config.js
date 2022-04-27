@@ -42,9 +42,9 @@ export default builder([
     },
     {
         sourcemap: false,
-        input: "src/index.ts",
+        input: "src/index.umd.ts",
         output: "./dist/moveable.cjs.js",
-        exports: "umd",
+        exports: "default",
         plugins: [reactPlugin],
         format: "cjs",
         external,
