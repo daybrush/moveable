@@ -115,6 +115,7 @@ $ npm i moveable
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
 ## 🚀 How to use
+* All classes of moveable control box and able elements have a `moveable-` prefix. So please don't put `moveable-` class name in target.
 ```ts
 import Moveable from "moveable";
 
