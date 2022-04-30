@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.29.6](https://github.com/daybrush/moveable/compare/0.29.5...0.29.6) (2022-04-27)
 ### :sparkles: Packages
- * `lit-moveable` 0.6.6
+* `lit-moveable` 0.6.6
 * `moveable` 0.29.6
 * `preact-moveable` 0.31.6
 * `react-compat-moveable` 0.17.6
@@ -14,7 +14,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * `vue-moveable` 2.0.0-beta.13
 * `vue3-moveable` 0.4.6
 * `ngx-moveable` 0.26.6
- 
+
 
 ### :mega: Other
 

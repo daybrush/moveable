@@ -431,15 +431,6 @@ export function calculateElementInfo(
         width,
         height,
         rotation,
-        // rootMatrix: number[];
-        // beforeMatrix: number[];
-        // offsetMatrix: number[];
-        // allMatrix: number[];
-        // targetMatrix: number[];
-        // targetTransform: string;
-        // transformOrigin: number[];
-        // targetOrigin: number[];
-        // is3d: boolean;
         rootMatrix: createIdentityMatrix(n),
         beforeMatrix: createIdentityMatrix(n),
         offsetMatrix: createIdentityMatrix(n),
@@ -449,16 +440,6 @@ export function calculateElementInfo(
         transformOrigin: [0, 0],
         targetOrigin: [0, 0],
         is3d: !!isAbsolute3d,
-        // left: number;
-        // top: number;
-        // right: number;
-        // bottom: number;
-        // origin: number[];
-        // pos1: number[];
-        // pos2: number[];
-        // pos3: number[];
-        // pos4: number[];
-        // direction: 1 | -1;
         left: 0,
         top: 0,
         right: 0,
@@ -556,7 +537,6 @@ export function calculateMatrixStack(
         // calculate for SVGElement
         if (!info.matrix) {
             const nextInfo = matrixes[i + 1];
-
             const offset = getSVGOffset(
                 info,
                 nextInfo,
@@ -668,8 +648,8 @@ export function getSVGGraphicsOffset(
     el: SVGGraphicsElement,
     origin: number[],
 ) {
-    if (!el.getBBox) {
-        return [0, 0];
+    if (!el.getBBox || el.tagName.toLowerCase() === "g") {
+        return [0, 0, 0, 0];
     }
     const bbox = el.getBBox();
     const viewBox = getSVGViewBox(el.ownerSVGElement!);
