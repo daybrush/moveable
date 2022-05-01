@@ -150,20 +150,12 @@ export function getOffsetInfo(
 }
 export function getOffsetPosInfo(
     el: HTMLElement | SVGElement,
-    container: SVGElement | HTMLElement | null | undefined,
     style: CSSStyleDeclaration,
-    isFixed: boolean,
 ) {
     const tagName = el.tagName.toLowerCase();
     let offsetLeft = (el as HTMLElement).offsetLeft;
     let offsetTop = (el as HTMLElement).offsetTop;
 
-    if (isFixed) {
-        const containerClientRect = (container || document.documentElement).getBoundingClientRect();
-
-        offsetLeft -= containerClientRect.left;
-        offsetTop -= containerClientRect.top;
-    }
     // svg
     const isSVG = isUndefined(offsetLeft);
     let hasOffset = !isSVG;
@@ -229,6 +221,36 @@ export function convert3DMatrixes(matrixes: MatrixInfo[]) {
     });
 }
 
+export function getBodyScrollPos() {
+    return [
+        document.documentElement.scrollLeft || document.body.scrollLeft,
+        document.documentElement.scrollTop || document.body.scrollTop,
+    ];
+}
+
+export function getPositionFixedInfo(el: HTMLElement | SVGElement) {
+    let fixedContainer = el.parentElement;
+    let hasTransform = false;
+
+    while (fixedContainer) {
+        const transform = getComputedStyle(fixedContainer).transform;
+
+
+        if (transform && transform !== "none") {
+            hasTransform = true;
+            break;
+        }
+        if (fixedContainer === document.body) {
+            break;
+        }
+        fixedContainer = fixedContainer.parentElement;
+    }
+
+    return {
+        fixedContainer: fixedContainer || document.body,
+        hasTransform,
+    };
+}
 
 export function getMatrixStackInfo(
     target: SVGElement | HTMLElement,
@@ -237,7 +259,7 @@ export function getMatrixStackInfo(
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
-    let requestEnd = !checkContainer && target === container;
+    let requestEnd = !checkContainer && target === container || target === document.body;
     let isEnd = requestEnd;
     let is3d = false;
     let n = 3;
@@ -245,16 +267,29 @@ export function getMatrixStackInfo(
     let targetTransformOrigin!: number[];
     let targetMatrix!: number[];
 
-    const offsetContainer = getOffsetInfo(container, container, true).offsetParent;
+    let hasFixed = false;
+    let offsetContainer = getOffsetInfo(container, container, true).offsetParent;
 
     while (el && !isEnd) {
         isEnd = requestEnd;
         const style: CSSStyleDeclaration = getComputedStyle(el);
         const position = style.position;
-        const isFixed = position === "fixed";
         const transform = getElementTransform(el, style);
-
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
+        const isFixed = position === "fixed";
+        let fixedInfo: {
+            hasTransform: boolean;
+            fixedContainer: HTMLElement | null;
+        } = {
+            hasTransform: false,
+            fixedContainer: null,
+        };
+        if (isFixed) {
+            hasFixed = true;
+            fixedInfo = getPositionFixedInfo(el);
+
+            offsetContainer = fixedInfo.fixedContainer!;
+        }
 
         // convert 3 to 4
         const length = matrix.length;
@@ -277,7 +312,7 @@ export function getMatrixStackInfo(
             origin,
             targetOrigin,
             offset: offsetPos,
-        } = getOffsetPosInfo(el, container, style, isFixed);
+        } = getOffsetPosInfo(el, style);
         let [
             offsetLeft,
             offsetTop,
@@ -298,11 +333,21 @@ export function getMatrixStackInfo(
             offsetLeft = 0;
             offsetTop = 0;
         }
-        const {
-            offsetParent,
-            isEnd: isOffsetEnd,
-            isStatic,
-        } = getOffsetInfo(el, container);
+
+        let offsetParent: HTMLElement;
+        let isOffsetEnd = false;
+        let isStatic = false;
+
+        if (isFixed) {
+            offsetParent = fixedInfo.fixedContainer!;
+            isOffsetEnd = true;
+        } else {
+            const offsetInfo = getOffsetInfo(el, container);
+
+            offsetParent = offsetInfo.offsetParent;
+            isOffsetEnd = offsetInfo.isEnd;
+            isStatic = offsetInfo.isStatic;
+        }
 
         if (IS_WEBKIT && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
             offsetLeft -= offsetParent.offsetLeft;
@@ -311,17 +356,29 @@ export function getMatrixStackInfo(
         }
         let parentClientLeft = 0;
         let parentClientTop = 0;
+        let fixedClientLeft = 0;
+        let fixedClientTop = 0;
 
-        if (hasOffset && offsetContainer !== offsetParent) {
-            // border
-            parentClientLeft = offsetParent.clientLeft;
-            parentClientTop = offsetParent.clientTop;
+        if (isFixed) {
+            if (hasOffset && fixedInfo.hasTransform) {
+                // border
+                fixedClientLeft = offsetParent.clientLeft;
+                fixedClientTop = offsetParent.clientTop;
+            }
+        } else {
+            if (hasOffset && offsetContainer !== offsetParent) {
+                // border
+                parentClientLeft = offsetParent.clientLeft;
+                parentClientTop = offsetParent.clientTop;
+            }
+            if (hasOffset && offsetParent === document.body) {
+                const margin = getBodyOffset(el, false, style);
+
+                offsetLeft += margin[0];
+                offsetTop += margin[1];
+            }
         }
-        if (hasOffset && offsetParent === document.body) {
-            const margin = getBodyOffset(el, false, style);
-            offsetLeft += margin[0];
-            offsetTop += margin[1];
-        }
+
         matrixes.push({
             type: "target",
             target: el,
@@ -332,8 +389,8 @@ export function getMatrixStackInfo(
                 type: "offset",
                 target: el,
                 matrix: createOriginMatrix([
-                    offsetLeft - el.scrollLeft + parentClientLeft,
-                    offsetTop - el.scrollTop + parentClientTop,
+                    offsetLeft - el.scrollLeft + parentClientLeft - fixedClientLeft,
+                    offsetTop - el.scrollTop + parentClientTop - fixedClientTop,
                 ], n),
             });
         } else {
@@ -381,6 +438,7 @@ export function getMatrixStackInfo(
         transformOrigin,
         targetOrigin: targetTransformOrigin,
         is3d,
+        hasFixed,
     };
 }
 export function calculateElementInfo(
@@ -450,6 +508,7 @@ export function calculateElementInfo(
         pos3: [0, 0],
         pos4: [0, 0],
         direction: 1,
+        hasFixed: false,
         ...allResult,
     };
 }
@@ -476,6 +535,7 @@ export function calculateMatrixStack(
         transformOrigin,
         targetOrigin,
         offsetContainer,
+        hasFixed,
     } = getMatrixStackInfo(target, container); // prevMatrix
     const {
         matrixes: rootMatrixes,
@@ -562,6 +622,7 @@ export function calculateMatrixStack(
     rootMatrix = ignoreDimension(rootMatrix, n, n);
 
     return {
+        hasFixed,
         rootMatrix,
         beforeMatrix,
         offsetMatrix,
@@ -1003,8 +1064,9 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     if (el === document.body || el === document.documentElement) {
         width = window.innerWidth;
         height = window.innerHeight;
-        left = -(document.documentElement.scrollLeft || document.body.scrollLeft);
-        top = -(document.documentElement.scrollTop || document.body.scrollTop);
+        const scrollPos = getBodyScrollPos();
+
+        [left, top] = [-scrollPos[0], -scrollPos[1]];
     } else {
         const clientRect = el.getBoundingClientRect();
 

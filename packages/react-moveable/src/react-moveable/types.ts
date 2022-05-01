@@ -182,6 +182,8 @@ export type MoveableManagerState<T = {}> = {
     containerClientRect: MoveableClientRect;
     moveableClientRect: MoveableClientRect;
     rotation: number;
+
+    hasFixed: boolean;
 } & T;
 
 /**

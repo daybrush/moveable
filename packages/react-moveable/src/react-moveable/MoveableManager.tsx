@@ -108,7 +108,13 @@ export default class MoveableManager<T = {}>
         this.updateRenderPoses();
 
         const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
-        const { left, top, target: stateTarget, direction } = state;
+        const {
+            left,
+            top,
+            target: stateTarget,
+            direction,
+            hasFixed,
+        } = state;
         const groupTargets = (props as any).targets;
         const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
         const isDragging = this.isDragging();
@@ -126,7 +132,7 @@ export default class MoveableManager<T = {}>
                 onClick={this.onPreventClick}
                 portalContainer={portalContainer}
                 style={{
-                    "position": "absolute",
+                    "position": hasFixed ? "fixed" : "absolute",
                     "display": isDisplay ? "block" : "none",
                     "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, ${translateZ})`,
                     "--zoom": zoom,
