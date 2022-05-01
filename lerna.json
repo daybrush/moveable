@@ -4,25 +4,27 @@
         "packages/ngx-moveable/projects/ngx-moveable"
     ],
     "version": "independent",
-    "lernaHelperDeployFileMap": [
-        {
-            "basePath": "packages/moveable/dist",
-            "dists": [
-                "demo/release/{{version}}/dist",
-                "demo/release/latest/dist"
-            ]
-        },
-        {
-            "basePath": "doc",
-            "dists": [
-                "demo/release/{{version}}/doc",
-                "demo/release/latest/doc"
-            ]
-        }
-    ],
-    "lernaHelperBeforeRelease": [
-        "npm run packages:build",
-        "npm run demo:build",
-        "npm run deploy"
-    ]
+    "lernaHelperOptions": {
+        "deployFileMap": [
+            {
+                "basePath": "packages/moveable/dist",
+                "dists": [
+                    "demo/release/{{version}}/dist",
+                    "demo/release/latest/dist"
+                ]
+            },
+            {
+                "basePath": "doc",
+                "dists": [
+                    "demo/release/{{version}}/doc",
+                    "demo/release/latest/doc"
+                ]
+            }
+        ],
+        "beforeReleaseScripts": [
+            "npm run packages:build",
+            "npm run demo:build",
+            "npm run deploy"
+        ]
+    }
 }
