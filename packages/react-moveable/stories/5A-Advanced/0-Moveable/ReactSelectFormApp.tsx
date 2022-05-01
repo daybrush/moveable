@@ -1,7 +1,7 @@
 import * as React from "react";
 import Moveable from "../../../src/react-moveable";
 
-export default function App(props: Record<string, any>) {
+export default function App() {
     const [target, setTarget] = React.useState<HTMLSelectElement>();
 
     React.useEffect(() => {
