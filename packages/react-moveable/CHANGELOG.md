@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.32.5...react-moveable@0.32.7) (2022-05-01)
+
+
+### :bug: Bug Fix
+
+* fix coordinate for position: fixed #653 ([87ba56c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/87ba56c5728203b6f4bf2cf0f4f004aee009a625))
+* skip beforeEvent set to lastEvent #654 ([5ab31c7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5ab31c749c8a331b40a564b365c75223be0736c2))
+
+
+### :mega: Other
+
+* update packages versions ([169c484](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/169c48417bb4bc07c59e227c545e379dbf43d15b))
+
+
+
 ## [0.32.5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.32.4...react-moveable@0.32.5) (2022-04-27)
 
 

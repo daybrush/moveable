@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.8](https://github.com/daybrush/moveable/compare/0.29.6...0.29.8) (2022-05-01)
+### :sparkles: Packages
+* `lit-moveable` 0.6.8
+* `moveable` 0.29.8
+* `preact-moveable` 0.31.8
+* `react-compat-moveable` 0.17.8
+* `react-moveable` 0.32.7
+* `svelte-moveable` 0.21.8
+* `vue-moveable` 2.0.0-beta.15
+* `vue3-moveable` 0.4.8
+* `ngx-moveable` 0.26.8
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix coordinate for position: fixed #653 ([87ba56c](https://github.com/daybrush/moveable/commit/87ba56c5728203b6f4bf2cf0f4f004aee009a625))
+    * skip beforeEvent set to lastEvent #654 ([5ab31c7](https://github.com/daybrush/moveable/commit/5ab31c749c8a331b40a564b365c75223be0736c2))
+
+
+### :mega: Other
+
+* All
+    * update packages versions ([169c484](https://github.com/daybrush/moveable/commit/169c48417bb4bc07c59e227c545e379dbf43d15b))
+* Other
+    * update lerna scripts ([6968e1b](https://github.com/daybrush/moveable/commit/6968e1bd004a29e06deebcca87d132082ac7e2c7))
+
+
+
 ## [0.29.6](https://github.com/daybrush/moveable/compare/0.29.5...0.29.6) (2022-04-27)
 ### :sparkles: Packages
 * `lit-moveable` 0.6.6
