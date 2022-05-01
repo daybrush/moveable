@@ -15,36 +15,33 @@ export default function App(props: Record<string, any>) {
                     position: "relative",
                     width: "200px",
                     height: "100px",
-                    maxWidth: props.maxWidth,
-                    maxHeight: props.maxHeight,
-                    minWidth: props.minWidth,
-                    minHeight: props.minHeight,
+                    // maxWidth: props.maxWidth,
+                    // maxHeight: props.maxHeight,
+                    // minWidth: props.minWidth,
+                    // minHeight: props.minHeight,
                 }}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
-                    resizable={props.resizable}
-                    keepRatio={props.keepRatio}
-                    throttleResize={props.throttleResize}
-                    onResizeStart={e => {
-                        e.dragStart && e.dragStart.set(translate);
-                    }}
+                    resizable={true}
+                    keepRatio={true}
+                    throttleResize={1}
                     onResize={e => {
-                        const beforeTranslate = e.drag.beforeTranslate;
+                        // const beforeTranslate = e.drag.beforeTranslate;
 
                         e.target.style.width = `${e.width}px`;
                         e.target.style.height = `${e.height}px`;
-                        e.target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+                        e.target.style.transform = e.drag.transform;
                     }}
                     onResizeEnd={e => {
                         const lastEvent = e.lastEvent;
 
                         if (lastEvent) {
-                            setTranslate(lastEvent.drag.beforeTranslate);
+                            console.log(lastEvent.drag.transform);
                         }
                     }}
                 />
             </div>
         </div>
     );
-};
+}
