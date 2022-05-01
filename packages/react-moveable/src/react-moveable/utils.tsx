@@ -1152,6 +1152,7 @@ export function fillParams<T extends IObject<any>>(
     moveable: any,
     e: any,
     params: ExcludeParams<T>,
+    isBeforeEvent?: boolean,
 ): T {
     const datas = e.datas;
 
@@ -1169,10 +1170,10 @@ export function fillParams<T extends IObject<any>>(
         datas: datas.datas,
     } as any;
 
-    if (datas.isStartEvent) {
-        datas.lastEvent = nextParams;
-    } else {
+    if (!datas.isStartEvent) {
         datas.isStartEvent = true;
+    } else if (!isBeforeEvent) {
+        datas.lastEvent = nextParams;
     }
     return nextParams;
 }

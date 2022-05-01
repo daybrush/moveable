@@ -295,7 +295,7 @@ export default {
             setSize(size: number[]) {
                 [boundingWidth, boundingHeight] = size;
             },
-        }));
+        }, true));
 
         let fixedPosition = dragClient;
 
@@ -537,7 +537,7 @@ export default {
             triggerEvent(moveable, "onBeforeResizeGroup", fillParams<OnBeforeResizeGroup>(moveable, e, {
                 ...parentEvent,
                 targets: moveable.props.targets!,
-            }));
+            }, true));
         });
 
 

@@ -448,7 +448,7 @@ export default {
                 beforeDist = dist;
                 absoluteDist = dist;
             },
-        }));
+        }, true));
         [
             beforeDelta,
             beforeDist,
@@ -592,7 +592,7 @@ export default {
             triggerEvent(moveable, "onBeforeRotateGroup", fillParams<OnBeforeRotateGroup>(moveable, e, {
                 ...parentEvent,
                 targets: moveable.props.targets!,
-            }));
+            }, true));
         });
         const params = this.dragControl(moveable, e);
 

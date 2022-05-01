@@ -243,7 +243,7 @@ export default {
             setScale(nextScale: number[]) {
                 scale = nextScale;
             },
-        }));
+        }, true));
 
         const dist = [scale[0] / startValue[0], scale[1] / startValue[1]];
         let fixedPosition = dragClient;
@@ -442,7 +442,7 @@ export default {
             triggerEvent(moveable, "onBeforeScaleGroup", fillParams<OnBeforeScaleGroup>(moveable, e, {
                 ...parentEvent,
                 targets: moveable.props.targets!,
-            }));
+            }, true));
         });
 
         const params = this.dragControl(moveable, e);
