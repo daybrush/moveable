@@ -105,14 +105,15 @@ export function getElementTransform(
             return "";
         }
 
-        const matrixs: string[] = [];
+        const matrixes: string[] = [];
 
         for (let i = 0; i < length; ++i) {
-            const matrix = baseVal[0].matrix;
+            const matrix = baseVal[i].matrix;
 
-            matrixs.push(`matrix(${(["a", "b", "c", "d", "e", "f"] as const).map(chr => matrix[chr]).join(", ")})`);
+            matrixes.push(`matrix(${(["a", "b", "c", "d", "e", "f"] as const).map(chr => matrix[chr]).join(", ")})`);
         }
-        return matrixs.join(" ");
+        return matrixes.join(" ");
+
     }
     return "";
 }

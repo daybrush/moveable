@@ -20,15 +20,16 @@ export default function App(props: Record<string, any>) {
                     left: "100px",
                 }}>
                     <g
+                        transform="translate(10, 10) rotate(0)"
                         style={{
-                            transform: "translate(10px, 10px) rotate(20deg)",
+                            // transform: "translate(10px, 10px) rotate(20deg)",
                         }}
                     >
                         <path d="M 0 0 L 200 0 L 200 200 z" ref={targetRef} style={{
                             fill: "white",
                             stroke: "red",
                             strokeWidth: 2,
-                            transform: "translate(10px, 10px) rotate(20deg)",
+                            // transform: "translate(10px, 10px) rotate(20deg)",
                         }} />
                     </g>
                 </svg>
