@@ -72,6 +72,8 @@
   },
   "dependencies": {
     "@daybrush/utils": "^1.6.0",
-    "framework-utils": "^1.1.0"
+    "@scena/event-emitter": "^1.0.5",
+    "framework-utils": "^1.1.0",
+    "react-simple-compat": "^1.2.2"
   }
 }
