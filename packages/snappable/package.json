@@ -1,0 +1,46 @@
+{
+    "name": "snappable",
+    "version": "0.0.1",
+    "description": "snappable",
+    "private": true,
+    "scripts": {
+        "build": ""
+    },
+    "keywords": [
+        "moveable",
+        "resizable",
+        "scalable",
+        "draggable",
+        "rotatable",
+        "warpable",
+        "pinchable",
+        "groupable",
+        "snappable",
+        "scrollable",
+        "movable",
+        "throttle",
+        "scroll",
+        "ratio",
+        "dom",
+        "resize",
+        "scale",
+        "drag",
+        "move",
+        "rotate",
+        "react",
+        "warp",
+        "snap",
+        "pinch",
+        "react"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/daybrush/moveable/blob/master/packages/snappable"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/moveable/issues"
+    },
+    "homepage": "https://daybrush.com/moveable"
+}
