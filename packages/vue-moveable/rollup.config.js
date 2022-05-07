@@ -18,8 +18,8 @@ export default buildHelper([
     {
         ...defaultOptions,
         format: "cjs",
-        // input: "./src/index.umd.ts",
-        exports: "named",
+        input: "./src/index.umd.ts",
+        exports: "default",
         output: "./dist/moveable.cjs.js",
     },
 ]);
