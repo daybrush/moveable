@@ -3,4 +3,5 @@ import Moveable from './Moveable.vue';
 
 export default Moveable;
 export { Moveable as VueMoveable };
-export * from 'moveable';
+export * from "react-moveable/types";
+
