@@ -580,6 +580,7 @@ export default {
             (["vertical", "horizontal"] as const).forEach(directionType => {
                 const info = snapBoundInfos[directionType];
                 const isHorizontal = directionType === "horizontal";
+
                 if (info.isSnap) {
                     lines.push(...info.snap.posInfos.map(({ pos }, i) => {
                         const snapPos1 = minus(calculatePosition(
@@ -772,62 +773,63 @@ export default {
         }
         const boundDelta = [0, 0];
 
-        for (let i = 0; i < 2; ++i) {
-            const {
-                horizontal: horizontalSnapInfo,
-                vertical: verticalSnapInfo,
-            } = checkSnapBounds(
-                guidelines,
-                props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
-                guideXPoses,
-                guideYPoses,
-                5,
-            );
-            const snapOffsetY = horizontalSnapInfo.offset;
-            const snapOffsetX = verticalSnapInfo.offset;
+        const {
+            horizontal: horizontalSnapInfo,
+            vertical: verticalSnapInfo,
+        } = checkSnapBounds(
+            guidelines,
+            props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
+            guideXPoses,
+            guideYPoses,
+            5,
+        );
+        const snapOffsetY = horizontalSnapInfo.offset;
+        const snapOffsetX = verticalSnapInfo.offset;
 
-            if (horizontalSnapInfo.isBound) {
-                boundDelta[1] += snapOffsetY;
-            }
-            if (verticalSnapInfo.isBound) {
-                boundDelta[0] += snapOffsetX;
-            }
-            if ((isEllipse || isCircle) && dists[0][0] === 0 && dists[0][1] === 0) {
-                const guideRect = getRect(nextPoses);
-                let cy = guideRect.bottom - guideRect.top;
-                let cx = isEllipse ? guideRect.right - guideRect.left : cy;
-                const distSnapX = verticalSnapInfo.isBound
-                    ? Math.abs(snapOffsetX)
-                    : (verticalSnapInfo.snapIndex === 0 ? -snapOffsetX : snapOffsetX);
-                const distSnapY = horizontalSnapInfo.isBound
-                    ? Math.abs(snapOffsetY)
-                    : (horizontalSnapInfo.snapIndex === 0 ? -snapOffsetY : snapOffsetY);
-                cx -= distSnapX;
-                cy -= distSnapY;
+        // let keepRatio =
 
-                if (isCircle) {
-                    cy = checkSnapBoundPriority(verticalSnapInfo, horizontalSnapInfo) > 0 ? cy : cx;
-                    cx = cy;
+        if (horizontalSnapInfo.isBound) {
+            boundDelta[1] += snapOffsetY;
+        }
+        if (verticalSnapInfo.isBound) {
+            boundDelta[0] += snapOffsetX;
+        }
+        if ((isEllipse || isCircle) && dists[0][0] === 0 && dists[0][1] === 0) {
+            const guideRect = getRect(nextPoses);
+            let cy = guideRect.bottom - guideRect.top;
+            let cx = isEllipse ? guideRect.right - guideRect.left : cy;
+
+
+            const distSnapX = verticalSnapInfo.isBound
+                ? Math.abs(snapOffsetX)
+                : (verticalSnapInfo.snapIndex === 0 ? -snapOffsetX : snapOffsetX);
+            const distSnapY = horizontalSnapInfo.isBound
+                ? Math.abs(snapOffsetY)
+                : (horizontalSnapInfo.snapIndex === 0 ? -snapOffsetY : snapOffsetY);
+            cx -= distSnapX;
+            cy -= distSnapY;
+
+            if (isCircle) {
+                cy = checkSnapBoundPriority(verticalSnapInfo, horizontalSnapInfo) > 0 ? cy : cx;
+                cx = cy;
+            }
+            const center = guidePoses[0];
+
+            guidePoses[1][1] = center[1] - cy;
+            guidePoses[2][0] = center[0] + cx;
+            guidePoses[3][1] = center[1] + cy;
+            guidePoses[4][0] = center[0] - cx;
+        } else {
+            guidePoses.forEach((pos, j) => {
+                const dist = dists[j];
+
+                if (dist[0]) {
+                    pos[0] -= snapOffsetX;
                 }
-                const center = guidePoses[0];
-
-                guidePoses[1][1] = center[1] - cy;
-                guidePoses[2][0] = center[0] + cx;
-                guidePoses[3][1] = center[1] + cy;
-                guidePoses[4][0] = center[0] - cx;
-            } else {
-                guidePoses.forEach((pos, j) => {
-                    const dist = dists[j];
-
-                    if (dist[0]) {
-                        pos[0] -= snapOffsetX;
-                    }
-                    if (dist[1]) {
-                        pos[1] -= snapOffsetY;
-                    }
-                });
-                break;
-            }
+                if (dist[1]) {
+                    pos[1] -= snapOffsetY;
+                }
+            });
         }
         const nextClipStyles = getClipStyles(moveable, clipPath, nextPoses)!;
         const clipStyle = `${clipType}(${nextClipStyles.join(splitter)})`;
