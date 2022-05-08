@@ -223,7 +223,7 @@ export function checkSnapBoundsDrag(
         right,
         top,
         bottom,
-        center: (left + right ) / 2,
+        center: (left + right) / 2,
         middle: (top + bottom) / 2,
     });
     const {
@@ -496,13 +496,31 @@ export function getSnapBoundInfo(
         }
 
         const isVertical = snapLine === "vertical";
-        const sizeOffset = solveNextOffset(
-            otherStartPos,
-            otherEndPos,
-            -(isVertical ? otherVerticalOffset : otherHorizontalOffset),
-            isVertical,
-            datas,
-        ).offset.map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
+        let sizeOffset = [0, 0];
+
+        if (
+            !keepRatio
+            && Math.abs(endDirection[0]) === 1
+            && Math.abs(endDirection[1]) === 1
+            && startDirection[0] !== endDirection[0]
+            && startDirection[1] !== endDirection[1]
+        ) {
+            sizeOffset = getDragDist({
+                datas,
+                distX: -otherVerticalOffset,
+                distY: -otherHorizontalOffset,
+            });
+        } else {
+            sizeOffset = solveNextOffset(
+                otherStartPos,
+                otherEndPos,
+                -(isVertical ? otherVerticalOffset : otherHorizontalOffset),
+                isVertical,
+                datas,
+            ).offset;
+        }
+        sizeOffset = sizeOffset.map((size, i) => size * (multiple[i] ? 2 / multiple[i] : 0));
+
 
         return {
             sign: multiple,

@@ -360,16 +360,26 @@ export function getCheckSnapDirections(
             directions.push(
                 [fixedDirection, [direction[0], -direction[1]]],
                 [fixedDirection, [-direction[0], direction[1]]],
-                [fixedDirection, direction],
             );
         }
         directions.push([fixedDirection, direction]);
     } else {
-        if (direction[0] && direction[1]) {
-            directions.push(
-                [fixedDirection, [direction[0], -direction[1]]],
-                [fixedDirection, [-direction[0], direction[1]]]
-            );
+        if ((direction[0] && direction[1]) || (!direction[0] && !direction[1])) {
+            const endDirection = direction[0] ? direction : [1, 1];
+
+            [1, -1].forEach(signX => {
+                [1, -1].forEach(signY => {
+                    const nextDirection = [signX * endDirection[0], signY * endDirection[1]];
+
+                    if (
+                        fixedDirection[0] === nextDirection[0]
+                        && fixedDirection[1] === nextDirection[1]
+                    ) {
+                        return;
+                    }
+                    directions.push([fixedDirection, nextDirection]);
+                });
+            });
         } else if (direction[0]) {
             const signs = Math.abs(fixedDirection[0]) === 1 ? [1] : [1, -1];
 
@@ -408,48 +418,6 @@ export function getCheckSnapDirections(
                     ]
                 );
             });
-        } else {
-            // [0, 0] to all direction
-            directions.push(
-                [fixedDirection, [1, 0]],
-                [fixedDirection, [-1, 0]],
-                [fixedDirection, [0, -1]],
-                [fixedDirection, [0, 1]],
-
-                [
-                    [1, 0],
-                    [1, -1],
-                ],
-                [
-                    [1, 0],
-                    [1, 1],
-                ],
-                [
-                    [0, 1],
-                    [1, 1],
-                ],
-                [
-                    [0, 1],
-                    [-1, 1],
-                ],
-
-                [
-                    [-1, 0],
-                    [-1, -1],
-                ],
-                [
-                    [-1, 0],
-                    [-1, 1],
-                ],
-                [
-                    [0, -1],
-                    [1, -1],
-                ],
-                [
-                    [0, -1],
-                    [-1, -1],
-                ]
-            );
         }
     }
     return directions;

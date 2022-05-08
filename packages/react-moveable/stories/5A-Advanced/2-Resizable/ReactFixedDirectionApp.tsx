@@ -29,7 +29,7 @@ export default function App() {
                 <Moveable
                     target={".target.resizable"}
                     resizable={true}
-                    keepRatio={true}
+                    // keepRatio={true}
                     draggable={true}
                     rotatable={true}
                     snappable={true}
