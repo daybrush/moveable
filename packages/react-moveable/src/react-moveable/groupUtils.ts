@@ -44,20 +44,24 @@ export function triggerChildGesto(
     const moveables = moveable.moveables;
     const childs = events.map((ev, i) => {
         const childMoveable = moveables[i];
+        const state = childMoveable.state;
         let childEvent: any = ev;
 
         if (isStart) {
             childEvent = new CustomGesto().dragStart(delta, ev);
         } else {
-            if (!childMoveable.state.gesto) {
-                childMoveable.state.gesto = datas.childGestos[i];
+            if (!state.gesto) {
+                state.gesto = datas.childGestos[i];
             }
-            childEvent = setCustomDrag(ev, childMoveable.state, delta, isPinch, isConvert);
+            if (!state.gesto) {
+                return;
+            }
+            childEvent = setCustomDrag(ev, state, delta, isPinch, isConvert);
         }
         const result = (able as any)[type]!(childMoveable,  { ...childEvent, parentFlag: true });
 
         if (isEnd) {
-            childMoveable.state.gesto = null;
+            state.gesto = null;
         }
         return result;
     });
