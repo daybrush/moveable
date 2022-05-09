@@ -2,7 +2,7 @@
 
 
 export default {
-    title: "Tests",
+    title: "Etc...",
 };
 export * from "./1-ZoomInZoomOut.stories";
 export * from "./2-ZoomGroup.stories";
