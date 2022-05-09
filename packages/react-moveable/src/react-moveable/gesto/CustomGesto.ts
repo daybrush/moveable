@@ -15,7 +15,6 @@ export function setCustomDrag(
 
     return {
         ...(isConvert ? convertDragDist(state, result) : result),
-        isDrag: true,
         isPinch: !!isPinch,
         parentEvent: true,
         datas: draggableDatas,
@@ -68,10 +67,12 @@ export default class CustomGesto {
 
             this.isFlag = true;
         } else {
-
             clientX = this.prevX + delta[0];
             clientY = this.prevY + delta[1];
-            this.isDrag = true;
+
+            if (delta[0] || delta[1]) {
+                this.isDrag = true;
+            }
         }
 
         this.prevX = clientX;
