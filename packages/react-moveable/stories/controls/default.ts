@@ -83,7 +83,7 @@ export const DEFAULT_RESIZABLE_CONTROLS = {
     throttleResize: makeArgType({
         type: "number",
         description: makeLink("Resizable", "throttleResize"),
-        defaultValue: 0,
+        defaultValue: 1,
     }),
     renderDirections: makeArgType({
         type: "array",
