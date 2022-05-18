@@ -1,3 +1,4 @@
+import { TINY_NUM } from "@daybrush/utils";
 import { isObject, throttle } from "@daybrush/utils";
 import { diff } from "@egjs/children-differ";
 import { minus } from "@scena/matrix";
@@ -526,4 +527,41 @@ export function getGridGuidelines(
         }
     }
     return guidelines;
+}
+
+
+export function solveLineConstants([point1, point2]: number[][]): [number, number, number] {
+    let dx = point2[0] - point1[0];
+    let dy = point2[1] - point1[1];
+
+    if (Math.abs(dx) < TINY_NUM) {
+        dx = 0;
+    }
+    if (Math.abs(dy) < TINY_NUM) {
+        dy = 0;
+    }
+
+    // b > 0
+    // ax + by + c = 0
+    let a = 0;
+    let b = 0;
+    let c = 0;
+
+    if (!dx) {
+        // -x + 1 = 0
+        a = -1;
+        c = point1[0];
+    } else if (!dy) {
+        // y - 1 = 0
+        b = 1;
+        c = -point1[1];
+    } else {
+        // y = -a(x - x1) + y1
+        // ax + y + a * x1 - y1 = 0
+        a = -dy / dx;
+        b = 1;
+        c = a * point1[0] - point1[1];
+    }
+
+    return [a, b, c].map(v => throttle(v, TINY_NUM)) as [number, number, number];
 }

@@ -1,11 +1,12 @@
 import { average, getRad, throttle } from "@daybrush/utils";
 import { rotate } from "@scena/matrix";
-import { maxOffset, getDistSize, getTinyDist } from "../../utils";
+import { maxOffset, getDistSize, getTinyDist, calculatePoses } from "../../utils";
 
 import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../gesto/GestoUtils";
 import { getNearOffsetInfo } from "./snap";
 import { TINY_NUM } from "../../consts";
+import { solveLineConstants } from "./utils";
 
 function isStartLine(dot: number[], line: number[][]) {
     // l    o     => true
@@ -48,10 +49,8 @@ function hitTestLine(
     }
     return test1 - test2;
 }
-function isSameStartLine(dots: number[][], line: number[][], error: number = TINY_NUM) {
-    const centerSign = hitTestLine(dots[0], line) <= 0;
-
-    return dots.slice(1).every(dot => {
+function isSameStartLine(dots: number[][], line: number[][], centerSign: boolean, error: number = TINY_NUM) {
+    return dots.every(dot => {
         const value = hitTestLine(dot, line);
         const sign = value <= 0;
         return sign === centerSign || Math.abs(value) <= error;
@@ -84,8 +83,7 @@ function checkInnerBoundDot(
 
 function checkInnerBound(
     moveable: MoveableManagerInterface<SnappableProps>,
-    line: number[][],
-    center: number[],
+    { line, centerSign, verticalSign, horizontalSign, lineConstants }: InnerBoundLineInfo,
 ) {
     const bounds = moveable.props.innerBounds;
 
@@ -103,18 +101,13 @@ function checkInnerBound(
     const topLine = [[left, top], [left + width, top]];
     const rightLine = [[left + width, top], [left + width, top + height]];
     const bottomLine = [[left, top + height], [left + width, top + height]];
-    const {
-        horizontal: isHorizontalStart,
-        vertical: isVerticalStart,
-    } = isStartLine(center, line);
 
     if (isSameStartLine([
-        center,
         [left, top],
         [left + width, top],
         [left, top + height],
         [left + width, top + height],
-    ], line)) {
+    ], line, centerSign)) {
         return {
             isAllBound: false,
             isBound: false,
@@ -123,14 +116,14 @@ function checkInnerBound(
             offset: [0, 0],
         };
     }
-
     // test vertical
-    const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart);
-    const bottomBoundInfo = checkLineBoundCollision(line, bottomLine, isVerticalStart);
+
+    const topBoundInfo = checkLineBoundCollision(line, lineConstants, topLine, verticalSign);
+    const bottomBoundInfo = checkLineBoundCollision(line, lineConstants, bottomLine, verticalSign);
 
     // test horizontal
-    const leftBoundInfo = checkLineBoundCollision(line, leftLine, isHorizontalStart);
-    const rightBoundInfo = checkLineBoundCollision(line, rightLine, isHorizontalStart);
+    const leftBoundInfo = checkLineBoundCollision(line, lineConstants, leftLine, horizontalSign);
+    const rightBoundInfo = checkLineBoundCollision(line, lineConstants, rightLine, horizontalSign);
 
     const isAllVerticalBound = topBoundInfo.isBound && bottomBoundInfo.isBound;
     const isVerticalBound = topBoundInfo.isBound || bottomBoundInfo.isBound;
@@ -138,7 +131,6 @@ function checkInnerBound(
     const isHorizontalBound = leftBoundInfo.isBound || rightBoundInfo.isBound;
     const verticalOffset = maxOffset(topBoundInfo.offset, bottomBoundInfo.offset);
     const horizontalOffset = maxOffset(leftBoundInfo.offset, rightBoundInfo.offset);
-
     let offset = [0, 0];
     let isBound = false;
     let isAllBound = false;
@@ -163,37 +155,46 @@ function checkInnerBound(
 
 function checkLineBoundCollision(
     line: number[][],
+    [a, b]: [number, number, number],
     boundLine: number[][],
     isStart: boolean,
     threshold?: number,
     isRender?: boolean,
 ) {
     const dot1 = line[0];
-    const dot2 = line[1];
+    // const dot2 = line[1];
     const boundDot1 = boundLine[0];
     const boundDot2 = boundLine[1];
-    const dy1 = getTinyDist(dot2[1] - dot1[1]);
-    const dx1 = getTinyDist(dot2[0] - dot1[0]);
 
+    // const dy1 = getTinyDist(dot2[1] - dot1[1]);
+    // const dx1 = getTinyDist(dot2[0] - dot1[0]);
     const dy2 = getTinyDist(boundDot2[1] - boundDot1[1]);
     const dx2 = getTinyDist(boundDot2[0] - boundDot1[0]);
 
+    const hasDx = b;
+    const hasDy = a;
+    const slope = - a / b;
+    // lineConstants
+    // ax + by + c = 0
     // dx2 or dy2 is zero
     if (!dx2) {
         // vertical
-        if (isRender && !dy1) {
+        // by + c = 0
+        if (isRender && !hasDy) {
             // 90deg
             return {
                 isBound: false,
                 offset: 0,
             };
-        } else if (dx1) {
+        } else if (hasDx) {
+            // ax + by + c = 0
             // const y = dy1 ? dy1 / dx1 * (boundDot1[0] - dot1[0]) + dot1[1] : dot1[1];
-            const y = dy1 / dx1 * (boundDot1[0] - dot1[0]) + dot1[1];
+            const y = slope * (boundDot1[0] - dot1[0]) + dot1[1];
 
             // boundDot1[1] <= y  <= boundDot2[1]
             return checkInnerBoundDot(y, boundDot1[1], boundDot2[1], isStart, threshold);
         } else {
+            // ax + c = 0
             const offset = boundDot1[0] - dot1[0];
 
             const isBound = Math.abs(offset) <= (threshold || 0);
@@ -205,18 +206,18 @@ function checkLineBoundCollision(
         }
     } else if (!dy2) {
         // horizontal
-        if (isRender && !dx1) {
+        if (isRender && !hasDx) {
             // 90deg
             return {
                 isBound: false,
                 offset: 0,
             };
-        } else if (dy1) {
+        } else if (hasDy) {
             // y = a * (x - x1) + y1
             // x = (y - y1) / a + x1
             // const a = dy1 / dx1;
             // const x = dx1 ? (boundDot1[1] - dot1[1]) / a + dot1[0] : dot1[0];
-            const x = (boundDot1[1] - dot1[1]) / (dy1 / dx1) + dot1[0];
+            const x = (boundDot1[1] - dot1[1]) / slope + dot1[0];
 
             // boundDot1[0] <= x && x <= boundDot2[0]
             return checkInnerBoundDot(x, boundDot1[0], boundDot2[0], isStart, threshold);
@@ -238,17 +239,18 @@ function checkLineBoundCollision(
 }
 export function getInnerBoundInfo(
     moveable: MoveableManagerInterface<SnappableProps>,
-    lines: number[][][],
-    center: number[],
+    lineInfos: InnerBoundLineInfo[],
     datas: any,
 ) {
-    return lines.map(([multiple, pos1, pos2]) => {
+    return lineInfos.map(info => {
         const {
             isBound,
             offset,
             isVerticalBound,
             isHorizontalBound,
-        } = checkInnerBound(moveable, [pos1, pos2], center);
+        } = checkInnerBound(moveable, info);
+
+        const multiple = info.multiple;
 
         const sizeOffset = getDragDist({
             datas,
@@ -272,14 +274,13 @@ export function getInnerBoundDragInfo(
     poses: number[][],
     datas: any,
 ) {
-    const lines = getCheckInnerBoundLines(poses, [0, 0], false).map(([sign, pos1, pos2]) => {
-        return [
-            sign.map(dir => Math.abs(dir) * 2),
-            pos1,
-            pos2,
-        ];
+    const lines = getCheckInnerBoundLineInfos(moveable, poses, [0, 0], false).map(info => {
+        return {
+            ...info,
+            multiple: info.multiple.map(dir => Math.abs(dir) * 2),
+        };
     });
-    const innerBoundInfo = getInnerBoundInfo(moveable, lines, getPosByDirection(poses, [0, 0]), datas);
+    const innerBoundInfo = getInnerBoundInfo(moveable, lines, datas);
     const widthOffsetInfo = getNearOffsetInfo(innerBoundInfo, 0);
     const heightOffsetInfo = getNearOffsetInfo(innerBoundInfo, 1);
     let verticalOffset = 0;
@@ -352,17 +353,50 @@ export function getCheckSnapLineDirections(
 
     return lineDirections;
 }
-export function getCheckInnerBoundLines(
+export interface InnerBoundLineInfo {
+    line: number[][];
+    multiple: number[];
+    horizontalSign: boolean;
+    verticalSign: boolean;
+    centerSign: boolean;
+    lineConstants: [number, number, number];
+}
+export function getCheckInnerBoundLineInfos(
+    moveable: MoveableManagerInterface<SnappableProps>,
     poses: number[][],
     direction: number[],
     keepRatio: boolean,
-) {
-    return getCheckSnapLineDirections(direction, keepRatio).map(([sign, dir1, dir2]) => {
-        return [
-            sign,
-            getPosByDirection(poses, dir1),
-            getPosByDirection(poses, dir2),
+): InnerBoundLineInfo[] {
+    const {
+        allMatrix,
+        is3d,
+    } = moveable.state;
+    const virtualPoses = calculatePoses(allMatrix, 100, 100, is3d ? 4 : 3);
+    const center = getPosByDirection(virtualPoses, [0, 0]);
+
+    return getCheckSnapLineDirections(direction, keepRatio).map(([multiple, dir1, dir2]) => {
+        const virtualLine = [
+            getPosByDirection(virtualPoses, dir1),
+            getPosByDirection(virtualPoses, dir2),
         ];
+        const lineConstants = solveLineConstants(virtualLine);
+        const {
+            vertical: verticalSign,
+            horizontal: horizontalSign,
+        } = isStartLine(center, virtualLine);
+        const centerSign = hitTestLine(center, virtualLine) <= 0;
+
+        return {
+            multiple,
+            centerSign,
+            verticalSign,
+            horizontalSign,
+            lineConstants,
+            line: [
+                getPosByDirection(poses, dir1),
+                getPosByDirection(poses, dir2),
+            ],
+        };
     });
 }
 
@@ -373,16 +407,16 @@ function isBoundRotate(
     rad: number,
 ) {
     const nextPoses = rad ? relativePoses.map(pos => rotate(pos, rad)) : relativePoses;
-    const dots = [
-        center,
-        ...boundDots,
-    ];
     return [
         [nextPoses[0], nextPoses[1]],
         [nextPoses[1], nextPoses[3]],
         [nextPoses[3], nextPoses[2]],
         [nextPoses[2], nextPoses[0]],
-    ].some(line => !isSameStartLine(dots, line));
+    ].some(line => {
+        const centerSign = hitTestLine(center, line) <= 0;
+
+        return !isSameStartLine(boundDots, line, centerSign);
+    });
 }
 function getDistPointLine([pos1, pos2]: number[][]) {
     // x = 0, y = 0
@@ -524,13 +558,7 @@ export function checkInnerBoundPoses(
     const topLine = [[left, top], [left + width, top]];
     const rightLine = [[left + width, top], [left + width, top + height]];
     const bottomLine = [[left, top + height], [left + width, top + height]];
-
-    const lines = [
-        [pos1, pos2],
-        [pos2, pos4],
-        [pos4, pos3],
-        [pos3, pos1],
-    ];
+    const lineInfos = getCheckInnerBoundLineInfos(moveable, poses, [0, 0], false);
 
     const horizontalPoses: number[] = [];
     const verticalPoses: number[] = [];
@@ -542,19 +570,20 @@ export function checkInnerBoundPoses(
         right: false,
     };
 
-    lines.forEach(line => {
+    lineInfos.forEach(lineInfo => {
+        const { line, lineConstants } = lineInfo;
         const {
             horizontal: isHorizontalStart,
             vertical: isVerticalStart,
         } = isStartLine(center, line);
 
         // test vertical
-        const topBoundInfo = checkLineBoundCollision(line, topLine, isVerticalStart, 1, true);
-        const bottomBoundInfo = checkLineBoundCollision(line, bottomLine, isVerticalStart, 1, true);
+        const topBoundInfo = checkLineBoundCollision(line, lineConstants, topLine, isVerticalStart, 1, true);
+        const bottomBoundInfo = checkLineBoundCollision(line, lineConstants, bottomLine, isVerticalStart, 1, true);
 
         // test horizontal
-        const leftBoundInfo = checkLineBoundCollision(line, leftLine, isHorizontalStart, 1, true);
-        const rightBoundInfo = checkLineBoundCollision(line, rightLine, isHorizontalStart, 1, true);
+        const leftBoundInfo = checkLineBoundCollision(line, lineConstants, leftLine, isHorizontalStart, 1, true);
+        const rightBoundInfo = checkLineBoundCollision(line, lineConstants, rightLine, isHorizontalStart, 1, true);
 
         if (topBoundInfo.isBound && !boundMap.top) {
             horizontalPoses.push(top);

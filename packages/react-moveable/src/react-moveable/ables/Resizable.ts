@@ -362,14 +362,11 @@ export default {
                 boundingWidth = boundingHeight * ratio;
             }
         } else {
-            if (startOffsetWidth + distWidth < -snapThreshold) {
-                snapDist[0] = 0;
-            }
-            if (startOffsetWidth + distHeight < -snapThreshold) {
-                snapDist[1] = 0;
-            }
             boundingWidth += snapDist[0];
             boundingHeight += snapDist[1];
+
+            boundingWidth = Math.max(0, boundingWidth);
+            boundingHeight = Math.max(0, boundingHeight);
         }
         [boundingWidth, boundingHeight] = calculateBoundSize(
             [boundingWidth, boundingHeight],
@@ -377,7 +374,6 @@ export default {
             maxSize,
             keepRatio,
         );
-
         computeSize();
 
         distWidth = boundingWidth - startOffsetWidth;

@@ -38,7 +38,7 @@ import { dragControlCondition as rotatableDragControlCondtion } from "./Rotatabl
 import { FLOAT_POINT_NUM } from "../consts";
 import {
     getInnerBoundInfo,
-    getCheckInnerBoundLines,
+    getCheckInnerBoundLineInfos,
     checkRotateInnerBounds,
     checkInnerBoundPoses,
 } from "./snappable/innerBounds";
@@ -148,7 +148,7 @@ export function getSizeOffsetInfo(
 ) {
     const { fixedDirection } = datas;
     const directions = getCheckSnapDirections(direction, fixedDirection, keepRatio);
-    const lines = getCheckInnerBoundLines(poses, direction, keepRatio);
+    const innerBoundLineInfos = getCheckInnerBoundLineInfos(moveable, poses, direction, keepRatio);
     const offsets = [
         ...getSnapBoundInfo(
             moveable,
@@ -160,8 +160,7 @@ export function getSizeOffsetInfo(
         ),
         ...getInnerBoundInfo(
             moveable,
-            lines,
-            getPosByDirection(poses, [0, 0]),
+            innerBoundLineInfos,
             datas
         ),
     ];
