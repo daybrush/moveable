@@ -228,7 +228,7 @@ class App extends React.Component<any, any> {
                     // snapCenter={true}
                     // zoom={2}
                     // renderDirections={["n", "ne", "nw"]}
-                    snapDistFormat={d => `${d}px`}
+                    snapDistFormat={(d, type) => `${d}px`}
                     // padding={{ top: 10, left: 10, right: 10, bottom: 10 }}
                     // throttleRotate={90}
                     elementGuidelines={[

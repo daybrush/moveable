@@ -1983,7 +1983,7 @@ export interface SnappableOptions {
      * You can set the text format of the distance shown in the guidelines.
      * @default oneself
      */
-    snapDistFormat?: (distance: number) => number | string;
+    snapDistFormat?: (distance: number, type: "vertical" | "horizontal") => number | string;
 }
 
 /**
