@@ -266,10 +266,10 @@ export const DEFAULT_INNER_BOUNDS_CONTROLS = {
         description: makeLink("Snappable", "snappable"),
         defaultValue: true,
     }),
-    bounds: makeArgType({
+    innerBounds: makeArgType({
         type: "object",
-        description: makeLink("Snappable", "bounds"),
-        defaultValue: { left: 0, top: 0, right: 500, bottom: 500 },
+        description: makeLink("Snappable", "innerBounds"),
+        defaultValue: { left: 0, top: 0, width: 100, height: 100 },
     }),
 };
 

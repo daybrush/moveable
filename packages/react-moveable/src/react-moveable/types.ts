@@ -2231,6 +2231,11 @@ export interface ClippableOptions {
      */
     clippable?: boolean;
     /**
+     * Whether to keep the ratio of size if your clipPath is 'inset', 'rect', 'ellipse' type
+     * @default false
+     */
+    keepRatio?: boolean;
+    /**
      * You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
      */
     customClipPath?: string;
