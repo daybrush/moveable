@@ -8,8 +8,9 @@ import {
     prefix, calculatePosition, getDiagonalSize,
     fillParams, triggerEvent,
     makeMatrixCSS, getRect, fillEndParams,
-    convertCSSSize, moveControlPos,
+    convertCSSSize,
     getComputedStyle,
+    getSizeDistByDist,
 } from "../utils";
 import { plus, minus, multiply } from "@scena/matrix";
 import { getDragDist, calculatePointerDist, setDragStart } from "../gesto/GestoUtils";
@@ -111,6 +112,7 @@ function getClipStyles(
         return clipStyles;
     }
 }
+
 function getRectPoses(top: number, right: number, bottom: number, left: number): ControlPose[] {
     const xs = [left, (left + right) / 2, right];
     const ys = [top, (top + bottom) / 2, bottom];
@@ -125,6 +127,157 @@ function getRectPoses(top: number, right: number, bottom: number, left: number):
             pos: [x, y],
         };
     });
+}
+
+export function getControlSize(
+    controlPoses: ControlPose[],
+) {
+    const xRange = [Infinity, -Infinity];
+    const yRange = [Infinity, -Infinity];
+
+    controlPoses.forEach(({ pos }) => {
+        xRange[0] = Math.min(xRange[0], pos[0]);
+        xRange[1] = Math.max(xRange[1], pos[0]);
+        yRange[0] = Math.min(yRange[0], pos[1]);
+        yRange[1] = Math.max(yRange[1], pos[1]);
+    });
+
+    return [
+        Math.abs(xRange[1] - xRange[0]),
+        Math.abs(yRange[1] - yRange[0]),
+    ];
+}
+
+export function moveControlPos(
+    controlPoses: ControlPose[],
+    index: number,
+    dist: number[],
+    isRect?: boolean,
+    keepRatio?: boolean,
+) {
+    const { direction, sub } = controlPoses[index];
+    const dists = controlPoses.map(() => [0, 0]);
+    const directions = direction ? direction.split("") : [];
+
+    if (isRect && index < 8) {
+        const verticalDirections = directions.filter(dir => dir === "w" || dir === "e");
+        const horizontalDirections = directions.filter(dir => dir === "n" || dir === "s");
+
+        const verticalDirection = verticalDirections[0];
+        const horizontalDirection = horizontalDirections[0];
+
+        dists[index] = dist;
+        const [width, height] = getControlSize(controlPoses);
+        const ratio = width && height ? width / height : 0;
+
+        if (ratio && keepRatio) {
+            // 0 1 2
+            // 7   3
+            // 6 5 4
+
+            const fixedIndex = (index + 4) % 8;
+            const fixedPosition = controlPoses[fixedIndex].pos;
+            const sizeDirection = [0, 0];
+
+            if (direction!.indexOf("w") > -1) {
+                sizeDirection[0] = -1;
+            } else if (direction!.indexOf("e") > -1) {
+                sizeDirection[0] = 1;
+            }
+            if (direction!.indexOf("n") > -1) {
+                sizeDirection[1] = -1;
+            } else if (direction!.indexOf("s") > -1) {
+                sizeDirection[1] = 1;
+            }
+
+
+            const nextDist = getSizeDistByDist(
+                [width, height],
+                dist,
+                ratio,
+                sizeDirection,
+                true,
+            );
+            const nextWidth = width + nextDist[0];
+            const nextHeight = height + nextDist[1];
+            let top = fixedPosition[1];
+            let bottom = fixedPosition[1];
+            let left = fixedPosition[0];
+            let right = fixedPosition[0];
+
+            if (sizeDirection[0] === -1) {
+                left = right - nextWidth;
+            } else if (sizeDirection[0] === 1) {
+                right = left + nextWidth;
+            } else {
+                left = left - nextWidth / 2;
+                right = right + nextWidth / 2;
+            }
+            if (sizeDirection[1] === -1) {
+                top = bottom - nextHeight;
+            } else if (sizeDirection[1] === 1) {
+                bottom = top + nextHeight;
+            } else {
+                top = bottom - nextHeight / 2;
+                bottom = top + nextHeight;
+            }
+
+            const nextControlPoses = getRectPoses(top, right, bottom, left);
+
+            controlPoses.forEach((controlPose, i) => {
+                dists[i][0] = nextControlPoses[i].pos[0] - controlPose.pos[0];
+                dists[i][1] = nextControlPoses[i].pos[1] - controlPose.pos[1];
+            });
+        } else {
+            controlPoses.forEach((controlPose, i) => {
+                const {
+                    direction: controlDir,
+                } = controlPose;
+
+                if (!controlDir) {
+                    return;
+                }
+                if (controlDir.indexOf(verticalDirection) > -1) {
+                    dists[i][0] = dist[0];
+                }
+                if (controlDir.indexOf(horizontalDirection) > -1) {
+                    dists[i][1] = dist[1];
+                }
+            });
+            if (verticalDirection) {
+                dists[1][0] = dist[0] / 2;
+                dists[5][0] = dist[0] / 2;
+            }
+            if (horizontalDirection) {
+                dists[3][1] = dist[1] / 2;
+                dists[7][1] = dist[1] / 2;
+            }
+        }
+    } else if (direction && !sub) {
+        directions.forEach(dir => {
+            const isVertical = dir === "n" || dir === "s";
+
+            controlPoses.forEach((controlPose, i) => {
+                const {
+                    direction: dirDir,
+                    horizontal: dirHorizontal,
+                    vertical: dirVertical,
+                } = controlPose;
+
+                if (!dirDir || dirDir.indexOf(dir) === -1) {
+                    return;
+                }
+                dists[i] = [
+                    isVertical || !dirHorizontal ? 0 : dist[0],
+                    !isVertical || !dirVertical ? 0 : dist[1],
+                ];
+            });
+        });
+    } else {
+        dists[index] = dist;
+    }
+
+    return dists;
 }
 function getClipPath(
     target: HTMLElement | SVGElement,
@@ -681,6 +834,8 @@ export default {
         if (!clipPath) {
             return false;
         }
+
+        const { keepRatio } = moveable.props;
         let distX = 0;
         let distY = 0;
 
@@ -719,7 +874,7 @@ export default {
                 distX * Math.abs(horizontal),
                 distY * Math.abs(vertical),
             ];
-            dists = moveControlPos(clipPoses, clipIndex, dist, isRect);
+            dists = moveControlPos(clipPoses, clipIndex, dist, isRect, keepRatio);
         } else if (isAll) {
             dists = poses.map(() => [distX, distY]);
         }
@@ -783,10 +938,8 @@ export default {
             guideYPoses,
             5,
         );
-        const snapOffsetY = horizontalSnapInfo.offset;
-        const snapOffsetX = verticalSnapInfo.offset;
-
-        // let keepRatio =
+        let snapOffsetY = horizontalSnapInfo.offset;
+        let snapOffsetX = verticalSnapInfo.offset;
 
         if (horizontalSnapInfo.isBound) {
             boundDelta[1] += snapOffsetY;
@@ -819,6 +972,44 @@ export default {
             guidePoses[2][0] = center[0] + cx;
             guidePoses[3][1] = center[1] + cy;
             guidePoses[4][0] = center[0] - cx;
+        } else if (isRect && keepRatio && isControl) {
+            const [width, height] = getControlSize(clipPoses);
+            const ratio = width && height ? width / height : 0;
+            const clipPose = clipPoses[clipIndex];
+            const direction = clipPose.direction! || "";
+            let top = guidePoses[1][1];
+            let bottom = guidePoses[5][1];
+            let left = guidePoses[7][0];
+            let right = guidePoses[3][0];
+
+
+            if (snapOffsetY <= snapOffsetX) {
+                snapOffsetY = snapOffsetX / ratio;
+            } else {
+                snapOffsetX = snapOffsetY * ratio;
+            }
+            if (direction!.indexOf("w") > -1) {
+                left -= snapOffsetX;
+            } else if (direction!.indexOf("e") > -1) {
+                right -= snapOffsetX;
+            } else {
+                left += snapOffsetX / 2;
+                right -= snapOffsetX / 2;
+            }
+            if (direction!.indexOf("n") > -1) {
+                top -= snapOffsetY;
+            } else if (direction!.indexOf("s") > -1) {
+                bottom -= snapOffsetY;
+            } else {
+                top += snapOffsetY / 2;
+                bottom -= snapOffsetY / 2;
+            }
+
+            const nextControlPoses = getRectPoses(top, right, bottom, left);
+
+            guidePoses.forEach((pos, i) => {
+                [pos[0], pos[1]] = nextControlPoses[i].pos;
+            });
         } else {
             guidePoses.forEach((pos, j) => {
                 const dist = dists[j];

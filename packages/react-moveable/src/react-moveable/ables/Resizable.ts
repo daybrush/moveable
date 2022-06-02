@@ -244,7 +244,6 @@ export default {
             resizeFormat,
             throttleResize = 1,
             parentMoveable,
-            snapThreshold = 5,
         } = props;
         const direction = datas.direction;
         let sizeDirection = direction;

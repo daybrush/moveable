@@ -329,4 +329,9 @@ export const DEFAULT_CLIPPABLE_CONTROLS = {
         description: makeLink("Clippable", "clipTargetBounds"),
         defaultValue: false,
     }),
+    keepRatio: makeArgType({
+        type: "boolean",
+        description: makeLink("Clippable", "keepRatio"),
+        defaultValue: false,
+    }),
 };

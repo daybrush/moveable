@@ -27,6 +27,7 @@ export default function App(props: Record<string, any>) {
                     clipVerticalGuidelines={props.clipVerticalGuidelines}
                     clipHorizontalGuidelines={props.clipHorizontalGuidelines}
                     snapThreshold={5}
+                    keepRatio={props.keepRatio}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}

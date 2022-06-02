@@ -20,7 +20,7 @@ import {
 } from "@scena/matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
-    MoveableProps, ControlPose, ArrayFormat, MoveableRefType,
+    MoveableProps, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
@@ -1352,71 +1352,6 @@ export function convertCSSSize(value: number, size: number, isRelative?: boolean
     return isRelative ? `${value / size * 100}%` : `${value}px`;
 }
 
-export function moveControlPos(
-    controlPoses: ControlPose[],
-    index: number,
-    dist: number[],
-    isRect?: boolean,
-) {
-    const { direction, sub } = controlPoses[index];
-    const dists = controlPoses.map(() => [0, 0]);
-    const directions = direction ? direction.split("") : [];
-
-    if (isRect && index < 8) {
-        const verticalDirection = directions.filter(dir => dir === "w" || dir === "e")[0];
-        const horizontalDirection = directions.filter(dir => dir === "n" || dir === "s")[0];
-
-        dists[index] = dist;
-        controlPoses.forEach((controlPose, i) => {
-            const {
-                direction: controlDir,
-            } = controlPose;
-
-            if (!controlDir) {
-                return;
-            }
-            if (controlDir.indexOf(verticalDirection) > -1) {
-                dists[i][0] = dist[0];
-            }
-            if (controlDir.indexOf(horizontalDirection) > -1) {
-                dists[i][1] = dist[1];
-            }
-        });
-        if (verticalDirection) {
-            dists[1][0] = dist[0] / 2;
-            dists[5][0] = dist[0] / 2;
-        }
-        if (horizontalDirection) {
-            dists[3][1] = dist[1] / 2;
-            dists[7][1] = dist[1] / 2;
-        }
-    } else if (direction && !sub) {
-        directions.forEach(dir => {
-            const isVertical = dir === "n" || dir === "s";
-
-            controlPoses.forEach((controlPose, i) => {
-                const {
-                    direction: dirDir,
-                    horizontal: dirHorizontal,
-                    vertical: dirVertical,
-                } = controlPose;
-
-                if (!dirDir || dirDir.indexOf(dir) === -1) {
-                    return;
-                }
-                dists[i] = [
-                    isVertical || !dirHorizontal ? 0 : dist[0],
-                    !isVertical || !dirVertical ? 0 : dist[1],
-                ];
-            });
-        });
-    } else {
-        dists[index] = dist;
-    }
-
-    return dists;
-}
-
 export function getTinyDist(v: number) {
     return Math.abs(v) <= TINY_NUM ? 0 : v;
 }
@@ -1597,7 +1532,49 @@ export function getDragDistByState(state: MoveableManagerState, dist: number[]) 
     return calculateMatrixDist(inverseMatrix, dist);
 }
 
+export function getSizeDistByDist(
+    startSize: number[],
+    dist: number[],
+    ratio: number,
+    direction: number[],
+    keepRatio?: boolean,
+) {
+    const [startOffsetWidth, startOffsetHeight] = startSize;
+    let distWidth = 0;
+    let distHeight = 0;
 
+    if (keepRatio && startOffsetWidth && startOffsetHeight) {
+        const rad = getRad([0, 0], dist);
+        const standardRad = getRad([0, 0], direction);
+        const size = getDistSize(dist);
+        const signSize = Math.cos(rad - standardRad) * size;
+
+        if (!direction[0]) {
+            // top, bottom
+            distHeight = signSize;
+            distWidth = distHeight * ratio;
+        } else if (!direction[1]) {
+            // left, right
+            distWidth = signSize;
+            distHeight = distWidth / ratio;
+        } else {
+            // two-way
+            const startWidthSize = direction[0] * 2 * startOffsetWidth;
+            const startHeightSize = direction[1] * 2 * startOffsetHeight;
+            const distSize = getDistSize([startWidthSize + dist[0], startHeightSize + dist[1]])
+                - getDistSize([startWidthSize, startHeightSize]);
+            const ratioRad = getRad([0, 0], [ratio, 1]);
+
+            distWidth = Math.cos(ratioRad) * distSize;
+            distHeight = Math.sin(ratioRad) * distSize;
+        }
+    } else {
+        distWidth = direction[0] * dist[0];
+        distHeight = direction[1] * dist[1];
+    }
+
+    return [distWidth, distHeight];
+}
 export function getOffsetSizeDist(
     sizeDirection: number[],
     keepRatio: boolean,
@@ -1651,55 +1628,13 @@ export function getOffsetSizeDist(
             }
             return dist[index] * directionRatio;
         });
-
-
-        if (keepRatio && startOffsetWidth && startOffsetHeight) {
-            const rad = getRad([0, 0], dist);
-            const standardRad = getRad([0, 0], sizeDirection);
-            const size = getDistSize(dist);
-            const signSize = Math.cos(rad - standardRad) * size;
-
-            if (!sizeDirection[0]) {
-                // top, bottom
-                distHeight = signSize;
-                distWidth = distHeight * ratio;
-            } else if (!sizeDirection[1]) {
-                // left, right
-                distWidth = signSize;
-                distHeight = distWidth / ratio;
-            } else {
-                // two-way
-                const startWidthSize = sizeDirection[0] * 2 * startOffsetWidth;
-                const startHeightSize = sizeDirection[1] * 2 * startOffsetHeight;
-                const distSize = getDistSize([startWidthSize + dist[0], startHeightSize + dist[1]])
-                    - getDistSize([startWidthSize, startHeightSize]);
-                const ratioRad = getRad([0, 0], [ratio, 1]);
-
-                distWidth = Math.cos(ratioRad) * distSize;
-                distHeight = Math.sin(ratioRad) * distSize;
-            }
-        } else {
-            // const nextDirection = [...direction];
-
-            // if (!startOffsetWidth) {
-            //     if (dist[0] < 0) {
-            //         nextDirection[0] = -1;
-            //     } else if (dist[0] > 0) {
-            //         nextDirection[0] = 1;
-            //     }
-            // }
-            // if (!startOffsetHeight) {
-            //     if (dist[1] < 0) {
-            //         nextDirection[1] = -1;
-            //     } else if (dist[1] > 0) {
-            //         nextDirection[1] = 1;
-            //     }
-            // }
-            // direction = nextDirection;
-            // sizeDirection = nextDirection;
-            distWidth = sizeDirection[0] * dist[0];
-            distHeight = sizeDirection[1] * dist[1];
-        }
+        [distWidth, distHeight] = getSizeDistByDist(
+            [startOffsetWidth, startOffsetHeight],
+            dist,
+            ratio,
+            sizeDirection,
+            keepRatio,
+        );
     }
     return {
         // direction,
