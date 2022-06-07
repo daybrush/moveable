@@ -1738,14 +1738,14 @@
     gh-pages "^2.0.1"
     sync-exec "^0.6.2"
 
-"@daybrush/release@^0.4.2":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@daybrush/release/-/release-0.4.3.tgz#ba6017b46683d0d20f38e18662003e1a108d2667"
-  integrity sha512-qVyvaygYkRUMuFcRUdPMd+Cgxlrnxh+hks7D/SEPkIpvjK19Jpg/lmIrFMcMdIiHtTT3aXt+0+2A5y99BaDzVA==
+"@daybrush/release@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@daybrush/release/-/release-0.5.0.tgz#d1770d826b258f263341269affcb24ab4cff6676"
+  integrity sha512-dXtcd+9zKkTx1MCTmY0GLroR/8JITUFSA/aicbRyS6gmHWBJ4KmFvzN/f/xt3E6Hm1MzOYfZOAJ+80uH/qxOSw==
   dependencies:
     args "^5.0.1"
     commander "9.2.0"
-    conventional-changelog-conventionalcommits "4.6.3"
+    conventional-changelog-conventionalcommits "^4.6.3"
     cpx "1.5.0"
     gh-pages "^2.0.1"
     intercept-stdout "0.1.2"
@@ -7546,7 +7546,7 @@ conventional-changelog-angular@^5.0.12:
     compare-func "^2.0.0"
     q "^1.5.1"
 
-conventional-changelog-conventionalcommits@4.6.3:
+conventional-changelog-conventionalcommits@^4.6.3:
   version "4.6.3"
   resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-4.6.3.tgz#0765490f56424b46f6cb4db9135902d6e5a36dc2"
   integrity sha512-LTTQV4fwOM4oLPad317V/QNQ1FY4Hju5qeBIM1uTHbrnCE+Eg4CdRZ3gO2pUeR+tzWdp80M2j3qFFEDWVqOV4g==
