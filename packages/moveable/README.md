@@ -243,7 +243,7 @@ moveable.on("pinchStart", ({ target, clientX, clientY }) => {
 * [**vue3-moveable**](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable): A Vue 3 Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable.
 
 ## ⚙️ Developments
-The `moveable` repo is managed as a [monorepo](https://github.com/lerna/lerna).
+The `moveable` repo is managed as a [monorepo](https://github.com/lerna/lerna) with `yarn`.
 
 The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
 
@@ -252,7 +252,7 @@ For development and testing, check in [packages/react-moveable](https://github.c
 ### `npm run storybook`
 
 ```
-$ npm i
+$ yarn install
 $ npm run bootstrap
 $ npm run storybook
 ```

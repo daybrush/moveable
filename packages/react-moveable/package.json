@@ -1,6 +1,6 @@
 {
     "name": "react-moveable",
-    "version": "0.32.8-beta.3",
+    "version": "0.32.8-beta.4",
     "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -9,7 +9,6 @@
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
         "storybook": "start-storybook -p 6006",
-        "start": "react-scripts start",
         "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
         "build:storybook": "build-storybook -o ../../demo/storybook2",
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
@@ -72,8 +71,8 @@
         "@types/karma-chai": "^0.1.2",
         "@types/mocha": "^5.2.7",
         "@types/node": "^14.6.0",
-        "@types/react": "^16.14.25",
-        "@types/react-dom": "^16.9.15",
+        "@types/react": "^16.9.17",
+        "@types/react-dom": "^16.9.4",
         "@typescript-eslint/eslint-plugin": "^3.9.1",
         "@typescript-eslint/parser": "^3.9.1",
         "autoprefixer": "^10.2.1",
@@ -91,7 +90,6 @@
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
         "react-infinite-viewer": "^0.12.0",
-        "react-scripts": "^3.0.1",
         "react-selecto": "^1.15.0",
         "scenejs": "^1.5.0",
         "shape-svg": "^0.3.3",
@@ -99,7 +97,10 @@
         "storybook-dark-mode": "^1.0.9",
         "ts-loader": "^8.3.0",
         "tslib": "^2.3.1",
-        "typescript": "^4.6.3"
+        "typescript": "^4.5.0 <4.6.0"
+    },
+    "peerDependencies": {
+        "@types/react": "~16.9.0"
     },
     "dependencies": {
         "@daybrush/utils": "^1.6.0",

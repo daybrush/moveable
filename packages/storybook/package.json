@@ -1,40 +1,46 @@
 {
-  "name": "moveable-storybook",
-  "private": true,
-  "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build": "build-storybook -o ../../demo/storybook"
-  },
-  "author": "Daybrush",
-  "license": "MIT",
-  "dependencies": {
-    "@daybrush/utils": "^0.10.5",
-    "moveable-helper": "^0.4.0",
-    "react-infinite-viewer": "^0.11.0",
-    "react-moveable": "~0.32.7",
-    "storybook-addon-preview": "^1.2.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@storybook/addon-actions": "^5.3.14",
-    "@storybook/addon-info": "^5.3.14",
-    "@storybook/addon-knobs": "^5.3.14",
-    "@storybook/addon-links": "^5.3.14",
-    "@storybook/addon-storysource": "^5.3.14",
-    "@storybook/addon-viewport": "^5.3.14",
-    "@storybook/addons": "^5.3.14",
-    "@storybook/react": "^5.3.14",
-    "@types/node": "^12.12.29",
-    "@types/react": "^16.14.25",
-    "@types/react-dom": "^16.9.15",
-    "awesome-typescript-loader": "^5.2.1",
-    "babel-loader": "^8.0.6",
-    "raw-loader": "^4.0.0",
-    "react-docgen-typescript-loader": "^3.6.0",
-    "ts-node": "^8.6.2",
-    "typescript": "^3.8.3"
-  }
+    "name": "moveable-storybook",
+    "private": true,
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "storybook": "start-storybook -p 6006",
+        "build": "build-storybook -o ../../demo/storybook"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "dependencies": {
+        "@daybrush/utils": "^0.10.5",
+        "moveable-helper": "^0.4.0",
+        "react-infinite-viewer": "^0.11.0",
+        "react-moveable": "~0.32.8-beta.4",
+        "storybook-addon-preview": "^2.2.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.8.7",
+        "@storybook/addon-actions": "^6.4.22",
+        "@storybook/addon-controls": "^6.4.22",
+        "@storybook/addon-docs": "^6.4.22",
+        "@storybook/addon-links": "^6.4.22",
+        "@storybook/addon-viewport": "^6.4.22",
+        "@storybook/addons": "^6.4.22",
+        "@storybook/react": "^6.4.22",
+        "@storybook/addon-knobs": "^6.4.0",
+        "@storybook/addon-storysource": "^6.4.22",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "@types/node": "^12.12.29",
+        "@types/react": "^16.9.17",
+        "@types/react-dom": "^16.9.4",
+        "ts-loader": "^8.3.0",
+        "babel-loader": "^8.0.6",
+        "raw-loader": "^4.0.0",
+        "ts-node": "^8.6.2",
+        "typescript": "^4.5.0 <4.6.0"
+    },
+    "peerDependencies": {
+        "@types/react": "^16.9.17",
+        "@types/react-dom": "^16.9.4"
+    }
 }

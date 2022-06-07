@@ -6,16 +6,25 @@
     "module": "es2015",
     "target": "es5",
     "experimentalDecorators": true,
-    "skipLibCheck": false,
-    "strict": true,
+    "skipLibCheck": true,
     "moduleResolution": "node",
     "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
     "lib": [
       "es2015",
       "dom"
     ],
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
   ]
 }

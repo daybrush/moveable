@@ -1,79 +1,85 @@
 {
-  "name": "moveable-root",
-  "version": "0.30.0",
-  "private": true,
-  "keywords": [
-    "moveable",
-    "resizable",
-    "scalable",
-    "draggable",
-    "rotatable",
-    "groupable",
-    "movable",
-    "warpable",
-    "pinchable",
-    "snappable",
-    "clippable",
-    "roundable",
-    "border",
-    "origin",
-    "dom",
-    "resize",
-    "scale",
-    "drag",
-    "move",
-    "warp",
-    "rotate",
-    "react",
-    "preact",
-    "throttle",
-    "group",
-    "pinchi",
-    "snap"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/daybrush/moveable.git"
-  },
-  "author": "Daybrush",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/daybrush/moveable/issues"
-  },
-  "homepage": "https://daybrush.com/moveable/",
-  "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "storybook": "npm run storybook --prefix ./packages/react-moveable",
-    "build": "npm run build --prefix ./packages/react-moveable",
-    "packages:update": "lerna-helper version",
-    "packages:build": "lerna run build --ignore ngx-moveable --ignore moveable-storybook",
-    "packages:publish": "lerna-helper publish --ignore ngx-moveable",
-    "changelog": "lerna-helper changelog --type all --base moveable",
-    "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
-    "build:storybook": "npm run build --prefix ./packages/storybook",
-    "build:storybook2": "npm run build:storybook --prefix ./packages/react-moveable",
-    "demo:build": "npm run packages:build && npm run doc && npm run build:storybook && npm run build:storybook2",
-    "demo:deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
-    "deploy": "lerna-helper deploy --base moveable",
-    "release": "lerna-helper release --base moveable"
-  },
-  "devDependencies": {
-    "@daybrush/jsdoc": "^0.4.0",
-    "@daybrush/release": "^0.4.2",
-    "@types/react": "^16.14.25",
-    "@types/react-dom": "^16.9.15",
-    "cpx": "1.5.0",
-    "daybrush-jsdoc-template": "^1.7.0",
-    "gh-pages": "^2.0.1",
-    "intercept-stdout": "0.1.2",
-    "lerna": "^4.0.0",
-    "lerna-changelog": "2.2.0",
-    "typescript": "4.6.3"
-  },
-  "dependencies": {
-    "@daybrush/utils": "^1.6.0",
-    "@scena/event-emitter": "^1.0.5",
-    "framework-utils": "^1.1.0",
-    "react-simple-compat": "^1.2.2"
-  }
+    "name": "moveable-root",
+    "version": "0.30.0",
+    "private": true,
+    "keywords": [
+        "moveable",
+        "resizable",
+        "scalable",
+        "draggable",
+        "rotatable",
+        "groupable",
+        "movable",
+        "warpable",
+        "pinchable",
+        "snappable",
+        "clippable",
+        "roundable",
+        "border",
+        "origin",
+        "dom",
+        "resize",
+        "scale",
+        "drag",
+        "move",
+        "warp",
+        "rotate",
+        "react",
+        "preact",
+        "throttle",
+        "group",
+        "pinchi",
+        "snap"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/daybrush/moveable.git"
+    },
+    "author": "Daybrush",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/daybrush/moveable/issues"
+    },
+    "homepage": "https://daybrush.com/moveable/",
+    "scripts": {
+        "bootstrap": "lerna bootstrap",
+        "storybook": "npm run storybook --prefix ./packages/react-moveable",
+        "build": "npm run build --prefix ./packages/react-moveable",
+        "packages:update": "lerna-helper version",
+        "packages:build": "lerna run build --ignore ngx-moveable --ignore moveable-storybook",
+        "packages:publish": "lerna-helper publish --ignore ngx-moveable",
+        "changelog": "lerna-helper changelog --type all --base moveable",
+        "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
+        "build:storybook": "npm run build --prefix ./packages/storybook",
+        "build:storybook2": "npm run build:storybook --prefix ./packages/react-moveable",
+        "demo:build": "npm run packages:build && npm run doc && npm run build:storybook && npm run build:storybook2",
+        "demo:deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
+        "deploy": "lerna-helper deploy --base moveable",
+        "release": "lerna-helper release --base moveable"
+    },
+    "devDependencies": {
+        "@daybrush/jsdoc": "^0.4.0",
+        "@daybrush/release": "^0.4.2",
+        "cpx": "1.5.0",
+        "daybrush-jsdoc-template": "^1.7.0",
+        "gh-pages": "^2.0.1",
+        "intercept-stdout": "0.1.2",
+        "lerna": "^4.0.0",
+        "lerna-changelog": "2.2.0",
+        "typescript": "^4.5.0 <4.6.0"
+    },
+    "workspaces": {
+        "packages": [
+            "packages/*",
+            "packages/ngx-moveable/projects/ngx-moveable"
+        ]
+    },
+    "resolutions": {
+        "@types/react": "^16.9.17",
+        "typescript": "^4.5.0 <4.6.0"
+    },
+    "overrides": {
+        "@types/react": "^16.9.17",
+        "typescript": "^4.5.0 <4.6.0"
+    }
 }
