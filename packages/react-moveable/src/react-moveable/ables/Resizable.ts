@@ -381,14 +381,12 @@ export default {
             boundingWidth = Math.max(0, boundingWidth);
             boundingHeight = Math.max(0, boundingHeight);
         }
-        console.log("BEFORE", boundingWidth);
         [boundingWidth, boundingHeight] = calculateBoundSize(
             [boundingWidth, boundingHeight],
             minSize,
             maxSize,
             ratio,
         );
-        console.log("After", boundingWidth);
         computeSize();
 
         distWidth = boundingWidth - startOffsetWidth;

@@ -47,7 +47,7 @@
         "build": "npm run build --prefix ./packages/react-moveable",
         "packages:update": "lerna-helper version",
         "packages:build": "lerna run build --ignore ngx-moveable --ignore moveable-storybook",
-        "packages:publish": "lerna-helper publish --ignore ngx-moveable --commit 'chore: update packages versions'",
+        "packages:publish": "lerna-helper publish --ignore ngx-moveable --commit 'chore: publish packages'",
         "changelog": "lerna-helper changelog --type all --base moveable",
         "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
         "build:storybook": "npm run build --prefix ./packages/storybook",
