@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.17.9](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.17.8...react-compat-moveable@0.17.9) (2022-06-07)
+
+
+### :bug: Bug Fix
+
+* fix minSize for zero size ([c34f298](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/c34f29803a487098f36f45991ea6dff03bd2750a))
+
+
+### :house: Code Refactoring
+
+* use yarn workspace ([73da295](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/73da295064845a3791782c1777a9c555272a0af0))
+
+
+### :mega: Other
+
+* publish packages ([3530f05](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/3530f0526081b0c010e6c964265b466713f0212e))
+
+
+
 ## [0.17.8](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.17.6...react-compat-moveable@0.17.8) (2022-05-01)
 
 

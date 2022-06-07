@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.9](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.32.7...react-moveable@0.32.9) (2022-06-07)
+
+
+### :rocket: New Features
+
+* add clippable keepRatio ([37da849](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/37da849e81454ea17be4510a81beeef852cfda9f))
+
+
+### :bug: Bug Fix
+
+* fix [1, 1] direction's bounds #624 ([5108bc3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5108bc33cf9e098cd051e4b7d63b2ac3dc06bf09))
+* fix changed target getos #657 ([54ef5a0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/54ef5a03a781e706293699d1ae25141e215044c9))
+* fix clippable bounds #659 ([b3986de](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b3986de338b2d38e42288c9d2cafe2a2a7da7705))
+* fix group drag condition ([35c194a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/35c194a8fb2aa5051e7f46092418c35821e61890))
+* fix group gestos for strict mode #656 ([311c931](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/311c93137f9b8aa53b040cda05e94bbae08e313b))
+* fix innerBounds for no width, height ([42fe6f3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/42fe6f3d45662c2e46280d4d5a6eed0cc9a05e66))
+* fix minSize for zero size ([c34f298](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c34f29803a487098f36f45991ea6dff03bd2750a))
+* fix svg matrixes #643 ([525ad70](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/525ad70e2593500188e2a81d2759e726d4277049))
+* support keepRatio for Clippable ([a934512](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/a934512d2fc38e4a2fee6b6c5834df1b4f6e503e))
+
+
+### :house: Code Refactoring
+
+* use yarn workspace ([73da295](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/73da295064845a3791782c1777a9c555272a0af0))
+
+
+### :mega: Other
+
+* fix types dependencies ([b4a3ee6](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b4a3ee6486a81ca14a7c23284818628471369fe0))
+* publish packages ([3530f05](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3530f0526081b0c010e6c964265b466713f0212e))
+* update demo configuration ([917123c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/917123cdea2830e8e8f4a8d7b2a99654f16682ef))
+
+
+
 ## [0.32.7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.32.5...react-moveable@0.32.7) (2022-05-01)
 
 

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.9](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.29.8...moveable@0.29.9) (2022-06-07)
+
+
+### :house: Code Refactoring
+
+* use yarn workspace ([73da295](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/73da295064845a3791782c1777a9c555272a0af0))
+
+
+### :mega: Other
+
+* publish packages ([3530f05](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/3530f0526081b0c010e6c964265b466713f0212e))
+* update demo configuration ([917123c](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/917123cdea2830e8e8f4a8d7b2a99654f16682ef))
+* update dependencies ([9ad9efa](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/9ad9efa2a180c087cd68c1491f19a6226610567b))
+
+
+
 ## [0.29.8](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.29.6...moveable@0.29.8) (2022-05-01)
 
 

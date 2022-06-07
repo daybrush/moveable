@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.29.9](https://github.com/daybrush/moveable/compare/0.29.8...0.29.9) (2022-06-07)
+### :sparkles: Packages
+* `lit-moveable` 0.6.9
+* `moveable` 0.29.9
+* `preact-moveable` 0.31.9
+* `react-compat-moveable` 0.17.9
+* `react-moveable` 0.32.9
+* `svelte-moveable` 0.21.9
+* `vue-moveable` 2.0.0-beta.20
+* `vue3-moveable` 0.4.9
+* `ngx-moveable` 0.26.9
+
+
+### :rocket: New Features
+
+* `vue-moveable`, `react-moveable`
+    * add clippable keepRatio ([37da849](https://github.com/daybrush/moveable/commit/37da849e81454ea17be4510a81beeef852cfda9f))
+* Other
+    * add snappable package ([aec29c6](https://github.com/daybrush/moveable/commit/aec29c67d8314b9ede95e4320ff29d6c0dac87eb))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `react-compat-moveable`, `lit-moveable`
+    * fix minSize for zero size ([c34f298](https://github.com/daybrush/moveable/commit/c34f29803a487098f36f45991ea6dff03bd2750a))
+* `vue3-moveable`, `vue-moveable`
+    * fix commonjs import bug #650 ([15403ce](https://github.com/daybrush/moveable/commit/15403cee70d3f4bf0b9e1311d3bc3086742d7090))
+    * fix vue methods' return value ([cc0cb79](https://github.com/daybrush/moveable/commit/cc0cb7981e90c3973763c4fdde2c9cb03168a300))
+* `react-moveable`
+    * fix [1, 1] direction's bounds #624 ([5108bc3](https://github.com/daybrush/moveable/commit/5108bc33cf9e098cd051e4b7d63b2ac3dc06bf09))
+    * fix changed target getos #657 ([54ef5a0](https://github.com/daybrush/moveable/commit/54ef5a03a781e706293699d1ae25141e215044c9))
+    * fix clippable bounds #659 ([b3986de](https://github.com/daybrush/moveable/commit/b3986de338b2d38e42288c9d2cafe2a2a7da7705))
+    * fix group drag condition ([35c194a](https://github.com/daybrush/moveable/commit/35c194a8fb2aa5051e7f46092418c35821e61890))
+    * fix group gestos for strict mode #656 ([311c931](https://github.com/daybrush/moveable/commit/311c93137f9b8aa53b040cda05e94bbae08e313b))
+    * fix innerBounds for no width, height ([42fe6f3](https://github.com/daybrush/moveable/commit/42fe6f3d45662c2e46280d4d5a6eed0cc9a05e66))
+    * fix svg matrixes #643 ([525ad70](https://github.com/daybrush/moveable/commit/525ad70e2593500188e2a81d2759e726d4277049))
+    * support keepRatio for Clippable ([a934512](https://github.com/daybrush/moveable/commit/a934512d2fc38e4a2fee6b6c5834df1b4f6e503e))
+* `vue-moveable`
+    * fix commonjs issue #650 ([89a5fb6](https://github.com/daybrush/moveable/commit/89a5fb6b4b2c04360db4d341d27668079016a579))
+
+
+### :memo: Documentation
+
+* update handbook.md (#675) ([dfc428b](https://github.com/daybrush/moveable/commit/dfc428bb2526138856de8ed437183993ba6ffeaa))
+
+
+### :house: Code Refactoring
+
+* All
+    * use yarn workspace ([73da295](https://github.com/daybrush/moveable/commit/73da295064845a3791782c1777a9c555272a0af0))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([3530f05](https://github.com/daybrush/moveable/commit/3530f0526081b0c010e6c964265b466713f0212e))
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`
+    * update demo configuration ([917123c](https://github.com/daybrush/moveable/commit/917123cdea2830e8e8f4a8d7b2a99654f16682ef))
+* `react-moveable`
+    * fix types dependencies ([b4a3ee6](https://github.com/daybrush/moveable/commit/b4a3ee6486a81ca14a7c23284818628471369fe0))
+* `moveable`
+    * update dependencies ([9ad9efa](https://github.com/daybrush/moveable/commit/9ad9efa2a180c087cd68c1491f19a6226610567b))
+* Other
+    * fix lerna scripts ([6b6c210](https://github.com/daybrush/moveable/commit/6b6c21005ea028647534e6d11917e1bf8093946e))
+    * update release module ([f00caf5](https://github.com/daybrush/moveable/commit/f00caf55c7913a1b1c007489be5d84a8d6b36fd4))
+
+
+
 ## [0.29.8](https://github.com/daybrush/moveable/compare/0.29.6...0.29.8) (2022-05-01)
 ### :sparkles: Packages
 * `lit-moveable` 0.6.8

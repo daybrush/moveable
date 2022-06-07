@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.9](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.31.8...preact-moveable@0.31.9) (2022-06-07)
+
+
+### :house: Code Refactoring
+
+* use yarn workspace ([73da295](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/73da295064845a3791782c1777a9c555272a0af0))
+
+
+### :mega: Other
+
+* publish packages ([3530f05](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/3530f0526081b0c010e6c964265b466713f0212e))
+* update demo configuration ([917123c](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/917123cdea2830e8e8f4a8d7b2a99654f16682ef))
+
+
+
 ## [0.31.8](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.31.6...preact-moveable@0.31.8) (2022-05-01)
 
 
