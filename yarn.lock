@@ -1781,30 +1781,10 @@
     sinon "^7.4.1"
     source-map-support "^0.5.13"
 
-"@daybrush/utils@1.6.0", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-1.6.0.tgz#0dfd2c360764f63380df4ec0d44e176c69f7bbc3"
-  integrity sha512-9MjMoOLl1U+l8lXByN3BbLZXf+mktoLyeb6t78Jz2WZ7LRldK0FNg8oW//9giO2hHCUyxS7LX6jS1hToGIfRWA==
-
-"@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.10.5":
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-0.10.5.tgz#96427101f5de99ceb13bce1f09916374e62c84f1"
-  integrity sha512-VCPbgJgImkUmGHX33drZJh/5FYBhfSM+EFqlBY7fzKIahBGEemjYfninVSp9BdzqF9P2MyCh7R3hgxmySXLEzg==
-
-"@daybrush/utils@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-0.11.0.tgz#3fd113fcedaab29d8c80773ca5f4d32551bdc9d8"
-  integrity sha512-PnrY1NDjXqXKASoREcjHokQt0WWHiUBClMJ0l9APx42QkeOCQ5nXB7k4VdmkaU23BndeSmNNYJDNL6eEsRitaA==
-
-"@daybrush/utils@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-0.5.2.tgz#cc7876e2690895b6b4e5e048795271d5ddb2fedd"
-  integrity sha512-WD23IKwqFW8E8Y/gRUmoKpkkCAzedSGiU7kpOKvbqB+PRkg9rTq20SWMIlNxAU0Y+6zYGOVFguNPlL0W1lz1vQ==
-
-"@daybrush/utils@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-0.7.1.tgz#be259ce794d7bdda6195b24da1e9666bd845d25f"
-  integrity sha512-n4timHtzzOS9w6fQJ0SfynfNFNqqJeSoXoeFw2CS1PPD3GfWJZliSklFWMBJ5taDcNovyCWlZV7D4bdeGY0nPA==
+"@daybrush/utils@1.6.0", "@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.10.5", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@daybrush/utils/-/utils-1.7.0.tgz#b256b91c78b6b9f4d7e22a02f3f5de01c8272a1d"
+  integrity sha512-52QInHXL1tffnEIxURWav7ZoIdhiK6ioQr2tzitZr8Uul0g3X58jdyDG7UeqCAFnbH4bZUp0QSznPSX8fHdZZQ==
 
 "@discoveryjs/json-ext@0.5.6":
   version "0.5.6"
@@ -8120,14 +8100,6 @@ css-selector-tokenizer@^0.7.0, css-selector-tokenizer@^0.7.1:
     cssesc "^3.0.0"
     fastparse "^1.1.2"
 
-css-styled@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/css-styled/-/css-styled-0.1.7.tgz#811122c586360a3746c4d4211296c5f028564dbb"
-  integrity sha512-ypbwCHOxYG0N7cbH2IPH6uZrWi8WqFBkUxPWeT/gtYL4uE+3Te7AsQISsnzeQbOR+/DleziQBQCm6zZsbht/Ig==
-  dependencies:
-    "@daybrush/utils" "^0.10.1"
-    string-hash "^1.1.3"
-
 css-styled@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/css-styled/-/css-styled-1.0.0.tgz#6fe10a98f95c24fa66cb1c41e11e7c00bcedac13"
@@ -10574,12 +10546,7 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framework-utils@^0.3.0, framework-utils@^0.3.4:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/framework-utils/-/framework-utils-0.3.4.tgz#450e63cca680c2a78047691a32ed9f51a748e3a1"
-  integrity sha512-Psekd+sXiHxtjLvK6aqi7vw6sQpShfBQSYlLkxCyhVzpmeTdxv1lCq8BGx++Mm5yw+MUn5IA4WKNO6LZFtOe2Q==
-
-framework-utils@^1.1.0:
+framework-utils@^0.3.0, framework-utils@^0.3.4, framework-utils@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/framework-utils/-/framework-utils-1.1.0.tgz#a3b528bce838dfd623148847dc92371b09d0da2d"
   integrity sha512-KAfqli5PwpFJ8o3psRNs8svpMGyCSAe8nmGcjQ0zZBWN2H6dZDnq+ABp3N3hdUmFeMrLtjOCTXD4yplUJIWceg==
@@ -18025,15 +17992,7 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^0.1.3:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/react-css-styled/-/react-css-styled-0.1.4.tgz#10be3528f335cc5b114330dc4757fcb36309a34b"
-  integrity sha512-iuRtEu5Vy2jno0Bs+GEi4KOjBuXJsmEUD47Jk18FOIcwwheZQSAu1KFHZrL6cg147eL0p7ycV2E8pAyrnNvI5g==
-  dependencies:
-    css-styled "^0.1.7"
-    framework-utils "^0.3.4"
-
-react-css-styled@^1.0.2, react-css-styled@^1.0.3:
+react-css-styled@^0.1.3, react-css-styled@^1.0.2, react-css-styled@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-css-styled/-/react-css-styled-1.0.3.tgz#f6dda995f41e4777567d2464b7d12ed1373b4f1d"
   integrity sha512-6H3aZPO66PYmYg9wx12WzOJpPlBEdA7O5JefCh+4SldlihVKBCxA6mityfWSGWL5ldOkJdHJWGwHR6nGPcVm+A==

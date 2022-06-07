@@ -32,6 +32,7 @@ import {
     calculateBoundSize,
     isString, convertUnitSize,
     throttle,
+    isNumber,
 } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 
@@ -104,7 +105,10 @@ export default {
             datas.startWidth,
             datas.startHeight,
         ] = getCSSSize(target);
-        const padding = [Math.max(0, width - datas.startWidth), Math.max(0, height - datas.startHeight)];
+        const padding = [
+            Math.max(0, width - datas.startWidth),
+            Math.max(0, height - datas.startHeight),
+        ];
         datas.minSize = padding;
         datas.maxSize = [Infinity, Infinity];
 
@@ -177,14 +181,24 @@ export default {
                 datas.startWidth = startWidth;
                 datas.startHeight = startHeight;
             },
-            setMin: (minSize: number[]) => {
-                datas.minSize = minSize;
+            setMin: (minSize: Array<string | number>) => {
+                datas.minSize = [
+                    convertUnitSize(`${minSize[0]}`, 0) || 0,
+                    convertUnitSize(`${minSize[1]}`, 0) || 0,
+                ];
             },
-            setMax: (maxSize: number[]) => {
-                datas.maxSize = [
+            setMax: (maxSize: Array<string | number>) => {
+                const nextMaxSize = [
                     maxSize[0] || Infinity,
                     maxSize[1] || Infinity,
                 ];
+                if (!isNumber(nextMaxSize[0]) || isFinite(nextMaxSize[0])) {
+                    nextMaxSize[0] = convertUnitSize(`${nextMaxSize[0]}`, 0) || Infinity;
+                }
+                if (!isNumber(nextMaxSize[1]) || isFinite(nextMaxSize[1])) {
+                    nextMaxSize[1] = convertUnitSize(`${nextMaxSize[1]}`, 0) || Infinity;
+                }
+                datas.maxSize = nextMaxSize;
             },
             setRatio,
             setFixedDirection,
@@ -367,12 +381,14 @@ export default {
             boundingWidth = Math.max(0, boundingWidth);
             boundingHeight = Math.max(0, boundingHeight);
         }
+        console.log("BEFORE", boundingWidth);
         [boundingWidth, boundingHeight] = calculateBoundSize(
             [boundingWidth, boundingHeight],
             minSize,
             maxSize,
-            keepRatio,
+            ratio,
         );
+        console.log("After", boundingWidth);
         computeSize();
 
         distWidth = boundingWidth - startOffsetWidth;

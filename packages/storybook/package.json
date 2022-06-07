@@ -11,7 +11,7 @@
     "author": "Daybrush",
     "license": "MIT",
     "dependencies": {
-        "@daybrush/utils": "^0.10.5",
+        "@daybrush/utils": "^1.7.0",
         "moveable-helper": "^0.4.0",
         "react-infinite-viewer": "^0.11.0",
         "react-moveable": "~0.32.8-beta.4",
