@@ -12,6 +12,7 @@
         ],
         "sourceMap": true,
         "allowJs": false,
+        "skipLibCheck": true,
         "jsx": "react",
         "moduleResolution": "node",
         "rootDirs": [

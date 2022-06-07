@@ -13,7 +13,7 @@
             "packages/react-moveable/src/react-moveable/ables",
             "packages/react-moveable/src/react-moveable/MoveableManager.tsx",
             "packages/react-moveable/src/react-moveable/types.ts",
-            "packages/moveable/node_modules/@scena/event-emitter/src"
+            "node_modules/@scena/event-emitter/src"
         ],
         "includePattern": "(.+\\.js(doc|x)?|.+\\.ts(doc|x)?)$",
         "excludePattern": "(^|\\/|\\\\)_"

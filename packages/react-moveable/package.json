@@ -11,11 +11,7 @@
         "storybook": "start-storybook -p 6006",
         "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
         "build:storybook": "build-storybook -o ../../demo/storybook2",
-        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json",
-        "test": "karma start",
-        "test:chrome": "karma start --chrome",
-        "coverage": "karma start --coverage && print-coveralls --sort=desc",
-        "coveralls": "cat ./coverage/lcov.info | coveralls"
+        "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
     },
     "keywords": [
         "moveable",
@@ -68,8 +64,6 @@
         "@storybook/addon-viewport": "^6.4.22",
         "@storybook/addons": "^6.4.22",
         "@storybook/react": "^6.4.22",
-        "@types/karma-chai": "^0.1.2",
-        "@types/mocha": "^5.2.7",
         "@types/node": "^14.6.0",
         "@types/react": "^16.9.17",
         "@types/react-dom": "^16.9.4",
