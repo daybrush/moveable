@@ -195,7 +195,7 @@ export class AppComponent {
     let moveable;
     let target;
 
-    function nonMouseDown(e) {
+    function onMouseDown(e) {
         target = e.target;
 
         setTimeout(() => {
