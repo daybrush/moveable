@@ -1062,9 +1062,9 @@ export default {
  *
  * const moveable = new Moveable(document.body, {
  *  snappable: true,
- *  snapDistFormat: v => v,
+ *  snapDistFormat: (v, type) => v,
  * });
- * moveable.snapDistFormat = v => `${v}px`;
+ * moveable.snapDistFormat = (v, type) => `${v}px`;
  */
 
 /**

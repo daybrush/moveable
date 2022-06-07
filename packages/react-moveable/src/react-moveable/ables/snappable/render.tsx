@@ -127,7 +127,13 @@ export function renderDigitLine(
     const {
         snapDigit = 0,
         isDisplaySnapDigit = true,
-        snapDistFormat = (v: number) => v,
+        snapDistFormat = (v: number, type: "vertical" | "horizontal") => {
+            // Type can be used render different values.
+            if (type === 'vertical') {
+                return v;
+            }
+            return v;
+        },
         zoom,
     } = moveable.props;
     const scaleType = type === "horizontal" ? "X" : "Y";
@@ -162,7 +168,7 @@ export function renderDigitLine(
                 transform: `translate${scaleType}(-50%) scale(${zoom})`,
             }}
         >
-            {snapSize > 0 ? snapDistFormat(snapSize) : ""}
+            {snapSize > 0 ? snapDistFormat(snapSize, type) : ""}
         </div>
     </div>;
 }
