@@ -20,6 +20,7 @@ export default {
         translateZ: Number,
         hideDefaultLines: Boolean,
         props: Object,
+        flushSync: Function,
     } as const,
     events: {} as const,
 };

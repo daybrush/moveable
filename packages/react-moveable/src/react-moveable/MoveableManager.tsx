@@ -13,6 +13,7 @@ import {
     groupByMap,
     calculatePadding,
     getAbsoluteRotation,
+    defaultSync,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
@@ -62,6 +63,7 @@ export default class MoveableManager<T = {}>
         cssStyled: null,
         customStyledMap: {},
         props: {},
+        flushSync: defaultSync,
     };
     public state: MoveableManagerState = {
         container: null,

@@ -131,6 +131,17 @@ export interface DefaultOptions {
      * @default empty object
      */
     props?: Record<string, any>;
+    /**
+     * If you are using React 18's concurrent mode, use `flushSync` for UI sync.
+     * @default empty function
+     * @example
+     * ```jsx
+     * import { flushSync } from "react-dom";
+     *
+     * <Moveable flushSync={flushSync} />
+     * ```
+     */
+    flushSync?: (callback: () => void) => void;
 }
 /**
  * @typedef

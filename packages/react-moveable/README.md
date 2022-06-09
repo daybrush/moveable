@@ -196,39 +196,6 @@ render() {
             onRotateEnd={({ target, isDrag, clientX, clientY }) => {
                 console.log("onRotateEnd", target, isDrag);
             }}
-
-            /* warpable */
-            /* Only one of resizable, scalable, warpable can be used. */
-            /*
-            this.matrix = [
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1,
-            ]
-            */
-            warpable={true}
-            onWarpStart={({ target, clientX, clientY }) => {
-                console.log("onWarpStart", target);
-            }}
-            onWarp={({
-                target,
-                clientX,
-                clientY,
-                delta,
-                dist,
-                multiply,
-                transform,
-            }) => {
-                console.log("onWarp", target);
-                // target.style.transform = transform;
-                this.matrix = multiply(this.matrix, delta);
-                target.style.transform = `matrix3d(${this.matrix.join(",")})`;
-            }}
-            onWarpEnd={({ target, isDrag, clientX, clientY }) => {
-                console.log("onWarpEnd", target, isDrag);
-            }}
-
             // Enabling pinchable lets you use events that
             // can be used in draggable, resizable, scalable, and rotateable.
             pinchable={true}
@@ -249,6 +216,30 @@ render() {
 }
 ```
 
+### React 18 concurrent mode
+
+If you are using React 18's concurrent mode, use `flushSync` for UI sync.
+
+```tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { flushSync } from "react-dom";
+
+import Moveable from "react-moveable";
+
+
+function App() {
+    return <Moveable flushSync={flushSync} />
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
+);
+```
 
 ## ⚙️ Developments
 ### `npm start`

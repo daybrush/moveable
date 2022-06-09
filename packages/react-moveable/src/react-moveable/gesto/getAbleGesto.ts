@@ -1,6 +1,6 @@
 import { Able, MoveableManagerInterface, MoveableGroupInterface } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
-import { convertDragDist } from "../utils";
+import { convertDragDist, defaultSync } from "../utils";
 import Gesto from "gesto";
 import BeforeRenderable from "../ables/BeforeRenderable";
 import Renderable from "../ables/Renderable";
@@ -141,8 +141,13 @@ export function triggerAble(
         return false;
     }
     if ((!isStart && isUpdate && !requestInstant) || isEnd) {
-        moveable.updateRect(isEnd ? eventType : "", true, false);
-        moveable.forceUpdate();
+        const flushSync = moveable.props.flushSync || defaultSync;
+
+        flushSync(() => {
+            moveable.updateRect(isEnd ? eventType : "", true, false);
+            moveable.forceUpdate();
+        });
+
     }
     if (!isStart && !isEnd && !isAfter && isUpdate && !requestInstant) {
         triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);

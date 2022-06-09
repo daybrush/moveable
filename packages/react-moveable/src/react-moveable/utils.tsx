@@ -39,6 +39,10 @@ export function prefix(...classNames: string[]) {
     return prefixNames(PREFIX, ...classNames);
 }
 
+export function defaultSync(fn: () => void) {
+    fn();
+}
+
 export function createIdentityMatrix3() {
     return createIdentityMatrix(3);
 }
