@@ -81,9 +81,9 @@ export default {
         const {
             inputEvent,
             isPinch,
+            isGroup,
             parentDirection,
             datas,
-            parentFlag,
         } = e;
 
         const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
@@ -112,7 +112,7 @@ export default {
         datas.minSize = padding;
         datas.maxSize = [Infinity, Infinity];
 
-        if (!parentFlag) {
+        if (!isGroup) {
             const style = getComputedStyle(target);
 
             const {
@@ -170,36 +170,40 @@ export default {
             datas.fixedDirection = fixedDirection;
             datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
         }
+        function setMin(minSize: Array<string | number>)  {
+            datas.minSize = [
+                convertUnitSize(`${minSize[0]}`, 0) || 0,
+                convertUnitSize(`${minSize[1]}`, 0) || 0,
+            ];
+        }
+        function setMax(maxSize: Array<string | number>) {
+            const nextMaxSize = [
+                maxSize[0] || Infinity,
+                maxSize[1] || Infinity,
+            ];
+            if (!isNumber(nextMaxSize[0]) || isFinite(nextMaxSize[0])) {
+                nextMaxSize[0] = convertUnitSize(`${nextMaxSize[0]}`, 0) || Infinity;
+            }
+            if (!isNumber(nextMaxSize[1]) || isFinite(nextMaxSize[1])) {
+                nextMaxSize[1] = convertUnitSize(`${nextMaxSize[1]}`, 0) || Infinity;
+            }
+            datas.maxSize = nextMaxSize;
+        }
 
         setRatio(width / height);
         setFixedDirection([-direction[0], -direction[1]]);
 
         datas.setFixedDirection = setFixedDirection;
+        datas.setMin = setMin;
+        datas.setMax = setMax;
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
             set: ([startWidth, startHeight]: number[]) => {
                 datas.startWidth = startWidth;
                 datas.startHeight = startHeight;
             },
-            setMin: (minSize: Array<string | number>) => {
-                datas.minSize = [
-                    convertUnitSize(`${minSize[0]}`, 0) || 0,
-                    convertUnitSize(`${minSize[1]}`, 0) || 0,
-                ];
-            },
-            setMax: (maxSize: Array<string | number>) => {
-                const nextMaxSize = [
-                    maxSize[0] || Infinity,
-                    maxSize[1] || Infinity,
-                ];
-                if (!isNumber(nextMaxSize[0]) || isFinite(nextMaxSize[0])) {
-                    nextMaxSize[0] = convertUnitSize(`${nextMaxSize[0]}`, 0) || Infinity;
-                }
-                if (!isNumber(nextMaxSize[1]) || isFinite(nextMaxSize[1])) {
-                    nextMaxSize[1] = convertUnitSize(`${nextMaxSize[1]}`, 0) || Infinity;
-                }
-                datas.maxSize = nextMaxSize;
-            },
+            setMin,
+            setMax,
             setRatio,
             setFixedDirection,
             setOrigin: (origin: Array<string | number>) => {
@@ -385,7 +389,7 @@ export default {
             [boundingWidth, boundingHeight],
             minSize,
             maxSize,
-            ratio,
+            keepRatio ? ratio : false,
         );
         computeSize();
 
@@ -484,7 +488,7 @@ export default {
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
-        const params = this.dragControlStart(moveable, e);
+        const params = this.dragControlStart(moveable, {...e, isGroup: true });
 
         if (!params) {
             return false;
@@ -506,6 +510,48 @@ export default {
 
             return ev;
         }
+        const {
+            startOffsetWidth: parentStartOffsetWidth,
+            startOffsetHeight: parentStartOffsetHeight,
+        } = datas;
+
+        function updateGroupMin() {
+            const originalMinSize = datas.minSize;
+            originalEvents.forEach(ev => {
+                const {
+                    minSize: childMinSize,
+                    startOffsetWidth: childStartOffsetWidth,
+                    startOffsetHeight: childStartOffsetHeight,
+                } = ev.datas;
+
+                const parentMinWidth = parentStartOffsetWidth
+                    * (childStartOffsetWidth ? childMinSize[0] / childStartOffsetWidth : 0);
+                const parentMinHeight = parentStartOffsetHeight
+                    * (childStartOffsetHeight ? childMinSize[1] / childStartOffsetHeight : 0);
+
+                originalMinSize[0] = Math.max(originalMinSize[0], parentMinWidth);
+                originalMinSize[1] = Math.max(originalMinSize[1], parentMinHeight);
+            });
+        }
+
+        function updateGroupMax() {
+            const originalMaxSize = datas.maxSize;
+            originalEvents.forEach(ev => {
+                const {
+                    maxSize: childMaxSize,
+                    startOffsetWidth: childStartOffsetWidth,
+                    startOffsetHeight: childStartOffsetHeight,
+                } = ev.datas;
+
+                const parentMaxWidth = parentStartOffsetWidth
+                    * (childStartOffsetWidth ? childMaxSize[0] / childStartOffsetWidth : 0);
+                const parentMaxHeight = parentStartOffsetHeight
+                    * (childStartOffsetHeight ? childMaxSize[1] / childStartOffsetHeight : 0);
+
+                originalMaxSize[0] = Math.min(originalMaxSize[0], parentMaxWidth);
+                originalMaxSize[1] = Math.min(originalMaxSize[1], parentMaxHeight);
+            });
+        }
         const events = triggerChildAbles(
             moveable,
             this,
@@ -515,6 +561,11 @@ export default {
                 return setDist(child, ev);
             },
         );
+
+
+        updateGroupMin();
+        updateGroupMax();
+
         const setFixedDirection = (fixedDirection: number[]) => {
             params.setFixedDirection(fixedDirection);
             events.forEach((ev, i) => {
@@ -528,8 +579,28 @@ export default {
         const nextParams: OnResizeGroupStart = {
             ...params,
             targets: moveable.props.targets!,
-            events,
+            events: events.map(ev => {
+                return {
+                    ...ev,
+                    setMin: (minSize: Array<number | string>) => {
+                        ev.setMin(minSize);
+                        updateGroupMin();
+                    },
+                    setMax: (maxSize: Array<number | string>) => {
+                        ev.setMax(maxSize);
+                        updateGroupMax();
+                    },
+                };
+            }),
             setFixedDirection,
+            setMin: (minSize: Array<number | string>) => {
+                params.setMin(minSize);
+                updateGroupMin();
+            },
+            setMax: (maxSize: Array<number | string>) => {
+                params.setMax(maxSize);
+                updateGroupMax();
+            },
         };
         const result = triggerEvent(moveable, "onResizeGroupStart", nextParams);
 
