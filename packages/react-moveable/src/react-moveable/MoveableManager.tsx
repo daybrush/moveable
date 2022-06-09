@@ -605,6 +605,7 @@ export default class MoveableManager<T = {}>
     }
     public onPreventClick = (e: any) => {
         e.stopPropagation();
+        e.preventDefault();
         removeEvent(window, "click", this.onPreventClick, true);
     }
     public checkUpdateRect = () => {

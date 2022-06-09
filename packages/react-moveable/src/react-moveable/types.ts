@@ -811,8 +811,8 @@ export interface OnResizeStart extends OnEvent {
     direction: number[];
     dragStart: OnDragStart | false;
     set: (size: number[]) => any;
-    setMin: (minSize: number[]) => any;
-    setMax: (maxSize: number[]) => any;
+    setMin: (minSize: Array<string | number>) => any;
+    setMax: (maxSize: Array<string | number>) => any;
     setOrigin: (origin: Array<string | number>) => any;
     setFixedDirection: (startDirecition: number[]) => any;
     setRatio: (ratio: number) => any;
@@ -2190,6 +2190,12 @@ export interface ClickableOptions {
      * @default true
      */
     clickable?: boolean;
+    /**
+     * Whether to prevents the default behavior of native `click` events.
+     * If true, call preventDefault on click event.
+     * @default false
+     */
+    preventClickDefault?: boolean;
 }
 /**
  * @memberof Moveable.Clickable

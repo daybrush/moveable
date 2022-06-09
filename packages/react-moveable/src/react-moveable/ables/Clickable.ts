@@ -9,6 +9,7 @@ import { makeAble } from "./AbleManager";
 export default makeAble("clickable", {
     props: {
         clickable: Boolean,
+        preventClickDefault: Boolean,
     },
     events: {
         onClick: "click",
@@ -37,8 +38,7 @@ export default makeAble("clickable", {
         const isMoveableElement = moveable.isMoveableElement(inputTarget);
         const containsElement = !isMoveableElement && moveable.controlBox.getElement().contains(inputTarget);
 
-        if (!e.isDrag || containsElement) {
-
+        if ((!moveable.props.preventClickDefault && !e.isDrag) || containsElement) {
             this.unset(moveable);
         }
         if (
