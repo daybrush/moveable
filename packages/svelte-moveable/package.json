@@ -1,6 +1,6 @@
 {
   "name": "svelte-moveable",
-  "version": "0.21.9",
+  "version": "0.22.0",
   "description": "A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "svelte": "./src/index.js",
   "main": "./dist/moveable.cjs.js",
@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "framework-utils": "^1.1.0",
-    "moveable": "~0.29.9",
+    "moveable": "~0.30.0",
     "rollup-plugin-svelte": "^7.1.0"
   },
   "scripts": {

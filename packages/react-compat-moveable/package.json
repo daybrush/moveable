@@ -1,6 +1,6 @@
 {
     "name": "react-compat-moveable",
-    "version": "0.17.9",
+    "version": "0.18.0",
     "description": "A React Compat Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -76,6 +76,6 @@
         "overlap-area": "^1.0.0",
         "react-compat-css-styled": "^1.0.8",
         "react-css-styled": "^1.0.3",
-        "react-moveable": "~0.32.9"
+        "react-moveable": "~0.33.0"
     }
 }
