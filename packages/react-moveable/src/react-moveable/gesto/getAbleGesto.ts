@@ -197,6 +197,8 @@ export function getAbleGesto(
     } = moveable.props;
     const options: IObject<any> = {
         preventDefault: false,
+        preventRightClick: true,
+        preventWheelClick: true,
         container: window,
         pinchThreshold,
         pinchOutside,

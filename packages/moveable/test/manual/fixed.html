@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="target"></div>
+</div>
+<style>
+html, body {
+    position: relative;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    margin: 10px auto;
+    height: 400px;
+    border: 1px solid black;
+}
+.target {
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    background: #ee8;
+    color: #333;
+    font-weight: bold;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+</style>
+<script src="../../dist/moveable.js"></script>
+<script>
+const target = document.querySelector('.target');
+const container = document.querySelector('.container');
+const moveable = new Moveable(container, {
+    target,
+    resizable: true,
+    keepRatio: false,
+    renderDirections: ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'],
+    zoom: 1,
+    origin: true,
+    padding: { left: 0, top: 0, right: 0, bottom: 0 },
+    draggable: true,
+    snappable: true,
+    bounds: {
+        left: container.offsetLeft,
+        top: container.offsetTop,
+        bottom: container.offsetTop + container.offsetHeight,
+        right: container.offsetLeft + container.offsetWidth,
+    },
+});
+
+target.innerHTML = `Moveable`;
+
+moveable.on('resizeStart', (event) => {
+    event.setFixedDirection([0, 0]);
+});
+
+moveable.on('resize', (event) => {
+    target.style.width = `${event.width}px`;
+    target.style.height = `${event.height}px`;
+    target.style.transform = event.drag.transform;
+});
+
+moveable.on('drag', (event) => {
+    target.style.transform = event.transform;
+});
+
+</script>
