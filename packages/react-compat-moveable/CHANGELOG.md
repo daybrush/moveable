@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.17.9...react-compat-moveable@0.18.0) (2022-06-09)
+
+
+### :bug: Bug Fix
+
+* prevent wheel drag #674 ([e9bea04](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/e9bea04aec00bd3a2a06918b539c9b02b2a589d5))
+
+
+### :mega: Other
+
+* publish packages ([b432247](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/b4322470bcd3bb05fc67d2c89eedd737f8b4b67a))
+
+
+
 ## [0.17.9](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.17.8...react-compat-moveable@0.17.9) (2022-06-07)
 
 

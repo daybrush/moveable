@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.30.0](https://github.com/daybrush/moveable/compare/0.29.9...0.30.0) (2022-06-09)
+### :sparkles: Packages
+* `lit-moveable` 0.7.0
+* `moveable` 0.30.0
+* `preact-moveable` 0.32.0
+* `react-compat-moveable` 0.18.0
+* `react-moveable` 0.33.0
+* `svelte-moveable` 0.22.0
+* `vue-moveable` 2.0.0-beta.21
+* `vue3-moveable` 0.5.0
+* `ngx-moveable` 0.27.0
+
+
+### :rocket: New Features
+
+* `react-moveable`, `lit-moveable`
+    * add snap direction foramt (#669) ([52406cc](https://github.com/daybrush/moveable/commit/52406cc8c2a77dc2446dc935681aa9885661b77b))
+* `react-moveable`
+    * add `preventClickDefault` option #671 ([17da69f](https://github.com/daybrush/moveable/commit/17da69ff71c6abe4788603dc729b6bc9dd8f27bc))
+    * add flushSync prop #668 ([068c174](https://github.com/daybrush/moveable/commit/068c174706338f3eedfa3c93beb967b7399e6daa))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `react-compat-moveable`, `moveable`
+    * prevent wheel drag #674 ([e9bea04](https://github.com/daybrush/moveable/commit/e9bea04aec00bd3a2a06918b539c9b02b2a589d5))
+* `react-moveable`
+    * fix groups' setMin, setMax and ratio ([0e2abf1](https://github.com/daybrush/moveable/commit/0e2abf1ae8504334a7118b9e2b6e9cab9c90c91b))
+    * remove peerDependencies ([0aa9869](https://github.com/daybrush/moveable/commit/0aa986952e096cd75def5e0afe9c9b1ac9d4216e))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([b432247](https://github.com/daybrush/moveable/commit/b4322470bcd3bb05fc67d2c89eedd737f8b4b67a))
+
+
+
 ## [0.29.9](https://github.com/daybrush/moveable/compare/0.29.8...0.29.9) (2022-06-07)
 ### :sparkles: Packages
 * `lit-moveable` 0.6.9

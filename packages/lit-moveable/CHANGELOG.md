@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.6.9...lit-moveable@0.7.0) (2022-06-09)
+
+
+### :rocket: New Features
+
+* add snap direction foramt (#669) ([52406cc](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/52406cc8c2a77dc2446dc935681aa9885661b77b))
+
+
+### :mega: Other
+
+* publish packages ([b432247](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/b4322470bcd3bb05fc67d2c89eedd737f8b4b67a))
+
+
+
 ## [0.6.9](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.6.8...lit-moveable@0.6.9) (2022-06-07)
 
 
