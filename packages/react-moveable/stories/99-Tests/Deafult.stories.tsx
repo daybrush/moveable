@@ -12,3 +12,7 @@ group.add("Click a tag", {
     app: require("./ReactATagApp").default,
     text: require("!!raw-loader!./ReactATagApp").default,
 });
+group.add("Limit Sizes with Group", {
+    app: require("./ReactGroupMinSizeApp").default,
+    text: require("!!raw-loader!./ReactGroupMinSizeApp").default,
+});

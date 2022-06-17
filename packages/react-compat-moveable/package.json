@@ -65,7 +65,7 @@
         "typescript": "^4.5.0 <4.6.0"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.7.0",
+        "@daybrush/utils": "^1.7.1",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
         "@scena/dragscroll": "^1.1.1",
