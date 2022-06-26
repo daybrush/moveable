@@ -39,10 +39,15 @@ export function solveLineConstants(line: SnappableLine): [number, number, number
     let b = 0;
     let c = 0;
 
+    if (!dx && !dy) {
+
+    }
     if (!dx) {
-        // -x + 1 = 0
-        a = -1;
-        c = point1[0];
+        if (dy) {
+            // -x + 1 = 0
+            a = -1;
+            c = point1[0];
+        }
     } else if (!dy) {
         // y - 1 = 0
         b = 1;

@@ -12,7 +12,12 @@ export class Snappable {
     public move(lines: SnappableLine[], dist: number[]) {
 
     }
-    private _checkBounds(lines: SnappableLine[]) {
+    public addBoundLine(lines: SnappableBoundLine[]) {
+        lines.forEach(line => {
+            this._bounds.push(line);
+        })
+    }
+    public checkBounds(lines: SnappableLine[]) {
         const bounds = this._bounds;
 
 

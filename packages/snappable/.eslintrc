@@ -23,7 +23,7 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/ban-types": "off",
-        "indent": ["error", 2],
+        "indent": ["error", 4],
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/adjacent-overload-signatures": "off",
         "max-len": ["error", { "code": 120, "comments": 400, "ignoreTemplateLiterals": true }],

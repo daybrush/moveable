@@ -1,0 +1,61 @@
+<style>
+    canvas {
+        width: 1000px;
+        height: 1000px;
+    }
+</style>
+<canvas width="1000" height="1000"></canvas>
+<!-- <script src="../../../../overlap-area/dist/overlap-area.js"></script> -->
+<script>
+    const canvas = document.querySelector("canvas");
+    const ctx = canvas.getContext("2d");
+
+    // Start a new path
+
+    const points1 = [
+        [150, 100],
+        [200, 50],
+        [250, 60],
+        [300, 100],
+        [250, 160],
+        [150, 150],
+        // [200, 120],
+    ];
+    const points2 = [
+        [100, 100],
+        [350, 100],
+        [350, 120],
+        [100, 120],
+        // [250, 100],
+        // [300, 50],
+        // [350, 60],
+        // [400, 100],
+        // [350, 160],
+        // [250, 150],
+        // [300, 120],
+    ];
+    function fillRect(points, color) {
+        ctx.beginPath();
+        points.forEach((point, i) => {
+            if (i === 0) {
+                ctx.moveTo(point[0], point[1]);
+            } else {
+                ctx.lineTo(point[0], point[1]);
+            }
+        });
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    fillRect(points1, "#ffaaaaaa");
+    fillRect(points2, "#aaffaaaa");
+
+    // console.log(OverlapArea.isInside([100, 100], [[0, 0], [200, 0], [200, 200], [0, 200]]))
+    // console.log(OverlapArea.isInside(points2[0], points1))
+
+    const points3 = OverlapArea.getOverlapPoints(points1, points2);
+    OverlapArea.getUnoverlapAreas(points2, points1);
+    console.log(points3);
+    fillRect(points3, "#aaaaffaa");
+</script>
