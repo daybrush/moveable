@@ -838,7 +838,7 @@ export default class MoveableManager<T = {}>
 
 /**
  * Whether the target size is detected and updated whenever it changes.
- * @name Moveable#zoom
+ * @name Moveable#useResizeObserver
  * @default false
  * @example
  * import Moveable from "moveable";
