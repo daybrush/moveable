@@ -1,0 +1,13 @@
+<body>
+    <input class="target" />
+</body>
+<script src ="../../dist/moveable.js"></script>
+<script>
+    new Moveable(document.body, {
+        draggable: true,
+        target: ".target",
+    }).on("drag", e => {
+        e.target.style.transform = e.transform;
+    });
+</script>
+

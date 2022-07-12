@@ -16,3 +16,7 @@ group.add("Limit Sizes with Group", {
     app: require("./ReactGroupMinSizeApp").default,
     text: require("!!raw-loader!./ReactGroupMinSizeApp").default,
 });
+group.add("Any native input element", {
+    app: require("./ReactInputApp").default,
+    text: require("!!raw-loader!./ReactInputApp").default,
+});
