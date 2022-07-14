@@ -55,6 +55,11 @@ export const DEFAULT_RESIZABLE_CONTROLS = {
         description: makeLink("Resizable", "resizable"),
         defaultValue: true,
     }),
+    edge: makeArgType({
+        type: "boolean",
+        description: makeLink("Resizable", "edge"),
+        defaultValue: false,
+    }),
     maxWidth: makeArgType({
         type: "text",
         description: makeLink("Resizable", "OnResizeStart"),

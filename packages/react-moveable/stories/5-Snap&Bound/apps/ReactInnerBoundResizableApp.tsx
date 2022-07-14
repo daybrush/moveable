@@ -14,6 +14,7 @@ export default function App(props: Record<string, any>) {
                     target={".target"}
                     draggable={true}
                     resizable={true}
+                    edge={props.edge}
                     keepRatio={props.keepRatio}
                     snappable={true}
                     innerBounds={props.innerBounds}

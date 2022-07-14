@@ -21,6 +21,11 @@ export default makeAble("edgeDraggable", {
         return hasClass(target, prefix("direction")) && hasClass(target, prefix("line"));
     },
     dragControlStart(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
+        (moveable.state as any).snapRenderInfo = {
+            request: e.isRequest,
+            snap: true,
+            center: true,
+        };
         return Draggable.dragStart(moveable, getDraggableEvent(e));
     },
     dragControl(moveable: MoveableManagerInterface<DraggableProps>, e: any) {

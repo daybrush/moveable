@@ -25,6 +25,7 @@ export default function App(props: Record<string, any>) {
                     keepRatio={props.keepRatio}
                     snappable={props.snappable}
                     bounds={props.bounds}
+                    edge={props.edge}
                     onBeforeRenderStart={e => {
                         e.setTransform(e.target.style.transform);
                     }}
