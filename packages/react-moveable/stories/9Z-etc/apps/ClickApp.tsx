@@ -7,16 +7,19 @@ export default function App(props: Record<string, any>) {
 
     return (
         <div className="root">
-            <div className="container">
+            <div className="container" onClick={() => {
+                console.log("Click");
+            }} onMouseDown={() => {
+                console.log("MouseDown");
+            }}>
                 <div className="target" ref={targetRef}>Target</div>
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
+                    resizable={true}
+                    preventClickDefault={true}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
-                    }}
-                    onClick={() => {
-                        alert("Click DragArea");
                     }}
                 />
             </div>

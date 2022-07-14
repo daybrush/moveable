@@ -205,6 +205,8 @@ export function getAbleGesto(
     };
     const gesto = new Gesto(target!, options);
 
+    const isControl = eventAffix === "Control";
+
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
             gesto.on(`${eventOperation}${eventType}` as any, e => {
@@ -218,6 +220,8 @@ export function getAbleGesto(
 
                 if (!result) {
                     e.stop();
+                } else if (eventType === "Start" && isControl) {
+                    e?.inputEvent?.stopPropagation();
                 }
             });
         });
