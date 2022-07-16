@@ -77,9 +77,10 @@ export interface DefaultOptions {
     transformOrigin?: Array<string | number> | string | "";
     /**
      * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
      * @default false
      */
-    edge?: boolean;
+    edge?: boolean | Array<LineDirection>;
     /**
      * You can add your custom able.
      * @default []
@@ -200,6 +201,12 @@ export type MoveableManagerState<T = {}> = {
 /**
  * @typedef
  * @memberof Moveable
+ */
+export type LineDirection = "n" | "e" | "s" | "w" | "nw" | "ne" | "sw" | "se";
+
+/**
+ * @typedef
+ * @memberof Moveable
  * @property - left padding
  * @property - top padding
  * @property - right padding
@@ -211,6 +218,7 @@ export interface PaddingBox {
     right?: number;
     bottom?: number;
 }
+
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }

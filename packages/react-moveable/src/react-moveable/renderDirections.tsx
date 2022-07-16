@@ -54,7 +54,7 @@ export function renderLine(
     const rad = getRad(pos1, pos2);
     const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
 
-    return <div key={`line${key}`} className={prefix("line", "direction", direction, ...classNames)}
+    return <div key={`line${key}`} className={prefix("line", "direction",  direction ? "edge" : "", direction, ...classNames)}
         data-rotation={rotation}
         data-line-index={key}
         data-direction={direction} style={getLineStyle(pos1, pos2, zoom, rad)}></div>;

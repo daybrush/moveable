@@ -21,6 +21,8 @@ import {
     MoveableManagerProps, MoveableManagerState, Able,
     RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
     MoveableDefaultOptions,
+    GroupableProps,
+    LineDirection,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
@@ -751,7 +753,7 @@ export default class MoveableManager<T = {}>
             hideDefaultLines,
             hideChildMoveableDefaultLines,
             parentMoveable,
-        } = props;
+        } = props as MoveableManagerProps<GroupableProps>;
 
         if (hideDefaultLines || (parentMoveable && hideChildMoveableDefaultLines)) {
             return [];
@@ -760,11 +762,21 @@ export default class MoveableManager<T = {}>
         const Renderer = {
             createElement,
         };
+
+        const edgeList = edge === true
+            ? ["n", "e", "w", "s"] as LineDirection[]
+            : edge || [];
+
+        const edgeMap: Partial<Record<LineDirection, LineDirection>> = {};
+
+        edgeList.forEach(dir => {
+            edgeMap[dir] = dir;
+        });
         return [
-            renderLine(Renderer, edge ? "n" : "", renderPoses[0], renderPoses[1], zoom!, 0),
-            renderLine(Renderer, edge ? "e" : "", renderPoses[1], renderPoses[3], zoom!, 1),
-            renderLine(Renderer, edge ? "w" : "", renderPoses[0], renderPoses[2], zoom!, 2),
-            renderLine(Renderer, edge ? "s" : "", renderPoses[2], renderPoses[3], zoom!, 3),
+            renderLine(Renderer, edgeMap.n || "", renderPoses[0], renderPoses[1], zoom!, 0),
+            renderLine(Renderer, edgeMap.e || "", renderPoses[1], renderPoses[3], zoom!, 1),
+            renderLine(Renderer, edgeMap.w || "", renderPoses[0], renderPoses[2], zoom!, 2),
+            renderLine(Renderer, edgeMap.s || "", renderPoses[2], renderPoses[3], zoom!, 3),
         ];
     }
     private _isTargetChanged(useDragArea?: boolean) {

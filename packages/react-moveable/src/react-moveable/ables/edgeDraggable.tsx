@@ -18,7 +18,9 @@ export default makeAble("edgeDraggable", {
             return false;
         }
         const target = e.inputEvent.target;
-        return hasClass(target, prefix("direction")) && hasClass(target, prefix("line"));
+        return hasClass(target, prefix("direction"))
+            && hasClass(target, prefix("line"))
+            && !hasClass(target, prefix("edge"));
     },
     dragControlStart(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         (moveable.state as any).snapRenderInfo = {

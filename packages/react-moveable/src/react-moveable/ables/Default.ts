@@ -9,7 +9,7 @@ export default {
         useResizeObserver: Boolean,
         zoom: Number,
         transformOrigin: Array,
-        edge: Boolean,
+        edge: Object,
         ables: Array,
         className: String,
         pinchThreshold: Number,
