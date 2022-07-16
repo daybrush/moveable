@@ -1,4 +1,4 @@
-import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT } from "./consts";
+import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT, IS_SAFARI_ABOVE15 } from "./consts";
 import { prefixNames, InvertObject } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
@@ -354,7 +354,11 @@ export function getMatrixStackInfo(
             isStatic = offsetInfo.isStatic;
         }
 
-        if (IS_WEBKIT && hasOffset && !isSVG && isStatic && (position === "relative" || position === "static")) {
+        if (
+            IS_WEBKIT && !IS_SAFARI_ABOVE15
+            && hasOffset && !isSVG && isStatic
+            && (position === "relative" || position === "static")
+        ) {
             offsetLeft -= offsetParent.offsetLeft;
             offsetTop -= offsetParent.offsetTop;
             requestEnd = requestEnd || isOffsetEnd;
@@ -1625,7 +1629,7 @@ export function getOffsetSizeDist(
         let dist = getDragDist({ datas, distX, distY });
 
         dist = [0, 1].map(index => {
-            let directionRatio =  Math.abs(sizeDirection[index] - startFixedDirection[index]);
+            let directionRatio = Math.abs(sizeDirection[index] - startFixedDirection[index]);
 
             if (directionRatio !== 0) {
                 directionRatio = 2 / directionRatio;

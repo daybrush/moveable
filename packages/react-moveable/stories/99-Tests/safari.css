@@ -1,0 +1,22 @@
+.safari-canvas {
+    margin-top: 125px;
+    overflow: inherit;
+    height: 1000px;
+    margin-left: 120px;
+    padding: 4rem 10rem;
+    position: relative;
+    background: #eee;
+}
+
+.safari-pages {
+    transform: scale(1.45);
+    transform-origin: center top 0px;
+    height: 1726.35px;
+}
+
+.safari-target {
+    border: 1px solid red;
+    min-height: 50px;
+    max-width: 100px;
+    width: 100px;
+  }

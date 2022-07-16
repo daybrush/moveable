@@ -24,7 +24,7 @@ import {
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { cancelAnimationFrame, getKeys, IObject, removeEvent, requestAnimationFrame } from "@daybrush/utils";
+import { cancelAnimationFrame, getKeys, IObject, requestAnimationFrame } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
@@ -608,7 +608,6 @@ export default class MoveableManager<T = {}>
     public onPreventClick = (e: any) => {
         e.stopPropagation();
         e.preventDefault();
-        console.log("PRE");
         // removeEvent(window, "click", this.onPreventClick, true);
     }
     public checkUpdateRect = () => {

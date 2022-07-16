@@ -31,6 +31,8 @@ export const IS_WEBKIT605 = IS_WEBKIT && (() => {
 
     return res ? parseFloat(res[1]) < 605 : false;
 })();
+export const IS_SAFARI_ABOVE15 = agent.browser.majorVersion >= 15;
+// export const IS_SAFARI =
 export const PREFIX = "moveable-";
 export const MOVEABLE_CSS = `
 {
