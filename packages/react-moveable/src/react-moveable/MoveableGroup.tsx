@@ -248,8 +248,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 }
 
 /**
- * Sets the initial rotation of the group. (default 0)
+ * Sets the initial rotation of the group.
  * @name Moveable.Group#defaultGroupRotate
+ * @default 0
  * @example
  * import Moveable from "moveable";
  *
@@ -262,8 +263,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
  */
 
 /**
- * Sets the initial origin of the group. (default 0)
+ * Sets the initial origin of the group.
  * @name Moveable.Group#defaultGroupOrigin
+ * @default 0
  * @example
  * import Moveable from "moveable";
  *
@@ -273,5 +275,21 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
  * });
  *
  * moveable.defaultGroupOrigin = "20% 40%";
+ */
+
+
+/**
+ * Whether to hide the line in child moveable for group corresponding to the rect of the target.
+ * @name Moveable.Group#hideChildMoveableDefaultLines
+ * @default false
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   target: [].slice.call(document.querySelectorAll(".target")),
+ *   hideChildMoveableDefaultLines: false,
+ * });
+ *
+ * moveable.hideChildMoveableDefaultLines = true;
  */
 export default MoveableGroup;

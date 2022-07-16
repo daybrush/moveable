@@ -127,11 +127,6 @@ export interface DefaultOptions {
      */
     hideDefaultLines?: boolean;
     /**
-     * Whether to hide the line in child moveable for group corresponding to the rect of the target.
-     * @default false
-     */
-    hideChildMoveableDefaultLines?: boolean;
-    /**
      * You can use props in object format or custom props.
      * @default empty object
      */
@@ -1889,6 +1884,11 @@ export interface GroupableOptions {
      * @private
      */
     groupable?: boolean;
+    /**
+     * Whether to hide the line in child moveable for group corresponding to the rect of the target.
+     * @default false
+     */
+    hideChildMoveableDefaultLines?: boolean;
 }
 
 

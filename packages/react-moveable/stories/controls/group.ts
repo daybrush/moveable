@@ -6,7 +6,7 @@ export const DEFAULT_GROUPPABLE_GROUP_CONTROLS = {
         description: makeLink("Grouppable", "hideChildMoveableDefaultLines"),
         defaultValue: false,
     }),
-}
+};
 export const DEFAULT_RESIZABLE_GROUP_CONTROLS = {
     maxWidth: makeArgType({
         type: "number",

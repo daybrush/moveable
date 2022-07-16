@@ -1236,8 +1236,9 @@ export default {
  */
 
 /**
- * You can drag the clip by setting clipArea. (default: false)
+ * You can drag the clip by setting clipArea.
  * @name Moveable.Clippable#clipArea
+ * @default false
  * @example
  * import Moveable from "moveable";
  *
@@ -1263,8 +1264,9 @@ export default {
  */
 
 /**
-* Whether the clip is bound to the target. (default: false)
+* Whether the clip is bound to the target.
 * @name Moveable.Clippable#clipTargetBounds
+* @default false
 * @example
 * import Moveable from "moveable";
 *
@@ -1291,9 +1293,10 @@ export default {
 */
 
 /**
-* Add clip guidelines in the vertical direction. (default: [])
-* @name Moveable.Clippable#clipVerticalGuidelines
-* @example
+ * Add clip guidelines in the vertical direction.
+ * @name Moveable.Clippable#clipVerticalGuidelines
+ * @default 0
+ * @example
 * import Moveable from "moveable";
 *
 * const moveable = new Moveable(document.body, {
@@ -1310,8 +1313,9 @@ export default {
 */
 
 /**
-* Add clip guidelines in the horizontal direction. (default: [])
+* Add clip guidelines in the horizontal direction.
 * @name Moveable.Clippable#clipHorizontalGuidelines
+* @default []
 * @example
 * import Moveable from "moveable";
 *
@@ -1328,8 +1332,9 @@ export default {
 * });
 */
 /**
-* istance value that can snap to clip guidelines. (default: 5)
+* istance value that can snap to clip guidelines.
 * @name Moveable.Clippable#clipSnapThreshold
+* @default 5
 * @example
 * import Moveable from "moveable";
 *

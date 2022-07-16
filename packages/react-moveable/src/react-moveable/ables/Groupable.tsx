@@ -1,6 +1,6 @@
 import { refs } from "framework-utils";
 import MoveableManager from "../MoveableManager";
-import { Renderer, MoveableGroupInterface } from "../types";
+import { Renderer, MoveableGroupInterface, GroupableProps } from "../types";
 
 export default {
     name: "groupable",
@@ -8,9 +8,10 @@ export default {
         defaultGroupRotate: Number,
         defaultGroupOrigin: String,
         groupable: Boolean,
+        hideChildMoveableDefaultLines: Boolean,
     } as const,
     events: {} as const,
-    render(moveable: MoveableGroupInterface, React: Renderer): any[] {
+    render(moveable: MoveableGroupInterface<GroupableProps>, React: Renderer): any[] {
         const targets = moveable.props.targets || [];
 
         moveable.moveables = [];
@@ -19,7 +20,7 @@ export default {
         const props = moveable.props;
 
         return targets.map((target, i) => {
-            return <MoveableManager
+            return <MoveableManager<GroupableProps>
                 key={"moveable" + i}
                 ref={refs(moveable, "moveables", i)}
                 target={target}
