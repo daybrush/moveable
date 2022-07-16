@@ -1,5 +1,12 @@
 import { makeArgType, makeLink } from "../utils";
 
+export const DEFAULT_GROUPPABLE_GROUP_CONTROLS = {
+    hideChildMoveableDefaultLines: makeArgType({
+        type: "boolean",
+        description: makeLink("Grouppable", "hideChildMoveableDefaultLines"),
+        defaultValue: false,
+    }),
+}
 export const DEFAULT_RESIZABLE_GROUP_CONTROLS = {
     maxWidth: makeArgType({
         type: "number",

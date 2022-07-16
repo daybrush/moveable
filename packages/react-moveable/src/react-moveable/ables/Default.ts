@@ -19,6 +19,7 @@ export default {
         cspNonce: String,
         translateZ: Number,
         hideDefaultLines: Boolean,
+        hideChildMoveableDefaultLines: Boolean,
         props: Object,
         flushSync: Function,
     } as const,

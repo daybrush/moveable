@@ -9,7 +9,7 @@ import {
     DEFAULT_RESIZABLE_CONTROLS,
     DEFAULT_ROTATABLE_CONTROLS,
 } from "../controls/default";
-import { DEFAULT_RESIZABLE_GROUP_CONTROLS } from "../controls/group";
+import { DEFAULT_GROUPPABLE_GROUP_CONTROLS, DEFAULT_RESIZABLE_GROUP_CONTROLS } from "../controls/group";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
 
 
@@ -17,6 +17,7 @@ export const DraggableResizableGroupTemplate = App as any;
 
 DraggableResizableGroupTemplate.storyName = "Draggable & Resizable & Rotatable";
 DraggableResizableGroupTemplate.argTypes = {
+    ...DEFAULT_GROUPPABLE_GROUP_CONTROLS,
     ...DEFAULT_RESIZABLE_CONTROLS,
     ...DEFAULT_ROTATABLE_CONTROLS,
     ...DEFAULT_DRAGGABLE_CONTROLS,

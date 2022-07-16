@@ -8,6 +8,7 @@ export default function App(props: Record<string, any>) {
         <div className="target target3">Target3</div>
         <Moveable
             target={".target"}
+            hideChildMoveableDefaultLines={props.hideChildMoveableDefaultLines}
             draggable={props.draggable}
             throttleDrag={props.throttleDrag}
             edgeDraggable={props.edgeDraggable}

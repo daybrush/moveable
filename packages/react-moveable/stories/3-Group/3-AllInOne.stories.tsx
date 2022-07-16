@@ -8,12 +8,14 @@ import {
     DEFAULT_DRAGGABLE_CONTROLS,
     DEFAULT_ROTATABLE_CONTROLS, DEFAULT_SCALABLE_CONTROLS,
 } from "../controls/default";
+import { DEFAULT_GROUPPABLE_GROUP_CONTROLS } from "../controls/group";
 // import  from "../controls/default";
 
 export const AllInOneTemplate = App as any;
 
 AllInOneTemplate.storyName = "All In One";
 AllInOneTemplate.argTypes = {
+    ...DEFAULT_GROUPPABLE_GROUP_CONTROLS,
     ...DEFAULT_DRAGGABLE_CONTROLS,
     ...DEFAULT_SCALABLE_CONTROLS,
     ...DEFAULT_ROTATABLE_CONTROLS,

@@ -749,9 +749,11 @@ export default class MoveableManager<T = {}>
             edge,
             zoom,
             hideDefaultLines,
+            hideChildMoveableDefaultLines,
+            parentMoveable,
         } = props;
 
-        if (hideDefaultLines) {
+        if (hideDefaultLines || (parentMoveable && hideChildMoveableDefaultLines)) {
             return [];
         }
         const renderPoses = this.state.renderPoses;

@@ -10,13 +10,14 @@ import {
     DEFAULT_ROTATABLE_CONTROLS,
 } from "../controls/default";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
-import { DEFAULT_SCALABLE_GROUP_CONTROLS } from "../controls/group";
+import { DEFAULT_GROUPPABLE_GROUP_CONTROLS, DEFAULT_SCALABLE_GROUP_CONTROLS } from "../controls/group";
 
 
 export const DraggableScalableGroupTemplate = App as any;
 
 DraggableScalableGroupTemplate.storyName = "Draggable & Scalable & Rotatable";
 DraggableScalableGroupTemplate.argTypes = {
+    ...DEFAULT_GROUPPABLE_GROUP_CONTROLS,
     ...DEFAULT_SCALABLE_CONTROLS,
     ...DEFAULT_SCALABLE_GROUP_CONTROLS,
     ...DEFAULT_ROTATABLE_CONTROLS,

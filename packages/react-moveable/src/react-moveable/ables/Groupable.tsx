@@ -27,6 +27,7 @@ export default {
                 cssStyled={props.cssStyled}
                 customStyledMap={props.customStyledMap}
                 useResizeObserver={props.useResizeObserver}
+                hideChildMoveableDefaultLines={props.hideChildMoveableDefaultLines}
                 parentMoveable={moveable}
                 parentPosition={position}
             />;
