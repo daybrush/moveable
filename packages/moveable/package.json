@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.31.1",
+  "version": "0.31.2",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -57,10 +57,13 @@
     "url": "https://github.com/daybrush/moveable/issues"
   },
   "homepage": "https://daybrush.com/moveable/",
+  "files": [
+    "./*"
+  ],
   "dependencies": {
     "@scena/event-emitter": "^1.0.5",
-    "react-compat-moveable": "~0.19.1",
-    "react-moveable": "~0.34.1",
+    "react-compat-moveable": "~0.19.2",
+    "react-moveable": "~0.34.2",
     "react-simple-compat": "^1.2.2"
   },
   "devDependencies": {
