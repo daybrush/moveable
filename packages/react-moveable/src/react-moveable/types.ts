@@ -910,6 +910,11 @@ export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
      */
     set: (rotate: number) => void;
     /**
+     * Set a fixed direction to rotate.
+     * @default target's transformOrigin
+     */
+    setFixedDirection: (fixedDirection: number[]) => void;
+    /**
      * rotate causes a `dragStart` event.
      */
     dragStart: OnDragStart | false;

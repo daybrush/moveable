@@ -17,7 +17,7 @@ import {
 } from "../types";
 import { triggerChildAbles } from "../groupUtils";
 import Draggable from "./Draggable";
-import { minus, plus, rotate as rotateMatrix } from "@scena/matrix";
+import { calculate, convertPositionMatrix, getOrigin, minus, plus, rotate as rotateMatrix } from "@scena/matrix";
 import CustomGesto from "../gesto/CustomGesto";
 import { checkSnapRotate } from "./Snappable";
 import {
@@ -29,6 +29,7 @@ import {
     setDefaultTransformIndex,
     resolveTransformEvent,
     getTransformDirection,
+    getPosByDirection,
 } from "../gesto/GestoUtils";
 import { renderDirectionControls } from "../renderDirections";
 
@@ -40,10 +41,17 @@ import { renderDirectionControls } from "../renderDirections";
 
 function setRotateStartInfo(
     moveable: MoveableManagerInterface<any, any>,
-    datas: IObject<any>, clientX: number, clientY: number, origin: number[], rect: MoveableClientRect) {
-
-    const n = moveable.state.is3d ? 4 : 3;
-    const nextOrigin = calculatePosition(moveable.state.rootMatrix, origin, n);
+    datas: IObject<any>, clientX: number, clientY: number,
+    rect: MoveableClientRect,
+) {
+    const state = moveable.state;
+    const n = state.is3d ? 4 : 3;
+    const origin = datas.origin;
+    const nextOrigin = calculatePosition(
+        moveable.state.rootMatrix,
+        minus([origin[0], origin[1]], [state.left, state.top]),
+        n,
+    );
     const startAbsoluteOrigin = plus([rect.left, rect.top], nextOrigin);
 
     datas.startAbsoluteOrigin = startAbsoluteOrigin;
@@ -90,7 +98,6 @@ function getAbsoluteDistByClient(
     datas: IObject<any>,
 ) {
     return getAbsoluteDist(
-
         getRad(datas.startAbsoluteOrigin, [clientX, clientY]) / Math.PI * 180,
         direction,
         datas,
@@ -300,11 +307,17 @@ export default {
             parentRotate, parentFlag, isPinch,
             isRequest,
         } = e;
+        const state = moveable.state;
         const {
-            target, left, top, origin, beforeOrigin,
+            target, left, top,
             direction, beforeDirection, targetTransform,
             moveableClientRect,
-        } = moveable.state;
+            offsetMatrix,
+            targetMatrix,
+            allMatrix,
+            width,
+            height,
+        } = state;
 
         if (!isRequest && !target) {
             return false;
@@ -315,8 +328,10 @@ export default {
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
-        datas.fixedPosition = getDirectionOffset(moveable, getOriginDirection(moveable));
-
+        let setFixedDirection: OnRotateStart["setFixedDirection"] = (fixedDirection: number[]) => {
+            datas.fixedDirection = fixedDirection;
+            datas.fixedPosition = getDirectionOffset(moveable, fixedDirection);
+        };
         if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
 
@@ -343,11 +358,35 @@ export default {
                 startValue: rect.rotation,
             };
 
-            setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, beforeOrigin, moveableClientRect);
-            setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, origin, moveableClientRect);
-            setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, origin, moveableClientRect);
-        }
+            setFixedDirection = (fixedDirection: number[]) => {
+                const n = state.is3d ? 4 : 3;
+                const originalPosition = getPosByDirection([
+                    [0, 0],
+                    [width, 0],
+                    [0, height],
+                    [width, height],
+                ], fixedDirection);
+                const [originX, originY] = plus(getOrigin(targetMatrix, n), originalPosition);
+                const fixedBeforeOrigin = calculate(
+                    offsetMatrix,
+                    convertPositionMatrix([originX, originY], n),
+                );
+                const fixedAfterOrigin = calculate(
+                    allMatrix,
+                    convertPositionMatrix([originalPosition[0], originalPosition[1]], n),
+                );
+                datas.fixedDirection = fixedDirection;
+                datas.fixedPosition = getDirectionOffset(moveable, fixedDirection);
+                datas.beforeInfo.origin = fixedBeforeOrigin;
+                datas.afterInfo.origin = fixedAfterOrigin;
+                datas.absoluteInfo.origin = fixedAfterOrigin;
 
+                setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, moveableClientRect);
+                setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, moveableClientRect);
+                setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, moveableClientRect);
+            };
+        }
+        setFixedDirection(getOriginDirection(moveable));
         datas.direction = direction;
         datas.beforeDirection = beforeDirection;
         datas.startValue = 0;
@@ -359,6 +398,7 @@ export default {
             set: (rotatation: number) => {
                 datas.startValue = rotatation * Math.PI / 180;
             },
+            setFixedDirection,
             ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
                 moveable,
@@ -367,7 +407,7 @@ export default {
         });
         const result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
-        moveable.state.snapRenderInfo = {
+        state.snapRenderInfo = {
             request: e.isRequest,
         };
 
@@ -423,7 +463,6 @@ export default {
             beforeDist = parentDist;
             dist = parentDist;
             absoluteDist = parentDist;
-
         } else if (isPinch || parentFlag) {
             beforeDist = getAbsoluteDist(parentRotate, beforeDirection, beforeInfo);
             dist = getAbsoluteDist(parentRotate, direction, afterInfo);
@@ -475,7 +514,7 @@ export default {
             datas, `rotate(${rotation}deg)`, `rotate(${dist}deg)`,
         );
 
-        const inverseDist = getRotateDist(moveable, dist, datas.fixedPosition, datas);
+        const inverseDist = getRotateDist(moveable, dist, datas);
         const inverseDelta = minus(
             plus(groupDelta || [0, 0], inverseDist),
             datas.prevInverseDist || [0, 0],

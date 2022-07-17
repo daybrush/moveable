@@ -8,7 +8,7 @@ import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
     calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo,
 } from "../utils";
-import { splitUnit, isArray, splitSpace, average, findIndex } from "@daybrush/utils";
+import { splitUnit, isArray, splitSpace, findIndex, dot } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag,
@@ -268,29 +268,21 @@ export function getPosByDirection(
     poses: number[][],
     direction: number[],
 ) {
-    /*
-    [-1, -1](pos1)       [0, -1](pos1,pos2)       [1, -1](pos2)
-    [-1, 0](pos1, pos3)                           [1, 0](pos2, pos4)
-    [-1, 1](pos3)        [0, 1](pos3, pos4)       [1, 1](pos4)
-    */
-    const nextPoses = getPosesByDirection(poses, direction);
+    const xRatio = (direction[0] + 1) / 2;
+    const yRatio = (direction[1] + 1) / 2;
 
-    return [
-        average(nextPoses.map(pos => pos[0])),
-        average(nextPoses.map(pos => pos[1])),
+    const top = [
+        dot(poses[0][0], poses[1][0], xRatio, 1 - xRatio),
+        dot(poses[0][1], poses[1][1], xRatio, 1 - xRatio),
     ];
-}
-export function getPosByReverseDirection(
-    poses: number[][],
-    direction: number[],
-) {
-    /*
-    [-1, -1](pos4)       [0, -1](pos3,pos4)       [1, -1](pos3)
-    [-1, 0](pos2, pos4)                           [1, 0](pos3, pos1)
-    [-1, 1](pos2)        [0, 1](pos1, pos2)       [1, 1](pos1)
-    */
-
-    return getPosByDirection(poses, direction.map(dir => -dir));
+    const bottom = [
+        dot(poses[2][0], poses[3][0], xRatio, 1 - xRatio),
+        dot(poses[2][1], poses[3][1], xRatio, 1 - xRatio),
+    ];
+    return [
+        dot(top[0], bottom[0], yRatio, 1 - yRatio),
+        dot(top[1], bottom[1], yRatio, 1 - yRatio),
+    ];
 }
 
 function getDist(
@@ -501,10 +493,10 @@ export function getDirectionOffset(
 export function getRotateDist(
     moveable: MoveableManagerInterface<any>,
     rotateDist: number,
-    fixedPosition: number[],
     datas: any,
 ) {
-    const fixedDirection = getOriginDirection(moveable);
+    const fixedDirection = datas.fixedDirection;
+    const fixedPosition = datas.fixedPosition;
 
     return getTranslateDist(
         moveable,
