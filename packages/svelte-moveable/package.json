@@ -1,6 +1,6 @@
 {
   "name": "svelte-moveable",
-  "version": "0.22.1-beta.0",
+  "version": "0.23.0",
   "description": "A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
   "svelte": "./src/index.js",
   "main": "./dist/moveable.cjs.js",
@@ -49,6 +49,7 @@
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-livereload": "^1.0.4",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-terser": "^5.2.0",
     "scenejs": "^1.1.5",
     "sirv-cli": "^0.4.5",
@@ -56,12 +57,11 @@
     "svelte-guides": "^0.17.1",
     "svelte-preprocess": "^3.2.2",
     "tslib": "^1.10.0",
-    "typescript": "^4.5.0 <4.6.0",
-    "rollup-plugin-svelte": "^7.1.0"
+    "typescript": "^4.5.0 <4.6.0"
   },
   "dependencies": {
     "framework-utils": "^1.1.0",
-    "moveable": "~0.30.0"
+    "moveable": "~0.31.0"
   },
   "scripts": {
     "build": "rollup -c rollup.build.config.js && print-sizes ./dist",
