@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.0](https://github.com/daybrush/moveable/compare/0.30.0...0.31.0) (2022-07-17)
+### :sparkles: Packages
+* `lit-moveable` 0.8.0
+* `moveable` 0.31.0
+* `preact-moveable` 0.33.0
+* `react-compat-moveable` 0.19.0
+* `react-moveable` 0.34.0
+* `svelte-moveable` 0.23.0
+* `vue-moveable` 2.0.0-beta.22
+* `vue3-moveable` 0.6.0
+* `ngx-moveable` 0.28.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add hideChildMoveableDefaultLines prop #692 ([c691403](https://github.com/daybrush/moveable/commit/c6914031e75712eef6a574d6aaf04645535f59d3))
+    * add setFixedDirection on rotateStart #670 ([093d0b1](https://github.com/daybrush/moveable/commit/093d0b1303c9742a79f73071470ec73306ff2de6))
+    * support edge prop's object type #695 ([699997d](https://github.com/daybrush/moveable/commit/699997d7426110cb199094cd7ac56682723d1cae))
+* Other
+    * add Snappable ([c7bbd98](https://github.com/daybrush/moveable/commit/c7bbd98393f1e8f45219a5dab9e1337187366ab5))
+
+
+### :bug: Bug Fix
+
+* `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `lit-moveable`
+    * fix floating point for min limit size ([766561c](https://github.com/daybrush/moveable/commit/766561c0e785098720c5a0ae6d9da1e2d9d7b879))
+* `svelte-moveable`
+    * change dependencies #680 ([7c01017](https://github.com/daybrush/moveable/commit/7c010170642f68b2ec52cf0ea8e2b569fcd2b634))
+* `react-moveable`
+    * fix guidelines for edgeDraggable #694 ([80f2b44](https://github.com/daybrush/moveable/commit/80f2b44643a0d804df6a65f72583c4d7f6d8ddf7))
+    * fix safari 15 consts ([a140e5b](https://github.com/daybrush/moveable/commit/a140e5b77f623973cf6d27d0ff8ab12e63901004))
+    * fix transform behavior in safari 15 #696 ([eb0a71c](https://github.com/daybrush/moveable/commit/eb0a71cb8aa11c100a3cf2f85e007d6fdb45a2d7))
+    * stop propagation for click control #690 ([1a8f697](https://github.com/daybrush/moveable/commit/1a8f6978ba267632282049b61753bc062d69266f))
+
+
+### :memo: Documentation
+
+* `react-moveable`
+    * add hideChildMoveableDefaultLines docs ([9e02faa](https://github.com/daybrush/moveable/commit/9e02faa5cbd4f5e529a1a58647afd519b0672d3b))
+    * fix typo #685 ([c591b1d](https://github.com/daybrush/moveable/commit/c591b1d8a410a3fa6115fcec51ae21d4027aeaa7))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([2a4940f](https://github.com/daybrush/moveable/commit/2a4940f74997fae24c7d77c553a6bc6be1301d40))
+* `react-moveable`, `react-compat-moveable`
+    * update overlap-area ([be8c4dc](https://github.com/daybrush/moveable/commit/be8c4dc19dbd6d6d7f782c73272cb9878ca21982))
+
+
+
 ## [0.30.0](https://github.com/daybrush/moveable/compare/0.29.9...0.30.0) (2022-06-09)
 ### :sparkles: Packages
 * `lit-moveable` 0.7.0

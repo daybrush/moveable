@@ -1759,10 +1759,10 @@
     gh-pages "^2.0.1"
     sync-exec "^0.6.2"
 
-"@daybrush/release@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@daybrush/release/-/release-0.5.0.tgz#d1770d826b258f263341269affcb24ab4cff6676"
-  integrity sha512-dXtcd+9zKkTx1MCTmY0GLroR/8JITUFSA/aicbRyS6gmHWBJ4KmFvzN/f/xt3E6Hm1MzOYfZOAJ+80uH/qxOSw==
+"@daybrush/release@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@daybrush/release/-/release-0.5.2.tgz#c23c3694f5c88785a1db7dc17abd725950d86a45"
+  integrity sha512-Hzmki/CiUHg+YD46xdpN+sTE3+SYg7llzRjH8bAOOizdcqWQiGTJD8HkpizcBo3L+Mwb/S/v9PEyuDwDyUm3SA==
   dependencies:
     args "^5.0.1"
     commander "9.2.0"

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.7.0...lit-moveable@0.8.0) (2022-07-17)
+
+
+### :bug: Bug Fix
+
+* fix floating point for min limit size ([766561c](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/766561c0e785098720c5a0ae6d9da1e2d9d7b879))
+
+
+### :mega: Other
+
+* publish packages ([2a4940f](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/2a4940f74997fae24c7d77c553a6bc6be1301d40))
+
+
+
 ## [0.7.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.6.9...lit-moveable@0.7.0) (2022-06-09)
 
 

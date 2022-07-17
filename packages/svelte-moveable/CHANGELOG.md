@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.0](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/compare/svelte-moveable@0.22.0...svelte-moveable@0.23.0) (2022-07-17)
+
+
+### :bug: Bug Fix
+
+* change dependencies #680 ([7c01017](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/commit/7c010170642f68b2ec52cf0ea8e2b569fcd2b634))
+* fix floating point for min limit size ([766561c](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/commit/766561c0e785098720c5a0ae6d9da1e2d9d7b879))
+
+
+### :mega: Other
+
+* publish packages ([2a4940f](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/commit/2a4940f74997fae24c7d77c553a6bc6be1301d40))
+
+
+
 ## [0.22.0](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/compare/svelte-moveable@0.21.9...svelte-moveable@0.22.0) (2022-06-09)
 
 
