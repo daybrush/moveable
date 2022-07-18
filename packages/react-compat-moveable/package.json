@@ -59,7 +59,7 @@
         "keycon": "^0.3.0",
         "print-sizes": "^0.1.0",
         "pvu": "^0.6.1",
-        "react-simple-compat": "^1.2.1",
+        "react-simple-compat": "^1.2.3",
         "rollup-plugin-css-bundle": "^1.0.4",
         "rollup-plugin-react-compat": "^0.1.0",
         "scenejs": "^1.1.4",

@@ -5,7 +5,7 @@
       <button @click="toggleDraggable">Toggle {{draggable}}</button>
       <moveable
         ref="moveable"
-        :target="['.target']"
+        :target="target"
         v-bind:draggable="draggable"
         v-bind:throttleDrag="1"
         v-bind:edgeDraggable="false"
@@ -26,13 +26,14 @@ export default defineComponent({
     },
     data(){
         return {
-            target: ['.target'],
+            target: [],
             className: "",
             draggable: true,
         };
     },
     methods: {
         mousedown(event) {
+            this.target = ['.target'];
             event.target.classList.add("target");
 
             this.$nextTick(() => {

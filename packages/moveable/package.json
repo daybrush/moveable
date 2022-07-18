@@ -64,7 +64,7 @@
     "@scena/event-emitter": "^1.0.5",
     "react-compat-moveable": "~0.19.2",
     "react-moveable": "~0.34.2",
-    "react-simple-compat": "^1.2.2"
+    "react-simple-compat": "^1.2.3"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",
