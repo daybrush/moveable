@@ -2356,7 +2356,7 @@ export interface ClippableOptions {
      * Whether to clip the target.
      * @default false
      */
-    clippable?: boolean;
+    clippable?: boolean | ClippableOptions;
     /**
      * Whether to keep the ratio of size if your clipPath is 'inset', 'rect', 'ellipse' type
      * @default false

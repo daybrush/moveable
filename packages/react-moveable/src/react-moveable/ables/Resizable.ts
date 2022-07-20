@@ -4,6 +4,7 @@ import {
     getAbsolutePosesByState,
     catchEvent,
     getOffsetSizeDist,
+    getProps,
 } from "../utils";
 import {
     setDragStart,
@@ -223,7 +224,7 @@ export default {
         if (!isResize) {
             return;
         }
-        const props = moveable.props;
+        const props = getProps(moveable.props, "resizable");
         const {
             resizeFormat,
             throttleResize = parentFlag ? 0 : 1,
@@ -588,11 +589,12 @@ export default {
         if (!datas.isResize) {
             return;
         }
+        const props = getProps(moveable.props, "resizable");
 
         catchEvent(moveable, "onBeforeResize", parentEvent => {
             triggerEvent(moveable, "onBeforeResizeGroup", fillParams<OnBeforeResizeGroup>(moveable, e, {
                 ...parentEvent,
-                targets: moveable.props.targets!,
+                targets: props.targets!,
             }, true));
         });
 
@@ -608,7 +610,7 @@ export default {
             dist,
         } = params;
 
-        const keepRatio = moveable.props.keepRatio;
+        const keepRatio = props.keepRatio;
 
         const parentScale = [
             boundingWidth / (boundingWidth - dist[0]),
@@ -642,7 +644,7 @@ export default {
             },
         );
         const nextParams: OnResizeGroup = {
-            targets: moveable.props.targets!,
+            targets: props.targets!,
             events,
             ...params,
         };

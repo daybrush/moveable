@@ -11,6 +11,7 @@ import {
     convertCSSSize,
     getComputedStyle,
     getSizeDistByDist,
+    getProps,
 } from "../utils";
 import { plus, minus, multiply } from "@scena/matrix";
 import { getDragDist, calculatePointerDist, setDragStart } from "../gesto/GestoUtils";
@@ -596,7 +597,8 @@ export default {
     ],
     render(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, React: Renderer): any[] {
         const {
-            customClipPath, defaultClipPath,
+            customClipPath,
+            defaultClipPath,
             clipArea, zoom,
         } = moveable.props;
         const {
@@ -834,8 +836,9 @@ export default {
         if (!clipPath) {
             return false;
         }
+        const props = getProps(moveable.props, "clippable");
 
-        const { keepRatio } = moveable.props;
+        const { keepRatio } = props;
         let distX = 0;
         let distY = 0;
 
@@ -849,7 +852,7 @@ export default {
         }
 
         const firstDist = [distX, distY];
-        const props = moveable.props;
+
         const state = moveable.state;
         const { width, height } = state;
         const isDragWithTarget = !isArea && !isControl && !isLine;

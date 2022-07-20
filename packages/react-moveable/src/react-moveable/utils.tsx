@@ -934,6 +934,18 @@ export function getCSSSize(target: SVGElement | HTMLElement) {
     ];
 }
 
+export function getProps<Props>(props: Props, ableName: keyof Props): Props {
+    const self = props[ableName];
+
+    if (isObject(self)) {
+        return {
+            ...props,
+            ...self,
+        };
+    }
+    return props;
+}
+
 export function getSize(
     target?: SVGElement | HTMLElement | null,
     style: CSSStyleDeclaration | null = target ? getComputedStyle(target) : null,
