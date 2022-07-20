@@ -18946,23 +18946,6 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-moveable@~0.34.1:
-  version "0.34.1"
-  resolved "https://registry.yarnpkg.com/react-moveable/-/react-moveable-0.34.1.tgz#5625fa4ff1d4b8c869301e41ff5f92b7326a0499"
-  integrity sha512-AzOFf0ErJdHhPW0CFNPw+Tnf7dct6TOg/sVuQre/wFkJAC4pORFpl5/lZl2AvJ0aGryk8LdZa8r1644aTpOf0Q==
-  dependencies:
-    "@daybrush/utils" "^1.7.1"
-    "@egjs/agent" "^2.2.1"
-    "@egjs/children-differ" "^1.0.1"
-    "@scena/dragscroll" "^1.1.1"
-    "@scena/event-emitter" "^1.0.5"
-    "@scena/matrix" "^1.1.1"
-    css-to-mat "^1.0.3"
-    framework-utils "^1.1.0"
-    gesto "^1.9.0"
-    overlap-area "^1.1.0"
-    react-css-styled "^1.0.3"
-
 react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
@@ -18989,10 +18972,18 @@ react-selecto@^1.15.0:
   dependencies:
     selecto "~1.16.2"
 
-react-simple-compat@^1.2.1, react-simple-compat@^1.2.2:
+react-simple-compat@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/react-simple-compat/-/react-simple-compat-1.2.2.tgz#e62cd33d2053ce023c4d2a204a5f1d5c8499c933"
   integrity sha512-DYa9MHplwzjL/9xDKmTvM70umky8R162aZsKsWC2XRD7d+mIXyr8IQmAoRMlH2uwl4yGGgZbg7bj20qlCMhIYA==
+  dependencies:
+    "@daybrush/utils" "^1.0.0"
+    "@egjs/list-differ" "^1.0.0"
+
+react-simple-compat@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/react-simple-compat/-/react-simple-compat-1.2.3.tgz#26c330d84cb20b2036ff443303ca5250a1e5c674"
+  integrity sha512-vYepRjSriGRyEmFtSsTQoHWVQRbBMYR4ONATeZtuf8GDY8jWGkc6R4+lIb5rVhPBIkx3ru68bpl+9r8V4YA/nA==
   dependencies:
     "@daybrush/utils" "^1.0.0"
     "@egjs/list-differ" "^1.0.0"

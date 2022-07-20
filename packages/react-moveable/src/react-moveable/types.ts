@@ -196,7 +196,31 @@ export type MoveableManagerState<T = {}> = {
     rotation: number;
 
     hasFixed: boolean;
-} & T;
+} & ElementSizes & T;
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export interface ElementSizes {
+    svg: boolean;
+    offsetWidth: number;
+    offsetHeight: number;
+    clientWidth: number;
+    clientHeight: number;
+    cssWidth: number;
+    cssHeight: number;
+    contentWidth: number;
+    contentHeight: number;
+    minWidth: number;
+    minHeight: number;
+    maxWidth: number;
+    maxHeight: number;
+    minOffsetWidth: number;
+    minOffsetHeight: number;
+    maxOffsetWidth: number;
+    maxOffsetHeight: number;
+}
 
 /**
  * @typedef
@@ -827,13 +851,46 @@ export interface OnScaleEnd extends OnEndEvent {
  * @property - Set the ratio of width and height. (default: offsetWidth / offsetHeight)
  */
 export interface OnResizeStart extends OnEvent {
+    /**
+     * The direction of resize.
+     */
     direction: number[];
+    /**
+     * First set (boundingWidth / boundingHeight) value
+     */
+    startRatio: number;
+    /**
+     * resize causes a `dragStart` event.
+     */
     dragStart: OnDragStart | false;
+    /**
+     * You can set the css width, height value.
+     */
     set: (size: number[]) => any;
+    /**
+     * You can set the css min offset width, min offset height value.
+     * @default [minOffsetWidth, minOffsetHeight])
+     */
     setMin: (minSize: Array<string | number>) => any;
+    /**
+     * You can set the css max offset width, max offset height value.
+     * @default [maxOffsetWidth, maxOffsetHeight])
+     */
     setMax: (maxSize: Array<string | number>) => any;
+    /**
+     * You can set the css origin
+     * @default transformOrigin
+     */
     setOrigin: (origin: Array<string | number>) => any;
+    /**
+     * Set a fixed direction to resize.
+     * @default Opposite direction
+     */
     setFixedDirection: (startDirecition: number[]) => any;
+    /**
+     * Set the ratio of width and height.
+     * @default offsetWidth / offsetHeight
+     */
     setRatio: (ratio: number) => any;
 }
 
@@ -866,29 +923,55 @@ export interface OnBeforeResize extends OnEvent {
  * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
- * @property - The direction of resize.
- * @property - a target's cssWidth
- * @property - a target's cssHeight
- * @property - a target's offset width as an integer with bounding width
- * @property - a target's offset height as an integer with bounding height
- * @property - a target's bounding width
- * @property - a target's bounding height
- * @property - The distance of [width, height]
- * @property - The delta of [width, height]
- * @property - Whether or not it is being pinched.
- * @property - resize causes a `drag` event.
  */
 export interface OnResize extends OnEvent {
+    /**
+     * The direction of resize.
+     */
     direction: number[];
+    /**
+     * a target's cssWidth
+     */
     width: number;
+    /**
+     * a target's cssHeight
+     */
     height: number;
+    /**
+     * a target's offset width as an integer with bounding width
+     */
     offsetWidth: number;
+    /**
+     * a target's offset height as an integer with bounding height
+     */
     offsetHeight: number;
+    /**
+     * a target's bounding width
+     */
     boundingWidth: number;
+    /**
+     * a target's bounding height
+     */
     boundingHeight: number;
+    /**
+     * The distance of [boundingWidth, boundingHeight]
+     */
     dist: number[];
+    /**
+     * The delta of [boundingWidth, boundingHeight]
+     */
     delta: number[];
+    /**
+     * First set (boundingWidth / boundingHeight) value
+     */
+    startRatio: number;
+    /**
+     * Whether or not it is being pinched.
+     */
     isPinch: boolean;
+    /**
+     * resize causes a `drag` event.
+     */
     drag: OnDrag;
 }
 /**
@@ -1632,7 +1715,7 @@ export interface ResizableOptions extends RenderDirections {
      * Whether or not target can be resized.
      * @default false
      */
-    resizable?: boolean;
+    resizable?: boolean | ResizableOptions;
     /**
      * throttle of width, height when resize.
      * @default 1
@@ -1643,6 +1726,11 @@ export interface ResizableOptions extends RenderDirections {
      * @default false
      */
     keepRatio?: boolean;
+    /**
+     * The size can be changed by format and throttle, but the ratio is maintained at the end. Forced true when using groups.
+     * @default false
+     */
+    keepRatioFinally?: boolean;
     /**
      * Function to convert size for resize.
      * @default oneself
@@ -1681,6 +1769,10 @@ export interface ResizableRequestParam extends AbleRequestParam {
      * offset number of height
      */
     offsetHeight?: number;
+    /**
+     *
+     */
+    horizontal?: boolean;
 }
 
 export interface ResizableEvents {

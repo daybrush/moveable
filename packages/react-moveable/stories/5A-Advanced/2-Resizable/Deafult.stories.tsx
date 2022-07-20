@@ -13,3 +13,8 @@ group.add("Resizable with display: flex", {
     app: require("./ReactFlexApp").default,
     text: require("!!raw-loader!./ReactFlexApp").default,
 });
+
+group.add("Limit Sizes with Group", {
+    app: require("./ReactGroupMinSizeApp").default,
+    text: require("!!raw-loader!./ReactGroupMinSizeApp").default,
+});

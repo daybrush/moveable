@@ -5,34 +5,31 @@ export default function App(props: Record<string, any>) {
     const widthInputRef = React.useRef<HTMLInputElement>(null);
     const heightInputRef = React.useRef<HTMLInputElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
-    const [frames] = React.useState([{
-        translate: [0, 0],
-    }, {
-        translate: [0, 0],
-    }, {
-        translate: [0, 0],
-    }]);
     const [requestCallbacks] = React.useState(() => {
-        function request() {
+        function request(horizontal: boolean) {
             moveableRef.current!.request("resizable", {
-                offsetWidth: parseInt(widthInputRef.current!.value),
-                offsetHeight: parseInt(heightInputRef.current!.value),
+                offsetWidth: parseFloat(widthInputRef.current!.value),
+                offsetHeight: parseFloat(heightInputRef.current!.value),
+                horizontal,
             }, true);
         }
         return {
             onInput(e: any) {
                 const ev = (e.nativeEvent || e) as InputEvent;
+                const horizontal = JSON.parse((ev.target as HTMLElement).getAttribute("data-horizontal")!);
 
                 if (typeof ev.data === "undefined") {
-                    request();
+                    request(horizontal);
                 }
             },
             onKeyUp(e: any) {
+                const ev = (e.nativeEvent || e) as InputEvent;
+                const horizontal = JSON.parse((ev.target as HTMLElement).getAttribute("data-horizontal")!);
                 e.stopPropagation();
 
                 // enter
                 if (e.keyCode === 13) {
-                    request();
+                    request(horizontal);
                 }
             },
         };
@@ -40,8 +37,8 @@ export default function App(props: Record<string, any>) {
 
     return <div className="root">
         <div>
-            width: <input ref={widthInputRef} type="number" defaultValue="280" {...requestCallbacks}></input>&nbsp;
-            height: <input ref={heightInputRef} type="number" defaultValue="230" {...requestCallbacks}></input>
+            width: <input ref={widthInputRef} type="number" defaultValue="280" {...requestCallbacks} data-horizontal="true"></input>&nbsp;
+            height: <input ref={heightInputRef} type="number" defaultValue="230" {...requestCallbacks} data-horizontal="false"></input>
         </div>
         <div className="container">
             <div className="target target1">Target1</div>
@@ -50,23 +47,19 @@ export default function App(props: Record<string, any>) {
             <Moveable
                 ref={moveableRef}
                 target={".target"}
+                draggable={true}
                 resizable={props.resizable}
                 keepRatio={props.keepRatio}
                 throttleResize={props.throttleResize}
                 renderDirections={props.renderDirections}
-                onResizeGroupStart={({ events, setMin, setMax }) => {
+                onResizeGroupStart={({ setMin, setMax }) => {
                     setMin([props.minWidth, props.minHeight]);
                     setMax([props.maxWidth, props.maxHeight]);
-
-                    events.forEach((ev, i) => {
-                        ev.dragStart && ev.dragStart.set(frames[i].translate);
-                    });
                 }}
                 onResizeGroup={({ events }) => {
-                    events.forEach((ev, i) => {
-                        frames[i].translate = ev.drag.beforeTranslate;
-                        ev.target.style.width = `${ev.width}px`;
-                        ev.target.style.height = `${ev.height}px`;
+                    events.forEach(ev => {
+                        ev.target.style.width = `${ev.boundingWidth}px`;
+                        ev.target.style.height = `${ev.boundingHeight}px`;
                         ev.target.style.transform
                             = `translate(${ev.drag.beforeTranslate[0]}px, ${ev.drag.beforeTranslate[1]}px)`;
                     });
@@ -77,6 +70,11 @@ export default function App(props: Record<string, any>) {
 
                         widthInputRef.current!.value = `${rect.offsetWidth}`;
                         heightInputRef.current!.value = `${rect.offsetHeight}`;
+                    });
+                }}
+                onDragGroup={({ events }) => {
+                    events.forEach(ev => {
+                        ev.target.style.transform = ev.transform;
                     });
                 }}
             />
