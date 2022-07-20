@@ -1,8 +1,6 @@
 import {
     getDirection, triggerEvent,
-    fillParams, getCSSSize,
-    fillEndParams, directionCondition,
-    getComputedStyle,
+    fillParams, fillEndParams, directionCondition,
     getAbsolutePosesByState,
     catchEvent,
     getOffsetSizeDist,
@@ -87,8 +85,8 @@ export default {
         } = e;
 
         const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
-
-        const { target, width, height } = moveable.state;
+        const state = moveable.state;
+        const { target, width, height } = state;
 
         if (!direction || !target) {
             return false;
@@ -101,55 +99,21 @@ export default {
         datas.startOffsetHeight = height;
         datas.prevWidth = 0;
         datas.prevHeight = 0;
-        [
-            datas.startWidth,
-            datas.startHeight,
-        ] = getCSSSize(target);
-        const padding = [
-            Math.max(0, width - datas.startWidth),
-            Math.max(0, height - datas.startHeight),
-        ];
-        datas.minSize = padding;
+
+        datas.minSize = [0, 0];
+        datas.startWidth = state.cssWidth;
+        datas.startHeight = state.cssHeight;
         datas.maxSize = [Infinity, Infinity];
 
         if (!isGroup) {
-            const style = getComputedStyle(target);
-
-            const {
-                position,
-                minWidth,
-                minHeight,
-                maxWidth,
-                maxHeight,
-            } = style;
-            const isParentElement = position === "static" || position === "relative";
-            const container = isParentElement
-                ? target.parentElement
-                : (target as HTMLElement).offsetParent;
-
-            let containerWidth = width;
-            let containerHeight = height;
-
-            if (container) {
-                containerWidth = container!.clientWidth;
-                containerHeight = container!.clientHeight;
-
-                if (isParentElement) {
-                    const containerStyle = getComputedStyle(container!);
-
-                    containerWidth -= parseFloat(containerStyle.paddingLeft) || 0;
-                    containerHeight -= parseFloat(containerStyle.paddingTop) || 0;
-                }
-            }
-
-            datas.minSize = plus([
-                convertUnitSize(minWidth, containerWidth) || 0,
-                convertUnitSize(minHeight, containerHeight) || 0,
-            ], padding);
-            datas.maxSize = plus([
-                convertUnitSize(maxWidth, containerWidth) || Infinity,
-                convertUnitSize(maxHeight, containerHeight) || Infinity,
-            ], padding);
+            datas.minSize = [
+                state.minOffsetWidth,
+                state.minOffsetHeight,
+            ];
+            datas.maxSize = [
+                state.maxOffsetWidth,
+                state.maxOffsetHeight,
+            ];
         }
         const transformOrigin = moveable.props.transformOrigin || "% %";
 
@@ -157,7 +121,7 @@ export default {
             ? transformOrigin.split(" ")
             : transformOrigin;
 
-        datas.isWidth = (!direction[0] && !direction[1]) || direction[0] || !direction[1];
+        datas.isWidth = e?.parentIsWidth ?? ((!direction[0] && !direction[1]) || direction[0] || !direction[1]);
 
         function setRatio(ratio: number) {
             datas.ratio = ratio && isFinite(ratio) ? ratio : 0;
@@ -198,6 +162,7 @@ export default {
         datas.setMax = setMax;
         const params = fillParams<OnResizeStart>(moveable, e, {
             direction,
+            startRatio: datas.ratio,
             set: ([startWidth, startHeight]: number[]) => {
                 datas.startWidth = startWidth;
                 datas.startHeight = startHeight;
@@ -236,6 +201,7 @@ export default {
             dragClient,
             parentDist,
             isRequest,
+            isGroup,
         } = e;
 
         const {
@@ -248,20 +214,21 @@ export default {
             minSize,
             maxSize,
             ratio,
-            isWidth,
             startOffsetWidth,
             startOffsetHeight,
+            isWidth,
+
         } = datas;
 
         if (!isResize) {
             return;
         }
-
         const props = moveable.props;
         const {
             resizeFormat,
-            throttleResize = 1,
+            throttleResize = parentFlag ? 0 : 1,
             parentMoveable,
+            keepRatioFinally,
         } = props;
         const direction = datas.direction;
         let sizeDirection = direction;
@@ -385,6 +352,7 @@ export default {
             boundingWidth = Math.max(0, boundingWidth);
             boundingHeight = Math.max(0, boundingHeight);
         }
+
         [boundingWidth, boundingHeight] = calculateBoundSize(
             [boundingWidth, boundingHeight],
             minSize,
@@ -393,6 +361,13 @@ export default {
         );
         computeSize();
 
+        if (keepRatio && (isGroup || keepRatioFinally)) {
+            if (isWidth) {
+                boundingHeight = boundingWidth / ratio;
+            } else {
+                boundingWidth = boundingHeight * ratio;
+            }
+        }
         distWidth = boundingWidth - startOffsetWidth;
         distHeight = boundingHeight - startOffsetHeight;
 
@@ -418,6 +393,7 @@ export default {
             height: startHeight + distHeight,
             offsetWidth: Math.round(boundingWidth),
             offsetHeight: Math.round(boundingHeight),
+            startRatio: ratio,
             boundingWidth,
             boundingHeight,
             direction,
@@ -621,7 +597,7 @@ export default {
         });
 
 
-        const params = this.dragControl(moveable, e);
+        const params = this.dragControl(moveable, {...e, isGroup: true });
 
         if (!params) {
             return;
@@ -723,7 +699,7 @@ export default {
      * requester.requestEnd();
      */
     request(moveable: MoveableManagerInterface<any>) {
-        const datas = {};
+        const datas: Record<string, any> = {};
         let distWidth = 0;
         let distHeight = 0;
         const rect = moveable.getRect();
@@ -731,7 +707,7 @@ export default {
         return {
             isControl: true,
             requestStart(e: ResizableRequestParam) {
-                return { datas, parentDirection: e.direction || [1, 1] };
+                return { datas, parentDirection: e.direction || [1, 1], parentIsWidth: e?.horizontal ?? true };
             },
             request(e: ResizableRequestParam) {
                 if ("offsetWidth" in e) {
@@ -744,6 +720,7 @@ export default {
                 } else if ("deltaHeight" in e) {
                     distHeight += e.deltaHeight!;
                 }
+
 
                 return { datas, parentDist: [distWidth, distHeight], parentKeepRatio: e.keepRatio };
             },
