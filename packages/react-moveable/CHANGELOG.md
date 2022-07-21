@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.34.2...react-moveable@0.35.0) (2022-07-21)
+
+
+### :rocket: New Features
+
+* add `keepRatioFinally` prop #698 ([bf29635](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/bf29635ab8a160c9e938213b2477cfec73e8401d))
+* add move cursor style with edgeDraggable #703 ([9901deb](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9901deb3dd51f449edcd75e4f147b9fa671d951e))
+* support object self type #701 ([99967c2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/99967c28f9f0f09ef1891ea1ece4b16a6c10ef43))
+
+
+### :bug: Bug Fix
+
+* calculate size more accurately #698 ([4dd4038](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/4dd4038c82c9dff272226e3911549249743dff50))
+* enhance bounds accuracy #699 ([9aee6bd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9aee6bdf0cd9105ef3ef653e18363e21ad4c4b3f))
+* support shadow root #684 ([8502d07](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8502d0795c903e7894d0fad9a6a130cbc543f301))
+
+
+### :mega: Other
+
+* publish packages ([da24696](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/da24696977c24b6ea54a433192d15bb7ecbc62e9))
+* update `react-compat-moveable` ([712ae6f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/712ae6fb49dec3f4e40a3cd664f63625d7cd5669))
+
+
+
 ## [0.34.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.34.0...react-moveable@0.34.2) (2022-07-17)
 
 

@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.0](https://github.com/daybrush/moveable/compare/0.31.2...0.32.0) (2022-07-21)
+### :sparkles: Packages
+* `lit-moveable` 0.9.0
+* `moveable` 0.32.0
+* `preact-moveable` 0.34.0
+* `react-compat-moveable` 0.20.0
+* `react-moveable` 0.35.0
+* `svelte-moveable` 0.24.0
+* `vue-moveable` 2.0.0-beta.26
+* `vue3-moveable` 0.7.0
+* `ngx-moveable` 0.29.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add `keepRatioFinally` prop #698 ([bf29635](https://github.com/daybrush/moveable/commit/bf29635ab8a160c9e938213b2477cfec73e8401d))
+    * add move cursor style with edgeDraggable #703 ([9901deb](https://github.com/daybrush/moveable/commit/9901deb3dd51f449edcd75e4f147b9fa671d951e))
+    * support object self type #701 ([99967c2](https://github.com/daybrush/moveable/commit/99967c28f9f0f09ef1891ea1ece4b16a6c10ef43))
+
+
+### :bug: Bug Fix
+
+* `vue3-moveable`, `vue-moveable`
+    * fix files field in package.json #700 ([5130109](https://github.com/daybrush/moveable/commit/51301099b5a9a9764500c09ce61e4bf65c7c60ef))
+* `react-moveable`
+    * calculate size more accurately #698 ([4dd4038](https://github.com/daybrush/moveable/commit/4dd4038c82c9dff272226e3911549249743dff50))
+    * enhance bounds accuracy #699 ([9aee6bd](https://github.com/daybrush/moveable/commit/9aee6bdf0cd9105ef3ef653e18363e21ad4c4b3f))
+    * support shadow root #684 ([8502d07](https://github.com/daybrush/moveable/commit/8502d0795c903e7894d0fad9a6a130cbc543f301))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([da24696](https://github.com/daybrush/moveable/commit/da24696977c24b6ea54a433192d15bb7ecbc62e9))
+* `vue3-moveable`, `react-moveable`, `react-compat-moveable`, `moveable`
+    * update `react-compat-moveable` ([712ae6f](https://github.com/daybrush/moveable/commit/712ae6fb49dec3f4e40a3cd664f63625d7cd5669))
+
+
+
 ## [0.31.2](https://github.com/daybrush/moveable/compare/0.31.0...0.31.2) (2022-07-17)
 ### :sparkles: Packages
 * `lit-moveable` 0.8.2
