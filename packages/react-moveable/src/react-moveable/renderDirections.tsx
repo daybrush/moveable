@@ -47,7 +47,8 @@ export function renderDirectionControls(
     });
 }
 export function renderLine(
-    React: Renderer, direction: string,
+    React: Renderer,
+    direction: string,
     pos1: number[], pos2: number[],
     zoom: number,
     key: number | string, ...classNames: string[]) {

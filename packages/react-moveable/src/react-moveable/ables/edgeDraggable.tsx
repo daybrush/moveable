@@ -13,6 +13,11 @@ function getDraggableEvent(e: any) {
     return { ...e, datas };
 }
 export default makeAble("edgeDraggable", {
+    css: [
+        `:host[data-able-edgedraggable] .direction.line:not(.edge) {
+    cursor: move;
+}`,
+    ],
     dragControlCondition(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         if (!moveable.props.edgeDraggable || !e.inputEvent) {
             return false;
