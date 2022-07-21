@@ -257,6 +257,7 @@ export function checkSnapBoundsDrag(
         [isVerticalSnap, isHorizontalSnap],
         [verticalOffset, horizontalOffset]
     );
+
     return [
         {
             isBound: isVerticalBound,

@@ -18,6 +18,7 @@ import { triggerChildGesto } from "../groupUtils";
 import { startCheckSnapDrag } from "./Snappable";
 import { IObject, getRad, throttle, throttleArray } from "@daybrush/utils";
 import { checkSnapBoundsDrag } from "./snappable/snapBounds";
+import { TINY_NUM } from "../consts";
 
 /**
  * @namespace Draggable
@@ -181,6 +182,7 @@ export default {
                 isBound: isHorizontalBound,
                 offset: horizontalOffset,
             } = horizontalInfo;
+
             isSnap = isVerticalSnap || isHorizontalSnap || isVerticalBound || isHorizontalBound;
 
             distX += verticalOffset;
@@ -194,6 +196,8 @@ export default {
             throttleArray(translate, throttleDrag);
             throttleArray(beforeTranslate, throttleDrag);
         }
+        throttleArray(translate, TINY_NUM);
+        throttleArray(beforeTranslate, TINY_NUM);
 
         const beforeDist = minus(beforeTranslate, startValue);
         const dist = minus(translate, startValue);

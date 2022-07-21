@@ -193,8 +193,8 @@ export type MoveableManagerState<T = {}> = {
     targetClientRect: MoveableClientRect;
     containerClientRect: MoveableClientRect;
     moveableClientRect: MoveableClientRect;
+    rootContainerClientRect: MoveableClientRect;
     rotation: number;
-
     hasFixed: boolean;
 } & ElementSizes & T;
 

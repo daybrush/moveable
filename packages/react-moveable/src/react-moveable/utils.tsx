@@ -471,7 +471,10 @@ export function calculateElementInfo(
     container?: SVGElement | HTMLElement | null,
     rootContainer: HTMLElement | SVGElement | null | undefined = container,
     isAbsolute3d?: boolean,
-) {
+): ReturnType<typeof calculateMatrixStack>
+    & ReturnType<typeof calculateMoveablePosition>
+    & ElementSizes
+    & { width: number; height: number; rotation: number; } {
     let width = 0;
     let height = 0;
     let rotation = 0;
@@ -492,6 +495,7 @@ export function calculateElementInfo(
             isAbsolute3d,
             // prevMatrix, prevRootMatrix, prevN,
         );
+
         const position = calculateMoveablePosition(
             result.allMatrix,
             result.transformOrigin,
@@ -533,6 +537,8 @@ export function calculateElementInfo(
         pos4: [0, 0],
         direction: 1,
         hasFixed: false,
+        offsetContainer: null,
+        offsetRootContainer: null,
         ...allResult,
     };
 }
@@ -564,6 +570,7 @@ export function calculateMatrixStack(
     const {
         matrixes: rootMatrixes,
         is3d: isRoot3d,
+        offsetContainer: offsetRootContainer,
     } = getMatrixStackInfo(offsetContainer, rootContainer, true); // prevRootMatrix
 
     // if (rootContainer === document.body) {
@@ -656,6 +663,8 @@ export function calculateMatrixStack(
         transformOrigin,
         targetOrigin,
         is3d: isNext3d,
+        offsetContainer: offsetContainer as HTMLElement | null,
+        offsetRootContainer: offsetRootContainer as HTMLElement | null,
     };
 }
 export function makeMatrixCSS(matrix: number[], is3d: boolean = matrix.length > 9) {
@@ -1016,12 +1025,19 @@ export function getSize(
             }
             const inlineWidth = convertUnitSize(targetStyle.width, 0);
             const inlineHeight = convertUnitSize(targetStyle.height, 0);
+            const computedWidth = parseFloat(style!.width);
+            const computedHeight = parseFloat(style!.height);
 
             cssWidth = parseFloat(style!.width);
             cssHeight = parseFloat(style!.height);
 
-            contentWidth = between(minWidth, inlineWidth || parseFloat(style!.width), maxWidth);
-            contentHeight = between(minHeight, inlineHeight || parseFloat(style!.height), maxHeight);
+            contentWidth = Math.abs(computedWidth - inlineWidth) < 1
+                ? between(minWidth, inlineWidth || parseFloat(style!.width), maxWidth)
+                : computedWidth;
+            contentHeight = Math.abs(computedHeight - inlineHeight) < 1
+                ? between(minHeight, inlineHeight || parseFloat(style!.height), maxHeight)
+                : computedHeight;
+
             offsetWidth = contentWidth;
             offsetHeight = contentHeight;
             clientWidth = contentWidth;
@@ -1085,8 +1101,9 @@ export function getTargetInfo(
     let beforeDirection: 1 | -1 = 1;
     let beforeOrigin = [0, 0];
     let targetClientRect = resetClientRect();
-    let containerClientRect = resetClientRect();
     let moveableClientRect = resetClientRect();
+    let containerClientRect = resetClientRect();
+    let rootContainerClientRect = resetClientRect();
 
     const result = calculateElementInfo(
         target, container!, rootContainer!, false,
@@ -1106,10 +1123,10 @@ export function getTargetInfo(
         );
 
         targetClientRect = getClientRect(target);
-        containerClientRect = getClientRect(
-            getOffsetInfo(parentContainer, parentContainer, true).offsetParent || document.body,
-            true,
-        );
+        const offsetContainer = getOffsetInfo(parentContainer, parentContainer, true).offsetParent
+            || result.offsetRootContainer!;
+        containerClientRect = getClientRect(offsetContainer, true);
+        rootContainerClientRect = getClientRect(result.offsetRootContainer!);
         if (moveableElement) {
             moveableClientRect = getClientRect(moveableElement);
         }
@@ -1119,6 +1136,7 @@ export function getTargetInfo(
         targetClientRect,
         containerClientRect,
         moveableClientRect,
+        rootContainerClientRect,
         beforeDirection,
         beforeOrigin,
         originalBeforeOrigin: beforeOrigin,
@@ -1128,9 +1146,10 @@ export function getTargetInfo(
 }
 export function resetClientRect(): MoveableClientRect {
     return {
-        left: 0, right: 0,
-        top: 0, bottom: 0,
+        left: 0, top: 0,
         width: 0, height: 0,
+        right: 0,
+        bottom: 0,
         clientLeft: 0, clientTop: 0,
         clientWidth: 0, clientHeight: 0,
         scrollWidth: 0, scrollHeight: 0,
@@ -1142,31 +1161,33 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     let width = 0;
     let height = 0;
 
-    if (el === document.body || el === document.documentElement) {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        const scrollPos = getBodyScrollPos();
+    if (el) {
+        if (el === document.body || el === document.documentElement) {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            const scrollPos = getBodyScrollPos();
 
-        [left, top] = [-scrollPos[0], -scrollPos[1]];
-    } else {
-        const clientRect = el.getBoundingClientRect();
+            [left, top] = [-scrollPos[0], -scrollPos[1]];
+        } else {
+            const clientRect = el.getBoundingClientRect();
 
-        left = clientRect.left;
-        top = clientRect.top;
-        width = clientRect.width;
-        height = clientRect.height;
+            left = clientRect.left;
+            top = clientRect.top;
+            width = clientRect.width;
+            height = clientRect.height;
+        }
     }
 
     const rect: MoveableClientRect = {
         left,
-        right: left + width,
         top,
-        bottom: top + height,
         width,
         height,
+        right: left + width,
+        bottom: top + height,
     };
 
-    if (isExtends) {
+    if (el && isExtends) {
         rect.clientLeft = el.clientLeft;
         rect.clientTop = el.clientTop;
         rect.clientWidth = el.clientWidth;

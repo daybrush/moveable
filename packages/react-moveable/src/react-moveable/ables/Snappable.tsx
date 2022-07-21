@@ -107,10 +107,10 @@ export function snapStart(
                 snapContainerRect.right - containerClientRect.right,
                 snapContainerRect.bottom - containerClientRect.bottom,
             ]);
-            snapOffset.left = throttle(offset1[0], 0.1);
-            snapOffset.top = throttle(offset1[1], 0.1);
-            snapOffset.right = throttle(offset2[0], 0.1);
-            snapOffset.bottom = throttle(offset2[1], 0.1);
+            snapOffset.left = throttle(offset1[0], 0.00001);
+            snapOffset.top = throttle(offset1[1], 0.00001);
+            snapOffset.right = throttle(offset2[0], 0.00001);
+            snapOffset.bottom = throttle(offset2[1], 0.00001);
         }
     }
 

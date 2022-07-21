@@ -337,7 +337,9 @@ export default class MoveableManager<T = {}>
             : props.rootContainer;
         this.updateState(
             getTargetInfo(this.controlBox && this.controlBox.getElement(),
-                target, container, container,
+                target,
+                container,
+                container,
                 rootContainer || container,
                 // isTarget ? state : undefined
             ),

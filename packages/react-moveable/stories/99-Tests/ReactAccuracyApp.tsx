@@ -10,7 +10,7 @@ export default function App() {
             position: "relative",
             width: "800px",
             height: "800px",
-            // transform: "scale(0.67123)",
+            transform: "scale(0.67123)",
             transformOrigin: "top left",
             background: "#eee",
         }}>
