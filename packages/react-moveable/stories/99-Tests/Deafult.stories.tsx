@@ -29,3 +29,7 @@ group.add("Check drag accuracy when using bounds", {
     app: require("./ReactAccuracyApp").default,
     text: require("!!raw-loader!./ReactAccuracyApp").default,
 });
+group.add("Check element guidelines accuracy when zoom is large", {
+    app: require("./ReactLargeZoomElementGuidelinesApp").default,
+    text: require("!!raw-loader!./ReactLargeZoomElementGuidelinesApp").default,
+});

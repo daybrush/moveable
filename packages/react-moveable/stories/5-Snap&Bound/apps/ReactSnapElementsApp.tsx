@@ -8,6 +8,8 @@ export default function App(props: Record<string, any>) {
     return (
         <div className="root">
             <div className="container" style={{
+                left: "200px",
+                top: "100px",
                 width: "500px",
                 height: "500px",
                 border: "1px solid #ccc",
