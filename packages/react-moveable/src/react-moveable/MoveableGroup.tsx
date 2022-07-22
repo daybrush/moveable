@@ -4,10 +4,11 @@ import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
-import { getTargetInfo, getAbsolutePosesByState, equals, unset } from "./utils";
+import { getAbsolutePosesByState, equals, unset } from "./utils";
 import { minus, plus, rotate } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
 import { throttle } from "@daybrush/utils";
+import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 
 function getMaxPos(poses: number[][][], index: number) {
     return Math.max(...poses.map(([pos1, pos2, pos3, pos4]) => {
@@ -143,7 +144,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         state.height = height;
 
         const container = this.getContainer();
-        const info = getTargetInfo(
+        const info = getMoveableTargetInfo(
             this.controlBox.getElement(),
             target,
             this.controlBox.getElement(),

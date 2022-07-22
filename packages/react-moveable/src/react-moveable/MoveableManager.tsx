@@ -3,7 +3,6 @@ import { createElement } from "react";
 import { PREFIX } from "./consts";
 import {
     prefix,
-    getTargetInfo,
     unset,
     getAbsolutePosesByState,
     getRect,
@@ -32,6 +31,7 @@ import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
 import styled from "react-css-styled";
 import EventEmitter from "@scena/event-emitter";
+import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -72,7 +72,7 @@ export default class MoveableManager<T = {}>
         gesto: null,
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         disableNativeEvent: false,
-        ...getTargetInfo(null),
+        ...getMoveableTargetInfo(null),
     };
     public enabledAbles: Able[] = [];
     public targetAbles: Able[] = [];
@@ -336,7 +336,7 @@ export default class MoveableManager<T = {}>
             ? parentMoveable.props.rootContainer
             : props.rootContainer;
         this.updateState(
-            getTargetInfo(this.controlBox && this.controlBox.getElement(),
+            getMoveableTargetInfo(this.controlBox && this.controlBox.getElement(),
                 target,
                 container,
                 container,

@@ -18,7 +18,7 @@ export {
     InitialMoveable,
 } from "./InitialMoveable";
 
-export { getElementInfo } from "./utils";
+export { getElementInfo } from "./utils/getElementInfo";
 
 export {
     default as Draggable,

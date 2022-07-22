@@ -125,13 +125,13 @@ export default {
     Moveable,
   },
   methods: {
-    onDrag({ transform }) {
+    onDrag({ target, transform }) {
       target.style.transform = transform;
     },
-    onScale({ drag }) {
+    onScale({ target, drag }) {
       target.style.transform = drag.transform;
     },
-    onRotate({ drag }) {
+    onRotate({ target, drag }) {
       target.style.transform = drag.transform;
     },
   }

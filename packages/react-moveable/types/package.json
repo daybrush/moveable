@@ -3,7 +3,7 @@
     "private": true,
     "main": "./index.js",
     "module": "./index.js",
-    "typings": "../declaration/types.d.ts",
-    "types": "../declaration/types.d.ts",
+    "typings": "../declaration/externalTypes.d.ts",
+    "types": "../declaration/externalTypes.d.ts",
     "sideEffects": false
   }

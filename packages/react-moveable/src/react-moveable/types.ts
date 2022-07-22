@@ -2,6 +2,7 @@ import { IObject } from "@daybrush/utils";
 import Gesto, * as GestoTypes from "gesto";
 import CustomGesto from "./gesto/CustomGesto";
 import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
+import { MoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 
 export interface MoveableClientRect {
     left: number;
@@ -28,6 +29,24 @@ export type MoveableManagerProps<T = {}> = {
 } & MoveableDefaultOptions & (unknown extends T ? IObject<any> : T);
 
 export type AnyObject<T> = (unknown extends T ? IObject<any> : T);
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export interface MoveablePosition {
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+    origin: number[];
+    pos1: number[];
+    pos2: number[];
+    pos3: number[];
+    pos4: number[];
+    direction: 1 | -1;
+}
+
 /**
  * @typedef
  * @memberof Moveable
@@ -162,41 +181,10 @@ export interface MatrixInfo {
 }
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
-    target: SVGElement | HTMLElement | null | undefined;
-    left: number;
-    top: number;
-    right: number;
-    bottom: number;
-    width: number;
-    height: number;
-    beforeMatrix: number[];
-    allMatrix: number[];
-    targetTransform: string;
-    rootMatrix: number[];
-    targetMatrix: number[];
-    offsetMatrix: number[];
-    is3d: boolean;
-    transformOrigin: number[];
-    targetOrigin: number[];
-    beforeOrigin: number[];
-    origin: number[];
-    originalBeforeOrigin: number[];
-    beforeDirection: number;
-    direction: number;
-    renderPoses: number[][];
     disableNativeEvent: boolean;
-    pos1: number[];
-    pos2: number[];
-    pos3: number[];
-    pos4: number[];
     gesto: Gesto | CustomGesto | null;
-    targetClientRect: MoveableClientRect;
-    containerClientRect: MoveableClientRect;
-    moveableClientRect: MoveableClientRect;
-    rootContainerClientRect: MoveableClientRect;
-    rotation: number;
-    hasFixed: boolean;
-} & ElementSizes & T;
+    renderPoses: number[][];
+} & MoveableTargetInfo & T;
 
 /**
  * @typedef
