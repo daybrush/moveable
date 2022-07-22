@@ -103,7 +103,7 @@ If you want to check the methods and events, please refer to the [**API document
 ```vue
 <template>
 <div class="container">
-    <div class="target">Vue Moveable</div>
+    <div class="target" ref="target">Vue Moveable</div>
     <Moveable
         className="moveable"
         v-bind:target="['.target']"
@@ -126,13 +126,13 @@ export default {
   },
   methods: {
     onDrag({ transform }) {
-      target.style.transform = transform;
+      this.$refs.target.style.transform = transform;
     },
     onScale({ drag }) {
-      target.style.transform = drag.transform;
+      this.$refs.target.style.transform = drag.transform;
     },
     onRotate({ drag }) {
-      target.style.transform = drag.transform;
+      this.$refs.target.style.transform = drag.transform;
     },
   }
 }
