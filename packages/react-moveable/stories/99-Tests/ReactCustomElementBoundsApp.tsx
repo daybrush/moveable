@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import * as React from "react";
 import Moveable from "@/react-moveable";
+import { createPortal } from "react-dom";
 
 const CustomElement = `
 class CustomElement extends HTMLElement {
@@ -65,6 +66,12 @@ declare global {
 }
 
 export default function App() {
+    const [customElement, setCustomElement] = React.useState<HTMLElement>();
+
+    React.useEffect(() => {
+        setCustomElement(document.querySelector("custom-element")!);
+    }, []);
+
     return <div className="container" style={{
         border: "1px solid black",
     }}>
@@ -78,7 +85,7 @@ export default function App() {
                 backgroundColor: "#e79627",
             }}></div>
         </custom-element>
-        <Moveable
+        {customElement && createPortal(<Moveable
             target={"#draggable"}
             draggable={true}
             snappable={true}
@@ -86,7 +93,7 @@ export default function App() {
             onDrag={e => {
                 e.target.style.transform = e.transform;
             }}
-        />
+        />, customElement.shadowRoot!.querySelector('.card-content')!)}
     </div>;
 }
 

@@ -25,6 +25,10 @@ group.add("Test Custom Element Offset", {
     app: require("./ReactCustomElementApp").default,
     text: require("!!raw-loader!./ReactCustomElementApp").default,
 });
+group.add("Test Custom Element with Bounds", {
+    app: require("./ReactCustomElementBoundsApp").default,
+    text: require("!!raw-loader!./ReactCustomElementBoundsApp").default,
+});
 group.add("Check drag accuracy when using bounds", {
     app: require("./ReactAccuracyApp").default,
     text: require("!!raw-loader!./ReactAccuracyApp").default,
