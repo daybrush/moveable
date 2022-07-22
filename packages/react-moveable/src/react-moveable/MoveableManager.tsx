@@ -41,7 +41,6 @@ export default class MoveableManager<T = {}>
         container: null,
         rootContainer: null,
         origin: true,
-        edge: false,
         parentMoveable: null,
         wrapperMoveable: null,
         parentPosition: null,
@@ -750,7 +749,6 @@ export default class MoveableManager<T = {}>
     private _renderLines() {
         const props = this.props;
         const {
-            edge,
             zoom,
             hideDefaultLines,
             hideChildMoveableDefaultLines,
@@ -765,21 +763,14 @@ export default class MoveableManager<T = {}>
             createElement,
         };
 
-        const edgeList = edge === true
-            ? ["n", "e", "w", "s"] as LineDirection[]
-            : edge || [];
-
-        const edgeMap: Partial<Record<LineDirection, LineDirection>> = {};
-
-        edgeList.forEach(dir => {
-            edgeMap[dir] = dir;
-        });
         return [
-            renderLine(Renderer, edgeMap.n || "", renderPoses[0], renderPoses[1], zoom!, 0),
-            renderLine(Renderer, edgeMap.e || "", renderPoses[1], renderPoses[3], zoom!, 1),
-            renderLine(Renderer, edgeMap.w || "", renderPoses[0], renderPoses[2], zoom!, 2),
-            renderLine(Renderer, edgeMap.s || "", renderPoses[2], renderPoses[3], zoom!, 3),
-        ];
+            [0, 1],
+            [1, 3],
+            [3, 2],
+            [2, 0],
+        ].map(([from, to], i) => {
+            return renderLine(Renderer, "", renderPoses[from], renderPoses[to], zoom!, i);
+        });
     }
     private _isTargetChanged(useDragArea?: boolean) {
         const props = this.props;

@@ -18,3 +18,8 @@ group.add("Limit Sizes with Group", {
     app: require("./ReactGroupMinSizeApp").default,
     text: require("!!raw-loader!./ReactGroupMinSizeApp").default,
 });
+
+group.add("Using Edges and Controls with Draggable, Resizable, and Scalable", {
+    app: require("./ReactWithEdgeControlApp").default,
+    text: require("!!raw-loader!./ReactWithEdgeControlApp").default,
+});

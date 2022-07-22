@@ -86,6 +86,10 @@ export const MOVEABLE_CSS = `
     background: var(--moveable-color);
 	transform-origin: 0px 50%;
 }
+.line.edge {
+    z-index: 1;
+    background: transparent;
+}
 .line.dashed {
     box-sizing: border-box;
     background: transparent;
@@ -169,6 +173,8 @@ export const MIN_SCALE = 0.000000001;
 export const MAX_NUM = Math.pow(10, 10);
 export const MIN_NUM = -MAX_NUM;
 
+
+export const DIRECTIONS4 = ["n", "w", "s", "e"];
 export const DIRECTIONS = ["n", "w", "s", "e", "nw", "ne", "sw", "se"];
 
 export const DIRECTION_INDEXES: IObject<number[]> = {

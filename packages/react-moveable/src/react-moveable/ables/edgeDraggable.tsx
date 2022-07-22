@@ -3,6 +3,8 @@ import { DraggableProps, MoveableGroupInterface, MoveableManagerInterface } from
 import { prefix } from "../utils";
 import Draggable from "./Draggable";
 import { makeAble } from "./AbleManager";
+import React from "react";
+import { renderEdgeLines } from "../renderDirections";
 
 function getDraggableEvent(e: any) {
     let datas = e.originalDatas.draggable;
@@ -14,18 +16,33 @@ function getDraggableEvent(e: any) {
 }
 export default makeAble("edgeDraggable", {
     css: [
-        `:host[data-able-edgedraggable] .direction.line:not(.edge) {
+        `.edge.edgeDraggable.line {
     cursor: move;
 }`,
     ],
+    render(moveable: MoveableManagerInterface<DraggableProps>) {
+        const props = moveable.props;
+        const edge = props.edgeDraggable!;
+
+        if (!edge) {
+            return [];
+        }
+        return renderEdgeLines(
+            React,
+            "edgeDraggable",
+            edge,
+            moveable.state.renderPoses,
+            props.zoom!,
+        );
+    },
     dragControlCondition(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         if (!moveable.props.edgeDraggable || !e.inputEvent) {
             return false;
         }
         const target = e.inputEvent.target;
         return hasClass(target, prefix("direction"))
-            && hasClass(target, prefix("line"))
-            && !hasClass(target, prefix("edge"));
+            && hasClass(target, prefix("edge"))
+            && hasClass(target, prefix("edgeDraggable"));
     },
     dragControlStart(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         (moveable.state as any).snapRenderInfo = {

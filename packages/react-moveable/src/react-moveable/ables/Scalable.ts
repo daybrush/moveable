@@ -1,6 +1,6 @@
 import {
     getDirection, triggerEvent, multiply2,
-    fillParams, fillEndParams, directionCondition, getAbsolutePosesByState, catchEvent, getOffsetSizeDist,
+    fillParams, fillEndParams, getAbsolutePosesByState, catchEvent, getOffsetSizeDist, getDirectionCondition,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -13,10 +13,10 @@ import {
     setDefaultTransformIndex,
     getPosByDirection,
 } from "../gesto/GestoUtils";
-import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
+import { getRenderDirections } from "../renderDirections";
 import {
-    ScalableProps, ResizableProps, OnScaleGroup, OnScaleGroupEnd,
-    Renderer, OnScaleGroupStart, DraggableProps, OnDragStart,
+    ScalableProps, OnScaleGroup, OnScaleGroupEnd,
+    OnScaleGroupStart, DraggableProps, OnDragStart,
     SnappableState, GroupableProps, OnScaleStart,
     OnScale, OnScaleEnd, MoveableManagerInterface, MoveableGroupInterface,
     OnBeforeScaleGroup,
@@ -34,6 +34,8 @@ import {
     isArray, IObject, getDist,
     throttle,
 } from "@daybrush/utils";
+
+const directionCondition = getDirectionCondition("scalable");
 
 /**
  * @namespace Scalable
@@ -60,17 +62,7 @@ export default {
         onScaleGroup: "scaleGroup",
         onScaleGroupEnd: "scaleGroupEnd",
     } as const,
-    render(
-        moveable: MoveableManagerInterface<Partial<ResizableProps & ScalableProps>>,
-        React: Renderer): any[] | undefined {
-        const { resizable, scalable, edge } = moveable.props;
-        if (!resizable && scalable) {
-            if (edge) {
-                return renderDiagonalDirections(moveable, React);
-            }
-            return renderAllDirections(moveable, React);
-        }
-    },
+    render: getRenderDirections("scalable"),
     dragControlCondition: directionCondition,
     dragControlStart(
         moveable: MoveableManagerInterface<ScalableProps & DraggableProps, SnappableState>,

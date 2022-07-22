@@ -95,12 +95,6 @@ export interface DefaultOptions {
      */
     transformOrigin?: Array<string | number> | string | "";
     /**
-     * Whether to scale and resize through edge lines.
-     * You can use "n", "w", "s", "e" in LineDirection array.
-     * @default false
-     */
-    edge?: boolean | Array<LineDirection>;
-    /**
      * You can add your custom able.
      * @default []
      */
@@ -1583,7 +1577,7 @@ export interface DraggableOptions {
      * Whether to move by dragging the edge line
      * @default false
      */
-    edgeDraggable?: boolean;
+    edgeDraggable?: boolean |  Array<LineDirection>;
 }
 export interface DraggableEvents {
     onDragStart: OnDragStart;
@@ -1724,6 +1718,12 @@ export interface ResizableOptions extends RenderDirections {
      * @default oneself
      */
     resizeFormat?: (size: number[]) => number[];
+    /**
+     * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
+     * @default false
+     */
+    edge?: boolean | Array<LineDirection>;
 }
 /**
  * @typedef
@@ -1788,7 +1788,7 @@ export interface ScalableOptions extends RenderDirections {
      * Whether or not target can be scaled.
      * @default false
      */
-    scalable?: boolean;
+    scalable?: boolean | ScalableOptions;
     /**
      * throttle of scaleX, scaleY when scale.
      * @default 0
@@ -1799,6 +1799,12 @@ export interface ScalableOptions extends RenderDirections {
      * @default false
      */
     keepRatio?: boolean;
+    /**
+     * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
+     * @default false
+     */
+    edge?: boolean | Array<LineDirection>;
 }
 
 
@@ -1860,6 +1866,12 @@ export interface RenderDirections {
      * @default false if rotatable, ["n", "nw", "ne", "s", "se", "sw", "e", "w"] otherwise
      */
     renderDirections?: boolean | string[];
+    /**
+     * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
+     * @default false
+     */
+    edge?: boolean | Array<LineDirection>;
 }
 /**
  * @typedef
@@ -1871,7 +1883,7 @@ export interface RotatableOptions extends RenderDirections {
      * Whether or not target can be rotated.
      * @default false
      */
-    rotatable?: boolean;
+    rotatable?: boolean | RotatableOptions;
     /**
      * You can specify the position of the rotation.
      * @default "top"
@@ -1910,18 +1922,14 @@ export interface RotatableProps extends RotatableOptions, EventInterface<Rotatab
 /**
  * @typedef
  * @memberof Moveable.Warpable
+ * @extends Moveable.RenderDirections
  */
-export interface WarpableOptions {
+export interface WarpableOptions extends RenderDirections {
     /**
      * Whether or not target can be warped.
      * @default false
      */
     warpable?: boolean;
-    /**
-     * Set directions to show the control box.
-     * @default ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
-     */
-    renderDirections?: boolean | string[];
 }
 
 export interface WarpableEvents {

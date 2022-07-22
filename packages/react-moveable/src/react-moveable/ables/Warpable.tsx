@@ -94,14 +94,16 @@ export default {
                 key="middeLine3" style={getLineStyle(linePosFrom3, linePosTo3, zoom)}></div>,
             <div className={prefix("line")}
                 key="middeLine4" style={getLineStyle(linePosFrom4, linePosTo4, zoom)}></div>,
-            ...renderAllDirections(moveable, React),
+            ...renderAllDirections(moveable, "warpable", React),
         ];
     },
     dragControlCondition(moveable: any, e: any) {
         if (e.isRequest) {
             return false;
         }
-        return hasClass(e.inputEvent.target, prefix("direction"));
+        const target = e.inputEvent.target;
+
+        return hasClass(target, prefix("direction")) && hasClass(target, prefix("warpable"));
     },
     dragControlStart(
         moveable: MoveableManagerInterface<WarpableProps, SnappableState>,

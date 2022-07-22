@@ -291,9 +291,8 @@ export default {
             );
         }
         if (renderDirections) {
-            jsxs.push(...renderDirectionControls(moveable, [], React));
+            jsxs.push(...renderDirectionControls(moveable, [], "rotatable", React));
         }
-
 
         return jsxs;
     },

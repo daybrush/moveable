@@ -1,10 +1,11 @@
 import {
     getDirection, triggerEvent,
-    fillParams, fillEndParams, directionCondition,
+    fillParams, fillEndParams,
     getAbsolutePosesByState,
     catchEvent,
     getOffsetSizeDist,
     getProps,
+    getDirectionCondition,
 } from "../utils";
 import {
     setDragStart,
@@ -14,11 +15,11 @@ import {
 } from "../gesto/GestoUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
-    Renderer, OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
+    OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
     OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
     OnBeforeResize, OnBeforeResizeGroup, ResizableRequestParam,
 } from "../types";
-import { renderAllDirections, renderDiagonalDirections } from "../renderDirections";
+import { getRenderDirections } from "../renderDirections";
 import {
     fillChildEvents,
     triggerChildAbles,
@@ -40,6 +41,8 @@ import { TINY_NUM } from "../consts";
  * @memberof Moveable
  * @description Resizable indicates whether the target's width and height can be increased or decreased.
  */
+
+const directionCondition = getDirectionCondition("resizable");
 
 export default {
     name: "resizable",
@@ -63,15 +66,7 @@ export default {
         onResizeGroup: "resizeGroup",
         onResizeGroupEnd: "resizeGroupEnd",
     } as const,
-    render(moveable: MoveableManagerInterface<Partial<ResizableProps>>, React: Renderer): any[] | undefined {
-        const { resizable, edge } = moveable.props;
-        if (resizable) {
-            if (edge) {
-                return renderDiagonalDirections(moveable, React);
-            }
-            return renderAllDirections(moveable, React);
-        }
-    },
+    render: getRenderDirections("resizable"),
     dragControlCondition: directionCondition,
     dragControlStart(
         moveable: MoveableManagerInterface<ResizableProps & DraggableProps, SnappableState>,

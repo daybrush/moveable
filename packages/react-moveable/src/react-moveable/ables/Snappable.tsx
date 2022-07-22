@@ -19,11 +19,11 @@ import {
     getRect,
     getAbsolutePosesByState,
     getAbsolutePoses,
-    directionCondition,
     getClientRect,
     getRefTarget,
     getDragDistByState,
     triggerEvent,
+    getDirectionCondition,
 } from "../utils";
 import {
     findIndex, hasClass, throttle,
@@ -507,6 +507,9 @@ function addBoundGuidelines(
         });
     });
 }
+
+const directionCondition = getDirectionCondition("", ["resizable", "scalable"]);
+
 /**
  * @namespace Moveable.Snappable
  * @description Whether or not target can be snapped to the guideline. (default: false)

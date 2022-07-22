@@ -1206,15 +1206,19 @@ export function getTinyDist(v: number) {
     return Math.abs(v) <= TINY_NUM ? 0 : v;
 }
 
-export function directionCondition(moveable: any, e: any) {
-    if (e.isRequest) {
-        if (e.requestAble === "resizable" || e.requestAble === "scalable") {
-            return e.parentDirection!;
-        } else {
-            return false;
+export function getDirectionCondition(ableName: string, checkAbles: string[] = [ableName]) {
+    return (moveable: any, e: any) => {
+        if (e.isRequest) {
+            if (checkAbles.some(name => e.requestAble === name)) {
+                return e.parentDirection!;
+            } else {
+                return false;
+            }
         }
-    }
-    return hasClass(e.inputEvent.target, prefix("direction"));
+        const target = e.inputEvent.target;
+
+        return hasClass(target, prefix("direction")) && (!ableName || hasClass(target, prefix(ableName)));
+    };
 }
 
 export function invertObject<T extends IObject<any>>(obj: T): InvertObject<T> {

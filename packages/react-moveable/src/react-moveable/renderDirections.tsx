@@ -1,13 +1,13 @@
-import { prefix, getControlTransform, getLineStyle } from "./utils";
+import { prefix, getControlTransform, getLineStyle, getProps } from "./utils";
 import { Renderer, MoveableManagerInterface, RenderDirections } from "./types";
-import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS } from "./consts";
+import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS, DIRECTIONS4 } from "./consts";
 import { IObject, throttle, getRad } from "@daybrush/utils";
 
 export function renderDirectionControls(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
     defaultDirections: string[],
+    ableName: string,
     React: Renderer,
-    additionalClassName: string = "",
 ): any[] {
     const {
         renderPoses,
@@ -17,7 +17,7 @@ export function renderDirectionControls(
     const {
         renderDirections: directions = defaultDirections,
         zoom,
-    } = moveable.props;
+    } = getProps(moveable.props, ableName as any);
 
     const directionMap: IObject<boolean> = {};
 
@@ -40,7 +40,7 @@ export function renderDirectionControls(
         const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
         return (
-            <div className={prefix("control", "direction", dir, additionalClassName)}
+            <div className={prefix("control", "direction", dir, ableName)}
                 data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
                 style={getControlTransform(rotationRad, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
         );
@@ -55,20 +55,63 @@ export function renderLine(
     const rad = getRad(pos1, pos2);
     const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
 
-    return <div key={`line${key}`} className={prefix("line", "direction",  direction ? "edge" : "", direction, ...classNames)}
+    return <div key={`line${key}`} className={prefix("line", "direction", direction ? "edge" : "", direction, ...classNames)}
         data-rotation={rotation}
         data-line-index={key}
         data-direction={direction} style={getLineStyle(pos1, pos2, zoom, rad)}></div>;
 }
+
+export function renderEdgeLines(
+    React: Renderer,
+    ableName: string,
+    edge: true | string[],
+    poses: number[][],
+    zoom: number,
+) {
+    const directions = edge === true ? DIRECTIONS4 : edge;
+
+    return directions.map((direction, i) => {
+        const [index1, index2] = DIRECTION_INDEXES[direction];
+
+        if (index2 == null) {
+            return;
+        }
+        return renderLine(React, direction, poses[index1], poses[index2], zoom, `${ableName}Edge${i}`, ableName);
+    }).filter(Boolean);
+}
+export function getRenderDirections(ableName: string) {
+    return (
+        moveable: MoveableManagerInterface<Partial<RenderDirections>>,
+        React: Renderer,
+    ) => {
+        const edge = getProps(moveable.props, ableName as any).edge;
+
+        if (edge && (edge === true || edge.length)) {
+            return [
+                ...renderEdgeLines(
+                    React,
+                    ableName,
+                    edge,
+                    moveable.state.renderPoses,
+                    moveable.props.zoom!,
+                ),
+                ...renderDiagonalDirections(moveable, ableName, React),
+            ];
+        }
+        return renderAllDirections(moveable, ableName, React);
+    };
+}
 export function renderAllDirections(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
+    ableName: string,
     React: Renderer,
 ) {
-    return renderDirectionControls(moveable, DIRECTIONS, React);
+    return renderDirectionControls(moveable, DIRECTIONS, ableName, React);
 }
 export function renderDiagonalDirections(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
+    ableName: string,
     React: Renderer,
 ): any[] {
-    return renderDirectionControls(moveable, ["nw", "ne", "sw", "se"], React);
+    return renderDirectionControls(moveable, ["nw", "ne", "sw", "se"], ableName, React);
 }
