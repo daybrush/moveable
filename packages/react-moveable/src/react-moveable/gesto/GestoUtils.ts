@@ -6,7 +6,7 @@ import {
 } from "@scena/matrix";
 import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
-    calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo,
+    calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo, fillCSSObject,
 } from "../utils";
 import { splitUnit, isArray, splitSpace, findIndex, dot } from "@daybrush/utils";
 import {
@@ -417,12 +417,16 @@ export function fillTransformEvent(
     e: any,
 ): OnTransformEvent {
     fillOriginalTransform(e, nextTransform);
+    const drag = Draggable.drag(
+        moveable,
+        setCustomDrag(e, moveable.state, delta, isPinch, false),
+    ) as OnDrag;
     return {
         transform: nextTransform,
-        drag: Draggable.drag(
-            moveable,
-            setCustomDrag(e, moveable.state, delta, isPinch, false),
-        ) as OnDrag,
+        drag,
+        ...fillCSSObject({
+            transform: drag.transform,
+        }),
     };
 }
 export function getTranslateDist(

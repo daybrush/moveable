@@ -1,7 +1,10 @@
 import { prefix, getControlTransform, getLineStyle, getProps } from "./utils";
-import { Renderer, MoveableManagerInterface, RenderDirections } from "./types";
+import {
+    Renderer, MoveableManagerInterface,
+    RenderDirections,
+} from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS, DIRECTIONS4 } from "./consts";
-import { IObject, throttle, getRad } from "@daybrush/utils";
+import { IObject, throttle, getRad, getKeys } from "@daybrush/utils";
 
 export function renderDirectionControls(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
@@ -9,11 +12,18 @@ export function renderDirectionControls(
     ableName: string,
     React: Renderer,
 ): any[] {
+    const renderState = moveable.renderState;
+    if (!renderState.renderDirectionMap) {
+        renderState.renderDirectionMap = {};
+    }
     const {
         renderPoses,
         rotation: rotationRad,
         direction,
     } = moveable.state;
+
+    const renderDirectionMap = renderState.renderDirectionMap;
+
     const {
         renderDirections: directions = defaultDirections,
         zoom,
@@ -37,6 +47,7 @@ export function renderDirectionControls(
         if (!indexes || !directionMap[dir]) {
             return null;
         }
+        renderDirectionMap[dir] = true;
         const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
         return (
@@ -46,6 +57,43 @@ export function renderDirectionControls(
         );
     });
 }
+export function renderAroundControls(
+    moveable: MoveableManagerInterface<Partial<RenderDirections>>,
+    React: Renderer,
+): any[] {
+    const renderState = moveable.renderState;
+    if (!renderState.renderDirectionMap) {
+        renderState.renderDirectionMap = {};
+    }
+    const {
+        renderPoses,
+        rotation: rotationRad,
+        direction,
+    } = moveable.state;
+
+    const renderDirectionMap = renderState.renderDirectionMap;
+
+    const {
+        zoom,
+    } = moveable.props;
+    const sign = (direction > 0 ? 1 : -1);
+    const degRotation = rotationRad / Math.PI * 180;
+
+    return getKeys(renderDirectionMap).map(dir => {
+        const indexes = DIRECTION_INDEXES[dir];
+
+        if (!indexes) {
+            return null;
+        }
+        const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
+
+        return (
+            <div className={prefix("around-control")} data-rotation={directionRotation} data-direction={dir} key={`direction-around-${dir}`}
+                style={getControlTransform(rotationRad, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
+        );
+    });
+}
+
 export function renderLine(
     React: Renderer,
     direction: string,

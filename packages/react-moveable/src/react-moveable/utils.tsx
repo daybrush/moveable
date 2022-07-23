@@ -3,7 +3,7 @@ import { prefixNames, InvertObject } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
-    getShapeDirection, isFunction, convertUnitSize, between,
+    getShapeDirection, isFunction, convertUnitSize, between, getKeys,
 } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -998,7 +998,12 @@ export function unset(self: any, name: string) {
     self[name] = null;
 }
 
-
+export function fillCSSObject(style: Record<string, any>) {
+    return {
+        style,
+        cssText: getKeys(style).map(name => `${name}: ${style[name]};`).join(""),
+    };
+}
 export function fillParams<T extends IObject<any>>(
     moveable: any,
     e: any,

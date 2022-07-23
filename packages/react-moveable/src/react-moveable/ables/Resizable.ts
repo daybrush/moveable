@@ -1,6 +1,7 @@
 import {
     getDirection, triggerEvent,
-    fillParams, fillEndParams,
+    fillParams, fillCSSObject,
+    fillEndParams,
     getAbsolutePosesByState,
     catchEvent,
     getOffsetSizeDist,
@@ -54,6 +55,8 @@ export default {
         renderDirections: Array,
         keepRatio: Boolean,
         resizeFormat: Function,
+        keepRatioFinally: Boolean,
+        edge: Boolean,
     } as const,
     events: {
         onResizeStart: "resizeStart",
@@ -384,6 +387,10 @@ export default {
         if (!parentMoveable && delta.every(num => !num) && inverseDelta.every(num => !num)) {
             return;
         }
+        const drag = Draggable.drag(
+            moveable,
+            setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false),
+        ) as OnDrag;
         const params = fillParams<OnResize>(moveable, e, {
             width: startWidth + distWidth,
             height: startHeight + distHeight,
@@ -396,10 +403,12 @@ export default {
             dist: [distWidth, distHeight],
             delta,
             isPinch: !!isPinch,
-            drag: Draggable.drag(
-                moveable,
-                setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false),
-            ) as OnDrag,
+            drag,
+            ...fillCSSObject({
+                width: `${boundingWidth}px`,
+                height: `${boundingHeight}px`,
+                transform: drag.transform,
+            }),
         });
         triggerEvent(moveable, "onResize", params);
         return params;

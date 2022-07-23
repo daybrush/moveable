@@ -21,7 +21,6 @@ import {
     RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
     MoveableDefaultOptions,
     GroupableProps,
-    LineDirection,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
@@ -73,6 +72,7 @@ export default class MoveableManager<T = {}>
         disableNativeEvent: false,
         ...getMoveableTargetInfo(null),
     };
+    public renderState: Record<string, any> = {};
     public enabledAbles: Able[] = [];
     public targetAbles: Able[] = [];
     public controlAbles: Able[] = [];
@@ -685,6 +685,8 @@ export default class MoveableManager<T = {}>
             createElement,
         };
 
+        this.renderState = {};
+
         return groupByMap(flat<any>(
             filterAbles(this.getEnabledAbles(), ["render"], triggerAblesSimultaneously).map(({ render }) => {
                 return render!(this, Renderer) || [];
@@ -701,7 +703,6 @@ export default class MoveableManager<T = {}>
             this._observer?.disconnect();
             return;
         }
-
 
         if (prevProps.target === target && this._observer) {
             return;

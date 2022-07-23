@@ -179,9 +179,9 @@ export const DIRECTIONS = ["n", "w", "s", "e", "nw", "ne", "sw", "se"];
 
 export const DIRECTION_INDEXES: IObject<number[]> = {
     n: [0, 1],
-    s: [2, 3],
-    w: [2, 0],
     e: [1, 3],
+    s: [3, 2],
+    w: [2, 0],
     nw: [0],
     ne: [1],
     sw: [2],

@@ -9,6 +9,7 @@ export {
     MOVEABLE_PROPS_MAP,
 } from "./ables/consts";
 export {
+    DIRECTIONS,
     MOVEABLE_METHODS,
 } from "./consts";
 export {

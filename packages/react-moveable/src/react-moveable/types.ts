@@ -539,8 +539,9 @@ export interface OnTransformStartEvent {
 /**
  * @typedef
  * @memberof Moveable
+ * @extends Moveable.CSSObject
  */
-export interface OnTransformEvent {
+export interface OnTransformEvent extends CSSObject {
     /**
      * a target's next transform string value.
      */
@@ -900,13 +901,27 @@ export interface OnBeforeResize extends OnEvent {
      */
     boundingHeight: number;
 }
-
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export interface CSSObject {
+    /**
+     * You can get the style you can get from the event.
+     */
+    style: Record<string, string>;
+    /**
+     * You can get it as a cssText that you can get from that event.
+     */
+    cssText: string;
+}
 /**
  * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
+ * @extends Moveable.CSSObject
  */
-export interface OnResize extends OnEvent {
+export interface OnResize extends OnEvent, CSSObject {
     /**
      * The direction of resize.
      */
@@ -1855,7 +1870,6 @@ export interface GapGuideline extends SnapGuideline {
     renderPos: number[];
     inner?: boolean;
 }
-
 /**
  * @typedef
  * @memberof Moveable
@@ -1895,6 +1909,11 @@ export interface RotatableOptions extends RenderDirections {
     | "left-top" | "left-bottom"
     | "right-top" | "right-bottom"
     | "none";
+    /**
+     * You can rotate around direction controls.
+     * @default 0
+     */
+    rotateAroundControls?: boolean;
     /**
      * throttle of angle(degree) when rotate.
      * @default 0
@@ -2519,6 +2538,7 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     moveables?: MoveableManagerInterface[];
     props: MoveableManagerProps<T>;
     state: MoveableManagerState<U>;
+    renderState: Record<string, any>;
     rotation: number;
     scale: number[];
     controlGesto: Gesto;
