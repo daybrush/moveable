@@ -24,8 +24,8 @@ import IndividualGroupable from "./IndividualGroupable";
 
 export const MOVEABLE_ABLES = /*#__PURE__*/[
     BeforeRenderable,
-    Default, Snappable, Pinchable, Draggable, edgeDraggable, Rotatable,
-    Resizable, Scalable, Warpable, Scrollable, Padding, Origin,
+    Default, Snappable, Pinchable, Draggable, edgeDraggable,
+    Resizable, Scalable, Warpable, Rotatable, Scrollable, Padding, Origin,
     OriginDraggable,
     Clippable, Roundable, Groupable, IndividualGroupable,
     Clickable,

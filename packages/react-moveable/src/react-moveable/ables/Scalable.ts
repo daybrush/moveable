@@ -51,6 +51,7 @@ export default {
         throttleScale: Number,
         renderDirections: String,
         keepRatio: Boolean,
+        edge: Boolean,
     } as const,
     events: {
         onScaleStart: "scaleStart",

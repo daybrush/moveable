@@ -1,6 +1,6 @@
 import {
     prefix, triggerEvent, fillParams,
-    calculatePosition, fillEndParams, getRotationRad, getRefTargets, catchEvent,
+    calculatePosition, fillEndParams, getRotationRad, getRefTargets, catchEvent, getProps,
 } from "../utils";
 import {
     IObject, hasClass, getRad,
@@ -31,7 +31,8 @@ import {
     getTransformDirection,
     getPosByDirection,
 } from "../gesto/GestoUtils";
-import { renderDirectionControls } from "../renderDirections";
+import { renderAroundControls, renderDirectionControls } from "../renderDirections";
+import { DIRECTIONS } from "../consts";
 
 /**
  * @namespace Rotatable
@@ -195,7 +196,11 @@ export function dragControlCondition(moveable: MoveableManagerInterface<Rotatabl
         return e.requestAble === "rotatable";
     }
     const target = e.inputEvent.target as HTMLElement;
-    if (hasClass(target, prefix("rotation-control"))) {
+    if (
+        hasClass(target, prefix("rotation-control"))
+        || hasClass(target, prefix("around-control"))
+        || (hasClass(target, prefix("control")) && hasClass(target, prefix("rotatable")))
+    ) {
         return true;
     }
     const rotationTarget = moveable.props.rotationTarget;
@@ -211,6 +216,74 @@ export function dragControlCondition(moveable: MoveableManagerInterface<Rotatabl
     return false;
 }
 
+const directionCSS = DIRECTIONS.map(dir => {
+    let top = "";
+    let left = "";
+    let originX = "center";
+    let originY = "center";
+
+    if (dir.indexOf("n") > -1) {
+        top = "top: -20px;";
+        originY = "bottom";
+    }
+    if (dir.indexOf("s") > -1) {
+        top = "top: 0px;";
+        originY = "top";
+    }
+    if (dir.indexOf("w") > -1) {
+        left = "left: -20px;";
+        originX = "right";
+    }
+    if (dir.indexOf("e") > -1) {
+        left = "left: 0px;";
+        originX = "left";
+    }
+    return `.around-control[data-direction*="${dir}"] {
+        ${left}${top}
+        transform-origin: ${originX} ${originY};
+    }`;
+}).join("\n");
+const css = `.rotation {
+    position: absolute;
+    height: 40px;
+    width: 1px;
+    transform-origin: 50% 100%;
+    height: calc(40px * var(--zoom));
+    top: auto;
+    left: 0;
+    bottom: 100%;
+    will-change: transform;
+}
+.rotation .rotation-line {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-origin: 50% 50%;
+}
+.rotation .rotation-control {
+    border-color: #4af;
+    border-color: var(--moveable-color);
+    background:#fff;
+    cursor: alias;
+}
+.rotatable.direction.control {
+    cursor: alias;
+}
+.around-control {
+    position: absolute;
+    will-change: transform;
+    width: 20px;
+    height: 20px;
+    left: -10px;
+    top: -10px;
+    box-sizing: border-box;
+    background: transparent;
+    z-index: 8;
+    cursor: alias;
+    transform-origin: center center;
+}
+${directionCSS}
+`;
 export default {
     name: "rotatable",
     canPinch: true,
@@ -220,6 +293,8 @@ export default {
         throttleRotate: Number,
         renderDirections: Object,
         rotationTarget: Object,
+        rotateAroundControls: Boolean,
+        edge: Boolean,
     } as const,
     events: {
         onRotateStart: "rotateStart",
@@ -231,38 +306,15 @@ export default {
         onRotateGroup: "rotateGroup",
         onRotateGroupEnd: "rotateGroupEnd",
     } as const,
-    css: [
-        `.rotation {
-            position: absolute;
-            height: 40px;
-            width: 1px;
-            transform-origin: 50% 100%;
-            height: calc(40px * var(--zoom));
-            top: auto;
-            left: 0;
-            bottom: 100%;
-            will-change: transform;
-        }
-        .rotation .rotation-line {
-            display: block;
-            width: 100%;
-            height: 100%;
-            transform-origin: 50% 50%;
-        }
-        .rotation .rotation-control {
-            border-color: #4af;
-            border-color: var(--moveable-color);
-            background:#fff;
-            cursor: alias;
-        }`,
-    ],
+    css: [css],
     render(moveable: MoveableManagerInterface<RotatableProps>, React: Renderer): any {
         const {
             rotatable,
             rotationPosition,
             zoom,
             renderDirections,
-        } = moveable.props;
+            rotateAroundControls,
+        } = getProps(moveable.props, "rotatable");
         const {
             renderPoses,
             direction,
@@ -292,6 +344,9 @@ export default {
         }
         if (renderDirections) {
             jsxs.push(...renderDirectionControls(moveable, [], "rotatable", React));
+        }
+        if (rotateAroundControls) {
+            jsxs.push(...renderAroundControls(moveable, React));
         }
 
         return jsxs;
@@ -539,9 +594,6 @@ export default {
             absoluteRotation,
 
             isPinch: !!isPinch,
-            // setValue(pos: number) {
-            //     datas.requestValue = pos;
-            // },
             ...fillTransformEvent(
                 moveable,
                 nextTransform,

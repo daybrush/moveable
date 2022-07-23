@@ -1584,6 +1584,20 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@cfcs/core@^0.0.4", "@cfcs/core@~0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@cfcs/core/-/core-0.0.4.tgz#5c1e89c2c170dfa9ba69450376ed0d894e19e2a1"
+  integrity sha512-Y/BD2l+XpGtx2LT/ehdqUyvJ6OpI3F6yAQMNKj1t57WhzQX1AS6uEQRLmgPWd75fzsyV7u4Aia/+5KeCqgHuNg==
+  dependencies:
+    "@egjs/component" "^3.0.2"
+
+"@cfcs/react@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@cfcs/react/-/react-0.0.4.tgz#aa22e4bfbd4851c00240ef1f6a1353151facde27"
+  integrity sha512-0ETIzD8dxURPCBq59hjxm8P9TwPDeEqlSTlUng9q4L8IPDBcuQzyQRtmQQKxWVTP2zfA8ov/B85Yw3Qdp2xC9g==
+  dependencies:
+    "@cfcs/core" "~0.0.4"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -1720,13 +1734,6 @@
     tslib "^1.9.3"
     typescript "^3.3.3"
 
-"@daybrush/drag@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@daybrush/drag/-/drag-0.12.0.tgz#36022ce5b03027d6d6c31d512c6cea9c7779410b"
-  integrity sha512-KO9xoEo8KhbNdxJusZ+exOH/HJiyzw3uv+zhKzgsAysZ99cVKKC5TnokzXGB+e4cTn25xnCljMuXpYPLbTXRzw==
-  dependencies:
-    "@daybrush/utils" "^0.10.0"
-
 "@daybrush/jsdoc@^0.4.0":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@daybrush/jsdoc/-/jsdoc-0.4.1.tgz#1acf5f4b7d5cf4790e80aa8e4382e4a67a1ee1f2"
@@ -1847,6 +1854,11 @@
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@egjs/component/-/component-2.2.2.tgz#b8208ea4ca05f6562a51d58f1e6f9979aad8a9d9"
   integrity sha512-2m6nu6/Mbs6VnoT4IHFGUBX6V82Zp01zDmlWpIJ3fMatHpe7BB1qUYFgMmSWGY0uOvOl4plvflwbCRUAGMfwWQ==
+
+"@egjs/component@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@egjs/component/-/component-3.0.2.tgz#c56794fcf1b2cb2768d09b021444779e54d0de1b"
+  integrity sha512-Mze3mwEE19+dERrimg0JVLtpOHG4AC+LOuKqvF4qGZjn0k23ZbNI7b/gy1LFR63LigC2b8k70aDjy8xoT+WNPA==
 
 "@egjs/list-differ@^1.0.0":
   version "1.0.0"
@@ -3271,18 +3283,7 @@
   dependencies:
     "@daybrush/utils" "^1.4.0"
 
-"@scena/react-guides@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@scena/react-guides/-/react-guides-0.4.1.tgz#74d89860a314a6c26dc33f8decfcf59d8aa303a2"
-  integrity sha512-a3YdQKvtPm7jSqi7Y7yYGyBPH5R3W74Ck6ULZrfupvIybhJX+CZsN0IRV7zYwDLTxJwgIaNoNlRMr4eAR9c9cQ==
-  dependencies:
-    "@daybrush/drag" "^0.12.0"
-    "@daybrush/utils" "^0.10.1"
-    "@scena/react-ruler" "^0.2.1"
-    framework-utils "^0.3.0"
-    react-css-styled "^0.1.3"
-
-"@scena/react-guides@~0.17.1":
+"@scena/react-guides@^0.17.1", "@scena/react-guides@~0.17.1":
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/@scena/react-guides/-/react-guides-0.17.1.tgz#d5f7b5004852505f6579c3360485052b3d3b9b6c"
   integrity sha512-qmVKDw681kdsLvirevHPQ9jQy7aenQDy8VNsMdFgsak9GS/GcZz6wBT8lqp6otmQ5oEFjS7+4ZyFsH3tpMiDSQ==
@@ -3293,14 +3294,6 @@
     framework-utils "^1.1.0"
     gesto "^1.5.1"
     react-css-styled "^1.0.2"
-
-"@scena/react-ruler@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@scena/react-ruler/-/react-ruler-0.2.1.tgz#6a9ed8377758096f8711151a04bb97392c8f9640"
-  integrity sha512-H/GCXHUoZb1b5T/fqW1HL3LRs9ebc+Zx/34jo5ILxvHBBAxve1KtRltrdqbB8EEg+1Te1xUFcUoenRzNe+nSqw==
-  dependencies:
-    "@daybrush/utils" "^0.10.1"
-    framework-utils "^0.3.0"
 
 "@scena/react-ruler@^0.9.1", "@scena/react-ruler@~0.9.1":
   version "0.9.1"
@@ -6079,7 +6072,7 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-autoprefixer@^10.2.1, autoprefixer@^10.4.2, autoprefixer@^10.4.7:
+autoprefixer@^10.4.2, autoprefixer@^10.4.7:
   version "10.4.7"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.7.tgz#1db8d195f41a52ca5069b7593be167618edbbedf"
   integrity sha512-ypHju4Y2Oav95SipEcCcI5J7CGPuvz8oat7sUtYj3ClK44bldfvtvcxK6IEK++7rqB7YchDGzweZIBG+SD0ZAA==
@@ -10920,7 +10913,7 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-framework-utils@^0.3.0, framework-utils@^0.3.4, framework-utils@^1.1.0:
+framework-utils@^0.3.4, framework-utils@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/framework-utils/-/framework-utils-1.1.0.tgz#a3b528bce838dfd623148847dc92371b09d0da2d"
   integrity sha512-KAfqli5PwpFJ8o3psRNs8svpMGyCSAe8nmGcjQ0zZBWN2H6dZDnq+ABp3N3hdUmFeMrLtjOCTXD4yplUJIWceg==
@@ -14325,6 +14318,15 @@ keycon@^1.0.0, keycon@^1.1.2:
     "@scena/event-emitter" "^1.0.2"
     keycode "^2.2.0"
 
+keycon@~1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/keycon/-/keycon-1.2.2.tgz#004facc286cee0a926f8f37cc2bcea23ddccdbca"
+  integrity sha512-pCqrjHyPkpo2V7g/PpezezHF3MZJD8zQhxPfbpVxJx2rkmRiRzVS/b1mZK0c/jea5o6+DU35zHWvN87nVGS1gw==
+  dependencies:
+    "@daybrush/utils" "^1.7.1"
+    "@scena/event-emitter" "^1.0.2"
+    keycode "^2.2.0"
+
 keyframer@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/keyframer/-/keyframer-0.1.0.tgz#321cd4acdc767ef910f63a7fa9838d5890198700"
@@ -17635,7 +17637,7 @@ postcss-loader@^3.0.0:
     postcss-load-config "^2.0.0"
     schema-utils "^1.0.0"
 
-postcss-loader@^4.1.0, postcss-loader@^4.2.0:
+postcss-loader@^4.2.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/postcss-loader/-/postcss-loader-4.3.0.tgz#2c4de9657cd4f07af5ab42bd60a673004da1b8cc"
   integrity sha512-M/dSoIiNDOo8Rk0mUqoj4kpGq91gcxCfb9PoyZVdZ76/AuhxylHDYZblNE8o+EQ9AMSASeMFEKxZf5aU6wlx1Q==
@@ -18853,7 +18855,7 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^0.1.3, react-css-styled@^1.0.2, react-css-styled@^1.0.3:
+react-css-styled@^1.0.2, react-css-styled@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-css-styled/-/react-css-styled-1.0.3.tgz#f6dda995f41e4777567d2464b7d12ed1373b4f1d"
   integrity sha512-6H3aZPO66PYmYg9wx12WzOJpPlBEdA7O5JefCh+4SldlihVKBCxA6mityfWSGWL5ldOkJdHJWGwHR6nGPcVm+A==
@@ -18940,6 +18942,15 @@ react-is@^16.13.1, react-is@^16.8.4:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-keycon@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-keycon/-/react-keycon-0.1.2.tgz#b549f4584eaf2c9a359cb1980ebd84763752cbb0"
+  integrity sha512-uXo8TJkSHQsEp8kcuQCjfMnc4mwalWHSO627XwEMeUr6MFdD17jkQrrk2+RFsgTvQqhV2lnoB4nTsk5ZsotxoA==
+  dependencies:
+    "@cfcs/core" "^0.0.4"
+    "@cfcs/react" "^0.0.4"
+    keycon "~1.2.2"
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"

@@ -62,6 +62,7 @@ export default {
     props: {
         warpable: Boolean,
         renderDirections: Array,
+        edge: Boolean,
     } as const,
     events: {
         onWarpStart: "warpStart",
