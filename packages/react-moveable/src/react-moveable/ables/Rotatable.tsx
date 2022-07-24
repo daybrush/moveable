@@ -1,10 +1,15 @@
 import {
     prefix, triggerEvent, fillParams,
-    calculatePosition, fillEndParams, getRotationRad, getRefTargets, catchEvent, getProps,
+    calculatePosition, fillEndParams, getRotationRad, getRefTargets,
+    catchEvent, getProps, calculateMoveableClientPositions,
+    fillAfterTransform,
 } from "../utils";
 import {
     IObject, hasClass, getRad,
     throttle,
+    getDist,
+    getKeys,
+    isArray,
 } from "@daybrush/utils";
 import {
     RotatableProps, OnRotateGroup, OnRotateGroupEnd,
@@ -12,13 +17,15 @@ import {
     OnRotateEnd, MoveableClientRect, SnappableProps,
     SnappableState, MoveableManagerInterface, MoveableGroupInterface, DraggableProps,
     OnBeforeRotate,
-    OnDragStart,
     OnBeforeRotateGroup,
+    OnResizeStart,
+    OnResize,
+    TransformObject,
+    OnDragStart,
 } from "../types";
 import { triggerChildAbles } from "../groupUtils";
-import Draggable from "./Draggable";
 import { calculate, convertPositionMatrix, getOrigin, minus, plus, rotate as rotateMatrix } from "@scena/matrix";
-import CustomGesto from "../gesto/CustomGesto";
+import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapRotate } from "./Snappable";
 import {
     fillTransformStartEvent,
@@ -31,8 +38,9 @@ import {
     getTransformDirection,
     getPosByDirection,
 } from "../gesto/GestoUtils";
-import { renderAroundControls, renderDirectionControls } from "../renderDirections";
-import { DIRECTIONS } from "../consts";
+import { DirectionControlInfo, renderAroundControls, renderDirectionControlsByInfos } from "../renderDirections";
+import { DIRECTIONS, DIRECTION_REGION_TO_DIRECTION } from "../consts";
+import Resizable from "./Resizable";
 
 /**
  * @namespace Rotatable
@@ -60,6 +68,7 @@ function setRotateStartInfo(
     datas.defaultDeg = datas.prevDeg;
     datas.prevSnapDeg = 0;
     datas.loop = 0;
+    datas.startDist = getDist(startAbsoluteOrigin, [clientX, clientY]);
 }
 
 function getAbsoluteDist(
@@ -282,6 +291,9 @@ const css = `.rotation {
     cursor: alias;
     transform-origin: center center;
 }
+.rotatable.direction.control.move {
+    cursor: move;
+}
 ${directionCSS}
 `;
 export default {
@@ -295,6 +307,7 @@ export default {
         rotationTarget: Object,
         rotateAroundControls: Boolean,
         edge: Boolean,
+        resolveAblesWithRotatable: Object,
     } as const,
     events: {
         onRotateStart: "rotateStart",
@@ -314,6 +327,7 @@ export default {
             zoom,
             renderDirections,
             rotateAroundControls,
+            resolveAblesWithRotatable,
         } = getProps(moveable.props, "rotatable");
         const {
             renderPoses,
@@ -343,7 +357,35 @@ export default {
             );
         }
         if (renderDirections) {
-            jsxs.push(...renderDirectionControls(moveable, [], "rotatable", React));
+            const ables = getKeys(resolveAblesWithRotatable || {});
+            const resolveMap: Record<string, string> = {};
+
+            ables.forEach(name => {
+                resolveAblesWithRotatable![name]!.forEach(direction => {
+                    resolveMap[direction] = name;
+                });
+            });
+
+            let directionControlInfos: DirectionControlInfo[] = [];
+
+            if (isArray(renderDirections)) {
+                directionControlInfos = renderDirections.map(dir => {
+                    const able = resolveMap[dir];
+
+                    return {
+                        data: able ? { resolve: able } : {},
+                        classNames: able ? [`move`] : [],
+                        dir,
+                    };
+                });
+            }
+
+            jsxs.push(...renderDirectionControlsByInfos(
+                moveable,
+                "rotatable",
+                directionControlInfos,
+                React,
+            ));
         }
         if (rotateAroundControls) {
             jsxs.push(...renderAroundControls(moveable, React));
@@ -351,7 +393,7 @@ export default {
 
         return jsxs;
     },
-    dragControlCondition,
+    dragControlCondition: dragControlCondition as (moveable: any, e: any) => boolean,
     dragControlStart(
         moveable: MoveableManagerInterface<RotatableProps & SnappableProps & DraggableProps, SnappableState>,
         e: any) {
@@ -385,7 +427,14 @@ export default {
         let setFixedDirection: OnRotateStart["setFixedDirection"] = (fixedDirection: number[]) => {
             datas.fixedDirection = fixedDirection;
             datas.fixedPosition = getDirectionOffset(moveable, fixedDirection);
+
+            if (resizeStart) {
+                resizeStart.setFixedDirection(fixedDirection);
+            }
         };
+        let startClientX = clientX;
+        let startClientY = clientY;
+
         if (isRequest || isPinch || parentFlag) {
             const externalRotate = parentRotate || 0;
 
@@ -394,6 +443,7 @@ export default {
                 prevDeg: externalRotate,
                 defaultDeg: externalRotate,
                 prevSnapDeg: 0,
+                startDist: 0,
             };
             datas.afterInfo = {
                 ...datas.beforeInfo,
@@ -405,12 +455,42 @@ export default {
                 startValue: externalRotate,
             };
         } else {
+            const inputTarget = e.inputEvent?.target;
+
+            if (inputTarget) {
+                const regionDirection = inputTarget.getAttribute("data-direction") || "";
+                const controlDirection = DIRECTION_REGION_TO_DIRECTION[regionDirection];
+
+                if (controlDirection) {
+                    datas.isControl = true;
+                    datas.isAroundControl = hasClass(inputTarget, prefix("around-control"));
+                    datas.controlDirection = controlDirection;
+                    const resolve = inputTarget.getAttribute("data-resolve");
+
+                    if (resolve) {
+                        datas.resolveAble = resolve;
+                    }
+
+                    const clientPoses = calculateMoveableClientPositions(
+                        state.rootMatrix,
+                        state.renderPoses,
+                        moveableClientRect,
+                    );
+
+
+                    [startClientX, startClientY] = getPosByDirection(clientPoses, controlDirection);
+                }
+            }
+
+
             datas.beforeInfo = { origin: rect.beforeOrigin };
             datas.afterInfo = { origin: rect.origin };
             datas.absoluteInfo = {
                 origin: rect.origin,
                 startValue: rect.rotation,
             };
+
+            const originalFixedDirection = setFixedDirection;
 
             setFixedDirection = (fixedDirection: number[]) => {
                 const n = state.is3d ? 4 : 3;
@@ -429,18 +509,20 @@ export default {
                     allMatrix,
                     convertPositionMatrix([originalPosition[0], originalPosition[1]], n),
                 );
-                datas.fixedDirection = fixedDirection;
-                datas.fixedPosition = getDirectionOffset(moveable, fixedDirection);
+                originalFixedDirection(fixedDirection);
+
                 datas.beforeInfo.origin = fixedBeforeOrigin;
                 datas.afterInfo.origin = fixedAfterOrigin;
                 datas.absoluteInfo.origin = fixedAfterOrigin;
 
-                setRotateStartInfo(moveable, datas.beforeInfo, clientX, clientY, moveableClientRect);
-                setRotateStartInfo(moveable, datas.afterInfo, clientX, clientY, moveableClientRect);
-                setRotateStartInfo(moveable, datas.absoluteInfo, clientX, clientY, moveableClientRect);
+                setRotateStartInfo(moveable, datas.beforeInfo, startClientX, startClientY, moveableClientRect);
+                setRotateStartInfo(moveable, datas.afterInfo, startClientX, startClientY, moveableClientRect);
+                setRotateStartInfo(moveable, datas.absoluteInfo, startClientX, startClientY, moveableClientRect);
             };
         }
-        setFixedDirection(getOriginDirection(moveable));
+
+        datas.startClientX = startClientX;
+        datas.startClientY = startClientY;
         datas.direction = direction;
         datas.beforeDirection = beforeDirection;
         datas.startValue = 0;
@@ -448,16 +530,43 @@ export default {
 
         setDefaultTransformIndex(e, "rotate");
 
+        let dragStart: OnDragStart | false = false;
+        let resizeStart: OnResizeStart | false = false;
+
+
+
+        if (datas.isControl && datas.resolveAble) {
+            const resolveAble = datas.resolveAble;
+
+            if  (resolveAble === "resizable") {
+                const resizable = moveable.getAble<typeof Resizable>("resizable");
+
+                resizeStart = resizable ? resizable.dragControlStart(moveable, {
+                    ...(new CustomGesto("resizable").dragStart([0, 0], e)),
+                    parentDirection: datas.controlDirection,
+                    parentFixedDirection: datas.fixedDirection,
+                }) : false;
+            }
+        }
+
+        if (!resizeStart) {
+            const draggable = moveable.getAble("draggable");
+
+            dragStart = draggable ? draggable.dragStart!(
+                moveable,
+                new CustomGesto().dragStart([0, 0], e),
+            ) : false;
+        }
+
+        setFixedDirection(getOriginDirection(moveable));
         const params = fillParams<OnRotateStart>(moveable, e, {
             set: (rotatation: number) => {
                 datas.startValue = rotatation * Math.PI / 180;
             },
             setFixedDirection,
             ...fillTransformStartEvent(e),
-            dragStart: Draggable.dragStart(
-                moveable,
-                new CustomGesto().dragStart([0, 0], e),
-            ) as OnDragStart | false,
+            dragStart,
+            resizeStart,
         });
         const result = triggerEvent(moveable, "onRotateStart", params);
         datas.isRotate = result !== false;
@@ -471,7 +580,7 @@ export default {
         moveable: MoveableManagerInterface<RotatableProps & DraggableProps>,
         e: any,
     ) {
-        const { datas, clientX, clientY, parentRotate, parentFlag, isPinch, groupDelta } = e;
+        const { datas, distX, distY, parentRotate, parentFlag, isPinch, groupDelta } = e;
         const {
             beforeDirection,
             beforeInfo,
@@ -480,6 +589,8 @@ export default {
             isRotate,
             startValue,
             rect,
+            startClientX,
+            startClientY,
         } = datas;
 
         if (!isRotate) {
@@ -510,6 +621,8 @@ export default {
         const startRotation = 180 / Math.PI * startValue;
         const absoluteStartRotation = absoluteInfo.startValue;
         let isSnap = false;
+        const nextClientX = startClientX + distX;
+        const nextClientY = startClientY + distY;
 
         if (!parentFlag && "parentDist" in e) {
             const parentDist = e.parentDist;
@@ -522,9 +635,9 @@ export default {
             dist = getAbsoluteDist(parentRotate, direction, afterInfo);
             absoluteDist = getAbsoluteDist(parentRotate, direction, absoluteInfo);
         } else {
-            beforeDist = getAbsoluteDistByClient(clientX, clientY, beforeDirection, beforeInfo);
-            dist = getAbsoluteDistByClient(clientX, clientY, direction, afterInfo);
-            absoluteDist = getAbsoluteDistByClient(clientX, clientY, direction, absoluteInfo);
+            beforeDist = getAbsoluteDistByClient(nextClientX, nextClientY, beforeDirection, beforeInfo);
+            dist = getAbsoluteDistByClient(nextClientX, nextClientY, direction, afterInfo);
+            absoluteDist = getAbsoluteDistByClient(nextClientX, nextClientY, direction, absoluteInfo);
             isSnap = true;
         }
         beforeRotation = startRotation + beforeDist;
@@ -577,6 +690,37 @@ export default {
 
         datas.requestValue = null;
 
+        const dragEvent = fillTransformEvent(
+            moveable,
+            nextTransform,
+            inverseDelta,
+            isPinch,
+            e,
+        );
+        let transformEvent: TransformObject = dragEvent;
+        const parentDistance = getDist(
+            [nextClientX, nextClientY],
+            absoluteInfo.startAbsoluteOrigin,
+        ) - absoluteInfo.startDist;
+
+        let resize: OnResize | undefined = undefined;
+
+        if (datas.resolveAble === "resizable") {
+            const resizeEvent =  moveable.getAble<typeof Resizable>("resizable")!.dragControl(
+                moveable,
+                {
+                    ...setCustomDrag(e, moveable.state, [e.deltaX, e.deltaY], !!isPinch, false, "resizable"),
+                    resolveMatrix: true,
+                    parentDistance,
+                },
+            );
+
+            if (resizeEvent) {
+                resize = resizeEvent;
+                transformEvent = fillAfterTransform(transformEvent, resizeEvent);
+            }
+        }
+
         const params = fillParams<OnRotate>(moveable, e, {
             delta,
             dist,
@@ -594,13 +738,9 @@ export default {
             absoluteRotation,
 
             isPinch: !!isPinch,
-            ...fillTransformEvent(
-                moveable,
-                nextTransform,
-                inverseDelta,
-                isPinch,
-                e,
-            ),
+            resize,
+            ...dragEvent,
+            ...transformEvent,
         });
         triggerEvent(moveable, "onRotate", params);
 
@@ -626,7 +766,7 @@ export default {
         triggerEvent(moveable, "onRotateEnd", params);
         return params;
     },
-    dragGroupControlCondition: dragControlCondition,
+    dragGroupControlCondition: dragControlCondition as (moveable: any, e: any) => boolean,
     dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
         const { datas } = e;
         const {

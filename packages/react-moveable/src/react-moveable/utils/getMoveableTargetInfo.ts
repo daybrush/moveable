@@ -34,8 +34,8 @@ export function getMoveableTargetInfo(
     let rootContainerClientRect = resetClientRect();
 
     const result = calculateElementInfo(
-        target, container!, rootContainer!, false,
-        // state,
+        target, container!, rootContainer!,
+        true,
     );
     if (target) {
         const n = result.is3d ? 4 : 3;

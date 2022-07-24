@@ -8,12 +8,11 @@ import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
     calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo, fillCSSObject,
 } from "../utils";
-import { splitUnit, isArray, splitSpace, findIndex, dot } from "@daybrush/utils";
+import { splitUnit, isArray, splitSpace, findIndex, dot, find } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag,
 } from "../types";
-import Draggable from "../ables/Draggable";
 import { setCustomDrag } from "./CustomGesto";
 import { parse, parseMat } from "css-to-mat";
 
@@ -71,15 +70,20 @@ export function resolveTransformEvent(event: any, functionName: string) {
     } = event;
 
     const index = datas.transformIndex;
+
+
     const nextTransforms = originalDatas.nextTransforms;
-    const nextTransformAppendedIndexes = originalDatas.nextTransformAppendedIndexes;
+    const length = nextTransforms.length;
+    const nextTransformAppendedIndexes: any[] = originalDatas.nextTransformAppendedIndexes;
     let nextIndex = 0;
 
     if (index === -1) {
         nextIndex = nextTransforms.length;
         datas.transformIndex = nextIndex;
+    } else if (find(nextTransformAppendedIndexes, info => info.index === index && info.functionName === functionName)) {
+        nextIndex = index;
     } else {
-        nextIndex = index + nextTransformAppendedIndexes.filter((i: number) => i < index).length;
+        nextIndex = index + nextTransformAppendedIndexes.filter(info => info.index < index).length;
     }
 
     const result = convertTransformInfo(nextTransforms, nextIndex);
@@ -98,9 +102,14 @@ export function resolveTransformEvent(event: any, functionName: string) {
     if (targetFunction.functionName === matFunctionName) {
         datas.afterFunctionTexts.splice(0, 1);
         datas.isAppendTransform = false;
-    } else {
+    } else if (length > nextIndex) {
         datas.isAppendTransform = true;
-        originalDatas.nextTransformAppendedIndexes = [...nextTransformAppendedIndexes, nextIndex];
+
+        originalDatas.nextTransformAppendedIndexes = [...nextTransformAppendedIndexes, {
+            functionName,
+            index: nextIndex,
+            isAppend: true,
+        }];
     }
 }
 
@@ -398,16 +407,19 @@ export function fillOriginalTransform(
     const originalDatas = e.originalDatas.beforeRenderable;
 
     originalDatas.nextTransforms = splitSpace(transform);
+    // originalDatas.nextTargetMatrix = parseMat(transform);
 }
-
-export function getNextTransformText(e: any) {
+export function getNextTransforms(e: any) {
     const {
         originalDatas: {
             beforeRenderable: originalDatas,
         },
     } = e;
 
-    return originalDatas.nextTransforms.join(" ");
+    return originalDatas.nextTransforms;
+}
+export function getNextTransformText(e: any) {
+    return getNextTransforms(e).join(" ");
 }
 export function fillTransformEvent(
     moveable: MoveableManagerInterface<DraggableProps>,
@@ -417,16 +429,20 @@ export function fillTransformEvent(
     e: any,
 ): OnTransformEvent {
     fillOriginalTransform(e, nextTransform);
-    const drag = Draggable.drag(
+
+    const draggable = moveable.getAble("draggable");
+    const drag = draggable && draggable.drag!(
         moveable,
         setCustomDrag(e, moveable.state, delta, isPinch, false),
     ) as OnDrag;
+    const afterTransform = drag ? drag.transform : nextTransform;
     return {
         transform: nextTransform,
-        drag,
+        drag: drag as OnDrag,
         ...fillCSSObject({
-            transform: drag.transform,
+            transform: afterTransform,
         }),
+        afterTransform,
     };
 }
 export function getTranslateDist(
@@ -514,24 +530,25 @@ export function getResizeDist(
     moveable: MoveableManagerInterface<any>,
     width: number,
     height: number,
-    fixedDirection: number[],
     fixedPosition: number[],
     transformOrigin: string[],
+    datas: any,
 ) {
     const {
         groupable,
     } = moveable.props;
+    const state = moveable.state;
     const {
         transformOrigin: prevOrigin,
-        targetMatrix,
         offsetMatrix,
         is3d,
         width: prevWidth,
         height: prevHeight,
         left,
         top,
-    } = moveable.state;
-
+    } = state;
+    const fixedDirection = datas.fixedDirection;
+    const targetMatrix = datas.nextTargetMatrix || state.targetMatrix;
     const n = is3d ? 4 : 3;
     const nextOrigin = calculateTransformOrigin(
         transformOrigin!,
@@ -544,7 +561,6 @@ export function getResizeDist(
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
     const nextMatrix = getNextMatrix(offsetMatrix, targetMatrix, nextOrigin, n);
-
     const dist = getDist(fixedPosition, nextMatrix, width, height, n, fixedDirection);
 
     return minus(dist, [groupLeft, groupTop]);

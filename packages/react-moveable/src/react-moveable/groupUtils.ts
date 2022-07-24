@@ -1,4 +1,4 @@
-import { Able, MoveableGroupInterface, MoveableManagerInterface } from "./types";
+import { Able, MoveableGroupInterface, MoveableManagerInterface, MoveableManagerState } from "./types";
 import CustomGesto, { setCustomDrag } from "./gesto/CustomGesto";
 
 export function fillChildEvents(
@@ -34,39 +34,42 @@ export function triggerChildGesto(
     delta: number[],
     e: any,
     isConvert: boolean,
+    ableName: string,
 ) {
     const isStart = !!type.match(/Start$/g);
     const isEnd = !!type.match(/End$/g);
     const isPinch = e.isPinch;
     const datas = e.datas;
     const events = fillChildEvents(moveable, able.name, e);
-
     const moveables = moveable.moveables;
     const childs = events.map((ev, i) => {
         const childMoveable = moveables[i];
-        const state = childMoveable.state;
+        const state = childMoveable.state as MoveableManagerState<any>;
+        const gestos = state.gestos;
         let childEvent: any = ev;
 
         if (isStart) {
-            childEvent = new CustomGesto().dragStart(delta, ev);
+            childEvent = new CustomGesto(ableName).dragStart(delta, ev);
         } else {
-            if (!state.gesto) {
-                state.gesto = datas.childGestos[i];
+
+
+            if (!gestos[ableName]) {
+                gestos[ableName] = datas.childGestos[i];
             }
-            if (!state.gesto) {
+            if (!gestos[ableName]) {
                 return;
             }
-            childEvent = setCustomDrag(ev, state, delta, isPinch, isConvert);
+            childEvent = setCustomDrag(ev, state, delta, isPinch, isConvert, ableName);
         }
         const result = (able as any)[type]!(childMoveable,  { ...childEvent, parentFlag: true });
 
         if (isEnd) {
-            state.gesto = null;
+            gestos[ableName] = null;
         }
         return result;
     });
     if (isStart) {
-        datas.childGestos = moveables.map(child => child.state.gesto);
+        datas.childGestos = moveables.map(child => child.state.gestos[ableName]);
     }
     return childs;
 }
@@ -92,7 +95,7 @@ export function triggerChildAbles<T extends Able>(
         result && callback && callback(childMoveable, ev, result, i);
 
         if (isEnd) {
-            childMoveable.state.gesto = null;
+            childMoveable.state.gestos = {};
         }
         return result;
     });

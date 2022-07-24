@@ -7,6 +7,7 @@ import {
     triggerEvent, fillParams,
     getDistSize, prefix,
     fillEndParams, getComputedStyle,
+    fillCSSObject,
 } from "../utils";
 import { minus, plus } from "@scena/matrix";
 import {
@@ -79,13 +80,13 @@ export default {
         const state = moveable.state;
         const {
             target,
-            gesto,
+            gestos,
         } = state;
 
-        if (gesto) {
+        if (gestos.draggable) {
             return false;
         }
-        state.gesto = parentGesto || moveable.targetGesto;
+        gestos.draggable = parentGesto || moveable.targetGesto;
         const style = getComputedStyle(target!);
 
         datas.datas = {};
@@ -119,7 +120,7 @@ export default {
                 dist: [0, 0],
             };
         } else {
-            state.gesto = null;
+            gestos.draggable = null;
             datas.isPinch = false;
         }
         return datas.isDrag ? params : false;
@@ -246,6 +247,9 @@ export default {
             width,
             height,
             isPinch,
+            ...fillCSSObject({
+                style: nextTransform,
+            }),
         });
 
         !parentEvent && triggerEvent(moveable, "onDrag", params);
@@ -272,7 +276,6 @@ export default {
     ) {
         const { parentEvent, datas } = e;
 
-        moveable.state.gesto = null;
         moveable.state.dragInfo = null;
         if (!datas.isDrag) {
             return;
@@ -293,7 +296,7 @@ export default {
         const events = triggerChildGesto(moveable, this, "dragStart", [
             clientX || 0,
             clientY || 0,
-        ], e, false);
+        ], e, false, "draggable");
 
         const nextParams: OnDragGroupStart = {
             ...params,
@@ -314,7 +317,7 @@ export default {
         }
         const params = this.drag(moveable, e);
         const { passDelta } = e.datas;
-        const events = triggerChildGesto(moveable, this, "drag", passDelta, e, false);
+        const events = triggerChildGesto(moveable, this, "drag", passDelta, e, false, "draggable");
 
         if (!params) {
             return;
@@ -335,7 +338,7 @@ export default {
             return;
         }
         this.dragEnd(moveable, e);
-        const events = triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false);
+        const events = triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false, "draggable");
         triggerEvent(moveable, "onDragGroupEnd", fillEndParams<OnDragGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
             events,

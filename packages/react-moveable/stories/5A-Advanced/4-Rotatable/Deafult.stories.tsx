@@ -12,3 +12,7 @@ group.add("rotate with direction controls", {
     app: require("./ReactRotateWithControlsApp").default,
     text: require("!!raw-loader!./ReactRotateWithControlsApp").default,
 });
+group.add("rotate with resize", {
+    app: require("./ReactRotateWithResizeApp").default,
+    text: require("!!raw-loader!./ReactRotateWithResizeApp").default,
+});

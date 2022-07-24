@@ -7,17 +7,17 @@ export function setCustomDrag(
     delta: number[],
     isPinch: boolean,
     isConvert: boolean,
+    ableName = "draggable",
 ) {
-
-    const result = state.gesto!.move(delta, e.inputEvent);
+    const result = state.gestos[ableName].move(delta, e.inputEvent);
     const datas = result.originalDatas || result.datas;
-    const draggableDatas = datas.draggable || (datas.draggable = {});
+    const ableDatas = datas[ableName] || (datas[ableName] = {});
 
     return {
         ...(isConvert ? convertDragDist(state, result) : result),
         isPinch: !!isPinch,
         parentEvent: true,
-        datas: draggableDatas,
+        datas: ableDatas,
         originalDatas: e.originalDatas,
     };
 }
@@ -32,6 +32,11 @@ export default class CustomGesto {
     private datas: any = {
         draggable: {},
     };
+    constructor(private ableName = "draggable") {
+        this.datas = {
+            [ableName]: {},
+        };
+    }
 
     public dragStart(client: number[], e: any) {
         this.isDrag = false;
@@ -39,8 +44,8 @@ export default class CustomGesto {
         const originalDatas = e.originalDatas;
 
         this.datas = originalDatas;
-        if (!originalDatas.draggable) {
-            originalDatas.draggable = {};
+        if (!originalDatas[this.ableName]) {
+            originalDatas[this.ableName] = {};
         }
         return {
             ...this.move(client, e.inputEvent),
@@ -88,7 +93,7 @@ export default class CustomGesto {
             distY: clientY - this.startY,
             deltaX: delta[0],
             deltaY: delta[1],
-            datas: this.datas.draggable,
+            datas: this.datas[this.ableName],
             originalDatas: this.datas,
             parentEvent: true,
             parentGesto: this,

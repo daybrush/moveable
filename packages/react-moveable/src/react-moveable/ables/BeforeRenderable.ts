@@ -11,7 +11,9 @@ import { fillChildEvents } from "../groupUtils";
 
 
 function isIdentityMatrix(matrix: string, is3d?: boolean) {
-    const value = is3d ? `matrix3d(${createIdentityMatrix(4)}` : `matrix(${createIdentityMatrix(3)})`;
+    const n = is3d ? 4 : 3;
+    const identityMatrix = createIdentityMatrix(n);
+    const value = `matrix${is3d ? "3d" : ""}(${identityMatrix.join(",")})`;
 
     return matrix === value || matrix === `matrix(1,0,0,1,0,0)`;
 }

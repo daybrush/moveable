@@ -121,11 +121,11 @@ export function triggerAble(
         }).length === 0;
     }
     if (isEnd || isForceEnd) {
-        moveable.state.gesto = null;
+        moveable.state.gestos = {};
 
         if ((moveable as MoveableGroupInterface).moveables) {
             (moveable as MoveableGroupInterface).moveables.forEach(childMoveable => {
-                childMoveable.state.gesto = null;
+                childMoveable.state.gestos = {};
             });
         }
     }

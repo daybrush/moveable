@@ -1,18 +1,22 @@
 import {
     getDirection, triggerEvent,
-    fillParams, fillCSSObject,
+    fillParams,
     fillEndParams,
     getAbsolutePosesByState,
     catchEvent,
     getOffsetSizeDist,
     getProps,
     getDirectionCondition,
+    calculatePoses,
+    fillAfterTransform,
 } from "../utils";
 import {
     setDragStart,
     getResizeDist,
     getAbsolutePosition,
     getPosByDirection,
+    getNextMatrix,
+    getNextTransforms,
 } from "../gesto/GestoUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -26,7 +30,7 @@ import {
     triggerChildAbles,
 } from "../groupUtils";
 import Draggable from "./Draggable";
-import { calculate, createRotateMatrix, plus } from "@scena/matrix";
+import { calculate, convertDimension, createRotateMatrix, plus } from "@scena/matrix";
 import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
 import { checkSnapResize } from "./Snappable";
 import {
@@ -36,6 +40,7 @@ import {
     isNumber,
 } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
+import { parseMat } from "css-to-mat";
 
 /**
  * @namespace Resizable
@@ -80,16 +85,23 @@ export default {
             isPinch,
             isGroup,
             parentDirection,
+            parentGesto,
             datas,
+            parentFixedDirection,
+            parentEvent,
         } = e;
 
         const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
         const state = moveable.state;
-        const { target, width, height } = state;
+        const { target, width, height, gestos } = state;
 
         if (!direction || !target) {
             return false;
         }
+        if (gestos.resizable) {
+            return false;
+        }
+        gestos.resizable = parentGesto || moveable.controlGesto;
         !isPinch && setDragStart(moveable, e);
 
         datas.datas = {};
@@ -119,6 +131,9 @@ export default {
         datas.transformOrigin = transformOrigin && isString(transformOrigin)
             ? transformOrigin.split(" ")
             : transformOrigin;
+
+        datas.startOffsetMatrix = state.offsetMatrix;
+        datas.startTransformOrigin = state.transformOrigin;
 
         datas.isWidth = e?.parentIsWidth ?? ((!direction[0] && !direction[1]) || direction[0] || !direction[1]);
 
@@ -154,7 +169,7 @@ export default {
         }
 
         setRatio(width / height);
-        setFixedDirection([-direction[0], -direction[1]]);
+        setFixedDirection(parentFixedDirection || [-direction[0], -direction[1]]);
 
         datas.setFixedDirection = setFixedDirection;
         datas.setMin = setMin;
@@ -178,7 +193,8 @@ export default {
                 new CustomGesto().dragStart([0, 0], e),
             ),
         });
-        const result = triggerEvent(moveable, "onResizeStart", params);
+        const result = parentEvent || triggerEvent(moveable, "onResizeStart", params);
+
         if (result !== false) {
             datas.isResize = true;
             moveable.state.snapRenderInfo = {
@@ -201,6 +217,8 @@ export default {
             parentDist,
             isRequest,
             isGroup,
+            parentEvent,
+            resolveMatrix,
         } = e;
 
         const {
@@ -216,11 +234,38 @@ export default {
             startOffsetWidth,
             startOffsetHeight,
             isWidth,
-
         } = datas;
 
         if (!isResize) {
             return;
+        }
+        if (resolveMatrix) {
+            const {
+                is3d,
+            } = moveable.state;
+            const {
+                startOffsetMatrix,
+                startTransformOrigin,
+            } = datas;
+            const n = is3d ? 4 : 3;
+            let targetMatrix = parseMat(getNextTransforms(e));
+            const targetN = Math.sqrt(targetMatrix.length);
+
+            if (n !== targetN) {
+                targetMatrix = convertDimension(targetMatrix, targetN, n);
+            }
+
+            const nextAllMatrix = getNextMatrix(
+                startOffsetMatrix,
+                targetMatrix,
+                startTransformOrigin,
+                n,
+            );
+            const poses = calculatePoses(nextAllMatrix, startOffsetWidth, startOffsetHeight, n);
+
+            datas.startPositions = poses;
+            datas.nextTargetMatrix = targetMatrix;
+            datas.nextAllMatrix = nextAllMatrix;
         }
         const props = getProps(moveable.props, "resizable");
         const {
@@ -240,14 +285,15 @@ export default {
         const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
 
         function getNextBoundingSize() {
+            const fixedDirection = datas.fixedDirection;
             const nextSize = getOffsetSizeDist(sizeDirection, keepRatio, datas, e);
 
             distWidth = nextSize.distWidth;
             distHeight = nextSize.distHeight;
 
-            let nextWidth = sizeDirection[0] || keepRatio
+            let nextWidth = (sizeDirection[0] - fixedDirection[0]) || keepRatio
                 ? Math.max(startOffsetWidth + distWidth, TINY_NUM) : startOffsetWidth;
-            let nextHeight = sizeDirection[1] || keepRatio
+            let nextHeight = (sizeDirection[1] - fixedDirection[1]) || keepRatio
                 ? Math.max(startOffsetHeight + distHeight, TINY_NUM) : startOffsetHeight;
 
             if (keepRatio && startOffsetWidth && startOffsetHeight) {
@@ -263,22 +309,24 @@ export default {
 
         let [boundingWidth, boundingHeight] = getNextBoundingSize();
 
-        datas.setFixedDirection(datas.fixedDirection);
+        if (!parentEvent) {
+            datas.setFixedDirection(datas.fixedDirection);
 
-        triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
-            setFixedDirection(nextFixedDirection: number[]) {
-                datas.setFixedDirection(nextFixedDirection);
+            triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
+                setFixedDirection(nextFixedDirection: number[]) {
+                    datas.setFixedDirection(nextFixedDirection);
 
-                [boundingWidth, boundingHeight] = getNextBoundingSize();
+                    [boundingWidth, boundingHeight] = getNextBoundingSize();
 
-                return [boundingWidth, boundingHeight];
-            },
-            boundingWidth,
-            boundingHeight,
-            setSize(size: number[]) {
-                [boundingWidth, boundingHeight] = size;
-            },
-        }, true));
+                    return [boundingWidth, boundingHeight];
+                },
+                boundingWidth,
+                boundingHeight,
+                setSize(size: number[]) {
+                    [boundingWidth, boundingHeight] = size;
+                },
+            }, true));
+        }
 
         let fixedPosition = dragClient;
 
@@ -379,9 +427,9 @@ export default {
             moveable,
             boundingWidth,
             boundingHeight,
-            datas.fixedDirection,
             fixedPosition,
             transformOrigin,
+            datas,
         );
 
         if (!parentMoveable && delta.every(num => !num) && inverseDelta.every(num => !num)) {
@@ -389,8 +437,9 @@ export default {
         }
         const drag = Draggable.drag(
             moveable,
-            setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false),
+            setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false, "draggable"),
         ) as OnDrag;
+        const transform = drag.transform;
         const params = fillParams<OnResize>(moveable, e, {
             width: startWidth + distWidth,
             height: startHeight + distHeight,
@@ -404,13 +453,15 @@ export default {
             delta,
             isPinch: !!isPinch,
             drag,
-            ...fillCSSObject({
-                width: `${boundingWidth}px`,
-                height: `${boundingHeight}px`,
-                transform: drag.transform,
-            }),
+            ...fillAfterTransform({
+                style: {
+                    width: `${boundingWidth}px`,
+                    height: `${boundingHeight}px`,
+                },
+                transform,
+            }, drag),
         });
-        triggerEvent(moveable, "onResize", params);
+        !parentEvent && triggerEvent(moveable, "onResize", params);
         return params;
     },
     dragControlAfter(
@@ -456,14 +507,14 @@ export default {
         moveable: MoveableManagerInterface<ResizableProps & DraggableProps>,
         e: any,
     ) {
-        const { datas } = e;
+        const { datas, parentEvent } = e;
         if (!datas.isResize) {
             return;
         }
         datas.isResize = false;
 
         const params = fillEndParams<OnResizeEnd>(moveable, e, {});
-        triggerEvent(moveable, "onResizeEnd", params);
+        !parentEvent && triggerEvent(moveable, "onResizeEnd", params);
         return params;
     },
     dragGroupControlCondition: directionCondition,

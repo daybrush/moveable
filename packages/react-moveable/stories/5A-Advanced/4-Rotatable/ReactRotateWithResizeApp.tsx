@@ -1,32 +1,37 @@
 import * as React from "react";
 import Moveable, { DIRECTIONS} from "../../../src/react-moveable";
-import { useKeycon } from "react-keycon";
 
 export default function App() {
-    const { isKeydown } = useKeycon({
-        keys: ["meta"],
-    });
-
     return (
         <div className="root">
-            <div className="target">Target</div>
+            <div className="target" style={{
+                transformOrigin: "top center",
+            }}>Target</div>
             <Moveable
                 target={".target"}
+                draggable={true}
                 rotatable={{
-                    renderDirections: isKeydown ? DIRECTIONS : false,
+                    renderDirections: DIRECTIONS,
+                }}
+                resolveAblesWithRotatable={{
+                    resizable: ["nw", "ne", "sw", "se"],
                 }}
                 resizable={{
-                    renderDirections: isKeydown ? false : true,
+                    renderDirections: false,
                 }}
                 rotateAroundControls={true}
+                onDrag={e => {
+                    e.target.style.cssText += `transform: ${e.transform};`;
+                }}
                 onResize={e => {
-                    e.target.style.cssText += e.cssText;
                 }}
                 onRotateStart={e => {
-                    e.setFixedDirection([-0.5, -0.5]);
+                    // e.setFixedDirection([0, 0]);
                 }}
                 onRotate={e => {
+                    // e.target.style.cssText = e.cssText;
                     e.target.style.cssText += e.cssText;
+
                 }}
             />
         </div>

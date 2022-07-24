@@ -1,10 +1,7 @@
 import * as React from "react";
-import keycon from "keycon";
 import Moveable from "../../../src/react-moveable";
 import { throttle } from "@daybrush/utils";
 
-
-keycon.setGlobal();
 
 export default function App() {
     return (
@@ -62,4 +59,4 @@ export default function App() {
             </div>
         </div>
     );
-};
+}

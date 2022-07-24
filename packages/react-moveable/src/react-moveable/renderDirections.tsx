@@ -6,42 +6,43 @@ import {
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS, DIRECTIONS4 } from "./consts";
 import { IObject, throttle, getRad, getKeys } from "@daybrush/utils";
 
-export function renderDirectionControls(
+export interface DirectionControlInfo {
+    data: Record<string, any>;
+    classNames: string[];
+    dir: string;
+}
+export function renderDirectionControlsByInfos(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
-    defaultDirections: string[],
     ableName: string,
+    renderDirections: DirectionControlInfo[],
     React: Renderer,
 ): any[] {
-    const renderState = moveable.renderState;
-    if (!renderState.renderDirectionMap) {
-        renderState.renderDirectionMap = {};
-    }
+
     const {
         renderPoses,
         rotation: rotationRad,
         direction,
     } = moveable.state;
-
-    const renderDirectionMap = renderState.renderDirectionMap;
-
     const {
-        renderDirections: directions = defaultDirections,
         zoom,
     } = getProps(moveable.props, ableName as any);
 
+
+    const sign = (direction > 0 ? 1 : -1);
+    const degRotation = rotationRad / Math.PI * 180;
     const directionMap: IObject<boolean> = {};
 
-    if (!directions) {
-        return [];
+    const renderState = moveable.renderState;
+    if (!renderState.renderDirectionMap) {
+        renderState.renderDirectionMap = {};
     }
-    const sign = (direction > 0 ? 1 : -1);
-    const renderDirections = directions === true ? DIRECTIONS : directions;
-    const degRotation = rotationRad / Math.PI * 180;
+    const renderDirectionMap = renderState.renderDirectionMap;
 
-    renderDirections.forEach(dir => {
+    renderDirections.forEach(({ dir }) => {
         directionMap[dir] = true;
     });
-    return renderDirections.map(dir => {
+
+    return renderDirections.map(({ data, classNames, dir }) => {
         const indexes = DIRECTION_INDEXES[dir];
 
         if (!indexes || !directionMap[dir]) {
@@ -50,12 +51,48 @@ export function renderDirectionControls(
         renderDirectionMap[dir] = true;
         const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
+        const dataAttrs: Record<string, string> = {};
+
+        getKeys(data).forEach(name => {
+            dataAttrs[`data-${name}`] = data[name];
+        });
         return (
-            <div className={prefix("control", "direction", dir, ableName)}
-                data-rotation={directionRotation} data-direction={dir} key={`direction-${dir}`}
+            <div className={prefix("control", "direction", dir, ableName, ...classNames)}
+                data-rotation={directionRotation}
+                data-direction={dir}
+                {...dataAttrs}
+                key={`direction-${dir}`}
                 style={getControlTransform(rotationRad, zoom!, ...indexes.map(index => renderPoses[index]))}></div>
         );
     });
+}
+export function renderDirectionControls(
+    moveable: MoveableManagerInterface<Partial<RenderDirections>>,
+    defaultDirections: string[],
+    ableName: string,
+    React: Renderer,
+): any[] {
+    const {
+        renderDirections: directions = defaultDirections,
+    } = getProps(moveable.props, ableName as any);
+
+    if (!directions) {
+        return [];
+    }
+    const renderDirections = directions === true ? DIRECTIONS : directions;
+
+    return renderDirectionControlsByInfos(
+        moveable,
+        ableName,
+        renderDirections.map(dir => {
+            return {
+                data: {},
+                classNames: [],
+                dir,
+            };
+        }),
+        React,
+    );
 }
 export function renderAroundControls(
     moveable: MoveableManagerInterface<Partial<RenderDirections>>,
@@ -99,7 +136,8 @@ export function renderLine(
     direction: string,
     pos1: number[], pos2: number[],
     zoom: number,
-    key: number | string, ...classNames: string[]) {
+    key: number | string, ...classNames: string[],
+): any {
     const rad = getRad(pos1, pos2);
     const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
 
@@ -115,7 +153,7 @@ export function renderEdgeLines(
     edge: true | string[],
     poses: number[][],
     zoom: number,
-) {
+): any[] {
     const directions = edge === true ? DIRECTIONS4 : edge;
 
     return directions.map((direction, i) => {

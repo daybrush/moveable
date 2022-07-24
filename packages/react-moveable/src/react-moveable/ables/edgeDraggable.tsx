@@ -1,9 +1,8 @@
 import { hasClass } from "@daybrush/utils";
-import { DraggableProps, MoveableGroupInterface, MoveableManagerInterface } from "../types";
+import { DraggableProps, MoveableGroupInterface, MoveableManagerInterface, Renderer } from "../types";
 import { prefix } from "../utils";
 import Draggable from "./Draggable";
 import { makeAble } from "./AbleManager";
-import React from "react";
 import { renderEdgeLines } from "../renderDirections";
 
 function getDraggableEvent(e: any) {
@@ -20,7 +19,7 @@ export default makeAble("edgeDraggable", {
     cursor: move;
 }`,
     ],
-    render(moveable: MoveableManagerInterface<DraggableProps>) {
+    render(moveable: MoveableManagerInterface<DraggableProps>, React: Renderer) {
         const props = moveable.props;
         const edge = props.edgeDraggable!;
 

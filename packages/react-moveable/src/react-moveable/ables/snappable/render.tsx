@@ -73,7 +73,7 @@ export function renderGuidelines(
     targetPos: number[],
     targetRect: SnapDirectionPoses,
     React: Renderer
-) {
+): any[] {
     const { zoom, isDisplayInnerSnapDigit } = moveable.props;
 
     const mainNames = type === "horizontal" ? VERTICAL_NAMES_MAP : HORIZONTAL_NAMES_MAP;
@@ -123,7 +123,7 @@ export function renderDigitLine(
     renderPos: number[],
     className: string | undefined,
     React: Renderer,
-) {
+): any {
     const {
         snapDigit = 0,
         isDisplaySnapDigit = true,
@@ -247,7 +247,7 @@ export function renderDashedGuidelines(
     targetPos: number[],
     targetRect: SnapDirectionPoses,
     React: Renderer,
-) {
+): any[] {
     const {
         isDisplayInnerSnapDigit,
     } = moveable.props;

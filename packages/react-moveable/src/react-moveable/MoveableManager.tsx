@@ -24,7 +24,7 @@ import {
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { cancelAnimationFrame, getKeys, IObject, requestAnimationFrame } from "@daybrush/utils";
+import { cancelAnimationFrame, find, getKeys, IObject, requestAnimationFrame } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
@@ -67,7 +67,7 @@ export default class MoveableManager<T = {}>
     };
     public state: MoveableManagerState = {
         container: null,
-        gesto: null,
+        gestos: {},
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         disableNativeEvent: false,
         ...getMoveableTargetInfo(null),
@@ -180,6 +180,16 @@ export default class MoveableManager<T = {}>
             const manager = events[name];
             manager && manager.destroy();
         }
+    }
+    /**
+     * Get the able used in MoveableManager.
+     * @method Moveable#getAble
+     * @param - able name
+     */
+    public getAble<T extends Able>(ableName: string): T | undefined {
+        const ables: Able[] = this.props.ables || [];
+
+        return find(ables, able => able.name === ableName) as T;
     }
     public getContainer(): HTMLElement | SVGElement {
         const { parentMoveable, wrapperMoveable, container } = this.props;
@@ -544,7 +554,8 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const {
             originalBeforeOrigin, transformOrigin,
-            allMatrix, is3d, pos1, pos2, pos3, pos4,
+            allMatrix, is3d,
+            pos1, pos2, pos3, pos4,
             left: stateLeft, top: stateTop,
         } = state;
         const {

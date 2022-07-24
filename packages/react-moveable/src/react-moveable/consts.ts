@@ -177,6 +177,17 @@ export const MIN_NUM = -MAX_NUM;
 export const DIRECTIONS4 = ["n", "w", "s", "e"];
 export const DIRECTIONS = ["n", "w", "s", "e", "nw", "ne", "sw", "se"];
 
+export const DIRECTION_REGION_TO_DIRECTION: Record<string, number[]> = {
+    n: [0, -1],
+    e: [1, 0],
+    s: [0, 1],
+    w: [-1, 0],
+    nw: [-1, -1],
+    ne: [1, -1],
+    sw: [-1, 1],
+    se: [1, 1],
+};
+
 export const DIRECTION_INDEXES: IObject<number[]> = {
     n: [0, 1],
     e: [1, 3],

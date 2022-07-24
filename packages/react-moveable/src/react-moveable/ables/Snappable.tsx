@@ -358,13 +358,14 @@ export function checkSnapResize(
     if (!hasGuidelines(moveable, "resizable")) {
         return [0, 0];
     }
-    const { fixedDirection } = datas;
+    const { fixedDirection, nextAllMatrix } = datas;
     const { allMatrix, is3d } = moveable.state;
+
     return checkSizeDist(
         moveable,
         (widthOffset: number, heightOffset: number) => {
             return getNextFixedPoses(
-                allMatrix,
+                nextAllMatrix || allMatrix,
                 width + widthOffset,
                 height + heightOffset,
                 fixedDirection,
