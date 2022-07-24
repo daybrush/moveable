@@ -19,7 +19,8 @@ import {
 import {
     MoveableManagerState, Able, MoveableClientRect,
     MoveableProps, ArrayFormat, MoveableRefType,
-    MatrixInfo, ExcludeEndParams, ExcludeParams, ElementSizes, MoveablePosition,
+    MatrixInfo, ExcludeEndParams, ExcludeParams,
+    ElementSizes, MoveablePosition, TransformObject,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getDragDist } from "./gesto/GestoUtils";
@@ -312,6 +313,7 @@ export function getMatrixStackInfo(
 
         // convert 3 to 4
         const length = matrix.length;
+
         if (!is3d && length === 16) {
             is3d = true;
             n = 4;
@@ -661,6 +663,22 @@ export function getSVGOffset(
     }
     return offset.map(p => Math.round(p));
 }
+
+export function calculateMoveableClientPositions(
+    rootMatrix: number[],
+    poses: number[][],
+    rootClientRect: MoveableClientRect,
+) {
+    const is3d = rootMatrix.length === 16;
+    const n = is3d ? 4 : 3;
+    const rootPoses = poses.map(pos => calculatePosition(rootMatrix, pos, n));
+    const { left, top } = rootClientRect;
+
+    return rootPoses.map(pos => {
+        return [pos[0] + left, pos[1] + top];
+    });
+
+}
 export function calculateMoveablePosition(
     matrix: number[],
     origin: number[],
@@ -1003,6 +1021,23 @@ export function fillCSSObject(style: Record<string, any>) {
         style,
         cssText: getKeys(style).map(name => `${name}: ${style[name]};`).join(""),
     };
+}
+export function fillAfterTransform(
+    prevEvent: { style: Record<string, string>, transform: string },
+    nextEvent: { style: Record<string, string>, transform: string, afterTransform?: string },
+): TransformObject {
+    const afterTransform = nextEvent.afterTransform || nextEvent.transform;
+
+    return {
+        ...fillCSSObject({
+            ...prevEvent.style,
+            ...nextEvent.style,
+            transform: afterTransform,
+        }),
+        afterTransform,
+        transform: prevEvent.transform,
+    };
+
 }
 export function fillParams<T extends IObject<any>>(
     moveable: any,
@@ -1453,10 +1488,19 @@ export function getOffsetSizeDist(
         parentDistance,
         parentDist,
         parentScale,
-        isPinch,
     } = e;
     const startFixedDirection = datas.fixedDirection;
+    const directionsDists = [0, 1].map(index => {
+        return Math.abs(sizeDirection[index] - startFixedDirection[index]);
+    });
+    const directionRatios = [0, 1].map(index => {
+        let dist = directionsDists[index];
 
+        if (dist !== 0) {
+            dist = 2 / dist;
+        }
+        return dist;
+    });
     if (parentDist) {
         distWidth = parentDist[0];
         distHeight = parentDist[1];
@@ -1471,22 +1515,20 @@ export function getOffsetSizeDist(
     } else if (parentScale) {
         distWidth = (parentScale[0] - 1) * startOffsetWidth;
         distHeight = (parentScale[1] - 1) * startOffsetHeight;
-    } else if (isPinch) {
-        if (parentDistance) {
-            distWidth = parentDistance;
-            distHeight = parentDistance * startOffsetHeight / startOffsetWidth;
-        }
+    } else if (parentDistance) {
+        const scaleX = startOffsetWidth * directionsDists[0];
+        const scaleY = startOffsetHeight * directionsDists[1];
+        const ratioDistance = getDistSize([scaleX, scaleY]);
+
+        distWidth = parentDistance / ratioDistance * scaleX * directionRatios[0];
+        distHeight = parentDistance / ratioDistance * scaleY * directionRatios[1];
     } else {
         let dist = getDragDist({ datas, distX, distY });
 
-        dist = [0, 1].map(index => {
-            let directionRatio = Math.abs(sizeDirection[index] - startFixedDirection[index]);
-
-            if (directionRatio !== 0) {
-                directionRatio = 2 / directionRatio;
-            }
-            return dist[index] * directionRatio;
+        dist = directionRatios.map((ratio, i) => {
+            return dist[i] * ratio;
         });
+
         [distWidth, distHeight] = getSizeDistByDist(
             [startOffsetWidth, startOffsetHeight],
             dist,

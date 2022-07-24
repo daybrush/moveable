@@ -176,7 +176,7 @@ export interface MatrixInfo {
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
     disableNativeEvent: boolean;
-    gesto: Gesto | CustomGesto | null;
+    gestos: Record<string, Gesto | CustomGesto | null>;
     renderPoses: number[][];
 } & MoveableTargetInfo & T;
 
@@ -418,10 +418,10 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     render?(moveable: any, renderer: Renderer): any;
 
     // Operates when a drag event occurs for the single target.
-    dragStart?(moveable: any, e: GestoTypes.OnDragStart): any;
-    drag?(moveable: any, e: GestoTypes.OnDrag): any;
-    dragEnd?(moveable: any, e: GestoTypes.OnDragEnd): any;
-    dragAfter?(moveable: any, e: GestoTypes.OnDrag): any;
+    dragStart?(moveable: any, e: any): any;
+    drag?(moveable: any, e: any): any;
+    dragEnd?(moveable: any, e: any): any;
+    dragAfter?(moveable: any, e: any): any;
 
     // Operates when a pinch event occurs for the single target.
     pinchStart?(moveable: any, e: GestoTypes.OnPinchStart): any;
@@ -431,17 +431,17 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     // Condition that occurs dragControl
     dragControlCondition?(moveable: any, e: any): boolean;
     // Operates when a drag event occurs for the moveable control and single target.
-    dragControlStart?(moveable: any, e: GestoTypes.OnDragStart): any;
-    dragControl?(moveable: any, e: GestoTypes.OnDrag): any;
-    dragControlEnd?(moveable: any, e: GestoTypes.OnDragEnd): any;
-    dragControlAfter?(moveable: any, e: GestoTypes.OnDrag): any;
+    dragControlStart?(moveable: any, e: any): any;
+    dragControl?(moveable: any, e: any): any;
+    dragControlEnd?(moveable: any, e: any): any;
+    dragControlAfter?(moveable: any, e: any): any;
 
     // Condition that occurs dragGroup
     dragGroupCondition?(moveable: any, e: any): boolean;
     // Operates when a drag event occurs for the multi target.
-    dragGroupStart?(moveable: any, e: GestoTypes.OnDragStart): any;
-    dragGroup?(moveable: any, e: GestoTypes.OnDrag): any;
-    dragGroupEnd?(moveable: any, e: GestoTypes.OnDragEnd): any;
+    dragGroupStart?(moveable: any, e: any): any;
+    dragGroup?(moveable: any, e: any): any;
+    dragGroupEnd?(moveable: any, e: any): any;
 
     // Operates when a pinch event occurs for the multi target.
     pinchGroupStart?(moveable: any, e: GestoTypes.OnPinchStart): any;
@@ -452,9 +452,9 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     dragGroupControlCondition?(moveable: any, e: any): boolean;
 
     // Operates when a drag event occurs for the moveable control and multi target.
-    dragGroupControlStart?(moveable: any, e: GestoTypes.OnDragStart): any;
-    dragGroupControl?(moveable: any, e: GestoTypes.OnDragStart): any;
-    dragGroupControlEnd?(moveable: any, e: GestoTypes.OnDragEnd): any;
+    dragGroupControlStart?(moveable: any, e: any): any;
+    dragGroupControl?(moveable: any, e: any): any;
+    dragGroupControlEnd?(moveable: any, e: any): any;
 
     // mouse enter event
     mouseEnter?(moveable: any, e: any): any;
@@ -541,13 +541,24 @@ export interface OnTransformStartEvent {
  * @memberof Moveable
  * @extends Moveable.CSSObject
  */
-export interface OnTransformEvent extends CSSObject {
+export interface TransformObject extends CSSObject {
     /**
      * a target's next transform string value.
      */
     transform: string;
     /**
-     * transform events causes a `drag` event.
+     * A transform obtained by the simultaneous occurrence of other events in the current event
+     */
+    afterTransform: string;
+}
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.TransformObject
+ */
+export interface OnTransformEvent extends TransformObject {
+    /**
+     * transform events causes a `drag` event. In some events, there may be no value.
      */
     drag: OnDrag;
 }
@@ -622,6 +633,7 @@ export interface OnDragStart extends OnEvent, OnTransformStartEvent {
  * @typedef
  * @memberof Moveable.Draggable
  * @extends Moveable.OnEvent
+ * @extends Moveable.CSSObject
  * @property - The delta of [left, top]
  * @property - The distance of [left, top]
  * @property - The position of [left, top]
@@ -637,7 +649,7 @@ export interface OnDragStart extends OnEvent, OnTransformStartEvent {
  * @property - a target's right
  * @property - Whether or not it is being pinched.
  */
-export interface OnDrag extends OnEvent {
+export interface OnDrag extends OnEvent, CSSObject {
     beforeDelta: number[];
     beforeDist: number[];
     beforeTranslate: number[];
@@ -919,9 +931,9 @@ export interface CSSObject {
  * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.OnEvent
- * @extends Moveable.CSSObject
+ * @extends Moveable.OnTransformEvent
  */
-export interface OnResize extends OnEvent, CSSObject {
+export interface OnResize extends OnEvent, OnTransformEvent {
     /**
      * The direction of resize.
      */
@@ -966,10 +978,6 @@ export interface OnResize extends OnEvent, CSSObject {
      * Whether or not it is being pinched.
      */
     isPinch: boolean;
-    /**
-     * resize causes a `drag` event.
-     */
-    drag: OnDrag;
 }
 /**
  * @typedef
@@ -998,6 +1006,10 @@ export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
      * rotate causes a `dragStart` event.
      */
     dragStart: OnDragStart | false;
+    /**
+     * rotate causes a `resizeStart` event.
+     */
+    resizeStart: OnResizeStart | false;
 }
 /**
  * @typedef
@@ -1032,7 +1044,7 @@ export interface OnBeforeRotate extends OnEvent {
  * @extends Moveable.OnEvent
  * @extends Moveable.OnTransformEvent
  */
-export interface OnRotate extends OnEvent {
+export interface OnRotate extends OnEvent, OnTransformEvent {
     /**
      * The distance of rotation degree before transform is applied
      */
@@ -1085,17 +1097,13 @@ export interface OnRotate extends OnEvent {
      */
     absoluteRotation: number;
     /**
-     * a target's transform
-     */
-    transform: string;
-    /**
      * Whether or not it is being pinched.
      */
     isPinch: boolean;
     /**
-     * rotate causes a `drag` event.
+     * rotate causes a `resize` event.
      */
-    drag: OnDrag;
+    resize?: OnResize;
 }
 /**
  * @typedef
@@ -1793,6 +1801,7 @@ export interface ResizableEvents {
 export interface ResizableProps extends ResizableOptions, EventInterface<ResizableEvents> {
 }
 
+
 /**
  * @typedef
  * @memberof Moveable.Scalable
@@ -1915,10 +1924,16 @@ export interface RotatableOptions extends RenderDirections {
      */
     rotateAroundControls?: boolean;
     /**
+     * Sets the control that will cause resize along with rotate. (Only Single Target, Only resizable, Beta)
+     * @default null
+     */
+    resolveAblesWithRotatable?: Record<string, LineDirection[]> | null | undefined;
+    /**
      * throttle of angle(degree) when rotate.
      * @default 0
      */
     throttleRotate?: number;
+
     /**
      * Set additional rotationTargets.
      * @default null
@@ -2565,6 +2580,7 @@ export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerI
 export interface MoveableInterface {
     getManager(): MoveableManagerInterface<any, any>;
     getRect(): RectInfo;
+    getAble<T extends Able>(ableName: string): T | undefined;
     isMoveableElement(target: Element): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
