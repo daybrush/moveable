@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.36.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.35.0...react-moveable@0.36.0) (2022-07-25)
+
+
+### :rocket: New Features
+
+* add `cssText`, `style` property on events ([7a9012e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7a9012e4fcdc9a37bb2096bcf37e8e4d25310a8b))
+* add `rotateAroundControls` prop ([d473ffa](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d473ffa76a5c390945c320ee8ee8b6f671a0fbed))
+* add style, cssText, afterTransform properties ([68b4a92](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/68b4a925b75f599924628425b4da5cfd5424ad71))
+* support pos guideline info #707 ([1cd1b81](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1cd1b8134419df88b16ffb9aaa412ebb9048b379))
+* Support rotate and resize together #467 ([24482a6](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/24482a68ac2611507e2fa9e6673f969bc1c65cff))
+* use edge at the same tiem #706 ([c273703](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c273703e5b62ea41ec9df441158a77cb0bf835c1))
+
+
+### :bug: Bug Fix
+
+* remove wrong react types #703 ([25dced4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/25dced4f1531cc46d77601f71674031aa58fdf0b))
+
+
+### :mega: Other
+
+* publish packages ([63e03d1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/63e03d1d5f69e56c7df6d357c58d7acd06932e80))
+* update dragscroll module version ([e9b5864](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e9b5864c83853578c4190e792543019e30b017eb))
+
+
+
 ## [0.35.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.34.2...react-moveable@0.35.0) (2022-07-21)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.0](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/compare/vue3-moveable@0.7.0...vue3-moveable@0.8.0) (2022-07-25)
+
+
+### :bug: Bug Fix
+
+* remove wrong react types #703 ([25dced4](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/commit/25dced4f1531cc46d77601f71674031aa58fdf0b))
+
+
+### :memo: Documentation
+
+* Update Vue3-moveable code example (#704) ([21c7629](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/commit/21c76295808454d158a36fb74028b3dbe7b3466f))
+
+
+### :mega: Other
+
+* publish packages ([63e03d1](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/commit/63e03d1d5f69e56c7df6d357c58d7acd06932e80))
+
+
+
 ## [0.7.0](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/compare/vue3-moveable@0.6.2...vue3-moveable@0.7.0) (2022-07-21)
 
 

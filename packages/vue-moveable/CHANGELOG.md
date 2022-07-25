@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-beta.27](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/compare/vue-moveable@2.0.0-beta.26...vue-moveable@2.0.0-beta.27) (2022-07-25)
+
+
+### :bug: Bug Fix
+
+* remove wrong react types #703 ([25dced4](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/commit/25dced4f1531cc46d77601f71674031aa58fdf0b))
+
+
+### :mega: Other
+
+* publish packages ([63e03d1](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/commit/63e03d1d5f69e56c7df6d357c58d7acd06932e80))
+
+
+
 ## [2.0.0-beta.26](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/compare/vue-moveable@2.0.0-beta.24...vue-moveable@2.0.0-beta.26) (2022-07-21)
 
 

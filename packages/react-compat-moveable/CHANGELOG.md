@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.21.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.20.0...react-compat-moveable@0.21.0) (2022-07-25)
+
+
+### :mega: Other
+
+* publish packages ([63e03d1](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/63e03d1d5f69e56c7df6d357c58d7acd06932e80))
+* update dragscroll module version ([e9b5864](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/e9b5864c83853578c4190e792543019e30b017eb))
+
+
+
 ## [0.20.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.19.2...react-compat-moveable@0.20.0) (2022-07-21)
 
 

@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.0](https://github.com/daybrush/moveable/compare/0.32.0...0.33.0) (2022-07-25)
+### :sparkles: Packages
+* `lit-moveable` 0.10.0
+* `moveable` 0.33.0
+* `preact-moveable` 0.35.0
+* `react-compat-moveable` 0.21.0
+* `react-moveable` 0.36.0
+* `svelte-moveable` 0.25.0
+* `vue-moveable` 2.0.0-beta.27
+* `vue3-moveable` 0.8.0
+* `ngx-moveable` 0.30.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add `cssText`, `style` property on events ([7a9012e](https://github.com/daybrush/moveable/commit/7a9012e4fcdc9a37bb2096bcf37e8e4d25310a8b))
+    * add `rotateAroundControls` prop ([d473ffa](https://github.com/daybrush/moveable/commit/d473ffa76a5c390945c320ee8ee8b6f671a0fbed))
+    * add style, cssText, afterTransform properties ([68b4a92](https://github.com/daybrush/moveable/commit/68b4a925b75f599924628425b4da5cfd5424ad71))
+    * support pos guideline info #707 ([1cd1b81](https://github.com/daybrush/moveable/commit/1cd1b8134419df88b16ffb9aaa412ebb9048b379))
+    * Support rotate and resize together #467 ([24482a6](https://github.com/daybrush/moveable/commit/24482a68ac2611507e2fa9e6673f969bc1c65cff))
+    * use edge at the same tiem #706 ([c273703](https://github.com/daybrush/moveable/commit/c273703e5b62ea41ec9df441158a77cb0bf835c1))
+
+
+### :bug: Bug Fix
+
+* `vue3-moveable`, `vue-moveable`, `react-moveable`
+    * remove wrong react types #703 ([25dced4](https://github.com/daybrush/moveable/commit/25dced4f1531cc46d77601f71674031aa58fdf0b))
+
+
+### :memo: Documentation
+
+* `vue3-moveable`
+    * Update Vue3-moveable code example (#704) ([21c7629](https://github.com/daybrush/moveable/commit/21c76295808454d158a36fb74028b3dbe7b3466f))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([63e03d1](https://github.com/daybrush/moveable/commit/63e03d1d5f69e56c7df6d357c58d7acd06932e80))
+* `react-moveable`, `react-compat-moveable`
+    * update dragscroll module version ([e9b5864](https://github.com/daybrush/moveable/commit/e9b5864c83853578c4190e792543019e30b017eb))
+
+
+
 ## [0.32.0](https://github.com/daybrush/moveable/compare/0.31.2...0.32.0) (2022-07-21)
 ### :sparkles: Packages
 * `lit-moveable` 0.9.0
