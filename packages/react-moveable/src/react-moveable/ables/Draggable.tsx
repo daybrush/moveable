@@ -248,7 +248,7 @@ export default {
             height,
             isPinch,
             ...fillCSSObject({
-                style: nextTransform,
+                transform: nextTransform,
             }),
         });
 
