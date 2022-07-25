@@ -93,7 +93,7 @@ export function renderGuidelines(
         }
         return true;
     }).map((guideline, i) => {
-        const { pos, size, element } = guideline;
+        const { pos, size, element, className } = guideline;
 
         const renderPos = [
             -targetPos[0] + pos[0],
@@ -103,7 +103,7 @@ export function renderGuidelines(
         return renderInnerGuideline(
             {
                 key: `${type}-default-guideline-${i}`,
-                classNames: element ? [prefix("bold")] : [],
+                classNames: element ? [prefix("bold"), className] : [className],
                 direction: type,
                 posValue: renderPos,
                 sizeValue: size,

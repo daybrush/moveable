@@ -2109,12 +2109,12 @@ export interface SnappableOptions {
      * Add guidelines in the horizontal direction.
      * @default []
      */
-    horizontalGuidelines?: number[];
+    horizontalGuidelines?: Array<PosGuideline | number>;
     /**
      * Add guidelines in the vertical direction.
      * @default []
      */
-    verticalGuidelines?: number[];
+    verticalGuidelines?: Array<PosGuideline | number>;
     /**
      * Add guidelines for the element.
      * @default []
@@ -2194,7 +2194,42 @@ export interface ElementGuidelineValue extends SnapDirections {
      */
     refresh?: boolean;
 }
-
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface PosGuideline {
+    /**
+     * guideline pos
+     */
+    pos: number;
+    /**
+     * class names to add to guideline
+     * @default ""
+     */
+    className?: string;
+}
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ * @extends Moveable.Snappable.SnapDirections
+ */
+export interface ElementGuidelineValue extends SnapDirections {
+    /**
+     * guideline element
+     */
+    element: Element;
+    /**
+     * class names to add to guideline
+     * @default ""
+     */
+    className?: string;
+    /**
+     * Whether to update the element size at every render
+     * @default false
+     */
+    refresh?: boolean;
+}
 export interface SnappableEvents {
     onSnap: OnSnap;
 }

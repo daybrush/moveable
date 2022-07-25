@@ -3,7 +3,7 @@ import { isObject, throttle } from "@daybrush/utils";
 import { diff } from "@egjs/children-differ";
 import { minus } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
-import { SnapElementRect } from "src/react-moveable";
+import { PosGuideline, SnapElementRect } from "src/react-moveable";
 import {
     ElementGuidelineValue, MoveableClientRect, MoveableManagerInterface,
     SnapDirectionPoses,
@@ -234,8 +234,8 @@ export function getGapGuidelines(
     return gapGuidelines;
 }
 export function getDefaultGuidelines(
-    horizontalGuidelines: number[] | false,
-    verticalGuidelines: number[] | false,
+    horizontalGuidelines: Array<PosGuideline | number> | false,
+    verticalGuidelines: Array<PosGuideline | number> | false,
     width: number,
     height: number,
     clientLeft = 0,
@@ -252,20 +252,26 @@ export function getDefaultGuidelines(
     const snapWidth = width! + snapOffsetRight - snapOffsetLeft;
     const snapHeight = height! + snapOffsetBottom - snapOffsetTop;
 
-    horizontalGuidelines && horizontalGuidelines!.forEach(pos => {
+    horizontalGuidelines && horizontalGuidelines!.forEach(posInfo => {
+        const nextPosInfo = isObject(posInfo) ? posInfo : { pos: posInfo };
+
         guidelines.push({
             type: "horizontal", pos: [
                 snapOffsetLeft,
-                throttle(pos - clientTop + snapOffsetTop, 0.1),
+                throttle(nextPosInfo.pos - clientTop + snapOffsetTop, 0.1),
             ], size: snapWidth,
+            className: nextPosInfo.className,
         });
     });
-    verticalGuidelines && verticalGuidelines!.forEach(pos => {
+    verticalGuidelines && verticalGuidelines!.forEach(posInfo => {
+        const nextPosInfo = isObject(posInfo) ? posInfo : { pos: posInfo };
+
         guidelines.push({
             type: "vertical", pos: [
-                throttle(pos - clientLeft + snapOffsetLeft, 0.1),
+                throttle(nextPosInfo.pos - clientLeft + snapOffsetLeft, 0.1),
                 snapOffsetTop,
             ], size: snapHeight,
+            className: nextPosInfo.className,
         });
     });
     return guidelines;
