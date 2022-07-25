@@ -134,14 +134,17 @@ export function renderAroundControls(
 export function renderLine(
     React: Renderer,
     direction: string,
-    pos1: number[], pos2: number[],
+    pos1: number[],
+    pos2: number[],
     zoom: number,
-    key: number | string, ...classNames: string[],
+    key: number | string,
+    ...classNames: string[]
 ): any {
     const rad = getRad(pos1, pos2);
     const rotation = direction ? (throttle(rad / Math.PI * 180, 15)) % 180 : -1;
 
-    return <div key={`line${key}`} className={prefix("line", "direction", direction ? "edge" : "", direction, ...classNames)}
+    return <div key={`line${key}`}
+        className={prefix("line", "direction", direction ? "edge" : "", direction, ...classNames)}
         data-rotation={rotation}
         data-line-index={key}
         data-direction={direction} style={getLineStyle(pos1, pos2, zoom, rad)}></div>;

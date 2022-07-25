@@ -3252,10 +3252,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@scena/dragscroll@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@scena/dragscroll/-/dragscroll-1.1.1.tgz#43e57bcc0133d51e9927ba5dc0c41bbbb78bbc21"
-  integrity sha512-RnoGpQC0aJ5Z+glLzQAAAf1jmRac1yRuil4zi4HQ8GhzoxTqlgplAOGkFF/IRnUMK1uc5S6R/MEEybfyDGlEcQ==
+"@scena/dragscroll@^1.1.1", "@scena/dragscroll@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@scena/dragscroll/-/dragscroll-1.2.0.tgz#dd00cdc463423951e556de157610880e0ec936c5"
+  integrity sha512-npjR1nh5on74e6dh3mBviVAS3Kx9ZkUFkJdVVPfcrEGO1O9c3IB154d//cLXwiHwV7xMzsADmEMQZrrWwVlb8Q==
   dependencies:
     "@daybrush/utils" "1.6.0"
     "@scena/event-emitter" "^1.0.2"
