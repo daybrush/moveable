@@ -790,6 +790,10 @@ export interface OnBeforeScale extends OnEvent {
      */
     setFixedDirection: (startDirecition: number[]) => number[];
     /**
+     * fixedDirection set by rotateStart.
+     */
+    startFixedDirection: number[];
+    /**
      * Set target's scale to scaling.
      */
     setScale: (scale: number[]) => void;
@@ -900,6 +904,10 @@ export interface OnBeforeResize extends OnEvent {
      * If fixedDirection is set, the boundingWidth and boundingHeight values can be changed and can be reconfirmed as a return value.
      */
     setFixedDirection: (startDirecition: number[]) => number[];
+    /**
+     * fixedDirection set by resizeStart.
+     */
+    startFixedDirection: number[];
     /**
      * Set the bounding size to resizing.
      */

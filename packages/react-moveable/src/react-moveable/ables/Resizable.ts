@@ -195,6 +195,7 @@ export default {
         });
         const result = parentEvent || triggerEvent(moveable, "onResizeStart", params);
 
+        datas.startFixedDirection = datas.fixedDirection;
         if (result !== false) {
             datas.isResize = true;
             moveable.state.snapRenderInfo = {
@@ -313,6 +314,7 @@ export default {
             datas.setFixedDirection(datas.fixedDirection);
 
             triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
+                startFixedDirection: datas.startFixedDirection,
                 setFixedDirection(nextFixedDirection: number[]) {
                     datas.setFixedDirection(nextFixedDirection);
 
@@ -440,9 +442,13 @@ export default {
             setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false, "draggable"),
         ) as OnDrag;
         const transform = drag.transform;
+
+        const nextWidth = startWidth + distWidth;
+        const nextHeight = startHeight + distHeight;
+
         const params = fillParams<OnResize>(moveable, e, {
-            width: startWidth + distWidth,
-            height: startHeight + distHeight,
+            width: nextWidth,
+            height: nextHeight,
             offsetWidth: Math.round(boundingWidth),
             offsetHeight: Math.round(boundingHeight),
             startRatio: ratio,
@@ -455,8 +461,8 @@ export default {
             drag,
             ...fillAfterTransform({
                 style: {
-                    width: `${boundingWidth}px`,
-                    height: `${boundingHeight}px`,
+                    width: `${nextWidth}px`,
+                    height: `${nextHeight}px`,
                 },
                 transform,
             }, drag),

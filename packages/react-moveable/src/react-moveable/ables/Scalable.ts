@@ -141,6 +141,8 @@ export default {
         });
         const result = triggerEvent(moveable, "onScaleStart", params);
 
+        datas.startFixedDirection = datas.fixedDirection;
+
         if (result !== false) {
             datas.isScale = true;
             moveable.state.snapRenderInfo = {
@@ -233,6 +235,7 @@ export default {
 
                 return scale;
             },
+            startFixedDirection: datas.startFixedDirection,
             setScale(nextScale: number[]) {
                 scale = nextScale;
             },
