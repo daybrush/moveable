@@ -249,7 +249,7 @@ export default {
             isPinch,
             ...fillCSSObject({
                 transform: nextTransform,
-            }),
+            }, e),
         });
 
         !parentEvent && triggerEvent(moveable, "onDrag", params);

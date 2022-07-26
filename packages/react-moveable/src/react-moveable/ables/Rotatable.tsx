@@ -717,7 +717,7 @@ export default {
 
             if (resizeEvent) {
                 resize = resizeEvent;
-                transformEvent = fillAfterTransform(transformEvent, resizeEvent);
+                transformEvent = fillAfterTransform(transformEvent, resizeEvent, e);
             }
         }
 

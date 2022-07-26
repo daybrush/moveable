@@ -45,9 +45,12 @@ export default {
 
         e.datas.startTransforms = isIdentityMatrix(startTransform, is3d) ? [] : splitSpace(startTransform);
     },
-    resetTransform(e: any) {
-        e.datas.nextTransforms = e.datas.startTransforms;
-        e.datas.nextTransformAppendedIndexes = [];
+    resetStyle(e: any) {
+        const datas = e.datas;
+
+        datas.nextStyle = {};
+        datas.nextTransforms = e.datas.startTransforms;
+        datas.nextTransformAppendedIndexes = [];
     },
     fillDragStartParams(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         return fillParams<OnBeforeRenderStart>(moveable, e, {
@@ -68,8 +71,10 @@ export default {
         triggerEvent(moveable, `onBeforeRenderStart`, this.fillDragStartParams(moveable, e));
     },
     drag(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
-        this.resetTransform(e);
+        this.resetStyle(e);
+        const datas = e.datas;
 
+        datas.nextStyle = {};
         triggerEvent(moveable, `onBeforeRender`, fillParams<OnBeforeRender>(moveable, e, {
             isPinch: !!e.isPinch,
         }));
@@ -106,10 +111,12 @@ export default {
         const params = events.map((childEvent, i) => {
             const childMoveable = moveables[i];
 
-            this.resetTransform(childEvent);
+            this.resetStyle(childEvent);
+            const datas = e.datas;
+
+            datas.nextStyle = {};
             return this.fillDragParams(childMoveable, childEvent);
         });
-
         triggerEvent(moveable, `onBeforeRenderGroup`, fillParams<OnBeforeRenderGroup>(moveable, e, {
             isPinch: !!e.isPinch,
             targets: moveable.props.targets,

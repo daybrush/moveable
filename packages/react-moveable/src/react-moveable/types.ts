@@ -1498,10 +1498,11 @@ export interface OnRenderStart extends OnEvent {
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
+ * @extends Moveable.CSSObject
  * @property - a target's next transform string value.
  * @property - Whether or not it is being pinched.
  */
-export interface OnRender extends OnEvent {
+export interface OnRender extends OnEvent, CSSObject {
     transform: string;
     isPinch: boolean;
 }

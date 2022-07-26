@@ -465,7 +465,7 @@ export default {
                     height: `${nextHeight}px`,
                 },
                 transform,
-            }, drag),
+            }, drag, e),
         });
         !parentEvent && triggerEvent(moveable, "onResize", params);
         return params;

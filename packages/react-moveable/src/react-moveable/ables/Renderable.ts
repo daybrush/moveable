@@ -1,11 +1,11 @@
-import { getNextTransformText } from "../gesto/GestoUtils";
+import { getNextStyle, getNextTransformText } from "../gesto/GestoUtils";
 import { fillChildEvents } from "../groupUtils";
 import {
     MoveableManagerInterface, RenderableProps, OnRenderStart, OnRender,
     OnRenderEnd, MoveableGroupInterface,
     OnRenderGroupStart, OnRenderGroup, OnRenderGroupEnd,
 } from "../types";
-import { triggerEvent, fillParams } from "../utils";
+import { triggerEvent, fillParams, fillCSSObject } from "../utils";
 
 export default {
     name: "renderable",
@@ -55,8 +55,9 @@ export default {
             isPinch: !!e.isPinch,
             targets: moveable.props.targets,
             transform: getNextTransformText(e),
+            ...fillCSSObject(getNextStyle(e)),
             events: params,
-        }));
+        },));
     },
     dragGroupEnd(moveable: MoveableGroupInterface<RenderableProps>, e: any) {
         const events = fillChildEvents(moveable, "beforeRenderable", e);
@@ -99,6 +100,7 @@ export default {
         return fillParams<OnRender>(moveable, e, {
             isPinch: !!e.isPinch,
             transform: getNextTransformText(e),
+            ...fillCSSObject(getNextStyle(e)),
         });
     },
     fillDragEndParams(moveable: MoveableManagerInterface<RenderableProps>, e: any) {

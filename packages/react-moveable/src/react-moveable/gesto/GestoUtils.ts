@@ -366,7 +366,7 @@ export function scaleMatrix(
 }
 
 export function fillTransformStartEvent(e: any): OnTransformStartEvent {
-    const originalDatas = e.originalDatas.beforeRenderable;
+    const originalDatas = getBeforeRenderableDatas(e);
     return {
         setTransform: (transform: string | string[], index = -1) => {
             originalDatas.startTransforms = isArray(transform) ? transform : splitSpace(transform);
@@ -378,13 +378,13 @@ export function fillTransformStartEvent(e: any): OnTransformStartEvent {
     };
 }
 export function setDefaultTransformIndex(e: any, property: string) {
-    const originalDatas = e.originalDatas.beforeRenderable;
+    const originalDatas = getBeforeRenderableDatas(e);
     const startTransforms = originalDatas.startTransforms;
 
     setTransformIndex(e, findIndex<string>(startTransforms, func => func.indexOf(`${property}(`) === 0));
 }
 export function setTransformIndex(e: any, index: number) {
-    const originalDatas = e.originalDatas.beforeRenderable;
+    const originalDatas = getBeforeRenderableDatas(e);
     const datas = e.datas;
 
     datas.transformIndex = index;
@@ -404,10 +404,13 @@ export function fillOriginalTransform(
     e: any,
     transform: string,
 ) {
-    const originalDatas = e.originalDatas.beforeRenderable;
+    const originalDatas = getBeforeRenderableDatas(e);
 
     originalDatas.nextTransforms = splitSpace(transform);
     // originalDatas.nextTargetMatrix = parseMat(transform);
+}
+export function getBeforeRenderableDatas(e: any) {
+    return e.originalDatas.beforeRenderable;
 }
 export function getNextTransforms(e: any) {
     const {
@@ -421,6 +424,11 @@ export function getNextTransforms(e: any) {
 export function getNextTransformText(e: any) {
     return getNextTransforms(e).join(" ");
 }
+
+export function getNextStyle(e: any) {
+    return getBeforeRenderableDatas(e).nextStyle;
+}
+
 export function fillTransformEvent(
     moveable: MoveableManagerInterface<DraggableProps>,
     nextTransform: string,
@@ -441,7 +449,7 @@ export function fillTransformEvent(
         drag: drag as OnDrag,
         ...fillCSSObject({
             transform: afterTransform,
-        }),
+        }, e),
         afterTransform,
     };
 }

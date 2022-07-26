@@ -23,7 +23,7 @@ import {
     ElementSizes, MoveablePosition, TransformObject,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
-import { getDragDist } from "./gesto/GestoUtils";
+import { getBeforeRenderableDatas, getDragDist } from "./gesto/GestoUtils";
 
 export function round(num: number) {
     return Math.round(num);
@@ -1008,23 +1008,35 @@ export function getAbsolutePosesByState({
 }) {
     return getAbsolutePoses([pos1, pos2, pos3, pos4], [left, top]);
 }
+
 export function roundSign(num: number) {
     return Math.round(num % 1 === -0.5 ? num - 1 : num);
 }
+
 export function unset(self: any, name: string) {
     self[name]?.unset();
     self[name] = null;
 }
 
-export function fillCSSObject(style: Record<string, any>) {
+export function fillCSSObject(style: Record<string, any>, resolvedEvent?: any) {
+    if (resolvedEvent) {
+        const originalDatas = getBeforeRenderableDatas(resolvedEvent);
+
+        originalDatas.nextStyle = {
+            ...originalDatas.nextStyle,
+            ...style,
+        };
+    }
     return {
         style,
         cssText: getKeys(style).map(name => `${name}: ${style[name]};`).join(""),
     };
 }
+
 export function fillAfterTransform(
     prevEvent: { style: Record<string, string>, transform: string },
     nextEvent: { style: Record<string, string>, transform: string, afterTransform?: string },
+    resolvedEvent?: any
 ): TransformObject {
     const afterTransform = nextEvent.afterTransform || nextEvent.transform;
 
@@ -1033,12 +1045,12 @@ export function fillAfterTransform(
             ...prevEvent.style,
             ...nextEvent.style,
             transform: afterTransform,
-        }),
+        }, resolvedEvent),
         afterTransform,
         transform: prevEvent.transform,
     };
-
 }
+
 export function fillParams<T extends IObject<any>>(
     moveable: any,
     e: any,
