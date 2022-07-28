@@ -21,6 +21,7 @@ export default {
         hideDefaultLines: Boolean,
         props: Object,
         flushSync: Function,
+        stopPropagation: Boolean,
     } as const,
     events: {} as const,
 };

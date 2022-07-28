@@ -220,7 +220,7 @@ export function getAbleGesto(
 
                 if (!result) {
                     e.stop();
-                } else if (eventType === "Start" && isControl) {
+                } else if (moveable.props.stopPropagation || (eventType === "Start" && isControl)) {
                     e?.inputEvent?.stopPropagation();
                 }
             });

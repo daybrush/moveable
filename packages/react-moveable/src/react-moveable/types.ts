@@ -141,6 +141,11 @@ export interface DefaultOptions {
      */
     hideDefaultLines?: boolean;
     /**
+     * Whether to prevent bubbling of events like mousedown, touchstart, etc.
+     * @default false
+     */
+    stopPropagation?: boolean;
+    /**
      * You can use props in object format or custom props.
      * @default empty object
      */
