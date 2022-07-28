@@ -37,3 +37,7 @@ group.add("Check element guidelines accuracy when zoom is large", {
     app: require("./ReactLargeZoomElementGuidelinesApp").default,
     text: require("!!raw-loader!./ReactLargeZoomElementGuidelinesApp").default,
 });
+group.add("Test flex element", {
+    app: require("./ReactFlexApp").default,
+    text: require("!!raw-loader!./ReactFlexApp").default,
+});

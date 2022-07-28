@@ -815,7 +815,6 @@ export function getSize(
             contentHeight = offsetHeight;
             clientWidth = offsetWidth;
             clientHeight = offsetHeight;
-
         } else {
             const targetStyle = target.style;
             const boxSizing = style!.boxSizing === "border-box";
@@ -835,8 +834,8 @@ export function getSize(
             const horizontalOffset = horizontalPadding + horizontalBorder;
             const verticalOffset = verticalPadding + verticalBorder;
 
-            minWidth = Math.max(horizontalPadding, convertUnitSize(style!.minWidth, 0));
-            minHeight = Math.max(verticalPadding, convertUnitSize(style!.minHeight, 0));
+            minWidth = Math.max(horizontalPadding, convertUnitSize(style!.minWidth, 0) || 0);
+            minHeight = Math.max(verticalPadding, convertUnitSize(style!.minHeight, 0) || 0);
             maxWidth = convertUnitSize(style!.maxWidth, 0);
             maxHeight = convertUnitSize(style!.maxHeight, 0);
 
@@ -844,19 +843,19 @@ export function getSize(
                 maxWidth = Infinity;
                 maxHeight = Infinity;
             }
-            const inlineWidth = convertUnitSize(targetStyle.width, 0);
-            const inlineHeight = convertUnitSize(targetStyle.height, 0);
-            const computedWidth = parseFloat(style!.width);
-            const computedHeight = parseFloat(style!.height);
+            const inlineCSSWidth = convertUnitSize(targetStyle.width, 0) || 0;
+            const inlineCSSHeight = convertUnitSize(targetStyle.height, 0) || 0;
+            const computedWidth = parseFloat(style!.width) || 0;
+            const computedHeight = parseFloat(style!.height) || 0;
 
             cssWidth = parseFloat(style!.width);
             cssHeight = parseFloat(style!.height);
 
-            contentWidth = Math.abs(computedWidth - inlineWidth) < 1
-                ? between(minWidth, inlineWidth || parseFloat(style!.width), maxWidth)
+            contentWidth = Math.abs(computedWidth - inlineCSSWidth) < 1
+                ? between(minWidth, inlineCSSWidth || cssWidth, maxWidth)
                 : computedWidth;
-            contentHeight = Math.abs(computedHeight - inlineHeight) < 1
-                ? between(minHeight, inlineHeight || parseFloat(style!.height), maxHeight)
+            contentHeight = Math.abs(computedHeight - inlineCSSHeight) < 1
+                ? between(minHeight, inlineCSSHeight || cssHeight, maxHeight)
                 : computedHeight;
 
             offsetWidth = contentWidth;
