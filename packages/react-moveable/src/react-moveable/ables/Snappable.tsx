@@ -60,7 +60,6 @@ import {
     renderGapGuidelines,
 } from "./snappable/render";
 import {
-    getTotalGuidelines,
     hasGuidelines,
 } from "./snappable/utils";
 import {
@@ -68,6 +67,7 @@ import {
     checkMoveableSnapBounds,
     getSnapBoundInfo,
 } from "./snappable/snapBounds";
+import { getTotalGuidelines } from "./snappable/getTotalGuidelines";
 
 
 export interface SnapPoses {

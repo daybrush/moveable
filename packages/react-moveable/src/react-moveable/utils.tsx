@@ -1346,6 +1346,9 @@ export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
     if (!target) {
         return null;
     }
+    if (target instanceof Element) {
+        return target;
+    }
     if (isString(target)) {
         if (isSelector) {
             return document.querySelector(target);

@@ -53,6 +53,7 @@ export default function App(props: Record<string, any>) {
                     snapDirections={props.snapDirections}
                     elementSnapDirections={props.elementSnapDirections}
                     snapThreshold={props.snapThreshold}
+                    maxSnapElementGuidelineDistance={props.maxSnapElementGuidelineDistance}
                     elementGuidelines={[".element1", ".element2", ".element3"]}
                     onBeforeRenderStart={e => {
                         e.setTransform(e.target.style.transform);

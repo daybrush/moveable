@@ -22,7 +22,7 @@ import {
 import { renderLine } from "../renderDirections";
 import { checkSnapBoundPriority } from "./snappable/snap";
 import { checkSnapBounds } from "./snappable/snapBounds";
-import { getDefaultGuidelines } from "./snappable/utils";
+import { getDefaultGuidelines } from "./snappable/getTotalGuidelines";
 
 
 const CLIP_DIRECTIONS = [

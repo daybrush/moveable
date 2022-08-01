@@ -227,6 +227,11 @@ export const DEFAULT_SNAPPABLE_ELEMENTS_CONTROLS = {
         description: makeLink("Snappable", "snapDigit"),
         defaultValue: 0,
     }),
+    maxSnapElementGuidelineDistance: makeArgType({
+        type: "number",
+        description: makeLink("Snappable", "maxSnapElementGuidelineDistance"),
+        defaultValue: Infinity,
+    }),
 };
 export const DEFAULT_SNAP_GRID_CONTROLS = {
     snappable: makeArgType({

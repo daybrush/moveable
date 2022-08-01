@@ -6,7 +6,6 @@ export default function App() {
 
     return (
         <div className="root">
-            <style dangerouslySetInnerHTML={{ __html: `.red { background: red!important;}` }} />
             <div className="container" style={{
                 width: "500px",
                 height: "500px",

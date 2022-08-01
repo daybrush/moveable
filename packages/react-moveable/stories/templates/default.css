@@ -72,3 +72,40 @@ html, body {
     top: 50px;
     left: 50px
 }
+
+
+/* pos guidelines */
+.moveable-normal.red {
+    background: red!important;
+}
+/* gap guidelines */
+.moveable-gap.red {
+    background: red!important;
+}
+/* When snapped to an element in elementGuidelines */
+.moveable-bold.red {
+    background: red!important;
+}
+/* A dashed line between target and element */
+.moveable-dashed.red {
+    border-top-color: red!important;
+    border-left-color: red!important;
+}
+
+/* pos guidelines */
+.moveable-normal.green {
+    background: green!important;
+}
+/* gap guidelines */
+.moveable-gap.green {
+    background: green!important;
+}
+/* When snapped to an element in elementGuidelines */
+.moveable-bold.green {
+    background: green!important;
+}
+/* A dashed line between target and element */
+.moveable-dashed.green {
+    border-top-color: green!important;
+    border-left-color: green!important;
+}

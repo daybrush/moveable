@@ -103,7 +103,7 @@ export function renderGuidelines(
         return renderInnerGuideline(
             {
                 key: `${type}-default-guideline-${i}`,
-                classNames: element ? [prefix("bold"), className] : [className],
+                classNames: element ? [prefix("bold"), className] : [prefix("normal"), className],
                 direction: type,
                 posValue: renderPos,
                 sizeValue: size,
@@ -377,7 +377,7 @@ export function renderGapGuidelines(
         const targetSideEnd = targetRect[sideNames.end]!;
 
 
-        nextGuidelines.forEach(({ gap, gapRects, className }) => {
+        nextGuidelines.forEach(({ gap, gapRects }) => {
             const sideStartPos = Math.max(
                 targetSideStart,
                 ...gapRects!.map(({ rect }) => rect[sideNames.start]!),
@@ -391,7 +391,7 @@ export function renderGapGuidelines(
             if (sideStartPos === sideEndPos || sideCenterPos === (targetSideStart + targetSideEnd)/ 2) {
                 return;
             }
-            gapRects!.forEach(({ rect }) => {
+            gapRects!.forEach(({ rect, className }) => {
                 const renderPos = [targetPos[0], targetPos[1]];
 
                 if (rect[mainNames.end]! < targetStart) {

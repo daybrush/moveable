@@ -2143,7 +2143,7 @@ export interface SnappableOptions {
      * Add guidelines for the element.
      * @default []
      */
-    elementGuidelines?: Array<ElementGuidelineValue | MoveableRefType<Element>>;
+    elementGuidelines?: Array<ElementGuidelineValueOption | MoveableRefType<Element>>;
     /**
      * Maximum distance to which element guidelines can be snapped.
      * @default Infinity
@@ -2212,6 +2212,47 @@ export interface ElementGuidelineValue extends SnapDirections {
      * guideline element
      */
     element: Element;
+    /**
+     * class names to add to guideline
+     * @default ""
+     * @example
+     *
+     * ```css
+     * .moveable-gap.red {
+     *   background: red!important;
+     * }
+     * ```
+     * ```css
+     * .moveable-bold.red {
+     *   background: red!important;
+     * }
+     * ```
+     * ```css
+     * .moveable-dashed.red {
+     *   border-top-color: red!important;
+     * }
+     * ```
+     */
+    className?: string;
+    /**
+     * Whether to update the element size at every render
+     * @default false
+     */
+    refresh?: boolean;
+}
+
+
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ * @extends Moveable.Snappable.SnapDirections
+ */
+export interface ElementGuidelineValueOption extends SnapDirections {
+    /**
+     * guideline element
+     */
+    element: MoveableRefType<Element>;
     /**
      * class names to add to guideline
      * @default ""
