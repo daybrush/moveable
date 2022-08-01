@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.2](https://github.com/daybrush/moveable/compare/0.33.0...0.34.2) (2022-08-01)
+### :sparkles: Packages
+* `lit-moveable` 0.11.2
+* `moveable` 0.34.2
+* `preact-moveable` 0.36.2
+* `react-compat-moveable` 0.22.2
+* `react-moveable` 0.37.2
+* `svelte-moveable` 0.26.2
+* `vue-moveable` 2.0.0-beta.30
+* `vue3-moveable` 0.9.2
+* `ngx-moveable` 0.31.2
+
+
+### :rocket: New Features
+
+* `react-moveable`, `react-compat-moveable`
+    * add preventClickEventOnDrag prop ([281b2b7](https://github.com/daybrush/moveable/commit/281b2b7aa5dba3bdc4c3f478e115a0de8fd2359e))
+* `react-moveable`
+    * add CSSObject on render ([e2f462a](https://github.com/daybrush/moveable/commit/e2f462aecd10d076ef874a6ba2af97a2e59841d1))
+    * add maxSnapElementGuidelineDistance #707 ([171b027](https://github.com/daybrush/moveable/commit/171b02708e6343656655cf403744e1a0fbfa2324))
+    * add startFixedDirection property on before event ([c838c9c](https://github.com/daybrush/moveable/commit/c838c9cc13305eb10ba85b75bcfcd7daa52047f1))
+    * add stopPropagation prop ([3ce54e0](https://github.com/daybrush/moveable/commit/3ce54e09972962f69f2b697dc52e0b507b2aad9a))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix cssText, style on drag ([aed807e](https://github.com/daybrush/moveable/commit/aed807ef7a04b25101cef8fbad38d94a1e7482ff))
+    * fix drag undefined on Rotate Group #710 ([db80e7d](https://github.com/daybrush/moveable/commit/db80e7d92bee3be684c74a9cb20bc62680f4e0a4))
+    * fix getElementInfo's NaN type value #709 ([e99d94f](https://github.com/daybrush/moveable/commit/e99d94f5c3302fd3c851aa942e99daa75346479c))
+    * fix rotate position #710 ([d269d1f](https://github.com/daybrush/moveable/commit/d269d1f3c095a0930359597d894d3cdb631b3ee2))
+
+
+### :memo: Documentation
+
+* `react-moveable`, `moveable`
+    * fix README ([5ded1c1](https://github.com/daybrush/moveable/commit/5ded1c19b77fe2c3974bcf1f1ac1356d2924991d))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([0076577](https://github.com/daybrush/moveable/commit/00765776ba92b5ca691c1aefd1c20687952373d9))
+    * publish packages ([ffa0c18](https://github.com/daybrush/moveable/commit/ffa0c18bb6970d6f8d88a49db23b11620e704618))
+    * publish packages ([958ebac](https://github.com/daybrush/moveable/commit/958ebace6032eafb17f1ce366394b440671b45b3))
+
+
+
 ## [0.33.0](https://github.com/daybrush/moveable/compare/0.32.0...0.33.0) (2022-07-25)
 ### :sparkles: Packages
 * `lit-moveable` 0.10.0
