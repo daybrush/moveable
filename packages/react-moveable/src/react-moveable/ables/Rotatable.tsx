@@ -41,6 +41,7 @@ import {
 import { DirectionControlInfo, renderAroundControls, renderDirectionControlsByInfos } from "../renderDirections";
 import { DIRECTIONS, DIRECTION_REGION_TO_DIRECTION } from "../consts";
 import Resizable from "./Resizable";
+import Draggable from "./Draggable";
 
 /**
  * @namespace Rotatable
@@ -539,23 +540,19 @@ export default {
             const resolveAble = datas.resolveAble;
 
             if  (resolveAble === "resizable") {
-                const resizable = moveable.getAble<typeof Resizable>("resizable");
-
-                resizeStart = resizable ? resizable.dragControlStart(moveable, {
+                resizeStart = Resizable.dragControlStart(moveable, {
                     ...(new CustomGesto("resizable").dragStart([0, 0], e)),
                     parentDirection: datas.controlDirection,
                     parentFixedDirection: datas.fixedDirection,
-                }) : false;
+                });
             }
         }
 
         if (!resizeStart) {
-            const draggable = moveable.getAble("draggable");
-
-            dragStart = draggable ? draggable.dragStart!(
+            dragStart = Draggable.dragStart!(
                 moveable,
                 new CustomGesto().dragStart([0, 0], e),
-            ) : false;
+            );
         }
 
         setFixedDirection(getOriginDirection(moveable));
@@ -697,6 +694,7 @@ export default {
             isPinch,
             e,
         );
+
         let transformEvent: TransformObject = dragEvent;
         const parentDistance = getDist(
             [nextClientX, nextClientY],
@@ -706,7 +704,7 @@ export default {
         let resize: OnResize | undefined = undefined;
 
         if (datas.resolveAble === "resizable") {
-            const resizeEvent =  moveable.getAble<typeof Resizable>("resizable")!.dragControl(
+            const resizeEvent = Resizable.dragControl(
                 moveable,
                 {
                     ...setCustomDrag(e, moveable.state, [e.deltaX, e.deltaY], !!isPinch, false, "resizable"),
