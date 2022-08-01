@@ -3,13 +3,12 @@ import {
     ClickableProps, OnClick, OnClickGroup,
 } from "../types";
 import { triggerEvent, fillParams } from "../utils";
-import { addEvent, findIndex, removeEvent, requestAnimationFrame } from "@daybrush/utils";
+import { findIndex } from "@daybrush/utils";
 import { makeAble } from "./AbleManager";
 
 export default makeAble("clickable", {
     props: {
         clickable: Boolean,
-        preventClickDefault: Boolean,
     },
     events: {
         onClick: "click",
@@ -17,30 +16,23 @@ export default makeAble("clickable", {
     } as const,
     always: true,
     dragRelation: "weak",
-    dragStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
-        if (!e.isRequest) {
-            addEvent(window, "click", moveable.onPreventClick, true);
-        }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    dragStart() {
+        return;
     },
-    dragControlStart(moveable: MoveableManagerInterface, e: any) {
-        this.dragStart(moveable, e);
+    dragControlStart() {
+        this.dragStart();
     },
     dragGroupStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
-        this.dragStart(moveable, e);
         e.datas.inputTarget = e.inputEvent && e.inputEvent.target;
     },
     dragEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
-        this.endEvent(moveable);
         const target = moveable.state.target!;
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
-
         const isMoveableElement = moveable.isMoveableElement(inputTarget);
         const containsElement = !isMoveableElement && moveable.controlBox.getElement().contains(inputTarget);
 
-        if ((!moveable.props.preventClickDefault && !e.isDrag) || containsElement) {
-            this.unset(moveable);
-        }
         if (
             !inputEvent || !inputTarget || e.isDrag
             || moveable.isMoveableElement(inputTarget)
@@ -59,7 +51,6 @@ export default makeAble("clickable", {
         }));
     },
     dragGroupEnd(moveable: MoveableGroupInterface<ClickableProps>, e: any) {
-        this.endEvent(moveable);
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
 
@@ -95,14 +86,6 @@ export default makeAble("clickable", {
     },
     dragGroupControlEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
         this.dragEnd(moveable, e);
-    },
-    endEvent(moveable: MoveableManagerInterface<ClickableProps>) {
-        requestAnimationFrame(() => {
-            this.unset(moveable);
-        });
-    },
-    unset(moveable: MoveableManagerInterface<ClickableProps>) {
-        removeEvent(window, "click", moveable.onPreventClick, true);
     },
 });
 

@@ -22,6 +22,8 @@ export default {
         props: Object,
         flushSync: Function,
         stopPropagation: Boolean,
+        preventClickEventOnDrag: Boolean,
+        preventClickDefault: Boolean,
     } as const,
     events: {} as const,
 };

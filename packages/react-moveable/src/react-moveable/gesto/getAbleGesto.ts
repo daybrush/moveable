@@ -1,7 +1,7 @@
 import { Able, MoveableManagerInterface, MoveableGroupInterface } from "../types";
 import { hasClass, IObject } from "@daybrush/utils";
 import { convertDragDist, defaultSync } from "../utils";
-import Gesto from "gesto";
+import Gesto, { GestoOptions } from "gesto";
 import BeforeRenderable from "../ables/BeforeRenderable";
 import Renderable from "../ables/Renderable";
 
@@ -191,17 +191,22 @@ export function getAbleGesto(
     eventAffix: string,
     conditionFunctions: IObject<any> = {},
 ) {
+    const isTargetAbles = ableType === "targetAbles";
     const {
         pinchOutside,
         pinchThreshold,
+        preventClickEventOnDrag,
+        preventClickDefault,
     } = moveable.props;
-    const options: IObject<any> = {
+    const options: GestoOptions = {
         preventDefault: false,
         preventRightClick: true,
         preventWheelClick: true,
         container: window,
         pinchThreshold,
         pinchOutside,
+        preventClickEventOnDrag: isTargetAbles ? preventClickEventOnDrag : false,
+        preventClickEventOnDragStart: isTargetAbles ? preventClickDefault : false,
     };
     const gesto = new Gesto(target!, options);
 

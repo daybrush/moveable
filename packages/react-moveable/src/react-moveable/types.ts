@@ -146,6 +146,16 @@ export interface DefaultOptions {
      */
     stopPropagation?: boolean;
     /**
+     * Prevent click event on drag. (mousemove, touchmove)
+     * @default true
+     */
+    preventClickEventOnDrag?: boolean;
+    /**
+     * Prevent click event on dragStart. (mousedown, touchstart)
+     * @default false
+     */
+    preventClickDefault?: boolean;
+    /**
      * You can use props in object format or custom props.
      * @default empty object
      */
@@ -2135,6 +2145,11 @@ export interface SnappableOptions {
      */
     elementGuidelines?: Array<ElementGuidelineValue | MoveableRefType<Element>>;
     /**
+     * Maximum distance to which element guidelines can be snapped.
+     * @default Infinity
+     */
+    maxSnapElementGuidelineDistance?: number;
+    /**
      * You can set up boundaries.
      * @default null
      */
@@ -2386,16 +2401,9 @@ export interface ArrayFormat<T = any> {
 export interface ClickableOptions {
     /**
      * Whether to trigger the moveable's click event.
-     * If true, the event is not propagated to the target's parent element.
      * @default true
      */
     clickable?: boolean;
-    /**
-     * Whether to prevents the default behavior of native `click` events.
-     * If true, call preventDefault on click event.
-     * @default false
-     */
-    preventClickDefault?: boolean;
 }
 /**
  * @memberof Moveable.Clickable

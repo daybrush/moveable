@@ -15,6 +15,7 @@ import {
 } from "../types";
 import { setCustomDrag } from "./CustomGesto";
 import { parse, parseMat } from "css-to-mat";
+import { Draggable } from "../index.esm";
 
 export function calculatePointerDist(moveable: MoveableManagerInterface, e: any) {
     const { clientX, clientY, datas } = e;
@@ -438,8 +439,7 @@ export function fillTransformEvent(
 ): OnTransformEvent {
     fillOriginalTransform(e, nextTransform);
 
-    const draggable = moveable.getAble("draggable");
-    const drag = draggable && draggable.drag!(
+    const drag = Draggable.drag!(
         moveable,
         setCustomDrag(e, moveable.state, delta, isPinch, false),
     ) as OnDrag;

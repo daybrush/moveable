@@ -63,6 +63,9 @@ export default class MoveableManager<T = {}>
         cssStyled: null,
         customStyledMap: {},
         props: {},
+        stopPropagation: false,
+        preventClickDefault: false,
+        preventClickEventOnDrag: true,
         flushSync: defaultSync,
     };
     public state: MoveableManagerState = {

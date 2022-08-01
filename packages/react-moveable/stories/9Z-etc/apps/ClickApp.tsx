@@ -18,6 +18,7 @@ export default function App(props: Record<string, any>) {
                     target={targetRef}
                     resizable={true}
                     preventClickDefault={true}
+                    draggable={true}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}
