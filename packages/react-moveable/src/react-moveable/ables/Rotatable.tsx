@@ -54,12 +54,14 @@ function setRotateStartInfo(
     datas: IObject<any>, clientX: number, clientY: number,
     rect: MoveableClientRect,
 ) {
+    const groupable = moveable.props.groupable;
     const state = moveable.state;
     const n = state.is3d ? 4 : 3;
     const origin = datas.origin;
     const nextOrigin = calculatePosition(
         moveable.state.rootMatrix,
-        minus([origin[0], origin[1]], [state.left, state.top]),
+        // TO-DO #710
+        minus([origin[0], origin[1]], groupable ? [0, 0] : [state.left, state.top]),
         n,
     );
     const startAbsoluteOrigin = plus([rect.left, rect.top], nextOrigin);
