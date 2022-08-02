@@ -1,7 +1,7 @@
 const ts = require("typescript");
 const path = require("path");
 const { writeFileSync } = require("fs");
-const { PROPERTIES, EVENTS } = require("../dist/moveable.cjs");
+const { PROPERTIES, EVENTS } = require("../packages/moveable/dist/moveable.cjs");
 
 const staticConsts = {
   "ANGULAR_MOVEABLE_INPUTS": PROPERTIES,
