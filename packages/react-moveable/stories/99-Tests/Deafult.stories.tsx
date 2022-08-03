@@ -41,3 +41,7 @@ group.add("Test flex element", {
     app: require("./ReactFlexApp").default,
     text: require("!!raw-loader!./ReactFlexApp").default,
 });
+group.add("Test Container with will change", {
+    app: require("./ReactWillChangeApp").default,
+    text: require("!!raw-loader!./ReactWillChangeApp").default,
+});

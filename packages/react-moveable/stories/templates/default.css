@@ -14,6 +14,23 @@ html, body {
     position: relative;
     margin-top: 50px;
 }
+.will-change-container {
+    padding-left: 100px;
+    padding-top: 100px;
+    will-change: transform;
+}
+.will-change-target {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    background: #ee8;
+    color: #333;
+    font-weight: bold;
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
 .target {
     position: absolute;
     width: 100px;

@@ -143,9 +143,15 @@ export function getOffsetInfo(
         const style = getComputedStyle(target);
         const tagName = target.tagName.toLowerCase();
         const transform = getElementTransform(target as SVGElement, style);
+        const willChange = style.willChange;
         position = style.position!;
 
-        if (tagName === "svg" || position !== "static" || (transform && transform !== "none")) {
+        if (
+            tagName === "svg"
+            || position !== "static"
+            || (transform && transform !== "none")
+            || willChange === "transform"
+        ) {
             break;
         }
         const parentNode = target.parentNode;
