@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.26.3](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/compare/svelte-moveable@0.26.2...svelte-moveable@0.26.3) (2022-08-03)
+
+
+### :mega: Other
+
+* publish packages ([5468ff7](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/commit/5468ff763bfa3f30e637ce8f504af09152b22c5c))
+
+
+
 ## [0.26.2](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/compare/svelte-moveable@0.25.0...svelte-moveable@0.26.2) (2022-08-01)
 
 

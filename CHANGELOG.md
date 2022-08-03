@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.3](https://github.com/daybrush/moveable/compare/0.34.2...0.34.3) (2022-08-03)
+### :sparkles: Packages
+* `lit-moveable` 0.11.3
+* `moveable` 0.34.3
+* `preact-moveable` 0.36.3
+* `react-compat-moveable` 0.22.3
+* `react-moveable` 0.37.3
+* `svelte-moveable` 0.26.3
+* `vue-moveable` 2.0.0-beta.31
+* `vue3-moveable` 0.9.3
+* `ngx-moveable` 0.31.3
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `react-compat-moveable`
+    * fix click event by gesto update #713 ([3a3c762](https://github.com/daybrush/moveable/commit/3a3c762fc20cf682c3d8fda21f28244a3ecf36bd))
+* `react-moveable`
+    * fix offsetParent with willChange #711 ([cd1de86](https://github.com/daybrush/moveable/commit/cd1de864191fc39b04065ada89d6e600f02ad0a1))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([5468ff7](https://github.com/daybrush/moveable/commit/5468ff763bfa3f30e637ce8f504af09152b22c5c))
+* Other
+    * fix angular type script ([4f04200](https://github.com/daybrush/moveable/commit/4f042003a31ae6ff13936ab6e64cdfc8a91e3125))
+    * Update FUNDING.yml ([4cd7af1](https://github.com/daybrush/moveable/commit/4cd7af1096bbd23244b62db744fb6a92deb03165))
+
+
+
 ## [0.34.2](https://github.com/daybrush/moveable/compare/0.33.0...0.34.2) (2022-08-01)
 ### :sparkles: Packages
 * `lit-moveable` 0.11.2

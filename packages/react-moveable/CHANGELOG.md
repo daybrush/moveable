@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.37.3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.37.2...react-moveable@0.37.3) (2022-08-03)
+
+
+### :bug: Bug Fix
+
+* fix click event by gesto update #713 ([3a3c762](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3a3c762fc20cf682c3d8fda21f28244a3ecf36bd))
+* fix offsetParent with willChange #711 ([cd1de86](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/cd1de864191fc39b04065ada89d6e600f02ad0a1))
+
+
+### :mega: Other
+
+* publish packages ([5468ff7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5468ff763bfa3f30e637ce8f504af09152b22c5c))
+
+
+
 ## [0.37.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.36.0...react-moveable@0.37.2) (2022-08-01)
 
 
