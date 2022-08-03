@@ -7,7 +7,9 @@ export default function App(props: Record<string, any>) {
 
     return (
         <div className="root">
-            <div className="container" onClick={() => {
+            <div className="container" style={{
+                height: "100px",
+            }} onClick={() => {
                 console.log("Click");
             }} onMouseDown={() => {
                 console.log("MouseDown");
