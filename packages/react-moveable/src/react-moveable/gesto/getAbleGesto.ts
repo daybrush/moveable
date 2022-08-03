@@ -197,6 +197,7 @@ export function getAbleGesto(
         pinchThreshold,
         preventClickEventOnDrag,
         preventClickDefault,
+        checkInput,
     } = moveable.props;
     const options: GestoOptions = {
         preventDefault: false,
@@ -207,6 +208,7 @@ export function getAbleGesto(
         pinchOutside,
         preventClickEventOnDrag: isTargetAbles ? preventClickEventOnDrag : false,
         preventClickEventOnDragStart: isTargetAbles ? preventClickDefault : false,
+        checkInput: isTargetAbles ? checkInput : false,
     };
     const gesto = new Gesto(target!, options);
 
