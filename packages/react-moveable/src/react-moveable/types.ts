@@ -519,6 +519,11 @@ export interface OnEvent {
      * The mouse or touch input event that is invoking the moveable event
      */
     inputEvent: any;
+    /**
+     * Calling `stopDrag` in a drag-related event ends the drag.
+     */
+    stopDrag(): void;
+
 }
 /**
  * @typedef

@@ -45,3 +45,7 @@ group.add("Test Container with will change", {
     app: require("./ReactWillChangeApp").default,
     text: require("!!raw-loader!./ReactWillChangeApp").default,
 });
+group.add("Stop drag if target is select, input, textarea", {
+    app: require("./ReactStopDragApp").default,
+    text: require("!!raw-loader!./ReactStopDragApp").default,
+});

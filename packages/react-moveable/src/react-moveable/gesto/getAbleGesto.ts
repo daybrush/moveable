@@ -70,6 +70,12 @@ export function triggerAble(
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
     let resultCount = 0;
+
+    let isDragStop = false;
+    const stop = () => {
+        isDragStop = true;
+        e.stop?.();
+    };
     const results = eventAbles.filter((able: any) => {
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
@@ -81,6 +87,7 @@ export function triggerAble(
         if (nextDatas.isEventStart) {
             const result = able[eventName](moveable, {
                 ...e,
+                stop,
                 resultCount,
                 datas: nextDatas,
                 originalDatas: datas,
@@ -101,8 +108,9 @@ export function triggerAble(
     let isForceEnd = false;
 
     // end ables
-    if (isStart && eventAbles.length && !isUpdate) {
-        isForceEnd = eventAbles.filter(able => {
+    console.log(isDragStop);
+    if (isStart && (isDragStop || (eventAbles.length && !isUpdate))) {
+        isForceEnd = isDragStop || eventAbles.filter(able => {
             const ableName = able.name;
             const nextDatas = datas[ableName];
 
@@ -134,7 +142,7 @@ export function triggerAble(
             able.unset && able.unset(moveable);
         });
     }
-    if (isStart && !isRequest && isUpdate) {
+    if (isStart && !isForceEnd && !isRequest && isUpdate) {
         e?.preventDefault();
     }
     if (moveable.isUnmounted || isForceEnd) {
@@ -200,7 +208,7 @@ export function getAbleGesto(
         checkInput,
     } = moveable.props;
     const options: GestoOptions = {
-        preventDefault: false,
+        preventDefault: true,
         preventRightClick: true,
         preventWheelClick: true,
         container: window,

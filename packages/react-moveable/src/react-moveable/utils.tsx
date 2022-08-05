@@ -1076,6 +1076,9 @@ export function fillParams<T extends IObject<any>>(
         currentTarget: moveable,
         moveable,
         datas: datas.datas,
+        stopDrag() {
+            e.stop?.();
+        },
     } as any;
 
     if (!datas.isStartEvent) {
