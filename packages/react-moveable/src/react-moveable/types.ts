@@ -2673,7 +2673,6 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     getContainer(): HTMLElement | SVGElement;
     getRotation(): number;
     triggerEvent(name: string, params: IObject<any>, isManager?: boolean): any;
-    onPreventClick(e: any): void;
 }
 export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {
     moveables: MoveableManagerInterface[];
@@ -2695,6 +2694,7 @@ export interface MoveableInterface {
     isDragging(): boolean;
     hitTest(el: Element | HitRect): number;
     setState(state: any, callback?: () => any): any;
+    waitToChangeTarget(): Promise<void>;
     forceUpdate(callback?: () => any): any;
 }
 

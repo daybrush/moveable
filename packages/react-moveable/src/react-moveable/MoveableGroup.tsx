@@ -110,6 +110,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public transformOrigin = "50% 50%";
 
     public checkUpdate() {
+        this._isPropTargetChanged = false;
         this.updateAbles();
     }
 
@@ -240,10 +241,13 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             state.container = props.container;
         }
         const { added, changed, removed } = this.differ.update(props.targets!);
+    
+        const isTargetChanged = added.length || removed.length;
 
-        if (isContainerChanged || added.length || changed.length || removed.length) {
+        if (isContainerChanged || isTargetChanged || changed.length) {
             this.updateRect();
         }
+        this._isPropTargetChanged = !!isTargetChanged;
     }
     protected _updateObserver() {}
 }

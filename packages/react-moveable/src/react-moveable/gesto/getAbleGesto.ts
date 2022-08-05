@@ -108,7 +108,6 @@ export function triggerAble(
     let isForceEnd = false;
 
     // end ables
-    console.log(isDragStop);
     if (isStart && (isDragStop || (eventAbles.length && !isUpdate))) {
         isForceEnd = isDragStop || eventAbles.filter(able => {
             const ableName = able.name;

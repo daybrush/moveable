@@ -94,6 +94,8 @@ export default class MoveableManager<T = {}>
     protected _emitter: EventEmitter = new EventEmitter();
     protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _prevDragArea = false;
+    protected _onChangetarget: (() => void) | null = null;
+    protected _isPropTargetChanged = false;
 
     private _observer: ResizeObserver | null = null;
     private _observerId = 0;
@@ -135,7 +137,7 @@ export default class MoveableManager<T = {}>
                 className={`${prefix("control-box", direction === -1
                     ? "reverse" : "", isDragging ? "dragging" : "")} ${className}`}
                 {...ableAttributes}
-                onClick={this.onPreventClick}
+                onClick={this._onPreventClick}
                 portalContainer={portalContainer}
                 style={{
                     "position": hasFixed ? "fixed" : "absolute",
@@ -171,6 +173,10 @@ export default class MoveableManager<T = {}>
         this._updateTargets();
         this.updateCheckInput();
         this._updateObserver(prevProps);
+
+        if (this._isPropTargetChanged) {
+            this._onChangetarget?.();
+        }
     }
     public componentWillUnmount() {
         this.isUnmounted = true;
@@ -579,6 +585,7 @@ export default class MoveableManager<T = {}>
         ];
     }
     public checkUpdate() {
+        this._isPropTargetChanged = false;
         const { target, container, parentMoveable } = this.props;
         const {
             target: stateTarget,
@@ -590,7 +597,8 @@ export default class MoveableManager<T = {}>
         }
         this.updateAbles();
 
-        const isChanged = !equals(stateTarget, target) || !equals(stateContainer, container);
+        const isTargetChanged = !equals(stateTarget, target);
+        const isChanged = isTargetChanged || !equals(stateContainer, container);
 
         if (!isChanged) {
             return;
@@ -605,6 +613,34 @@ export default class MoveableManager<T = {}>
         if (!parentMoveable && moveableContainer) {
             this.updateRect("End", false, false);
         }
+        this._isPropTargetChanged = isTargetChanged;
+    }
+    /**
+     * User changes target and waits for target to change.
+     * @method Moveable#waitToChangeTarget
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.querySelector(".target").addEventListener("mousedown", e => {
+     *   moveable.waitToChangeTarget().then(() => {
+     *      moveable.dragStart(e.currentTarget);
+     *   });
+     *   moveable.target = e.currentTarget;
+     * });
+     */
+    public waitToChangeTarget(): Promise<void> {
+        let resolvePromise: () => void;
+
+        this._onChangetarget = () => {
+            this._onChangetarget = null;
+            resolvePromise();
+        };
+
+        return new Promise<void>(resolve => {
+            resolvePromise = resolve;
+        });
     }
     public triggerEvent(name: string, e: any): any {
         this._emitter.trigger(name, e);
@@ -621,11 +657,6 @@ export default class MoveableManager<T = {}>
             customStyleMap[key] = styled(tag, css);
         }
         return customStyleMap[key];
-    }
-    public onPreventClick = (e: any) => {
-        e.stopPropagation();
-        e.preventDefault();
-        // removeEvent(window, "click", this.onPreventClick, true);
     }
     public checkUpdateRect = () => {
         if (this.isDragging()) {
@@ -738,7 +769,7 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const target = props.dragTarget || props.target;
         const isUnset = (!hasTargetAble && this.targetGesto)
-            || this._isTargetChanged(true);
+        || this._isTargetChanged(true);
 
         if (isUnset) {
             unset(this, "targetGesto");
@@ -786,6 +817,11 @@ export default class MoveableManager<T = {}>
         ].map(([from, to], i) => {
             return renderLine(Renderer, "", renderPoses[from], renderPoses[to], zoom!, i);
         });
+    }
+    private _onPreventClick = (e: any) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // removeEvent(window, "click", this._onPreventClick, true);
     }
     private _isTargetChanged(useDragArea?: boolean) {
         const props = this.props;

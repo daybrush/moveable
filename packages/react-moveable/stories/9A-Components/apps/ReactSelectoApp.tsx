@@ -6,7 +6,6 @@ import "./cube.css";
 
 export default function App() {
     const [targets, setTargets] = React.useState<Array<SVGElement | HTMLElement>>([]);
-    const [frameMap] = React.useState(() => new Map());
     const moveableRef = React.useRef<Moveable>(null);
     const selectoRef = React.useRef<Selecto>(null);
     const cubes = [];
@@ -26,20 +25,6 @@ export default function App() {
                 }}
                 onDrag={e => {
                     e.target.style.transform = e.transform;
-                }}
-                onDragGroupStart={e => {
-                    e.events.forEach(ev => {
-                        const target = ev.target;
-
-                        if (!frameMap.has(target)) {
-                            frameMap.set(target, {
-                                translate: [0, 0],
-                            });
-                        }
-                        const frame = frameMap.get(target);
-
-                        ev.set(frame.translate);
-                    });
                 }}
                 onDragGroup={e => {
                     e.events.forEach(ev => {
@@ -68,15 +53,14 @@ export default function App() {
                 }}
                 onSelectEnd={e => {
                     const moveable = moveableRef.current!;
-                    setTargets(e.selected);
-
                     if (e.isDragStart) {
                         e.inputEvent.preventDefault();
 
-                        setTimeout(() => {
-                            moveable.dragStart(e.inputEvent);
+                        moveable.waitToChangeTarget().then(() => {
+                            moveable.dragStart(e.inputEvent)
                         });
                     }
+                    setTargets(e.selected);
                 }}
             ></Selecto>
 

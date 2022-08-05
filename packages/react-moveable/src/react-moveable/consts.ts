@@ -223,4 +223,5 @@ export const MOVEABLE_METHODS: Array<keyof MoveableInterface> = [
     "isDragging",
     "getManager",
     "forceUpdate",
+    "waitToChangeTarget",
 ];
