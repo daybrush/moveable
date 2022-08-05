@@ -208,10 +208,12 @@ export function getAbleGesto(
         pinchOutside,
         preventClickEventOnDrag: isTargetAbles ? preventClickEventOnDrag : false,
         preventClickEventOnDragStart: isTargetAbles ? preventClickDefault : false,
+        preventClickEventByCondition: isTargetAbles ? null : (e: MouseEvent) => {
+            return moveable.controlBox.getElement().contains(e.target as Element);
+        },
         checkInput: isTargetAbles ? checkInput : false,
     };
     const gesto = new Gesto(target!, options);
-
     const isControl = eventAffix === "Control";
 
     ["drag", "pinch"].forEach(eventOperation => {
