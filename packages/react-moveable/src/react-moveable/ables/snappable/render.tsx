@@ -366,7 +366,7 @@ export function renderGapGuidelines(
 ): any[] {
     const rendered: any[] = [];
     (["horizontal", "vertical"] as const).forEach(type => {
-        const nextGuidelines = guidelines.filter(guideline => guideline.type === type);
+        const nextGuidelines = guidelines.filter(guideline => guideline.type === type).slice(0, 1);
         const index = type === "vertical" ? 0 : 1;
         const otherIndex = index ? 0 : 1;
         const mainNames = index ? HORIZONTAL_NAMES_MAP : VERTICAL_NAMES_MAP;

@@ -9,3 +9,4 @@ export * from "./5-BoundScalable.stories";
 export * from "./6-BoundResizable.stories";
 export * from "./7-SnapContainer.stories";
 export * from "./8-InnerBoundResizable.stories";
+export * from "./9-maxSnapElement.stories";

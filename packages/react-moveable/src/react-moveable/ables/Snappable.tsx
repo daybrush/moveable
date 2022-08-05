@@ -704,7 +704,10 @@ export default {
         }
         const allGuidelines = [...verticalGuidelines, ...horizontalGuidelines];
         const elementGuidelines = allGuidelines.filter(guideline => guideline.element && !guideline.gapRects);
-        const gapGuidelines = allGuidelines.filter(guideline => guideline.gapRects);
+        const gapGuidelines = allGuidelines.filter(guideline => guideline.gapRects).sort((a, b) => {
+            return a.gap! - b.gap!;
+        });
+
         triggerEvent(
             moveable,
             "onSnap",
