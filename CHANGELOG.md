@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.0](https://github.com/daybrush/moveable/compare/0.34.3...0.35.0) (2022-08-06)
+### :sparkles: Packages
+* `lit-moveable` 0.12.0
+* `moveable` 0.35.0
+* `preact-moveable` 0.37.0
+* `react-compat-moveable` 0.23.0
+* `react-moveable` 0.38.0
+* `svelte-moveable` 0.27.0
+* `vue-moveable` 2.0.0-beta.32
+* `vue3-moveable` 0.10.0
+* `ngx-moveable` 0.32.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add maxSnapElementGapDistance prop #707 ([5f71c30](https://github.com/daybrush/moveable/commit/5f71c304192764cd8c9261daec56f1594f13e3df))
+    * add stopDrag event property #665 ([70f49ee](https://github.com/daybrush/moveable/commit/70f49ee4dabade6366e37fa3408421ee7d1d4931))
+    * add waitToChangeTarget method #714 ([8e6c534](https://github.com/daybrush/moveable/commit/8e6c534010689c0c0a2a821f8ab7e3d6cf63f240))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `react-compat-moveable`
+    * prevent click when drag & click control #713 ([2071c0d](https://github.com/daybrush/moveable/commit/2071c0dd68503d920fe9c26e53ec8c17627bee2b))
+* `react-moveable`
+    * render only shortest gap guidelines #707 ([176c1b3](https://github.com/daybrush/moveable/commit/176c1b31b6c8cc3359d44474225a35014fba42d4))
+* Other
+    * update type script ([106c416](https://github.com/daybrush/moveable/commit/106c4162bf388b5bf35c3e38515bebc361721cec))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([80005ba](https://github.com/daybrush/moveable/commit/80005bada5651afd0c5487a193ab321b22ab1b55))
+
+
+
 ## [0.34.3](https://github.com/daybrush/moveable/compare/0.34.2...0.34.3) (2022-08-03)
 ### :sparkles: Packages
 * `lit-moveable` 0.11.3
