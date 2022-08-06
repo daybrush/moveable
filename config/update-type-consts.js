@@ -1,11 +1,11 @@
 const ts = require("typescript");
 const path = require("path");
 const { writeFileSync } = require("fs");
-const { PROPERTIES, EVENTS } = require("../packages/moveable/dist/moveable.cjs");
+const { MOVEABLE_PROPS, MOVEABLE_EVENTS } = require("../packages/react-moveable/dist/moveable.cjs");
 
 const staticConsts = {
-  "ANGULAR_MOVEABLE_INPUTS": PROPERTIES,
-  "ANGULAR_MOVEABLE_OUTPUTS": EVENTS,
+  "ANGULAR_MOVEABLE_INPUTS": MOVEABLE_PROPS,
+  "ANGULAR_MOVEABLE_OUTPUTS": MOVEABLE_EVENTS,
 };
 const paths = [
   path.resolve(__dirname, "../packages/ngx-moveable/projects/ngx-moveable/src/public-api.ts"),
