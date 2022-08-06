@@ -541,6 +541,10 @@ export default {
         bounds: Object,
         innerBounds: Object,
         snapDistFormat: Function,
+
+
+        maxSnapElementGuidelineDistance: Number,
+        maxSnapElementGapDistance: Number,
     } as const,
     events: {
         onSnap: "snap",
