@@ -2155,6 +2155,11 @@ export interface SnappableOptions {
      */
     maxSnapElementGuidelineDistance?: number;
     /**
+     * Maximum distance to which element gap guidelines can be snapped.
+     * @default Infinity
+     */
+    maxSnapElementGapDistance?: number;
+    /**
      * You can set up boundaries.
      * @default null
      */

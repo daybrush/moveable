@@ -67,6 +67,8 @@ export default function App(props: Record<string, any>) {
                         "center": true,
                         "middle": true,
                     }}
+                    maxSnapElementGuidelineDistance={props.maxSnapElementGuidelineDistance}
+                    maxSnapElementGapDistance={props.maxSnapElementGapDistance}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}

@@ -84,6 +84,7 @@ export function getGapGuidelines(
 ) {
     const {
         maxSnapElementGuidelineDistance = Infinity,
+        maxSnapElementGapDistance = Infinity,
     } = moveable.props;
     const elementRects = moveable.state.elementRects;
     const gapGuidelines: SnapGuideline[] = [];
@@ -194,6 +195,9 @@ export function getGapGuidelines(
                 return;
             }
             if (!checkBetweenRects(targetRect, rect2, type, maxSnapElementGuidelineDistance)) {
+                return;
+            }
+            if (gap > maxSnapElementGapDistance) {
                 return;
             }
             gapGuidelines.push({
