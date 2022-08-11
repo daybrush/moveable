@@ -408,7 +408,8 @@ export default {
             },
         };
     },
-    unset(moveable: any) {
+    unset(moveable: MoveableManagerInterface<any, Record<string, any>>) {
+        moveable.state.gestos.draggable = null;
         moveable.state.dragInfo = null;
     },
 };

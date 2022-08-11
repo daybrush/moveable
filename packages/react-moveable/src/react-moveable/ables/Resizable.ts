@@ -792,6 +792,9 @@ export default {
             },
         };
     },
+    unset(moveable: MoveableManagerInterface<any, {}>) {
+        moveable.state.gestos.resizable = null;
+    },
 };
 
 /**
