@@ -1,0 +1,91 @@
+<div id="app">
+    <custom-parent class="parent draggable">
+        <custom-children class="children draggable"></custom-children>
+    </custom-parent>
+</div>
+<style>
+    .container {
+        width: 1000px;
+        height: 800px;
+        position: absolute;
+        left: 100px;
+        top: 100px;
+    }
+
+    .parent {
+        width: 500px;
+        height: 500px;
+        position: absolute;
+        transform: translate(100px, 100px)
+    }
+
+    .children {
+        width: 150px;
+        height: 150px;
+        position: absolute;
+        background-color: #e79627;
+        transform: translate(100px, 100px)
+    }
+</style>
+<script src="./custom-parent.js"></script>
+<script src="./custom-child.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="../../../dist/moveable.js"></script>
+<script>
+
+
+$('#app').on('mousedown', '.draggable', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+  console.log('mousedown', e.currentTarget);
+  moveableDemo.waitToChangeTarget().then(() => {
+    console.log('?');
+    moveableDemo.dragStart(e);
+  });
+  moveableDemo.target = e.currentTarget;
+});
+
+
+// document.querySelectorAll("custom-parent, custom-children").forEach(t => t.addEventListener("mousedown", e => {
+//     e.stopPropagation();
+//     e.preventDefault();
+//     console.log('mousedown', e.currentTarget);
+//     moveableDemo.waitToChangeTarget().then(() => {
+//         console.log('?');
+//         moveableDemo.dragStart(e);
+//     });
+//     moveableDemo.target = e.currentTarget;
+// }));
+
+    var moveableDemo = new Moveable(document.body, {
+        target: null,
+        snapThreshold: 5,
+        draggable: true,
+        resizable: true,
+        keepRatio: false,
+        throttleDrag: 0,
+        throttleResize: 0,
+        startDragRotate: 0,
+        throttleDragRotate: 0,
+        zoom: 1,
+        origin: true,
+        bounds: { left: 0, right: 700, top: 0, bottom: 520 },
+        padding: { left: 0, top: 0, right: 0, bottom: 0 },
+        elementGuidelines: [],
+        snapGap: true,
+        snapDirections: { left: true, top: true, right: true, bottom: true },
+        elementSnapDirections: { left: true, top: true, right: true, bottom: true },
+    });
+
+    moveableDemo.on('dragStart', (e) => {
+        console.log('dragStart');
+    });
+
+    moveableDemo.on('drag', (e) => {
+        // console.log(e);
+        e.target.style.transform = e.transform;
+        console.log(e);
+        console.log(moveableDemo.getRect());
+    });
+
+</script>
