@@ -10,6 +10,7 @@ const external = {
     "css-styled": "css-styled",
     "framework-utils": "framework-utils",
     "gesto": "Gesto",
+    "@scena/event-emitter": "@scena/event-emitter",
     "@egjs/agent": "eg.Agent",
     "@egjs/children-differ": "eg.ChildrenDiffer",
     "@moveable/matrix": "@moveable/matrix",
