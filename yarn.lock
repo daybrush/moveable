@@ -11128,10 +11128,10 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.12.0, gesto@^1.3.0, gesto@^1.5.1, gesto@^1.7.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/gesto/-/gesto-1.12.0.tgz#522c3abb8e442412491626e8942f0bd856acacb2"
-  integrity sha512-SWQuDmgGMAxdkoeP+pwl10xx4B8GImbXUjOdNGxLNgF6HR2MaXX/VyL6wINpPjy1nz4ylliskwC0hKGGURcUDQ==
+gesto@^1.12.1, gesto@^1.3.0, gesto@^1.5.1, gesto@^1.7.0:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/gesto/-/gesto-1.12.1.tgz#18544aa246e98782163f27b81dea8e45c4ddefc0"
+  integrity sha512-JmeCEdd5HLI4Yb2EvCCLbIjPYbNpM0Ui7pQ3ygy/ozOSKnHdNEEu9nfYWDBAUhf1K6dp4KOQxSeXoOnHRixo5Q==
   dependencies:
     "@daybrush/utils" "^1.7.1"
     "@scena/event-emitter" "^1.0.2"

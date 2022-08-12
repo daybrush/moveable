@@ -105,7 +105,7 @@
         "@scena/react-guides": "^0.17.1",
         "css-to-mat": "^1.0.3",
         "framework-utils": "^1.1.0",
-        "gesto": "^1.12.0",
+        "gesto": "^1.12.1",
         "overlap-area": "^1.1.0",
         "react-css-styled": "^1.0.3"
     },
