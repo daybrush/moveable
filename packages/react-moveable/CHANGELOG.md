@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.0...react-moveable@0.38.1) (2022-08-12)
+
+
+### :bug: Bug Fix
+
+* export event-emitter ([937d83e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/937d83e221d7080abdb699bc088eff9ca89caaa4))
+* fix click event for mobile #720 ([ce6bced](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ce6bced55ca6e32981215ebd91a57fe04a789f4e))
+* fix that dragStart method cannot fire #718 ([5ea9fc3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5ea9fc362534e8a56976ad87053700ee06a14e0d))
+
+
+### :mega: Other
+
+* publish packages ([6be7e81](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6be7e8122b8edd2e323a039cdbb73381de74e14f))
+
+
+
 ## [0.38.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.37.3...react-moveable@0.38.0) (2022-08-06)
 
 

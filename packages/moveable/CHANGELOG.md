@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.35.0...moveable@0.35.1) (2022-08-12)
+
+
+### :bug: Bug Fix
+
+* fix that dragStart method cannot fire #718 ([5ea9fc3](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/5ea9fc362534e8a56976ad87053700ee06a14e0d))
+
+
+### :mega: Other
+
+* publish packages ([6be7e81](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/6be7e8122b8edd2e323a039cdbb73381de74e14f))
+
+
+
 ## [0.35.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.34.3...moveable@0.35.0) (2022-08-06)
 
 

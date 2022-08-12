@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.1](https://github.com/daybrush/moveable/compare/0.35.0...0.35.1) (2022-08-12)
+### :sparkles: Packages
+* `lit-moveable` 0.12.1
+* `moveable` 0.35.1
+* `preact-moveable` 0.37.1
+* `react-compat-moveable` 0.23.1
+* `react-moveable` 0.38.1
+* `svelte-moveable` 0.27.1
+* `vue-moveable` 2.0.0-beta.33
+* `vue3-moveable` 0.10.1
+* `ngx-moveable` 0.32.1
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `react-compat-moveable`
+    * export event-emitter ([937d83e](https://github.com/daybrush/moveable/commit/937d83e221d7080abdb699bc088eff9ca89caaa4))
+    * fix click event for mobile #720 ([ce6bced](https://github.com/daybrush/moveable/commit/ce6bced55ca6e32981215ebd91a57fe04a789f4e))
+* `react-moveable`, `moveable`
+    * fix that dragStart method cannot fire #718 ([5ea9fc3](https://github.com/daybrush/moveable/commit/5ea9fc362534e8a56976ad87053700ee06a14e0d))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([6be7e81](https://github.com/daybrush/moveable/commit/6be7e8122b8edd2e323a039cdbb73381de74e14f))
+
+
+
 ## [0.35.0](https://github.com/daybrush/moveable/compare/0.34.3...0.35.0) (2022-08-06)
 ### :sparkles: Packages
 * `lit-moveable` 0.12.0
