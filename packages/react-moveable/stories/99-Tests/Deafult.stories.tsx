@@ -1,7 +1,7 @@
 import { makeStoryGroup } from "../utils/story";
 
 
-const group = makeStoryGroup("Test Codes", module);
+const group = makeStoryGroup("Variable Situations", module);
 
 
 group.add("No Target", {
@@ -48,4 +48,12 @@ group.add("Test Container with will change", {
 group.add("Stop drag if target is select, input, textarea", {
     app: require("./ReactStopDragApp").default,
     text: require("!!raw-loader!./ReactStopDragApp").default,
+});
+group.add("Stop Click event's Propagation for dragStart", {
+    app: require("./ReactClickApp").default,
+    text: require("!!raw-loader!./ReactClickApp").default,
+});
+group.add("Nested Moveable's target", {
+    app: require("./ReactNestedTargetApp").default,
+    text: require("!!raw-loader!./ReactNestedTargetApp").default,
 });
