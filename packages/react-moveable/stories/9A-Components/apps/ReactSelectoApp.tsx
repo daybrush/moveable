@@ -57,7 +57,7 @@ export default function App() {
                         e.inputEvent.preventDefault();
 
                         moveable.waitToChangeTarget().then(() => {
-                            moveable.dragStart(e.inputEvent)
+                            moveable.dragStart(e.inputEvent);
                         });
                     }
                     setTargets(e.selected);

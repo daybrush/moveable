@@ -616,6 +616,22 @@ export interface AbleRequester {
     requestEnd(): IObject<any>;
 }
 
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export interface OnChangeTarget {
+    /**
+     * The Moveable instance
+     */
+    moveable: MoveableManagerInterface<any, any>;
+    /**
+     * The Moveable's targets
+     */
+    targets: Array<HTMLElement | SVGElement>;
+}
+
 /**
  * @typedef
  * @memberof Moveable.Pinchable
@@ -1629,7 +1645,7 @@ export interface DraggableOptions {
      * Whether to move by dragging the edge line
      * @default false
      */
-    edgeDraggable?: boolean |  Array<LineDirection>;
+    edgeDraggable?: boolean | Array<LineDirection>;
 }
 export interface DraggableEvents {
     onDragStart: OnDragStart;
@@ -1640,6 +1656,7 @@ export interface DraggableEvents {
     onDragGroup: OnDragGroup;
     onDragGroupEnd: OnDragGroupEnd;
 }
+
 export interface DraggableProps extends DraggableOptions, EventInterface<DraggableEvents> {
 }
 

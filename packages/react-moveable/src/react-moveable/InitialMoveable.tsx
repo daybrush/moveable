@@ -15,6 +15,7 @@ import styled from "react-css-styled";
 import { getRefTargets, getElementTargets } from "./utils";
 import IndividualGroupable from "./ables/IndividualGroupable";
 import MoveableIndividualGroup from "./MoveableIndividualGroup";
+import ChildrenDiffer from "@egjs/children-differ";
 
 
 export class InitialMoveable<T = {}>
@@ -46,6 +47,9 @@ export class InitialMoveable<T = {}>
     public moveable!: MoveableManager | MoveableGroup | MoveableIndividualGroup;
     public refTargets: Array<HTMLElement | SVGElement | string | undefined | null> = [];
     public selectorMap: IObject<Array<HTMLElement | SVGElement>> = {};
+    private _differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
+    private _elementTargets: Array<HTMLElement | SVGElement> = [];
+    private _onChangetarget: (() => void) | null = null;
     public render() {
         const moveableContructor = (this.constructor as typeof InitialMoveable);
 
@@ -74,6 +78,7 @@ export class InitialMoveable<T = {}>
             customStyledMap: moveableContructor.customStyledMap,
         };
 
+        this._elementTargets = elementTargets;
         if (isGroup) {
             if (props.individualGroupable) {
                 return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
@@ -95,11 +100,59 @@ export class InitialMoveable<T = {}>
         this._updateRefs();
     }
     public componentDidUpdate() {
+        const { added, removed } = this._differ.update(this._elementTargets);
+        const isTargetChanged = added.length || removed.length;
+
+        if (isTargetChanged && this._onChangetarget) {
+            this._onChangetarget();
+        }
+
         this._updateRefs();
     }
     public componentWillUnmount() {
         this.selectorMap = {};
         this.refTargets = [];
+    }
+
+    /**
+     * User changes target and waits for target to change.
+     * @method Moveable#waitToChangeTarget
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.querySelector(".target").addEventListener("mousedown", e => {
+     *   moveable.waitToChangeTarget().then(() => {
+     *      moveable.dragStart(e.currentTarget);
+     *   });
+     *   moveable.target = e.currentTarget;
+     * });
+     */
+    public waitToChangeTarget(): Promise<void> {
+        // let resolvePromise: (e: OnChangeTarget) => void;
+
+        // this._onChangetarget = () => {
+        //     this._onChangetarget = null;
+        //     resolvePromise({
+        //         moveable: this.getManager(),
+        //         targets: this._elementTargets,
+        //     });
+        // };
+
+        // return new Promise<OnChangeTarget>(resolve => {
+        //     resolvePromise = resolve;
+        // });
+        let resolvePromise: () => void;
+
+        this._onChangetarget = () => {
+            this._onChangetarget = null;
+            resolvePromise();
+        };
+
+        return new Promise(resolve => {
+            resolvePromise = resolve;
+        });
     }
     public getManager(): MoveableManagerInterface<any, any> {
         return this.moveable;

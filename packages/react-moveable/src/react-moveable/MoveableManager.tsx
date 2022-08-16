@@ -94,7 +94,6 @@ export default class MoveableManager<T = {}>
     protected _emitter: EventEmitter = new EventEmitter();
     protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _prevDragArea = false;
-    protected _onChangetarget: (() => void) | null = null;
     protected _isPropTargetChanged = false;
 
     private _observer: ResizeObserver | null = null;
@@ -173,10 +172,6 @@ export default class MoveableManager<T = {}>
         this._updateTargets();
         this.updateCheckInput();
         this._updateObserver(prevProps);
-
-        if (this._isPropTargetChanged) {
-            this._onChangetarget?.();
-        }
     }
     public componentWillUnmount() {
         this.isUnmounted = true;
@@ -615,32 +610,8 @@ export default class MoveableManager<T = {}>
         }
         this._isPropTargetChanged = isTargetChanged;
     }
-    /**
-     * User changes target and waits for target to change.
-     * @method Moveable#waitToChangeTarget
-     * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
-     * document.querySelector(".target").addEventListener("mousedown", e => {
-     *   moveable.waitToChangeTarget().then(() => {
-     *      moveable.dragStart(e.currentTarget);
-     *   });
-     *   moveable.target = e.currentTarget;
-     * });
-     */
     public waitToChangeTarget(): Promise<void> {
-        let resolvePromise: () => void;
-
-        this._onChangetarget = () => {
-            this._onChangetarget = null;
-            resolvePromise();
-        };
-
-        return new Promise<void>(resolve => {
-            resolvePromise = resolve;
-        });
+        return new Promise(() => {});
     }
     public triggerEvent(name: string, e: any): any {
         this._emitter.trigger(name, e);
