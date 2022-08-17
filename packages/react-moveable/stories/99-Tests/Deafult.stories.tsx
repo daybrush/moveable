@@ -57,3 +57,7 @@ group.add("Nested Moveable's target", {
     app: require("./ReactNestedTargetApp").default,
     text: require("!!raw-loader!./ReactNestedTargetApp").default,
 });
+group.add("Zoomed Cursor", {
+    app: require("./ReactZoomedCursorApp").default,
+    text: require("!!raw-loader!./ReactZoomedCursorApp").default,
+});
