@@ -17,10 +17,16 @@ background-color: #3794FF;
 }
 
 .card-content {
-width: 100%;
-height: calc(100% - 80px);
-background-color: #EDF0F3;
-position: relative;
+    width: 100%;
+    height: calc(100% - 80px);
+    background-color: #EDF0F3;
+    position: relative;
+}
+
+.card-inner {
+    position: relative;
+    top: 50px;
+    left: 50px;
 }
 ${"`"};
 
@@ -33,7 +39,9 @@ ${"`"};
         div.innerHTML = ${"`"}
 <div class="card-header"></div>
 <div class="card-content">
-  <slot name="custom-element"></slot>
+    <div class="card-inner">
+        <slot name="custom-element"></slot>
+    </div>
 </div>
 ${"`"};
         style.textContent = this.styleText;
@@ -73,6 +81,7 @@ export default function App() {
             padding: "10px",
         }}>
             <div id="draggable" slot="custom-element" style={{
+                position: "relative",
                 width: "150px",
                 height: "150px",
                 backgroundColor: "#e79627",

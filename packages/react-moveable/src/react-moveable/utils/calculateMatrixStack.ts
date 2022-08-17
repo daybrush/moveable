@@ -1,5 +1,6 @@
 import { createIdentityMatrix, convertDimension, multiply, createOriginMatrix, ignoreDimension } from "@scena/matrix";
-import { getMatrixStackInfo, convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
+import { convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
+import { getMatrixStackInfo } from "./getMatrixStackInfo";
 
 export interface MoveableElementMatrixInfo {
     hasFixed: boolean;

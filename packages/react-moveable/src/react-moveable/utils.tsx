@@ -1,4 +1,4 @@
-import { PREFIX, IS_WEBKIT605, TINY_NUM, IS_WEBKIT, IS_SAFARI_ABOVE15 } from "./consts";
+import { PREFIX, IS_WEBKIT605, TINY_NUM } from "./consts";
 import { prefixNames, InvertObject } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
@@ -13,7 +13,6 @@ import {
     minus,
     createScaleMatrix,
     plus,
-    convertCSStoMatrix,
     convertMatrixtoCSS,
 } from "@scena/matrix";
 import {
@@ -120,15 +119,31 @@ export function getElementTransform(
     }
     return "";
 }
+
 export function getOffsetInfo(
     el: SVGElement | HTMLElement | null | undefined,
     lastParent: SVGElement | HTMLElement | null | undefined,
     isParent?: boolean,
 ) {
     const body = document.body;
-    let target = !el || isParent
-        ? el
-        : el?.assignedSlot?.parentElement || el.parentElement;
+    let hasSlot = false;
+    let target: HTMLElement | SVGElement | null | undefined;
+    let parentSlotElement: HTMLElement | null | undefined;
+
+    if (!el || isParent) {
+        target = el;
+    } else {
+        const assignedSlotParentElement = el?.assignedSlot?.parentElement;
+        const parentElement = el.parentElement;
+
+        if (assignedSlotParentElement) {
+            hasSlot = true;
+            parentSlotElement = parentElement;
+            target = assignedSlotParentElement;
+        } else {
+            target = parentElement;
+        }
+    }
 
     let isCustomElement = false;
     let isEnd = el === lastParent || target === lastParent;
@@ -146,6 +161,7 @@ export function getOffsetInfo(
         const willChange = style.willChange;
         position = style.position!;
 
+
         if (
             tagName === "svg"
             || position !== "static"
@@ -154,12 +170,21 @@ export function getOffsetInfo(
         ) {
             break;
         }
-        const parentNode = target.parentNode;
+        const slotParentNode = el?.assignedSlot?.parentNode;
+        const targetParentNode = target.parentNode;
+
+        if (slotParentNode) {
+            hasSlot = true;
+            parentSlotElement = targetParentNode as HTMLElement;
+        }
+        const parentNode = slotParentNode || targetParentNode;
+
 
         if (parentNode && parentNode.nodeType === 11) {
             // Shadow Root
             target = (parentNode as ShadowRoot).host as HTMLElement;
-            isCustomElement = true;
+            isCustomElement = true;            
+
             break;
         }
 
@@ -167,6 +192,8 @@ export function getOffsetInfo(
         position = "relative";
     }
     return {
+        hasSlot,
+        parentSlotElement,
         isCustomElement,
         isStatic: position === "static",
         isEnd: isEnd || !target || target === body,
@@ -275,201 +302,6 @@ export function getPositionFixedInfo(el: HTMLElement | SVGElement) {
     return {
         fixedContainer: fixedContainer || document.body,
         hasTransform,
-    };
-}
-
-export function getMatrixStackInfo(
-    target: SVGElement | HTMLElement,
-    container?: SVGElement | HTMLElement | null,
-    checkContainer?: boolean,
-) {
-    let el: SVGElement | HTMLElement | null = target;
-    const matrixes: MatrixInfo[] = [];
-    let requestEnd = !checkContainer && target === container || target === document.body;
-    let isEnd = requestEnd;
-    let is3d = false;
-    let n = 3;
-    let transformOrigin!: number[];
-    let targetTransformOrigin!: number[];
-    let targetMatrix!: number[];
-
-    let hasFixed = false;
-    let offsetContainer = getOffsetInfo(container, container, true).offsetParent;
-
-    while (el && !isEnd) {
-        isEnd = requestEnd;
-        const style: CSSStyleDeclaration = getComputedStyle(el);
-        const position = style.position;
-        const transform = getElementTransform(el, style);
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
-        const isFixed = position === "fixed";
-        let fixedInfo: {
-            hasTransform: boolean;
-            fixedContainer: HTMLElement | null;
-        } = {
-            hasTransform: false,
-            fixedContainer: null,
-        };
-        if (isFixed) {
-            hasFixed = true;
-            fixedInfo = getPositionFixedInfo(el);
-
-            offsetContainer = fixedInfo.fixedContainer!;
-        }
-
-        // convert 3 to 4
-        const length = matrix.length;
-
-        if (!is3d && length === 16) {
-            is3d = true;
-            n = 4;
-
-            convert3DMatrixes(matrixes);
-            if (targetMatrix) {
-                targetMatrix = convertDimension(targetMatrix, 3, 4);
-            }
-        }
-        if (is3d && length === 9) {
-            matrix = convertDimension(matrix, 3, 4);
-        }
-        const {
-            tagName,
-            hasOffset,
-            isSVG,
-            origin,
-            targetOrigin,
-            offset: offsetPos,
-        } = getOffsetPosInfo(el, style);
-        let [
-            offsetLeft,
-            offsetTop,
-        ] = offsetPos;
-        if (tagName === "svg" && targetMatrix) {
-            // scale matrix for svg's SVGElements.
-            matrixes.push({
-                type: "target",
-                target: el,
-                matrix: getSVGMatrix(el as SVGSVGElement, n),
-            });
-            matrixes.push({
-                type: "offset",
-                target: el,
-                matrix: createIdentityMatrix(n),
-            });
-        } else if (tagName === "g" && target !== el) {
-            offsetLeft = 0;
-            offsetTop = 0;
-        }
-
-        let offsetParent: HTMLElement;
-        let isOffsetEnd = false;
-        let isStatic = false;
-
-        if (isFixed) {
-            offsetParent = fixedInfo.fixedContainer!;
-            isOffsetEnd = true;
-        } else {
-            const offsetInfo = getOffsetInfo(el, container);
-
-            offsetParent = offsetInfo.offsetParent;
-            isOffsetEnd = offsetInfo.isEnd;
-            isStatic = offsetInfo.isStatic;
-        }
-
-        if (
-            IS_WEBKIT && !IS_SAFARI_ABOVE15
-            && hasOffset && !isSVG && isStatic
-            && (position === "relative" || position === "static")
-        ) {
-            offsetLeft -= offsetParent.offsetLeft;
-            offsetTop -= offsetParent.offsetTop;
-            requestEnd = requestEnd || isOffsetEnd;
-        }
-        let parentClientLeft = 0;
-        let parentClientTop = 0;
-        let fixedClientLeft = 0;
-        let fixedClientTop = 0;
-
-        if (isFixed) {
-            if (hasOffset && fixedInfo.hasTransform) {
-                // border
-                fixedClientLeft = offsetParent.clientLeft;
-                fixedClientTop = offsetParent.clientTop;
-            }
-        } else {
-            if (hasOffset && offsetContainer !== offsetParent) {
-                // border
-                parentClientLeft = offsetParent.clientLeft;
-                parentClientTop = offsetParent.clientTop;
-            }
-            if (hasOffset && offsetParent === document.body) {
-                const margin = getBodyOffset(el, false, style);
-
-                offsetLeft += margin[0];
-                offsetTop += margin[1];
-            }
-        }
-
-        matrixes.push({
-            type: "target",
-            target: el,
-            matrix: getAbsoluteMatrix(matrix, n, origin),
-        });
-        if (hasOffset) {
-            matrixes.push({
-                type: "offset",
-                target: el,
-                matrix: createOriginMatrix([
-                    offsetLeft - el.scrollLeft + parentClientLeft - fixedClientLeft,
-                    offsetTop - el.scrollTop + parentClientTop - fixedClientTop,
-                ], n),
-            });
-        } else {
-            // svg
-            matrixes.push({
-                type: "offset",
-                target: el,
-                origin,
-            });
-        }
-        if (!targetMatrix) {
-            targetMatrix = matrix;
-        }
-        if (!transformOrigin) {
-            transformOrigin = origin;
-        }
-        if (!targetTransformOrigin) {
-            targetTransformOrigin = targetOrigin;
-        }
-
-        if (isEnd || isFixed) {
-            break;
-        } else {
-            el = offsetParent;
-            requestEnd = isOffsetEnd;
-        }
-        if (!checkContainer || el === document.body) {
-            isEnd = requestEnd;
-        }
-    }
-    if (!targetMatrix) {
-        targetMatrix = createIdentityMatrix(n);
-    }
-    if (!transformOrigin) {
-        transformOrigin = [0, 0];
-    }
-    if (!targetTransformOrigin) {
-        targetTransformOrigin = [0, 0];
-    }
-
-    return {
-        offsetContainer,
-        matrixes,
-        targetMatrix,
-        transformOrigin,
-        targetOrigin: targetTransformOrigin,
-        is3d,
-        hasFixed,
     };
 }
 
