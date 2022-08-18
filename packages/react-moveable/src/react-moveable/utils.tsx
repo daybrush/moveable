@@ -203,6 +203,7 @@ export function getOffsetInfo(
 }
 export function getOffsetPosInfo(
     el: HTMLElement | SVGElement,
+    target: HTMLElement | SVGElement,
     style: CSSStyleDeclaration,
 ) {
     const tagName = el.tagName.toLowerCase();
@@ -225,7 +226,11 @@ export function getOffsetPosInfo(
 
         [
             offsetLeft, offsetTop, origin[0], origin[1],
-        ] = getSVGGraphicsOffset(el as SVGGraphicsElement, origin);
+        ] = getSVGGraphicsOffset(
+            el as SVGGraphicsElement,
+            origin,
+            el === target && target.tagName.toLowerCase() === "g",
+        );
     } else {
         origin = getTransformOrigin(style).map(pos => parseFloat(pos));
         targetOrigin = origin.slice();
@@ -379,8 +384,9 @@ export function getSVGMatrix(
 export function getSVGGraphicsOffset(
     el: SVGGraphicsElement,
     origin: number[],
+    isGTarget?: boolean,
 ) {
-    if (!el.getBBox || el.tagName.toLowerCase() === "g") {
+    if (!el.getBBox || !isGTarget && el.tagName.toLowerCase() === "g") {
         return [0, 0, 0, 0];
     }
     const bbox = el.getBBox();

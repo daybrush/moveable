@@ -21,11 +21,14 @@ export default function App(props: Record<string, any>) {
                 }}>
                     <g
                         transform="translate(10, 10) rotate(0)"
+                        x="50"
+                        y="50"
                         style={{
                             // transform: "translate(10px, 10px) rotate(20deg)",
                         }}
                     >
-                        <path d="M 0 0 L 200 0 L 200 200 z" ref={targetRef} style={{
+                        <path d="M 50 50 L 250 50 L 250 250 z" ref={targetRef} style={{
+                            transform: "translate(30px, 30px) rotate(20deg)",
                             fill: "white",
                             stroke: "red",
                             strokeWidth: 2,

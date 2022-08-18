@@ -2,34 +2,39 @@ import * as React from "react";
 import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
-    const targetRef = React.useRef<SVGCircleElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
 
     return (
-        <div className="root" style={{
-            paddingLeft: "100px",
-            paddingTop: "100px",
-        }}>
+        <div className="root">
             <div className="container" style={{
                 transformOrigin: "0 0",
                 transform: `scale(${props.containerScale})`,
             }}>
                 <svg viewBox="0 0 200 200" style={{
+                    position: "relative",
                     border: "1px solid black",
                     width: "200px",
                     height: "200px",
+                    top: "100px",
+                    left: "100px",
                 }}>
-                    <circle cx="100" cy="100" r="50"  ref={targetRef}/>
+                    <g className="g">
+                        <path d="M 0 0 L 200 0 L 200 200 z" style={{
+                            fill: "white",
+                            stroke: "red",
+                            strokeWidth: 2,
+                            transform: "translate(50px, 50px)",
+                        }} />
+                    </g>
                 </svg>
                 <Moveable
                     ref={moveableRef}
-                    target={targetRef}
+                    target={".g"}
                     draggable={true}
-                    rotatable={true}
-                    onRender={e => {
+                    onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}
-                ></Moveable>
+                />
             </div>
         </div>
     );

@@ -84,7 +84,7 @@ export function getMatrixStackInfo(
             origin,
             targetOrigin,
             offset: offsetPos,
-        } = getOffsetPosInfo(el, style);
+        } = getOffsetPosInfo(el, target, style);
         let [
             offsetLeft,
             offsetTop,
@@ -101,9 +101,6 @@ export function getMatrixStackInfo(
                 target: el,
                 matrix: createIdentityMatrix(n),
             });
-        } else if (tagName === "g" && target !== el) {
-            offsetLeft = 0;
-            offsetTop = 0;
         }
 
         let offsetParent: HTMLElement;

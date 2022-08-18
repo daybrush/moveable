@@ -3,13 +3,14 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
-import { convertReactTemplate, convertPath } from "../utils";
+import { convertReactTemplate, convertPath, makeArgs } from "../utils";
 // import { DEFAULT_DRAGGABLE_CONTROLS, DEFAULT_CLIPPABLE_CONTROLS } from "../controls/default";
 
 
 export interface StoryParameter {
     app: any;
     text: string;
+    argsTypes?: Record<string, any>;
 }
 export function makeStoryGroup(title: string, module: NodeModule) {
     const stories = storiesOf(title, module);
@@ -17,16 +18,15 @@ export function makeStoryGroup(title: string, module: NodeModule) {
     function add(storyTitle: string, {
         app,
         text,
+        argsTypes,
     }: StoryParameter) {
         stories.add(storyTitle, (props: any) => {
             const Component = app;
 
             return <Component {...props}/>;
         }, {
-            // argTypes: {
-            //     ...DEFAULT_DRAGGABLE_CONTROLS,
-            //     ...DEFAULT_CLIPPABLE_CONTROLS,
-            // },
+            argTypes: argsTypes || {},
+            args: makeArgs(argsTypes || {}),
             preview: {
                 tab: "React",
                 template: convertReactTemplate(convertPath(text)),
