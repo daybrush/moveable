@@ -51,7 +51,7 @@ export function triggerAble(
             ables.push(...moveable.props.ables!.filter(able => able.name === requestAble));
         }
     }
-    if (!ables.length) {
+    if (!ables.length || ables.every(able => able.dragRelation)) {
         return false;
     }
     const eventAbles: Able[] = [BeforeRenderable, ...ables, Renderable].filter((able: any) => able[eventName]);
@@ -115,9 +115,6 @@ export function triggerAble(
 
             if (nextDatas.isEventStart) {
                 if (able.dragRelation === "strong") {
-                    // cancel drag
-                    nextDatas.isEventStart = false;
-
                     return false;
                 }
                 // start drag
@@ -125,7 +122,7 @@ export function triggerAble(
             }
             // cancel event
             return false;
-        }).length === 0;
+        }).length as any;
     }
     if (isEnd || isForceEnd) {
         moveable.state.gestos = {};

@@ -422,6 +422,9 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     updateRect?: boolean;
     canPinch?: boolean;
     css?: string[];
+    /**
+     * Check how related to drag
+     */
     dragRelation?: "strong" | "weak" | undefined | null | false,
     /**
      * Fired when the event is cleared
