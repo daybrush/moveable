@@ -4,6 +4,7 @@ import * as React from "react";
 import { storiesOf } from "@storybook/react";
 import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
 import { convertReactTemplate, convertPath, makeArgs } from "../utils";
+import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
 // import { DEFAULT_DRAGGABLE_CONTROLS, DEFAULT_CLIPPABLE_CONTROLS } from "../controls/default";
 
 
@@ -27,12 +28,19 @@ export function makeStoryGroup(title: string, module: NodeModule) {
         }, {
             argTypes: argsTypes || {},
             args: makeArgs(argsTypes || {}),
-            preview: {
-                tab: "React",
-                template: convertReactTemplate(convertPath(text)),
-                codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
-                language: "tsx",
-            },
+            preview: [
+                {
+                    tab: "React",
+                    template: convertReactTemplate(convertPath(text)),
+                    codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
+                    language: "tsx",
+                },
+                {
+                    tab: "CSS",
+                    template: DEFAULT_CSS_TEMPLATE,
+                    language: "css",
+                },
+            ],
         });
     }
     return {

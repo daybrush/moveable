@@ -61,3 +61,8 @@ group.add("Zoomed Cursor", {
     app: require("./ReactZoomedCursorApp").default,
     text: require("!!raw-loader!./ReactZoomedCursorApp").default,
 });
+
+group.add("Test performance for large number instances", {
+    app: require("./ReactHandleLargeNumberApp").default,
+    text: require("!!raw-loader!./ReactHandleLargeNumberApp").default,
+});
