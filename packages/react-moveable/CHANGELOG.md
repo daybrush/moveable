@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.1...react-moveable@0.38.3) (2022-08-23)
+
+
+### :bug: Bug Fix
+
+* fix custom element offsetPos for firefox ([6e05812](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6e05812c649098c6330678289cd83d9abaa6df1d))
+* fix svg group's offset pos #722 ([167d277](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/167d277abe7f58d0b203867eb8df25addba2172a))
+* fix waitToChangeTarget method #714 ([fc9847b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/fc9847b4d2fa78eb057259bb5d4a2a187a663bf1))
+* stop event if no use ables #724 ([2a90842](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/2a90842e4ff937af6b39bbc4e147a7a7acbb0acf))
+
+
+### :mega: Other
+
+* fix cjs configs ([ce8cbb1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ce8cbb18563e34234f7e9d83a0b3f024870314a8))
+* publish packages ([3597bc5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3597bc5fd58cdec56fd4ff8916380a6f3709f7f5))
+
+
+
 ## [0.38.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.0...react-moveable@0.38.1) (2022-08-12)
 
 
