@@ -45,7 +45,7 @@ export default builder([
         sourcemap: false,
         input: "src/index.umd.ts",
         output: "./dist/moveable.cjs.js",
-        exports: "default",
+        exports: "named",
         plugins: [reactPlugin],
         format: "cjs",
         external,

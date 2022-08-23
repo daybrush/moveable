@@ -17,5 +17,6 @@ export default builder([{
     input: "src/react-moveable/index.umd.ts",
     output: "./dist/moveable.cjs.js",
     format: "cjs",
+    exports: "named",
 },
 ]);

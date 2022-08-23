@@ -1,6 +1,9 @@
-import Moveable, * as others from "./index.esm";
+import Moveable, * as modules from "./index.esm";
 
-for (const name in others) {
-    (Moveable as any)[name] = (others as any)[name];
+for (const name in modules) {
+    (Moveable as any)[name] = (modules as any)[name];
 }
+
+module.exports = Moveable;
+export * from "./index.esm";
 export default Moveable;

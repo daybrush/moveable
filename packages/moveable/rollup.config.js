@@ -57,9 +57,9 @@ export default builder([
         external,
     },
     {
-        input: "src/index.umd.ts",
+        input: "src/index.cjs.ts",
         output: "./dist/moveable.cjs.js",
-        exports: "default",
+        exports: "named",
         format: "cjs",
         plugins: [compatPlugin],
         external,
