@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.3...react-moveable@0.38.4) (2022-08-24)
+
+
+### :bug: Bug Fix
+
+* ignore document for firefox ([db0c730](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/db0c730be90c00d8d187445db26e0e42a08cedb2))
+
+
+### :mega: Other
+
+* publish packages ([d57ebb1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d57ebb130006c47e3a687d2b417fe3fe7f30149a))
+
+
+
 ## [0.38.3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.1...react-moveable@0.38.3) (2022-08-23)
 
 

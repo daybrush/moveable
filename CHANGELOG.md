@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.4](https://github.com/daybrush/moveable/compare/0.35.3...0.35.4) (2022-08-24)
+### :sparkles: Packages
+* `lit-moveable` 0.12.4
+* `moveable` 0.35.4
+* `preact-moveable` 0.37.4
+* `react-compat-moveable` 0.23.4
+* `react-moveable` 0.38.4
+* `svelte-moveable` 0.27.4
+* `vue-moveable` 2.0.0-beta.36
+* `vue3-moveable` 0.10.4
+* `ngx-moveable` 0.32.4
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * ignore document for firefox ([db0c730](https://github.com/daybrush/moveable/commit/db0c730be90c00d8d187445db26e0e42a08cedb2))
+
+
+### :mega: Other
+
+* All
+    * publish packages ([d57ebb1](https://github.com/daybrush/moveable/commit/d57ebb130006c47e3a687d2b417fe3fe7f30149a))
+
+
+
 ## [0.35.3](https://github.com/daybrush/moveable/compare/0.35.1...0.35.3) (2022-08-23)
 ### :sparkles: Packages
 * `lit-moveable` 0.12.3
