@@ -130,7 +130,7 @@ const Editable = {
         // Add key (required)
         // Add class prefix moveable-(required)
         return <EditableViewer key="editable-viewer" className={"moveable-editable"} style={{
-            transform: ${"`"}translate(${"$"}{pos2[0]}px, (${"$"}{pos2[1]}px) rotate((${"$"}{rect.rotation}deg) translate(10px)${"`"},
+            transform: ${"`"}translate(${"$"}{pos2[0]}px, ${"$"}{pos2[1]}px) rotate(${"$"}{rect.rotation}deg) translate(10px)${"`"},
         }}>
             <button className="moveable-button" onClick={() => {
                 alert("+");
