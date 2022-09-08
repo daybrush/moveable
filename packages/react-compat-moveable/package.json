@@ -78,8 +78,8 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.12.2",
         "overlap-area": "^1.1.0",
-        "react-compat-css-styled": "^1.0.8",
-        "react-css-styled": "^1.0.3",
+        "react-compat-css-styled": "^1.0.9",
+        "react-css-styled": "^1.0.4",
         "react-moveable": "~0.38.4"
     }
 }

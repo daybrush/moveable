@@ -8408,6 +8408,14 @@ css-styled@^1.0.0:
     "@daybrush/utils" "^1.0.0"
     string-hash "^1.1.3"
 
+css-styled@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/css-styled/-/css-styled-1.0.1.tgz#803dc2bf615954805a56679cc500065c756ad525"
+  integrity sha512-psJCbNDPPusDBWH/gszP6BetPh577QaqpvaysTNPitxX0nxdGiTgELiOCus0gZ0yXk3gvjShBrFP07nvn58/TQ==
+  dependencies:
+    "@daybrush/utils" "^1.0.0"
+    string-hash "^1.1.3"
+
 css-to-mat@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/css-to-mat/-/css-to-mat-1.0.3.tgz#5c0d9b572b68b57fa8ba0b1a4c572c18ce3b2b60"
@@ -18208,10 +18216,10 @@ preact-context@^1.1.3:
   resolved "https://registry.yarnpkg.com/preact-context/-/preact-context-1.1.4.tgz#866ebd35bef5788f73fc453f06f01b03ddf8f4ff"
   integrity sha512-gcCjPJ65R0MiW9hDu8W/3WAmyTElIvwLyEO6oLQiM6/TbLKLxCpBCWV8GJjx52TTEyUr60HLDcmoCXZlslelzQ==
 
-preact-css-styled@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/preact-css-styled/-/preact-css-styled-1.0.3.tgz#1f7da32854a5a91a2f79f0b434278093a23d472b"
-  integrity sha512-5WG/1JrShEhgGQBTARLmb0ae4XuV2jKOFuPiqVTjusq4+Mnzd46y24+suajJVfxyWyMkQ7BsGh0mbnggfMcxCA==
+preact-css-styled@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/preact-css-styled/-/preact-css-styled-1.0.4.tgz#3420d37b708e9c4c165d2a2c057c764e8855fa71"
+  integrity sha512-5OHQIiBilia8udywc1KyDGqiWMHqcWXCBelf70D9tiCY/rmtbrLJ58AThjNRWrdjaVeHgZ2odOHpaOSimQOTBA==
   dependencies:
     css-styled "^1.0.0"
     framework-utils "^1.1.0"
@@ -18829,15 +18837,15 @@ react-colorful@^5.1.2:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.5.1.tgz#29d9c4e496f2ca784dd2bb5053a3a4340cfaf784"
   integrity sha512-M1TJH2X3RXEt12sWkpa6hLc/bbYS0H6F4rIqjQZ+RxNBstpY67d9TrFXtqdZwhpmBXcCwEi7stKqFue3ZRkiOg==
 
-react-compat-css-styled@^1.0.6, react-compat-css-styled@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/react-compat-css-styled/-/react-compat-css-styled-1.0.8.tgz#a6735a9a362b47bc12535e6d2c0f57262704f382"
-  integrity sha512-CG0kVbpKjiLMQc85pP50+Z0R9PGp7NIkkGqO88QTjEsSMOGKYlCXIAnXdKR2ZII23NJmA4XrJry03jkXOxTUkg==
+react-compat-css-styled@^1.0.6, react-compat-css-styled@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/react-compat-css-styled/-/react-compat-css-styled-1.0.9.tgz#70ed3ed8d8000fe01cb5ce15ee7723a094165db1"
+  integrity sha512-YpUgTpXU1wR58aPQJVGAWq6QeEFWkafV0qq4Y8KRUwpQJLbJF2GYu5ZQ/kafHGvN3dqQX2e340NlNZ+zbZZv2w==
   dependencies:
     "@daybrush/utils" "^1.0.0"
     css-styled "^1.0.0"
     framework-utils "^1.1.0"
-    react-css-styled "^1.0.3"
+    react-css-styled "~1.0.4"
 
 react-compat-guides@~0.15.1:
   version "0.15.1"
@@ -18855,12 +18863,12 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^1.0.2, react-css-styled@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-css-styled/-/react-css-styled-1.0.3.tgz#f6dda995f41e4777567d2464b7d12ed1373b4f1d"
-  integrity sha512-6H3aZPO66PYmYg9wx12WzOJpPlBEdA7O5JefCh+4SldlihVKBCxA6mityfWSGWL5ldOkJdHJWGwHR6nGPcVm+A==
+react-css-styled@^1.0.2, react-css-styled@^1.0.4, react-css-styled@~1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-css-styled/-/react-css-styled-1.0.4.tgz#236ce398232dc152084bbf20540df1c971534174"
+  integrity sha512-nRske1bAKOCaf7Gf3o76tKQFIYggaW1qH4rutBlitH5lYnRPA7WoAYKrcxqdUPZd00oASg3SvFZSh3Mc1Wvj3w==
   dependencies:
-    css-styled "^1.0.0"
+    css-styled "~1.0.1"
     framework-utils "^1.1.0"
 
 react-docgen-typescript@^2.1.1:
