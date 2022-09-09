@@ -66,3 +66,8 @@ group.add("Test performance for large number instances", {
     app: require("./ReactHandleLargeNumberApp").default,
     text: require("!!raw-loader!./ReactHandleLargeNumberApp").default,
 });
+
+group.add("Test overflow: auto target", {
+    app: require("./ReactOverflowApp").default,
+    text: require("!!raw-loader!./ReactOverflowApp").default,
+});

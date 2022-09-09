@@ -89,6 +89,7 @@ export function getMatrixStackInfo(
             offsetLeft,
             offsetTop,
         ] = offsetPos;
+
         if (tagName === "svg" && targetMatrix) {
             // scale matrix for svg's SVGElements.
             matrixes.push({
@@ -118,7 +119,7 @@ export function getMatrixStackInfo(
             isStatic = offsetInfo.isStatic;
 
             if (IS_FIREFOX) {
-                const parentSlotElement = offsetInfo.parentSlotElement;                
+                const parentSlotElement = offsetInfo.parentSlotElement;
 
                 if (parentSlotElement) {
                     let customOffsetParent: HTMLElement | null = offsetParent;
@@ -138,6 +139,7 @@ export function getMatrixStackInfo(
                 }
             }
         }
+
         if (
             IS_WEBKIT && !IS_SAFARI_ABOVE15
             && hasOffset && !isSVG && isStatic
@@ -178,13 +180,18 @@ export function getMatrixStackInfo(
             target: el,
             matrix: getAbsoluteMatrix(matrix, n, origin),
         });
+
         if (hasOffset) {
+            const isElementTarget = el === target;
+            const scrollLeft = isElementTarget ? 0 : el.scrollLeft;
+            const scrollTop = isElementTarget ? 0 : el.scrollTop;
+
             matrixes.push({
                 type: "offset",
                 target: el,
                 matrix: createOriginMatrix([
-                    offsetLeft - el.scrollLeft + parentClientLeft - fixedClientLeft,
-                    offsetTop - el.scrollTop + parentClientTop - fixedClientTop,
+                    offsetLeft - scrollLeft + parentClientLeft - fixedClientLeft,
+                    offsetTop - scrollTop + parentClientTop - fixedClientTop,
                 ], n),
             });
         } else {
