@@ -2721,6 +2721,7 @@ export interface MoveableInterface {
     setState(state: any, callback?: () => any): any;
     waitToChangeTarget(): Promise<void>;
     forceUpdate(callback?: () => any): any;
+    updateSelectors(): void;
 }
 
 export interface ControlPose {

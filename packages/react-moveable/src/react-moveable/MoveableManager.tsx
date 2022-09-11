@@ -647,6 +647,7 @@ export default class MoveableManager<T = {}>
             this.updateRect();
         });
     }
+    public updateSelectors() {}
     protected unsetAbles() {
         this.targetAbles.forEach(able => {
             if (able.unset) {

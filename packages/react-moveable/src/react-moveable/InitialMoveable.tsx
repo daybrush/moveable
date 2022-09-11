@@ -113,7 +113,23 @@ export class InitialMoveable<T = {}>
         this.selectorMap = {};
         this.refTargets = [];
     }
-
+    /**
+     * If the element list corresponding to the selector among the targets is changed, it is updated.
+     * @method Moveable#updateSelectors
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body, {
+     *    target: ".target",
+     * });
+     *
+     * moveable.updateSelectors();
+     */
+    public updateSelectors() {
+        this.selectorMap = {};
+        this.refTargets = [];
+        this.forceUpdate();
+    }
     /**
      * User changes target and waits for target to change.
      * @method Moveable#waitToChangeTarget
