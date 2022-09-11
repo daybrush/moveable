@@ -134,7 +134,7 @@ function getRotateInfo(
 
 
     if (isSnap) {
-        nextDist = checkSnapRotate(moveable, moveableRect, datas.origin, nextDist);
+        nextDist = checkSnapRotate(moveable, moveableRect, nextDist);
     }
 
     const snapRotation = throttle(startValue + nextDist, throttleRotate);

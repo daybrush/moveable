@@ -316,25 +316,26 @@ export function checkSizeDist(
 export function checkSnapRotate(
     moveable: MoveableManagerInterface<SnappableProps & RotatableProps, any>,
     rect: RectInfo,
-    origin: number[],
     rotation: number
 ) {
     if (!hasGuidelines(moveable, "rotatable")) {
         return rotation;
     }
 
-    const { pos1, pos2, pos3, pos4 } = rect;
+    const { pos1, pos2, pos3, pos4, origin: origin2 } = rect;
     const rad = (rotation * Math.PI) / 180;
-    const prevPoses = [pos1, pos2, pos3, pos4].map((pos) => minus(pos, origin));
+    const prevPoses = [pos1, pos2, pos3, pos4].map((pos) => minus(pos, origin2));
     const nextPoses = prevPoses.map((pos) => rotate(pos, rad));
 
+    // console.log(moveable.state.left, moveable.state.top, moveable.state.origin);
+    // console.log(pos1, pos2, pos3, pos4, origin, rad, prevPoses, nextPoses);
     const result = [
-        ...checkRotateBounds(moveable, prevPoses, nextPoses, origin, rotation),
+        ...checkRotateBounds(moveable, prevPoses, nextPoses, origin2, rotation),
         ...checkRotateInnerBounds(
             moveable,
             prevPoses,
             nextPoses,
-            origin,
+            origin2,
             rotation
         ),
     ];
