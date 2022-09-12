@@ -2,6 +2,9 @@ const path = require("path");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
+    features: {
+        interactionsDebugger: true,
+    },
     typescript: {
         reactDocgen: "react-docgen-typescript",
         reactDocgenTypescriptOptions: {
@@ -33,6 +36,7 @@ module.exports = {
         "@storybook/addon-viewport/register",
         "storybook-addon-preview/register",
         "storybook-dark-mode/register",
+        "@storybook/addon-interactions",
     ],
     "framework": "@storybook/react",
 };

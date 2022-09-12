@@ -1,3 +1,6 @@
+import { within } from '@storybook/testing-library';
+import { expect } from '@storybook/jest';
+
 import { DEFAULT_REACT_CODESANDBOX, DEFAULT_VANILLA_CODESANDBOX } from "storybook-addon-preview";
 import "../common.css";
 import "../templates/default.css";
@@ -11,6 +14,8 @@ import {
     DEFAULT_DRAGGABLE_CONTROLS, SCALE_CONTROLS,
 } from "../controls/default";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
+import { StoryContext } from '@storybook/csf';
+import { dispatchDrag } from '../tests/GestoHelper';
 
 export const DraggableTemplate = App as any;
 
@@ -24,6 +29,15 @@ DraggableTemplate.args = {
     ...makeArgs(DraggableTemplate.argTypes),
 };
 
+// DraggableTemplate.play = async ({ canvasElement }: StoryContext) => {
+//     const canvas = within(canvasElement);
+//     const target = await canvas.findByText("Target");
+
+
+//     // move 200px
+//     await dispatchDrag(target, [40, 40], [200, 0]);
+//     expect(target.style.transform).toBe("translate(200px, 0px)");
+// };
 
 DraggableTemplate.parameters = {
     preview: [
