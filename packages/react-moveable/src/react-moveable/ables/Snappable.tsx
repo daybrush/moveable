@@ -319,7 +319,10 @@ export function checkSnapRotate(
     rotation: number
 ) {
     if (!hasGuidelines(moveable, "rotatable")) {
-        return rotation;
+        return {
+            isSnap: false,
+            rotation,
+        };
     }
 
     const { pos1, pos2, pos3, pos4, origin: origin2 } = rect;
@@ -340,12 +343,12 @@ export function checkSnapRotate(
         ),
     ];
     result.sort((a, b) => Math.abs(a - rotation) - Math.abs(b - rotation));
+    const isSnap = result.length > 0;
 
-    if (result.length) {
-        return result[0];
-    } else {
-        return rotation;
-    }
+    return {
+        isSnap,
+        rotation: isSnap ? result[0] : rotation,
+    };
 }
 export function checkSnapResize(
     moveable: MoveableManagerInterface<{}, {}>,

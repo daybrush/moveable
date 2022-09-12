@@ -122,27 +122,30 @@ function getRotateInfo(
     datas: IObject<any>,
     dist: number,
     startValue: number,
-    isSnap?: boolean,
+    checkSnap?: boolean,
 ) {
     const {
         throttleRotate = 0,
     } = moveable.props;
-    let nextDist = dist;
-
     const prevSnapDeg = datas.prevSnapDeg;
+    let snapRotation = 0;
+    let isSnap = false;
 
+    if (checkSnap) {
+        const result = checkSnapRotate(moveable, moveableRect, dist);
 
-
-    if (isSnap) {
-        nextDist = checkSnapRotate(moveable, moveableRect, nextDist);
+        isSnap = result.isSnap;
+        snapRotation = startValue + result.rotation;
     }
 
-    const snapRotation = throttle(startValue + nextDist, throttleRotate);
+    if (!isSnap) {
+        snapRotation = throttle(startValue + dist, throttleRotate);
+    }
     const snapDeg = snapRotation - startValue;
 
     datas.prevSnapDeg = snapDeg;
 
-    return [snapDeg - prevSnapDeg, nextDist, snapRotation];
+    return [snapDeg - prevSnapDeg, snapDeg, snapRotation];
 
 
 }
@@ -654,6 +657,7 @@ export default {
                 absoluteDist = dist;
             },
         }, true));
+
         [
             beforeDelta,
             beforeDist,
@@ -795,6 +799,7 @@ export default {
                     minus(beforeOrigin, parentBeforeOrigin),
                 );
 
+                ev.datas.startGroupClient = childClient;
                 ev.datas.groupClient = childClient;
                 return { ...ev, parentRotate: 0 };
             },
@@ -831,18 +836,17 @@ export default {
         }
         const direction = datas.beforeDirection;
         const parentRotate = params.beforeDist;
-        const deg = params.beforeDelta;
-        const rad = deg / 180 * Math.PI;
-
+        const rad = parentRotate / 180 * Math.PI;
         const events = triggerChildAbles(
             moveable,
             this,
             "dragControl",
             e,
             (_, ev) => {
-                const [prevX, prevY] = ev.datas.groupClient;
-                const [clientX, clientY] = rotateMatrix([prevX, prevY], rad * direction);
-                const delta = [clientX - prevX, clientY - prevY];
+                const startGroupClient = ev.datas.startGroupClient;
+                const [prevClientX, prevClientY] = ev.datas.groupClient;
+                const [clientX, clientY] = rotateMatrix(startGroupClient, rad * direction);
+                const delta = [clientX - prevClientX, clientY - prevClientY];
 
                 ev.datas.groupClient = [clientX, clientY];
                 return { ...ev, parentRotate, groupDelta: delta };
