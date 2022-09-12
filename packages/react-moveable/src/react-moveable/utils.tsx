@@ -20,6 +20,7 @@ import {
     MoveableProps, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
     ElementSizes, MoveablePosition, TransformObject,
+    MoveableRefTargetsResultType, MoveableRefTargetType,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getBeforeRenderableDatas, getDragDist } from "./gesto/GestoUtils";
@@ -183,7 +184,7 @@ export function getOffsetInfo(
         if (parentNode && parentNode.nodeType === 11) {
             // Shadow Root
             target = (parentNode as ShadowRoot).host as HTMLElement;
-            isCustomElement = true;            
+            isCustomElement = true;
 
             break;
         }
@@ -1212,12 +1213,12 @@ export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
 }
 
 export function getRefTargets(
-    targets: MoveableRefType | ArrayFormat<MoveableRefType>,
+    targets: MoveableRefTargetType,
     isSelector: true): Array<HTMLElement | SVGElement | null>;
 export function getRefTargets(
-    targets: MoveableRefType | ArrayFormat<MoveableRefType>,
-    isSelector?: boolean): Array<HTMLElement | SVGElement | string | null>;
-export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRefType>, isSelector?: boolean) {
+    targets: MoveableRefTargetType,
+    isSelector?: boolean): MoveableRefTargetsResultType;
+export function getRefTargets(targets: MoveableRefTargetType, isSelector?: boolean): any[] {
     if (!targets) {
         return [];
     }
@@ -1227,30 +1228,13 @@ export function getRefTargets(targets: MoveableRefType | ArrayFormat<MoveableRef
         if (isString(target) && isSelector) {
             return [...prev, ...[].slice.call(document.querySelectorAll<HTMLElement>(target))];
         }
-        prev.push(getRefTarget(target, isSelector));
+        if (isArray(target)) {
+            prev.push(getRefTargets(target, isSelector));
+        } else {
+            prev.push(getRefTarget(target, isSelector));
+        }
         return prev;
-    }, [] as Array<SVGElement | HTMLElement | string | null | undefined>);
-}
-
-export function getElementTargets(
-    targets: Array<SVGElement | HTMLElement | string | null | undefined>,
-    selectorMap: IObject<Array<HTMLElement | SVGElement>>,
-) {
-    const elementTargets: Array<SVGElement | HTMLElement> = [];
-    targets.forEach(target => {
-        if (!target) {
-            return;
-        }
-        if (isString(target)) {
-            if (selectorMap[target]) {
-                elementTargets.push(...selectorMap[target]);
-            }
-            return;
-        }
-        elementTargets.push(target);
-    });
-
-    return elementTargets;
+    }, [] as MoveableRefTargetsResultType);
 }
 
 export function minmax(...values: number[]) {

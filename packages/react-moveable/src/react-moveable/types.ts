@@ -24,7 +24,7 @@ export type MoveableManagerProps<T = {}> = {
     customStyledMap: Record<string, any>;
     wrapperMoveable?: MoveableManagerInterface | null;
     parentMoveable?: MoveableManagerInterface | null;
-    parentPosition?: { left: number, top: number } | null;
+    parentPosition?: number[] | null;
     groupable?: boolean;
 } & MoveableDefaultOptions & (unknown extends T ? IObject<any> : T);
 
@@ -353,8 +353,17 @@ export interface MoveableProps extends
  * @extends Moveable.MoveableDefaultOptions
  */
 export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions, "target"> {
-    target?: MoveableRefType | ArrayFormat<MoveableRefType>;
+    target?: MoveableRefTargetType;
 }
+/**
+ * @memberof Moveable
+ * @typedef
+ */
+export type MoveableRefTargetType = MoveableRefType | ArrayFormat<MoveableRefTargetType>;
+
+export type MoveableRefTargetsResultType
+    = Array<HTMLElement | SVGElement | string | null | MoveableRefTargetsResultType>;
+
 /**
  * @memberof Moveable
  * @typedef
@@ -2065,6 +2074,10 @@ export interface GroupableOptions {
      */
     defaultGroupOrigin?: string;
     /**
+     * @default
+     */
+    targetGroups?: MoveableTargetGroupsType;
+    /**
      * @private
      */
     groupable?: boolean;
@@ -2074,6 +2087,12 @@ export interface GroupableOptions {
      */
     hideChildMoveableDefaultLines?: boolean;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export type MoveableTargetGroupsType = Array<HTMLElement | SVGElement | MoveableTargetGroupsType>;
 
 
 /**
@@ -2663,6 +2682,23 @@ export interface RectInfo {
     rotation: number;
     children?: RectInfo[];
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export interface GroupRect {
+    pos1: number[];
+    pos2: number[];
+    pos3: number[];
+    pos4: number[];
+    minX: number;
+    minY: number;
+    width: number;
+    height: number;
+    rotation: number;
+}
+
 /**
  * @typedef
  * @memberof Moveable
@@ -2700,9 +2736,10 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     triggerEvent(name: string, params: IObject<any>, isManager?: boolean): any;
 }
 export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {
-    moveables: MoveableManagerInterface[];
     props: MoveableManagerProps<T> & { targets: Array<HTMLElement | SVGElement> };
+    moveables: MoveableManagerInterface[];
     transformOrigin: string;
+    renderGroupRects: GroupRect[];
 }
 export interface MoveableInterface {
     getManager(): MoveableManagerInterface<any, any>;
@@ -2751,9 +2788,9 @@ export interface SnappableRenderType {
     pos: number;
 }
 
-export type ExcludeParams<T>
+export type ExcludeParams<T extends IObject<any>>
     = ExcludeKeys<T, keyof OnEvent>;
-export type ExcludeEndParams<T>
+export type ExcludeEndParams<T extends IObject<any>>
     = ExcludeKeys<ExcludeParams<T>, "lastEvent" | "isDrag" | "isDouble">;
 export type DefaultProps<Name extends string, AbleObject extends Partial<Able<any, any>>>
     = AbleObject extends { props: {} } ? AbleObject["props"] : { readonly [key in Name]: BooleanConstructor; };

@@ -103,7 +103,8 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const state = this.state;
         const {
-            parentPosition, className,
+            parentPosition,
+            className,
             target: propsTarget,
             zoom, cspNonce,
             translateZ,
@@ -114,7 +115,7 @@ export default class MoveableManager<T = {}>
         this.checkUpdate();
         this.updateRenderPoses();
 
-        const { left: parentLeft, top: parentTop } = parentPosition! || { left: 0, top: 0 };
+        const [parentLeft, parentTop] = parentPosition as number[] || [0, 0];
         const {
             left,
             top,
@@ -611,7 +612,7 @@ export default class MoveableManager<T = {}>
         this._isPropTargetChanged = isTargetChanged;
     }
     public waitToChangeTarget(): Promise<void> {
-        return new Promise(() => {});
+        return new Promise(() => { });
     }
     public triggerEvent(name: string, e: any): any {
         this._emitter.trigger(name, e);
@@ -647,7 +648,7 @@ export default class MoveableManager<T = {}>
             this.updateRect();
         });
     }
-    public updateSelectors() {}
+    public updateSelectors() { }
     protected unsetAbles() {
         this.targetAbles.forEach(able => {
             if (able.unset) {
@@ -741,7 +742,7 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const target = props.dragTarget || props.target;
         const isUnset = (!hasTargetAble && this.targetGesto)
-        || this._isTargetChanged(true);
+            || this._isTargetChanged(true);
 
         if (isUnset) {
             unset(this, "targetGesto");
@@ -787,7 +788,7 @@ export default class MoveableManager<T = {}>
             [3, 2],
             [2, 0],
         ].map(([from, to], i) => {
-            return renderLine(Renderer, "", renderPoses[from], renderPoses[to], zoom!, i);
+            return renderLine(Renderer, "", renderPoses[from], renderPoses[to], zoom!, `render-line-${i}`);
         });
     }
     private _onPreventClick = (e: any) => {

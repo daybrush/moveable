@@ -1,5 +1,5 @@
 import MoveableManager from "./MoveableManager";
-import { GroupableProps, RectInfo } from "./types";
+import { GroupableProps, GroupRect, MoveableTargetGroupsType, RectInfo } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
@@ -7,7 +7,7 @@ import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getAbsolutePosesByState, equals, unset } from "./utils";
 import { minus, plus } from "@scena/matrix";
 import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
-import { throttle } from "@daybrush/utils";
+import { find, isArray, throttle } from "@daybrush/utils";
 import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 import { solveC, solveConstantsDistance } from "./Snappable/utils";
 
@@ -22,7 +22,8 @@ function getMinPos(poses: number[][][], index: number) {
     }));
 }
 
-function getGroupRect(moveables: MoveableManager[], rotation: number) {
+
+function getGroupRect(parentPoses: number[][][], rotation: number): GroupRect {
     let pos1 = [0, 0];
     let pos2 = [0, 0];
     let pos3 = [0, 0];
@@ -30,7 +31,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
     let width = 0;
     let height = 0;
 
-    if (!moveables.length) {
+    if (!parentPoses.length) {
         return {
             pos1,
             pos2,
@@ -40,10 +41,9 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
             minY: 0,
             width,
             height,
+            rotation,
         };
     }
-
-    const moveablePoses = moveables.map(({ state }) => getAbsolutePosesByState(state));
     const fixedRotation = throttle(rotation, TINY_NUM);
 
     if (fixedRotation % 90) {
@@ -57,7 +57,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
         const a2MinMax = [MAX_NUM, MIN_NUM];
         const a2MinMaxPos = [[0, 0], [0, 0]];
 
-        moveablePoses.forEach(poses => {
+        parentPoses.forEach(poses => {
             poses.forEach(pos => {
 
                 // const b1 = pos[1] - a1 * pos[0];
@@ -104,10 +104,10 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
         width = a2MinMax[1] - a2MinMax[0];
         height = a1MinMax[1] - a1MinMax[0];
     } else {
-        const minX = getMinPos(moveablePoses, 0);
-        const minY = getMinPos(moveablePoses, 1);
-        const maxX = getMaxPos(moveablePoses, 0);
-        const maxY = getMaxPos(moveablePoses, 1);
+        const minX = getMinPos(parentPoses, 0);
+        const minY = getMinPos(parentPoses, 1);
+        const maxX = getMaxPos(parentPoses, 0);
+        const maxY = getMaxPos(parentPoses, 1);
 
         pos1 = [minX, minY];
         pos2 = [maxX, minY];
@@ -144,6 +144,7 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
 
         [pos1, pos2, pos3, pos4] = changedX;
     }
+    const { minX, minY } = getMinMaxs([pos1, pos2, pos3, pos4]);
 
     return {
         pos1,
@@ -152,10 +153,32 @@ function getGroupRect(moveables: MoveableManager[], rotation: number) {
         pos4,
         width,
         height,
-        minX: Math.min(pos1[0], pos2[0], pos3[0], pos4[0]),
-        minY: Math.min(pos1[1], pos2[1], pos3[1], pos4[1]),
+        minX,
+        minY,
+        rotation,
     };
 }
+type SelfGroup = Array<MoveableManager | null | SelfGroup>;
+
+function findMoveableGroups(moveables: MoveableManager[], childTargetGroups: MoveableTargetGroupsType): SelfGroup {
+    return childTargetGroups.map(targetGroup => {
+        if (isArray(targetGroup)) {
+            const childMoveableGroups = findMoveableGroups(moveables, targetGroup);
+            const length = childMoveableGroups.length;
+
+            if (length > 1) {
+                return childMoveableGroups;
+            } else if (length === 1) {
+                return childMoveableGroups[0];
+            } else {
+                return null;
+            }
+        } else {
+            return find(moveables, moveable => moveable.props.target === targetGroup)!;
+        }
+    }).filter(Boolean);
+}
+
 /**
  * @namespace Moveable.Group
  * @description You can make targets moveable.
@@ -174,6 +197,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     public moveables: MoveableManager[] = [];
     public transformOrigin = "50% 50%";
+    public renderGroupRects: GroupRect[] = [];
 
     public checkUpdate() {
         this._isPropTargetChanged = false;
@@ -192,22 +216,59 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const props = this.props;
         const moveables = this.moveables;
         const target = state.target! || props.target!;
+        const moveableGroups = findMoveableGroups(moveables, this.props.targetGroups || []);
+        const renderGroupRects: GroupRect[] = [];
+        const isReset = !isTarget || (type !== "" && props.updateGroup);
 
-        const firstRotation = moveables[0].getRotation();
-        const isSameRotation = moveables.every(moveable => {
-            return Math.abs(firstRotation - moveable.getRotation()) < 0.1;
-        });
+        function getMoveableGroupRect(group: SelfGroup, parentRotation: number, isRoot?: boolean): GroupRect {
+            const posesRotations = group.map(moveable => {
+                if (isArray(moveable)) {
+                    const rect = getMoveableGroupRect(moveable, parentRotation);
+                    const poses = [rect.pos1, rect.pos2, rect.pos3, rect.pos4];
 
-        if (!isTarget || (type !== "" && props.updateGroup)) {
+                    renderGroupRects.push(rect);
+                    return { poses, rotation: rect.rotation };
+                } else {
+                    return {
+                        poses: getAbsolutePosesByState(moveable!.state),
+                        rotation: moveable!.getRotation(),
+                    };
+                }
+            });
+            const rotations = posesRotations.map(({ rotation }) => rotation);
+
+            let groupRotation = 0;
+            const firstRotation = rotations[0];
+            const isSameRotation = rotations.every(nextRotation => {
+                return Math.abs(firstRotation - nextRotation) < 0.1;
+            });
+
+            if (isReset) {
+                groupRotation = isSameRotation ? firstRotation : (props.defaultGroupRotate || 0);
+            } else {
+                groupRotation = !isRoot && isSameRotation ? firstRotation : parentRotation;
+            }
+            const groupPoses = posesRotations.map(({ poses }) => poses);
+            const groupRect = getGroupRect(
+                groupPoses,
+                groupRotation,
+            );
+
+            return groupRect;
+        }
+        const rootGroupRect = getMoveableGroupRect(moveableGroups, this.rotation, true);
+
+        if (isReset) {
             // reset rotataion
-            this.rotation = isSameRotation ? firstRotation : props.defaultGroupRotate!;
+            this.rotation = rootGroupRect.rotation;
             this.transformOrigin = props.defaultGroupOrigin || "50% 50%";
             this.scale = [1, 1];
-
         }
+
+        this.renderGroupRects = renderGroupRects;
         const rotation = this.rotation;
         const scale = this.scale;
-        const { width, height, minX, minY } = getGroupRect(moveables, rotation);
+        const { width, height, minX, minY } = rootGroupRect;
 
         // tslint:disable-next-line: max-line-length
         const transform = `rotate(${rotation}deg) scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
