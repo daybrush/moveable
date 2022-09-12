@@ -5,10 +5,11 @@ import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import { getAbsolutePosesByState, equals, unset } from "./utils";
-import { minus, plus, rotate } from "@scena/matrix";
-import { getMinMaxs } from "overlap-area";
+import { minus, plus } from "@scena/matrix";
+import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
 import { throttle } from "@daybrush/utils";
 import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
+import { solveC, solveConstantsDistance } from "./Snappable/utils";
 
 function getMaxPos(poses: number[][][], index: number) {
     return Math.max(...poses.map(([pos1, pos2, pos3, pos4]) => {
@@ -20,75 +21,140 @@ function getMinPos(poses: number[][][], index: number) {
         return Math.min(pos1[index], pos2[index], pos3[index], pos4[index]);
     }));
 }
+
 function getGroupRect(moveables: MoveableManager[], rotation: number) {
+    let pos1 = [0, 0];
+    let pos2 = [0, 0];
+    let pos3 = [0, 0];
+    let pos4 = [0, 0];
+    let width = 0;
+    let height = 0;
+
     if (!moveables.length) {
-        return [0, 0, 0, 0];
+        return {
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+            minX: 0,
+            minY: 0,
+            width,
+            height,
+        };
     }
 
     const moveablePoses = moveables.map(({ state }) => getAbsolutePosesByState(state));
-    let minX = MAX_NUM;
-    let minY = MAX_NUM;
-    let groupWidth = 0;
-    let groupHeight = 0;
     const fixedRotation = throttle(rotation, TINY_NUM);
 
     if (fixedRotation % 90) {
         const rad = fixedRotation / 180 * Math.PI;
         const a1 = Math.tan(rad);
         const a2 = -1 / a1;
-        const b1MinMax = [MIN_NUM, MAX_NUM];
-        const b2MinMax = [MIN_NUM, MAX_NUM];
+        // ax = y  // -ax + y = 0 // 0 => 1
+        // -ax = y // ax + y = 0  // 0 => 3
+        const a1MinMax = [MAX_NUM, MIN_NUM];
+        const a1MinMaxPos = [[0, 0], [0, 0]];
+        const a2MinMax = [MAX_NUM, MIN_NUM];
+        const a2MinMaxPos = [[0, 0], [0, 0]];
 
         moveablePoses.forEach(poses => {
             poses.forEach(pos => {
-                // ax + b = y
-                // b = y - ax
-                const b1 = pos[1] - a1 * pos[0];
-                const b2 = pos[1] - a2 * pos[0];
 
-                b1MinMax[0] = Math.max(b1MinMax[0], b1);
-                b1MinMax[1] = Math.min(b1MinMax[1], b1);
-                b2MinMax[0] = Math.max(b2MinMax[0], b2);
-                b2MinMax[1] = Math.min(b2MinMax[1], b2);
+                // const b1 = pos[1] - a1 * pos[0];
+                // const b2 = pos[1] - a2 * pos[0];
+
+                const a1Dist = solveConstantsDistance([-a1, 1, 0], pos);
+                const a2Dist = solveConstantsDistance([-a2, 1, 0], pos);
+
+                if (a1MinMax[0] > a1Dist) {
+                    a1MinMaxPos[0] = pos;
+                    a1MinMax[0] = a1Dist;
+                }
+                if (a1MinMax[1] < a1Dist) {
+                    a1MinMaxPos[1] = pos;
+                    a1MinMax[1] = a1Dist;
+                }
+                if (a2MinMax[0] > a2Dist) {
+                    a2MinMaxPos[0] = pos;
+                    a2MinMax[0] = a2Dist;
+                }
+                if (a2MinMax[1] < a2Dist) {
+                    a2MinMaxPos[1] = pos;
+                    a2MinMax[1] = a2Dist;
+                }
             });
         });
 
-        b1MinMax.forEach(b1 => {
-            // a1x + b1 = a2x + b2
-            b2MinMax.forEach(b2 => {
-                // (a1 - a2)x = b2 - b1
-                const x = (b2 - b1) / (a1 - a2);
-                const y = a1 * x + b1;
+        const [a1MinPos, a1MaxPos] = a1MinMaxPos;
+        const [a2MinPos, a2MaxPos] = a2MinMaxPos;
 
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-            });
-        });
-        const rotatePoses = moveablePoses.map(([pos1, pos2, pos3, pos4]) => {
-            return [
-                rotate(pos1, -rad),
-                rotate(pos2, -rad),
-                rotate(pos3, -rad),
-                rotate(pos4, -rad),
-            ];
-        });
+        const minHorizontalLine = [-a1, 1, solveC([-a1, 1], a1MinPos)];
+        const maxHorizontalLine = [-a1, 1, solveC([-a1, 1], a1MaxPos)];
 
-        groupWidth = getMaxPos(rotatePoses, 0) - getMinPos(rotatePoses, 0);
-        groupHeight = getMaxPos(rotatePoses, 1) - getMinPos(rotatePoses, 1);
+        const minVerticalLine = [-a2, 1, solveC([-a2, 1], a2MinPos)];
+        const maxVerticalLine = [-a2, 1, solveC([-a2, 1], a2MaxPos)];
+
+        [pos1, pos2, pos3, pos4] = [
+            [minHorizontalLine, minVerticalLine],
+            [minHorizontalLine, maxVerticalLine],
+            [maxHorizontalLine, minVerticalLine],
+            [maxHorizontalLine, maxVerticalLine],
+        ].map(([line1, line2]) => getIntersectionPointsByConstants(line1, line2)[0]);
+
+        width = a2MinMax[1] - a2MinMax[0];
+        height = a1MinMax[1] - a1MinMax[0];
     } else {
-        minX = getMinPos(moveablePoses, 0);
-        minY = getMinPos(moveablePoses, 1);
-        groupWidth = getMaxPos(moveablePoses, 0) - minX;
-        groupHeight = getMaxPos(moveablePoses, 1) - minY;
+        const minX = getMinPos(moveablePoses, 0);
+        const minY = getMinPos(moveablePoses, 1);
+        const maxX = getMaxPos(moveablePoses, 0);
+        const maxY = getMaxPos(moveablePoses, 1);
 
+        pos1 = [minX, minY];
+        pos2 = [maxX, minY];
+        pos3 = [minX, maxY];
+        pos4 = [maxX, maxY];
+        width = maxX - minX;
+        height = maxY - minY;
         if (fixedRotation % 180) {
-            const changedWidth = groupWidth;
+            // 0
+            // 1 2
+            // 3 4
+            // 90
+            // 3 1
+            // 4 2
+            // 180
+            // 4 3
+            // 2 1
+            // 270
+            // 2 4
+            // 1 3
+            // 1, 2, 3,4 = 3 1 4 2
+            const changedX = [pos3, pos1, pos4, pos2];
 
-            groupWidth = groupHeight;
-            groupHeight = changedWidth;
+            [pos1, pos2, pos3, pos4] = changedX;
+            width = maxY - minY;
+            height = maxX - minX;
         }
+
     }
-    return [minX, minY, groupWidth, groupHeight];
+    if (fixedRotation % 360 > 180) {
+        // 1 2   4 3
+        // 3 4   2 1
+        const changedX = [pos4, pos3, pos2, pos1];
+
+        [pos1, pos2, pos3, pos4] = changedX;
+    }
+
+    return {
+        pos1,
+        pos2,
+        pos3,
+        pos4,
+        width,
+        height,
+        minX: Math.min(pos1[0], pos2[0], pos3[0], pos4[0]),
+        minY: Math.min(pos1[1], pos2[1], pos3[1], pos4[1]),
+    };
 }
 /**
  * @namespace Moveable.Group
@@ -124,18 +190,24 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const state = this.state;
         const props = this.props;
+        const moveables = this.moveables;
         const target = state.target! || props.target!;
+
+        const firstRotation = moveables[0].getRotation();
+        const isSameRotation = moveables.every(moveable => {
+            return Math.abs(firstRotation - moveable.getRotation()) < 0.1;
+        });
 
         if (!isTarget || (type !== "" && props.updateGroup)) {
             // reset rotataion
-            this.rotation = props.defaultGroupRotate!;
+            this.rotation = isSameRotation ? firstRotation : props.defaultGroupRotate!;
             this.transformOrigin = props.defaultGroupOrigin || "50% 50%";
             this.scale = [1, 1];
 
         }
         const rotation = this.rotation;
         const scale = this.scale;
-        const [left, top, width, height] = getGroupRect(this.moveables, rotation);
+        const { width, height, minX, minY } = getGroupRect(moveables, rotation);
 
         // tslint:disable-next-line: max-line-length
         const transform = `rotate(${rotation}deg) scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
@@ -167,8 +239,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         info.pos2 = minus(pos2, delta);
         info.pos3 = minus(pos3, delta);
         info.pos4 = minus(pos4, delta);
-        info.left = left - info.left! + delta[0];
-        info.top = top - info.top! + delta[1];
+        info.left = minX - info.left! + delta[0];
+        info.top = minY - info.top! + delta[1];
         info.origin = minus(plus(pos, info.origin!), delta);
         info.beforeOrigin = minus(plus(pos, info.beforeOrigin!), delta);
         info.originalBeforeOrigin = plus(pos, info.originalBeforeOrigin!);
@@ -241,7 +313,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             state.container = props.container;
         }
         const { added, changed, removed } = this.differ.update(props.targets!);
-    
+
         const isTargetChanged = added.length || removed.length;
 
         if (isContainerChanged || isTargetChanged || changed.length) {
@@ -249,7 +321,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         }
         this._isPropTargetChanged = !!isTargetChanged;
     }
-    protected _updateObserver() {}
+    protected _updateObserver() { }
 }
 
 /**
