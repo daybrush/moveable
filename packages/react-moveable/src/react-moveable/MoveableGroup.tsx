@@ -159,9 +159,13 @@ function getGroupRect(parentPoses: number[][][], rotation: number): GroupRect {
     };
 }
 type SelfGroup = Array<MoveableManager | null | SelfGroup>;
+type CheckedMoveableManager = { finded: boolean; manager: MoveableManager };
 
-function findMoveableGroups(moveables: MoveableManager[], childTargetGroups: MoveableTargetGroupsType): SelfGroup {
-    return childTargetGroups.map(targetGroup => {
+function findMoveableGroups(
+    moveables: CheckedMoveableManager[],
+    childTargetGroups: MoveableTargetGroupsType,
+): SelfGroup {
+    const groups = childTargetGroups.map(targetGroup => {
         if (isArray(targetGroup)) {
             const childMoveableGroups = findMoveableGroups(moveables, targetGroup);
             const length = childMoveableGroups.length;
@@ -174,9 +178,20 @@ function findMoveableGroups(moveables: MoveableManager[], childTargetGroups: Mov
                 return null;
             }
         } else {
-            return find(moveables, moveable => moveable.props.target === targetGroup)!;
+            const checked = find(moveables, ({ manager }) => manager.props.target === targetGroup)!;
+
+            if (checked) {
+                checked.finded = true;
+                return checked.manager;
+            }
+            return null;
         }
     }).filter(Boolean);
+
+    if (groups.length === 1 && isArray(groups[0])) {
+        return groups[0];
+    }
+    return groups;
 }
 
 /**
@@ -216,7 +231,14 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const props = this.props;
         const moveables = this.moveables;
         const target = state.target! || props.target!;
-        const moveableGroups = findMoveableGroups(moveables, this.props.targetGroups || []);
+        const checkeds = moveables.map(moveable => ({ finded: false, manager: moveable }));
+        const moveableGroups = findMoveableGroups(
+            checkeds,
+            this.props.targetGroups || [],
+        );
+
+        moveableGroups.push(...checkeds.filter(({ finded }) => !finded).map(({ manager }) => manager));
+
         const renderGroupRects: GroupRect[] = [];
         const isReset = !isTarget || (type !== "" && props.updateGroup);
 

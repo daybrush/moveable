@@ -3,6 +3,7 @@ import { refs } from "framework-utils";
 import MoveableManager from "../MoveableManager";
 import { renderLine } from "../renderDirections";
 import { Renderer, MoveableGroupInterface, GroupableProps } from "../types";
+import { flat } from "../utils";
 
 export default {
     name: "groupable",
@@ -40,8 +41,9 @@ export default {
                     zoom={zoom}
                 />;
             }),
-            ...renderGroupRects.map(({ pos1, pos2, pos3, pos4 }, i) => {
+            ...flat(renderGroupRects.map(({ pos1, pos2, pos3, pos4 }, i) => {
                 const poses = [pos1, pos2, pos3, pos4];
+
                 return [
                     [0, 1],
                     [1, 3],
@@ -57,7 +59,7 @@ export default {
                         `group-rect-${i}-${j}`,
                     );
                 });
-            }),
+            })),
         ];
     },
 };
