@@ -1,6 +1,6 @@
 import * as React from "react";
 import Selecto from "react-selecto";
-import Moveable from "../../../src/react-moveable";
+import Moveable from "../../src/react-moveable";
 import "./cube.css";
 
 
