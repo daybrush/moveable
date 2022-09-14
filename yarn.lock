@@ -13767,15 +13767,7 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.12.2, gesto@^1.3.0, gesto@^1.5.1:
-  version "1.12.2"
-  resolved "https://registry.yarnpkg.com/gesto/-/gesto-1.12.2.tgz#c3a86ce4f1906d1f259776c47e5f9db0e2188126"
-  integrity sha512-29hLp39ajlNEQvmqi1N1Plhon9wxRZ/KpWKq6U0cwfUwXnk6XiBwaxzFffJQqpbs3ueWm9bi1yTXDoc31Av54g==
-  dependencies:
-    "@daybrush/utils" "^1.7.1"
-    "@scena/event-emitter" "^1.0.2"
-
-gesto@^1.13.1:
+gesto@^1.13.1, gesto@^1.3.0, gesto@^1.5.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/gesto/-/gesto-1.13.1.tgz#5c025f051183ff5c275f02fdb1c31ef7e3892df9"
   integrity sha512-YLMnlMI5Dkc3HZz0zw72tIpd4hSrsoFp43EuSsjsmMLF604pBQTuAgWeXiNogidI7fmyN8fvWQ5sntldT0ihaQ==
@@ -22585,12 +22577,12 @@ react-select@^3.2.0:
     react-input-autosize "^3.0.0"
     react-transition-group "^4.3.0"
 
-react-selecto@^1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/react-selecto/-/react-selecto-1.20.0.tgz#989f1b7b740ebd9e8d2c18a20b6a8e16241fc29a"
-  integrity sha512-Hw3C64FoQpduUpqaV/s8h+VgnCIvoA2tmrl3ds97Ii3N/m4LA5UiLqYbHLixEeJZewUIEVlv1QIECVY+bqYnRg==
+react-selecto@^1.20.2:
+  version "1.20.2"
+  resolved "https://registry.yarnpkg.com/react-selecto/-/react-selecto-1.20.2.tgz#494bd4e47d9881a9871a91d8693300f9c5b16414"
+  integrity sha512-fLE3fAymw9Kz9Y5gB2+DqtJ59YssS+gnalJ1EptWbwINJK3DwPj9e3lw8O76s2ctbZ92TtrjaLXWbfU+MiaT1A==
   dependencies:
-    selecto "~1.20.0"
+    selecto "~1.20.2"
 
 react-simple-compat@^1.2.2:
   version "1.2.2"
@@ -23757,10 +23749,10 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
-selecto@~1.20.0:
-  version "1.20.0"
-  resolved "https://registry.yarnpkg.com/selecto/-/selecto-1.20.0.tgz#7b49a869522b6bf499b14b185f8a515b4274a6f6"
-  integrity sha512-injRCuvXmwO4S8gEgoUddAnrkWpraYrc8selm5ZQP+jQLZa2vC61C0u5ctttKag1mSbMZTSOFDSyPobuAAAcGg==
+selecto@~1.20.2:
+  version "1.20.2"
+  resolved "https://registry.yarnpkg.com/selecto/-/selecto-1.20.2.tgz#196e7876f72675858ff814747701cd482b57e187"
+  integrity sha512-nhsBUvONr8DtRmoxIEzAYTLJm8U8XVT2KK6HWiAEjUfz/Bd2c8MJBilGJ34ra8/UDpSZnXYQkn3DH/GaTXZTQQ==
   dependencies:
     "@daybrush/utils" "^1.7.1"
     "@egjs/children-differ" "^1.0.1"
