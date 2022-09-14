@@ -1427,36 +1427,44 @@ export interface OnPinchGroupEnd extends OnPinchEnd {
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
- * @property - Clicked target.
- * @property - Whether the clicked target is moveable target.
- * @property - Whether the clicked target is a child of moveable target.
- * @property - Whether it is double-click
  */
 export interface OnClick extends OnEvent {
+    /**
+     * Clicked element.
+     */
     inputTarget: Element;
+    /**
+     * clicked moveable target
+     */
+    moveableTarget: HTMLElement | SVGElement | null;
+    /**
+     * Whether the clicked target is moveable target.
+     */
     isTarget: boolean;
+    /**
+     * Whether the clicked target is a child of moveable target.
+     */
     containsTarget: boolean;
+    /**
+     * Whether it is double-click
+     */
     isDouble: boolean;
 }
 
 /**
  * @typedef
  * @memberof Moveable
- * @extends Moveable.OnEvent
- * @property - targets set to group.
- * @property - Clicked target.
- * @property - Whether the clicked target is on the targets set in the group.
- * @property - Whether the clicked target is a child of the targets set in the group.
- * @property - The corresponding index among the targets set as a group.
- * @property - Whether it is double-click
+ * @extends Moveable.OnClick
  */
-export interface OnClickGroup extends OnEvent {
+export interface OnClickGroup extends OnClick {
+    /**
+     * targets set to group.
+     */
     targets: Element[];
-    inputTarget: Element;
-    isTarget: boolean;
-    containsTarget: boolean;
+    /**
+     * The corresponding index among the targets set as a group.
+     */
     targetIndex: number;
-    isDouble: boolean;
 }
 
 /**

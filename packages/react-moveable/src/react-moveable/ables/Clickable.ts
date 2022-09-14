@@ -21,13 +21,13 @@ export default makeAble("clickable", {
         return;
     },
     dragControlStart() {
-        this.dragStart();
+        return;
     },
     dragGroupStart(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
         e.datas.inputTarget = e.inputEvent && e.inputEvent.target;
     },
     dragEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
-        const target = moveable.state.target!;
+        const target = moveable.props.target!;
         const inputEvent = e.inputEvent;
         const inputTarget = e.inputTarget;
         const isMoveableElement = moveable.isMoveableElement(inputTarget);
@@ -47,6 +47,7 @@ export default makeAble("clickable", {
             isDouble: e.isDouble,
             inputTarget,
             isTarget: target === inputTarget,
+            moveableTarget: moveable.props.target!,
             containsTarget,
         }));
     },
@@ -79,6 +80,7 @@ export default makeAble("clickable", {
             targetIndex,
             isTarget,
             containsTarget,
+            moveableTarget: targets[targetIndex],
         }));
     },
     dragControlEnd(moveable: MoveableManagerInterface<ClickableProps>, e: any) {
