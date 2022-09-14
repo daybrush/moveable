@@ -110,7 +110,7 @@ export class GroupArrayChild extends Child {
         }
         return null;
     }
-    public findCleanChild(
+    public findPureChild(
         target: HTMLElement | SVGElement,
         range: Array<HTMLElement | SVGElement>,
     ): GroupArrayChild | null {
@@ -124,7 +124,7 @@ export class GroupArrayChild extends Child {
 
         this.value.some(nextChild => {
             if (nextChild.type !== "single" && nextChild.has(target)) {
-                nextGroupChild = nextChild.findCleanChild(target, childSelected);
+                nextGroupChild = nextChild.findPureChild(target, childSelected);
 
                 if (nextGroupChild) {
                     return true;
@@ -133,6 +133,17 @@ export class GroupArrayChild extends Child {
         });
 
         return nextGroupChild;
+    }
+    public findNextPureChild(
+        target: HTMLElement | SVGElement,
+        range: Array<HTMLElement | SVGElement>,
+    ): GroupArrayChild | null {
+        const nextChild = this.findNextChild(target);
+
+        if (nextChild) {
+            return nextChild.findPureChild(target, range);
+        }
+        return null;
     }
     public toTargetGroups(): MoveableTargetGroupsType {
         return this.value.map(child => {

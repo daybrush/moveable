@@ -143,8 +143,6 @@ export default function App() {
                     const rootGroup = rootGroupRef.current!;
                     const nextTargets = [...targets];
 
-
-
                     // click alone
                     if (isDragStart || isClick) {
                         if (isCommand) {
@@ -189,17 +187,13 @@ export default function App() {
                             });
 
                             added.forEach(element => {
-                                const nextChild = rootGroup.findNextChild(element);
+                                const pureChild = rootGroup.findNextPureChild(element, startSelected);
 
-                                if (nextChild) {
-                                    const cleanChild = nextChild.findCleanChild(element, startSelected);
-
-                                    if (cleanChild) {
-                                        nextTargets.push(cleanChild.toTargetGroups());
-                                        return;
-                                    }
+                                if (pureChild) {
+                                    nextTargets.push(pureChild.toTargetGroups());
+                                } else {
+                                    nextTargets.push(element);
                                 }
-                                nextTargets.push(element);
                             });
                         }
                     } else {
