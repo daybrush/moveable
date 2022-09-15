@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.0](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.37.4...preact-moveable@0.38.0) (2022-09-15)
+
+
+### :bug: Bug Fix
+
+* fix shadow dom css #729 ([7581afc](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/7581afc13a7c5f9f749b22d7bd3160de0972d112))
+
+
+### :mega: Other
+
+* update packages ([e5774a9](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/e5774a9becd500d154e8d354017dcbd80505ba13))
+
+
+
 ## [0.37.4](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.37.3...preact-moveable@0.37.4) (2022-08-24)
 
 

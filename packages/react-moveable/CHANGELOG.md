@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.39.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.4...react-moveable@0.39.0) (2022-09-15)
+
+
+### :rocket: New Features
+
+* add `moveableTarget` property in click event ([ee3d9f2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ee3d9f2153ad70f86548f73412fad9d255d80760))
+* add `updateSelectors` method ([90f40e2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/90f40e2b500bce6564f878294e1a0aaf27dd5b69))
+* support multiple group #566 #731 ([0bb7977](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/0bb79772fc956f5f38ed540f4de9382d8e5567fd))
+
+
+### :bug: Bug Fix
+
+* fix defaultGroupRotate action ([1f6709a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1f6709a9ddbdd5fe8cc6381cc7c0dac68ab42a70))
+* fix dragtarget #468 ([c662cca](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c662cca73f6f64a6df38936ce97d756e5197d55e))
+* fix multiple group ([20af5c1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/20af5c113fb6b250be27dd427c3fa6a4146bf958))
+* fix overflow auto target #730 ([1e0ae91](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1e0ae91df7baed8a7ae11e96c29a3f3f4cb9b8c6))
+* fix rotatable throttling ([b18f16a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b18f16a93d853621f3883da16bfc3e6d0cd6db94))
+* fix rotate group origin #733 ([3e9e8e5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3e9e8e5f59ca65584e3c709544c1d43734086d82))
+* fix shadow dom css #729 ([7581afc](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7581afc13a7c5f9f749b22d7bd3160de0972d112))
+
+
+### :mega: Other
+
+* update packages ([e5774a9](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e5774a9becd500d154e8d354017dcbd80505ba13))
+
+
+
 ## [0.38.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.38.3...react-moveable@0.38.4) (2022-08-24)
 
 
