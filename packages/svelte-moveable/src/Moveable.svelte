@@ -39,7 +39,7 @@
   });
   onMount(() => {
     moveable = new VanillaMoveable(moveableElement, {
-      ...options
+      ...options,
       portalContainer: moveableElement,
     });
 

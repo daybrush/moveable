@@ -48,7 +48,7 @@
         "packages:update": "lerna-helper version && npm run update-type-consts",
         "update-type-consts": "node ./config/update-type-consts.js",
         "packages:build": "npm run build --prefix packages/react-moveable && npm run update-type-consts && lerna run build --ignore ngx-moveable --ignore moveable-storybook --ignore snappable --ignore react-moveable",
-        "packages:publish": "lerna-helper publish --ignore ngx-moveable --commit 'chore: publish packages'",
+        "packages:publish": "lerna-helper publish --ignore ngx-moveable,@moveable/helper --commit 'chore: publish packages'",
         "changelog": "lerna-helper changelog --type all --base moveable",
         "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
         "build:storybook": "npm run build --prefix ./packages/storybook",
