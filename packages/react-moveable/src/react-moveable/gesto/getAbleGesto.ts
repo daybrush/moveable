@@ -166,10 +166,11 @@ export function getTargetAbleGesto(
 ) {
     const controlBox = moveable.controlBox.getElement();
     const targets: Array<HTMLElement | SVGElement> = [];
+    const dragTarget = moveable.props.dragTarget;
 
     targets.push(controlBox);
 
-    if (!moveable.props.dragArea || moveable.props.dragTarget) {
+    if (!moveable.props.dragArea || dragTarget) {
         targets.push(moveableTarget);
     }
 
@@ -177,7 +178,8 @@ export function getTargetAbleGesto(
         const eventTarget = e.inputEvent.target;
         const areaElement = moveable.areaElement;
 
-        return eventTarget === areaElement
+        return dragTarget && (eventTarget === dragTarget || dragTarget.contains(eventTarget))
+            || eventTarget === areaElement
             || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.getElement().contains(eventTarget))
             || hasClass(eventTarget, "moveable-area")
             || hasClass(eventTarget, "moveable-padding");
@@ -222,6 +224,7 @@ export function getAbleGesto(
 
     ["drag", "pinch"].forEach(eventOperation => {
         ["Start", "", "End"].forEach(eventType => {
+
             gesto.on(`${eventOperation}${eventType}` as any, e => {
                 const eventName = e.eventType;
 

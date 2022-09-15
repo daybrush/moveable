@@ -71,3 +71,7 @@ group.add("Test overflow: auto target", {
     app: require("./ReactOverflowApp").default,
     text: require("!!raw-loader!./ReactOverflowApp").default,
 });
+group.add("Test Drag Target", {
+    app: require("./ReactDragTargetApp").default,
+    text: require("!!raw-loader!./ReactDragTargetApp").default,
+});
