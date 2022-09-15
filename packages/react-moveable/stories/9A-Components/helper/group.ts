@@ -1,16 +1,11 @@
-import { isArray } from "@daybrush/utils";
+import { deepFlat, isArray } from "@daybrush/utils";
 import { MoveableTargetGroupsType } from "src/react-moveable";
-
-export interface GroupSingleChild {
-    parent: GroupArrayChild;
-    type: "single";
-    value: HTMLElement | SVGElement;
-}
 
 export type GroupChild = GroupSingleChild | GroupArrayChild;
 
 export class Child {
     public type: "group" | "root" | "single" = "single";
+    public depth = 0;
     constructor(public parent?: GroupArrayChild) { }
 }
 
@@ -20,17 +15,31 @@ export class GroupSingleChild extends Child {
         super(parent);
     }
 }
+
+
 export class GroupArrayChild extends Child {
     public type: "group" | "root" = "group";
     public value: GroupChild[] = [];
     public map: Map<HTMLElement | SVGElement, GroupSingleChild> = new Map();
 
-    public compare(groups: MoveableTargetGroupsType) {
-        const elements = groups.flat(3) as Array<HTMLElement | SVGElement>;
+    public compare(groups: MoveableTargetGroupsType, checker: -1 | 0 | 1 = 0) {
+        const elements = deepFlat(groups);
         const map = this.map;
+        const elementsLength = elements.length;
+        const mapSize = map.size;
+        const sizeDiff = mapSize - elementsLength;
 
-        return map.size === elements.length
-            && elements.every(element => map.has(element));
+        // 1 this > groups
+        // 0 this = groups
+        // -1 this < groups
+        const count = elements.filter(element => map.has(element)).length;
+
+        if ((checker > 0 && sizeDiff >= 0) || (checker === 0 && sizeDiff === 0)) {
+            return elementsLength === count;
+        } else if (checker < 0 && sizeDiff <= 0) {
+            return mapSize === count;
+        }
+        return false;
     }
     public has(target: HTMLElement | SVGElement) {
         return this.map.has(target);
@@ -41,9 +50,9 @@ export class GroupArrayChild extends Child {
         if (!isArray(target)) {
             return map.get(target);
         }
-        const flattern = target.flat(3) as Array<HTMLElement | SVGElement>;
-        const length = flattern.length;
-        const single = map.get(flattern[0]);
+        const flatted = deepFlat(target);
+        const length = flatted.length;
+        const single = map.get(flatted[0]);
 
         if (!single) {
             return;
@@ -58,6 +67,41 @@ export class GroupArrayChild extends Child {
             parent = parent.parent;
         }
         return;
+    }
+    public findCommonParent(targets: MoveableTargetGroupsType): GroupArrayChild {
+        let depth = Infinity;
+        let childs = targets.map(target => this.findExactChild(target));
+
+        childs.forEach(child => {
+            if (!child) {
+                return;
+            }
+            depth = Math.min(child.depth, depth);
+        });
+
+        while (depth) {
+            --depth;
+            childs = childs.map(child => {
+                let parent: GroupChild | undefined = child;
+
+                while (parent && parent.depth !== depth) {
+                    parent = parent.parent;
+                }
+
+                return parent;
+            });
+            const firstChild = childs.find(child => child);
+
+            if (!firstChild) {
+                return this;
+            }
+            if (childs.every(child => !child || child === firstChild)) {
+                break;
+            }
+        }
+        const commonParent = childs.find(child => child) as GroupArrayChild;
+
+        return commonParent || this;
     }
     public findNextChild(
         target: HTMLElement | SVGElement,
@@ -91,8 +135,8 @@ export class GroupArrayChild extends Child {
     }
     public findNextExactChild(
         target: HTMLElement | SVGElement,
-        range: MoveableTargetGroupsType,
         selected: Array<HTMLElement | SVGElement>,
+        range: MoveableTargetGroupsType = this.toTargetGroups(),
     ): GroupArrayChild | null {
         // [[1, 2]] => group([1, 2]) exact
         // [[[1, 2], 3]] => group([1, 2])
@@ -102,10 +146,7 @@ export class GroupArrayChild extends Child {
             return null;
         }
 
-
-        const map = nextChild.map;
-
-        if (selected.filter(element => map.has(element)).length === map.size) {
+        if (nextChild.compare(selected, -1)) {
             return nextChild;
         }
         return null;
@@ -154,18 +195,27 @@ export class GroupArrayChild extends Child {
             }
         });
     }
+
+    public groupByPerfect(selected: Array<HTMLElement | SVGElement>) {
+        return this.value.filter(child => {
+            if (child.type !== "single") {
+                return child.compare(selected, -1);
+            }
+            return selected.indexOf(child.value) > -1;
+        });
+    }
 }
 
 export function createRootChild(
     targets: Array<HTMLElement | SVGElement>,
     targetGroups: MoveableTargetGroupsType,
 ) {
-    const map: Map<HTMLElement | SVGElement, GroupSingleChild> = new Map();
-    const value: GroupChild[] = [];
     const root = new GroupArrayChild();
-
+    const map = root.map;
+    const value = root.value;
     root.type = "root";
     createGroupChildren(targetGroups, root);
+
 
     targets.forEach(target => {
         if (map.has(target)) {
@@ -173,6 +223,7 @@ export function createRootChild(
         }
         const single = new GroupSingleChild(root, target);
 
+        single.depth = 1;
         value.push(single);
         map.set(target, single);
     });
@@ -192,13 +243,14 @@ export function createGroupChildren(
         if (isArray(child)) {
             const group = new GroupArrayChild(parent);
 
-
+            group.depth = parent.depth + 1;
             value.push(group);
 
             createGroupChildren(child, group);
         } else {
             const single = new GroupSingleChild(parent, child);
 
+            single.depth = parent.depth + 1;
             value.push(single);
             map.set(child, single);
         }

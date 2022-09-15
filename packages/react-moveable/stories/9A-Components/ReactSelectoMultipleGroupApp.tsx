@@ -1,49 +1,13 @@
-import { isArray } from "@daybrush/utils";
+import { deepFlat } from "@daybrush/utils";
+import { useCallback } from "@storybook/addons";
 import * as React from "react";
 import { useKeycon } from "react-keycon";
 import Selecto from "react-selecto";
-import Moveable, { MoveableTargetGroupsType } from "../../src/react-moveable";
+import Moveable, { MoveableTargetGroupsType } from "@/react-moveable";
 import "./cube.css";
 import { createRootChild, GroupArrayChild } from "./helper/group";
+import { SelectManager } from "./helper/SelectManager";
 
-// function findSameDepthGroups(
-//     groups: MoveableTargetGroupsType,
-//     targets: MoveableTargetGroupsType,
-// ): MoveableTargetGroupsType | null {
-//     let childGroups: MoveableTargetGroupsType | null = null;
-
-//     const result = groups.some(child => {
-//         if (isArray(child)) {
-//             // find group
-//             if (isSameGroups(child, targets)) {
-//                 return true;
-//             }
-//             const target = targets.find(target => {
-//                 return isArray(target) && isSameGroups(target, child);
-//             });
-
-//             if (target) {
-//                 return true;
-//             }
-//             const nextGroups = findSameDepthGroups(child, targets);
-
-//             if (nextGroups) {
-//                 childGroups = nextGroups;
-//             }
-//             return;
-//         }
-
-//         if (targets.indexOf(child) > -1) {
-//             return true;
-//         }
-//     });
-
-//     if (result) {
-//         return groups;
-//     }
-
-//     return childGroups || null;
-// }
 export default function App() {
     const { isKeydown: isCommand } = useKeycon({ keys: "meta" });
     const { isKeydown: isShift } = useKeycon({ keys: "shift" });
@@ -56,7 +20,10 @@ export default function App() {
     for (let i = 0; i < 30; ++i) {
         cubes.push(i);
     }
-
+    const setSelectedTargets = useCallback((nextTargetes: MoveableTargetGroupsType) => {
+        selectoRef.current!.setSelectedTargets(deepFlat(nextTargetes));
+        setTargets(nextTargetes);
+    }, []);
     React.useEffect(() => {
         // [[0, 1], 2], 3, 4, [5, 6], 7, 8, 9
         const elements = selectoRef.current!.getSelectableElements();
@@ -77,16 +44,14 @@ export default function App() {
                 target={targets}
                 onClickGroup={e => {
                     if (!e.moveableTarget) {
-                        selectoRef.current!.setSelectedTargets([]);
-                        setTargets([]);
+                        setSelectedTargets([]);
                         return;
                     }
                     if (e.isDouble) {
-                        const nextChild = rootGroupRef.current!.findNextChild(e.moveableTarget, targets);
-                        const nextTargets = nextChild ? [nextChild.toTargetGroups()] : [e.moveableTarget];
+                        const manager = new SelectManager(rootGroupRef.current!, targets);
 
-                        selectoRef.current!.setSelectedTargets(nextTargets.flat(3) as Array<HTMLElement | SVGElement>);
-                        setTargets(nextTargets);
+                        manager.selectNextChild(e.moveableTarget);
+                        setSelectedTargets(manager.getTargets());
                         return;
                     }
                     selectoRef.current!.clickTarget(e.inputEvent, e.moveableTarget);
@@ -123,12 +88,10 @@ export default function App() {
                 }}
                 onSelectEnd={e => {
                     const {
-                        startSelected,
                         isDragStart,
                         isClick,
                         added,
                         removed,
-                        currentTarget,
                         inputEvent,
                     } = e;
                     const moveable = moveableRef.current!;
@@ -141,123 +104,18 @@ export default function App() {
                         });
                     }
                     const rootGroup = rootGroupRef.current!;
-                    const nextTargets = [...targets];
+                    const selectManager = new SelectManager(rootGroup, targets, removed, added);
 
-                    // click alone
                     if (isDragStart || isClick) {
                         if (isCommand) {
-                            // group can't be added, removed.
-                            removed.forEach(element => {
-                                const index = nextTargets.indexOf(element);
-
-                                if (index > -1) {
-                                    nextTargets.splice(index, 1);
-                                }
-                            });
-
-                            // Targets can be added one by one
-                            added.forEach(element => {
-                                nextTargets.push(element);
-                            });
+                            selectManager.selectSingleTargets();
                         } else {
-                            // group can be added, removed.
-                            removed.forEach(element => {
-                                // Single Target
-                                const index = nextTargets.indexOf(element);
-
-                                if (index > -1) {
-                                    // single target or group
-                                    nextTargets.splice(index, 1);
-                                    return;
-                                }
-                                // Group Target
-                                const removedChild = isShift
-                                    ? rootGroup.findNextChild(element, nextTargets)
-                                    : rootGroup.findNextExactChild(element, nextTargets, removed);
-
-                                if (removedChild) {
-                                    const groupIndex = nextTargets.findIndex(target => {
-                                        return isArray(target) && removedChild.compare(target);
-                                    });
-
-                                    if (groupIndex > -1) {
-                                        nextTargets.splice(groupIndex, 1);
-                                    }
-                                }
-                            });
-
-                            added.forEach(element => {
-                                const pureChild = rootGroup.findNextPureChild(element, startSelected);
-
-                                if (pureChild) {
-                                    nextTargets.push(pureChild.toTargetGroups());
-                                } else {
-                                    nextTargets.push(element);
-                                }
-                            });
+                            selectManager.selectCompletedTargets(isShift);
                         }
                     } else {
-                        // // select same depth
-                        // const sameDepthGroups = findSameDepthGroups(multipleGroups, nextTargets) || multipleGroups;
-
-                        // // removed.forEach
-                        // if (!sameDepthGroups || sameDepthGroups === multipleGroups) {
-                        //     removed.forEach(element => {
-                        //         // Single Target
-                        //         const index = nextTargets.indexOf(element);
-
-                        //         if (index > -1) {
-                        //             // single target or group
-                        //             nextTargets.splice(index, 1);
-                        //             return;
-                        //         }
-                        //         const removedGroup = findPerfectGroups(nextTargets, element, removed);
-
-                        //         if (removedGroup) {
-                        //             if (isSameGroups(nextTargets, removedGroup)) {
-                        //                 nextTargets = [];
-                        //             } else {
-                        //                 const groupIndex = nextTargets.findIndex(target => {
-                        //                     return isArray(target) && isSameGroups(target, removedGroup);
-                        //                 });
-
-                        //                 if (groupIndex > -1) {
-                        //                     nextTargets.splice(groupIndex, 1);
-                        //                 }
-                        //             }
-                        //         }
-                        //     });
-                        //     const perfectGroups = groups.filter(child => {
-                        //         if (isArray(child)) {
-                        //             return isPerfectGroups(child, added);
-                        //         } else {
-                        //             return added.indexOf(child) > -1;
-                        //         }
-                        //     });
-
-                        //     added.forEach(element => {
-
-
-                        //         console.log(childGroups);
-                        //         if (childGroups) {
-                        //             const cleanGroups = findCleanChildGroups(childGroups, element, startSelected);
-
-                        //             if (cleanGroups) {
-                        //                 nextTargets.push(cleanGroups);
-                        //                 return;
-                        //             }
-                        //         }
-                        //         nextTargets.push(element);
-                        //     });
-                        // }
-
-                        // console.log("SAME", groups, startSelected, sameDepthGroups);
-
+                        selectManager.selectSameDepthTargets();
                     }
-
-                    console.log("SET", targets, nextTargets);
-                    currentTarget.setSelectedTargets(nextTargets.flat(3) as Array<HTMLElement | SVGElement>);
-                    setTargets(nextTargets);
+                    setSelectedTargets(selectManager.getTargets());
                 }}
             ></Selecto>
 
