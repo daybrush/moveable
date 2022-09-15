@@ -23,7 +23,7 @@ TreeShakingTemplate.parameters = {
         {
             tab: "React",
             template: convertReactTemplate(convertPath(RawApp)),
-            codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "moveable-helper", "react-infinite-viewer"]),
+            codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "react-infinite-viewer"]),
             language: "tsx",
         },
     ],

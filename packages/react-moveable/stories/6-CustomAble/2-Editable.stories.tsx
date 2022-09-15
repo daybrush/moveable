@@ -17,7 +17,7 @@ EditableTemplate.parameters = {
         {
             tab: "React",
             template: convertReactTemplate(convertPath(RawApp)),
-            codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable", "moveable-helper"]),
+            codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
             language: "tsx",
         },
         {

@@ -69,6 +69,7 @@
         "@storybook/addons": "6.5.10",
         "@storybook/jest": "^0.0.10",
         "@storybook/react": "6.5.10",
+        "@moveable/helper": "~0.0.4",
         "@storybook/test-runner": "^0.7.1",
         "@storybook/testing-library": "^0.0.13",
         "@types/node": "^14.6.0",

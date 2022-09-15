@@ -163,11 +163,11 @@ export class GroupManager extends GroupArrayChild {
         targets: TargetGroupsType,
         added: Array<HTMLElement | SVGElement>,
         removed: Array<HTMLElement | SVGElement>,
+        continueSelect?: boolean,
     ) {
         const nextTargets = [...targets];
         const commonParent = this.findCommonParent(nextTargets);
 
-        // if (!sameDepthGroups || sameDepthGroups === multipleGroups) {
         removed.forEach(element => {
             // Single Target
             const index = nextTargets.indexOf(element);
@@ -177,7 +177,11 @@ export class GroupManager extends GroupArrayChild {
                 nextTargets.splice(index, 1);
                 return;
             }
-            const removedChild = commonParent.findNextExactChild(element, removed, nextTargets);
+            const removedChild = continueSelect
+                // Find the nearest exact child for element, all removed and nextTargets.
+                ? commonParent.findNextExactChild(element, removed, nextTargets)
+                // Finds the nearest child for element and nextTargets.
+                : commonParent.findNextChild(element, nextTargets, true);
 
             if (removedChild) {
                 const groupIndex = nextTargets.findIndex(target => {
@@ -189,9 +193,9 @@ export class GroupManager extends GroupArrayChild {
                 }
             }
         });
-        const children = commonParent.groupByPerfect(added);
+        const addedChildren = commonParent.groupByPerfect(added);
 
-        children.forEach(child => {
+        addedChildren.forEach(child => {
             if (child.type === "single") {
                 nextTargets.push(child.value);
             } else {

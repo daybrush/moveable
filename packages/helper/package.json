@@ -1,6 +1,6 @@
 {
     "name": "@moveable/helper",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Helper for demo of Moveable",
     "main": "./dist/helper.cjs.js",
     "module": "./dist/helper.esm.js",
@@ -11,6 +11,7 @@
     ],
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
+        "start": "rollup -c -w",
         "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
     },

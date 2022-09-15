@@ -1,17 +1,15 @@
 import { deepFlat } from "@daybrush/utils";
-import { useCallback } from "@storybook/addons";
 import * as React from "react";
 import { useKeycon } from "react-keycon";
 import Selecto from "react-selecto";
 import Moveable, { MoveableTargetGroupsType } from "@/react-moveable";
 import "./cube.css";
-import { createRootChild, GroupArrayChild } from "./helper/group";
-import { SelectManager } from "./helper/SelectManager";
+import { GroupManager } from "@moveable/helper";
 
 export default function App() {
     const { isKeydown: isCommand } = useKeycon({ keys: "meta" });
     const { isKeydown: isShift } = useKeycon({ keys: "shift" });
-    const rootGroupRef = React.useRef<GroupArrayChild>() ;
+    const groupManagerRef = React.useRef<GroupManager>() ;
     const [targets, setTargets] = React.useState<MoveableTargetGroupsType>([]);
     const moveableRef = React.useRef<Moveable>(null);
     const selectoRef = React.useRef<Selecto>(null);
@@ -20,7 +18,7 @@ export default function App() {
     for (let i = 0; i < 30; ++i) {
         cubes.push(i);
     }
-    const setSelectedTargets = useCallback((nextTargetes: MoveableTargetGroupsType) => {
+    const setSelectedTargets = React.useCallback((nextTargetes: MoveableTargetGroupsType) => {
         selectoRef.current!.setSelectedTargets(deepFlat(nextTargetes));
         setTargets(nextTargetes);
     }, []);
@@ -28,10 +26,10 @@ export default function App() {
         // [[0, 1], 2], 3, 4, [5, 6], 7, 8, 9
         const elements = selectoRef.current!.getSelectableElements();
 
-        rootGroupRef.current = createRootChild(elements, [
+        groupManagerRef.current = new GroupManager([
             [[elements[0], elements[1]], elements[2]],
             [elements[5], elements[6], elements[7]],
-        ]);
+        ], elements);
     }, []);
 
     return <div className="root">
@@ -48,10 +46,8 @@ export default function App() {
                         return;
                     }
                     if (e.isDouble) {
-                        const manager = new SelectManager(rootGroupRef.current!, targets);
-
-                        manager.selectNextChild(e.moveableTarget);
-                        setSelectedTargets(manager.getTargets());
+                        const nextTargets = groupManagerRef!.current!.selectNextChild(targets, e.moveableTarget);
+                        setSelectedTargets(nextTargets);
                         return;
                     }
                     selectoRef.current!.clickTarget(e.inputEvent, e.moveableTarget);
@@ -103,24 +99,26 @@ export default function App() {
                             moveable.dragStart(inputEvent);
                         });
                     }
-                    const rootGroup = rootGroupRef.current!;
-                    const selectManager = new SelectManager(rootGroup, targets, removed, added);
+                    const groupManager = groupManagerRef.current!;
+                    let nextTargets = targets;
 
                     if (isDragStart || isClick) {
                         if (isCommand) {
-                            selectManager.selectSingleTargets();
+                            nextTargets = groupManager.selectSingleTargets(targets, added, removed);
                         } else {
-                            selectManager.selectCompletedTargets(isShift);
+                            nextTargets = groupManager.selectCompletedTargets(targets, added, removed, isShift);
                         }
                     } else {
-                        selectManager.selectSameDepthTargets();
+                        nextTargets = groupManager.selectSameDepthTargets(targets, added, removed);
                     }
-                    setSelectedTargets(selectManager.getTargets());
+                    setSelectedTargets(nextTargets);
                 }}
             ></Selecto>
+            <p>[[0, 1], 2] is group</p>
+            <p>[5, 6, 7] is group</p>
 
             <div className="elements selecto-area">
-                {cubes.map(i => <div className="cube" key={i}></div>)}
+                {cubes.map(i => <div className="cube" key={i}>{i}</div>)}
             </div>
             <div className="empty elements"></div>
         </div>

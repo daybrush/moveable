@@ -1,7 +1,8 @@
 import * as React from "react";
 import {
     Able, MoveableInterface, GroupableProps, MoveableDefaultProps,
-    IndividualGroupableProps, MoveableManagerInterface, MoveableRefTargetsResultType, MoveableTargetGroupsType,
+    IndividualGroupableProps, MoveableManagerInterface, MoveableRefTargetsResultType,
+    MoveableTargetGroupsType, BeforeRenderableProps, RenderableProps,
 } from "./types";
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
@@ -87,8 +88,10 @@ function compareRefTargets(
     });
 }
 
+type DefaultAbles = GroupableProps & IndividualGroupableProps & BeforeRenderableProps & RenderableProps;
+
 export class InitialMoveable<T = {}>
-    extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T> {
+    extends React.PureComponent<MoveableDefaultProps & DefaultAbles & T> {
     public static defaultAbles: Able[] = [];
     public static customStyledMap: Record<string, any> = {};
     public static defaultStyled: any = null;
@@ -282,7 +285,7 @@ export class InitialMoveable<T = {}>
     }
 }
 export interface InitialMoveable<T = {}>
-    extends React.PureComponent<MoveableDefaultProps & GroupableProps & IndividualGroupableProps & T>,
+    extends React.PureComponent<MoveableDefaultProps & DefaultAbles & T>,
     MoveableInterface {
     setState(state: any, callback?: () => any): any;
     forceUpdate(callback?: () => any): any;

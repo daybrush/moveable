@@ -2764,6 +2764,20 @@
   resolved "https://registry.npmjs.org/@egjs/agent/-/agent-2.4.2.tgz"
   integrity sha512-UZQzdpPl0g0M1wDAiq4EY2vUzUI6P5SKGOAPkf0yxSnlcwrU8/zuoyUWbYj11ROFeHV8iW0IetGsmia83z1Hbw==
 
+"@egjs/build-helper@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.npmjs.org/@egjs/build-helper/-/build-helper-0.1.2.tgz#cce62a1e8d355e38069c876ff835b84d635c07d5"
+  integrity sha512-VdTllKles30qLgutKwIxapwXGEuU5kS95b+u01unphw3TouGROskPvLqEJ7SIubqgPc6q3vRlTgOe75yhaYF8w==
+  dependencies:
+    rollup "^1.7.4"
+    rollup-plugin-commonjs "^9.3.4"
+    rollup-plugin-node-resolve "^4.0.1"
+    rollup-plugin-prototype-minify "^1.0.5"
+    rollup-plugin-replace "^2.1.1"
+    rollup-plugin-typescript "^1.0.1"
+    rollup-plugin-uglify "^6.0.2"
+    rollup-plugin-visualizer "^1.1.0"
+
 "@egjs/children-differ@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@egjs/children-differ/-/children-differ-1.0.1.tgz"
@@ -4320,23 +4334,6 @@
   version "1.6.22"
   resolved "https://registry.npmjs.org/@mdx-js/util/-/util-1.6.22.tgz"
   integrity sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==
-
-"@moveable/helper@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@moveable/helper/-/helper-0.0.1.tgz#0d092c2989a59ad18c82104a380017443fb78918"
-  integrity sha512-O9w75A7t8rMd94p1E0A/JECibOGn15Nrh77Z5d7ud9aDKCJ6c5X6z6ZjaT4C8sFfKa47OoYe3HcyW5xbckM4bQ==
-  dependencies:
-    "@daybrush/utils" "^1.10.0"
-    "@egjs/agent" "^2.2.1"
-    "@egjs/children-differ" "^1.0.1"
-    "@scena/dragscroll" "^1.2.0"
-    "@scena/event-emitter" "^1.0.5"
-    "@scena/matrix" "^1.1.1"
-    css-to-mat "^1.0.3"
-    framework-utils "^1.1.0"
-    gesto "^1.13.1"
-    overlap-area "^1.1.0"
-    react-css-styled "^1.0.4"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"

@@ -29,9 +29,6 @@
             ],
             "@/react-moveable": [
                 "./src/react-moveable/"
-            ],
-            "moveable-helper": [
-                "./stories/moveable-helper/"
             ]
         }
     },

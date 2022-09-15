@@ -7,4 +7,7 @@
     margin: 4px;
     background: #eee;
     --color: #4af;
+    color: #333;
+    line-height: 40px;
+    text-align: center;
 }
