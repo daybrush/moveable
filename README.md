@@ -245,6 +245,10 @@ moveable.on("pinchStart", ({ target, clientX, clientY }) => {
 ## ⚙️ Developments
 The `moveable` repo is managed as a [monorepo](https://github.com/lerna/lerna) with `yarn`.
 
+```sh
+yarn config set registry https://registry.npmjs.org/
+```
+
 The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
 
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
