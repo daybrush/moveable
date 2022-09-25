@@ -159,6 +159,22 @@ export function triggerAble(
     return true;
 }
 
+export function checkMoveableTarget(moveable: MoveableManagerInterface) {
+    const dragTarget = moveable.props.dragTarget;
+
+    return (e: { inputEvent: Event }) => {
+        const eventTarget = e.inputEvent.target as Element;
+        const areaElement = moveable.areaElement;
+
+        return dragTarget && (eventTarget === dragTarget || dragTarget.contains(eventTarget))
+            || eventTarget === areaElement
+            || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.getElement().contains(eventTarget))
+            || hasClass(eventTarget, "moveable-area")
+            || hasClass(eventTarget, "moveable-padding")
+            || hasClass(eventTarget, "moveable-edgeDraggable");
+    };
+}
+
 export function getTargetAbleGesto(
     moveable: MoveableManagerInterface,
     moveableTarget: HTMLElement | SVGElement,
@@ -174,20 +190,9 @@ export function getTargetAbleGesto(
         targets.push(moveableTarget);
     }
 
-    const startFunc = (e: any) => {
-        const eventTarget = e.inputEvent.target;
-        const areaElement = moveable.areaElement;
-
-        return dragTarget && (eventTarget === dragTarget || dragTarget.contains(eventTarget))
-            || eventTarget === areaElement
-            || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.getElement().contains(eventTarget))
-            || hasClass(eventTarget, "moveable-area")
-            || hasClass(eventTarget, "moveable-padding");
-    };
-
     return getAbleGesto(moveable, targets, "targetAbles", eventAffix, {
-        dragStart: startFunc,
-        pinchStart: startFunc,
+        dragStart: checkMoveableTarget(moveable),
+        pinchStart: checkMoveableTarget(moveable),
     });
 }
 export function getAbleGesto(

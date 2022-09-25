@@ -22,7 +22,7 @@ import {
     MoveableDefaultOptions,
     GroupableProps,
 } from "./types";
-import { triggerAble, getTargetAbleGesto, getAbleGesto } from "./gesto/getAbleGesto";
+import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
 import { cancelAnimationFrame, find, getKeys, IObject, requestAnimationFrame } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
@@ -239,9 +239,16 @@ export default class MoveableManager<T = {}>
      */
     public dragStart(e: MouseEvent | TouchEvent) {
         const targetGesto = this.targetGesto;
+        const controlGesto = this.controlGesto;
 
-        if (targetGesto && !targetGesto.isFlag()) {
-            targetGesto.triggerDragStart(e);
+        if (targetGesto && checkMoveableTarget(this)({ inputEvent: e })) {
+            if (!targetGesto.isFlag()) {
+                targetGesto.triggerDragStart(e);
+            }
+        } else if (controlGesto && this.isMoveableElement(e.target as Element)) {
+            if (!controlGesto.isFlag()) {
+                controlGesto.triggerDragStart(e);
+            }
         }
         return this;
     }

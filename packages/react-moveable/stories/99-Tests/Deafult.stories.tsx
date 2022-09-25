@@ -75,3 +75,7 @@ group.add("Test Drag Target", {
     app: require("./ReactDragTargetApp").default,
     text: require("!!raw-loader!./ReactDragTargetApp").default,
 });
+group.add("Test Drag Start Group Manually", {
+    app: require("./ReactDragStartGroupApp").default,
+    text: require("!!raw-loader!./ReactDragStartGroupApp").default,
+});
