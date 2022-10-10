@@ -240,12 +240,14 @@ export default {
         let lineIndex = -1;
 
         if (isLine) {
-            const indexAttr = inputTarget.getAttribute("data-line-index")!;
+            const indexAttr = inputTarget.getAttribute("data-line-key")! || "";
 
-            lineIndex = parseInt(indexAttr.replace(/render-line-/g, ""), 10);
+            if (indexAttr) {
+                lineIndex = parseInt(indexAttr.replace(/render-line-/g, ""), 10);
 
-            if (isNaN(lineIndex)) {
-                lineIndex = -1;
+                if (isNaN(lineIndex)) {
+                    lineIndex = -1;
+                }
             }
         }
 
