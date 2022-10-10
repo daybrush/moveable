@@ -359,15 +359,16 @@ export default {
         return params;
     },
     dragControlEnd(moveable: MoveableManagerInterface<ScalableProps>, e: any) {
-        const { datas, isDrag } = e;
+        const { datas } = e;
         if (!datas.isScale) {
             return false;
         }
 
         datas.isScale = false;
 
-        triggerEvent(moveable, "onScaleEnd", fillEndParams<OnScaleEnd>(moveable, e, {}));
-        return isDrag;
+        const scaleEndParam = fillEndParams<OnScaleEnd>(moveable, e, {});
+        triggerEvent(moveable, "onScaleEnd", scaleEndParam);
+        return scaleEndParam;
     },
     dragGroupControlCondition: directionCondition,
     dragGroupControlStart(moveable: MoveableGroupInterface<any, any>, e: any) {
