@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.39.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.39.1...react-moveable@0.39.4) (2022-10-10)
+
+
+### :bug: Bug Fix
+
+* enhance updateSelectors #760 ([e72b119](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e72b119fd7d413df1af231607db2aeee1f20e467))
+* fix click event #746 ([41809c1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/41809c10646b91586f74332b74ad2f83ab9a4b2d))
+* fix drag start edge #745 ([105bb1c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/105bb1ce073e349c77f6a0c4dd8d3d259a03aabe))
+* fix index attr for roundable ([92932d7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/92932d7c35f58d365d2b2294d4735fced9416214))
+* fix onScaleGroupEnd param #755 ([ce7d855](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ce7d855da4fe4042163c7fdca59b87b3060cfd88))
+* fix roundable line index #756 ([83d5232](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/83d523288757e0276a1ffe9a6f4903fc86a7f19a))
+
+
+### :mega: Other
+
+* publish packages ([9e3ee2f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9e3ee2ff44dea473e7aa73e4d501c2d23062f40d))
+* publish packages ([16b2516](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/16b251618307faad8f8f3fc5433b27ed1466311c))
+
+
+
 ## [0.39.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.39.0...react-moveable@0.39.1) (2022-09-19)
 
 
