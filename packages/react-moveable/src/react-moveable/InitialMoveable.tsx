@@ -205,8 +205,7 @@ export class InitialMoveable<T = {}>
      */
     public updateSelectors() {
         this.selectorMap = {};
-        this.refTargets = [];
-        this.forceUpdate();
+        this._updateRefs();
     }
     /**
      * User changes target and waits for target to change.
