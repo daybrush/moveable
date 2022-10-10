@@ -686,6 +686,8 @@ export function getSize(
 
             if (isNaN(maxWidth)) {
                 maxWidth = Infinity;
+            }
+            if (isNaN(maxHeight)) {
                 maxHeight = Infinity;
             }
             const inlineCSSWidth = convertUnitSize(targetStyle.width, 0) || 0;
