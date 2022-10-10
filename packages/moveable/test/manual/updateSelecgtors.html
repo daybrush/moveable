@@ -1,0 +1,29 @@
+<body>
+    <div class="target target1"></div>
+    <div class="target2"></div>
+    <button>aa</button>
+</body>
+<style>
+    .target1, .target2 {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: #f55;
+        border: 1px solid #333;
+    }
+</style>
+<script src ="../../dist/moveable.js"></script>
+<script>
+    const moveable = new Moveable(document.body, {
+        draggable: true,
+        target: ".target",
+    }).on("drag", e => {
+        e.target.style.transform = e.transform;
+    });
+
+    document.querySelector("button").addEventListener("click", e => {
+        document.querySelector(".target2").classList.add("target");
+        moveable.updateSelectors();
+    })
+</script>
+
