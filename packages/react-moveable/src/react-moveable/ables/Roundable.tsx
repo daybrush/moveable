@@ -237,7 +237,17 @@ export default {
         const isControl = className.indexOf("border-radius") > -1;
         const isLine = className.indexOf("moveable-line") > -1 && className.indexOf("moveable-direction") > -1;
         const controlIndex = isControl ? parseInt(inputTarget.getAttribute("data-radius-index"), 10) : -1;
-        const lineIndex = isLine ? parseInt(inputTarget.getAttribute("data-line-index"), 10) : -1;
+        let lineIndex = -1;
+
+        if (isLine) {
+            const indexAttr = inputTarget.getAttribute("data-line-index")!;
+
+            lineIndex = parseInt(indexAttr.replace(/render-line-/g, ""), 10);
+
+            if (isNaN(lineIndex)) {
+                lineIndex = -1;
+            }
+        }
 
         if (!isControl && !isLine) {
             return false;
@@ -377,6 +387,7 @@ export default {
 
                 addBorderRadius(controlPoses, poses, lineIndex, distX, distY, width, height);
             }
+
             if (length !== controlPoses.length) {
                 triggerRoundEvent(
                     moveable,
