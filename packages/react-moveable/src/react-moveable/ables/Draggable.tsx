@@ -48,7 +48,7 @@ export default {
         React: Renderer,
     ): any[] {
         const { throttleDragRotate, zoom } = moveable.props;
-        const { dragInfo, beforeOrigin } = moveable.state;
+        const { dragInfo, beforeOrigin } = moveable.getState();
 
         if (!throttleDragRotate || !dragInfo) {
             return [];

@@ -607,7 +607,7 @@ export default {
             clipPathState,
             snapBoundInfos,
             rotation: rotationRad,
-        } = moveable.state;
+        } = moveable.getState();
 
         if (!target) {
             return [];

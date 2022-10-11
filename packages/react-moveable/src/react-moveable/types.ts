@@ -161,6 +161,11 @@ export interface DefaultOptions {
      */
     props?: Record<string, any>;
     /**
+     * @private
+     * single => group로 변환과정에 도형 유지를 위한 첫 렌더링 state
+     */
+    firstRenderState?: MoveableManagerState | null;
+    /**
      * If you are using React 18's concurrent mode, use `flushSync` for UI sync.
      * @default empty function
      * @example
@@ -2741,6 +2746,7 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     useCSS(tag: string, css: string): any;
     getContainer(): HTMLElement | SVGElement;
     getRotation(): number;
+    getState(): MoveableManagerState<U>;
     triggerEvent(name: string, params: IObject<any>, isManager?: boolean): any;
 }
 export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {

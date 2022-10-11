@@ -2,7 +2,7 @@ import * as React from "react";
 import {
     Able, MoveableInterface, GroupableProps, MoveableDefaultProps,
     IndividualGroupableProps, MoveableManagerInterface, MoveableRefTargetsResultType,
-    MoveableTargetGroupsType, BeforeRenderableProps, RenderableProps,
+    MoveableTargetGroupsType, BeforeRenderableProps, RenderableProps, MoveableManagerState,
 } from "./types";
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
@@ -161,12 +161,20 @@ export class InitialMoveable<T = {}>
             }
             const targetGroups = getTargetGroups(refTargets, this.selectorMap);
 
+            let firstRenderState: MoveableManagerState | null = null;
+            const prevMoveable = this.moveable;
+
+            if (prevMoveable && !prevMoveable.props.groupable && !(prevMoveable.props as any).individualGroupable) {
+                // manager
+                firstRenderState = {...prevMoveable.state};
+            }
 
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
                 {...nextProps}
                 target={null}
                 targets={elementTargets}
                 targetGroups={targetGroups}
+                firstRenderState={firstRenderState}
             />;
         } else {
             return <MoveableManager<any> key="single" ref={ref(this, "moveable")}

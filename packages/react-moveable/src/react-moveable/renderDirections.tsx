@@ -22,7 +22,7 @@ export function renderDirectionControlsByInfos(
         renderPoses,
         rotation: rotationRad,
         direction,
-    } = moveable.state;
+    } = moveable.getState();
     const {
         zoom,
     } = getProps(moveable.props, ableName as any);
@@ -106,7 +106,7 @@ export function renderAroundControls(
         renderPoses,
         rotation: rotationRad,
         direction,
-    } = moveable.state;
+    } = moveable.getState();
 
     const renderDirectionMap = renderState.renderDirectionMap;
 
@@ -181,7 +181,7 @@ export function getRenderDirections(ableName: string) {
                     React,
                     ableName,
                     edge,
-                    moveable.state.renderPoses,
+                    moveable.getState().renderPoses,
                     moveable.props.zoom!,
                 ),
                 ...renderDiagonalDirections(moveable, ableName, React),

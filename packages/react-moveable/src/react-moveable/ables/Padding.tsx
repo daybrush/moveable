@@ -22,7 +22,7 @@ export default makeAble("padding", {
             pos2,
             pos3,
             pos4,
-        } = moveable.state;
+        } = moveable.getState();
 
         const poses = [pos1, pos2, pos3, pos4];
         const paddingDirections: number[][] = [];

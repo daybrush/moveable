@@ -30,7 +30,7 @@ export default makeAble("edgeDraggable", {
             React,
             "edgeDraggable",
             edge,
-            moveable.state.renderPoses,
+            moveable.getState().renderPoses,
             props.zoom!,
         );
     },

@@ -1,0 +1,140 @@
+<body>
+    <div id="artwork" class="target target1"></div>
+    <div class="target2"></div>
+    <button>aa</button>
+</body>
+<style>
+    .target1,
+    .target2 {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: #f55;
+        border: 1px solid #333;
+    }
+</style>
+<script src="https://daybrush.com/moveable/release/latest/dist/moveable.js"></script>
+
+<script>
+    let hasInteracted = false;
+    let isActive = true;
+
+    const editor = document.body;
+    let moveable;
+    moveable = new Moveable(editor, {
+        target: document.querySelector("#artwork"),
+        className: "moveable",
+        // If the container is null, the position is fixed. (default: parentElement(document.body))
+        container: editor,
+        draggable: true,
+        resizable: true,
+        scalable: false,
+        rotatable: true,
+        isDisplaySnapDigit: false,
+        elementGuidelines: [document.body],
+        snappable: true,
+        snapThreshold: 5,
+        snapGap: false,
+        snapDirections: {
+            top: true,
+            right: true,
+            bottom: true,
+            left: true,
+            center: true,
+            middle: true,
+        },
+        elementSnapDirections: {
+            top: true,
+            right: true,
+            bottom: true,
+            left: true,
+            center: true,
+            middle: true,
+        },
+        // Enabling pinchable lets you use events that
+        // can be used in draggable, resizable, scalable, and rotateable.
+        pinchable: false, // ["resizable", "scalable", "rotatable"]
+        origin: false,
+        keepRatio: true,
+        // Resize, Scale Events at edges.
+        // edge: true,
+        throttleDrag: 0,
+        throttleResize: 0,
+        throttleRotate: 0,
+        padding: { left: 0, top: 0, right: 0, bottom: 0 },
+    });
+
+    /* draggable */
+    moveable
+        .on("dragStart", ({ target, clientX, clientY }) => {
+            console.log("onDragStart");
+            hasInteracted = true;
+        })
+        .on("drag", ({ target, left, top }) => {
+            if (isActive) {
+                console.log("onDrag left, top", left, top);
+                target.style.left = `${left}px`;
+                target.style.top = `${top}px`;
+            }
+            // console.log("onDrag translate", dist);
+            // target!.style.transform = transform;
+        })
+        .on("dragEnd", ({ target, isDrag, clientX, clientY }) => {
+            console.log("onDragEnd");
+        });
+
+    /* resizable */
+    let frame = {
+        translate: [0, 0],
+    };
+    moveable
+        .on("resizeStart", (e) => {
+            e.setMin([100, 100]);
+            e.setOrigin(["%", "%"]);
+            e.dragStart && e.dragStart.set(frame.translate);
+            hasInteracted = true;
+        })
+        .on("resize", (e) => {
+            if (isActive) {
+                const beforeTranslate = e.drag.beforeTranslate;
+
+                frame.translate = beforeTranslate;
+                e.target.style.width = `${e.width}px`;
+                e.target.style.height = `${e.height}px`;
+                e.target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+            }
+        });
+
+    /* rotatable */
+    moveable
+        .on("rotateStart", ({ target, clientX, clientY }) => {
+            console.log("onRotateStart");
+            hasInteracted = true;
+        })
+        .on("rotate", ({ target, beforeDelta, delta, dist, transform, clientX, clientY, beforeRotate }) => {
+            if (isActive) {
+                console.log("onRotate", dist);
+                target.style.transform = transform;
+            }
+        })
+        .on("rotateEnd", ({ target, isDrag, clientX, clientY }) => {
+            console.log("onRotateEnd");
+        });
+
+    // Turn the editor on and off
+    const moveableEditor = document.querySelector(".moveable");
+    editor.addEventListener("click", (e) => {
+        console.log(e);
+        if (hasInteracted) {
+            if (e.target == moveable.target || moveable.target.contains(e.target)) {
+                moveableEditor.style.display = "block";
+                moveable.draggable = true;
+                isActive = true;
+            } else {
+                moveableEditor.style.display = "none";
+                moveable.draggable = false;
+                // isActive = false;
+            }
+        }
+    });
+</script>

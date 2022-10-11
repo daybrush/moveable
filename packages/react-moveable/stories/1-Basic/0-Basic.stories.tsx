@@ -22,8 +22,8 @@ group.add("Draggable", {
 
 
 group.add("Resizable", {
-    app: require("./ReactDraggableApp").default,
-    text: require("!!raw-loader!./ReactDraggableApp").default,
+    app: require("./ReactResizableApp").default,
+    text: require("!!raw-loader!./ReactResizableApp").default,
     argsTypes: {
         ...DEFAULT_RESIZABLE_CONTROLS,
     },

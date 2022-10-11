@@ -5,7 +5,7 @@ import { makeAble } from "./AbleManager";
 export default makeAble("origin", {
     render(moveable: MoveableManagerInterface<OriginOptions>, React: Renderer): any[] {
         const { zoom } = moveable.props;
-        const { beforeOrigin, rotation } = moveable.state;
+        const { beforeOrigin, rotation } = moveable.getState();
 
         return [
             <div className={prefix("control", "origin")}

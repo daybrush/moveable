@@ -183,7 +183,7 @@ export default {
             left,
             top,
             borderRadiusState,
-        } = moveable.state;
+        } = moveable.getState();
         const {
             minRoundControls = [0, 0],
             maxRoundControls = [4, 4],

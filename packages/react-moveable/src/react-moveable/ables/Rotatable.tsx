@@ -338,7 +338,7 @@ export default {
         const {
             renderPoses,
             direction,
-        } = moveable.state;
+        } = moveable.getState();
         if (!rotatable) {
             return null;
         }

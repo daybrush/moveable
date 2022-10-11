@@ -42,7 +42,7 @@ export default {
     } as const,
     render(moveable: MoveableManagerInterface<GroupableProps>, React: Renderer): any[] {
         const { target, dragArea, groupable, passDragArea } = moveable.props;
-        const { width, height, renderPoses } = moveable.state;
+        const { width, height, renderPoses } = moveable.getState();
 
         const className = passDragArea ? prefix("area", "pass") : prefix("area");
         if (groupable) {

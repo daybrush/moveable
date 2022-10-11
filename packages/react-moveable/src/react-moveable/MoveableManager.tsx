@@ -67,6 +67,7 @@ export default class MoveableManager<T = {}>
         preventClickDefault: false,
         preventClickEventOnDrag: true,
         flushSync: defaultSync,
+        firstRenderState: null,
     };
     public state: MoveableManagerState = {
         container: null,
@@ -101,7 +102,7 @@ export default class MoveableManager<T = {}>
 
     public render() {
         const props = this.props;
-        const state = this.state;
+        const state = this.getState();
         const {
             parentPosition,
             className,
@@ -110,6 +111,7 @@ export default class MoveableManager<T = {}>
             translateZ,
             cssStyled: ControlBoxElement,
             portalContainer,
+            groupable,
         } = props;
 
         this.checkUpdate();
@@ -124,12 +126,13 @@ export default class MoveableManager<T = {}>
             hasFixed,
         } = state;
         const groupTargets = (props as any).targets;
-        const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && stateTarget;
+        const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && (stateTarget || groupable);
         const isDragging = this.isDragging();
         const ableAttributes: IObject<boolean> = {};
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
+
         return (
             <ControlBoxElement
                 cspNonce={cspNonce}
@@ -562,7 +565,7 @@ export default class MoveableManager<T = {}>
         this.componentWillUnmount();
     }
     public updateRenderPoses() {
-        const state = this.state;
+        const state = this.getState();
         const props = this.props;
         const {
             originalBeforeOrigin, transformOrigin,
@@ -577,7 +580,7 @@ export default class MoveableManager<T = {}>
             right = 0,
         } = (props.padding || {}) as PaddingBox;
         const n = is3d ? 4 : 3;
-        const absoluteOrigin = (props as any).groupable
+        const absoluteOrigin = this.controlBox && (props as any).groupable
             ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
 
         state.renderPoses = [
@@ -654,6 +657,14 @@ export default class MoveableManager<T = {}>
             }
             this.updateRect();
         });
+    }
+    public getState(): MoveableManagerState {
+        const firstRenderState = this.props.firstRenderState as any;
+        if (firstRenderState && !this.controlBox) {
+            return firstRenderState;
+        } else {
+            return this.state;
+        }
     }
     public updateSelectors() { }
     protected unsetAbles() {
@@ -784,7 +795,7 @@ export default class MoveableManager<T = {}>
         if (hideDefaultLines || (parentMoveable && hideChildMoveableDefaultLines)) {
             return [];
         }
-        const renderPoses = this.state.renderPoses;
+        const renderPoses = this.getState().renderPoses;
         const Renderer = {
             createElement,
         };
