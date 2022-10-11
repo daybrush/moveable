@@ -164,9 +164,13 @@ export class InitialMoveable<T = {}>
             let firstRenderState: MoveableManagerState | null = null;
             const prevMoveable = this.moveable;
 
+            // manager
             if (prevMoveable && !prevMoveable.props.groupable && !(prevMoveable.props as any).individualGroupable) {
-                // manager
-                firstRenderState = {...prevMoveable.state};
+                const target = prevMoveable.props.target!;
+
+                if (target && elementTargets.indexOf(target) > -1) {
+                    firstRenderState = {...prevMoveable.state};
+                }
             }
 
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
