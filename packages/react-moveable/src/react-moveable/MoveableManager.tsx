@@ -145,6 +145,7 @@ export default class MoveableManager<T = {}>
                 style={{
                     "position": hasFixed ? "fixed" : "absolute",
                     "display": isDisplay ? "block" : "none",
+                    "visibility": this.controlBox || this.props.firstRenderState ? "visible" : "hidden",
                     "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, ${translateZ})`,
                     "--zoom": zoom,
                     "--zoompx": `${zoom}px`,
