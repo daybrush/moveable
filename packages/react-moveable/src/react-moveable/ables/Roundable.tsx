@@ -32,8 +32,8 @@ function addBorderRadius(
     // lineIndex
     // 0 top
     // 1 right
-    // 2 left
-    // 3 bottom
+    // 2 bottom
+    // 3 left
 
     // 0 top - left
     // 1 top - right
@@ -46,26 +46,30 @@ function addBorderRadius(
     let horizontalIndex = -1;
     let verticalIndex = -1;
 
+    console.log(lineIndex, horizontalsLength, verticalsLength);
+
     if (lineIndex === 0) {
         if (horizontalsLength === 0) {
             horizontalIndex = 0;
         } else if (horizontalsLength === 1) {
             horizontalIndex = 1;
         }
-    } else if (lineIndex === 3) {
+    }
+    if (lineIndex === 2) {
         if (horizontalsLength <= 2) {
             horizontalIndex = 2;
         } else if (horizontalsLength <= 3) {
             horizontalIndex = 3;
         }
     }
-    if (lineIndex === 2) {
+    if (lineIndex === 3) {
         if (verticalsLength === 0) {
             verticalIndex = 0;
         } else if (verticalsLength < 4) {
             verticalIndex = 3;
         }
-    } else if (lineIndex === 1) {
+    }
+    if (lineIndex === 1) {
         if (verticalsLength <= 1) {
             verticalIndex = 1;
         } else if (verticalsLength <= 2) {
