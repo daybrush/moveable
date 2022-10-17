@@ -13,6 +13,8 @@ import {
     calculatePadding,
     getAbsoluteRotation,
     defaultSync,
+    getRefTarget,
+    groupBy,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
@@ -24,13 +26,18 @@ import {
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
 import { plus } from "@scena/matrix";
-import { cancelAnimationFrame, find, getKeys, IObject, requestAnimationFrame } from "@daybrush/utils";
+import {
+    addClass, cancelAnimationFrame, find,
+    getKeys, IObject, removeClass, requestAnimationFrame,
+} from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
 import styled from "react-css-styled";
 import EventEmitter from "@scena/event-emitter";
 import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
+import { VIEW_DRAGGING } from "./classNames";
+import { diff } from "@egjs/list-differ";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -68,6 +75,7 @@ export default class MoveableManager<T = {}>
         preventClickEventOnDrag: true,
         flushSync: defaultSync,
         firstRenderState: null,
+        viewContainer: null,
     };
     public state: MoveableManagerState = {
         container: null,
@@ -87,6 +95,7 @@ export default class MoveableManager<T = {}>
     public rotation = 0;
     public scale: number[] = [1, 1];
     public isUnmounted = false;
+
     public events: Record<string, EventManager | null> = {
         "mouseEnter": null,
         "mouseLeave": null,
@@ -99,6 +108,9 @@ export default class MoveableManager<T = {}>
 
     private _observer: ResizeObserver | null = null;
     private _observerId = 0;
+    public _rootContainer: HTMLElement | null | undefined = null;
+    private _viewContainer: HTMLElement | null | undefined = null;
+    private _viewClassNames: string[] = [];
 
     public render() {
         const props = this.props;
@@ -114,6 +126,7 @@ export default class MoveableManager<T = {}>
             groupable,
         } = props;
 
+        this._checkUpdateRootContainer();
         this.checkUpdate();
         this.updateRenderPoses();
 
@@ -132,9 +145,7 @@ export default class MoveableManager<T = {}>
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
-        const ableClassName = this.getEnabledAbles().map(able => {
-            return able.className?.(this);
-        }).filter(Boolean).join(" ");
+        const ableClassName = this._getAbleClassName();
 
         return (
             <ControlBoxElement
@@ -163,6 +174,9 @@ export default class MoveableManager<T = {}>
         const props = this.props;
         const { parentMoveable, container, wrapperMoveable } = props;
 
+
+        this._checkUpdateRootContainer();
+        this._checkUpdateViewContainer();
         this._updateTargets();
         this._updateNativeEvents();
         this._updateEvents();
@@ -174,6 +188,8 @@ export default class MoveableManager<T = {}>
         this._updateObserver(this.props);
     }
     public componentDidUpdate(prevProps: any) {
+        this._checkUpdateRootContainer();
+        this._checkUpdateViewContainer();
         this._updateNativeEvents();
         this._updateEvents();
         this._updateTargets();
@@ -183,6 +199,12 @@ export default class MoveableManager<T = {}>
     public componentWillUnmount() {
         this.isUnmounted = true;
         this._emitter.off();
+
+        const viewContainer = this._viewContainer;
+
+        if (viewContainer) {
+            this._changeAbleViewClassNames([]);
+        }
         unset(this, "targetGesto");
         unset(this, "controlGesto");
 
@@ -364,10 +386,11 @@ export default class MoveableManager<T = {}>
         const target = (state.target || this.props.target) as HTMLElement | SVGElement;
         const container = this.getContainer();
         const rootContainer = parentMoveable
-            ? parentMoveable.props.rootContainer
-            : props.rootContainer;
+            ? (parentMoveable as any)._rootContainer
+            : this._rootContainer;
         this.updateState(
-            getMoveableTargetInfo(this.controlBox && this.controlBox.getElement(),
+            getMoveableTargetInfo(
+                this.controlBox && this.controlBox.getElement(),
                 target,
                 container,
                 container,
@@ -888,6 +911,79 @@ export default class MoveableManager<T = {}>
             }
             manager.setAbles(ables);
         });
+    }
+    private _checkUpdateRootContainer() {
+        const rootContainer = this.props.rootContainer;
+
+        if (!this._rootContainer && rootContainer) {
+            this._rootContainer = getRefTarget(rootContainer, true);
+        }
+    }
+    private _checkUpdateViewContainer() {
+        const viewContainerOption = this.props.viewContainer;
+
+        if (!this._viewContainer && viewContainerOption) {
+            this._viewContainer = getRefTarget(viewContainerOption, true);
+        }
+        const viewContainer = this._viewContainer;
+
+        if (viewContainer) {
+            this._changeAbleViewClassNames([
+                ...this._getAbleViewClassNames(),
+                this.isDragging() ? VIEW_DRAGGING : "",
+            ]);
+        }
+    }
+    private _changeAbleViewClassNames(classNames: string[]) {
+        const viewContainer = this._viewContainer!;
+        const nextClassNames = groupBy(
+            classNames.filter(Boolean),
+            el => el,
+        ).map(([className]) => className);
+        const prevClassNames = this._viewClassNames;
+
+        const {
+            removed,
+            added,
+        } = diff(prevClassNames, nextClassNames);
+
+        removed.forEach(index => {
+            removeClass(viewContainer, prevClassNames[index]);
+        });
+        added.forEach(index => {
+            addClass(viewContainer, nextClassNames[index]);
+        });
+
+        this._viewClassNames = nextClassNames;
+
+    }
+    private _getAbleViewClassNames() {
+        return this.getEnabledAbles().map(able => {
+            return (able.viewClassName?.(this) || "");
+        }).join(" ").split(/\s+/g);
+    }
+    private _getAbleClassName() {
+        const ables = this.getEnabledAbles();
+
+        const targetGesto = this.targetGesto;
+        const controlGesto = this.controlGesto;
+        const targetGestoData: Record<string, any> = targetGesto?.isFlag()
+            ? targetGesto.getEventData() : {};
+        const controlGestoData: Record<string, any> = controlGesto?.isFlag()
+            ? controlGesto.getEventData() : {};
+
+        return ables.map(able => {
+            const name = able.name;
+            let className = able.className?.(this) || "";
+
+            if (
+                targetGestoData[name]?.isEventStart
+                || controlGestoData[name]?.isEventStart
+            ) {
+                className += ` ${prefix(`${name}-dragging`)}`;
+            }
+            return className.trim();
+        }).filter(Boolean).join(" ");
     }
 }
 

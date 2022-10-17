@@ -2822,7 +2822,7 @@
 
 "@egjs/list-differ@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.npmjs.org/@egjs/list-differ/-/list-differ-1.0.0.tgz"
+  resolved "https://registry.npmjs.org/@egjs/list-differ/-/list-differ-1.0.0.tgz#2277aff52e3e4bd9318d5c30ffc3ba3b6216f05e"
   integrity sha512-HsbMKc0ZAQH+EUeCmI/2PvTYSybmkaWwakU8QGDYYgMVIg9BQ5sM0A0Nnombjxo2+JzXHxmH+jw//yGX+y6GYw==
 
 "@emotion/cache@^10.0.27", "@emotion/cache@^10.0.9":

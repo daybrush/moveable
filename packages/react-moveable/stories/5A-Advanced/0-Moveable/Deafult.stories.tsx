@@ -13,3 +13,8 @@ group.add("Select Form", {
     app: require("./ReactSelectFormApp").default,
     text: require("!!raw-loader!./ReactSelectFormApp").default,
 });
+
+group.add("Cursor is applied in viewer during dragging.", {
+    app: require("./ReactViewContainerApp").default,
+    text: require("!!raw-loader!./ReactViewContainerApp").default,
+});

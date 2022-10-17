@@ -1,6 +1,6 @@
 import {
     prefix, getLineStyle, getDirection, getAbsolutePosesByState,
-    triggerEvent, fillParams, fillEndParams,
+    triggerEvent, fillParams, fillEndParams, getDirectionViewClassName,
 } from "../utils";
 import {
     convertDimension, invert, multiply,
@@ -69,6 +69,7 @@ export default {
         onWarp: "warp",
         onWarpEnd: "warpEnd",
     } as const,
+    viewClassName: getDirectionViewClassName("warpable"),
     render(moveable: MoveableManagerInterface<ResizableProps & ScalableProps & WarpableProps>, React: Renderer): any[] {
         const { resizable, scalable, warpable, zoom } = moveable.props;
 
@@ -113,7 +114,7 @@ export default {
         const { datas, inputEvent } = e;
         const { target } = moveable.props;
         const { target: inputTarget } = inputEvent;
-        const direction = getDirection(inputTarget);
+        const direction = getDirection(inputTarget, datas);
 
         if (!direction || !target) {
             return false;

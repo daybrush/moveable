@@ -71,6 +71,7 @@
         "@daybrush/utils": "^1.10.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
+        "@egjs/list-differ": "^1.0.0",
         "@scena/dragscroll": "^1.2.0",
         "@scena/event-emitter": "^1.0.5",
         "@scena/matrix": "^1.1.1",

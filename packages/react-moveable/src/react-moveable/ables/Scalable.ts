@@ -1,6 +1,7 @@
 import {
-    getDirection, triggerEvent, multiply2,
-    fillParams, fillEndParams, getAbsolutePosesByState, catchEvent, getOffsetSizeDist, getDirectionCondition,
+    triggerEvent, multiply2,
+    fillParams, fillEndParams, getAbsolutePosesByState,
+    catchEvent, getOffsetSizeDist, getDirectionCondition, getDirectionViewClassName, getTotalDirection,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -65,11 +66,18 @@ export default {
     } as const,
     render: getRenderDirections("scalable"),
     dragControlCondition: directionCondition,
+    viewClassName: getDirectionViewClassName("scalable"),
     dragControlStart(
         moveable: MoveableManagerInterface<ScalableProps & DraggableProps, SnappableState>,
         e: any) {
         const { datas, isPinch, inputEvent, parentDirection } = e;
-        const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
+
+        const direction = getTotalDirection(
+            parentDirection,
+            isPinch,
+            inputEvent,
+            datas,
+        );
         const {
             width,
             height,

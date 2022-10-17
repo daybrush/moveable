@@ -1,5 +1,5 @@
 import {
-    getDirection, triggerEvent,
+    triggerEvent,
     fillParams,
     fillEndParams,
     getAbsolutePosesByState,
@@ -9,6 +9,8 @@ import {
     getDirectionCondition,
     calculatePoses,
     fillAfterTransform,
+    getDirectionViewClassName,
+    getTotalDirection,
 } from "../utils";
 import {
     setDragStart,
@@ -76,6 +78,7 @@ export default {
     } as const,
     render: getRenderDirections("resizable"),
     dragControlCondition: directionCondition,
+    viewClassName: getDirectionViewClassName("resizable"),
     dragControlStart(
         moveable: MoveableManagerInterface<ResizableProps & DraggableProps, SnappableState>,
         e: any,
@@ -91,7 +94,13 @@ export default {
             parentEvent,
         } = e;
 
-        const direction = parentDirection || (isPinch ? [0, 0] : getDirection(inputEvent.target));
+        const direction = getTotalDirection(
+            parentDirection,
+            isPinch,
+            inputEvent,
+            datas,
+        );
+
         const state = moveable.state;
         const { target, width, height, gestos } = state;
 

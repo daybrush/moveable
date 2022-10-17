@@ -129,7 +129,7 @@ export const MOVEABLE_CSS = `
 	pointer-events: none;
 }
 ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
-.direction[data-rotation="${degree}"] {
+.direction[data-rotation="${degree}"], :global .view-control-rotation${degree} {
 	${getCursorCSS(degree)}
 }
 `).join("\n")}

@@ -281,7 +281,7 @@ const css = `.rotation {
     background:#fff;
     cursor: alias;
 }
-.rotatable.direction.control {
+:global .view-rotation-dragging, .rotatable.direction.control {
     cursor: alias;
 }
 .around-control {
@@ -326,6 +326,12 @@ export default {
         onRotateGroupEnd: "rotateGroupEnd",
     } as const,
     css: [css],
+    viewClassName(moveable: MoveableManagerInterface<RotatableProps>) {
+        if (!moveable.isDragging("rotatable")) {
+            return "";
+        }
+        return prefix("view-rotation-dragging");
+    },
     render(moveable: MoveableManagerInterface<RotatableProps>, React: Renderer): any {
         const {
             rotatable,

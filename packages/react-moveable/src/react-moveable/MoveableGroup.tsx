@@ -307,7 +307,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             target,
             this.controlBox.getElement(),
             this.getContainer(),
-            this.props.rootContainer || container,
+            this._rootContainer || container,
             // state,
         );
         const pos = [info.left!, info.top!];

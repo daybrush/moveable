@@ -24,6 +24,7 @@ export default {
         stopPropagation: Boolean,
         preventClickEventOnDrag: Boolean,
         preventClickDefault: Boolean,
+        viewContainer: Object,
     } as const,
     events: {} as const,
 };

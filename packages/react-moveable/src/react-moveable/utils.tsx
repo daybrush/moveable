@@ -20,10 +20,11 @@ import {
     MoveableProps, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
     ElementSizes, MoveablePosition, TransformObject,
-    MoveableRefTargetsResultType, MoveableRefTargetType,
+    MoveableRefTargetsResultType, MoveableRefTargetType, MoveableManagerInterface,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getBeforeRenderableDatas, getDragDist } from "./gesto/GestoUtils";
+import { getGestoData } from "./gesto/GestoData";
 
 export function round(num: number) {
     return Math.round(num);
@@ -839,11 +840,33 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     }
     return rect;
 }
-export function getDirection(target: SVGElement | HTMLElement) {
+export function getTotalDirection(
+    parentDirection: number[],
+    isPinch: boolean,
+    inputEvent: any,
+    datas: any,
+) {
+    let direction: number[] | undefined;
+
+    if (parentDirection) {
+        direction = parentDirection;
+    } else if (isPinch) {
+        direction = [0, 0];
+    } else {
+        const target = inputEvent.target;
+
+        direction = getDirection(target, datas);
+    }
+    return direction;
+}
+export function getDirection(target: SVGElement | HTMLElement, datas: any) {
     if (!target) {
         return;
     }
+    const deg = target.getAttribute("data-rotation") || "";
     const direciton = target.getAttribute("data-direction")!;
+
+    datas.deg = deg;
 
     if (!direciton) {
         return;
@@ -1134,7 +1157,21 @@ export function convertCSSSize(value: number, size: number, isRelative?: boolean
 export function getTinyDist(v: number) {
     return Math.abs(v) <= TINY_NUM ? 0 : v;
 }
+export function getDirectionViewClassName(ableName: string) {
+    return (moveable: MoveableManagerInterface) => {
+        if (!moveable.isDragging(ableName)) {
+            return "";
+        }
+        const data = getGestoData(moveable, ableName);
+        const deg = data.deg;
+        if (!deg) {
+            return "";
+        }
+        const className = `view-${ableName}-dragging`;
 
+        return prefix(className, `view-control-rotation${deg}`);
+    };
+}
 export function getDirectionCondition(ableName: string, checkAbles: string[] = [ableName]) {
     return (moveable: any, e: any) => {
         if (e.isRequest) {

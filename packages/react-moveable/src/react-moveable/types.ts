@@ -78,7 +78,12 @@ export interface DefaultOptions {
      * Moveable Root Container (No Transformed Container)
      * @default parentElement
      */
-    rootContainer?: HTMLElement | null;
+    rootContainer?: MoveableRefType<HTMLElement>;
+    /**
+     * If you want to set the dragging information to the viewer, refer to the following.
+     * @default null
+     */
+    viewContainer?: MoveableRefType<HTMLElement>;
     /**
      * Whether the target size is detected and updated whenever it changes.
      * @default false
@@ -440,6 +445,10 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
      * You can specify the class name to be added to the Moveable control box.
      */
     className?(moveable: any): string;
+    /**
+     * You can specify the class name to be added to the Moveable View Container
+     */
+    viewClassName?(moveable: any): string;
     /**
      * Check how related to drag
      */
