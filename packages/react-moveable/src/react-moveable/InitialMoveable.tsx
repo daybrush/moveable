@@ -204,6 +204,20 @@ export class InitialMoveable<T = {}>
         this.refTargets = [];
     }
     /**
+     * Get targets set in moveable through target or targets of props.
+     * @method Moveable#getTargets
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body, {
+     *    target: [targetRef, ".target", document.querySelectorAll(".target")],
+     * });
+     *
+     * console.log(moveable.getTargets());
+     */
+    public getTargets() {
+        return this.moveable?.getTargets() ?? [];
+    }
+    /**
      * If the element list corresponding to the selector among the targets is changed, it is updated.
      * @method Moveable#updateSelectors
      * @example

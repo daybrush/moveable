@@ -33,6 +33,9 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
         </ControlBoxElement>;
     }
     public componentDidUpdate() {}
+    public getTargets() {
+        return this.props.targets!;
+    }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
         this.moveables.forEach(moveable => {
             moveable.updateRect(type, isTarget, isSetState);

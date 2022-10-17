@@ -218,7 +218,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         this._isPropTargetChanged = false;
         this.updateAbles();
     }
-
+    public getTargets() {
+        return this.props.targets!;
+    }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState = true) {
         if (!this.controlBox) {
             return;
