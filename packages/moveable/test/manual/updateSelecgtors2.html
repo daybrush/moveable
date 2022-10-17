@@ -1,0 +1,59 @@
+<body>
+    <div class="target1 box"></div>
+    <div class="target2 box"></div>
+    <button id="btn1">selectFirst</button>
+    <button id="btn2">selectSecond</button>
+    <button id="btn3">clearSelect</button>
+</body>
+<style>
+    body {
+        background-color: black;
+    }
+
+    .target1,
+    .target2 {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: #f55;
+        border: 1px solid #333;
+    }
+
+    .target2 {
+        left: 500px;
+        top: 200px;
+    }
+
+    .target1 {
+        left: 300px;
+        top: 100px;
+    }
+</style>
+<script src="../../dist/moveable.js"></script>
+<script>
+    const moveable = new Moveable(document.body, {
+        draggable: true,
+        target: ".target",
+        resizable: true
+    }).on("drag", (e) => {
+        e.target.style.transform = e.transform;
+    });
+
+    document.querySelector("#btn1").addEventListener("click", (e) => {
+        document.querySelector(".target1").classList.add("target");
+        moveable.updateSelectors();
+    });
+    document.querySelector("#btn2").addEventListener("click", (e) => {
+        document.querySelector(".target1").classList.remove("target");
+        moveable.updateSelectors();
+        document.querySelector(".target1").classList.add("target");
+        document.querySelector(".target2").classList.add("target");
+        moveable.updateSelectors();
+    });
+    document.querySelector("#btn3").addEventListener("click", (e) => {
+        document.querySelectorAll(".target").forEach((item) => {
+            item.classList.remove("target");
+        });
+        moveable.updateSelectors();
+    });
+</script>

@@ -180,12 +180,13 @@ export default class MoveableManager<T = {}>
         this._updateTargets();
         this._updateNativeEvents();
         this._updateEvents();
+        this.updateCheckInput();
+        this._updateObserver(this.props);
 
         if (!container && !parentMoveable && !wrapperMoveable) {
             this.updateRect("", false, true);
+            this.forceUpdate();
         }
-        this.updateCheckInput();
-        this._updateObserver(this.props);
     }
     public componentDidUpdate(prevProps: any) {
         this._checkUpdateRootContainer();

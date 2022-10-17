@@ -7,7 +7,7 @@ import {
 import MoveableManager from "./MoveableManager";
 import MoveableGroup from "./MoveableGroup";
 import { ref, withMethods, prefixCSS } from "framework-utils";
-import { getKeys, IObject, isArray, isString } from "@daybrush/utils";
+import { find, getKeys, IObject, isArray, isString } from "@daybrush/utils";
 import { MOVEABLE_METHODS, PREFIX, MOVEABLE_CSS } from "./consts";
 import Default from "./ables/Default";
 import Groupable from "./ables/Groupable";
@@ -151,6 +151,11 @@ export class InitialMoveable<T = {}>
         };
 
         this._elementTargets = elementTargets;
+
+        let firstRenderState: MoveableManagerState | null = null;
+        const prevMoveable = this.moveable;
+
+
         if (isGroup) {
             if (props.individualGroupable) {
                 return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
@@ -161,15 +166,12 @@ export class InitialMoveable<T = {}>
             }
             const targetGroups = getTargetGroups(refTargets, this.selectorMap);
 
-            let firstRenderState: MoveableManagerState | null = null;
-            const prevMoveable = this.moveable;
-
             // manager
             if (prevMoveable && !prevMoveable.props.groupable && !(prevMoveable.props as any).individualGroupable) {
                 const target = prevMoveable.props.target!;
 
                 if (target && elementTargets.indexOf(target) > -1) {
-                    firstRenderState = {...prevMoveable.state};
+                    firstRenderState = { ...prevMoveable.state };
                 }
             }
 
@@ -181,9 +183,21 @@ export class InitialMoveable<T = {}>
                 firstRenderState={firstRenderState}
             />;
         } else {
+            const target = elementTargets[0];
+            // manager
+            if (prevMoveable && (prevMoveable.props.groupable || (prevMoveable.props as any).individualGroupable)) {
+                const moveables = (prevMoveable as MoveableGroup | MoveableIndividualGroup).moveables || [];
+                const prevTargetMoveable = find(moveables, mv => mv.props.target === target);
+
+                if (prevTargetMoveable) {
+                    firstRenderState = { ...prevTargetMoveable.state };
+                }
+            }
+
             return <MoveableManager<any> key="single" ref={ref(this, "moveable")}
                 {...nextProps}
-                target={elementTargets[0]} />;
+                target={target}
+                firstRenderState={firstRenderState} />;
         }
     }
     public componentDidMount() {
