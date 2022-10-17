@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.39.4...react-moveable@0.40.0) (2022-10-17)
+
+
+### :rocket: New Features
+
+* add `viewContainer` prop #753 ([352073c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/352073c5c5c765aca707236abdff9dded7988343))
+* add getTargets method #751 ([16f1061](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/16f1061ac616081c1d9dd40e00105e8a2a93e1d2))
+* add roundPadding, isDisplayShadowRoundControls #761 #762 ([68be2e8](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/68be2e879cc5dbba6d4566cf96d343216710e0c9))
+
+
+### :bug: Bug Fix
+
+* fix border radius for line #761 ([803f0b6](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/803f0b6c2210653a7cdb17f51a828c4e3f6db641))
+* fix cache condition #760 ([03e2789](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/03e2789db951f95087f918d32fa32cdd70fba533))
+* fix first visibility #760 ([38ba047](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/38ba04792925b0c32e85258046f5285133f92dc1))
+* fix flash of single, group toggling #760 ([5578030](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/557803012e21d2e78e3c0577aa9a238d9ee3a8dd))
+* fix max-width percentage #763 ([f1ad4af](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f1ad4affba14d86f3d0145f08e08c647bd0b4f08))
+* fix roundable control index #762 ([1b29ecd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1b29ecdfb0d1d4df6c348e78852d1325aa727aaf))
+* Fixing bad type causing type conflict (#767) ([c63c1d3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c63c1d30067e52b4115f09c6a78639177b443226))
+* support cache for group #760 ([4661320](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/46613207e47279e72bdfc656ae35548a3f07474d))
+
+
+### :mega: Other
+
+* publish packages ([75db134](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/75db1345ab1119dd9a5270c7c11de455888c2627))
+* publish packages ([47f5335](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/47f53351792bf5264c6d66745088e0571cedc3aa))
+* update packages ([61730d5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/61730d5c143d4027c55a714c764efe77bbebe5bf))
+
+
+
 ## [0.39.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.39.1...react-moveable@0.39.4) (2022-10-10)
 
 

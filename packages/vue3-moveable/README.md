@@ -100,6 +100,7 @@ $ npm i vue-moveable@beta
 
 ## 🚀 How to use
 If you want to check the methods and events, please refer to the [**API documentation**](https://daybrush.com/moveable/release/latest/doc/).
+
 ```vue
 <template>
 <div class="container">
@@ -117,7 +118,8 @@ If you want to check the methods and events, please refer to the [**API document
 </div>
 </template>
 <script>
-import Moveable from "vue3-moveable";
+// `VueMoveableInstance` is Vue Moveable's Instance type.
+import Moveable, { VueMoveableInstance } from "vue3-moveable";
 
 export default {
   name: "app",
@@ -126,13 +128,13 @@ export default {
   },
   methods: {
     onDrag({ transform }) {
-      this.$refs.target.style.transform = transform;
+        this.$refs.target.style.transform = transform;
     },
     onScale({ drag }) {
-      this.$refs.target.style.transform = drag.transform;
+        this.$refs.target.style.transform = drag.transform;
     },
     onRotate({ drag }) {
-      this.$refs.target.style.transform = drag.transform;
+        this.$refs.target.style.transform = drag.transform;
     },
   }
 }

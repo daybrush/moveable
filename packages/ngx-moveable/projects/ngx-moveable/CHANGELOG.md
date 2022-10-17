@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.33.4...ngx-moveable@0.34.0) (2022-10-17)
+
+
+### :bug: Bug Fix
+
+* fix flash of single, group toggling #760 ([5578030](https://github.com/daybrush/moveable/commit/557803012e21d2e78e3c0577aa9a238d9ee3a8dd))
+
+
+### :mega: Other
+
+* publish packages ([75db134](https://github.com/daybrush/moveable/commit/75db1345ab1119dd9a5270c7c11de455888c2627))
+* publish packages ([47f5335](https://github.com/daybrush/moveable/commit/47f53351792bf5264c6d66745088e0571cedc3aa))
+
+
+
 ## [0.33.4](https://github.com/daybrush/moveable/compare/ngx-moveable@0.33.1...ngx-moveable@0.33.4) (2022-10-10)
 
 

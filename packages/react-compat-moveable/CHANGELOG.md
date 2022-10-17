@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.25.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.24.4...react-compat-moveable@0.25.0) (2022-10-17)
+
+
+### :rocket: New Features
+
+* add `viewContainer` prop #753 ([352073c](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/352073c5c5c765aca707236abdff9dded7988343))
+
+
+### :mega: Other
+
+* publish packages ([75db134](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/75db1345ab1119dd9a5270c7c11de455888c2627))
+* publish packages ([47f5335](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/47f53351792bf5264c6d66745088e0571cedc3aa))
+* update packages ([61730d5](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/61730d5c143d4027c55a714c764efe77bbebe5bf))
+
+
+
 ## [0.24.4](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.24.1...react-compat-moveable@0.24.4) (2022-10-10)
 
 
