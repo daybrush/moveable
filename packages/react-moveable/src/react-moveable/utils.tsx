@@ -3,7 +3,7 @@ import { prefixNames, InvertObject } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
-    getShapeDirection, isFunction, convertUnitSize, between, getKeys,
+    getShapeDirection, isFunction, convertUnitSize, between, getKeys, decamelize,
 } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -678,11 +678,39 @@ export function getSize(
             const verticalBorder = borderTop + borderBottom;
             const horizontalOffset = horizontalPadding + horizontalBorder;
             const verticalOffset = verticalPadding + verticalBorder;
+            const position = style!.position;
 
-            minWidth = Math.max(horizontalPadding, convertUnitSize(style!.minWidth, 0) || 0);
-            minHeight = Math.max(verticalPadding, convertUnitSize(style!.minHeight, 0) || 0);
-            maxWidth = convertUnitSize(style!.maxWidth, 0);
-            maxHeight = convertUnitSize(style!.maxHeight, 0);
+            let containerWidth = 0;
+            let containerHeight = 0;
+
+            // SVGSVGElement, HTMLElement
+            if ("clientLeft" in target) {
+                let parentElement: HTMLElement | null = null;
+
+                if (position === "absolute") {
+                    const offsetInfo = getOffsetInfo(target, document.body, false);
+                    parentElement = offsetInfo.offsetParent;
+
+                } else {
+                    parentElement = target.parentElement;
+                }
+                if (parentElement) {
+                    const parentStyle = getComputedStyle(parentElement);
+
+                    containerWidth = parseFloat(parentStyle.width);
+                    containerHeight = parseFloat(parentStyle.height);
+                }
+            }
+            minWidth = Math.max(
+                horizontalPadding,
+                convertUnitSize(style!.minWidth, containerWidth) || 0,
+            );
+            minHeight = Math.max(
+                verticalPadding,
+                convertUnitSize(style!.minHeight, containerHeight) || 0,
+            );
+            maxWidth = convertUnitSize(style!.maxWidth, containerWidth);
+            maxHeight = convertUnitSize(style!.maxHeight, containerHeight);
 
             if (isNaN(maxWidth)) {
                 maxWidth = Infinity;
@@ -875,7 +903,7 @@ export function fillCSSObject(style: Record<string, any>, resolvedEvent?: any) {
     }
     return {
         style,
-        cssText: getKeys(style).map(name => `${name}: ${style[name]};`).join(""),
+        cssText: getKeys(style).map(name => `${decamelize(name, "-")}: ${style[name]};`).join(""),
     };
 }
 
