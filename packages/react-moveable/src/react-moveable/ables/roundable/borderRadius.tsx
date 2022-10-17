@@ -19,7 +19,7 @@ export const HORIZONTAL_RADIUS_DIRECTIONS = [1, -1, -1, 1] as const;
 export const VERTICAL_RADIUS_DIRECTIONS = [1, 1, -1, -1] as const;
 
 export function getRadiusStyles(
-    poses: number[][], controlPoses: ControlPose[],
+    nextPoses: ControlPose[],
     isRelative: boolean,
     width: number,
     height: number,
@@ -31,8 +31,10 @@ export function getRadiusStyles(
     const clipStyles: string[] = [];
     let isVertical = false;
 
-    const raws = poses.map((pos, i) => {
-        const { horizontal, vertical } = controlPoses[i];
+    const radiusPoses = nextPoses.filter(pos => !pos.virtual);
+    const raws = radiusPoses.map(posInfo => {
+        const { horizontal, vertical, pos } = posInfo;
+
         if (vertical && !isVertical) {
             isVertical = true;
             clipStyles.push("/");
@@ -52,6 +54,7 @@ export function getRadiusStyles(
     });
 
     return {
+        radiusPoses,
         styles: clipStyles,
         raws,
     };
@@ -95,11 +98,15 @@ export function getRadiusValues(
     left: number,
     top: number,
     minCounts: number[] = [0, 0],
+    full = false,
 ): ControlPose[] {
     const splitIndex = values.indexOf("/");
     const splitLength = (splitIndex > -1 ? values.slice(0, splitIndex) : values).length;
     const horizontalValues = values.slice(0, splitLength);
     const verticalValues = values.slice(splitLength + 1);
+    const horizontalValuesLength = horizontalValues.length;
+    const verticalValuesLength = verticalValues.length;
+    const hasVerticalValues = verticalValuesLength > 0;
     const [
         nwValue = "0px",
         neValue = nwValue,
@@ -108,9 +115,9 @@ export function getRadiusValues(
     ] = horizontalValues;
     const [
         wnValue = nwValue,
-        enValue = wnValue,
-        esValue = wnValue,
-        wsValue = enValue,
+        enValue = hasVerticalValues ? wnValue : neValue,
+        esValue = hasVerticalValues ? wnValue : seValue,
+        wsValue = hasVerticalValues ? enValue : swValue,
     ] = verticalValues;
 
     const horizontalRawPoses = [nwValue, neValue, seValue, swValue].map(pos => convertUnitSize(pos, width));
@@ -118,20 +125,34 @@ export function getRadiusValues(
     const horizontalPoses = horizontalRawPoses.slice();
     const verticalPoses = verticalRawPoses.slice();
 
-    [horizontalPoses[0], horizontalPoses[1]] = calculateRatio([horizontalPoses[0], horizontalPoses[1]], width);
-    [horizontalPoses[3], horizontalPoses[2]] = calculateRatio([horizontalPoses[3], horizontalPoses[2]], width);
-    [verticalPoses[0], verticalPoses[3]] = calculateRatio([verticalPoses[0], verticalPoses[3]], height);
-    [verticalPoses[1], verticalPoses[2]] = calculateRatio([verticalPoses[1], verticalPoses[2]], height);
+    [horizontalPoses[0], horizontalPoses[1]] = calculateRatio(
+        [horizontalPoses[0], horizontalPoses[1]],
+        width,
+    );
+    [horizontalPoses[3], horizontalPoses[2]] = calculateRatio(
+        [horizontalPoses[3], horizontalPoses[2]],
+        width,
+    );
+    [verticalPoses[0], verticalPoses[3]] = calculateRatio(
+        [verticalPoses[0], verticalPoses[3]], height,
+    );
+    [verticalPoses[1], verticalPoses[2]] = calculateRatio(
+        [verticalPoses[1], verticalPoses[2]], height,
+    );
 
-    const nextHorizontalPoses
-        = horizontalPoses.slice(0, Math.max(minCounts[0], horizontalValues.length));
-    const nextVerticalPoses
-        = verticalPoses.slice(0, Math.max(minCounts[1], verticalValues.length));
+    const nextHorizontalPoses = full
+        ? horizontalPoses
+        : horizontalPoses.slice(0, Math.max(minCounts[0], horizontalValuesLength));
+    const nextVerticalPoses = full
+        ? verticalPoses
+        : verticalPoses.slice(0, Math.max(minCounts[1], verticalValuesLength));
+
     return [
         ...nextHorizontalPoses.map((pos, i) => {
             const direction = RADIUS_DIRECTIONS[i];
 
             return {
+                virtual: i >= horizontalValuesLength,
                 horizontal: HORIZONTAL_RADIUS_DIRECTIONS[i],
                 vertical: 0,
                 pos: [left + pos, top + (VERTICAL_RADIUS_DIRECTIONS[i] === -1 ? height : 0)],
@@ -144,6 +165,7 @@ export function getRadiusValues(
             const direction = RADIUS_DIRECTIONS[i];
 
             return {
+                virtual: i >= verticalValuesLength,
                 horizontal: 0,
                 vertical: VERTICAL_RADIUS_DIRECTIONS[i],
                 pos: [left + (HORIZONTAL_RADIUS_DIRECTIONS[i] === -1 ? width : 0), top + pos],

@@ -67,14 +67,12 @@ export default {
     },
     dragStart(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         this.setTransform(moveable, e);
+        this.resetStyle(e);
 
         triggerEvent(moveable, `onBeforeRenderStart`, this.fillDragStartParams(moveable, e));
     },
     drag(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         this.resetStyle(e);
-        const datas = e.datas;
-
-        datas.nextStyle = {};
         triggerEvent(moveable, `onBeforeRender`, fillParams<OnBeforeRender>(moveable, e, {
             isPinch: !!e.isPinch,
         }));
@@ -94,6 +92,8 @@ export default {
             const childMoveable = moveables[i];
 
             this.setTransform(childMoveable, childEvent);
+            this.resetStyle(childEvent);
+
             return this.fillDragStartParams(childMoveable, childEvent);
         });
         triggerEvent(moveable, `onBeforeRenderGroupStart`, fillParams<OnBeforeRenderGroupStart>(moveable, e, {
@@ -112,9 +112,6 @@ export default {
             const childMoveable = moveables[i];
 
             this.resetStyle(childEvent);
-            const datas = e.datas;
-
-            datas.nextStyle = {};
             return this.fillDragParams(childMoveable, childEvent);
         });
         triggerEvent(moveable, `onBeforeRenderGroup`, fillParams<OnBeforeRenderGroup>(moveable, e, {

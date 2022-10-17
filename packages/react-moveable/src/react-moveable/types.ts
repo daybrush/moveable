@@ -437,6 +437,10 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     canPinch?: boolean;
     css?: string[];
     /**
+     * You can specify the class name to be added to the Moveable control box.
+     */
+    className?(moveable: any): any;
+    /**
      * Check how related to drag
      */
     dragRelation?: "strong" | "weak" | undefined | null | false,
@@ -776,6 +780,7 @@ export interface OnRoundStart extends OnEvent { }
  * @typedef
  * @memberof Moveable.Roundable
  * @extends Moveable.OnEvent
+ * @extends Moveable.CSSObject
  * @property - Offset width of target
  * @property - Offset height of target
  * @property - The delta of [x, y]
@@ -784,7 +789,7 @@ export interface OnRoundStart extends OnEvent { }
  * @property - The target's moved border-radius's vertical poses
  * @property - The target's moved border-radius
  */
-export interface OnRound extends OnEvent {
+export interface OnRound extends OnEvent, CSSObject {
     width: number;
     height: number;
     delta: number[];
@@ -792,6 +797,7 @@ export interface OnRound extends OnEvent {
     horizontals: number[];
     verticals: number[];
     borderRadius: string;
+
 }
 /**
  * @typedef
@@ -1560,11 +1566,15 @@ export interface OnRenderStart extends OnEvent {
  * @memberof Moveable
  * @extends Moveable.OnEvent
  * @extends Moveable.CSSObject
- * @property - a target's next transform string value.
- * @property - Whether or not it is being pinched.
  */
 export interface OnRender extends OnEvent, CSSObject {
+    /**
+     * a target's next transform string value.
+     */
     transform: string;
+    /**
+     * Whether or not it is being pinched.
+     */
     isPinch: boolean;
 }
 
@@ -1573,11 +1583,20 @@ export interface OnRender extends OnEvent, CSSObject {
  * @typedef
  * @memberof Moveable
  * @extends Moveable.OnEvent
- * @property - Whether or not it is being dragged.
- * @property - Whether or not it is being pinched.
+ * @extends Moveable.CSSObject
  */
-export interface OnRenderEnd extends OnEvent {
+export interface OnRenderEnd extends OnEvent, CSSObject {
+    /**
+     * a target's next transform string value.
+     */
+    transform: string;
+    /**
+     * Whether or not it is being dragged.
+     */
     isPinch: boolean;
+    /**
+     * Whether or not it is being pinched.
+     */
     isDrag: boolean;
 }
 
@@ -1767,7 +1786,17 @@ export interface RoundableOptions {
      * Whether you can add/delete round controls by double-clicking a line or control.
      * @default true
      */
-    roundClickable?: boolean;
+    roundClickable?: boolean | "line" | "control";
+    /**
+     * Whether to show a round control that does not actually exist as a shadow
+     * @default false
+     */
+    isDisplayShadowRoundControls?: boolean | "horizontal";
+    /**
+     * The padding value of the position of the round control
+     * @default 0
+     */
+    roundPadding?: number;
 }
 
 export interface RoundableEvents {
@@ -2776,6 +2805,7 @@ export interface MoveableInterface {
 }
 
 export interface ControlPose {
+    virtual?: boolean;
     vertical: number;
     horizontal: number;
     pos: number[];
@@ -2783,6 +2813,7 @@ export interface ControlPose {
     raw?: number;
     direction?: "n" | "e" | "s" | "w" | "nw" | "ne" | "sw" | "se" | "nesw";
 }
+
 
 export type AnyProps<T extends IObject<any>> = Required<{ [key in keyof T]: any }>;
 export type UnionToIntersection<U> =

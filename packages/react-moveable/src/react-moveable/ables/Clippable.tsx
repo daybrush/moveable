@@ -86,8 +86,12 @@ function getClipStyles(
             const [subWidth, subHeight] = minus(poses[4], poses[0]);
 
             clipStyles.push("round", ...getRadiusStyles(
-                poses.slice(8),
-                clipPoses.slice(8),
+                clipPoses.slice(8).map((info, i) => {
+                    return {
+                        ...info,
+                        pos: poses[i],
+                    };
+                }),
                 clipRelative!,
                 subWidth,
                 subHeight,

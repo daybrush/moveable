@@ -73,6 +73,8 @@ export default {
             isDrag: e.isDrag,
             targets: moveable.props.targets,
             events: params,
+            transform: getNextTransformText(e),
+            ...fillCSSObject(getNextStyle(e)),
         }));
     },
     dragControlStart(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
@@ -107,6 +109,8 @@ export default {
         return fillParams<OnRenderEnd>(moveable, e, {
             isPinch: !!e.isPinch,
             isDrag: e.isDrag,
+            transform: getNextTransformText(e),
+            ...fillCSSObject(getNextStyle(e)),
         });
     },
 } as const;
