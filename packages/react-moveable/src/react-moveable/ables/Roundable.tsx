@@ -13,76 +13,104 @@ import { splitSpace } from "@daybrush/utils";
 import { setDragStart, getDragDist, calculatePointerDist } from "../gesto/GestoUtils";
 import { minus, plus } from "@scena/matrix";
 import {
-    getRadiusValues, getRadiusStyles, removeRadiusPos,
-    addRadiusPos, splitRadiusPoses,
+    getRadiusValues,
+    getRadiusStyles,
+    splitRadiusPoses,
 } from "./roundable/borderRadius";
 
-function addBorderRadius(
+
+function addBorderRadiusByLine(
     controlPoses: ControlPose[],
-    poses: number[][],
     lineIndex: number,
     distX: number,
     distY: number,
-    width: number,
-    height: number,
 ) {
-    const {
-        horizontals,
-        verticals,
-    } = splitRadiusPoses(controlPoses);
-    const horizontalsLength = horizontals.length;
-    const verticalsLength = verticals.length;
     // lineIndex
     // 0 top
     // 1 right
     // 2 bottom
     // 3 left
 
-    // 0 top - left
-    // 1 top - right
-    // 2 bottom - right
-    // 3 bottom - left
-    // 0 left - top
-    // 1 right - top
-    // 2 right - bottom
-    // 3 left - bottom
-    let horizontalIndex = -1;
-    let verticalIndex = -1;
+    const horizontalsLength = controlPoses.filter(({ virtual, horizontal }) => horizontal && !virtual).length;
+    const verticalsLength = controlPoses.filter(({ virtual, vertical }) => vertical && !virtual).length;
+    let controlIndex = -1;
 
+    //top
     if (lineIndex === 0) {
         if (horizontalsLength === 0) {
-            horizontalIndex = 0;
+            controlIndex = 0;
         } else if (horizontalsLength === 1) {
-            horizontalIndex = 1;
+            controlIndex = 1;
         }
     }
+    // bottom
     if (lineIndex === 2) {
         if (horizontalsLength <= 2) {
-            horizontalIndex = 2;
+            controlIndex = 2;
         } else if (horizontalsLength <= 3) {
-            horizontalIndex = 3;
+            controlIndex = 3;
         }
     }
+    // left
     if (lineIndex === 3) {
         if (verticalsLength === 0) {
-            verticalIndex = 0;
+            controlIndex = 4;
         } else if (verticalsLength < 4) {
-            verticalIndex = 3;
-        }
-    }
-    if (lineIndex === 1) {
-        if (verticalsLength <= 1) {
-            verticalIndex = 1;
-        } else if (verticalsLength <= 2) {
-            verticalIndex = 2;
+            controlIndex = 7;
         }
     }
 
-    addRadiusPos(
-        controlPoses, poses, 0,
-        horizontalIndex, verticalIndex,
-        distX, distY, width, height,
-    );
+    // right
+    if (lineIndex === 1) {
+        if (verticalsLength <= 1) {
+            controlIndex = 5;
+        } else if (verticalsLength <= 2) {
+            controlIndex = 6;
+        }
+    }
+    if (controlIndex === -1 || !controlPoses[controlIndex].virtual) {
+        return;
+    }
+    const controlPoseInfo = controlPoses[controlIndex];
+
+    addBorderRadius(controlPoses, controlIndex);
+
+    if (controlIndex < 4) {
+        controlPoseInfo.pos[0] = distX;
+    } else {
+        controlPoseInfo.pos[1] = distY;
+    }
+}
+function addBorderRadius(
+    controlPoses: ControlPose[],
+    index: number,
+) {
+    if (index < 4) {
+        controlPoses.slice(0, index + 1).forEach(info => {
+            info.virtual = false;
+        });
+    } else {
+        if (controlPoses[0].virtual) {
+            controlPoses[0].virtual = false;
+        }
+        controlPoses.slice(4, index + 1).forEach(info => {
+            info.virtual = false;
+        });
+    }
+}
+function removeBorderRadius(
+    controlPoses: ControlPose[],
+    index: number,
+) {
+    if (index < 4) {
+        controlPoses.slice(index, 4).forEach(info => {
+            info.virtual = true;
+        });
+    } else {
+        controlPoses.slice(index).forEach(info => {
+            info.virtual = true;
+        });
+    }
 }
 function getBorderRadius(
     target: HTMLElement | SVGElement,
@@ -448,41 +476,33 @@ export default {
             return false;
         }
         const {
-            width,
-            height,
-        } = state;
-        const {
             isControl,
             controlIndex,
             isLine,
             lineIndex,
         } = datas;
         const controlPoses = datas.controlPoses as ControlPose[];
-        const poses = controlPoses.map(pos => pos.pos);
-        const length = poses.length;
+        const length = controlPoses.filter(({ virtual }) => virtual).length;
         const {
             roundClickable = true,
         } = moveable.props;
 
         if (isDouble && roundClickable) {
             if (isControl && (roundClickable === true || roundClickable === "control")) {
-                removeRadiusPos(controlPoses, poses, controlIndex, 0);
+                removeBorderRadius(controlPoses, controlIndex);
             } else if (isLine && (roundClickable === true || roundClickable === "line")) {
                 const [distX, distY] = calculatePointerDist(moveable, e);
 
-                addBorderRadius(controlPoses, poses, lineIndex, distX, distY, width, height);
+                addBorderRadiusByLine(controlPoses, lineIndex, distX, distY);
             }
 
-            if (length !== controlPoses.length) {
+            if (length !== controlPoses.filter(({ virtual }) => virtual).length) {
                 triggerRoundEvent(
                     moveable,
                     e,
                     [0, 0],
                     [0, 0],
-                    controlPoses.map((info, i) => ({
-                        ...info,
-                        pos: poses[i],
-                    })),
+                    controlPoses,
                 );
             }
         }

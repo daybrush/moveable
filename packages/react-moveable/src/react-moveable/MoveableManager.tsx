@@ -132,13 +132,15 @@ export default class MoveableManager<T = {}>
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
+        const ableClassName = this.getEnabledAbles().map(able => {
+            return able.className?.(this);
+        }).filter(Boolean).join(" ");
 
         return (
             <ControlBoxElement
                 cspNonce={cspNonce}
                 ref={ref(this, "controlBox")}
-                className={`${prefix("control-box", direction === -1
-                    ? "reverse" : "", isDragging ? "dragging" : "")} ${className}`}
+                className={`${prefix("control-box", direction === -1 ? "reverse" : "", isDragging ? "dragging" : "")} ${ableClassName} ${className}`}
                 {...ableAttributes}
                 onClick={this._onPreventClick}
                 portalContainer={portalContainer}
@@ -189,6 +191,10 @@ export default class MoveableManager<T = {}>
             const manager = events[name];
             manager && manager.destroy();
         }
+    }
+    public getTargets(): Array<HTMLElement | SVGElement> {
+        const target = this.props.target;
+        return target ? [target] : [];
     }
     /**
      * Get the able used in MoveableManager.
@@ -374,6 +380,7 @@ export default class MoveableManager<T = {}>
     /**
      * Check if the moveable state is being dragged.
      * @method Moveable#isDragging
+     * @param - If you want to check if able is dragging, specify ableName.
      * @example
      * import Moveable from "moveable";
      *
@@ -387,9 +394,27 @@ export default class MoveableManager<T = {}>
      *   console.log(moveable.isDragging());
      * });
      */
-    public isDragging() {
-        return (this.targetGesto ? this.targetGesto.isFlag() : false)
-            || (this.controlGesto ? this.controlGesto.isFlag() : false);
+    public isDragging(ableName?: string) {
+        const targetGesto = this.targetGesto;
+        const controlGesto = this.controlGesto;
+
+        if (targetGesto?.isFlag()) {
+            if (!ableName) {
+                return true;
+            }
+            const data = targetGesto.getEventData();
+
+            return !!data[ableName]?.isEventStart;
+        }
+        if (controlGesto?.isFlag()) {
+            if (!ableName) {
+                return true;
+            }
+            const data = controlGesto.getEventData();
+
+            return !!data[ableName]?.isEventStart;
+        }
+        return false;
     }
     /**
      * If the width, height, left, and top of the only target change, update the shape of the moveable.

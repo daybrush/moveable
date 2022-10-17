@@ -439,7 +439,7 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     /**
      * You can specify the class name to be added to the Moveable control box.
      */
-    className?(moveable: any): any;
+    className?(moveable: any): string;
     /**
      * Check how related to drag
      */
@@ -2796,12 +2796,13 @@ export interface MoveableInterface {
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;
-    isDragging(): boolean;
+    isDragging(ableName?: string): boolean;
     hitTest(el: Element | HitRect): number;
     setState(state: any, callback?: () => any): any;
     waitToChangeTarget(): Promise<void>;
     forceUpdate(callback?: () => any): any;
     updateSelectors(): void;
+    getTargets(): Array<HTMLElement | SVGElement>;
 }
 
 export interface ControlPose {

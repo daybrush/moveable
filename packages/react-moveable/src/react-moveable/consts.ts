@@ -227,4 +227,5 @@ export const MOVEABLE_METHODS: Array<keyof MoveableInterface> = [
     "forceUpdate",
     "waitToChangeTarget",
     "updateSelectors",
+    "getTargets",
 ];
