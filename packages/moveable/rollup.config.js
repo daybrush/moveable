@@ -20,15 +20,22 @@ const resolveCompatPlugin = compat({
 */
 const external = {
     "react-simple-compat": "react-simple-compat",
-    "react-compat-css-styled": "react-compat-css-styled",
+    "react-compat-ruler": "react-compat-ruler",
     "react-compat-moveable": "react-compat-moveable",
-    "@egjs/component": "@egjs/component",
-    "@daybrush/utils": "@daybrush/utils",
-    "gesto": "gesto",
+    "react-compat-css-styled": "react-compat-css-styled",
+    "@daybrush/utils": "utils",
+    "css-styled": "css-styled",
     "framework-utils": "framework-utils",
+    "gesto": "Gesto",
+    "@scena/event-emitter": "@scena/event-emitter",
     "@egjs/agent": "eg.Agent",
     "@egjs/children-differ": "eg.ChildrenDiffer",
-    "css-styled": "css-styled"
+    "@moveable/matrix": "@moveable/matrix",
+    "@scena/dragscroll": "@scena/dragscroll",
+    "css-to-mat": "css-to-mat",
+    "overlap-area": "overlap-area",
+    "@scena/matrix": "@scena/matrix",
+    "@egjs/list-differ": "eg.ListDiffer",
 };
 export default builder([
     {

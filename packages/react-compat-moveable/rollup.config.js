@@ -18,6 +18,7 @@ const external = {
     "css-to-mat": "css-to-mat",
     "overlap-area": "overlap-area",
     "@scena/matrix": "@scena/matrix",
+    "@egjs/list-differ": "eg.ListDiffer",
 };
 
 

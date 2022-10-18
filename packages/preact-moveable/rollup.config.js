@@ -15,6 +15,7 @@ const defaultOptions = {
         "preact-css-styled": "preact-css-styled",
         "@egjs/agent": "eg.Agent",
         "@egjs/children-differ": "eg.ChildrenDiffer",
+        "@egjs/list-differ": "eg.ListDiffer",
         "@moveable/matrix": "@moveable/matrix",
         "@scena/dragscroll": "@scena/dragscroll",
         "css-to-mat": "css-to-mat",
