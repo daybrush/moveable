@@ -287,6 +287,7 @@ export default class MoveableManager<T = {}>
     }
     /**
      * Hit test an element or rect on a moveable target.
+     * (100% = 100)
      * @method Moveable#hitTest
      * @param - element or rect to test
      * @return - Get hit test rate (rate > 0 is hitted)
