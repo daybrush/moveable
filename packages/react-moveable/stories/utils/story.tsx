@@ -2,16 +2,17 @@
 /* eslint-disable max-len */
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { DEFAULT_REACT_CODESANDBOX } from "storybook-addon-preview";
-import { convertReactTemplate, convertPath, makeArgs } from "../utils";
+import { convertReactTemplate, convertPath, makeArgs, convertTemplate } from "../utils";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
 // import { DEFAULT_DRAGGABLE_CONTROLS, DEFAULT_CLIPPABLE_CONTROLS } from "../controls/default";
 
 
 export interface StoryParameter {
     app: any;
-    text: string;
+    text?: string;
+    path?: string;
     argsTypes?: Record<string, any>;
+    texts?: Record<string, any>;
 }
 export function makeStoryGroup(title: string, module: NodeModule) {
     const stories = storiesOf(title, module);
@@ -20,7 +21,64 @@ export function makeStoryGroup(title: string, module: NodeModule) {
         app,
         text,
         argsTypes,
+        path,
     }: StoryParameter) {
+        const previews: any[] = [
+            {
+                tab: "CSS",
+                template: DEFAULT_CSS_TEMPLATE,
+                copy: true,
+                language: "css",
+            },
+        ];
+
+        if (path) {
+            const filePath = path.replace("./stories/", "");
+            const directory = filePath.replace(/\/([^/]+)$/g, "/");
+            const fileName = filePath.replace(/\S+\/(\S+)\.\S+$/g, "$1");
+            const reactCode = require(`!!raw-loader!@/stories/${filePath}`).default;
+
+            previews.unshift({
+                tab: "React",
+                template: convertReactTemplate(convertPath(reactCode)),
+                copy: true,
+                // codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
+                language: "tsx",
+            });
+
+            try {
+                const vueCode = require(`!!raw-loader!@/stories/${directory}vue3/${fileName}/App.vue`).default;
+
+                previews.push({
+                    tab: "Vue3",
+                    template: convertTemplate(vueCode, /"\$preview_([^"]+)"/g),
+                    copy: true,
+                    language: "html",
+                });
+            // eslint-disable-next-line no-empty
+            } catch (e) {
+            }
+            try {
+                const vueCode = require(`!!raw-loader!@/stories/${directory}vue2/${fileName}/App.vue`).default;
+
+                previews.push({
+                    tab: "Vue2",
+                    template: convertTemplate(vueCode, /"\$preview_([^"]+)"/g),
+                    copy: true,
+                    language: "html",
+                });
+            // eslint-disable-next-line no-empty
+            } catch (e) {}
+        } else if (text) {
+            previews.unshift({
+                tab: "React",
+                template: convertReactTemplate(convertPath(text)),
+                // codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
+                copy: true,
+                language: "tsx",
+            });
+        }
+
         stories.add(storyTitle, (props: any) => {
             const Component = app;
 
@@ -28,19 +86,7 @@ export function makeStoryGroup(title: string, module: NodeModule) {
         }, {
             argTypes: argsTypes || {},
             args: makeArgs(argsTypes || {}),
-            preview: [
-                {
-                    tab: "React",
-                    template: convertReactTemplate(convertPath(text)),
-                    codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
-                    language: "tsx",
-                },
-                {
-                    tab: "CSS",
-                    template: DEFAULT_CSS_TEMPLATE,
-                    language: "css",
-                },
-            ],
+            preview: previews,
         });
     }
     return {

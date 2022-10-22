@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable, { DIRECTIONS} from "../../../src/react-moveable";
+import Moveable, { DIRECTIONS} from "@/react-moveable";
 
 export default function App() {
     return (

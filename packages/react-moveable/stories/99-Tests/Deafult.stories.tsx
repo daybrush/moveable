@@ -6,76 +6,76 @@ const group = makeStoryGroup("Variable Situations", module);
 
 group.add("No Target", {
     app: require("./ReactNoTargetApp").default,
-    text: require("!!raw-loader!./ReactNoTargetApp").default,
+    path: require.resolve("./ReactNoTargetApp"),
 });
 group.add("Click a tag", {
     app: require("./ReactATagApp").default,
-    text: require("!!raw-loader!./ReactATagApp").default,
+    path: require.resolve("./ReactATagApp"),
 });
 
 group.add("Any native input element", {
     app: require("./ReactInputApp").default,
-    text: require("!!raw-loader!./ReactInputApp").default,
+    path: require.resolve("./ReactInputApp"),
 });
 group.add("Test Control Box in Safari", {
     app: require("./ReactSafariApp").default,
-    text: require("!!raw-loader!./ReactSafariApp").default,
+    path: require.resolve("./ReactSafariApp"),
 });
 group.add("Test Custom Element Offset", {
     app: require("./ReactCustomElementApp").default,
-    text: require("!!raw-loader!./ReactCustomElementApp").default,
+    path: require.resolve("./ReactCustomElementApp"),
 });
 group.add("Test Custom Element with Bounds", {
     app: require("./ReactCustomElementBoundsApp").default,
-    text: require("!!raw-loader!./ReactCustomElementBoundsApp").default,
+    path: require.resolve("./ReactCustomElementBoundsApp"),
 });
 group.add("Check drag accuracy when using bounds", {
     app: require("./ReactAccuracyApp").default,
-    text: require("!!raw-loader!./ReactAccuracyApp").default,
+    path: require.resolve("./ReactAccuracyApp"),
 });
 group.add("Check element guidelines accuracy when zoom is large", {
     app: require("./ReactLargeZoomElementGuidelinesApp").default,
-    text: require("!!raw-loader!./ReactLargeZoomElementGuidelinesApp").default,
+    path: require.resolve("./ReactLargeZoomElementGuidelinesApp"),
 });
 group.add("Test flex element", {
     app: require("./ReactFlexApp").default,
-    text: require("!!raw-loader!./ReactFlexApp").default,
+    path: require.resolve("./ReactFlexApp"),
 });
 group.add("Test Container with will change", {
     app: require("./ReactWillChangeApp").default,
-    text: require("!!raw-loader!./ReactWillChangeApp").default,
+    path: require.resolve("./ReactWillChangeApp"),
 });
 group.add("Stop drag if target is select, input, textarea", {
     app: require("./ReactStopDragApp").default,
-    text: require("!!raw-loader!./ReactStopDragApp").default,
+    path: require.resolve("./ReactStopDragApp"),
 });
 group.add("Stop Click event's Propagation for dragStart", {
     app: require("./ReactClickApp").default,
-    text: require("!!raw-loader!./ReactClickApp").default,
+    path: require.resolve("./ReactClickApp"),
 });
 group.add("Nested Moveable's target", {
     app: require("./ReactNestedTargetApp").default,
-    text: require("!!raw-loader!./ReactNestedTargetApp").default,
+    path: require.resolve("./ReactNestedTargetApp"),
 });
 group.add("Zoomed Cursor", {
     app: require("./ReactZoomedCursorApp").default,
-    text: require("!!raw-loader!./ReactZoomedCursorApp").default,
+    path: require.resolve("./ReactZoomedCursorApp"),
 });
 
 group.add("Test performance for large number instances", {
     app: require("./ReactHandleLargeNumberApp").default,
-    text: require("!!raw-loader!./ReactHandleLargeNumberApp").default,
+    path: require.resolve("./ReactHandleLargeNumberApp"),
 });
 
 group.add("Test overflow: auto target", {
     app: require("./ReactOverflowApp").default,
-    text: require("!!raw-loader!./ReactOverflowApp").default,
+    path: require.resolve("./ReactOverflowApp"),
 });
 group.add("Test Drag Target", {
     app: require("./ReactDragTargetApp").default,
-    text: require("!!raw-loader!./ReactDragTargetApp").default,
+    path: require.resolve("./ReactDragTargetApp"),
 });
 group.add("Test Drag Start Group Manually", {
     app: require("./ReactDragStartGroupApp").default,
-    text: require("!!raw-loader!./ReactDragStartGroupApp").default,
+    path: require.resolve("./ReactDragStartGroupApp"),
 });

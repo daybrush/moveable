@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable from "../../../src/react-moveable";
+import Moveable from "@/react-moveable";
 import { throttle } from "@daybrush/utils";
 
 

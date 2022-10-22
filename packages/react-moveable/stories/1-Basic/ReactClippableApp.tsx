@@ -11,12 +11,11 @@ export default function App(props: Record<string, any>) {
                 <Moveable
                     target={targetRef}
                     draggable={props.draggable}
-                    throttleDrag={props.throttleDrag}
                     startDragRotate={props.startDragRotate}
                     throttleDragRotate={props.throttleDragRotate}
                     zoom={props.zoom}
-                    origin={props.origin}
-                    padding={props.padding}
+                    // origin={props.origin}
+                    // padding={props.padding}
                     clippable={props.clippable}
                     clipRelative={props.clipRelative}
                     clipArea={props.clipArea}
@@ -24,8 +23,8 @@ export default function App(props: Record<string, any>) {
                     dragWithClip={props.dragWithClip}
                     defaultClipPath={props.defaultClipPath}
                     clipTargetBounds={props.clipTargetBounds}
-                    clipVerticalGuidelines={props.clipVerticalGuidelines}
-                    clipHorizontalGuidelines={props.clipHorizontalGuidelines}
+                    // clipVerticalGuidelines={props.clipVerticalGuidelines}
+                    // clipHorizontalGuidelines={props.clipHorizontalGuidelines}
                     snapThreshold={5}
                     keepRatio={props.keepRatio}
                     onDrag={e => {

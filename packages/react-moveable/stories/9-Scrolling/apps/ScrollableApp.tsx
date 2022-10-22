@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable from "../../../src/react-moveable";
+import Moveable from "@/react-moveable";
 import InfiniteViewer from "react-infinite-viewer";
 
 export default function App() {

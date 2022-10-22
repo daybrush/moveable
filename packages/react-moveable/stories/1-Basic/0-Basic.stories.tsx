@@ -14,7 +14,7 @@ const group = makeStoryGroup("Basic", module);
 
 group.add("Draggable", {
     app: require("./ReactDraggableApp").default,
-    text: require("!!raw-loader!./ReactDraggableApp").default,
+    path: require.resolve("./ReactDraggableApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
     },
@@ -23,7 +23,7 @@ group.add("Draggable", {
 
 group.add("Resizable", {
     app: require("./ReactResizableApp").default,
-    text: require("!!raw-loader!./ReactResizableApp").default,
+    path: require.resolve("./ReactResizableApp"),
     argsTypes: {
         ...DEFAULT_RESIZABLE_CONTROLS,
     },
@@ -32,7 +32,7 @@ group.add("Resizable", {
 
 group.add("Scalable", {
     app: require("./ReactScalableApp").default,
-    text: require("!!raw-loader!./ReactScalableApp").default,
+    path: require.resolve("./ReactScalableApp"),
     argsTypes: {
         ...DEFAULT_SCALABLE_CONTROLS,
     },
@@ -40,7 +40,7 @@ group.add("Scalable", {
 
 group.add("Rotatable", {
     app: require("./ReactRotatableApp").default,
-    text: require("!!raw-loader!./ReactRotatableApp").default,
+    path: require.resolve("./ReactRotatableApp"),
     argsTypes: {
         ...DEFAULT_ROTATABLE_CONTROLS,
     },
@@ -49,7 +49,7 @@ group.add("Rotatable", {
 
 group.add("Warpable", {
     app: require("./ReactWarpableApp").default,
-    text: require("!!raw-loader!./ReactWarpableApp").default,
+    path: require.resolve("./ReactWarpableApp"),
     argsTypes: {
         ...DEFAULT_WARPABLE_CONTROLS,
     },
@@ -58,7 +58,7 @@ group.add("Warpable", {
 
 group.add("Clippable", {
     app: require("./ReactClippableApp").default,
-    text: require("!!raw-loader!./ReactClippableApp").default,
+    path: require.resolve("./ReactClippableApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_CLIPPABLE_CONTROLS,
@@ -67,5 +67,5 @@ group.add("Clippable", {
 
 group.add("Roundable", {
     app: require("./ReactRoundableApp").default,
-    text: require("!!raw-loader!./ReactRoundableApp").default,
+    path: require.resolve("./ReactRoundableApp"),
 });

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable from "../../src/react-moveable";
+import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
 
@@ -10,8 +10,8 @@ export default function App(props: Record<string, any>) {
                     Target
                     <div className="target target2">
                         Target
-                    
-                    </div>    
+
+                    </div>
                 </div>
                 <Moveable
                     target=".target1"

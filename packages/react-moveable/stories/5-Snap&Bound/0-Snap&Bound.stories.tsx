@@ -20,7 +20,7 @@ const group = makeStoryGroup("Snap & Bound", module);
 
 group.add("Snap Guidelines", {
     app: require("./ReactSnapGuidelinesApp").default,
-    text: require("!!raw-loader!./ReactSnapGuidelinesApp").default,
+    path: require.resolve("./ReactSnapGuidelinesApp"),
     argsTypes: {
         ...DEFAULT_SNAPPABLE_CONTROLS,
         ...DEFAULT_SNAPPABLE_GUIDELINES_CONTROLS,
@@ -31,7 +31,7 @@ group.add("Snap Guidelines", {
 
 group.add("Snap Elements", {
     app: require("./ReactSnapElementsApp").default,
-    text: require("!!raw-loader!./ReactSnapElementsApp").default,
+    path: require.resolve("./ReactSnapElementsApp"),
     argsTypes: {
         ...DEFAULT_SNAPPABLE_CONTROLS,
         ...DEFAULT_SNAPPABLE_ELEMENTS_CONTROLS,
@@ -43,7 +43,7 @@ group.add("Snap Elements", {
 
 group.add("Snap Grid", {
     app: require("./ReactSnapGridApp").default,
-    text: require("!!raw-loader!./ReactSnapGridApp").default,
+    path: require.resolve("./ReactSnapGridApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_SCALABLE_CONTROLS,
@@ -53,7 +53,7 @@ group.add("Snap Grid", {
 
 group.add("Bound Drag & Scale", {
     app: require("./ReactBoundScalableApp").default,
-    text: require("!!raw-loader!./ReactBoundScalableApp").default,
+    path: require.resolve("./ReactBoundScalableApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_SCALABLE_CONTROLS,
@@ -63,7 +63,7 @@ group.add("Bound Drag & Scale", {
 
 group.add("Bound Drag & Resize", {
     app: require("./ReactBoundResizableApp").default,
-    text: require("!!raw-loader!./ReactBoundResizableApp").default,
+    path: require.resolve("./ReactBoundResizableApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_RESIZABLE_CONTROLS,
@@ -74,7 +74,7 @@ group.add("Bound Drag & Resize", {
 
 group.add("Bound Drag & Rotate", {
     app: require("./ReactBoundRotatableApp").default,
-    text: require("!!raw-loader!./ReactBoundRotatableApp").default,
+    path: require.resolve("./ReactBoundRotatableApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_ROTATABLE_CONTROLS,
@@ -84,12 +84,12 @@ group.add("Bound Drag & Rotate", {
 
 group.add("Bound Drag & Rotate Group", {
     app: require("./ReactBoundRotatableGroupApp").default,
-    text: require("!!raw-loader!./ReactBoundRotatableGroupApp").default,
+    path: require.resolve("./ReactBoundRotatableGroupApp"),
 });
 
 group.add("Use snapContainer option", {
     app: require("./ReactSnapContainerApp").default,
-    text: require("!!raw-loader!./ReactSnapContainerApp").default,
+    path: require.resolve("./ReactSnapContainerApp"),
     argsTypes: {
         ...DEFAULT_SNAPPABLE_CONTROLS,
         ...DEFAULT_SNAP_CONTAINER_CONTROLS,
@@ -101,7 +101,7 @@ group.add("Use snapContainer option", {
 
 group.add("inner bound with resize", {
     app: require("./ReactInnerBoundResizableApp").default,
-    text: require("!!raw-loader!./ReactInnerBoundResizableApp").default,
+    path: require.resolve("./ReactInnerBoundResizableApp"),
     argsTypes: {
         ...DEFAULT_INNER_BOUNDS_CONTROLS,
     },
@@ -109,7 +109,7 @@ group.add("inner bound with resize", {
 
 group.add("Set maximum distance for guidelines", {
     app: require("./ReactMaxSnapElementApp").default,
-    text: require("!!raw-loader!./ReactMaxSnapElementApp").default,
+    path: require.resolve("./ReactMaxSnapElementApp"),
     argsTypes: {
         maxSnapElementGuidelineDistance: makeArgType({
             type: "number",

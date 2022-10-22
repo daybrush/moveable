@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable, { ResizableRequestParam } from "../../../src/react-moveable";
+import Moveable, { ResizableRequestParam } from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
     const widthInputRef = React.useRef<HTMLInputElement>(null);

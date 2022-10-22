@@ -17,7 +17,7 @@ const group = makeStoryGroup("Group", module);
 
 group.add("Draggable & Resizable & Rotatable", {
     app: require("./ReactDraggableResizableRotatableApp").default,
-    text: require("!!raw-loader!./ReactDraggableResizableRotatableApp").default,
+    path: require.resolve("./ReactDraggableResizableRotatableApp"),
     argsTypes: {
         ...DEFAULT_GROUPPABLE_GROUP_CONTROLS,
         ...DEFAULT_RESIZABLE_CONTROLS,
@@ -28,7 +28,7 @@ group.add("Draggable & Resizable & Rotatable", {
 });
 group.add("Draggable & Scalable & Rotatable", {
     app: require("./ReactDraggableScalableRotatableApp").default,
-    text: require("!!raw-loader!./ReactDraggableScalableRotatableApp").default,
+    path: require.resolve("./ReactDraggableScalableRotatableApp"),
     argsTypes: {
         ...DEFAULT_GROUPPABLE_GROUP_CONTROLS,
         ...DEFAULT_SCALABLE_CONTROLS,
@@ -41,7 +41,7 @@ group.add("Draggable & Scalable & Rotatable", {
 
 group.add("All in One", {
     app: require("./ReactAllInOneApp").default,
-    text: require("!!raw-loader!./ReactAllInOneApp").default,
+    path: require.resolve("./ReactAllInOneApp"),
     argsTypes: {
         ...DEFAULT_GROUPPABLE_GROUP_CONTROLS,
         ...DEFAULT_DRAGGABLE_CONTROLS,
@@ -51,5 +51,5 @@ group.add("All in One", {
 });
 group.add("Multiple Group", {
     app: require("./ReactMultipleGroupApp").default,
-    text: require("!!raw-loader!./ReactMultipleGroupApp").default,
+    path: require.resolve("./ReactMultipleGroupApp"),
 });
