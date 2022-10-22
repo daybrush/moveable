@@ -45,7 +45,7 @@ export function makeStoryGroup(title: string, module: NodeModule) {
                 // codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
                 language: "tsx",
             });
-
+            // Vue3
             try {
                 const vueCode = require(`!!raw-loader!@/stories/${directory}vue3/${fileName}/App.vue`).default;
 
@@ -58,12 +58,25 @@ export function makeStoryGroup(title: string, module: NodeModule) {
             // eslint-disable-next-line no-empty
             } catch (e) {
             }
+            // Vue2
             try {
                 const vueCode = require(`!!raw-loader!@/stories/${directory}vue2/${fileName}/App.vue`).default;
 
                 previews.push({
                     tab: "Vue2",
                     template: convertTemplate(vueCode, /"\$preview_([^"]+)"/g),
+                    copy: true,
+                    language: "html",
+                });
+            // eslint-disable-next-line no-empty
+            } catch (e) {}
+            // Svelte
+            try {
+                const svelteCode = require(`!!raw-loader!@/stories/${directory}svelte/${fileName}/App.svelte`).default;
+
+                previews.push({
+                    tab: "Svelte",
+                    template: convertTemplate(svelteCode, /"\$preview_([^"]+)"/g),
                     copy: true,
                     language: "html",
                 });

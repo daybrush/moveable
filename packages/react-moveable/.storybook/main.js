@@ -32,9 +32,9 @@ module.exports = {
     ],
     addons: [
         "@storybook/addon-docs/register",
+        "storybook-addon-preview/register",
         "@storybook/addon-controls/register",
         "@storybook/addon-viewport/register",
-        "storybook-addon-preview/register",
         "storybook-dark-mode/register",
         "@storybook/addon-interactions",
     ],

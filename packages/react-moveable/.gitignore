@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+stories/**/vue3/
+stories/**/vue2/
+stories/**/svelte/

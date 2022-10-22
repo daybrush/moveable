@@ -73,6 +73,10 @@
         "packages": [
             "packages/*",
             "packages/ngx-moveable/projects/ngx-moveable"
+        ],
+        "nohoist": [
+            "**/vue-tsc",
+            "**/vue-tsc/**"
         ]
     },
     "resolutions": {
