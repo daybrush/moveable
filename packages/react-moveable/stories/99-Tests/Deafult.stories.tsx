@@ -79,3 +79,9 @@ group.add("Test Drag Start Group Manually", {
     app: require("./ReactDragStartGroupApp").default,
     path: require.resolve("./ReactDragStartGroupApp"),
 });
+
+
+group.add("Test Changing Snap Container", {
+    app: require("./ReactChangingSnapContainerApp").default,
+    path: require.resolve("./ReactChangingSnapContainerApp"),
+});

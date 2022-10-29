@@ -1,11 +1,19 @@
 <body>
-    <input class="target" />
+    <input class="target target1" />
+    <input class="target target2" />
 </body>
 <script src ="../../dist/moveable.js"></script>
 <script>
     new Moveable(document.body, {
         draggable: true,
-        target: ".target",
+        target: document.querySelector(".target1"),
+    }).on("drag", e => {
+        e.target.style.transform = e.transform;
+    });
+
+    new Moveable(document.body, {
+        draggable: true,
+        target: document.querySelector(".target2"),
     }).on("drag", e => {
         e.target.style.transform = e.transform;
     });

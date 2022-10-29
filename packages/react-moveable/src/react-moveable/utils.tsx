@@ -802,9 +802,11 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     let top = 0;
     let width = 0;
     let height = 0;
+    let isRoot = false;
 
     if (el) {
-        if (el === document.body || el === document.documentElement) {
+        isRoot = el === document.body || el === document.documentElement;
+        if (isRoot) {
             width = window.innerWidth;
             height = window.innerHeight;
             const scrollPos = getBodyScrollPos();
@@ -836,6 +838,11 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
         rect.clientHeight = el.clientHeight;
         rect.scrollWidth = el.scrollWidth;
         rect.scrollHeight = el.scrollHeight;
+
+        if (isRoot) {
+            rect.clientHeight = Math.max(rect.height, rect.clientHeight);
+            rect.scrollHeight = Math.max(rect.height, rect.scrollHeight);
+        }
         rect.overflow = getComputedStyle(el).overflow !== "visible";
     }
     return rect;

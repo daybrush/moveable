@@ -184,7 +184,7 @@ export default class MoveableManager<T = {}>
         this._updateObserver(this.props);
 
         if (!container && !parentMoveable && !wrapperMoveable) {
-            this.updateRect("", false, true);
+            this.updateRect("", false, false);
             this.forceUpdate();
         }
     }

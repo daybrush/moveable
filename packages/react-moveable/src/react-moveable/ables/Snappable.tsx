@@ -107,6 +107,13 @@ export function snapStart(
                 snapContainerRect.right - containerClientRect.right,
                 snapContainerRect.bottom - containerClientRect.bottom,
             ]);
+
+            console.log(
+                snapContainerRect, containerClientRect,
+                offset2[1] - offset1[1],
+                containerClientRect.overflow,
+                containerClientRect.overflow ? containerClientRect.scrollHeight! : containerClientRect.clientHeight!
+            );
             snapOffset.left = throttle(offset1[0], 0.00001);
             snapOffset.top = throttle(offset1[1], 0.00001);
             snapOffset.right = throttle(offset2[0], 0.00001);
