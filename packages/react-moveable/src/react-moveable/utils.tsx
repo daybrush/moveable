@@ -1164,6 +1164,10 @@ export function convertCSSSize(value: number, size: number, isRelative?: boolean
 export function getTinyDist(v: number) {
     return Math.abs(v) <= TINY_NUM ? 0 : v;
 }
+
+export function viewDraggingPrefix(ableName: string) {
+    return prefix(`${ableName}-view-dragging`);
+}
 export function getDirectionViewClassName(ableName: string) {
     return (moveable: MoveableManagerInterface) => {
         if (!moveable.isDragging(ableName)) {
@@ -1174,9 +1178,7 @@ export function getDirectionViewClassName(ableName: string) {
         if (!deg) {
             return "";
         }
-        const className = `view-${ableName}-dragging`;
-
-        return prefix(className, `view-control-rotation${deg}`);
+        return prefix(`view-control-rotation${deg}`);
     };
 }
 export function getDirectionCondition(ableName: string, checkAbles: string[] = [ableName]) {

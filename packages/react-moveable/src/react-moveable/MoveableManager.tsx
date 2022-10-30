@@ -960,11 +960,11 @@ export default class MoveableManager<T = {}>
 
     }
     private _getAbleViewClassNames() {
-        return this.getEnabledAbles().map(able => {
+        return (this.getEnabledAbles().map(able => {
             return (able.viewClassName?.(this) || "");
-        }).join(" ").split(/\s+/g);
+        }).join(" ") + ` ${this._getAbleClassName("-view")}`).split(/\s+/g);
     }
-    private _getAbleClassName() {
+    private _getAbleClassName(classPrefix = "") {
         const ables = this.getEnabledAbles();
 
         const targetGesto = this.targetGesto;
@@ -982,7 +982,7 @@ export default class MoveableManager<T = {}>
                 targetGestoData[name]?.isEventStart
                 || controlGestoData[name]?.isEventStart
             ) {
-                className += ` ${prefix(`${name}-dragging`)}`;
+                className += ` ${prefix(`${name}${classPrefix}-dragging`)}`;
             }
             return className.trim();
         }).filter(Boolean).join(" ");
