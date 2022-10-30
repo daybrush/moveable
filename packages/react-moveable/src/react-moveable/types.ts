@@ -2200,6 +2200,11 @@ export interface SnappableOptions {
      */
     snapThreshold?: number;
     /**
+     * Distance value that render snapped guidelines.
+     * @default 1
+     */
+    snapRenderThreshold?: number;
+    /**
      * snap distance digits.
      * @default 0
      */

@@ -540,6 +540,7 @@ export default {
         isDisplayInnerSnapDigit: Boolean,
         snapDigit: Number,
         snapThreshold: Number,
+        snapRenderThreshold: Number,
 
         horizontalGuidelines: Array,
         verticalGuidelines: Array,
@@ -613,6 +614,9 @@ export default {
             pos4,
             snapRenderInfo,
         } = state;
+        const {
+            snapRenderThreshold = 1,
+        } = moveable.props;
 
         if (!snapRenderInfo || !hasGuidelines(moveable, "")) {
             return [];
@@ -645,7 +649,8 @@ export default {
                     getSnapInfosByDirection(
                         moveable,
                         poses,
-                        snapRenderInfo.direction
+                        snapRenderInfo.direction,
+                        snapRenderThreshold,
                     )
                 );
             }
@@ -655,7 +660,7 @@ export default {
                     (rect as any).middle = (rect.top + rect.bottom) / 2;
                     (rect as any).center = (rect.left + rect.right) / 2;
                 }
-                snapInfos.push(checkSnaps(moveable, rect, 1));
+                snapInfos.push(checkSnaps(moveable, rect, snapRenderThreshold));
             }
             if (hasExternalPoses) {
                 if (snapRenderInfo.center) {
@@ -664,7 +669,7 @@ export default {
                     (externalRect as any).center =
                         (externalRect.left + externalRect.right) / 2;
                 }
-                snapInfos.push(checkSnaps(moveable, externalRect, 1));
+                snapInfos.push(checkSnaps(moveable, externalRect, snapRenderThreshold));
             }
             snapInfos.forEach((snapInfo) => {
                 const {

@@ -249,6 +249,7 @@ export function getSnapInfosByDirection(
     moveable: MoveableManagerInterface<SnappableProps & (ResizableProps | ScalableProps), SnappableState>,
     poses: number[][],
     snapDirection: number[],
+    snapThreshold = 1,
 ) {
     let nextPoses: number[][] = [];
     if (snapDirection[0] && snapDirection[1]) {
@@ -287,7 +288,7 @@ export function getSnapInfosByDirection(
             }
         }
     }
-    return checkMoveableSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), 1);
+    return checkMoveableSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), snapThreshold);
 }
 
 export function checkSnapBoundPriority(
