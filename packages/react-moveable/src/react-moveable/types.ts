@@ -2458,6 +2458,7 @@ export interface SnappableState {
     staticGuidelines: SnapGuideline[];
     elementRects: SnapElementRect[];
     guidelines: SnapGuideline[];
+    snapContainer: MoveableRefType<HTMLElement | SVGElement>;
     snapOffset: { left: number, top: number, bottom: number, right: number }
     snapRenderInfo?: SnapRenderInfo | null;
     enableSnap: boolean;

@@ -29,7 +29,6 @@ export class LitMoveable extends LitElement {
                 options[name as any] = this[litName];
             }
         });
-        console.log(options);
 
         this.moveable = new VanillaMoveable(this, {
             portalContainer: this,

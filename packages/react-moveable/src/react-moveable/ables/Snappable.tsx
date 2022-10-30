@@ -75,16 +75,16 @@ export interface SnapPoses {
     horizontal: number[];
 }
 
-export function snapStart(
+export function checkSnapInfo(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>
 ) {
     const state = moveable.state;
-
-    if (state.guidelines && state.guidelines.length) {
-        return;
-    }
-    const container = moveable.state.container;
+    const container = state.container;
     const snapContainer = moveable.props.snapContainer || container!;
+
+    if (state.snapContainer === snapContainer && state.guidelines && state.guidelines.length) {
+        return false;
+    }
 
     const containerClientRect = state.containerClientRect;
     const snapOffset = {
@@ -108,12 +108,6 @@ export function snapStart(
                 snapContainerRect.bottom - containerClientRect.bottom,
             ]);
 
-            console.log(
-                snapContainerRect, containerClientRect,
-                offset2[1] - offset1[1],
-                containerClientRect.overflow,
-                containerClientRect.overflow ? containerClientRect.scrollHeight! : containerClientRect.clientHeight!
-            );
             snapOffset.left = throttle(offset1[0], 0.00001);
             snapOffset.top = throttle(offset1[1], 0.00001);
             snapOffset.right = throttle(offset2[0], 0.00001);
@@ -121,9 +115,11 @@ export function snapStart(
         }
     }
 
+    state.snapContainer = snapContainer;
     state.snapOffset = snapOffset;
     state.guidelines = getTotalGuidelines(moveable);
     state.enableSnap = true;
+    return true;
 }
 
 function getNextFixedPoses(
@@ -795,13 +791,15 @@ export default {
             snap: true,
             center: true,
         };
-        snapStart(moveable);
+        checkSnapInfo(moveable);
     },
     drag(
         moveable: MoveableManagerInterface<SnappableProps, SnappableState>
     ) {
         const state = moveable.state;
-        state.guidelines = getTotalGuidelines(moveable);
+        if (!checkSnapInfo(moveable)) {
+            state.guidelines = getTotalGuidelines(moveable);
+        }
     },
     pinchStart(
         moveable: MoveableManagerInterface<SnappableProps, SnappableState>
@@ -825,7 +823,7 @@ export default {
         moveable: MoveableManagerInterface<SnappableProps, SnappableState>
     ) {
         moveable.state.snapRenderInfo = null;
-        snapStart(moveable);
+        checkSnapInfo(moveable);
     },
     dragControl(
         moveable: MoveableManagerInterface<SnappableProps, SnappableState>
@@ -854,7 +852,7 @@ export default {
         moveable: MoveableGroupInterface<SnappableProps, SnappableState>
     ) {
         moveable.state.snapRenderInfo = null;
-        snapStart(moveable);
+        checkSnapInfo(moveable);
     },
     dragGroupControl(
         moveable: MoveableManagerInterface<SnappableProps, SnappableState>
