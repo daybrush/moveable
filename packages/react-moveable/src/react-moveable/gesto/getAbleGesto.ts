@@ -108,8 +108,11 @@ export function triggerAble(
     let isForceEnd = false;
 
     // end ables
-    if (isStart && (isDragStop || (eventAbles.length && !isUpdate))) {
-        isForceEnd = isDragStop || eventAbles.filter(able => {
+    if (isDragStop) {
+        isForceEnd = true;
+    }
+    if (!isForceEnd && isStart && eventAbles.length && !isUpdate) {
+        isForceEnd = eventAbles.filter(able => {
             const ableName = able.name;
             const nextDatas = datas[ableName];
 
@@ -132,8 +135,6 @@ export function triggerAble(
                 childMoveable.state.gestos = {};
             });
         }
-    }
-    if (isFirstStart && isForceEnd) {
         eventAbles.forEach(able => {
             able.unset && able.unset(moveable);
         });
