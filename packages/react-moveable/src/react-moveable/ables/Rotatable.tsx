@@ -588,7 +588,7 @@ export default {
         moveable: MoveableManagerInterface<RotatableProps & DraggableProps>,
         e: any,
     ) {
-        const { datas, distX, distY, parentRotate, parentFlag, isPinch, groupDelta } = e;
+        const { datas, clientDistX, clientDistY, parentRotate, parentFlag, isPinch, groupDelta } = e;
         const {
             beforeDirection,
             beforeInfo,
@@ -629,8 +629,8 @@ export default {
         const startRotation = 180 / Math.PI * startValue;
         const absoluteStartRotation = absoluteInfo.startValue;
         let isSnap = false;
-        const nextClientX = startClientX + distX;
-        const nextClientY = startClientY + distY;
+        const nextClientX = startClientX + clientDistX;
+        const nextClientY = startClientY + clientDistY;
 
         if (!parentFlag && "parentDist" in e) {
             const parentDist = e.parentDist;

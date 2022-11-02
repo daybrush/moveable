@@ -38,7 +38,10 @@ export function triggerAble(
     if (isFirstStart) {
         moveable.updateRect(eventType, true, false);
     }
+    e.clientDistX = e.distX;
+    e.clientDistY = e.distY;
     if (eventType === "" && !isRequest) {
+        // Convert distX, distY
         convertDragDist(moveable.state, e);
     }
     // const isGroup = eventAffix.indexOf("Group") > -1;
