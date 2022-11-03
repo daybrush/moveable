@@ -25,3 +25,15 @@ group.add("checkInput option", {
     app: require("./ReactCheckInputApp").default,
     path: require.resolve("./ReactCheckInputApp"),
 });
+
+group.add("Cursor is applied in viewer during dragging.", {
+    app: require("./ReactViewContainerApp").default,
+    path: require.resolve("./ReactViewContainerApp"),
+});
+
+
+
+group.add("First render with persisted data.", {
+    app: require("./ReactPersistDataApp").default,
+    path: require.resolve("./ReactPersistDataApp"),
+});

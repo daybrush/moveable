@@ -48,9 +48,10 @@ export const parameters = {
         },
     },
     darkMode: {
+        stylePreview: true,
         // Override the default light theme
         light: { ...themes.normal },
         // Override the default dark theme
-        dark: { ...themes.dark },
+        dark: { ...themes.dark  },
     },
 };

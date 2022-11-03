@@ -4,8 +4,7 @@ import "./snap.css";
 export default function App(props: Record<string, any>) {
     const [snapContainer, setSnapContainer] = React.useState<HTMLElement | string>(".snapGrid");
     const onMoustEnter = React.useCallback((e: MouseEvent) => {
-        console.log(e.currentTarget);
-        setSnapContainer(e.currentTarget);
+        setSnapContainer(e.currentTarget as HTMLElement);
     }, []);
     return (
         <div className="root" style={{
@@ -28,7 +27,7 @@ export default function App(props: Record<string, any>) {
                     e.target.style.transform = e.transform;
                     e.target.style.pointerEvents = "none";
                 }}
-                onDragEnd={() => {
+                onDragEnd={e => {
                     e.target.style.pointerEvents = "";
                     document.querySelectorAll<HTMLElement>(".snapGrid").forEach(grid => {
                         grid.removeEventListener("mouseenter", onMoustEnter);

@@ -166,6 +166,11 @@ export interface DefaultOptions {
      */
     props?: Record<string, any>;
     /**
+     * Data for first render
+     * @default null
+     */
+    persistData?: PersistRectData | null;
+    /**
      * @private
      * single => group로 변환과정에 도형 유지를 위한 첫 렌더링 state
      */
@@ -203,6 +208,7 @@ export type MoveableManagerState<T = {}> = {
     disableNativeEvent: boolean;
     gestos: Record<string, Gesto | CustomGesto | null>;
     renderPoses: number[][];
+    isPersisted?: boolean;
 } & MoveableTargetInfo & T;
 
 /**
@@ -2703,40 +2709,103 @@ export interface OnCustomDrag extends GestoTypes.Position {
     parentGesto: CustomGesto;
 }
 
+
+export interface PersistRectData {
+    /**
+     * left position of the target relative to the container
+     */
+    left: number;
+    /**
+     * top position of the target relative to the container
+     */
+    top: number;
+    /**
+     * The coordinates of the vertex 1
+     */
+    pos1: number[];
+    /**
+     * The coordinates of the vertex 2
+     */
+    pos2: number[];
+    /**
+     * The coordinates of the vertex 3
+     */
+    pos3: number[];
+    /**
+     * The coordinates of the vertex 4
+     */
+    pos4: number[];
+    /**
+     * The absolute transform origin
+     */
+    origin: number[];
+}
+
+
 /**
  * @typedef
  * @memberof Moveable
- * @property - The coordinates of the vertex 1
- * @property - The coordinates of the vertex 1
- * @property - The coordinates of the vertex 1
- * @property - The coordinates of the vertex 1
- * @property - left position of the target relative to the container
- * @property - top position of the target relative to the container
- * @property - The width of moveable element
- * @property - The height of moveable element
- * @property - The offset width of the target
- * @property - The offset height of the target
- * @property - The absolute transform origin
- * @property - The absolute transform origin before transformation
- * @property - The target transform origin
- * @property - you can get the absolute rotation value
- * @property - If you use a group, you can get child moveables' rect info
  */
 export interface RectInfo {
+    /**
+     * The coordinates of the vertex 1
+     */
     pos1: number[];
+    /**
+     * The coordinates of the vertex 2
+     */
     pos2: number[];
+    /**
+     * The coordinates of the vertex 3
+     */
     pos3: number[];
+    /**
+     * The coordinates of the vertex 4
+     */
     pos4: number[];
+    /**
+     * left position of the target relative to the container
+     */
     left: number;
+    /**
+     * top position of the target relative to the container
+     */
     top: number;
+    /**
+     * The width of moveable element
+     */
     width: number;
+    /**
+     * The height of moveable element
+     */
     height: number;
+    /**
+     * The offset width of the target
+     */
     offsetWidth: number;
+    /**
+     * The offset height of the target
+     */
     offsetHeight: number;
+    /**
+     * The absolute transform origin
+     */
     origin: number[];
+    /**
+     * The absolute transform origin before transformation
+     */
     beforeOrigin: number[];
+    /**
+     * The target transform origin
+     */
     transformOrigin: number[];
+    /**
+     * you can get the absolute rotation value
+     */
     rotation: number;
+    /**
+     * If you use a group, you can get child moveables' rect info
+     */
     children?: RectInfo[];
 }
 

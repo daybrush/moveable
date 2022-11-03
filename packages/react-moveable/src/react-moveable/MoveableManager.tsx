@@ -38,6 +38,7 @@ import EventEmitter from "@scena/event-emitter";
 import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 import { VIEW_DRAGGING } from "./classNames";
 import { diff } from "@egjs/list-differ";
+import { getPersistState } from "./utils/persist";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -75,6 +76,7 @@ export default class MoveableManager<T = {}>
         preventClickEventOnDrag: true,
         flushSync: defaultSync,
         firstRenderState: null,
+        persistData: null,
         viewContainer: null,
     };
     public state: MoveableManagerState = {
@@ -105,6 +107,7 @@ export default class MoveableManager<T = {}>
     protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _prevDragArea = false;
     protected _isPropTargetChanged = false;
+    protected _hasFirstTarget = false;
 
     private _observer: ResizeObserver | null = null;
     private _observerId = 0;
@@ -139,13 +142,17 @@ export default class MoveableManager<T = {}>
             hasFixed,
         } = state;
         const groupTargets = (props as any).targets;
-        const isDisplay = ((groupTargets && groupTargets.length) || propsTarget) && (stateTarget || groupable);
         const isDragging = this.isDragging();
         const ableAttributes: IObject<boolean> = {};
         this.getEnabledAbles().forEach(able => {
             ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
         });
         const ableClassName = this._getAbleClassName();
+        const isDisplay
+            = (groupTargets && groupTargets.length && (stateTarget || groupable))
+            || propsTarget
+            || (!this._hasFirstTarget && this.state.isPersisted);
+        const isVisible = this.controlBox || this.props.firstRenderState || this.props.persistData;
 
         return (
             <ControlBoxElement
@@ -158,7 +165,7 @@ export default class MoveableManager<T = {}>
                 style={{
                     "position": hasFixed ? "fixed" : "absolute",
                     "display": isDisplay ? "block" : "none",
-                    "visibility": this.controlBox || this.props.firstRenderState ? "visible" : "hidden",
+                    "visibility": isVisible ? "visible" : "hidden",
                     "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, ${translateZ})`,
                     "--zoom": zoom,
                     "--zoompx": `${zoom}px`,
@@ -390,15 +397,24 @@ export default class MoveableManager<T = {}>
         const rootContainer = parentMoveable
             ? (parentMoveable as any)._rootContainer
             : this._rootContainer;
+        const nextState = getMoveableTargetInfo(
+            this.controlBox && this.controlBox.getElement(),
+            target,
+            container,
+            container,
+            rootContainer || container,
+            // isTarget ? state : undefined
+        );
+
+        if (!target && this._hasFirstTarget && props.persistData) {
+            const persistState = getPersistState(props.persistData);
+
+            for (const name in persistState) {
+                (nextState as any)[name] = (persistState as any)[name];
+            }
+        }
         this.updateState(
-            getMoveableTargetInfo(
-                this.controlBox && this.controlBox.getElement(),
-                target,
-                container,
-                container,
-                rootContainer || container,
-                // isTarget ? state : undefined
-            ),
+            nextState,
             parentMoveable ? false : isSetState,
         );
     }
@@ -710,12 +726,20 @@ export default class MoveableManager<T = {}>
         });
     }
     public getState(): MoveableManagerState {
-        const firstRenderState = this.props.firstRenderState as any;
-        if (firstRenderState && !this.controlBox) {
-            return firstRenderState;
-        } else {
-            return this.state;
+        const props = this.props;
+        if (props.target) {
+            this._hasFirstTarget = true;
         }
+        const hasControlBox = this.controlBox;
+        const persistData = props.persistData as any;
+        const firstRenderState = props.firstRenderState as any;
+
+        if (!this._hasFirstTarget && persistData) {
+            this.updateState(getPersistState(persistData), false);
+        } else if (firstRenderState && !hasControlBox) {
+            return firstRenderState;
+        }
+        return this.state;
     }
     public updateSelectors() { }
     protected unsetAbles() {
