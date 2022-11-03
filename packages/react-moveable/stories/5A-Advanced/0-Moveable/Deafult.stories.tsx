@@ -14,7 +14,7 @@ group.add("Select Form", {
     path: require.resolve("./ReactSelectFormApp"),
 });
 
-group.add("Cursor is applied in viewer during dragging.", {
-    app: require("./ReactViewContainerApp").default,
-    path: require.resolve("./ReactViewContainerApp"),
+group.add("Static Body", {
+    app: require("./ReactNoRelativeApp").default,
+    path: require.resolve("./ReactNoRelativeApp"),
 });

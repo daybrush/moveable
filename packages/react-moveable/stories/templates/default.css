@@ -4,6 +4,11 @@ html, body {
     margin: 0;
     padding: 0;
 }
+html:has(.no-relative), body:has(.no-relative) {
+    margin: 8px;
+    padding: 8px;
+    border: 8px solid red;
+}
 .description {
     padding: 10px;
 }
