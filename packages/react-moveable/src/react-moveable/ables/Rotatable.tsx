@@ -170,21 +170,20 @@ export function getRotationPositions(
     rotationPosition: RotatableProps["rotationPosition"],
     [pos1, pos2, pos3, pos4]: number[][],
     direction: number,
-) {
+): [number[], number][] {
     if (rotationPosition === "none") {
-        return;
+        return [];
+    }
+    if (isArray(rotationPosition)) {
+        return rotationPosition.map(child => getRotationPositions(
+            child,
+            [pos1, pos2, pos3, pos4],
+            direction,
+        )[0]);
     }
     const [dir1, dir2] = (rotationPosition || "top").split("-");
     let radPoses = [pos1, pos2];
 
-    // if (scale[0] < 0) {
-    //     dir1 = getReversePositionX(dir1);
-    //     dir2 = getReversePositionX(dir2);
-    // }
-    // if (scale[1] < 0) {
-    //     dir1 = getReversePositionY(dir1);
-    //     dir2 = getReversePositionY(dir2);
-    // }
     if (dir1 === "left") {
         radPoses = [pos3, pos1];
     } else if (dir1 === "right") {
@@ -203,7 +202,7 @@ export function getRotationPositions(
 
         pos = radPoses[(isStart && !isReverse) || (!isStart && isReverse) ? 0 : 1];
     }
-    return [pos, rad] as const;
+    return [[pos, rad]];
 }
 
 export function dragControlCondition(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
@@ -349,13 +348,11 @@ export default {
             return null;
         }
         const positions = getRotationPositions(rotationPosition!, renderPoses, direction);
+        const jsxs: any[] = [];
 
-        const jsxs = [];
-
-        if (positions) {
-            const [pos, rad] = positions;
+        positions.forEach(([pos, rad], i) => {
             jsxs.push(
-                <div key="rotation" className={prefix("rotation")} style={{
+                <div key={`rotation${i}`} className={prefix("rotation")} style={{
                     // tslint:disable-next-line: max-line-length
                     transform: `translate(-50%) translate(${pos[0]}px, ${pos[1]}px) rotate(${rad}rad)`,
                 }}>
@@ -367,7 +364,7 @@ export default {
                     }}></div>
                 </div>
             );
-        }
+        });
         if (renderDirections) {
             const ables = getKeys(resolveAblesWithRotatable || {});
             const resolveMap: Record<string, string> = {};

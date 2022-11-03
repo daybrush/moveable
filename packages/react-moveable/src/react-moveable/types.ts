@@ -2011,6 +2011,16 @@ export interface RenderDirections {
      */
     edge?: boolean | Array<LineDirection>;
 }
+
+export type RotationPosition
+    = "top" | "bottom"
+    | "left" | "right"
+    | "top-right" | "top-left"
+    | "bottom-right" | "bottom-left"
+    | "left-top" | "left-bottom"
+    | "right-top" | "right-bottom"
+    | "none";
+
 /**
  * @typedef
  * @memberof Moveable.Rotatable
@@ -2026,13 +2036,7 @@ export interface RotatableOptions extends RenderDirections {
      * You can specify the position of the rotation.
      * @default "top"
      */
-    rotationPosition?:
-    "top" | "bottom" | "left" | "right"
-    | "top-right" | "top-left"
-    | "bottom-right" | "bottom-left"
-    | "left-top" | "left-bottom"
-    | "right-top" | "right-bottom"
-    | "none";
+    rotationPosition?: RotationPosition | RotationPosition[];
     /**
      * You can rotate around direction controls.
      * @default 0

@@ -150,6 +150,8 @@ export const DEFAULT_ROTATABLE_CONTROLS = {
                 "left-bottom",
                 "right-bottom",
                 "none",
+                ["top", "left"],
+                ["top", "bottom"],
             ],
         },
     }),
