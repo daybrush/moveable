@@ -14,7 +14,7 @@
         "@daybrush/utils": "^1.10.0",
         "moveable-helper": "^0.4.0",
         "react-infinite-viewer": "^0.11.0",
-        "react-moveable": "~0.40.0",
+        "react-moveable": "~0.41.0",
         "storybook-addon-preview": "^2.2.0"
     },
     "devDependencies": {
