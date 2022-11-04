@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.41.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.40.0...react-moveable@0.41.0) (2022-11-04)
+
+
+### :rocket: New Features
+
+* add ableName-view-dragging in viewContainer #751 ([90c5c34](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/90c5c34960615f57807d7c8d9895fc04231951e0))
+* add persistData prop for restore data #780 #777 ([599df9b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/599df9bfe1249665c4d76f44f3b771d347284d5a))
+* add snapThreshold prop #774 ([1bf05b3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1bf05b3bf5221e8ee1a1ffadbcae93a885630819))
+* support rotationPosition array type #783 ([80653c3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/80653c3235ecaef5112414f8b859bedeba196dda))
+* support stopDrag on drag  #775 ([d950472](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d95047250708d7d2e08988c3e6e4b66b99f53cc7))
+
+
+### :bug: Bug Fix
+
+* fix changing snapContainer #773 ([c3ee847](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c3ee8473765ee6bbb8a27e4865372edac7b3b6fe))
+* fix document element #782 ([b9194d7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b9194d72869c50f96976354ec0dd2cbb24788533))
+* fix no relative snapContainer's size #773 ([1db881f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1db881f4d63fe59ffa22b00428419cfb0e4e2827))
+* fix rotate dist #778 ([7ac47ca](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7ac47ca99402e811faef0f6cdfeede18e14c9ae2))
+
+
+### :memo: Documentation
+
+* fix hitTest doc ([d4b7648](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d4b764899bf4e9044028399f28991e1003195d9c))
+
+
+### :mega: Other
+
+* publish packages ([b6896b3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b6896b340dd1f78777bd63c48e8545895df9aa5e))
+
+
+
 ## [0.40.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.39.4...react-moveable@0.40.0) (2022-10-17)
 
 

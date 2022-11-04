@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.14.0...lit-moveable@0.15.0) (2022-11-04)
+
+
+### :bug: Bug Fix
+
+* fix changing snapContainer #773 ([c3ee847](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/c3ee8473765ee6bbb8a27e4865372edac7b3b6fe))
+
+
+### :mega: Other
+
+* publish packages ([b6896b3](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/b6896b340dd1f78777bd63c48e8545895df9aa5e))
+* update packages ([1ba698e](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/1ba698e996efe9c7c487823fe513ef43592cd6e9))
+
+
+
 ## [0.14.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.13.4...lit-moveable@0.14.0) (2022-10-17)
 
 

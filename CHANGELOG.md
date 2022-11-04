@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.0](https://github.com/daybrush/moveable/compare/0.37.0...0.38.0) (2022-11-04)
+### :sparkles: Packages
+* `@moveable/helper` 0.0.4
+* `lit-moveable` 0.15.0
+* `moveable` 0.38.0
+* `preact-moveable` 0.40.0
+* `react-compat-moveable` 0.26.0
+* `react-moveable` 0.41.0
+* `svelte-moveable` 0.30.0
+* `vue-moveable` 2.0.0-beta.46
+* `vue3-moveable` 0.13.0
+* `ngx-moveable` 0.35.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add ableName-view-dragging in viewContainer #751 ([90c5c34](https://github.com/daybrush/moveable/commit/90c5c34960615f57807d7c8d9895fc04231951e0))
+    * add persistData prop for restore data #780 #777 ([599df9b](https://github.com/daybrush/moveable/commit/599df9bfe1249665c4d76f44f3b771d347284d5a))
+    * add snapThreshold prop #774 ([1bf05b3](https://github.com/daybrush/moveable/commit/1bf05b3bf5221e8ee1a1ffadbcae93a885630819))
+    * support rotationPosition array type #783 ([80653c3](https://github.com/daybrush/moveable/commit/80653c3235ecaef5112414f8b859bedeba196dda))
+    * support stopDrag on drag  #775 ([d950472](https://github.com/daybrush/moveable/commit/d95047250708d7d2e08988c3e6e4b66b99f53cc7))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `lit-moveable`
+    * fix changing snapContainer #773 ([c3ee847](https://github.com/daybrush/moveable/commit/c3ee8473765ee6bbb8a27e4865372edac7b3b6fe))
+* `react-moveable`, `moveable`
+    * fix no relative snapContainer's size #773 ([1db881f](https://github.com/daybrush/moveable/commit/1db881f4d63fe59ffa22b00428419cfb0e4e2827))
+* `react-moveable`
+    * fix document element #782 ([b9194d7](https://github.com/daybrush/moveable/commit/b9194d72869c50f96976354ec0dd2cbb24788533))
+    * fix rotate dist #778 ([7ac47ca](https://github.com/daybrush/moveable/commit/7ac47ca99402e811faef0f6cdfeede18e14c9ae2))
+* Other
+    * fix nohoist modules ([20f5e97](https://github.com/daybrush/moveable/commit/20f5e975ac9a1a8a86d75dee75411a8e15d53aa6))
+
+
+### :memo: Documentation
+
+* `react-moveable`
+    * fix hitTest doc ([d4b7648](https://github.com/daybrush/moveable/commit/d4b764899bf4e9044028399f28991e1003195d9c))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([b6896b3](https://github.com/daybrush/moveable/commit/b6896b340dd1f78777bd63c48e8545895df9aa5e))
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `ngx-moveable`, `lit-moveable`
+    * update packages ([1ba698e](https://github.com/daybrush/moveable/commit/1ba698e996efe9c7c487823fe513ef43592cd6e9))
+* `react-compat-moveable`, `preact-moveable`, `moveable`
+    * update packages #760 ([5c77cf3](https://github.com/daybrush/moveable/commit/5c77cf3986fa319a170d8bd90b6cd720601b5172))
+
+
+
 ## [0.37.0](https://github.com/daybrush/moveable/compare/0.36.4...0.37.0) (2022-10-17)
 ### :sparkles: Packages
 * `@moveable/helper` 0.0.4

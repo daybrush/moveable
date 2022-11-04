@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.37.0...moveable@0.38.0) (2022-11-04)
+
+
+### :bug: Bug Fix
+
+* fix no relative snapContainer's size #773 ([1db881f](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/1db881f4d63fe59ffa22b00428419cfb0e4e2827))
+
+
+### :mega: Other
+
+* publish packages ([b6896b3](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/b6896b340dd1f78777bd63c48e8545895df9aa5e))
+* update packages #760 ([5c77cf3](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/5c77cf3986fa319a170d8bd90b6cd720601b5172))
+
+
+
 ## [0.37.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.36.4...moveable@0.37.0) (2022-10-17)
 
 
