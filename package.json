@@ -76,7 +76,13 @@
         ],
         "nohoist": [
             "**/vue-tsc",
-            "**/vue-tsc/**"
+            "**/vue-tsc/**",
+            "**/@vue/*",
+            "**/@vue/*/**",
+            "**/vue",
+            "**/vue/**",
+            "**/rollup-plugin-vue",
+            "**/rollup-plugin-vue/**"
         ]
     },
     "resolutions": {
