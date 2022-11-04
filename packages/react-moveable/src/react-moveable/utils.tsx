@@ -127,7 +127,7 @@ export function getOffsetInfo(
     lastParent: SVGElement | HTMLElement | null | undefined,
     isParent?: boolean,
 ) {
-    const body = document.body;
+    const documentElement = document.documentElement || document.body;
     let hasSlot = false;
     let target: HTMLElement | SVGElement | null | undefined;
     let parentSlotElement: HTMLElement | null | undefined;
@@ -153,7 +153,7 @@ export function getOffsetInfo(
 
 
 
-    while (target && target !== body) {
+    while (target && target !== documentElement) {
         if (lastParent === target) {
             isEnd = true;
         }
@@ -198,8 +198,8 @@ export function getOffsetInfo(
         parentSlotElement,
         isCustomElement,
         isStatic: position === "static",
-        isEnd: isEnd || !target || target === body,
-        offsetParent: target as HTMLElement || body,
+        isEnd: isEnd || !target || target === documentElement,
+        offsetParent: target as HTMLElement || documentElement,
     };
 
 }

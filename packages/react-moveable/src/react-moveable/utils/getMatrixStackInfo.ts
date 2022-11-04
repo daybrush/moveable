@@ -30,7 +30,8 @@ export function getMatrixStackInfo(
 ) {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
-    let requestEnd = !checkContainer && target === container || target === document.body;
+    const documentElement = document.documentElement || document.body;
+    let requestEnd = !checkContainer && target === container || target === documentElement;
     let isEnd = requestEnd;
     let is3d = false;
     let n = 3;
@@ -167,7 +168,7 @@ export function getMatrixStackInfo(
                 parentClientLeft = offsetParent.clientLeft;
                 parentClientTop = offsetParent.clientTop;
             }
-            if (hasOffset && offsetParent === document.body) {
+            if (hasOffset && offsetParent === documentElement) {
                 const margin = getBodyOffset(el, false, style);
 
                 offsetLeft += margin[0];
@@ -218,7 +219,7 @@ export function getMatrixStackInfo(
             el = offsetParent;
             requestEnd = isOffsetEnd;
         }
-        if (!checkContainer || el === document.body) {
+        if (!checkContainer || el === documentElement) {
             isEnd = requestEnd;
         }
     }

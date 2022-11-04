@@ -12,7 +12,6 @@ export default function App() {
                 draggable={true}
                 resizable={true}
                 rotatable={true}
-                viewContainer={document.body}
                 persistData={{
                     left:  67.6202,
                     top: 110.6202,

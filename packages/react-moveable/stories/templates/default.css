@@ -7,7 +7,11 @@ html, body {
 html:has(.no-relative), body:has(.no-relative) {
     margin: 8px;
     padding: 8px;
-    border: 8px solid red;
+    position: static;
+    /* border: 8px solid red; */
+}
+html:has(.no-relative) {
+    position: relative;
 }
 .description {
     padding: 10px;
