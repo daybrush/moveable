@@ -208,6 +208,7 @@ export type MoveableManagerState<T = {}> = {
     disableNativeEvent: boolean;
     gestos: Record<string, Gesto | CustomGesto | null>;
     renderPoses: number[][];
+    posDelta: number[];
     isPersisted?: boolean;
 } & MoveableTargetInfo & T;
 

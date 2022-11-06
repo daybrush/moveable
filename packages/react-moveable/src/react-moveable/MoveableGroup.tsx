@@ -342,6 +342,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         this.updateState(
             {
                 ...info,
+                posDelta: delta,
                 direction,
                 beforeDirection: direction,
             },

@@ -519,10 +519,11 @@ export default {
                     convertPositionMatrix([originalPosition[0], originalPosition[1]], n),
                 );
                 originalFixedDirection(fixedDirection);
+                const posDelta = state.posDelta;
 
-                datas.beforeInfo.origin = fixedBeforeOrigin;
-                datas.afterInfo.origin = fixedAfterOrigin;
-                datas.absoluteInfo.origin = fixedAfterOrigin;
+                datas.beforeInfo.origin = minus(fixedBeforeOrigin, posDelta);
+                datas.afterInfo.origin = minus(fixedAfterOrigin, posDelta);
+                datas.absoluteInfo.origin = minus(fixedAfterOrigin, posDelta);
 
                 setRotateStartInfo(moveable, datas.beforeInfo, startClientX, startClientY, moveableClientRect);
                 setRotateStartInfo(moveable, datas.afterInfo, startClientX, startClientY, moveableClientRect);

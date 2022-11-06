@@ -84,6 +84,7 @@ export default class MoveableManager<T = {}>
         gestos: {},
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         disableNativeEvent: false,
+        posDelta: [0, 0],
         ...getMoveableTargetInfo(null),
     };
     public renderState: Record<string, any> = {};
