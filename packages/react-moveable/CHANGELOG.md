@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.41.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.41.0...react-moveable@0.41.1) (2022-11-06)
+
+
+### :bug: Bug Fix
+
+* fix group rotation delta ([ef0c591](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ef0c591d7b0c86aed6847c476f17a82f6b80c8fc))
+
+
+### :mega: Other
+
+* publish packages ([64e846b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/64e846bb0e606756bc0b87c92b2b1052b458b9f7))
+
+
+
 ## [0.41.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.40.0...react-moveable@0.41.0) (2022-11-04)
 
 

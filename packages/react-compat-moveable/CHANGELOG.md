@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.26.1](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.26.0...react-compat-moveable@0.26.1) (2022-11-06)
+
+
+### :mega: Other
+
+* publish packages ([64e846b](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/64e846bb0e606756bc0b87c92b2b1052b458b9f7))
+
+
+
 ## [0.26.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.25.0...react-compat-moveable@0.26.0) (2022-11-04)
 
 
