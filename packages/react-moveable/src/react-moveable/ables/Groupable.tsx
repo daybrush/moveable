@@ -16,14 +16,21 @@ export default {
     } as const,
     events: {} as const,
     render(moveable: MoveableGroupInterface<GroupableProps>, React: Renderer): any[] {
-        const targets = moveable.props.targets || [];
+        const props = moveable.props;
+        let targets: Array<HTMLElement | SVGElement | undefined | null> = props.targets || [];
 
         moveable.moveables = [];
-        const { left, top } = moveable.state;
+        const { left, top, isPersisted } = moveable.getState();
         const position = [left, top];
-        const props = moveable.props;
         const zoom = props.zoom || 1;
         const renderGroupRects = moveable.renderGroupRects;
+        let persistDatChildren = props.persistData?.children || [];
+
+        if (isPersisted) {
+            targets = persistDatChildren.map(() => null);
+        } else {
+            persistDatChildren = [];
+        }
 
         return [
             ...targets.map((target, i) => {
@@ -38,6 +45,7 @@ export default {
                     hideChildMoveableDefaultLines={props.hideChildMoveableDefaultLines}
                     parentMoveable={moveable}
                     parentPosition={position}
+                    persistData={persistDatChildren[i]}
                     zoom={zoom}
                 />;
             }),

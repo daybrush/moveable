@@ -136,7 +136,7 @@ export class InitialMoveable<T = {}>
         const refTargets = this._updateRefs(true);
         const elementTargets = getElementTargets(refTargets, this.selectorMap);
 
-        const isGroup = elementTargets.length > 1;
+        let isGroup = elementTargets.length > 1;
         const totalAbles = moveableContructor.getTotalAbles();
         const ables = [
             ...totalAbles,
@@ -156,6 +156,11 @@ export class InitialMoveable<T = {}>
         const prevMoveable = this.moveable;
 
 
+        const persistData = props.persistData;
+
+        if (persistData?.children) {
+            isGroup = true;
+        }
         if (isGroup) {
             if (props.individualGroupable) {
                 return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}

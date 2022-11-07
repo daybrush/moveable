@@ -11,11 +11,22 @@ import { prefix } from "./utils";
 class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
     public moveables: MoveableManager[] = [];
     public render() {
+        const props = this.props;
         const {
             cspNonce,
             cssStyled: ControlBoxElement,
-            targets,
-        } = this.props;
+            persistData,
+        } = props;
+
+        let targets: Array<HTMLElement | SVGElement | null | undefined> = props.targets || [];
+        const length = targets.length;
+        const canPersist = this.isUnmounted || !length;
+        let persistDatChildren = persistData?.children ?? [];
+        if (canPersist && !length && persistDatChildren.length) {
+            targets = persistDatChildren.map(() => null);
+        } else if (!canPersist) {
+            persistDatChildren = [];
+        }
 
         return <ControlBoxElement
             cspNonce={cspNonce}
@@ -28,6 +39,7 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
                     {...this.props}
                     target={target}
                     wrapperMoveable={this}
+                    persistData={persistDatChildren[i]}
                 />;
             })}
         </ControlBoxElement>;

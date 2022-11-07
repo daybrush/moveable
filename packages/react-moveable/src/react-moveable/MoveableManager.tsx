@@ -25,13 +25,13 @@ import {
     GroupableProps,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
-import { plus } from "@scena/matrix";
+import { minus, plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
     getKeys, IObject, removeClass, requestAnimationFrame,
 } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
-import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
+import { fitPoints, getAreaSize, getMinMaxs, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
 import styled from "react-css-styled";
 import EventEmitter from "@scena/event-emitter";
@@ -728,7 +728,7 @@ export default class MoveableManager<T = {}>
     }
     public getState(): MoveableManagerState {
         const props = this.props;
-        if (props.target) {
+        if (props.target || (props as any).targets?.length) {
             this._hasFirstTarget = true;
         }
         const hasControlBox = this.controlBox;
@@ -736,7 +736,29 @@ export default class MoveableManager<T = {}>
         const firstRenderState = props.firstRenderState as any;
 
         if (!this._hasFirstTarget && persistData) {
-            this.updateState(getPersistState(persistData), false);
+            const persistState = getPersistState(persistData);
+
+            if (props.groupable) {
+                const {
+                    pos1,
+                    pos2,
+                    pos3,
+                    pos4,
+                } = persistState;
+                const minPos = getMinMaxs([pos1!, pos2!, pos3!, pos4!]);
+                const delta = [minPos.minX, minPos.minY];
+                const pos = [persistState.left!, persistState.top!];
+
+                persistState.pos1 = minus(pos1!, delta);
+                persistState.pos2 = minus(pos2!, delta);
+                persistState.pos3 = minus(pos3!, delta);
+                persistState.pos4 = minus(pos4!, delta);
+                persistState.origin = minus(plus(pos, persistState.origin!), delta);
+                persistState.beforeOrigin = minus(plus(pos, persistState.beforeOrigin!), delta);
+
+                persistState.posDelta = delta;
+            }
+            this.updateState(persistState, false);
         } else if (firstRenderState && !hasControlBox) {
             return firstRenderState;
         }

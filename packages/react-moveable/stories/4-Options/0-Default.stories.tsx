@@ -33,7 +33,16 @@ group.add("Cursor is applied in viewer during dragging.", {
 
 
 
-group.add("First render with persisted data.", {
+group.add("First render with persisted data", {
     app: require("./ReactPersistDataApp").default,
     path: require.resolve("./ReactPersistDataApp"),
+});
+
+group.add("First render with persisted data (group)", {
+    app: require("./ReactGroupPersistDataApp").default,
+    path: require.resolve("./ReactGroupPersistDataApp"),
+});
+group.add("First render with persisted data (individual group)", {
+    app: require("./ReactIndividualGroupPersistDataApp").default,
+    path: require.resolve("./ReactIndividualGroupPersistDataApp"),
 });

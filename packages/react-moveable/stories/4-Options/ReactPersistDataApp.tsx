@@ -7,21 +7,27 @@ export default function App() {
             <p className="description">
                 * You can persist by `moveable.getRect()` method.
             </p>
+            <div className="target" style={{
+                transform: "translate(100px, 100px) rotate(45deg)",
+            }}>
+                No Target
+            </div>
             <Moveable
                 // target={".target"}
                 draggable={true}
                 resizable={true}
                 rotatable={true}
+                origin={true}
                 persistData={{
-                    left:  67.6202,
-                    top: 110.6202,
+                    left: 179.2893,
+                    top: 229.2893,
                     offsetHeight: 100,
                     offsetWidth: 100,
-                    origin: [130, 173],
-                    pos1: [96.7019, 110.6202],
-                    pos2: [192.3798, 139.7019],
-                    pos3: [67.6202, 206.2981],
-                    pos4: [163.2981, 235.3798],
+                    origin: [250, 300],
+                    pos1: [250, 229.2893],
+                    pos2: [320.7107, 300],
+                    pos3: [179.2893, 300],
+                    pos4: [250, 370.7107],
                 }}
                 onRender={e => {
                     e.target.style.cssText += e.cssText;
