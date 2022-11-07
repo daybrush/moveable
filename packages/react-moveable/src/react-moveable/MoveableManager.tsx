@@ -39,6 +39,7 @@ import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 import { VIEW_DRAGGING } from "./classNames";
 import { diff } from "@egjs/list-differ";
 import { getPersistState } from "./utils/persist";
+// import { getClipPath } from "./ables/clippable/utils";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -639,7 +640,10 @@ export default class MoveableManager<T = {}>
             originalBeforeOrigin, transformOrigin,
             allMatrix, is3d,
             pos1, pos2, pos3, pos4,
-            left: stateLeft, top: stateTop,
+            left: stateLeft,
+            top: stateTop,
+            // offsetWidth,
+            // offsetHeight,
         } = state;
         const {
             left = 0,
@@ -648,6 +652,21 @@ export default class MoveableManager<T = {}>
             right = 0,
         } = (props.padding || {}) as PaddingBox;
         const n = is3d ? 4 : 3;
+
+        // const clipPathInfo = getClipPath(
+        //     props.target,
+        //     offsetWidth,
+        //     offsetHeight,
+        // );
+
+        // if (clipPathInfo) {
+        //     left -= Math.max(0, clipPathInfo.left);
+        //     top -= Math.max(0, clipPathInfo.top);
+        //     bottom -= Math.max(0, offsetHeight - clipPathInfo.bottom);
+        //     right -= Math.max(0, offsetWidth - clipPathInfo.right);
+        // }
+
+
         const absoluteOrigin = this.controlBox && (props as any).groupable
             ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
 

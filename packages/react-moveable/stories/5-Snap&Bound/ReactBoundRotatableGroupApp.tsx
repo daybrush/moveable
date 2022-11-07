@@ -16,11 +16,12 @@ export default function App(props: Record<string, any>) {
                 <div className="target target3">Target3</div>
                 <Moveable
                     ref={moveableRef}
-                    target={".target"}
+                    target={[".target1", ".target2"]}
                     draggable={true}
                     rotatable={true}
                     snappable={true}
-                    bounds={{ left: 0, top: 0, right: 0, bottom: 0, position: "css" }}
+                    // bounds={{ left: 0, top: 0, right: 0, bottom: 0, position: "css" }}
+                    verticalGuidelines={[0]}
                     onDragGroup={e => {
                         e.events.forEach(ev => {
                             ev.target.style.cssText += ev.cssText;

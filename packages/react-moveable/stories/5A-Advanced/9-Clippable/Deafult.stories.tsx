@@ -11,6 +11,12 @@ group.add("Clippable with Drag, Resize, Rotate", {
 });
 
 
+group.add("Drag, Resize, Rotate with Clipped Area", {
+    app: require("./ReactClippedAreaApp").default,
+    path: require.resolve("./ReactClippedAreaApp"),
+});
+
+
 group.add("Clip & Snap", {
     app: require("./ReactClipSnapApp").default,
     path: require.resolve("./ReactClipSnapApp"),
