@@ -4,9 +4,16 @@ import { makeStoryGroup } from "../../utils/story";
 const group = makeStoryGroup("Advanced Clippable", module);
 
 
-group.add("Clip & Snap", {
+
+group.add("Clippable with Drag, Resize, Rotate", {
     app: require("./ReactClippableApp").default,
     path: require.resolve("./ReactClippableApp"),
+});
+
+
+group.add("Clip & Snap", {
+    app: require("./ReactClipSnapApp").default,
+    path: require.resolve("./ReactClipSnapApp"),
 });
 
 group.add("keepRatio for both clippable and resizeable", {

@@ -12,6 +12,7 @@ import {
     getComputedStyle,
     getSizeDistByDist,
     getProps,
+    fillCSSObject,
 } from "../utils";
 import { plus, minus, multiply } from "@scena/matrix";
 import { getDragDist, calculatePointerDist, setDragStart } from "../gesto/GestoUtils";
@@ -491,14 +492,19 @@ function addClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: any)
         return;
     }
     const clipStyles = getClipStyles(moveable, clipPath, poses)!;
+    const clipStyle = `${clipType}(${clipStyles.join(splitter)})`;
+
     triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
         clipEventType: "added",
         clipType,
         poses,
         clipStyles,
-        clipStyle: `${clipType}(${clipStyles.join(splitter)})`,
+        clipStyle,
         distX: 0,
         distY: 0,
+        ...fillCSSObject({
+            clipPath: clipStyle,
+        }, e),
     }));
 }
 function removeClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: any) {
@@ -526,14 +532,19 @@ function removeClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: a
         return;
     }
     const clipStyles = getClipStyles(moveable, clipPath, poses)!;
+    const clipStyle = `${clipType}(${clipStyles.join(splitter)})`;
+
     triggerEvent(moveable, "onClip", fillParams<OnClip>(moveable, e, {
         clipEventType: "removed",
         clipType,
         poses,
         clipStyles,
-        clipStyle: `${clipType}(${clipStyles.join(splitter)})`,
+        clipStyle,
         distX: 0,
         distY: 0,
+        ...fillCSSObject({
+            clipPath: clipStyle,
+        }, e),
     }));
 }
 /**
@@ -565,6 +576,13 @@ export default {
         `.control.clip-control {
     background: #6d6;
     cursor: pointer;
+}
+.clip-control:after {
+    content: "";
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    background: #f55;
 }
 .control.clip-control.clip-radius {
     background: #d66;
@@ -1079,6 +1097,9 @@ export default {
             clipStyles: nextClipStyles,
             distX,
             distY,
+            ...fillCSSObject({
+                [clipType === "rect" ? "clip" : "clipPath"]: clipStyle,
+            }, e),
         }));
 
         return true;

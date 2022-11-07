@@ -17,25 +17,13 @@ export default function App(props: Record<string, any>) {
                     target={targetRef}
                     draggable={true}
                     resizable={true}
+                    rotatable={true}
                     clippable={true}
-                    dragWithClip={false}
-                    clipTargetBounds={true}
-                    snappable={true}
-
-                    horizontalGuidelines={[0, 100, 200, 300]}
-                    // verticalGuidelines={[0, 100, 200, 300]}
-                    snapThreshold={5}
-                    onDrag={e => {
-                        e.target.style.transform = e.transform;
+                    dragWithClip={true}
+                    onRender={e => {
+                        e.target.style.cssText += e.cssText;
                     }}
-                    onResize={e => {
-                        e.target.style.width = `${e.width}px`;
-                        e.target.style.height = `${e.height}px`;
-                        e.target.style.transform = e.drag.transform;
-                    }}
-                    onClip={e => {
-                        e.target.style.clipPath = e.clipStyle;
-                    }} />
+                />
             </div>
         </div>
     );

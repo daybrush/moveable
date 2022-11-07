@@ -2680,22 +2680,38 @@ export interface OnClipStart extends OnEvent {
  * @typedef
  * @memberof Moveable.Clippable
  * @extends Moveable.OnEvent
- * @property - The clip type.
- * @property - The clip event type.
- * @property - The control positions
- * @property - x position of the distance the control has moved
- * @property - y position of the distance the control has moved
- * @property - CSS style of changed clip
- * @property - Splited CSS styles of changed clip
+ * @extends Moveable.CSSObject
  */
-export interface OnClip extends OnEvent {
+export interface OnClip extends OnEvent, CSSObject {
+    /**
+     * The clip type.
+     */
     clipType: "polygon" | "circle" | "ellipse" | "inset" | "rect";
+    /**
+     * The clip event type.
+     */
     clipEventType: "added" | "changed" | "removed";
+    /**
+     * The control positions
+     */
     poses: number[][];
+    /**
+     * x position of the distance the control has moved
+     */
     distX: number;
+    /**
+     * y position of the distance the control has moved
+     */
     distY: number;
+    /**
+     * CSS style of changed clip
+     */
     clipStyle: string;
+    /**
+     * Splited CSS styles of changed clip
+     */
     clipStyles: string[];
+
 }
 /**
  * @typedef
@@ -2744,6 +2760,8 @@ export interface PersistRectData {
      * The absolute transform origin
      */
     origin: number[];
+
+    children?: PersistRectData[];
 }
 
 
