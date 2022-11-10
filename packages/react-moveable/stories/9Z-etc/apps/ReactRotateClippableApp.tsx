@@ -30,8 +30,8 @@ export default function App() {
                 dragWithClip={false}
                 defaultClipPath={"inset"}
                 clipTargetBounds={true}
-                clipVerticalGuidelines={[]}
-                clipHorizontalGuidelines={[]}
+                clipVerticalGuidelines={[0, 100, 200]}
+                clipHorizontalGuidelines={[0, 100, 200]}
                 snapThreshold={5}
                 onClip={(e) => {
                     if (e.clipType === "rect") {

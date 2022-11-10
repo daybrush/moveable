@@ -14,6 +14,7 @@ import {
     createScaleMatrix,
     plus,
     convertMatrixtoCSS,
+    rotate,
 } from "@scena/matrix";
 import {
     MoveableManagerState, Able, MoveableClientRect,
@@ -1463,5 +1464,89 @@ export function getOffsetSizeDist(
         // sizeDirection,
         distWidth,
         distHeight,
+    };
+}
+
+export function convertTransformUnit(
+    origin: string,
+    xy?: boolean,
+): { x?: string; y?: string; value?: string; } {
+    if (xy) {
+        if (origin === "left") {
+            return { x: "0%", y: "50%" };
+        } else if (origin === "top") {
+            return { x: "50%", y: "50%" };
+        } else if (origin === "center") {
+            return { x: "50%", y: "50%" };
+        } else if (origin === "right") {
+            return { x: "100%", y: "50%" };
+        } else if (origin === "bottom") {
+            return { x: "50%", y: "100%" };
+        }
+        const [left, right] = origin.split(" ");
+        const leftOrigin = convertTransformUnit(left || "");
+        const rightOrigin = convertTransformUnit(right || "");
+        const originObject = {
+            ...leftOrigin,
+            ...rightOrigin,
+        };
+
+        const nextOriginObject = {
+            x: "50%",
+            y: "50%",
+        };
+        if (originObject.x) {
+            nextOriginObject.x = originObject.x;
+        }
+        if (originObject.y) {
+            nextOriginObject.y = originObject.y;
+        }
+        if (originObject.value) {
+            if (originObject.x && !originObject.y) {
+                nextOriginObject.y = originObject.value;
+            }
+            if (!originObject.x && originObject.y) {
+                nextOriginObject.x = originObject.value;
+            }
+        }
+        return nextOriginObject;
+    }
+    if (origin === "left") {
+        return { x: "0%" };
+    }
+    if (origin === "right") {
+        return { x: "100%" };
+    }
+    if (origin === "top") {
+        return { y: "0%" };
+    }
+    if (origin === "bottom") {
+        return { y: "100%" };
+    }
+    if (!origin) {
+        return {};
+    }
+    if (origin === "center") {
+        return { value: "50%" };
+    }
+    return { value: origin };
+}
+export function convertTransformOriginArray(transformOrigin: string, width: number, height: number) {
+    const { x, y } = convertTransformUnit(transformOrigin, true);
+
+    return [
+        convertUnitSize(x!, width) || 0,
+        convertUnitSize(y!, height) || 0,
+    ];
+}
+
+export function rotatePosesInfo(poses: number[][], origin: number[], rad: number) {
+    const prevPoses = poses.map((pos) => minus(pos, origin));
+    const nextPoses = prevPoses.map((pos) => rotate(pos, rad));
+
+    return {
+        prev: prevPoses,
+        next: nextPoses,
+        result: nextPoses.map(pos => plus(pos, origin)),
     };
 }

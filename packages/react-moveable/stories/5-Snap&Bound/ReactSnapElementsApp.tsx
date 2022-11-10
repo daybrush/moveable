@@ -39,14 +39,9 @@ export default function App(props: Record<string, any>) {
                 <Moveable
                     ref={moveableRef}
                     target={targetRef}
-                    draggable={props.draggable}
-                    throttleDrag={props.throttleDrag}
-                    edgeDraggable={props.edgeDraggable}
-                    startDragRotate={props.startDragRotate}
-                    throttleDragRotate={props.throttleDragRotate}
-                    scalable={props.scalable}
-                    keepRatio={props.keepRatio}
-                    throttleScale={props.throttleScale}
+                    draggable={true}
+                    scalable={true}
+                    rotatable={true}
                     snappable={props.snappable}
                     isDisplaySnapDigit={props.isDisplaySnapDigit}
                     isDisplayInnerSnapDigit={props.isDisplayInnerSnapDigit}
@@ -55,14 +50,8 @@ export default function App(props: Record<string, any>) {
                     snapThreshold={props.snapThreshold}
                     maxSnapElementGuidelineDistance={props.maxSnapElementGuidelineDistance}
                     elementGuidelines={[".element1", ".element2", ".element3"]}
-                    onBeforeRenderStart={e => {
-                        e.setTransform(e.target.style.transform);
-                    }}
-                    onDrag={e => {
-                        e.target.style.transform = e.transform;
-                    }}
-                    onScale={e => {
-                        e.target.style.transform = e.drag.transform;
+                    onRender={e => {
+                        e.target.style.cssText += e.cssText;
                     }}
                 />
             </div>

@@ -35,8 +35,6 @@ group.add("Snap Elements", {
     argsTypes: {
         ...DEFAULT_SNAPPABLE_CONTROLS,
         ...DEFAULT_SNAPPABLE_ELEMENTS_CONTROLS,
-        ...DEFAULT_DRAGGABLE_CONTROLS,
-        ...DEFAULT_SCALABLE_CONTROLS,
     },
 });
 
@@ -123,6 +121,13 @@ group.add("Set maximum distance for guidelines", {
         }),
     },
 });
+
+
+group.add("Snap Elements (group)", {
+    app: require("./ReactSnapElementsGroupApp").default,
+    path: require.resolve("./ReactSnapElementsGroupApp"),
+});
+
 
 
 

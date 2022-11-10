@@ -4,7 +4,10 @@ import ChildrenDiffer from "@egjs/children-differ";
 import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
-import { getAbsolutePosesByState, equals, unset } from "./utils";
+import {
+    getAbsolutePosesByState, equals, unset, rotatePosesInfo,
+    convertTransformOriginArray,
+} from "./utils";
 import { minus, plus } from "@scena/matrix";
 import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
 import { find, isArray, throttle } from "@daybrush/utils";
@@ -39,6 +42,8 @@ function getGroupRect(parentPoses: number[][][], rotation: number): GroupRect {
             pos4,
             minX: 0,
             minY: 0,
+            maxX: 0,
+            maxY: 0,
             width,
             height,
             rotation,
@@ -144,7 +149,7 @@ function getGroupRect(parentPoses: number[][][], rotation: number): GroupRect {
 
         [pos1, pos2, pos3, pos4] = changedX;
     }
-    const { minX, minY } = getMinMaxs([pos1, pos2, pos3, pos4]);
+    const { minX, minY, maxX, maxY } = getMinMaxs([pos1, pos2, pos3, pos4]);
 
     return {
         pos1,
@@ -155,6 +160,8 @@ function getGroupRect(parentPoses: number[][][], rotation: number): GroupRect {
         height,
         minX,
         minY,
+        maxX,
+        maxY,
         rotation,
     };
 }
@@ -290,14 +297,32 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         }
 
         this.renderGroupRects = renderGroupRects;
+        const transformOrigin = this.transformOrigin;
         const rotation = this.rotation;
         const scale = this.scale;
         const { width, height, minX, minY } = rootGroupRect;
+        const posesInfo = rotatePosesInfo(
+            [
+                [0, 0],
+                [width, 0],
+                [0, height],
+                [width, height],
+            ],
+            convertTransformOriginArray(transformOrigin, width, height),
+            this.rotation / 180 * Math.PI,
+        );
 
-        // tslint:disable-next-line: max-line-length
-        const transform = `rotate(${rotation}deg) scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
-        target.style.cssText += `left:0px;top:0px; transform-origin: ${this.transformOrigin}; width:${width}px; height:${height}px;`
-            + `transform:${transform}`;
+        const { minX: deltaX, minY: deltaY } = getMinMaxs(posesInfo.result);
+        const rotateScale = ` rotate(${rotation}deg)`
+            + ` scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
+        const transform = `translate(${-deltaX}px, ${-deltaY}px)${rotateScale}`;
+
+        this.controlBox.getElement().style.transform
+            = `translate3d(${minX}px, ${minY}px, ${this.props.translateZ || 0})`;
+        target.style.cssText += `left:0px;top:0px;`
+            + `transform-origin:${transformOrigin};`
+            + `width:${width}px;height:${height}px;`
+            + `transform: ${transform}`;
         state.width = width;
         state.height = height;
 
@@ -320,25 +345,23 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const minPos = getMinMaxs([pos1, pos2, pos3, pos4]);
         const delta = [minPos.minX, minPos.minY];
+        const direction = scale[0] * scale[1] > 0 ? 1 : -1;
+
         info.pos1 = minus(pos1, delta);
         info.pos2 = minus(pos2, delta);
         info.pos3 = minus(pos3, delta);
         info.pos4 = minus(pos4, delta);
+        // info.left = info.left + delta[0];
+        // info.top = info.top + delta[1];
         info.left = minX - info.left! + delta[0];
         info.top = minY - info.top! + delta[1];
         info.origin = minus(plus(pos, info.origin!), delta);
         info.beforeOrigin = minus(plus(pos, info.beforeOrigin!), delta);
         info.originalBeforeOrigin = plus(pos, info.originalBeforeOrigin!);
-        // info.transformOrigin = minus(plus(pos, info.transformOrigin!), delta);
-
-        const clientRect = info.targetClientRect!;
-        const direction = scale[0] * scale[1] > 0 ? 1 : -1;
-
-        clientRect.top += info.top - state.top;
-        clientRect.left += info.left - state.left;
-
-        target.style.transform = `translate(${-delta[0]}px, ${-delta[1]}px) ${transform}`;
-
+        info.transformOrigin = minus(plus(pos, info.transformOrigin!), delta);
+        target.style.transform
+            = `translate(${-deltaX - delta[0]}px, ${-deltaY - delta[1]}px)`
+            + rotateScale;
         this.updateState(
             {
                 ...info,

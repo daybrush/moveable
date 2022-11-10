@@ -9,7 +9,7 @@ export function setCustomDrag(
     isConvert: boolean,
     ableName = "draggable",
 ) {
-    const result = state.gestos[ableName].move(delta, e.inputEvent);
+    const result = state.gestos[ableName]?.move(delta, e.inputEvent) ?? {};
     const datas = result.originalDatas || result.datas;
     const ableDatas = datas[ableName] || (datas[ableName] = {});
 
