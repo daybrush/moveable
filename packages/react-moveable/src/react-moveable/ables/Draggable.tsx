@@ -152,8 +152,11 @@ export default {
         const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
         const throttleDragRotate = parentEvent ? 0 : (props.throttleDragRotate || 0);
 
-        let isSnap = false;
         let dragRotateRad = 0;
+        let isVerticalSnap = false;
+        let isVerticalBound = false;
+        let isHorizontalSnap = false;
+        let isHorizontalBound = false;
 
         if (!parentEvent && throttleDragRotate > 0 && (distX || distY)) {
             const startDragRotate = props.startDragRotate || 0;
@@ -173,18 +176,13 @@ export default {
             const [verticalInfo, horizontalInfo] = checkSnapBoundsDrag(
                 moveable, distX, distY, throttleDragRotate, isRequest || deltaOffset, datas,
             );
-            const {
-                isSnap: isVerticalSnap,
-                isBound: isVerticalBound,
-                offset: verticalOffset,
-            } = verticalInfo;
-            const {
-                isSnap: isHorizontalSnap,
-                isBound: isHorizontalBound,
-                offset: horizontalOffset,
-            } = horizontalInfo;
+            isVerticalSnap = verticalInfo.isSnap;
+            isVerticalBound = verticalInfo.isBound;
+            isHorizontalSnap = horizontalInfo.isSnap;
+            isHorizontalBound = horizontalInfo.isBound;
 
-            isSnap = isVerticalSnap || isHorizontalSnap || isVerticalBound || isHorizontalBound;
+            const verticalOffset = verticalInfo.offset;
+            const horizontalOffset = horizontalInfo.offset;
 
             distX += verticalOffset;
             distY += horizontalOffset;
@@ -193,12 +191,20 @@ export default {
         const beforeTranslate = plus(getBeforeDragDist({ datas, distX, distY }), startValue);
         const translate = plus(getTransformDist({ datas, distX, distY }), startValue);
 
-        if (!throttleDragRotate && !isSnap) {
-            throttleArray(translate, throttleDrag);
-            throttleArray(beforeTranslate, throttleDrag);
-        }
         throttleArray(translate, TINY_NUM);
         throttleArray(beforeTranslate, TINY_NUM);
+
+        if (!throttleDragRotate) {
+            if (!isVerticalSnap && !isVerticalBound) {
+                translate[0] = throttle(translate[0], throttleDrag);
+                beforeTranslate[0] = throttle(beforeTranslate[0], throttleDrag);
+            }
+            if (!isHorizontalSnap && !isHorizontalBound) {
+                translate[1] = throttle(translate[1], throttleDrag);
+                beforeTranslate[1] = throttle(beforeTranslate[1], throttleDrag);
+            }
+        }
+
 
         const beforeDist = minus(beforeTranslate, startValue);
         const dist = minus(translate, startValue);
