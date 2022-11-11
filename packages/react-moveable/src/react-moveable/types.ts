@@ -2730,7 +2730,10 @@ export interface OnCustomDrag extends GestoTypes.Position {
     parentGesto: CustomGesto;
 }
 
-
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface PersistRectData {
     /**
      * left position of the target relative to the container
@@ -2760,7 +2763,9 @@ export interface PersistRectData {
      * The absolute transform origin
      */
     origin: number[];
-
+    /**
+     * In the case of a group, information on children is also required.
+     */
     children?: PersistRectData[];
 }
 

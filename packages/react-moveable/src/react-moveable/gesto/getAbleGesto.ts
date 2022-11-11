@@ -130,6 +130,7 @@ export function triggerAble(
             return false;
         }).length as any;
     }
+
     if (isEnd || isForceEnd) {
         moveable.state.gestos = {};
 
@@ -164,9 +165,10 @@ export function triggerAble(
 }
 
 export function checkMoveableTarget(moveable: MoveableManagerInterface) {
-    const dragTarget = moveable.props.dragTarget;
-
     return (e: { inputEvent: Event }) => {
+        const {
+            dragTarget,
+        } = moveable.props;
         const eventTarget = e.inputEvent.target as Element;
         const areaElement = moveable.areaElement;
 

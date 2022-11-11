@@ -34,43 +34,44 @@ export default makeAble("edgeDraggable", {
             props.zoom!,
         );
     },
-    dragControlCondition(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
-        if (!moveable.props.edgeDraggable || !e.inputEvent) {
+    dragCondition(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
+        const props = moveable.props;
+        const target = e.inputEvent?.target;
+
+        if (!props.edgeDraggable || !target) {
             return false;
         }
-        const target = e.inputEvent.target;
-        return hasClass(target, prefix("direction"))
+
+        return !props.draggable
+            && hasClass(target, prefix("direction"))
             && hasClass(target, prefix("edge"))
             && hasClass(target, prefix("edgeDraggable"));
     },
-    dragControlStart(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
-        (moveable.state as any).snapRenderInfo = {
-            request: e.isRequest,
-            snap: true,
-            center: true,
-        };
+    dragStart(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         return Draggable.dragStart(moveable, getDraggableEvent(e));
     },
-    dragControl(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
+    drag(moveable: MoveableManagerInterface<DraggableProps>, e: any) {
         return Draggable.drag(moveable, getDraggableEvent(e));
     },
-    dragControlEnd(moveable: MoveableManagerInterface<DraggableProps, any>, e: any) {
+    dragEnd(moveable: MoveableManagerInterface<DraggableProps, any>, e: any) {
         return Draggable.dragEnd(moveable, getDraggableEvent(e));
     },
-    dragGroupControlCondition(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
-        if (!moveable.props.edgeDraggable || !e.inputEvent) {
+    dragGroupCondition(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
+        const props = moveable.props;
+        const target = e.inputEvent?.target;
+
+        if (!props.edgeDraggable || !target) {
             return false;
         }
-        const target = e.inputEvent.target;
-        return hasClass(target, prefix("direction")) && hasClass(target, prefix("line"));
+        return !props.draggable && hasClass(target, prefix("direction")) && hasClass(target, prefix("line"));
     },
-    dragGroupControlStart(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
+    dragGroupStart(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
         return Draggable.dragGroupStart(moveable, getDraggableEvent(e));
     },
-    dragGroupControl(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
+    dragGroup(moveable: MoveableGroupInterface<DraggableProps>, e: any) {
         return Draggable.dragGroup(moveable, getDraggableEvent(e));
     },
-    dragGroupControlEnd(moveable: MoveableGroupInterface<DraggableProps, any>, e: any) {
+    dragGroupEnd(moveable: MoveableGroupInterface<DraggableProps, any>, e: any) {
         return Draggable.dragGroupEnd(moveable, getDraggableEvent(e));
     },
     unset(moveable: any) {
