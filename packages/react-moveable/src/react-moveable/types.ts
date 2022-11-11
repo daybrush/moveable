@@ -2917,6 +2917,7 @@ export interface MoveableInterface {
     forceUpdate(callback?: () => any): any;
     updateSelectors(): void;
     getTargets(): Array<HTMLElement | SVGElement>;
+    stopDrag(type?: "target" | "control"): void;
 }
 
 export interface ControlPose {

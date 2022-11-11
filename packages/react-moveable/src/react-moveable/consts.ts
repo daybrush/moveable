@@ -228,4 +228,5 @@ export const MOVEABLE_METHODS: Array<keyof MoveableInterface> = [
     "waitToChangeTarget",
     "updateSelectors",
     "getTargets",
+    "stopDrag",
 ];

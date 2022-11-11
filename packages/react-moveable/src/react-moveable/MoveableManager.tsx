@@ -534,6 +534,25 @@ export default class MoveableManager<T = {}>
     public getManager(): MoveableManagerInterface<any, any> {
         return this as any;
     }
+    /**
+     * You can stop the dragging currently in progress through a method from outside.
+     * @method Moveable#stopDrag
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.stopDrag();
+     */
+    public stopDrag(type?: "target" | "control"): void {
+        if (!type || type === "target") {
+            this.targetGesto?.stop();
+        }
+        if (!type || type === "control") {
+            this.controlGesto?.stop();
+        }
+    }
     public getRotation() {
         const {
             pos1,
