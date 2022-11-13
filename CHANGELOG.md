@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.39.0](https://github.com/daybrush/moveable/compare/0.38.1...0.39.0) (2022-11-13)
+### :sparkles: Packages
+* `@moveable/helper` 0.0.4
+* `lit-moveable` 0.16.0
+* `moveable` 0.39.0
+* `preact-moveable` 0.41.0
+* `react-compat-moveable` 0.27.0
+* `react-moveable` 0.42.0
+* `svelte-moveable` 0.31.0
+* `vue-moveable` 2.0.0-beta.48
+* `vue3-moveable` 0.14.0
+* `ngx-moveable` 0.36.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add `stopDrag` method #787 ([1c1d54d](https://github.com/daybrush/moveable/commit/1c1d54d7b6c3baff62bac34b439244c20a18c3c0))
+    * add cssText on clip event ([90e5397](https://github.com/daybrush/moveable/commit/90e539751a5e505257702dba6a09c96cd71d3f50))
+    * support group persist #780 ([40a23db](https://github.com/daybrush/moveable/commit/40a23dbc31d08ac22a85e5dc807ccb16e0604b4c))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `react-compat-moveable`
+    * update gesto, dragscroll dependencies ([0f33358](https://github.com/daybrush/moveable/commit/0f333589574f509d1e3058b77ec9df6b18d7fee6))
+* `react-moveable`
+    * fix edgeDraggable #695 ([9ebfae5](https://github.com/daybrush/moveable/commit/9ebfae559c978d5354ba5244ada6e22d20cdc83a))
+    * fix persist group ([d1c9e2c](https://github.com/daybrush/moveable/commit/d1c9e2cab1183b89f346daac5c02dbf531bb53e8))
+    * fix snap bug for rotated group #786 ([3ac47da](https://github.com/daybrush/moveable/commit/3ac47da798cb655d37903ea9a8574ae62d1a7844))
+    * fix snap for fixed position #791 ([05f6f22](https://github.com/daybrush/moveable/commit/05f6f221fbdc971ca21b7bf27b24c91b1e722057))
+    * fix throttleDrag #789 ([8f4659e](https://github.com/daybrush/moveable/commit/8f4659e2531d9cdba9593509c87f0c2915a28ae9))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([0780d7a](https://github.com/daybrush/moveable/commit/0780d7a204e5f1fa13070d4fa3ca657dfe3ee4af))
+
+
+
 ## [0.38.1](https://github.com/daybrush/moveable/compare/0.38.0...0.38.1) (2022-11-06)
 ### :sparkles: Packages
 * `@moveable/helper` 0.0.4
