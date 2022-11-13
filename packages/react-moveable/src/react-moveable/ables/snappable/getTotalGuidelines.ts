@@ -4,7 +4,9 @@ import { minus } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
 import {
     MoveableManagerInterface, SnappableProps,
-    SnappableState, SnapGuideline, SnapDirectionPoses, PosGuideline, ElementGuidelineValue, SnapElementRect,
+    SnappableState, SnapGuideline, SnapDirectionPoses,
+    PosGuideline, ElementGuidelineValue,
+    SnapElementRect,
 } from "../../types";
 import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, roundSign } from "../../utils";
 import {
@@ -15,18 +17,20 @@ import {
 export function getTotalGuidelines(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
 ) {
+    const state = moveable.state;
     const {
-        snapOffset,
-        containerClientRect: {
-            overflow,
-            scrollHeight: containerHeight,
-            scrollWidth: containerWidth,
-            clientHeight: containerClientHeight,
-            clientWidth: containerClientWidth,
-            clientLeft,
-            clientTop,
-        },
-    } = moveable.state;
+        containerClientRect,
+        hasFixed,
+    } = state;
+    const {
+        overflow,
+        scrollHeight: containerHeight,
+        scrollWidth: containerWidth,
+        clientHeight: containerClientHeight,
+        clientWidth: containerClientWidth,
+        clientLeft,
+        clientTop,
+    } = containerClientRect;
     const {
         snapGap = true,
         verticalGuidelines,
@@ -54,6 +58,20 @@ export function getTotalGuidelines(
         clientLeft,
         clientTop,
     ));
+    const snapOffset = {
+        ...(state.snapOffset || {
+            left: 0,
+            top: 0,
+            bottom: 0,
+            right: 0,
+        }),
+    };
+
+
+    if (hasFixed) {
+        snapOffset.left += containerClientRect.left;
+        snapOffset.top += containerClientRect.top;
+    }
 
     totalGuidelines.push(...getDefaultGuidelines(
         horizontalGuidelines || false,
@@ -398,10 +416,12 @@ export function getDefaultGuidelines(
         const nextPosInfo = isObject(posInfo) ? posInfo : { pos: posInfo };
 
         guidelines.push({
-            type: "horizontal", pos: [
+            type: "horizontal",
+            pos: [
                 snapOffsetLeft,
                 throttle(nextPosInfo.pos - clientTop + snapOffsetTop, 0.1),
-            ], size: snapWidth,
+            ],
+            size: snapWidth,
             className: nextPosInfo.className,
         });
     });
@@ -409,10 +429,12 @@ export function getDefaultGuidelines(
         const nextPosInfo = isObject(posInfo) ? posInfo : { pos: posInfo };
 
         guidelines.push({
-            type: "vertical", pos: [
+            type: "vertical",
+            pos: [
                 throttle(nextPosInfo.pos - clientLeft + snapOffsetLeft, 0.1),
                 snapOffsetTop,
-            ], size: snapHeight,
+            ],
+            size: snapHeight,
             className: nextPosInfo.className,
         });
     });

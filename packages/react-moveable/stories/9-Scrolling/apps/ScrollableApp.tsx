@@ -29,7 +29,7 @@ export default function App() {
                 <div className="target" ref={targetRef}>Target</div>
                 <Moveable
                     scrollable={true}
-                    scrollContainer={() => viewerRef.current!.getElement()}
+                    scrollContainer={() => viewerRef.current!.getContainer()}
                     scrollThreshold={20}
                     getScrollPosition={() => {
                         return [

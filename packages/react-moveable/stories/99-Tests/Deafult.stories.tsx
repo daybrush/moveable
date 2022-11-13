@@ -85,3 +85,10 @@ group.add("Test Changing Snap Container", {
     app: require("./ReactChangingSnapContainerApp").default,
     path: require.resolve("./ReactChangingSnapContainerApp"),
 });
+
+
+
+group.add("Test Snap with position: fixed", {
+    app: require("./ReactFixedSnapApp").default,
+    path: require.resolve("./ReactFixedSnapApp"),
+});

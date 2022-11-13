@@ -15,7 +15,7 @@ export function getPersistState(rect: PersistRectData): Partial<MoveableManagerS
     }
     const minPos = getMinMaxs([pos1!, pos2!, pos3!, pos4!]);
     const posDelta = [minPos.minX, minPos.minY];
-    const origin = minus(rect.origin, posDelta);
+    const origin = minus(rect.origin!, posDelta);
 
     pos1 = minus(pos1, posDelta);
     pos2 = minus(pos2, posDelta);

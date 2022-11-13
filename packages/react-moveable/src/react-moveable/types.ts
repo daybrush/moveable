@@ -2738,7 +2738,7 @@ export interface OnCustomDrag extends GestoTypes.Position {
  * @memberof Moveable
  */
 export type PersistRectData = Omit<Partial<RectInfo>, "children"> & {
-    children?: Partial<RectInfo>;
+    children?: Array<Partial<RectInfo>>;
 };
 
 
