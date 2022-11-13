@@ -2500,10 +2500,10 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@croffle/bakery@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.6.tgz#e407723b17ee31d89a67a7d84c6cf73adb0c2282"
-  integrity sha512-xZAtyFRE6CLkhNs4ERPdVhWCY1nMlrO1MmFhL7vOUk//y6k54d0mgZJHW0iEyjbIr12sTKJGpdBQwUkWvwc1sA==
+"@croffle/bakery@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.8.tgz#352a8e1344a6947da2719f3669e684e406ae41f8"
+  integrity sha512-AlIfBZSY459898du0O/jx4wwgAxIiJ5GjwTv4iwhml2r8qtYYplOBAGE52nQp3rLN5JUewRRawKfnMxE3Rlz2Q==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     commander "^9.4.0"
@@ -4620,10 +4620,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@scena/dragscroll@^1.2.0", "@scena/dragscroll@^1.2.1":
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/@scena/dragscroll/-/dragscroll-1.2.0.tgz"
-  integrity sha512-npjR1nh5on74e6dh3mBviVAS3Kx9ZkUFkJdVVPfcrEGO1O9c3IB154d//cLXwiHwV7xMzsADmEMQZrrWwVlb8Q==
+"@scena/dragscroll@^1.2.1", "@scena/dragscroll@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/@scena/dragscroll/-/dragscroll-1.3.0.tgz#3a9f30a4153eeb2d25df22004ddf602db6d55583"
+  integrity sha512-UlK/g9IX8fJ8+YczqfUT7WDjx/5KKQMU2/uZLYLXV8FWuzWS2WWpt2u1G6KCIF65380oCnCYOs7nOrYpedsOaQ==
   dependencies:
     "@daybrush/utils" "1.6.0"
     "@scena/event-emitter" "^1.0.2"
@@ -10306,10 +10306,10 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
-croffle@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.4.tgz#bd20620c222210ab6eb0e2288372d893e51ba3cc"
-  integrity sha512-d1Fqs5/NBodW8YBRd0XEehEMZAZD3I5sJv391/IA7wk+phPDJStuYD3qEWacbU1AFg4OTuTv8d5AEk3gf/vyRw==
+croffle@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.6.tgz#48ddc86b87337c1bdcbb6a3d7e7705f6d7ffacfc"
+  integrity sha512-Rvqo74Gt9ZiCddUXK3u8YSxhPUFKUluN/JcTiVJvvp6lJYVh2KzxKfRnTYVUgAUSyV423UcWqDgYpd0fVHtzCA==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     source-map "^0.7.4"
@@ -13360,10 +13360,10 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.1, gesto@^1.13.3, gesto@^1.3.0, gesto@^1.5.1:
-  version "1.13.3"
-  resolved "https://registry.npmjs.org/gesto/-/gesto-1.13.3.tgz#2d66c8de7dae80ddc7b580cb6e360d15e11263fc"
-  integrity sha512-OIOS19KzUWAqYrdV/g/j0WRbuCDorA3/E8+kBUGSV+AW9sgzrKtB3HuGTK8mfZQRJw21QRxrM5awZiR6qTd49g==
+gesto@^1.13.1, gesto@^1.13.4, gesto@^1.3.0, gesto@^1.5.1:
+  version "1.13.4"
+  resolved "https://registry.npmjs.org/gesto/-/gesto-1.13.4.tgz#5f53608dfac589e21acd2b905f51fb259f15a77f"
+  integrity sha512-TkXGgv8nC/IIjOO2dMrgCNovSnuRfPTJybmtwponzGihCje8QgLEdMf+h/RERu6O+wq8FZTSJ6ihIO9ytt4/Qg==
   dependencies:
     "@daybrush/utils" "^1.7.1"
     "@scena/event-emitter" "^1.0.2"
