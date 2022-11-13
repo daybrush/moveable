@@ -121,7 +121,7 @@ export class InitialMoveable<T = {}>
     public selectorMap: IObject<Array<HTMLElement | SVGElement>> = {};
     private _differ: ChildrenDiffer<HTMLElement | SVGElement> = new ChildrenDiffer();
     private _elementTargets: Array<HTMLElement | SVGElement> = [];
-    private _onChangetarget: (() => void) | null = null;
+    private _onChangeTargets: (() => void) | null = null;
     public render() {
         const moveableContructor = (this.constructor as typeof InitialMoveable);
 
@@ -206,17 +206,11 @@ export class InitialMoveable<T = {}>
         }
     }
     public componentDidMount() {
+        this._checkChangeTargets();
         this._updateRefs();
     }
     public componentDidUpdate() {
-        const { added, removed } = this._differ.update(this._elementTargets);
-        const isTargetChanged = added.length || removed.length;
-
-        if (isTargetChanged && this._onChangetarget) {
-            this._onChangetarget();
-        }
-
-        this._updateRefs();
+        this._checkChangeTargets();
     }
     public componentWillUnmount() {
         this.selectorMap = {};
@@ -270,8 +264,8 @@ export class InitialMoveable<T = {}>
     public waitToChangeTarget(): Promise<void> {
         // let resolvePromise: (e: OnChangeTarget) => void;
 
-        // this._onChangetarget = () => {
-        //     this._onChangetarget = null;
+        // this._onChangeTargets = () => {
+        //     this._onChangeTargets = null;
         //     resolvePromise({
         //         moveable: this.getManager(),
         //         targets: this._elementTargets,
@@ -283,14 +277,17 @@ export class InitialMoveable<T = {}>
         // });
         let resolvePromise: () => void;
 
-        this._onChangetarget = () => {
-            this._onChangetarget = null;
+        this._onChangeTargets = () => {
+            this._onChangeTargets = null;
             resolvePromise();
         };
 
         return new Promise(resolve => {
             resolvePromise = resolve;
         });
+    }
+    public waitToChangeTargets(): Promise<void> {
+        return this.waitToChangeTarget();
     }
     public getManager(): MoveableManagerInterface<any, any> {
         return this.moveable;
@@ -326,6 +323,20 @@ export class InitialMoveable<T = {}>
             this.forceUpdate();
         }
         return nextRefTargets;
+    }
+    private _checkChangeTargets() {
+        const { added, removed } = this._differ.update(this._elementTargets);
+        const isTargetChanged = added.length || removed.length;
+
+        if (isTargetChanged) {
+            this.props.onChangeTargets?.({
+                moveable: this.moveable,
+                targets: this._elementTargets,
+            });
+            this._onChangeTargets?.();
+        }
+        this._updateRefs();
+
     }
 }
 export interface InitialMoveable<T = {}>

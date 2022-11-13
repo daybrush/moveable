@@ -28,5 +28,7 @@ export default {
         persistData: Object,
         firstRenderState: Object,
     } as const,
-    events: {} as const,
+    events: {
+        onChangeTargets: "changeTargets",
+    } as const,
 };

@@ -8,7 +8,7 @@ export default function App() {
                 * You can persist by `moveable.getRect()` method.
             </p>
             <div className="target target1" style={{
-                transform: "translate(57.4837px, 16.3011px) rotate(30.5213deg)",
+                transform: "translate(57.4837px, 16.3011px) rotate(10.5213deg)",
             }}>No Target1</div>
             <div className="target target2" style={{
                 transform: "translate(22.3858px, 104.945px) rotate(30.5213deg)",
@@ -17,114 +17,154 @@ export default function App() {
                 transform: "translate(-16.8514px, 28.7599px) rotate(30.5213deg)",
             }}>No Target3</div>
             <Moveable
-                // target={".target"}
+                target={".target"}
                 draggable={true}
                 resizable={true}
                 rotatable={true}
                 origin={true}
                 persistData={{
-                    left: 92.99700062437337,
-                    top: 117.83604282479718,
-                    pos1: [
-                        209.80457062437335,
-                        117.83604282479718,
+                    "width": 391.66543415599995,
+                    "height": 383.962796948,
+                    "left": 62.228131762906024,
+                    "top": 90.31465753146728,
+                    "pos1": [
+                        219.08575903890602,
+                        90.31465753146728,
                     ],
-                    pos2: [
-                        451.00777062437334,
-                        260.03656282479716,
+                    "pos2": [
+                        453.89356591890595,
+                        287.34203529146725,
                     ],
-                    pos3: [
-                        92.99700062437337,
-                        315.96724282479715,
+                    "pos3": [
+                        62.228131762906024,
+                        277.25007671946724,
                     ],
-                    pos4: [
-                        334.20020062437334,
-                        458.1677628247972,
+                    "pos4": [
+                        297.035938642906,
+                        474.2774544794673,
                     ],
-                    offsetWidth: 280,
-                    offsetHeight: 230,
-                    origin: [
-                        272.00238562437335,
-                        288.0019028247972,
+                    "offsetWidth": 306.52,
+                    "offsetHeight": 244.027,
+                    "beforeOrigin": [
+                        258.060280934906,
+                        282.2936213634673,
                     ],
-                    children: [
+                    "origin": [
+                        258.060280934906,
+                        282.2936213634673,
+                    ],
+                    "transformOrigin": [
+                        153.258,
+                        122.012,
+                    ],
+                    "rotation": 40.00003345093183,
+                    "children": [
                         {
-                            left: 159.01875,
-                            top: 117.83615,
-                            pos1: [
-                                209.80455,
-                                117.83615,
+                            "width": 116.5788,
+                            "height": 116.5788,
+                            "left": 169.1943,
+                            "top": 128.01170000000002,
+                            "pos1": [
+                                187.4544,
+                                128.01170000000002,
                             ],
-                            pos2: [
-                                295.94865,
-                                168.62195,
+                            "pos2": [
+                                285.7731,
+                                146.2718,
                             ],
-                            pos3: [
-                                159.01875,
-                                203.98025,
+                            "pos3": [
+                                169.1943,
+                                226.33040000000003,
                             ],
-                            pos4: [
-                                245.16285,
-                                254.76605,
+                            "pos4": [
+                                267.51300000000003,
+                                244.59050000000002,
                             ],
-                            offsetWidth: 100,
-                            offsetHeight: 100,
-                            origin: [
+                            "offsetWidth": 100,
+                            "offsetHeight": 100,
+                            "beforeOrigin": [
                                 227.4837,
                                 186.30110000000002,
                             ],
+                            "origin": [
+                                227.4837,
+                                186.30110000000002,
+                            ],
+                            "transformOrigin": [
+                                50,
+                                50,
+                            ],
+                            "rotation": 10.52129854976897,
                         },
                         {
-                            left: 303.92085000000003,
-                            top: 226.48005,
-                            pos1: [
-                                354.70665,
+                            "width": 136.92990000000003,
+                            "height": 136.92989999999998,
+                            "left": 303.92085,
+                            "top": 226.48005,
+                            "pos1": [
+                                354.70675,
                                 226.48005,
                             ],
-                            pos2: [
+                            "pos2": [
                                 440.85075,
-                                277.26585,
+                                277.26595,
                             ],
-                            pos3: [
-                                303.92085000000003,
-                                312.62415,
+                            "pos3": [
+                                303.92085,
+                                312.62405,
                             ],
-                            pos4: [
-                                390.06495,
+                            "pos4": [
+                                390.06485,
                                 363.40995,
                             ],
-                            offsetWidth: 100,
-                            offsetHeight: 100,
-                            origin: [
+                            "offsetWidth": 100,
+                            "offsetHeight": 100,
+                            "beforeOrigin": [
                                 372.3858,
                                 294.945,
                             ],
+                            "origin": [
+                                372.3858,
+                                294.945,
+                            ],
+                            "transformOrigin": [
+                                50,
+                                50,
+                            ],
+                            "rotation": 30.521329871109174,
                         },
                         {
-                            left: 144.68365,
-                            top: 260.29495,
-                            pos1: [
-                                195.46945,
+                            "width": 136.92990000000003,
+                            "height": 136.92989999999998,
+                            "left": 144.68365,
+                            "top": 260.29495,
+                            "pos1": [
+                                195.46955,
                                 260.29495,
                             ],
-                            pos2: [
-                                281.61355,
-                                311.08074999999997,
+                            "pos2": [
+                                281.61355000000003,
+                                311.08084999999994,
                             ],
-                            pos3: [
+                            "pos3": [
                                 144.68365,
-                                346.43904999999995,
+                                346.43895,
                             ],
-                            pos4: [
-                                230.82774999999998,
+                            "pos4": [
+                                230.82765,
                                 397.22484999999995,
                             ],
-                            offsetWidth: 100,
-                            offsetHeight: 100,
-                            origin: [
+                            "offsetWidth": 100,
+                            "offsetHeight": 100,
+                            "origin": [
                                 213.1486,
                                 328.75989999999996,
                             ],
+                            "transformOrigin": [
+                                50,
+                                50,
+                            ],
+                            "rotation": 30.521329871109167,
                         },
                     ],
                 }}
@@ -135,6 +175,9 @@ export default function App() {
                 }}
                 onRenderGroupEnd={e => {
                     console.log(JSON.stringify(e.moveable.getRect(), undefined, 4));
+                }}
+                onChangeTargets={e => {
+                    console.log("??", JSON.stringify(e.moveable.getRect(), undefined, 4));
                 }}
             />
         </div>

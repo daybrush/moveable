@@ -28,6 +28,10 @@ export default function App() {
                     pos2: [320.7107, 300],
                     pos3: [179.2893, 300],
                     pos4: [250, 370.7107],
+                    transformOrigin: [
+                        50,
+                        50,
+                    ],
                 }}
                 onRender={e => {
                     e.target.style.cssText += e.cssText;

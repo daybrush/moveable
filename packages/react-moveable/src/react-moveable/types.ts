@@ -371,6 +371,7 @@ export interface MoveableProps extends
  */
 export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions, "target"> {
     target?: MoveableRefTargetType;
+    onChangeTargets?: (e: OnChangeTargets) => void;
 }
 /**
  * @memberof Moveable
@@ -658,7 +659,7 @@ export interface AbleRequester {
  * @typedef
  * @memberof Moveable
  */
-export interface OnChangeTarget {
+export interface OnChangeTargets {
     /**
      * The Moveable instance
      */
@@ -668,6 +669,8 @@ export interface OnChangeTarget {
      */
     targets: Array<HTMLElement | SVGElement>;
 }
+
+
 
 /**
  * @typedef
@@ -2734,40 +2737,9 @@ export interface OnCustomDrag extends GestoTypes.Position {
  * @typedef
  * @memberof Moveable
  */
-export interface PersistRectData {
-    /**
-     * left position of the target relative to the container
-     */
-    left: number;
-    /**
-     * top position of the target relative to the container
-     */
-    top: number;
-    /**
-     * The coordinates of the vertex 1
-     */
-    pos1: number[];
-    /**
-     * The coordinates of the vertex 2
-     */
-    pos2: number[];
-    /**
-     * The coordinates of the vertex 3
-     */
-    pos3: number[];
-    /**
-     * The coordinates of the vertex 4
-     */
-    pos4: number[];
-    /**
-     * The absolute transform origin
-     */
-    origin: number[];
-    /**
-     * In the case of a group, information on children is also required.
-     */
-    children?: PersistRectData[];
-}
+export type PersistRectData = Omit<Partial<RectInfo>, "children"> & {
+    children?: Partial<RectInfo>;
+};
 
 
 /**

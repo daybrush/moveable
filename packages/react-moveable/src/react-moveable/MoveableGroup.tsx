@@ -220,7 +220,11 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public moveables: MoveableManager[] = [];
     public transformOrigin = "50% 50%";
     public renderGroupRects: GroupRect[] = [];
+    private _hasFirstTargets = false;
 
+    public componentDidMount() {
+        super.componentDidMount();
+    }
     public checkUpdate() {
         this._isPropTargetChanged = false;
         this.updateAbles();
@@ -229,14 +233,15 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         return this.props.targets!;
     }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState = true) {
-        if (!this.controlBox) {
+        const state = this.state;
+
+        if (!this.controlBox || state.isPersisted) {
             return;
         }
         this.moveables.forEach(moveable => {
             moveable.updateRect(type, false, false);
         });
 
-        const state = this.state;
         const props = this.props;
         const moveables = this.moveables;
         const target = state.target! || props.target!;
@@ -250,6 +255,15 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const renderGroupRects: GroupRect[] = [];
         const isReset = !isTarget || (type !== "" && props.updateGroup);
+        let defaultGroupRotate = props.defaultGroupRotate || 0;
+
+        if (!this._hasFirstTargets) {
+            const persistedRoatation = this.props.persistData?.rotation;
+
+            if (persistedRoatation != null) {
+                defaultGroupRotate = persistedRoatation;
+            }
+        }
 
         function getMoveableGroupRect(group: SelfGroup, parentRotation: number, isRoot?: boolean): GroupRect {
             const posesRotations = group.map(moveable => {
@@ -275,7 +289,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             });
 
             if (isReset) {
-                groupRotation = isSameRotation ? firstRotation : (props.defaultGroupRotate || 0);
+                groupRotation = isSameRotation ? firstRotation : defaultGroupRotate;
             } else {
                 groupRotation = !isRoot && isSameRotation ? firstRotation : parentRotation;
             }
@@ -319,6 +333,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         this.controlBox.getElement().style.transform
             = `translate3d(${minX}px, ${minY}px, ${this.props.translateZ || 0})`;
+
         target.style.cssText += `left:0px;top:0px;`
             + `transform-origin:${transformOrigin};`
             + `width:${width}px;height:${height}px;`
@@ -422,11 +437,11 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             state.container = props.container;
         }
         const { added, changed, removed } = this.differ.update(props.targets!);
-
         const isTargetChanged = added.length || removed.length;
 
         if (isContainerChanged || isTargetChanged || changed.length) {
             this.updateRect();
+            this._hasFirstTargets = true;
         }
         this._isPropTargetChanged = !!isTargetChanged;
     }

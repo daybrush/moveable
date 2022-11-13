@@ -1152,8 +1152,11 @@ export function convertDragDist(state: MoveableManagerState, e: any) {
 }
 
 export function calculatePadding(
-    matrix: number[], pos: number[],
-    transformOrigin: number[], origin: number[], n: number,
+    matrix: number[],
+    pos: number[],
+    transformOrigin: number[],
+    origin: number[],
+    n: number,
 ) {
     return minus(calculatePosition(matrix, plus(transformOrigin, pos), n), origin);
 }

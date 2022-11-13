@@ -25,13 +25,13 @@ import {
     GroupableProps,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
-import { minus, plus } from "@scena/matrix";
+import { plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
     getKeys, IObject, removeClass, requestAnimationFrame,
 } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
-import { fitPoints, getAreaSize, getMinMaxs, getOverlapSize, isInside } from "overlap-area";
+import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
 import styled from "react-css-styled";
 import EventEmitter from "@scena/event-emitter";
@@ -192,7 +192,7 @@ export default class MoveableManager<T = {}>
         this.updateCheckInput();
         this._updateObserver(this.props);
 
-        if (!container && !parentMoveable && !wrapperMoveable) {
+        if (!container && !parentMoveable && !wrapperMoveable && !this.state.isPersisted) {
             this.updateRect("", false, false);
             this.forceUpdate();
         }
@@ -656,13 +656,15 @@ export default class MoveableManager<T = {}>
         const state = this.getState();
         const props = this.props;
         const {
-            originalBeforeOrigin, transformOrigin,
+            originalBeforeOrigin,
+            transformOrigin,
             allMatrix, is3d,
             pos1, pos2, pos3, pos4,
             left: stateLeft,
             top: stateTop,
             // offsetWidth,
             // offsetHeight,
+            isPersisted,
         } = state;
         const {
             left = 0,
@@ -685,9 +687,15 @@ export default class MoveableManager<T = {}>
         //     right -= Math.max(0, offsetWidth - clipPathInfo.right);
         // }
 
+        let absoluteOrigin: number[] = [];
 
-        const absoluteOrigin = this.controlBox && (props as any).groupable
-            ? originalBeforeOrigin : plus(originalBeforeOrigin, [stateLeft, stateTop]);
+        if (isPersisted) {
+            absoluteOrigin = transformOrigin;
+        } else if (this.controlBox && props.groupable) {
+            absoluteOrigin = originalBeforeOrigin;
+        } else {
+            absoluteOrigin = plus(originalBeforeOrigin, [stateLeft, stateTop]);
+        }
 
         state.renderPoses = [
             plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
@@ -770,36 +778,21 @@ export default class MoveableManager<T = {}>
             this._hasFirstTarget = true;
         }
         const hasControlBox = this.controlBox;
-        const persistData = props.persistData as any;
-        const firstRenderState = props.firstRenderState as any;
+        const persistData = props.persistData;
+        const firstRenderState = props.firstRenderState;
 
+        if (firstRenderState && !hasControlBox) {
+            return firstRenderState;
+        }
         if (!this._hasFirstTarget && persistData) {
             const persistState = getPersistState(persistData);
 
-            if (props.groupable) {
-                const {
-                    pos1,
-                    pos2,
-                    pos3,
-                    pos4,
-                } = persistState;
-                const minPos = getMinMaxs([pos1!, pos2!, pos3!, pos4!]);
-                const delta = [minPos.minX, minPos.minY];
-                const pos = [persistState.left!, persistState.top!];
-
-                persistState.pos1 = minus(pos1!, delta);
-                persistState.pos2 = minus(pos2!, delta);
-                persistState.pos3 = minus(pos3!, delta);
-                persistState.pos4 = minus(pos4!, delta);
-                persistState.origin = minus(plus(pos, persistState.origin!), delta);
-                persistState.beforeOrigin = minus(plus(pos, persistState.beforeOrigin!), delta);
-
-                persistState.posDelta = delta;
+            if (persistState) {
+                this.updateState(persistState, false);
+                return this.state;
             }
-            this.updateState(persistState, false);
-        } else if (firstRenderState && !hasControlBox) {
-            return firstRenderState;
         }
+        (this.state as any).isPersisted = false;
         return this.state;
     }
     public updateSelectors() { }
