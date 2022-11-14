@@ -2500,10 +2500,10 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@croffle/bakery@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.8.tgz#352a8e1344a6947da2719f3669e684e406ae41f8"
-  integrity sha512-AlIfBZSY459898du0O/jx4wwgAxIiJ5GjwTv4iwhml2r8qtYYplOBAGE52nQp3rLN5JUewRRawKfnMxE3Rlz2Q==
+"@croffle/bakery@^0.0.9":
+  version "0.0.9"
+  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.9.tgz#ba89d918f129e2d05f9ae3d77a7f017bbfe44cac"
+  integrity sha512-dDvNxfIudzi9C/gLc8kmfrVitDwCcbrqtuMoP4auVpxCpVeKd9bJP8X8EvJ5Um4TZy41/DAqLKTUewaHpP/jWg==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     commander "^9.4.0"
@@ -6226,7 +6226,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16", "@types/react@^16.9.17", "@types/react@~16.9.17":
+"@types/react@*", "@types/react@^16", "@types/react@^16.9.17":
   version "16.14.26"
   resolved "https://registry.npmjs.org/@types/react/-/react-16.14.26.tgz"
   integrity sha512-c/5CYyciOO4XdFcNhZW1O2woVx86k4T+DO2RorHZL7EhitkNQgSD/SgpdZJAUJa/qjVgOmTM44gHkAdZSXeQuQ==
@@ -10306,10 +10306,10 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
-croffle@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.6.tgz#48ddc86b87337c1bdcbb6a3d7e7705f6d7ffacfc"
-  integrity sha512-Rvqo74Gt9ZiCddUXK3u8YSxhPUFKUluN/JcTiVJvvp6lJYVh2KzxKfRnTYVUgAUSyV423UcWqDgYpd0fVHtzCA==
+croffle@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.7.tgz#cc48485d420ce756a3bbc0d840c48c7efa6e9a40"
+  integrity sha512-cBtSx/7DlrYVaBDUAvIaElzkkSVLZGYDD7rGxnbxPZj5bBPyPPafgzyyK6p1IbjgqsX+aW4EcE3GHnGlockXNg==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     source-map "^0.7.4"
