@@ -69,8 +69,12 @@ export function getTotalGuidelines(
 
 
     if (hasFixed) {
-        snapOffset.left += containerClientRect.left;
-        snapOffset.top += containerClientRect.top;
+        const { left, top } = containerClientRect;
+
+        snapOffset.left += left;
+        snapOffset.top += top;
+        snapOffset.right += left;
+        snapOffset.bottom += top;
     }
 
     totalGuidelines.push(...getDefaultGuidelines(

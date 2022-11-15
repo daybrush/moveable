@@ -3,7 +3,9 @@ import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
     return (
-        <div className="root">
+        <div className="root" style={{
+            paddingBottom: "400px",
+        }}>
             <div className="container" style={{
                 height: "900px",
             }}>
@@ -36,7 +38,7 @@ export default function App(props: Record<string, any>) {
                     scalable={true}
                     rotatable={true}
                     snappable={true}
-                    // verticalGuidelines={[0, 100, 200]}
+                    verticalGuidelines={[0, 100, 200]}
                     horizontalGuidelines={[0, 100, 200]}
                     elementGuidelines={[{
                         element: ".element1",
