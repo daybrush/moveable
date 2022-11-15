@@ -269,40 +269,24 @@ Please give a ⭐️ if this project helped you!
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
 
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/daybrush/moveable/blob/master/CONTRIBUTING.md)].
+
+<a href="https://github.com/daybrush/moveable/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=daybrush/moveable" />
+</a>
+
 ## 🐞 Bug Report
 
 If you find a bug, please report to us opening a new [Issue](https://github.com/daybrush/moveable/issues) on GitHub.
 
-
-## Contributors
-
-### Code Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/daybrush/moveable/graphs/contributors"><img src="https://opencollective.com/moveable/contributors.svg?width=890&button=false" /></a>
-
-### Financial Contributors
-
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/moveable/contribute)]
-
-#### Individuals
-
-<a href="https://opencollective.com/moveable"><img src="https://opencollective.com/moveable/individuals.svg?width=890"></a>
-
-#### Organizations
-
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/moveable/contribute)]
-
-<a href="https://opencollective.com/moveable/organization/0/website"><img src="https://opencollective.com/moveable/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/1/website"><img src="https://opencollective.com/moveable/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/2/website"><img src="https://opencollective.com/moveable/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/3/website"><img src="https://opencollective.com/moveable/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/4/website"><img src="https://opencollective.com/moveable/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/5/website"><img src="https://opencollective.com/moveable/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/6/website"><img src="https://opencollective.com/moveable/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/7/website"><img src="https://opencollective.com/moveable/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/8/website"><img src="https://opencollective.com/moveable/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/9/website"><img src="https://opencollective.com/moveable/organization/9/avatar.svg"></a>
+## Sponsors
+<p align="center">
+	<a href="https://daybrush.com/sponsors/sponsors.svg">
+		<img src="https://daybrush.com/sponsors/sponsors.svg"/>
+	</a>
+</p>
 
 ## 📝 License
 

@@ -161,9 +161,27 @@ Please give a ⭐️ if this project helped you!
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
 
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/daybrush/moveable/blob/master/CONTRIBUTING.md)].
+
+<a href="https://github.com/daybrush/moveable/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=daybrush/moveable" />
+</a>
+
 ## 🐞 Bug Report
 
 If you find a bug, please report to us opening a new [Issue](https://github.com/daybrush/moveable/issues) on GitHub.
+
+## Sponsors
+<p align="center">
+	<a href="https://daybrush.com/sponsors/sponsors.svg">
+		<img src="https://daybrush.com/sponsors/sponsors.svg"/>
+	</a>
+</p>
+
+
 
 
 ## 📝 License

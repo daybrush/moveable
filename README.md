@@ -271,23 +271,33 @@ You will also see any lint errors in the console.
 ## ⭐️ Show Your Support
 Please give a ⭐️ if this project helped you!
 
+
 ## 👏 Contributing
 
 If you have any questions or requests or want to contribute to `moveable` or other packages, please write the [issue](https://github.com/daybrush/moveable/issues) or give me a Pull Request freely.
+
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+
+<a href="https://github.com/daybrush/moveable/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=daybrush/moveable" />
+</a>
 
 ## 🐞 Bug Report
 
 If you find a bug, please report to us opening a new [Issue](https://github.com/daybrush/moveable/issues) on GitHub.
 
+## Sponsors
+<p align="center">
+	<a href="https://daybrush.com/sponsors/sponsors.svg">
+		<img src="https://daybrush.com/sponsors/sponsors.svg"/>
+	</a>
+</p>
 
-## Contributors
 
-### Code Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/daybrush/moveable/graphs/contributors"><img src="https://opencollective.com/moveable/contributors.svg?width=890&button=false" /></a>
-
-### Financial Contributors
+### Open Collective Financial Contributors
 
 Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/moveable/contribute)]
 
