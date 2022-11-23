@@ -61,6 +61,8 @@ export default class CustomGesto {
     public move(delta: number[], inputEvent: any): OnCustomDrag {
         let clientX!: number;
         let clientY!: number;
+        let isFirstDrag = false;
+
         if (!this.isFlag) {
             this.prevX = delta[0];
             this.prevY = delta[1];
@@ -72,11 +74,17 @@ export default class CustomGesto {
 
             this.isFlag = true;
         } else {
+            const isPrevDrag = this.isDrag;
+
             clientX = this.prevX + delta[0];
             clientY = this.prevY + delta[1];
 
             if (delta[0] || delta[1]) {
                 this.isDrag = true;
+            }
+
+            if (!isPrevDrag && this.isDrag) {
+                isFirstDrag = true;
             }
         }
 
@@ -88,6 +96,7 @@ export default class CustomGesto {
             clientX,
             clientY,
             inputEvent,
+            isFirstDrag,
             isDrag: this.isDrag,
             distX: clientX - this.startX,
             distY: clientY - this.startY,

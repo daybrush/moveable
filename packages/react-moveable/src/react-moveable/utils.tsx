@@ -976,6 +976,7 @@ export function fillParams<T extends IObject<any>>(
         currentTarget: moveable,
         moveable,
         datas: datas.datas,
+        isFirstDrag: !!e.isFirstDrag,
         stopDrag() {
             e.stop?.();
         },
@@ -1012,6 +1013,7 @@ export function fillEndParams<T extends IObject<any>>(
         lastEvent: datas.lastEvent,
         isDouble: e.isDouble,
         datas: datas.datas,
+        isFirstDrag: !!e.isFirstDrag,
     } as any;
 }
 export function catchEvent<EventName extends keyof Props, Props extends IObject<any> = MoveableProps>(

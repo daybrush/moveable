@@ -550,6 +550,10 @@ export interface OnEvent {
      */
     clientY: number;
     /**
+     * Whether this is the first drag in the drag event
+     */
+    isFirstDrag: number;
+    /**
      * Objects that can send information to the following events.
      */
     datas: IObject<any>;
@@ -2727,6 +2731,7 @@ export interface OnCustomDrag extends GestoTypes.Position {
     type: string;
     inputEvent: any;
     isDrag: boolean;
+    isFirstDrag: boolean;
     datas: IObject<any>;
     originalDatas: IObject<any>;
     parentEvent: boolean;
