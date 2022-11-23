@@ -16,7 +16,7 @@ export default function App() {
         }}>Target3</div>
         <Moveable
             ref={moveableRef}
-            target={[[".target1, .target2"]]}
+            target={[[".target1, .target2"], ".target3"]}
             draggable={true}
             rotatable={true}
             scalable={true}
