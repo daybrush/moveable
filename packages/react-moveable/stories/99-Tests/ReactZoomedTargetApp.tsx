@@ -23,6 +23,7 @@ export default function App(props: Record<string, any>) {
                         target={".target"}
                         draggable={true}
                         rotatable={true}
+                        resizable={true}
                         rootContainer={document.body}
                         onRender={e => {
                             e.target.style.cssText += e.cssText;
