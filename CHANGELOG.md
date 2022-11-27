@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.0](https://github.com/daybrush/moveable/compare/0.39.0...0.40.0) (2022-11-27)
+### :sparkles: Packages
+* `@moveable/helper` 0.0.4
+* `lit-moveable` 0.17.0
+* `moveable` 0.40.0
+* `preact-moveable` 0.42.0
+* `react-compat-moveable` 0.28.0
+* `react-moveable` 0.43.0
+* `svelte-moveable` 0.32.0
+* `vue-moveable` 2.0.0-beta.50
+* `vue3-moveable` 0.15.0
+* `ngx-moveable` 0.37.0
+
+
+### :rocket: New Features
+
+* `react-moveable`, `react-compat-moveable`
+    * add isFirstDrag property on drag event #796 ([7ade6a2](https://github.com/daybrush/moveable/commit/7ade6a23e9003d9ed4119a035ccad01b01c13ed7))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix snap size for position fixed #791 ([b02c82b](https://github.com/daybrush/moveable/commit/b02c82ba5012fdfdf534a6dad1dcc1aea76e420e))
+    * support css zoom #800 ([fa3de6b](https://github.com/daybrush/moveable/commit/fa3de6bd52de2509bf76b1d4a001b31f4a6b6ed4))
+
+
+### :memo: Documentation
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * fix README ([3a153c8](https://github.com/daybrush/moveable/commit/3a153c849b7279ec5fd603167117c88f25a7149c))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([3d5ac5a](https://github.com/daybrush/moveable/commit/3d5ac5ad855d98a2f555174cc46ec09c148d6a20))
+    * publish packages ([92eb72d](https://github.com/daybrush/moveable/commit/92eb72df6110eb40a66b4726740240acb43e9745))
+* `react-moveable`
+    * update croffle ([5714b2e](https://github.com/daybrush/moveable/commit/5714b2ecc219ec06ebc008c3ab1c9cad219a95e6))
+
+
+
 ## [0.39.0](https://github.com/daybrush/moveable/compare/0.38.1...0.39.0) (2022-11-13)
 ### :sparkles: Packages
 * `@moveable/helper` 0.0.4

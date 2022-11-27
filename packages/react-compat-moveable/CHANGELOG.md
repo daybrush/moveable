@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.28.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.27.0...react-compat-moveable@0.28.0) (2022-11-27)
+
+
+### :rocket: New Features
+
+* add isFirstDrag property on drag event #796 ([7ade6a2](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/7ade6a23e9003d9ed4119a035ccad01b01c13ed7))
+
+
+### :mega: Other
+
+* publish packages ([3d5ac5a](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/3d5ac5ad855d98a2f555174cc46ec09c148d6a20))
+* publish packages ([92eb72d](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/92eb72df6110eb40a66b4726740240acb43e9745))
+
+
+
 ## [0.27.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.26.1...react-compat-moveable@0.27.0) (2022-11-13)
 
 

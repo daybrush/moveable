@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.0](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/compare/vue3-moveable@0.14.0...vue3-moveable@0.15.0) (2022-11-27)
+
+
+### :memo: Documentation
+
+* fix README ([3a153c8](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/commit/3a153c849b7279ec5fd603167117c88f25a7149c))
+
+
+### :mega: Other
+
+* publish packages ([3d5ac5a](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/commit/3d5ac5ad855d98a2f555174cc46ec09c148d6a20))
+* publish packages ([92eb72d](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/commit/92eb72df6110eb40a66b4726740240acb43e9745))
+
+
+
 ## [0.14.0](https://github.com/daybrush/moveable/blob/master/packages/vue3-moveable/compare/vue3-moveable@0.13.1...vue3-moveable@0.14.0) (2022-11-13)
 
 

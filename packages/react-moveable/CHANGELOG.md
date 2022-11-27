@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.42.0...react-moveable@0.43.0) (2022-11-27)
+
+
+### :rocket: New Features
+
+* add isFirstDrag property on drag event #796 ([7ade6a2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7ade6a23e9003d9ed4119a035ccad01b01c13ed7))
+
+
+### :bug: Bug Fix
+
+* fix snap size for position fixed #791 ([b02c82b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b02c82ba5012fdfdf534a6dad1dcc1aea76e420e))
+* support css zoom #800 ([fa3de6b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/fa3de6bd52de2509bf76b1d4a001b31f4a6b6ed4))
+
+
+### :memo: Documentation
+
+* fix README ([3a153c8](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3a153c849b7279ec5fd603167117c88f25a7149c))
+
+
+### :mega: Other
+
+* publish packages ([3d5ac5a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3d5ac5ad855d98a2f555174cc46ec09c148d6a20))
+* publish packages ([92eb72d](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/92eb72df6110eb40a66b4726740240acb43e9745))
+* update croffle ([5714b2e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5714b2ecc219ec06ebc008c3ab1c9cad219a95e6))
+
+
+
 ## [0.42.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.41.1...react-moveable@0.42.0) (2022-11-13)
 
 
