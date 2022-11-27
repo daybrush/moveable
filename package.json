@@ -44,6 +44,7 @@
     "scripts": {
         "bootstrap": "lerna bootstrap",
         "storybook": "npm run storybook --prefix ./packages/react-moveable",
+        "bake": "npm run bake --prefix ./packages/react-moveable",
         "build": "npm run build --prefix ./packages/react-moveable",
         "packages:update": "lerna-helper version && npm run update-type-consts",
         "update-type-consts": "node ./config/update-type-consts.js",
