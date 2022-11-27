@@ -1,6 +1,6 @@
 import {
     convertCSStoMatrix, convertDimension,
-    createIdentityMatrix, createOriginMatrix,
+    createIdentityMatrix, createOriginMatrix, createScaleMatrix,
 } from "@scena/matrix";
 import { IS_WEBKIT, IS_SAFARI_ABOVE15, IS_FIREFOX } from "../consts";
 import { MatrixInfo } from "../types";
@@ -41,6 +41,7 @@ export function getMatrixStackInfo(
 
     let hasFixed = false;
     let offsetContainer = getOffsetInfo(container, container, true).offsetParent;
+    let zoom = 1;
 
     while (el && !isEnd) {
         isEnd = requestEnd;
@@ -108,18 +109,26 @@ export function getMatrixStackInfo(
         let offsetParent: HTMLElement;
         let isOffsetEnd = false;
         let isStatic = false;
+        let offsetZoom = 1;
+
+        const targetZoom = parseFloat((style as any).zoom) || 1;
 
         if (isFixed) {
             offsetParent = fixedInfo.fixedContainer!;
             isOffsetEnd = true;
         } else {
-            const offsetInfo = getOffsetInfo(el, container);
+            const offsetInfo = getOffsetInfo(el, container, false, true);
 
             offsetParent = offsetInfo.offsetParent;
             isOffsetEnd = offsetInfo.isEnd;
             isStatic = offsetInfo.isStatic;
+            offsetZoom = offsetInfo.offsetZoom;
+            zoom *= offsetZoom;
 
-            if (IS_FIREFOX) {
+            if (offsetZoom !== 1 && isStatic) {
+                offsetLeft -= offsetParent.offsetLeft;
+                offsetTop -= offsetParent.offsetTop;
+            } else if (IS_FIREFOX) {
                 const parentSlotElement = offsetInfo.parentSlotElement;
 
                 if (parentSlotElement) {
@@ -203,6 +212,14 @@ export function getMatrixStackInfo(
                 origin,
             });
         }
+        // transform으로 계산되지 않는 zoom을 위한 (0, 0) 을 기준 matrix 추가.
+        if (targetZoom !== 1) {
+            matrixes.push({
+                type: "zoom",
+                target: el,
+                matrix: getAbsoluteMatrix(createScaleMatrix([targetZoom, targetZoom], n), n, [0, 0]),
+            });
+        }
         if (!targetMatrix) {
             targetMatrix = matrix;
         }
@@ -234,6 +251,7 @@ export function getMatrixStackInfo(
     }
 
     return {
+        zoom,
         offsetContainer,
         matrixes,
         targetMatrix,

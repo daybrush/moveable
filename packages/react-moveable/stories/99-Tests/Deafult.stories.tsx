@@ -86,9 +86,13 @@ group.add("Test Changing Snap Container", {
     path: require.resolve("./ReactChangingSnapContainerApp"),
 });
 
-
-
 group.add("Test Snap with position: fixed", {
     app: require("./ReactFixedSnapApp").default,
     path: require.resolve("./ReactFixedSnapApp"),
+});
+
+
+group.add("Test css zoomed target", {
+    app: require("./ReactZoomedTargetApp").default,
+    path: require.resolve("./ReactZoomedTargetApp"),
 });

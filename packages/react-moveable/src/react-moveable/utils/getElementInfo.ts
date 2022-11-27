@@ -53,10 +53,12 @@ export function calculateElementInfo(
     const n = isAbsolute3d ? 4 : 3;
 
     return {
+        hasZoom: false,
         width,
         height,
         rotation,
         ...sizes,
+        originalRootMatrix: createIdentityMatrix(n),
         rootMatrix: createIdentityMatrix(n),
         beforeMatrix: createIdentityMatrix(n),
         offsetMatrix: createIdentityMatrix(n),

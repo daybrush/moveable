@@ -42,7 +42,19 @@ group.add("First render with persisted data (group)", {
     app: require("./ReactGroupPersistDataApp").default,
     path: require.resolve("./ReactGroupPersistDataApp"),
 });
+
+
 group.add("First render with persisted data (individual group)", {
     app: require("./ReactIndividualGroupPersistDataApp").default,
     path: require.resolve("./ReactIndividualGroupPersistDataApp"),
+});
+
+group.add("Use rootContainer with transformed container (css transform)", {
+    app: require("./ReactTransformedApp").default,
+    path: require.resolve("./ReactTransformedApp"),
+});
+
+group.add("Use rootContainer with zoomed container (css zoom)", {
+    app: require("./ReactZoomApp").default,
+    path: require.resolve("./ReactZoomApp"),
 });

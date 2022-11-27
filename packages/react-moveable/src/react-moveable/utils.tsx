@@ -127,6 +127,7 @@ export function getOffsetInfo(
     el: SVGElement | HTMLElement | null | undefined,
     lastParent: SVGElement | HTMLElement | null | undefined,
     isParent?: boolean,
+    checkZoom?: boolean,
 ) {
     const documentElement = document.documentElement || document.body;
     let hasSlot = false;
@@ -151,6 +152,7 @@ export function getOffsetInfo(
     let isCustomElement = false;
     let isEnd = el === lastParent || target === lastParent;
     let position = "relative";
+    let offsetZoom = 1;
 
 
 
@@ -162,9 +164,13 @@ export function getOffsetInfo(
         const tagName = target.tagName.toLowerCase();
         const transform = getElementTransform(target as SVGElement, style);
         const willChange = style.willChange;
+        const zoom = parseFloat((style as any).zoom) || 1;
         position = style.position!;
 
-
+        if (checkZoom && zoom !== 1) {
+            offsetZoom = zoom;
+            break;
+        }
         if (
             tagName === "svg"
             || position !== "static"
@@ -190,11 +196,11 @@ export function getOffsetInfo(
 
             break;
         }
-
         target = parentNode as HTMLElement | SVGElement;
         position = "relative";
     }
     return {
+        offsetZoom,
         hasSlot,
         parentSlotElement,
         isCustomElement,
@@ -690,7 +696,7 @@ export function getSize(
                 let parentElement: HTMLElement | null = null;
 
                 if (position === "absolute") {
-                    const offsetInfo = getOffsetInfo(target, document.body, false);
+                    const offsetInfo = getOffsetInfo(target, document.body);
                     parentElement = offsetInfo.offsetParent;
 
                 } else {
@@ -798,6 +804,62 @@ export function resetClientRect(): MoveableClientRect {
         scrollWidth: 0, scrollHeight: 0,
     };
 }
+
+export function getExtendsRect(el: HTMLElement | SVGElement, rect: MoveableClientRect): MoveableClientRect {
+    const isRoot = el === document.body || el === document.documentElement;
+
+
+    const extendsRect =  {
+        clientLeft: el.clientLeft,
+        clientTop: el.clientTop,
+        clientWidth: el.clientWidth,
+        clientHeight: el.clientHeight,
+        scrollWidth: el.scrollWidth,
+        scrollHeight: el.scrollHeight,
+        overflow: false,
+    };
+
+    if (isRoot) {
+        extendsRect.clientHeight = Math.max(rect.height, extendsRect.clientHeight);
+        extendsRect.scrollHeight = Math.max(rect.height, extendsRect.scrollHeight);
+    }
+    extendsRect.overflow = getComputedStyle(el).overflow !== "visible";
+
+    return {
+        ...rect,
+        ...extendsRect,
+    };
+}
+
+export function getClientRectByPosition(
+    position: { left: number, right: number, top: number, bottom: number },
+    base: MoveableClientRect,
+    el?: HTMLElement | SVGElement, isExtends?: boolean,
+) {
+    const {
+        left,
+        right,
+        top,
+        bottom,
+    } = position;
+    const baseTop = base.top;
+    const baseLeft = base.left;
+
+    const rect: MoveableClientRect = {
+        left: baseLeft + left,
+        top: baseTop + top,
+        right: baseLeft + right,
+        bottom: baseTop + bottom,
+        width: right - left,
+        height: bottom - top,
+    };
+
+
+    if (el && isExtends) {
+        return getExtendsRect(el, rect);
+    }
+    return rect;
+}
 export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean) {
     let left = 0;
     let top = 0;
@@ -833,18 +895,7 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     };
 
     if (el && isExtends) {
-        rect.clientLeft = el.clientLeft;
-        rect.clientTop = el.clientTop;
-        rect.clientWidth = el.clientWidth;
-        rect.clientHeight = el.clientHeight;
-        rect.scrollWidth = el.scrollWidth;
-        rect.scrollHeight = el.scrollHeight;
-
-        if (isRoot) {
-            rect.clientHeight = Math.max(rect.height, rect.clientHeight);
-            rect.scrollHeight = Math.max(rect.height, rect.scrollHeight);
-        }
-        rect.overflow = getComputedStyle(el).overflow !== "visible";
+        return getExtendsRect(el, rect);
     }
     return rect;
 }

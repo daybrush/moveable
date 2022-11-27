@@ -3,7 +3,9 @@ import { convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from ".
 import { getMatrixStackInfo } from "./getMatrixStackInfo";
 
 export interface MoveableElementMatrixInfo {
+    hasZoom: boolean;
     hasFixed: boolean;
+    originalRootMatrix: number[];
     rootMatrix: number[];
     beforeMatrix: number[];
     offsetMatrix: number[];
@@ -34,11 +36,13 @@ export function calculateMatrixStack(
         targetOrigin,
         offsetContainer,
         hasFixed,
+        zoom: containerZoom,
     } = getMatrixStackInfo(target, container); // prevMatrix
     const {
         matrixes: rootMatrixes,
         is3d: isRoot3d,
         offsetContainer: offsetRootContainer,
+        zoom: rootZoom,
     } = getMatrixStackInfo(offsetContainer, rootContainer, true); // prevRootMatrix
 
     // if (rootContainer === document.body) {
@@ -68,6 +72,7 @@ export function calculateMatrixStack(
     if (!isRoot3d && isNext3d) {
         convert3DMatrixes(rootMatrixes);
     }
+
 
     // rootMatrix = (...) -> container -> offset -> absolute -> offset -> absolute(targetMatrix)
     // rootMatrixBeforeOffset = lastOffsetMatrix -> (...) -> container
@@ -118,11 +123,14 @@ export function calculateMatrixStack(
         isMatrix3d,
     );
 
+    const originalRootMatrix = rootMatrix;
     rootMatrix = ignoreDimension(rootMatrix, n, n);
 
     return {
+        hasZoom: containerZoom !== 1 || rootZoom !== 1,
         hasFixed,
         rootMatrix,
+        originalRootMatrix,
         beforeMatrix,
         offsetMatrix,
         allMatrix,

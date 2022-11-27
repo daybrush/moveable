@@ -11,7 +11,7 @@
     ],
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
-        "storybook": "start-storybook -p 6006",
+        "storybook": "rm -rf node_modules/.cache && start-storybook -p 6006",
         "bake": "bake",
         "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
         "build:storybook": "build-storybook -o ../../demo/storybook2",

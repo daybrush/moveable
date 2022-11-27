@@ -1,8 +1,8 @@
-import { plus, getOrigin } from "@scena/matrix";
+import { plus, getOrigin, multiply } from "@scena/matrix";
 import { MoveableClientRect } from "../types";
 import {
     calculateMoveablePosition,
-    getClientRect, getOffsetInfo, resetClientRect,
+    getClientRect, getClientRectByPosition, getOffsetInfo, getTransformOrigin, resetClientRect,
 } from "../utils";
 import { calculateElementInfo, MoveableElementInfo } from "./getElementInfo";
 
@@ -50,13 +50,50 @@ export function getMoveableTargetInfo(
             [beforePosition.left - result.left, beforePosition.top - result.top],
         );
 
-        targetClientRect = getClientRect(target);
+        rootContainerClientRect = getClientRect(result.offsetRootContainer!);
+
+
         const offsetContainer = getOffsetInfo(parentContainer, parentContainer, true).offsetParent
             || result.offsetRootContainer!;
-        containerClientRect = getClientRect(offsetContainer, true);
-        rootContainerClientRect = getClientRect(result.offsetRootContainer!);
-        if (moveableElement) {
-            moveableClientRect = getClientRect(moveableElement);
+
+
+
+        if (result.hasZoom) {
+            const absoluteTargetPosition = calculateMoveablePosition(
+                multiply(result.originalRootMatrix, result.allMatrix),
+                result.transformOrigin,
+                result.width, result.height,
+            );
+            const absoluteContainerPosition = calculateMoveablePosition(
+                result.originalRootMatrix,
+                getTransformOrigin(getComputedStyle(offsetContainer)).map(pos => parseFloat(pos)),
+                offsetContainer.offsetWidth, offsetContainer.offsetHeight,
+            );
+            targetClientRect = getClientRectByPosition(absoluteTargetPosition, rootContainerClientRect);
+            containerClientRect = getClientRectByPosition(
+                absoluteContainerPosition,
+                rootContainerClientRect,
+                offsetContainer,
+                true,
+            );
+
+            if (moveableElement) {
+                const left = absoluteTargetPosition.left;
+                const top = absoluteTargetPosition.top;
+                moveableClientRect = getClientRectByPosition({
+                    left,
+                    top,
+                    bottom: top,
+                    right: top,
+                }, rootContainerClientRect);
+            }
+        } else {
+            targetClientRect = getClientRect(target);
+            containerClientRect = getClientRect(offsetContainer, true);
+
+            if (moveableElement) {
+                moveableClientRect = getClientRect(moveableElement);
+            }
         }
     }
 

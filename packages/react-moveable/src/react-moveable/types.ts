@@ -198,10 +198,11 @@ export interface MoveableDefaultOptions
     extends DefaultOptions, DragAreaOptions, OriginOptions, PaddingOptions {
 }
 export interface MatrixInfo {
-    type: "offset" | "target";
+    type: "offset" | "target" | "zoom";
     target: SVGElement | HTMLElement;
     matrix?: number[];
     origin?: number[];
+    zoom?: number;
 }
 export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
