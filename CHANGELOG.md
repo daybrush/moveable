@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.1](https://github.com/daybrush/moveable/compare/0.40.0...0.40.1) (2022-11-28)
+### :sparkles: Packages
+* `@moveable/helper` 0.0.4
+* `lit-moveable` 0.17.1
+* `moveable` 0.40.1
+* `preact-moveable` 0.42.1
+* `react-compat-moveable` 0.28.1
+* `react-moveable` 0.43.1
+* `svelte-moveable` 0.32.1
+* `vue-moveable` 2.0.0-beta.51
+* `vue3-moveable` 0.15.1
+* `ngx-moveable` 0.37.1
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix body rect #800 ([8976985](https://github.com/daybrush/moveable/commit/8976985422fd30cd9e6e85e41ba73473dca05d41))
+    * fix TRS order ([aff4b28](https://github.com/daybrush/moveable/commit/aff4b281e697bd9a550d21d1f26739fb0c5e4903))
+    * fix zero line height #801 ([99547ca](https://github.com/daybrush/moveable/commit/99547cace2be52de99eceb021cc7a75f54bc16da))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([746c40b](https://github.com/daybrush/moveable/commit/746c40b2a2f31f2f371f9110018c89e64c08a525))
+* `react-moveable`, `moveable`
+    * update jsdoc, template ([11408ca](https://github.com/daybrush/moveable/commit/11408caea15925a42165aa2080a7327e77a22ea8))
+
+
+
 ## [0.40.0](https://github.com/daybrush/moveable/compare/0.39.0...0.40.0) (2022-11-27)
 ### :sparkles: Packages
 * `@moveable/helper` 0.0.4

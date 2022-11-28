@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.43.0...react-moveable@0.43.1) (2022-11-28)
+
+
+### :bug: Bug Fix
+
+* fix body rect #800 ([8976985](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8976985422fd30cd9e6e85e41ba73473dca05d41))
+* fix TRS order ([aff4b28](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/aff4b281e697bd9a550d21d1f26739fb0c5e4903))
+* fix zero line height #801 ([99547ca](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/99547cace2be52de99eceb021cc7a75f54bc16da))
+
+
+### :mega: Other
+
+* publish packages ([746c40b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/746c40b2a2f31f2f371f9110018c89e64c08a525))
+* update jsdoc, template ([11408ca](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/11408caea15925a42165aa2080a7327e77a22ea8))
+
+
+
 ## [0.43.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.42.0...react-moveable@0.43.0) (2022-11-27)
 
 

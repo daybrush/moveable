@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.4](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.0.4...@moveable/helper@0.0.4) (2022-11-28)
+
+**Note:** Version bump only for package @moveable/helper
+
+
+
+
+
 ## [0.0.4](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.0.4...@moveable/helper@0.0.4) (2022-11-27)
 
 **Note:** Version bump only for package @moveable/helper
