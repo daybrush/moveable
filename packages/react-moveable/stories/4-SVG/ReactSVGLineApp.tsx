@@ -2,8 +2,7 @@ import * as React from "react";
 import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
-    const targetRef = React.useRef<SVGCircleElement>(null);
-    const moveableRef = React.useRef<Moveable>(null);
+    const targetRef = React.useRef<SVGLineElement>(null);
 
     return (
         <div className="root" style={{
@@ -19,15 +18,15 @@ export default function App(props: Record<string, any>) {
                     width: "200px",
                     height: "200px",
                 }}>
-                    <circle cx="100" cy="100" r="50"  ref={targetRef}/>
+                    <line x1="0" y1="80" x2="100" y2="80" strokeWidth="4" stroke="black"  ref={targetRef} />
                 </svg>
                 <Moveable
-                    ref={moveableRef}
                     target={targetRef}
                     draggable={true}
                     rotatable={true}
+                    scalable={true}
                     onRender={e => {
-                        e.target.style.transform = e.transform;
+                        e.target.style.cssText += e.cssText;
                     }}
                 ></Moveable>
             </div>

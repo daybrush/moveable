@@ -567,8 +567,7 @@ export function calculateMoveablePosition(
     originX = (originX - left) || 0;
     originY = (originY - top) || 0;
 
-    const direction = getShapeDirection(poses);
-
+    const direction = getShapeDirection(calculatePoses(matrix, 100, 100, n));
     return {
         left,
         top,

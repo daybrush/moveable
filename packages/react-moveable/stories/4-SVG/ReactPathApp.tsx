@@ -2,7 +2,7 @@ import * as React from "react";
 import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
-    const moveableRef = React.useRef<Moveable>(null);
+    const targetRef = React.useRef<SVGPathElement>(null);
 
     return (
         <div className="root">
@@ -11,28 +11,23 @@ export default function App(props: Record<string, any>) {
                 transform: `scale(${props.containerScale})`,
             }}>
                 <svg viewBox="0 0 200 200" style={{
-                    position: "relative",
                     border: "1px solid black",
                     width: "200px",
                     height: "200px",
-                    top: "100px",
-                    left: "100px",
                 }}>
-                    <g className="g">
-                        <path d="M 0 0 L 200 0 L 200 200 z" style={{
-                            fill: "white",
-                            stroke: "red",
-                            strokeWidth: 2,
-                            transform: "translate(50px, 50px)",
-                        }} />
-                    </g>
+                    <path d="M 0 0 L 200 0 L 200 200 z" ref={targetRef} style={{
+                        fill: "white",
+                        stroke: "red",
+                        strokeWidth: 2,
+                    }} />
                 </svg>
                 <Moveable
-                    ref={moveableRef}
-                    target={".g"}
+                    target={targetRef}
                     draggable={true}
-                    onDrag={e => {
-                        e.target.style.transform = e.transform;
+                    rotatable={true}
+                    scalable={true}
+                    onRender={e => {
+                        e.target.style.cssText += e.cssText;
                     }}
                 />
             </div>

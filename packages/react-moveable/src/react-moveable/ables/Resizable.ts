@@ -19,6 +19,7 @@ import {
     getPosByDirection,
     getNextMatrix,
     getNextTransforms,
+    getDirectionByPos,
 } from "../gesto/GestoUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -157,6 +158,15 @@ export default {
             datas.fixedDirection = fixedDirection;
             datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
         }
+        function setFixedPosition(fixedPosition: number[]) {
+            const {
+                width,
+                height,
+            } = moveable.state;
+
+            datas.fixedPosition = fixedPosition;
+            datas.fixedDirection = getDirectionByPos(fixedPosition, width, height);
+        }
         function setMin(minSize: Array<string | number>)  {
             datas.minSize = [
                 convertUnitSize(`${minSize[0]}`, 0) || 0,
@@ -181,6 +191,7 @@ export default {
         setFixedDirection(parentFixedDirection || [-direction[0], -direction[1]]);
 
         datas.setFixedDirection = setFixedDirection;
+        datas.setFixedPosition = setFixedPosition;
         datas.setMin = setMin;
         datas.setMax = setMax;
         const params = fillParams<OnResizeStart>(moveable, e, {
@@ -194,6 +205,7 @@ export default {
             setMax,
             setRatio,
             setFixedDirection,
+            setFixedPosition,
             setOrigin: (origin: Array<string | number>) => {
                 datas.transformOrigin = origin;
             },
@@ -205,6 +217,7 @@ export default {
         const result = parentEvent || triggerEvent(moveable, "onResizeStart", params);
 
         datas.startFixedDirection = datas.fixedDirection;
+        datas.startFixedPosition = datas.fixedPosition;
         if (result !== false) {
             datas.isResize = true;
             moveable.state.snapRenderInfo = {
@@ -324,8 +337,16 @@ export default {
 
             triggerEvent(moveable, "onBeforeResize", fillParams<OnBeforeResize>(moveable, e, {
                 startFixedDirection: datas.startFixedDirection,
+                startFixedPosition: datas.startFixedPosition,
                 setFixedDirection(nextFixedDirection: number[]) {
                     datas.setFixedDirection(nextFixedDirection);
+
+                    [boundingWidth, boundingHeight] = getNextBoundingSize();
+
+                    return [boundingWidth, boundingHeight];
+                },
+                setFixedPosition(nextFixedPosition: number[]) {
+                    datas.setFixedPosition(nextFixedPosition);
 
                     [boundingWidth, boundingHeight] = getNextBoundingSize();
 

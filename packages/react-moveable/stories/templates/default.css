@@ -13,6 +13,9 @@ html:has(.no-relative), body:has(.no-relative) {
 html:has(.no-relative) {
     position: relative;
 }
+html:has(.margin), body:has(.margin) {
+    margin-top: 50px;
+}
 .description {
     padding: 10px;
 }

@@ -973,6 +973,12 @@ export interface OnResizeStart extends OnEvent {
      */
     setFixedDirection: (startDirecition: number[]) => any;
     /**
+     * Set a fixed direction to resize.
+     * @default Opposite position
+     * @private
+     */
+    setFixedPosition: (startPosition: number[]) => any;
+    /**
      * Set the ratio of width and height.
      * @default offsetWidth / offsetHeight
      */
@@ -991,9 +997,20 @@ export interface OnBeforeResize extends OnEvent {
      */
     setFixedDirection: (startDirecition: number[]) => number[];
     /**
+     * Set a fixed position to resize.
+     * If fixedPosition is set, the boundingWidth and boundingHeight values can be changed and can be reconfirmed as a return value.
+     * @private
+     */
+    setFixedPosition: (startPosition: number[]) => number[];
+    /**
      * fixedDirection set by resizeStart.
      */
     startFixedDirection: number[];
+    /**
+     * fixedPosition set by resizeStart.
+     * @private
+     */
+    startFixedPosition: number[];
     /**
      * Set the bounding size to resizing.
      */
@@ -1096,6 +1113,11 @@ export interface OnRotateStart extends OnEvent, OnTransformStartEvent {
      * @default target's transformOrigin
      */
     setFixedDirection: (fixedDirection: number[]) => void;
+    /**
+     * Set a fixed position to rotate.
+     * @default target's transformOrigin
+     */
+    setFixedPosition: (fixedPosition: number[]) => void;
     /**
      * rotate causes a `dragStart` event.
      */

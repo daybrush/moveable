@@ -2,9 +2,7 @@ import * as React from "react";
 import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
-    const [translate, setTranslate]  = React.useState([0, 0]);
     const targetRef = React.useRef<SVGSVGElement>(null);
-    const moveableRef = React.useRef<Moveable>(null);
 
     return (
         <div className="root" style={{
@@ -27,24 +25,12 @@ export default function App(props: Record<string, any>) {
                     }} />
                 </svg>
                 <Moveable
-                    ref={moveableRef}
                     target={targetRef}
-                    draggable={props.draggable}
-                    throttleDrag={props.throttleDrag}
-                    edgeDraggable={props.edgeDraggable}
-                    startDragRotate={props.startDragRotate}
-                    throttleDragRotate={props.throttleDragRotate}
-                    onDragStart={e => {
-                        e.set(translate);
-                    }}
-                    onDrag={e => {
-                        e.target.style.transform = `translate(${e.beforeTranslate[0]}px, ${e.beforeTranslate[1]}px)`;
-                    }}
-                    onDragEnd={e => {
-                        const lastEvent = e.lastEvent;
-                        if (lastEvent) {
-                            setTranslate(lastEvent.beforeTranslate);
-                        }
+                    draggable={true}
+                    rotatable={true}
+                    scalable={true}
+                    onRender={e => {
+                        e.target.style.cssText += e.cssText;
                     }}
                 ></Moveable>
             </div>

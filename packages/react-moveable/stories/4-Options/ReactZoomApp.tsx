@@ -3,17 +3,9 @@ import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
     return (
-        <div className="root" style={{
+        <div className="root margin" style={{
             paddingTop: "100px",
         }}>
-            <div style={{
-                position: "absolute",
-                left: "50px",
-                top: "175px",
-                pointerEvents: "none",
-                zIndex: 1,
-                opacity: 0.5,
-            }}>50px, 170px</div>
             <div style={{
                 zoom: 0.5,
                 position: "relative",

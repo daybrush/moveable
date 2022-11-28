@@ -30,13 +30,13 @@ import { checkSnapRotate } from "./Snappable";
 import {
     fillTransformStartEvent,
     convertTransformFormat, getRotateDist,
-    getOriginDirection,
     getDirectionOffset,
     fillTransformEvent,
     setDefaultTransformIndex,
     resolveTransformEvent,
     getTransformDirection,
     getPosByDirection,
+    getDirectionByPos,
 } from "../gesto/GestoUtils";
 import { DirectionControlInfo, renderAroundControls, renderDirectionControlsByInfos } from "../renderDirections";
 import { DIRECTIONS, DIRECTION_REGION_TO_DIRECTION } from "../consts";
@@ -433,6 +433,21 @@ export default {
         datas.transform = targetTransform;
         datas.left = left;
         datas.top = top;
+        let setFixedPosition = (fixedPosition: number[]) => {
+            const {
+                allMatrix,
+                is3d,
+                width,
+                height,
+            } = moveable.state;
+            const fixedDirection = getDirectionByPos(fixedPosition, width, height);
+            datas.fixedDirection = fixedDirection;
+            datas.fixedPosition = calculatePosition(allMatrix, fixedPosition, is3d ? 4 : 3);
+
+            if (resizeStart) {
+                resizeStart.setFixedPosition(fixedPosition);
+            }
+        };
         let setFixedDirection: OnRotateStart["setFixedDirection"] = (fixedDirection: number[]) => {
             datas.fixedDirection = fixedDirection;
             datas.fixedPosition = getDirectionOffset(moveable, fixedDirection);
@@ -490,8 +505,6 @@ export default {
                     [startClientX, startClientY] = getPosByDirection(clientPoses, controlDirection);
                 }
             }
-
-
             datas.beforeInfo = { origin: rect.beforeOrigin };
             datas.afterInfo = { origin: rect.origin };
             datas.absoluteInfo = {
@@ -499,26 +512,20 @@ export default {
                 startValue: rect.rotation,
             };
 
-            const originalFixedDirection = setFixedDirection;
+            const originalFixedPosition = setFixedPosition;
 
-            setFixedDirection = (fixedDirection: number[]) => {
+            setFixedPosition = (fixedPosition: number[]) => {
                 const n = state.is3d ? 4 : 3;
-                const originalPosition = getPosByDirection([
-                    [0, 0],
-                    [width, 0],
-                    [0, height],
-                    [width, height],
-                ], fixedDirection);
-                const [originX, originY] = plus(getOrigin(targetMatrix, n), originalPosition);
+                const [originX, originY] = plus(getOrigin(targetMatrix, n), fixedPosition);
                 const fixedBeforeOrigin = calculate(
                     offsetMatrix,
                     convertPositionMatrix([originX, originY], n),
                 );
                 const fixedAfterOrigin = calculate(
                     allMatrix,
-                    convertPositionMatrix([originalPosition[0], originalPosition[1]], n),
+                    convertPositionMatrix([fixedPosition[0], fixedPosition[1]], n),
                 );
-                originalFixedDirection(fixedDirection);
+                originalFixedPosition(fixedPosition);
                 const posDelta = state.posDelta;
 
                 datas.beforeInfo.origin = minus(fixedBeforeOrigin, posDelta);
@@ -528,6 +535,16 @@ export default {
                 setRotateStartInfo(moveable, datas.beforeInfo, startClientX, startClientY, moveableClientRect);
                 setRotateStartInfo(moveable, datas.afterInfo, startClientX, startClientY, moveableClientRect);
                 setRotateStartInfo(moveable, datas.absoluteInfo, startClientX, startClientY, moveableClientRect);
+            };
+            setFixedDirection = (fixedDirection: number[]) => {
+                const fixedPosition = getPosByDirection([
+                    [0, 0],
+                    [width, 0],
+                    [0, height],
+                    [width, height],
+                ], fixedDirection);
+
+                setFixedPosition(fixedPosition);
             };
         }
 
@@ -543,16 +560,14 @@ export default {
         let dragStart: OnDragStart | false = false;
         let resizeStart: OnResizeStart | false = false;
 
-
-
         if (datas.isControl && datas.resolveAble) {
             const resolveAble = datas.resolveAble;
 
             if  (resolveAble === "resizable") {
                 resizeStart = Resizable.dragControlStart(moveable, {
                     ...(new CustomGesto("resizable").dragStart([0, 0], e)),
-                    parentDirection: datas.controlDirection,
-                    parentFixedDirection: datas.fixedDirection,
+                    parentPosition: datas.controlPosition,
+                    parentFixedPosition: datas.fixedPosition,
                 });
             }
         }
@@ -564,12 +579,13 @@ export default {
             );
         }
 
-        setFixedDirection(getOriginDirection(moveable));
+        setFixedPosition(state.transformOrigin);
         const params = fillParams<OnRotateStart>(moveable, e, {
             set: (rotatation: number) => {
                 datas.startValue = rotatation * Math.PI / 180;
             },
             setFixedDirection,
+            setFixedPosition,
             ...fillTransformStartEvent(e),
             dragStart,
             resizeStart,

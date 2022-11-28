@@ -207,8 +207,8 @@ export default {
             } = getOffsetSizeDist(sizeDirection, keepRatio, datas, e);
 
 
-            let scaleX = (startOffsetWidth + distWidth) / startOffsetWidth;
-            let scaleY = (startOffsetHeight + distHeight) / startOffsetHeight;
+            let scaleX = startOffsetWidth ? (startOffsetWidth + distWidth) / startOffsetWidth : 1;
+            let scaleY = startOffsetHeight ? (startOffsetHeight + distHeight) / startOffsetHeight : 1;
 
             scaleX = sizeDirection[0] || keepRatio ? scaleX * startValue[0] : startValue[0];
             scaleY = sizeDirection[1] || keepRatio ? scaleY * startValue[1] : startValue[1];
