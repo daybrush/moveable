@@ -51,6 +51,7 @@ export default class MoveableManager<T = {}>
         origin: true,
         parentMoveable: null,
         wrapperMoveable: null,
+        isWrapperMounted: false,
         parentPosition: null,
         portalContainer: null,
         useResizeObserver: false,
@@ -98,6 +99,7 @@ export default class MoveableManager<T = {}>
     public controlGesto!: Gesto;
     public rotation = 0;
     public scale: number[] = [1, 1];
+    public isMoveableMounted = false;
     public isUnmounted = false;
 
     public events: Record<string, EventManager | null> = {
@@ -178,6 +180,7 @@ export default class MoveableManager<T = {}>
         );
     }
     public componentDidMount() {
+        this.isMoveableMounted = true;
         this.isUnmounted = false;
         this.controlBox.getElement();
         const props = this.props;
@@ -207,6 +210,7 @@ export default class MoveableManager<T = {}>
         this._updateObserver(prevProps);
     }
     public componentWillUnmount() {
+        this.isMoveableMounted = false;
         this.isUnmounted = true;
         this._emitter.off();
 

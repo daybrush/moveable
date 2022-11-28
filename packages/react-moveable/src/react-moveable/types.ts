@@ -23,6 +23,7 @@ export type MoveableManagerProps<T = {}> = {
     cssStyled: any;
     customStyledMap: Record<string, any>;
     wrapperMoveable?: MoveableManagerInterface | null;
+    isWrapperMounted?: boolean;
     parentMoveable?: MoveableManagerInterface | null;
     parentPosition?: number[] | null;
     groupable?: boolean;

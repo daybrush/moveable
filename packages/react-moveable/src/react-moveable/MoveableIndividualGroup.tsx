@@ -39,7 +39,9 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
                     {...this.props}
                     target={target}
                     wrapperMoveable={this}
+                    isWrapperMounted={this.isMoveableMounted}
                     persistData={persistDatChildren[i]}
+
                 />;
             })}
         </ControlBoxElement>;
