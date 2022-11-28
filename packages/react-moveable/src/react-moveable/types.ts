@@ -77,16 +77,19 @@ export interface DefaultOptions {
     /**
      * Moveable Root Container (No Transformed Container)
      * @default parentElement
+     * @see {@link https://daybrush.com/moveable/storybook2/?path=/story/options--use-rootcontainer-with-transformed-container-css-transform See Storybook}
      */
     rootContainer?: MoveableRefType<HTMLElement>;
     /**
      * If you want to set the dragging information to the viewer, refer to the following.
      * @default null
+     * @see {@link https://daybrush.com/moveable/storybook2/?path=/story/options--cursor-is-applied-in-viewer-during-dragging See Storybook}
      */
     viewContainer?: MoveableRefType<HTMLElement>;
     /**
      * Whether the target size is detected and updated whenever it changes.
      * @default false
+     * @see {@link https://daybrush.com/moveable/storybook2/?path=/story/options--useresizeobserver See Storybook}
      */
     useResizeObserver?: boolean;
     /**

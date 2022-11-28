@@ -2656,14 +2656,28 @@
     taffydb "2.6.2"
     underscore "~1.8.3"
 
-"@daybrush/release@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@daybrush/release/-/release-0.2.4.tgz"
-  integrity sha512-SgCvcKBP/FCNWwONpKYGHjbNHNFesbBLF6Wc/RdP8OJeF39/yXa8AWu776Zq/jfOVpOMV9UoheC6h4mbD5XxCA==
+"@daybrush/jsdoc@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.npmjs.org/@daybrush/jsdoc/-/jsdoc-0.4.3.tgz#9073899e099e5faa5a7e8d34dcd22766b84e1681"
+  integrity sha512-0ZbqoitrE060eNOFQzW+TdzNqQSTQnWYHMqwLhrsFpPZy8GzorTdZwNll9XxKcDFoTR0sphcv1OKh9odHfLuvw==
   dependencies:
-    args "^5.0.1"
-    gh-pages "^2.0.1"
-    sync-exec "^0.6.2"
+    "@babel/parser" "^7.2.3"
+    "@babel/types" "^7.2.2"
+    "@daybrush/utils" "^1.6.0"
+    ast-parser "^0.2.0"
+    bluebird "~3.5.0"
+    catharsis "~0.8.9"
+    escape-string-regexp "~1.0.5"
+    js2xmlparser "~3.0.0"
+    klaw "~2.0.0"
+    markdown-it "~8.3.1"
+    markdown-it-named-headers "~0.0.4"
+    marked "~0.3.6"
+    mkdirp "~0.5.1"
+    requizzle "~0.2.1"
+    strip-json-comments "~2.0.1"
+    taffydb "2.6.2"
+    underscore "~1.8.3"
 
 "@daybrush/release@^0.5.2":
   version "0.5.3"
@@ -10804,10 +10818,10 @@ dateformat@^3.0.0:
   resolved "https://registry.npmjs.org/dateformat/-/dateformat-3.0.3.tgz"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
-daybrush-jsdoc-template@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.npmjs.org/daybrush-jsdoc-template/-/daybrush-jsdoc-template-1.7.0.tgz"
-  integrity sha512-+R+37tg0etaaWqMP+z5mGMdt7432riKh1jMo2SYZnUMhk0KMEmoXUC4JzwF1sKQtmWojLBQZ7Z2zfbsVA2tBjQ==
+daybrush-jsdoc-template@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.npmjs.org/daybrush-jsdoc-template/-/daybrush-jsdoc-template-1.8.0.tgz#ea0aaa4eb9e5304fd89682d07330413ccddafb21"
+  integrity sha512-/d+XmFMaBxys49djBMpHUfER3f22OTKKKIfkg/JGY4oXf4hG5rH7PCFhyvk86jvJ6PP5okc+j3MXK60jreB3qQ==
   dependencies:
     "@daybrush/jsdoc" "^0.4.0"
     "@daybrush/utils" "^1.6.0"
