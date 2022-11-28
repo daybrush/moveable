@@ -73,13 +73,21 @@ export function resolveTransformEvent(event: any, functionName: string) {
     const index = datas.transformIndex;
 
 
-    const nextTransforms = originalDatas.nextTransforms;
+    const nextTransforms = originalDatas.nextTransforms as string[];
     const length = nextTransforms.length;
     const nextTransformAppendedIndexes: any[] = originalDatas.nextTransformAppendedIndexes;
     let nextIndex = 0;
 
     if (index === -1) {
-        nextIndex = nextTransforms.length;
+        // translate => rotate => scale
+        if (functionName === "translate") {
+            nextIndex = 0;
+        } else if (functionName === "rotate") {
+            nextIndex = findIndex(nextTransforms, text => text.match(/scale\(/g,));
+        }
+        if (nextIndex === -1) {
+            nextIndex = nextTransforms.length;
+        }
         datas.transformIndex = nextIndex;
     } else if (find(nextTransformAppendedIndexes, info => info.index === index && info.functionName === functionName)) {
         nextIndex = index;
@@ -500,6 +508,16 @@ export function getOriginDirection(moveable: MoveableManagerInterface<any>) {
     return [
         -1 + transformOrigin[0] / (width / 2),
         -1 + transformOrigin[1] / (height / 2),
+    ];
+}
+export function getDirectionByPos(
+    pos: number[],
+    width: number,
+    height: number,
+) {
+    return [
+        -1 + pos[0] / (width / 2),
+        -1 + pos[1] / (height / 2),
     ];
 }
 export function getDirectionOffset(
