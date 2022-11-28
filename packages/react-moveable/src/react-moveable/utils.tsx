@@ -865,24 +865,24 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     let top = 0;
     let width = 0;
     let height = 0;
-    let isRoot = false;
+    // let isRoot = false;
 
     if (el) {
-        isRoot = el === document.body || el === document.documentElement;
-        if (isRoot) {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            const scrollPos = getBodyScrollPos();
+        // isRoot = el === document.body || el === document.documentElement;
+        // if (isRoot) {
+        //     width = window.innerWidth;
+        //     height = window.innerHeight;
+        //     const scrollPos = getBodyScrollPos();
 
-            [left, top] = [-scrollPos[0], -scrollPos[1]];
-        } else {
-            const clientRect = el.getBoundingClientRect();
+        //     [left, top] = [-scrollPos[0], -scrollPos[1]];
+        // } else {
+        const clientRect = el.getBoundingClientRect();
 
-            left = clientRect.left;
-            top = clientRect.top;
-            width = clientRect.width;
-            height = clientRect.height;
-        }
+        left = clientRect.left;
+        top = clientRect.top;
+        width = clientRect.width;
+        height = clientRect.height;
+        // }
     }
 
     const rect: MoveableClientRect = {
