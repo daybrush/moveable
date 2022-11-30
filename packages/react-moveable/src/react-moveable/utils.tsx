@@ -128,6 +128,7 @@ export function getOffsetInfo(
     lastParent: SVGElement | HTMLElement | null | undefined,
     isParent?: boolean,
     checkZoom?: boolean,
+    targetStyle?: CSSStyleDeclaration,
 ) {
     const documentElement = document.documentElement || document.body;
     let hasSlot = false;
@@ -155,6 +156,10 @@ export function getOffsetInfo(
     let offsetZoom = 1;
 
 
+    const targetZoom = parseFloat((targetStyle as any)?.zoom) || 1;
+    const targetPosition = targetStyle?.position;
+
+
 
     while (target && target !== documentElement) {
         if (lastParent === target) {
@@ -172,7 +177,9 @@ export function getOffsetInfo(
             break;
         }
         if (
-            tagName === "svg"
+            // offsetParent is the parentElement if the target's zoom is not 1 and not absolute.
+            !isParent && checkZoom && targetZoom !== 1 && targetPosition && targetPosition !== "absolute"
+            || tagName === "svg"
             || position !== "static"
             || (transform && transform !== "none")
             || willChange === "transform"

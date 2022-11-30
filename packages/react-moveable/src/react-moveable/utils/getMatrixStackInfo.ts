@@ -109,7 +109,6 @@ export function getMatrixStackInfo(
         let offsetParent: HTMLElement;
         let isOffsetEnd = false;
         let isStatic = false;
-        let offsetZoom = 1;
 
         const targetZoom = parseFloat((style as any).zoom) || 1;
 
@@ -117,12 +116,12 @@ export function getMatrixStackInfo(
             offsetParent = fixedInfo.fixedContainer!;
             isOffsetEnd = true;
         } else {
-            const offsetInfo = getOffsetInfo(el, container, false, true);
+            const offsetInfo = getOffsetInfo(el, container, false, true, style);
+            const offsetZoom = offsetInfo.offsetZoom;
 
             offsetParent = offsetInfo.offsetParent;
             isOffsetEnd = offsetInfo.isEnd;
             isStatic = offsetInfo.isStatic;
-            offsetZoom = offsetInfo.offsetZoom;
             zoom *= offsetZoom;
 
             if (offsetZoom !== 1 && isStatic) {
