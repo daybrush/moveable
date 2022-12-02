@@ -182,6 +182,7 @@ export class InitialMoveable<T = {}>
 
             return <MoveableGroup key="group" ref={ref(this, "moveable")}
                 {...nextProps}
+                {...props.groupableProps ?? {}}
                 target={null}
                 targets={elementTargets}
                 targetGroups={targetGroups}

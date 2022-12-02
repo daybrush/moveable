@@ -11,6 +11,7 @@ export default {
         defaultGroupRotate: Number,
         defaultGroupOrigin: String,
         groupable: Boolean,
+        groupableProps: Object,
         targetGroups: Object,
         hideChildMoveableDefaultLines: Boolean,
     } as const,
