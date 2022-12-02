@@ -188,12 +188,13 @@ function getStyleBorderRadius(moveable: MoveableManagerInterface<RoundableProps,
     } = moveable.getState();
     let borderRadius = style.borderRadius || "";
 
-    if (moveable.props.groupable) {
+    if (!borderRadius && moveable.props.groupable) {
         const firstTarget = moveable.getTargets()[0];
 
 
         if (firstTarget) {
             borderRadius = getComputedStyle(firstTarget).borderRadius;
+            style.borderRadius = borderRadius;
         }
     }
     return borderRadius;
