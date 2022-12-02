@@ -53,3 +53,8 @@ group.add("Multiple Group", {
     app: require("./ReactMultipleGroupApp").default,
     path: require.resolve("./ReactMultipleGroupApp"),
 });
+
+group.add("Roundable Group", {
+    app: require("./ReactRoundableGroupApp").default,
+    path: require.resolve("./ReactRoundableGroupApp"),
+});

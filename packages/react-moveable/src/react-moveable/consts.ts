@@ -50,6 +50,7 @@ export const MOVEABLE_CSS = `
     --zoom: 1;
     --zoompx: 1px;
     will-change: transform;
+    outline: 1px solid transparent;
 }
 .control-box {
     z-index: 0;

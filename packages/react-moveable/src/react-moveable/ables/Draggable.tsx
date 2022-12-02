@@ -6,7 +6,7 @@ import {
 import {
     triggerEvent, fillParams,
     getDistSize, prefix,
-    fillEndParams, getComputedStyle,
+    fillEndParams,
     fillCSSObject,
 } from "../utils";
 import { minus, plus } from "@scena/matrix";
@@ -43,6 +43,9 @@ export default {
         onDragGroup: "dragGroup",
         onDragGroupEnd: "dragGroupEnd",
     } as const,
+    requestStyle(): Array<keyof CSSStyleDeclaration> {
+        return ["left", "top", "right", "bottom"];
+    },
     render(
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         React: Renderer,
@@ -79,15 +82,14 @@ export default {
         const { datas, parentEvent, parentGesto } = e;
         const state = moveable.state;
         const {
-            target,
             gestos,
+            style,
         } = state;
 
         if (gestos.draggable) {
             return false;
         }
         gestos.draggable = parentGesto || moveable.targetGesto;
-        const style = getComputedStyle(target!);
 
         datas.datas = {};
         datas.left = parseFloat(style.left || "") || 0;

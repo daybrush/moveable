@@ -409,7 +409,7 @@ export default class MoveableManager<T = {}>
             container,
             container,
             rootContainer || container,
-            // isTarget ? state : undefined
+            this._getRequestStyles(),
         );
 
         if (!target && this._hasFirstTarget && props.persistData) {
@@ -813,9 +813,7 @@ export default class MoveableManager<T = {}>
     ) {
         const props = this.props as any;
         const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
-        const enabledAbles = ables!.filter(able => able && (
-            (able.always && props[able.name] !== false)
-            || props[able.name]));
+        const enabledAbles = this.getEnabledAbles(ables);
 
         const dragStart = `drag${eventAffix}Start` as "dragStart";
         const pinchStart = `pinch${eventAffix}Start` as "pinchStart";
@@ -842,10 +840,12 @@ export default class MoveableManager<T = {}>
             }
         }
     }
-    protected getEnabledAbles() {
+    protected getEnabledAbles(ables: Able[] = this.props.ables!) {
         const props = this.props as any;
-        const ables: Able[] = props.ables!;
-        return ables.filter(able => able && props[able.name]);
+
+        return ables.filter(able => able && (
+            (able.always && props[able.name] !== false)
+            || props[able.name]));
     }
     protected renderAbles() {
         const props = this.props as any;
@@ -863,6 +863,16 @@ export default class MoveableManager<T = {}>
     }
     protected updateCheckInput() {
         this.targetGesto && (this.targetGesto.options.checkInput = this.props.checkInput);
+    }
+    protected _getRequestStyles() {
+        const styleNames = this.getEnabledAbles().reduce((names, able) => {
+            const ableStyleNames = (able.requestStyle?.() ?? []) as Array<keyof CSSStyleDeclaration>;
+
+            return [...names, ...ableStyleNames];
+        }, [] as Array<keyof CSSStyleDeclaration>);
+
+
+        return styleNames;
     }
     protected _updateObserver(prevProps: MoveableDefaultOptions) {
         const props = this.props;

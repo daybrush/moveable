@@ -1,5 +1,5 @@
 import { plus, getOrigin, multiply } from "@scena/matrix";
-import { MoveableClientRect } from "../types";
+import { MoveableClientRect, Writable } from "../types";
 import {
     calculateMoveablePosition,
     getClientRect, getClientRectByPosition, getOffsetInfo, getTransformOrigin, resetClientRect,
@@ -16,6 +16,7 @@ export interface MoveableTargetInfo extends MoveableElementInfo {
     beforeOrigin: number[];
     originalBeforeOrigin: number[];
     target: HTMLElement | SVGElement | null | undefined;
+    style: Partial<Writable<CSSStyleDeclaration>>;
 }
 
 export function getMoveableTargetInfo(
@@ -24,7 +25,7 @@ export function getMoveableTargetInfo(
     container?: HTMLElement | SVGElement | null,
     parentContainer?: HTMLElement | SVGElement | null,
     rootContainer?: HTMLElement | SVGElement | null,
-    // state?: Partial<MoveableManagerState> | false | undefined,
+    requestStyle: Array<keyof CSSStyleDeclaration> = [],
 ): MoveableTargetInfo {
     let beforeDirection: 1 | -1 = 1;
     let beforeOrigin = [0, 0];
@@ -32,12 +33,18 @@ export function getMoveableTargetInfo(
     let moveableClientRect = resetClientRect();
     let containerClientRect = resetClientRect();
     let rootContainerClientRect = resetClientRect();
+    const style: Partial<Writable<CSSStyleDeclaration>> = {};
 
     const result = calculateElementInfo(
         target, container!, rootContainer!,
         true,
     );
     if (target) {
+        const computedStyle = getComputedStyle(target);
+
+        requestStyle.forEach(name => {
+            style[name] = computedStyle[name] as any;
+        });
         const n = result.is3d ? 4 : 3;
         const beforePosition = calculateMoveablePosition(
             result.offsetMatrix,
@@ -106,6 +113,7 @@ export function getMoveableTargetInfo(
         beforeOrigin,
         originalBeforeOrigin: beforeOrigin,
         target,
+        style,
         ...result,
     };
 }

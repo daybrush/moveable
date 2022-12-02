@@ -214,6 +214,7 @@ export type MoveableManagerState<T = {}> = {
     gestos: Record<string, Gesto | CustomGesto | null>;
     renderPoses: number[][];
     posDelta: number[];
+    style: Partial<Writable<CSSStyleDeclaration>>;
     isPersisted?: boolean;
 } & MoveableTargetInfo & T;
 
@@ -454,6 +455,13 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
     updateRect?: boolean;
     canPinch?: boolean;
     css?: string[];
+    /**
+     * You can request style. Specify the name of the style in camel case.
+     * You can check it with `moveable.state.style`
+     * @exmaple
+     * ["borderRadius", "top", "left"]
+     */
+    requestStyle?(): string[];
     /**
      * You can specify the class name to be added to the Moveable control box.
      */
@@ -827,6 +835,7 @@ export interface OnRound extends OnEvent, CSSObject {
     borderRadius: string;
 
 }
+
 /**
  * @typedef
  * @memberof Moveable.Roundable
@@ -834,6 +843,56 @@ export interface OnRound extends OnEvent, CSSObject {
  */
 export interface OnRoundEnd extends OnEndEvent {
 }
+
+
+/**
+ * @typedef
+ * @memberof Moveable.Roundable
+ * @extends Moveable.OnRoundStart
+ */
+export interface OnRoundGroupStart extends OnRoundStart {
+    /**
+     * moveable's targets
+     */
+    targets: Array<HTMLElement | SVGElement>;
+    /**
+     * moveable's child events
+     */
+    events: OnRoundStart[];
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Roundable
+ * @extends Moveable.OnRound
+ */
+export interface OnRoundGroup extends OnRound {
+    /**
+     * moveable's targets
+     */
+    targets: Array<HTMLElement | SVGElement>;
+    /**
+     * moveable's child events
+     */
+    events: OnRound[];
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Roundable
+ * @extends Moveable.OnRoundEnd
+ */
+export interface OnRoundGroupEnd extends OnRoundEnd {
+    /**
+     * moveable's targets
+     */
+    targets: Array<HTMLElement | SVGElement>;
+    /**
+     * moveable's child events
+     */
+    events: OnRoundEnd[];
+}
+
 /**
  * @typedef
  * @memberof Moveable.Scalable
@@ -1853,6 +1912,9 @@ export interface RoundableEvents {
     onRoundStart: OnRoundStart;
     onRound: OnRound;
     onRoundEnd: OnRoundEnd;
+    onRoundGroupStart: OnRoundGroupStart;
+    onRoundGroup: OnRoundGroup;
+    onRoundGroupEnd: OnRoundGroupEnd;
 }
 export interface RoundableProps extends RoundableOptions, EventInterface<RoundableEvents> {
 }
@@ -2182,6 +2244,19 @@ export interface GroupableOptions {
      * @default false
      */
     hideChildMoveableDefaultLines?: boolean;
+    /**
+     * Props that work when group
+     * @example
+     * ```js
+     * {
+     *     roundable: true,
+     *     groupableProps: {
+     *         roundable: false,
+     *     },
+     * }
+     * ```
+     */
+    groupableProps?: Record<string, any>;
 }
 
 /**
@@ -2194,9 +2269,11 @@ export type MoveableTargetGroupsType = Array<HTMLElement | SVGElement | Moveable
 /**
  * @typedef
  * @memberof Moveable.IndividualGroup
- * @property - Create targets individually, not as a group.
  */
 export interface IndividualGroupableOptions {
+    /**
+     * Create targets individually, not as a group.
+     */
     individualGroupable?: boolean;
 }
 
@@ -2942,6 +3019,10 @@ export type UnionToIntersection<U> =
 // export type MoveableEventsProps = Parameters<Required<MoveableProps>[keyof typeof MOVEABLE_EVENTS_PROPS_MAP]>[0];
 export type MoveableEvents = {
     [key in keyof typeof MOVEABLE_EVENTS_MAP]: Parameters<Required<MoveableProps>[typeof MOVEABLE_EVENTS_MAP[key]]>[0];
+};
+
+export type Writable<T> = {
+    -readonly [key in keyof T]: T[key];
 };
 
 export type MoveableProperties = {
