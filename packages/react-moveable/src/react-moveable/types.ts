@@ -2620,6 +2620,12 @@ export interface ScrollableOptions {
      */
     scrollThreshold?: number;
     /**
+     * Time interval that occurs when scrolling occurs when dragging is maintained
+     * If set to 0, it does not occur.
+     * @default 0
+     */
+    scrollThrottleTime?: number;
+    /**
      * Sets a function to get the scroll position.
      * @default scrollContainer's scrollTop, scrollLeft
      */

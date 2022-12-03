@@ -43,7 +43,7 @@ export default {
         onDragGroup: "dragGroup",
         onDragGroupEnd: "dragGroupEnd",
     } as const,
-    requestStyle(): Array<keyof CSSStyleDeclaration> {
+    requestStyle(): string[] {
         return ["left", "top", "right", "bottom"];
     },
     render(
