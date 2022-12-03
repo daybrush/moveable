@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.43.1...react-moveable@0.44.0) (2022-12-03)
+
+
+### :rocket: New Features
+
+* add borderRadius style state #804 ([57bae32](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/57bae3227dc77667314d900631765836b77a66cc))
+* add groupableProp #798 ([58d9d22](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/58d9d2231954c52821b4ec666e14703506c0840a))
+* add scrollThrottleTime prop ([b53924e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b53924ecbb6be2805bd3da368822a41638bbcea5))
+* Support roundable group #798 ([90a9c1a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/90a9c1a062661906d0b1777839db794dbc2ad370))
+
+
+### :bug: Bug Fix
+
+* fix first render for individual groupable ([74dc11a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/74dc11a4dec363746457046ecbde52f0b53955f3))
+* fix position relative with zoom #800 ([2efdc35](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/2efdc353465974acec59e59c2a3d8fcf29284eac))
+
+
+### :mega: Other
+
+* publish packages ([4739df4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/4739df488cdf3c32cb4ca4e024063c5c44fbaf0c))
+
+
+
 ## [0.43.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.43.0...react-moveable@0.43.1) (2022-11-28)
 
 
