@@ -2722,7 +2722,7 @@
     sinon "^7.4.1"
     source-map-support "^0.5.13"
 
-"@daybrush/utils@1.6.0", "@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.10.5", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.0", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1":
+"@daybrush/utils@1.6.0", "@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.0", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
   version "1.10.0"
   resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-1.10.0.tgz"
   integrity sha512-IDT0DWAGcjxb2+WMr8pHrVTkHVKdilBumX1SubXJUlowN4rMSLphwDxvMNfv+vQOrdCPXSoPVZ3mhfrHsQ9Xow==
@@ -4684,15 +4684,6 @@
   dependencies:
     "@daybrush/utils" "^1.6.0"
     framework-utils "^1.1.0"
-
-"@scenejs/effects@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@scenejs/effects/-/effects-1.0.1.tgz"
-  integrity sha512-WXZ2RTNOVZ/Z9o2d414cE3FkETNbnkhsL0c3MAiSe+sqvWfqItTmNKZZUekk7F8SOnx1zf+OnFLkHpDo60a6MA==
-  dependencies:
-    "@daybrush/utils" "^0.10.0"
-    keyframer "^0.1.0"
-    scenejs "^1.1.0"
 
 "@schematics/angular@13.1.4":
   version "13.1.4"
@@ -10534,7 +10525,7 @@ css-styled@^1.0.0:
     "@daybrush/utils" "^1.0.0"
     string-hash "^1.1.3"
 
-css-styled@~1.0.1:
+css-styled@^1.0.1, css-styled@~1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/css-styled/-/css-styled-1.0.1.tgz"
   integrity sha512-psJCbNDPPusDBWH/gszP6BetPh577QaqpvaysTNPitxX0nxdGiTgELiOCus0gZ0yXk3gvjShBrFP07nvn58/TQ==
@@ -13374,7 +13365,7 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.1, gesto@^1.14.0, gesto@^1.3.0, gesto@^1.5.1:
+gesto@^1.13.0, gesto@^1.13.1, gesto@^1.14.0, gesto@^1.3.0, gesto@^1.5.1:
   version "1.14.0"
   resolved "https://registry.npmjs.org/gesto/-/gesto-1.14.0.tgz#cb50213f80bf5a1ce5af1dd2bba7c3bb5338dfbc"
   integrity sha512-b89RyxAQb65t0HVJHPWi1+Ren66QoMaXpV5do3k7LRJAwunESYlJr520/4pNrMQGUkqopLMZjEceUE2uBqcgeQ==
@@ -14660,17 +14651,17 @@ infinite-viewer@^0.11.0:
     framework-utils "^0.3.4"
     gesto "^1.3.0"
 
-infinite-viewer@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/infinite-viewer/-/infinite-viewer-0.12.1.tgz"
-  integrity sha512-+FeMbo157DAKV8AKqZOl8qeUTzvjpov8vpetVqDwNjzBKmYJ9hPmr4RaxpM8eNOpr3VesLfnIJRZaPlfcVshKQ==
+infinite-viewer@~0.19.1:
+  version "0.19.1"
+  resolved "https://registry.npmjs.org/infinite-viewer/-/infinite-viewer-0.19.1.tgz#5474d92fb11af23fa1b1257442d40f9a93be4194"
+  integrity sha512-plpjNCkmRugrkTRb1CVyZwGfIxdsoYyqXV5EfZrl/4EqrEwbru4b/0871h1RqCxth3+zRKuVBVyfGPnj01GejQ==
   dependencies:
-    "@daybrush/utils" "^1.3.1"
+    "@daybrush/utils" "^1.9.1"
     "@egjs/agent" "^2.2.1"
-    "@scena/event-emitter" "^1.0.4"
-    css-styled "^1.0.0"
-    framework-utils "^0.3.4"
-    gesto "^1.3.0"
+    "@scena/event-emitter" "^1.0.5"
+    css-styled "^1.0.1"
+    framework-utils "^1.1.0"
+    gesto "^1.13.0"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -17434,14 +17425,6 @@ keycon@^1.2.0, keycon@~1.2.2:
     "@scena/event-emitter" "^1.0.2"
     keycode "^2.2.0"
 
-keyframer@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/keyframer/-/keyframer-0.1.0.tgz"
-  integrity sha512-PelLYEv7cVOIoTmKTifOr+QBa8b81ah8IMnJ+XGRGqIHNGXQTVq+7TnCQz9LyKatkGWA4hkO5Icrt9bBP+UmUA==
-  dependencies:
-    "@daybrush/utils" "^0.7.1"
-    scenejs "^1.0.0"
-
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/killable/-/killable-1.0.1.tgz"
@@ -17686,13 +17669,6 @@ linkify-it@^2.0.0:
   integrity sha512-GnAl/knGn+i1U/wjBz3akz2stz+HrHLsxMwHQGofCDfPvlf+gDKN58UtfmUquTY4/MXeE2x7k19KQmeoZi94Iw==
   dependencies:
     uc.micro "^1.0.1"
-
-list-map@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/list-map/-/list-map-0.1.1.tgz"
-  integrity sha512-LVmi+BBSaX7JkLlqY7ujzavpOEwOnl1vQxKJEqmXqoPp9EJxB9mtEUgjbRrnKfqPfZ3Zvj/ZW4dCvabSWhLEgw==
-  dependencies:
-    "@daybrush/utils" "^0.10.0"
 
 lit-element@^2.2.1:
   version "2.5.1"
@@ -22131,12 +22107,12 @@ react-infinite-viewer@^0.11.0:
   dependencies:
     infinite-viewer "^0.11.0"
 
-react-infinite-viewer@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.npmjs.org/react-infinite-viewer/-/react-infinite-viewer-0.12.0.tgz"
-  integrity sha512-bagcQf1ICG2TEI3ORg/fNxrC8tajfiqUEyI2BNwpp3uovrvFLaxTk3n9aP9W7Han9dHhVa3eB+vhxJR9MHvULw==
+react-infinite-viewer@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.npmjs.org/react-infinite-viewer/-/react-infinite-viewer-0.19.1.tgz#132024fd395de334b2173fa4b6d37cbd7c37c57c"
+  integrity sha512-0SlOpO7pv1dzZk+6aIK9jeMBGbZq3t3avwMRfWDxatyeTDEkDw7GpFM+UTJtZEHV84aju9tnRzHYASN9sBnR8Q==
   dependencies:
-    infinite-viewer "^0.12.1"
+    infinite-viewer "~0.19.1"
 
 react-input-autosize@^3.0.0:
   version "3.0.0"
@@ -23302,15 +23278,7 @@ sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
   resolved "https://registry.npmjs.org/sax/-/sax-1.2.4.tgz"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-scenejs@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/scenejs/-/scenejs-1.2.0.tgz"
-  integrity sha512-VYBTGy2xh/39Mmn3/x+dj5ygU/evyqvdzD5YOTh7TYfJFK8RhVPzmA/eQz657gHfmeAmly+YWSLa/uTnmapcDA==
-  dependencies:
-    "@daybrush/utils" "^0.10.5"
-    list-map "^0.1.1"
-
-scenejs@^1.0.0, scenejs@^1.1.0, scenejs@^1.1.4, scenejs@^1.1.5, scenejs@^1.4.2, scenejs@^1.5.0:
+scenejs@^1.1.5, scenejs@^1.4.2:
   version "1.6.0"
   resolved "https://registry.npmjs.org/scenejs/-/scenejs-1.6.0.tgz"
   integrity sha512-eVTffBKWGFqnELJfiUD5SOqOnkD1M+tW4YclcyLA5FMhml2zVNLhnRkCE6I53iqkoKDH/HrRZH6R4I2WQEXWhg==
@@ -23584,7 +23552,7 @@ shallow-clone@^3.0.0:
   dependencies:
     kind-of "^6.0.2"
 
-shape-svg@^0.3.0, shape-svg@^0.3.3:
+shape-svg@^0.3.0:
   version "0.3.3"
   resolved "https://registry.npmjs.org/shape-svg/-/shape-svg-0.3.3.tgz"
   integrity sha512-d2Tpr4kLs4dLKEVBmJVFFep0FD4ktQ76YI409OAibqjOD/nnb2vMcBzOMDyp0jKctxbzPXeHXf+acagnthcn/Q==

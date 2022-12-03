@@ -33,8 +33,8 @@ export default function App() {
                     scrollThreshold={20}
                     getScrollPosition={() => {
                         return [
-                            viewerRef.current!.getScrollLeft(),
-                            viewerRef.current!.getScrollTop(),
+                            viewerRef.current!.getScrollLeft({ absolute: true }),
+                            viewerRef.current!.getScrollTop({ absolute: true }),
                         ];
                     }}
                     onScroll={({ direction }) => {

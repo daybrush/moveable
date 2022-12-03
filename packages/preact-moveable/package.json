@@ -51,15 +51,12 @@
     "homepage": "https://daybrush.com/moveable",
     "devDependencies": {
         "@daybrush/builder": "^0.1.2",
-        "@scenejs/effects": "^1.0.1",
         "keycon": "^0.3.0",
         "preact": "^10.0.0",
         "print-sizes": "^0.1.0",
         "pvu": "^0.3.1",
         "rollup-plugin-css-bundle": "^1.0.4",
         "rollup-plugin-preact": "^0.5.2",
-        "scenejs": "^1.1.4",
-        "shape-svg": "^0.3.3",
         "tslint": "^5.16.0",
         "typescript": "^4.5.0 <4.6.0"
     },
