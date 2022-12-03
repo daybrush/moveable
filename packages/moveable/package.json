@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.40.1",
+  "version": "0.41.0",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -62,8 +62,8 @@
   ],
   "dependencies": {
     "@scena/event-emitter": "^1.0.5",
-    "react-compat-moveable": "~0.28.1",
-    "react-moveable": "~0.43.1",
+    "react-compat-moveable": "~0.29.0",
+    "react-moveable": "~0.44.0",
     "react-simple-compat": "^1.2.3"
   },
   "devDependencies": {
