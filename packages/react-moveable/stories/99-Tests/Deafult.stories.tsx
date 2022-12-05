@@ -96,3 +96,11 @@ group.add("Test css zoomed target", {
     app: require("./ReactZoomedTargetApp").default,
     path: require.resolve("./ReactZoomedTargetApp"),
 });
+
+
+
+
+group.add("Test snap for scaled target", {
+    app: require("./ReactZoomedSnapApp").default,
+    path: require.resolve("./ReactZoomedSnapApp"),
+});

@@ -202,7 +202,7 @@ export function recheckSizeByTwoDirection(
         horizontal: [snapPos[1]],
     });
 
-    if (verticalOffset || horizontalOffset) {
+    if (throttle(verticalOffset, FLOAT_POINT_NUM) || throttle(horizontalOffset, FLOAT_POINT_NUM)) {
         const [nextWidthOffset, nextHeightOffset] = getDragDist({
             datas,
             distX: -verticalOffset,
@@ -255,6 +255,7 @@ export function checkSizeDist(
         const isHeightBound = heightOffsetInfo.isBound;
         let nextWidthOffset = widthOffsetInfo.offset;
         let nextHeightOffset = heightOffsetInfo.offset;
+
 
         if (i === 1) {
             if (!isWidthBound) {
@@ -309,6 +310,7 @@ export function checkSizeDist(
             isRequest,
             datas
         );
+
         widthOffset += nextWidthOffset;
         heightOffset += nextHeightOffset;
     }
