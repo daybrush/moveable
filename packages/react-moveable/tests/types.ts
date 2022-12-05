@@ -13,27 +13,27 @@ import {
     RotatableProps, ScalableProps, ResizableProps, DraggableProps, OriginOptions,
     PaddingOptions, GroupableProps, ExcludeKeys, OriginDraggableOptions,
     MoveableOptions, BeforeRenderableEvents,
-} from "../src/react-moveable";
-import Draggable from "../src/react-moveable/ables/Draggable";
-import Resizable from "../src/react-moveable/ables/Resizable";
-import Scalable from "../src/react-moveable/ables/Scalable";
-import Rotatable from "../src/react-moveable/ables/Rotatable";
-import Warpable from "../src/react-moveable/ables/Warpable";
-import Groupable from "../src/react-moveable/ables/Groupable";
-import Snappable from "../src/react-moveable/ables/Snappable";
-import Default from "../src/react-moveable/ables/Default";
-import DragArea from "../src/react-moveable/ables/DragArea";
-import Roundable from "../src/react-moveable/ables/Roundable";
-import Clippable from "../src/react-moveable/ables/Clippable";
-import OriginDraggable from "../src/react-moveable/ables/OriginDraggable";
-import Pinchable from "../src/react-moveable/ables/Pinchable";
-import Scrollable from "../src/react-moveable/ables/Scrollable";
-import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP } from "../src/react-moveable/ables/consts";
-import Origin from "../src/react-moveable/ables/Origin";
-import Padding from "../src/react-moveable/ables/Padding";
-import Renderable from "../src/react-moveable/ables/Renderable";
-import BeforeRenderable from "../src/react-moveable/ables/BeforeRenderable";
-import Clickable from "../src/react-moveable/ables/Clickable";
+} from "../src";
+import Draggable from "../src/ables/Draggable";
+import Resizable from "../src/ables/Resizable";
+import Scalable from "../src/ables/Scalable";
+import Rotatable from "../src/ables/Rotatable";
+import Warpable from "../src/ables/Warpable";
+import Groupable from "../src/ables/Groupable";
+import Snappable from "../src/ables/Snappable";
+import Default from "../src/ables/Default";
+import DragArea from "../src/ables/DragArea";
+import Roundable from "../src/ables/Roundable";
+import Clippable from "../src/ables/Clippable";
+import OriginDraggable from "../src/ables/OriginDraggable";
+import Pinchable from "../src/ables/Pinchable";
+import Scrollable from "../src/ables/Scrollable";
+import { MOVEABLE_PROPS_MAP, MOVEABLE_EVENTS_PROPS_MAP } from "../src/ables/consts";
+import Origin from "../src/ables/Origin";
+import Padding from "../src/ables/Padding";
+import Renderable from "../src/ables/Renderable";
+import BeforeRenderable from "../src/ables/BeforeRenderable";
+import Clickable from "../src/ables/Clickable";
 
 type MatchTypes<
     T extends { [key in keyof Required<E>]: any },

@@ -9,11 +9,11 @@
         "include": [
             "README.md",
             "packages/moveable/src",
-            "packages/react-moveable/src/react-moveable/InitialMoveable.tsx",
-            "packages/react-moveable/src/react-moveable/MoveableGroup.tsx",
-            "packages/react-moveable/src/react-moveable/ables",
-            "packages/react-moveable/src/react-moveable/MoveableManager.tsx",
-            "packages/react-moveable/src/react-moveable/types.ts",
+            "packages/react-moveable/src/InitialMoveable.tsx",
+            "packages/react-moveable/src/MoveableGroup.tsx",
+            "packages/react-moveable/src/ables",
+            "packages/react-moveable/src/MoveableManager.tsx",
+            "packages/react-moveable/src/types.ts",
             "node_modules/@scena/event-emitter/src"
         ],
         "includePattern": "(.+\\.js(doc|x)?|.+\\.ts(doc|x)?)$",

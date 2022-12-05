@@ -6,7 +6,7 @@ const defaultOptions = {
 
 export default builder([{
     ...defaultOptions,
-    input: "src/react-moveable/index.ts",
+    input: "src/index.ts",
     output: "./dist/moveable.esm.js",
     visualizer: true,
     format: "es",
@@ -14,7 +14,7 @@ export default builder([{
 },
 {
     ...defaultOptions,
-    input: "src/react-moveable/index.umd.ts",
+    input: "src/index.umd.ts",
     output: "./dist/moveable.cjs.js",
     format: "cjs",
     exports: "named",

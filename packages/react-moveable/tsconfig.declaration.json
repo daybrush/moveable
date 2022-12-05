@@ -10,6 +10,6 @@
         "declarationDir": "declaration"
     },
     "include": [
-        "./src/react-moveable/**/*"
+        "./src/**/*"
     ]
 }

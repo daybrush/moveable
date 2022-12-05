@@ -28,7 +28,7 @@
                 "./stories/*"
             ],
             "@/react-moveable": [
-                "./src/react-moveable/"
+                "./src/"
             ]
         }
     },

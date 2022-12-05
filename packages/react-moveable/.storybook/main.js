@@ -24,7 +24,7 @@ module.exports = {
         config.plugins.push(new ForkTsCheckerWebpackPlugin());
         config.resolve.alias["@/stories"] = path.resolve(__dirname, "../stories");
         config.resolve.alias["moveable-helper"] = path.resolve(__dirname, "../stories/moveable-helper");
-        config.resolve.alias["@/react-moveable"] = path.resolve(__dirname, "../src/react-moveable");
+        config.resolve.alias["@/react-moveable"] = path.resolve(__dirname, "../src");
         return config;
     },
     stories: [

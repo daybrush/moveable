@@ -100,7 +100,7 @@ $ npm i ngx-moveable
 * [**Moveable Handbook**](https://github.com/daybrush/moveable/blob/master/handbook/handbook.md)
 * [**How to use Group**](https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-group)
 * [**How to use custom CSS**](https://github.com/daybrush/moveable/blob/master/handbook/handbook.md#toc-custom-css)
-* [**How to make custom able**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/src/react-moveable/ables/README.md)
+* [**How to make custom able**](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/src/ables/README.md)
 * [API Documentation](https://daybrush.com/moveable/release/latest/doc/)
 
 ## 🚀 How to use
