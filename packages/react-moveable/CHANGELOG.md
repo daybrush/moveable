@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.44.0...react-moveable@0.44.1) (2022-12-05)
+
+
+### :bug: Bug Fix
+
+* fix tangent's tiny x value #806 ([e45b92a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e45b92a5880475d27c2318d2e1489996ad465e1c))
+* move react-moveable path ([ec8e162](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ec8e1620e05f1d5a1a45ecccec7481c2ea8a4f57))
+
+
+### :mega: Other
+
+* publish packages ([9ee9bc9](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9ee9bc9c76f6c4b317548470b5b4894c6a462be1))
+
+
+
 ## [0.44.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.43.1...react-moveable@0.44.0) (2022-12-03)
 
 

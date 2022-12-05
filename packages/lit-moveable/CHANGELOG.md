@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.18.1](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.18.0...lit-moveable@0.18.1) (2022-12-05)
+
+
+### :mega: Other
+
+* publish packages ([9ee9bc9](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/9ee9bc9c76f6c4b317548470b5b4894c6a462be1))
+
+
+
 ## [0.18.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.17.1...lit-moveable@0.18.0) (2022-12-03)
 
 

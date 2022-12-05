@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.41.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.41.0...moveable@0.41.1) (2022-12-05)
+
+
+### :bug: Bug Fix
+
+* move react-moveable path ([ec8e162](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/ec8e1620e05f1d5a1a45ecccec7481c2ea8a4f57))
+
+
+### :mega: Other
+
+* publish packages ([9ee9bc9](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/9ee9bc9c76f6c4b317548470b5b4894c6a462be1))
+
+
+
 ## [0.41.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.40.1...moveable@0.41.0) (2022-12-03)
 
 

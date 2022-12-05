@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.41.1](https://github.com/daybrush/moveable/compare/0.41.0...0.41.1) (2022-12-05)
+### :sparkles: Packages
+* `@moveable/helper` 0.0.4
+* `lit-moveable` 0.18.1
+* `moveable` 0.41.1
+* `preact-moveable` 0.43.1
+* `react-compat-moveable` 0.29.1
+* `react-moveable` 0.44.1
+* `svelte-moveable` 0.33.1
+* `vue-moveable` 2.0.0-beta.53
+* `vue3-moveable` 0.16.1
+* `ngx-moveable` 0.38.1
+
+
+### :bug: Bug Fix
+
+* `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`
+    * move react-moveable path ([ec8e162](https://github.com/daybrush/moveable/commit/ec8e1620e05f1d5a1a45ecccec7481c2ea8a4f57))
+* `react-moveable`
+    * fix tangent's tiny x value #806 ([e45b92a](https://github.com/daybrush/moveable/commit/e45b92a5880475d27c2318d2e1489996ad465e1c))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([9ee9bc9](https://github.com/daybrush/moveable/commit/9ee9bc9c76f6c4b317548470b5b4894c6a462be1))
+
+
+
 ## [0.41.0](https://github.com/daybrush/moveable/compare/0.40.1...0.41.0) (2022-12-03)
 ### :sparkles: Packages
 * `@moveable/helper` 0.0.4
