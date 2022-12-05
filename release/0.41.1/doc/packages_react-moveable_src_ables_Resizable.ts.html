@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>packages/react-moveable/src/ables/Resizable.ts - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
+    <link type="text/css" rel="stylesheet" href="styles/custom.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="packages/react-moveable/src/ables/Resizable.ts - Documentation"/>
+
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h2 class="custom"><a href="https://github.com/daybrush/moveable" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><div class="search"><div class="input-area"><input type="text"/></div><button></button></div><ul class="classes"><li file="moveable" class="parent"><a href="Moveable.html">Moveable</a><h4><a href="Moveable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.html#className">className</a></li><li data-type='method'><a href="Moveable.html#dragArea">dragArea</a></li><li data-type='method'><a href="Moveable.html#dragTarget">dragTarget</a></li><li data-type='method'><a href="Moveable.html#edge">edge</a></li><li data-type='method'><a href="Moveable.html#origin">origin</a></li><li data-type='method'><a href="Moveable.html#padding">padding</a></li><li data-type='method'><a href="Moveable.html#passDragArea">passDragArea</a></li><li data-type='method'><a href="Moveable.html#target">target</a></li><li data-type='method'><a href="Moveable.html#useResizeObserver">useResizeObserver</a></li><li data-type='method'><a href="Moveable.html#zoom">zoom</a></li></ul><h4><a href="Moveable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.html#destroy">destroy</a></li><li data-type='method'><a href="Moveable.html#dragStart">dragStart</a></li><li data-type='method'><a href="Moveable.html#emit">emit</a></li><li data-type='method'><a href="Moveable.html#getAble">getAble</a></li><li data-type='method'><a href="Moveable.html#getManager">getManager</a></li><li data-type='method'><a href="Moveable.html#getRect">getRect</a></li><li data-type='method'><a href="Moveable.html#hitTest">hitTest</a></li><li data-type='method'><a href="Moveable.html#isDragging">isDragging</a></li><li data-type='method'><a href="Moveable.html#isInside">isInside</a></li><li data-type='method'><a href="Moveable.html#isMoveableElement">isMoveableElement</a></li><li data-type='method'><a href="Moveable.html#off">off</a></li><li data-type='method'><a href="Moveable.html#on">on</a></li><li data-type='method'><a href="Moveable.html#once">once</a></li><li data-type='method'><a href="Moveable.html#request">request</a></li><li data-type='method'><a href="Moveable.html#stopDrag">stopDrag</a></li><li data-type='method'><a href="Moveable.html#trigger">trigger</a></li><li data-type='method'><a href="Moveable.html#updateRect">updateRect</a></li><li data-type='method'><a href="Moveable.html#updateSelectors">updateSelectors</a></li><li data-type='method'><a href="Moveable.html#updateTarget">updateTarget</a></li><li data-type='method'><a href="Moveable.html#waitToChangeTarget">waitToChangeTarget</a></li></ul><h4><a href="Moveable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.html#.event:click">click</a></li><li data-type='event'><a href="Moveable.html#.event:clickGroup">clickGroup</a></li><li data-type='event'><a href="Moveable.html#.event:render">render</a></li><li data-type='event'><a href="Moveable.html#.event:renderEnd">renderEnd</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroup">renderGroup</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroupEnd">renderGroupEnd</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroupStart">renderGroupStart</a></li><li data-type='event'><a href="Moveable.html#.event:renderStart">renderStart</a></li></ul><h4><a href="Moveable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.html#.AbleRequestParam">AbleRequestParam</a></li><li data-type='typddef'><a href="Moveable.html#.CSSObject">CSSObject</a></li><li data-type='typddef'><a href="Moveable.html#.DefaultOptions">DefaultOptions</a></li><li data-type='typddef'><a href="Moveable.html#.DragAreaOptions">DragAreaOptions</a></li><li data-type='typddef'><a href="Moveable.html#.ElementSizes">ElementSizes</a></li><li data-type='typddef'><a href="Moveable.html#.GroupRect">GroupRect</a></li><li data-type='typddef'><a href="Moveable.html#.HitRect">HitRect</a></li><li data-type='typddef'><a href="Moveable.html#.In">In</a></li><li data-type='typddef'><a href="Moveable.html#.LineDirection">LineDirection</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableDefaultProps">MoveableDefaultProps</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableOptions">MoveableOptions</a></li><li data-type='typddef'><a href="Moveable.html#.MoveablePosition">MoveablePosition</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefObject">MoveableRefObject</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefTargetType">MoveableRefTargetType</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefType">MoveableRefType</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableTargetGroupsType">MoveableTargetGroupsType</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRender">OnBeforeRender</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderEnd">OnBeforeRenderEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroup">OnBeforeRenderGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroupEnd">OnBeforeRenderGroupEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroupStart">OnBeforeRenderGroupStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderStart">OnBeforeRenderStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnChangeTargets">OnChangeTargets</a></li><li data-type='typddef'><a href="Moveable.html#.OnClick">OnClick</a></li><li data-type='typddef'><a href="Moveable.html#.OnClickGroup">OnClickGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnEndEvent">OnEndEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnEvent">OnEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnRender">OnRender</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderEnd">OnRenderEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroup">OnRenderGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroupEnd">OnRenderGroupEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroupStart">OnRenderGroupStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderStart">OnRenderStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnTransformEvent">OnTransformEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnTransformStartEvent">OnTransformStartEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OriginOptions">OriginOptions</a></li><li data-type='typddef'><a href="Moveable.html#.PaddingBox">PaddingBox</a></li><li data-type='typddef'><a href="Moveable.html#.PaddingOptions">PaddingOptions</a></li><li data-type='typddef'><a href="Moveable.html#.PersistRectData">PersistRectData</a></li><li data-type='typddef'><a href="Moveable.html#.RectInfo">RectInfo</a></li><li data-type='typddef'><a href="Moveable.html#.RenderDirections">RenderDirections</a></li><li data-type='typddef'><a href="Moveable.html#.Requester">Requester</a></li><li data-type='typddef'><a href="Moveable.html#.TransformObject">TransformObject</a></li></ul></li><li file="eventemitter" class="parent"><a href="EventEmitter.html">EventEmitter</a><h4><a href="EventEmitter.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="EventEmitter.html#emit">emit</a></li><li data-type='method'><a href="EventEmitter.html#off">off</a></li><li data-type='method'><a href="EventEmitter.html#on">on</a></li><li data-type='method'><a href="EventEmitter.html#once">once</a></li><li data-type='method'><a href="EventEmitter.html#trigger">trigger</a></li><li data-type='method'><a href="EventEmitter.html#trigger">trigger</a></li></ul><h4><a href="EventEmitter.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="EventEmitter.html#.EmitterParam">EmitterParam</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventHash">EventHash</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventInfo">EventInfo</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventListener">EventListener</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventOptions">EventOptions</a></li><li data-type='typddef'><a href="EventEmitter.html#.OnEvent">OnEvent</a></li><li data-type='typddef'><a href="EventEmitter.html#.TargetParam">TargetParam</a></li></ul></li></ul><ul class="namespaces"><li file="snappable" class="parent"><a href="Moveable.Snappable.html">Moveable.Snappable</a><h4><a href="Moveable.Snappable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Snappable.html#bounds">bounds</a></li><li data-type='method'><a href="Moveable.Snappable.html#elementGuidelines">elementGuidelines</a></li><li data-type='method'><a href="Moveable.Snappable.html#elementSnapDirections">elementSnapDirections</a></li><li data-type='method'><a href="Moveable.Snappable.html#horizontalGuidelines">horizontalGuidelines</a></li><li data-type='method'><a href="Moveable.Snappable.html#innerBounds">innerBounds</a></li><li data-type='method'><a href="Moveable.Snappable.html#isDisplayInnerSnapDigit">isDisplayInnerSnapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#isDisplaySnapDigit">isDisplaySnapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapContainer">snapContainer</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDigit">snapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDirections">snapDirections</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDistFormat">snapDistFormat</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGap">snapGap</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGridHeight">snapGridHeight</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGridWidth">snapGridWidth</a></li><li data-type='method'><a href="Moveable.Snappable.html#snappable">snappable</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapThreshold">snapThreshold</a></li><li data-type='method'><a href="Moveable.Snappable.html#verticalGuidelines">verticalGuidelines</a></li></ul><h4><a href="Moveable.Snappable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Snappable.html#.event:snap">snap</a></li></ul><h4><a href="Moveable.Snappable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Snappable.html#.BoundType">BoundType</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValue">ElementGuidelineValue</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValue">ElementGuidelineValue</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValueOption">ElementGuidelineValueOption</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.GapGuideline">GapGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.InnerBoundType">InnerBoundType</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.OnSnap">OnSnap</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.PosGuideline">PosGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.RenderGuidelineInfo">RenderGuidelineInfo</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnapDirections">SnapDirections</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnapGuideline">SnapGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnappableOptions">SnappableOptions</a></li></ul></li><li file="warpable" class="parent"><a href="Moveable.Warpable.html">Moveable.Warpable</a><h4><a href="Moveable.Warpable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Warpable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Warpable.html#warpable">warpable</a></li></ul><h4><a href="Moveable.Warpable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Warpable.html#.event:warp">warp</a></li><li data-type='event'><a href="Moveable.Warpable.html#.event:warpEnd">warpEnd</a></li><li data-type='event'><a href="Moveable.Warpable.html#.event:warpStart">warpStart</a></li></ul><h4><a href="Moveable.Warpable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarp">OnWarp</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarpEnd">OnWarpEnd</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarpStart">OnWarpStart</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.WarpableOptions">WarpableOptions</a></li></ul></li><li file="scrollable" class="parent"><a href="Moveable.Scrollable.html">Moveable.Scrollable</a><h4><a href="Moveable.Scrollable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Scrollable.html#getScrollPosition">getScrollPosition</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollable">scrollable</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollContainer">scrollContainer</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollThreshold">scrollThreshold</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollThreshold">scrollThreshold</a></li></ul><h4><a href="Moveable.Scrollable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Scrollable.html#.event:scroll">scroll</a></li><li data-type='event'><a href="Moveable.Scrollable.html#.event:scrollGroup">scrollGroup</a></li></ul><h4><a href="Moveable.Scrollable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Scrollable.html#.OnScroll">OnScroll</a></li><li data-type='typddef'><a href="Moveable.Scrollable.html#.OnScrollGroup">OnScrollGroup</a></li><li data-type='typddef'><a href="Moveable.Scrollable.html#.ScrollableOptions">ScrollableOptions</a></li></ul></li><li file="scalable" class="parent"><a href="Moveable.Scalable.html">Moveable.Scalable</a><h4><a href="Moveable.Scalable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Scalable.html#keepRatio">keepRatio</a></li><li data-type='method'><a href="Moveable.Scalable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Scalable.html#scalable">scalable</a></li><li data-type='method'><a href="Moveable.Scalable.html#throttleScale">throttleScale</a></li></ul><h4><a href="Moveable.Scalable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Scalable.html#request">request</a></li></ul><h4><a href="Moveable.Scalable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Scalable.html#.event:beforeScale">beforeScale</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scale">scale</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleEnd">scaleEnd</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroup">scaleGroup</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroupEnd">scaleGroupEnd</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroupStart">scaleGroupStart</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleStart">scaleStart</a></li></ul><h4><a href="Moveable.Scalable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Scalable.html#.OnBeforeScale">OnBeforeScale</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnBeforeScaleGroup">OnBeforeScaleGroup</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScale">OnScale</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleEnd">OnScaleEnd</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroup">OnScaleGroup</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroupEnd">OnScaleGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroupStart">OnScaleGroupStart</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleStart">OnScaleStart</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.ScalableOptions">ScalableOptions</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.ScalableRequestParam">ScalableRequestParam</a></li></ul></li><li file="roundable" class="parent"><a href="Moveable.Roundable.html">Moveable.Roundable</a><h4><a href="Moveable.Roundable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Roundable.html#isDisplayShadowRoundControls">isDisplayShadowRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#maxRoundControls">maxRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#minRoundControls">minRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundable">roundable</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundClickable">roundClickable</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundPadding">roundPadding</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundRelative">roundRelative</a></li></ul><h4><a href="Moveable.Roundable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Roundable.html#.event:round">round</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundEnd">roundEnd</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundGroup">roundGroup</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundGroupEnd">roundGroupEnd</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundGroupStart">roundGroupStart</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundStart">roundStart</a></li></ul><h4><a href="Moveable.Roundable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRound">OnRound</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundEnd">OnRoundEnd</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundGroup">OnRoundGroup</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundGroupEnd">OnRoundGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundGroupStart">OnRoundGroupStart</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundStart">OnRoundStart</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.RoundableOptions">RoundableOptions</a></li></ul></li><li file="rotatable" class="parent"><a href="Moveable.Rotatable.html">Moveable.Rotatable</a><h4><a href="Moveable.Rotatable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Rotatable.html#rotatable">rotatable</a></li><li data-type='method'><a href="Moveable.Rotatable.html#rotationPosition">rotationPosition</a></li><li data-type='method'><a href="Moveable.Rotatable.html#throttleRotate">throttleRotate</a></li></ul><h4><a href="Moveable.Rotatable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Rotatable.html#request">request</a></li></ul><h4><a href="Moveable.Rotatable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotate">rotate</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateEnd">rotateEnd</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroup">rotateGroup</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroupEnd">rotateGroupEnd</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroupStart">rotateGroupStart</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateStart">rotateStart</a></li></ul><h4><a href="Moveable.Rotatable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnBeforeRotate">OnBeforeRotate</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnBeforeRotateGroup">OnBeforeRotateGroup</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotate">OnRotate</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateEnd">OnRotateEnd</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroup">OnRotateGroup</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroupEnd">OnRotateGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroupStart">OnRotateGroupStart</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateStart">OnRotateStart</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.RotatableOptions">RotatableOptions</a></li></ul></li><li file="resizable" class="parent"><a href="Moveable.Resizable.html">Moveable.Resizable</a><h4><a href="Moveable.Resizable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Resizable.html#keepRatio">keepRatio</a></li><li data-type='method'><a href="Moveable.Resizable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Resizable.html#resizable">resizable</a></li><li data-type='method'><a href="Moveable.Resizable.html#resizeFormat">resizeFormat</a></li><li data-type='method'><a href="Moveable.Resizable.html#throttleResize">throttleResize</a></li></ul><h4><a href="Moveable.Resizable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Resizable.html#request">request</a></li></ul><h4><a href="Moveable.Resizable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Resizable.html#.event:beforeResize">beforeResize</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resize">resize</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeEnd">resizeEnd</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroup">resizeGroup</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroupEnd">resizeGroupEnd</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroupStart">resizeGroupStart</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeStart">resizeStart</a></li></ul><h4><a href="Moveable.Resizable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Resizable.html#.OnBeforeResize">OnBeforeResize</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnBeforeResizeGroup">OnBeforeResizeGroup</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResize">OnResize</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeEnd">OnResizeEnd</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroup">OnResizeGroup</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroupEnd">OnResizeGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroupStart">OnResizeGroupStart</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeStart">OnResizeStart</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.ResizableOptions">ResizableOptions</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.ResizableRequestParam">ResizableRequestParam</a></li></ul></li><li file="pinchable" class="parent"><a href="Moveable.Pinchable.html">Moveable.Pinchable</a><h4><a href="Moveable.Pinchable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Pinchable.html#pinchable">pinchable</a></li></ul><h4><a href="Moveable.Pinchable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinch">pinch</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchEnd">pinchEnd</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroup">pinchGroup</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroupEnd">pinchGroupEnd</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroupStart">pinchGroupStart</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchStart">pinchStart</a></li></ul><h4><a href="Moveable.Pinchable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinch">OnPinch</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchEnd">OnPinchEnd</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroup">OnPinchGroup</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroupEnd">OnPinchGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroupStart">OnPinchGroupStart</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchStart">OnPinchStart</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.PinchableOptions">PinchableOptions</a></li></ul></li><li file="origindraggable" class="parent"><a href="Moveable.OriginDraggable.html">Moveable.OriginDraggable</a><h4><a href="Moveable.OriginDraggable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.OriginDraggable.html#originDraggable">originDraggable</a></li><li data-type='method'><a href="Moveable.OriginDraggable.html#originRelative">originRelative</a></li></ul><h4><a href="Moveable.OriginDraggable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.OriginDraggable.html#request">request</a></li></ul><h4><a href="Moveable.OriginDraggable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOrigin">dragOrigin</a></li><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOriginEnd">dragOriginEnd</a></li><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOriginStart">dragOriginStart</a></li></ul><h4><a href="Moveable.OriginDraggable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOrigin">OnDragOrigin</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOriginEnd">OnDragOriginEnd</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOriginStart">OnDragOriginStart</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OriginDraggableOptions">OriginDraggableOptions</a></li></ul></li><li file="group" class="parent"><a href="Moveable.Group.html">Moveable.Group</a><h4><a href="Moveable.Group.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Group.html#defaultGroupOrigin">defaultGroupOrigin</a></li><li data-type='method'><a href="Moveable.Group.html#defaultGroupRotate">defaultGroupRotate</a></li><li data-type='method'><a href="Moveable.Group.html#hideChildMoveableDefaultLines">hideChildMoveableDefaultLines</a></li></ul><h4><a href="Moveable.Group.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Group.html#.GroupableOptions">GroupableOptions</a></li></ul></li><li file="draggable" class="parent"><a href="Moveable.Draggable.html">Moveable.Draggable</a><h4><a href="Moveable.Draggable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Draggable.html#draggable">draggable</a></li><li data-type='method'><a href="Moveable.Draggable.html#edgeDraggable">edgeDraggable</a></li><li data-type='method'><a href="Moveable.Draggable.html#startDragRotate">startDragRotate</a></li><li data-type='method'><a href="Moveable.Draggable.html#throttleDrag">throttleDrag</a></li><li data-type='method'><a href="Moveable.Draggable.html#throttleDragRotate">throttleDragRotate</a></li></ul><h4><a href="Moveable.Draggable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Draggable.html#request">request</a></li></ul><h4><a href="Moveable.Draggable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Draggable.html#.event:drag">drag</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragEnd">dragEnd</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroup">dragGroup</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroupEnd">dragGroupEnd</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroupStart">dragGroupStart</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragStart">dragStart</a></li></ul><h4><a href="Moveable.Draggable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Draggable.html#.DraggableOptions">DraggableOptions</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDrag">OnDrag</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragEnd">OnDragEnd</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroup">OnDragGroup</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroupEnd">OnDragGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroupStart">OnDragGroupStart</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragStart">OnDragStart</a></li></ul></li><li file="clippable" class="parent"><a href="Moveable.Clippable.html">Moveable.Clippable</a><h4><a href="Moveable.Clippable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Clippable.html#clipArea">clipArea</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipHorizontalGuidelines">clipHorizontalGuidelines</a></li><li data-type='method'><a href="Moveable.Clippable.html#clippable">clippable</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipRelative">clipRelative</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipSnapThreshold">clipSnapThreshold</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipTargetBounds">clipTargetBounds</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipVerticalGuidelines">clipVerticalGuidelines</a></li><li data-type='method'><a href="Moveable.Clippable.html#customClipPath">customClipPath</a></li><li data-type='method'><a href="Moveable.Clippable.html#defaultClipPath">defaultClipPath</a></li><li data-type='method'><a href="Moveable.Clippable.html#dragWithClip">dragWithClip</a></li></ul><h4><a href="Moveable.Clippable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Clippable.html#.event:clip">clip</a></li><li data-type='event'><a href="Moveable.Clippable.html#.event:clipEnd">clipEnd</a></li><li data-type='event'><a href="Moveable.Clippable.html#.event:clipStart">clipStart</a></li></ul><h4><a href="Moveable.Clippable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Clippable.html#.ClippableOptions">ClippableOptions</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClip">OnClip</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClipEnd">OnClipEnd</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClipStart">OnClipStart</a></li></ul></li></ul><ul class="global"><li file="global"  class="parent"><a href="global.html">Global</a><h4><a href="global.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typedef'><a href="global.html#MoveableDefaultOptions">MoveableDefaultOptions</a></li></ul><h4><a href="global.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="global.html#Moveable#getTargetsimportMoveablefrom%2522moveable%2522;constmoveable=newMoveable(document.body,%257Btarget:%255BtargetRef,%2522.target%2522,document.querySelectorAll(%2522.target%2522)%255D,%257D);console.log(moveable.getTargets());">Moveable#getTargets
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+   target: [targetRef, ".target", document.querySelectorAll(".target")],
+});
+
+console.log(moveable.getTargets());</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">packages/react-moveable/src/ables/Resizable.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+    triggerEvent,
+    fillParams,
+    fillEndParams,
+    getAbsolutePosesByState,
+    catchEvent,
+    getOffsetSizeDist,
+    getProps,
+    getDirectionCondition,
+    calculatePoses,
+    fillAfterTransform,
+    getDirectionViewClassName,
+    getTotalDirection,
+} from "../utils";
+import {
+    setDragStart,
+    getResizeDist,
+    getAbsolutePosition,
+    getPosByDirection,
+    getNextMatrix,
+    getNextTransforms,
+    getDirectionByPos,
+} from "../gesto/GestoUtils";
+import {
+    ResizableProps, OnResizeGroup, OnResizeGroupEnd,
+    OnResizeGroupStart, DraggableProps, OnDrag, OnResizeStart, SnappableState,
+    OnResize, OnResizeEnd, MoveableManagerInterface, MoveableGroupInterface, SnappableProps,
+    OnBeforeResize, OnBeforeResizeGroup, ResizableRequestParam,
+} from "../types";
+import { getRenderDirections } from "../renderDirections";
+import {
+    fillChildEvents,
+    triggerChildAbles,
+} from "../groupUtils";
+import Draggable from "./Draggable";
+import { calculate, convertDimension, createRotateMatrix, plus } from "@scena/matrix";
+import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
+import { checkSnapResize } from "./Snappable";
+import {
+    calculateBoundSize,
+    isString, convertUnitSize,
+    throttle,
+    isNumber,
+} from "@daybrush/utils";
+import { TINY_NUM } from "../consts";
+import { parseMat } from "css-to-mat";
+
+/**
+ * @namespace Resizable
+ * @memberof Moveable
+ * @description Resizable indicates whether the target's width and height can be increased or decreased.
+ */
+
+const directionCondition = getDirectionCondition("resizable");
+
+export default {
+    name: "resizable",
+    ableGroup: "size",
+    canPinch: true,
+    props: {
+        resizable: Boolean,
+        throttleResize: Number,
+        renderDirections: Array,
+        keepRatio: Boolean,
+        resizeFormat: Function,
+        keepRatioFinally: Boolean,
+        edge: Boolean,
+    } as const,
+    events: {
+        onResizeStart: "resizeStart",
+        onBeforeResize: "beforeResize",
+        onResize: "resize",
+        onResizeEnd: "resizeEnd",
+
+        onResizeGroupStart: "resizeGroupStart",
+        onBeforeResizeGroup: "beforeResizeGroup",
+        onResizeGroup: "resizeGroup",
+        onResizeGroupEnd: "resizeGroupEnd",
+    } as const,
+    render: getRenderDirections("resizable"),
+    dragControlCondition: directionCondition,
+    viewClassName: getDirectionViewClassName("resizable"),
+    dragControlStart(
+        moveable: MoveableManagerInterface&lt;ResizableProps &amp; DraggableProps, SnappableState>,
+        e: any,
+    ) {
+        const {
+            inputEvent,
+            isPinch,
+            isGroup,
+            parentDirection,
+            parentGesto,
+            datas,
+            parentFixedDirection,
+            parentEvent,
+        } = e;
+
+        const direction = getTotalDirection(
+            parentDirection,
+            isPinch,
+            inputEvent,
+            datas,
+        );
+
+        const state = moveable.state;
+        const { target, width, height, gestos } = state;
+
+        if (!direction || !target) {
+            return false;
+        }
+        if (gestos.resizable) {
+            return false;
+        }
+        gestos.resizable = parentGesto || moveable.controlGesto;
+        !isPinch &amp;&amp; setDragStart(moveable, e);
+
+        datas.datas = {};
+        datas.direction = direction;
+        datas.startOffsetWidth = width;
+        datas.startOffsetHeight = height;
+        datas.prevWidth = 0;
+        datas.prevHeight = 0;
+
+        datas.minSize = [0, 0];
+        datas.startWidth = state.cssWidth;
+        datas.startHeight = state.cssHeight;
+        datas.maxSize = [Infinity, Infinity];
+
+        if (!isGroup) {
+            datas.minSize = [
+                state.minOffsetWidth,
+                state.minOffsetHeight,
+            ];
+            datas.maxSize = [
+                state.maxOffsetWidth,
+                state.maxOffsetHeight,
+            ];
+        }
+        const transformOrigin = moveable.props.transformOrigin || "% %";
+
+        datas.transformOrigin = transformOrigin &amp;&amp; isString(transformOrigin)
+            ? transformOrigin.split(" ")
+            : transformOrigin;
+
+        datas.startOffsetMatrix = state.offsetMatrix;
+        datas.startTransformOrigin = state.transformOrigin;
+
+        datas.isWidth = e?.parentIsWidth ?? ((!direction[0] &amp;&amp; !direction[1]) || direction[0] || !direction[1]);
+
+        function setRatio(ratio: number) {
+            datas.ratio = ratio &amp;&amp; isFinite(ratio) ? ratio : 0;
+        }
+
+
+        datas.startPositions = getAbsolutePosesByState(moveable.state);
+
+        function setFixedDirection(fixedDirection: number[]) {
+            datas.fixedDirection = fixedDirection;
+            datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
+        }
+        function setFixedPosition(fixedPosition: number[]) {
+            const {
+                width,
+                height,
+            } = moveable.state;
+
+            datas.fixedPosition = fixedPosition;
+            datas.fixedDirection = getDirectionByPos(fixedPosition, width, height);
+        }
+        function setMin(minSize: Array&lt;string | number>)  {
+            datas.minSize = [
+                convertUnitSize(`${minSize[0]}`, 0) || 0,
+                convertUnitSize(`${minSize[1]}`, 0) || 0,
+            ];
+        }
+        function setMax(maxSize: Array&lt;string | number>) {
+            const nextMaxSize = [
+                maxSize[0] || Infinity,
+                maxSize[1] || Infinity,
+            ];
+            if (!isNumber(nextMaxSize[0]) || isFinite(nextMaxSize[0])) {
+                nextMaxSize[0] = convertUnitSize(`${nextMaxSize[0]}`, 0) || Infinity;
+            }
+            if (!isNumber(nextMaxSize[1]) || isFinite(nextMaxSize[1])) {
+                nextMaxSize[1] = convertUnitSize(`${nextMaxSize[1]}`, 0) || Infinity;
+            }
+            datas.maxSize = nextMaxSize;
+        }
+
+        setRatio(width / height);
+        setFixedDirection(parentFixedDirection || [-direction[0], -direction[1]]);
+
+        datas.setFixedDirection = setFixedDirection;
+        datas.setFixedPosition = setFixedPosition;
+        datas.setMin = setMin;
+        datas.setMax = setMax;
+        const params = fillParams&lt;OnResizeStart>(moveable, e, {
+            direction,
+            startRatio: datas.ratio,
+            set: ([startWidth, startHeight]: number[]) => {
+                datas.startWidth = startWidth;
+                datas.startHeight = startHeight;
+            },
+            setMin,
+            setMax,
+            setRatio,
+            setFixedDirection,
+            setFixedPosition,
+            setOrigin: (origin: Array&lt;string | number>) => {
+                datas.transformOrigin = origin;
+            },
+            dragStart: Draggable.dragStart(
+                moveable,
+                new CustomGesto().dragStart([0, 0], e),
+            ),
+        });
+        const result = parentEvent || triggerEvent(moveable, "onResizeStart", params);
+
+        datas.startFixedDirection = datas.fixedDirection;
+        datas.startFixedPosition = datas.fixedPosition;
+        if (result !== false) {
+            datas.isResize = true;
+            moveable.state.snapRenderInfo = {
+                request: e.isRequest,
+                direction,
+            };
+        }
+        return datas.isResize ? params : false;
+    },
+    dragControl(
+        moveable: MoveableManagerInterface&lt;ResizableProps &amp; DraggableProps &amp; SnappableProps>,
+        e: any,
+    ) {
+        const {
+            datas,
+            parentFlag,
+            isPinch,
+            parentKeepRatio,
+            dragClient,
+            parentDist,
+            isRequest,
+            isGroup,
+            parentEvent,
+            resolveMatrix,
+        } = e;
+
+        const {
+            isResize,
+            transformOrigin,
+            startWidth,
+            startHeight,
+            prevWidth,
+            prevHeight,
+            minSize,
+            maxSize,
+            ratio,
+            startOffsetWidth,
+            startOffsetHeight,
+            isWidth,
+        } = datas;
+
+        if (!isResize) {
+            return;
+        }
+        if (resolveMatrix) {
+            const {
+                is3d,
+            } = moveable.state;
+            const {
+                startOffsetMatrix,
+                startTransformOrigin,
+            } = datas;
+            const n = is3d ? 4 : 3;
+            let targetMatrix = parseMat(getNextTransforms(e));
+            const targetN = Math.sqrt(targetMatrix.length);
+
+            if (n !== targetN) {
+                targetMatrix = convertDimension(targetMatrix, targetN, n);
+            }
+
+            const nextAllMatrix = getNextMatrix(
+                startOffsetMatrix,
+                targetMatrix,
+                startTransformOrigin,
+                n,
+            );
+            const poses = calculatePoses(nextAllMatrix, startOffsetWidth, startOffsetHeight, n);
+
+            datas.startPositions = poses;
+            datas.nextTargetMatrix = targetMatrix;
+            datas.nextAllMatrix = nextAllMatrix;
+        }
+        const props = getProps(moveable.props, "resizable");
+        const {
+            resizeFormat,
+            throttleResize = parentFlag ? 0 : 1,
+            parentMoveable,
+            keepRatioFinally,
+        } = props;
+        const direction = datas.direction;
+        let sizeDirection = direction;
+        let distWidth = 0;
+        let distHeight = 0;
+
+        if (!direction[0] &amp;&amp; !direction[1]) {
+            sizeDirection = [1, 1];
+        }
+        const keepRatio = (ratio &amp;&amp; (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
+
+        function getNextBoundingSize() {
+            const fixedDirection = datas.fixedDirection;
+            const nextSize = getOffsetSizeDist(sizeDirection, keepRatio, datas, e);
+
+            distWidth = nextSize.distWidth;
+            distHeight = nextSize.distHeight;
+
+            let nextWidth = (sizeDirection[0] - fixedDirection[0]) || keepRatio
+                ? Math.max(startOffsetWidth + distWidth, TINY_NUM) : startOffsetWidth;
+            let nextHeight = (sizeDirection[1] - fixedDirection[1]) || keepRatio
+                ? Math.max(startOffsetHeight + distHeight, TINY_NUM) : startOffsetHeight;
+
+            if (keepRatio &amp;&amp; startOffsetWidth &amp;&amp; startOffsetHeight) {
+                // startOffsetWidth : startOffsetHeight = nextWidth : nextHeight
+                if (isWidth) {
+                    nextHeight = nextWidth / ratio;
+                } else {
+                    nextWidth = nextHeight * ratio;
+                }
+            }
+            return [nextWidth, nextHeight];
+        }
+
+        let [boundingWidth, boundingHeight] = getNextBoundingSize();
+
+        if (!parentEvent) {
+            datas.setFixedDirection(datas.fixedDirection);
+
+            triggerEvent(moveable, "onBeforeResize", fillParams&lt;OnBeforeResize>(moveable, e, {
+                startFixedDirection: datas.startFixedDirection,
+                startFixedPosition: datas.startFixedPosition,
+                setFixedDirection(nextFixedDirection: number[]) {
+                    datas.setFixedDirection(nextFixedDirection);
+
+                    [boundingWidth, boundingHeight] = getNextBoundingSize();
+
+                    return [boundingWidth, boundingHeight];
+                },
+                setFixedPosition(nextFixedPosition: number[]) {
+                    datas.setFixedPosition(nextFixedPosition);
+
+                    [boundingWidth, boundingHeight] = getNextBoundingSize();
+
+                    return [boundingWidth, boundingHeight];
+                },
+                boundingWidth,
+                boundingHeight,
+                setSize(size: number[]) {
+                    [boundingWidth, boundingHeight] = size;
+                },
+            }, true));
+        }
+
+        let fixedPosition = dragClient;
+
+        if (!dragClient) {
+            if (!parentFlag &amp;&amp; isPinch) {
+                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
+            } else {
+                fixedPosition = datas.fixedPosition;
+            }
+        }
+
+        let snapDist = [0, 0];
+
+        if (!isPinch) {
+            snapDist = checkSnapResize(
+                moveable,
+                boundingWidth,
+                boundingHeight,
+                direction,
+                fixedPosition,
+                isRequest,
+                datas,
+            );
+        }
+        if (parentDist) {
+            !parentDist[0] &amp;&amp; (snapDist[0] = 0);
+            !parentDist[1] &amp;&amp; (snapDist[1] = 0);
+        }
+
+        function computeSize() {
+            if (resizeFormat) {
+                [boundingWidth, boundingHeight] = resizeFormat([boundingWidth, boundingHeight]);
+            }
+            boundingWidth = throttle(boundingWidth, throttleResize!);
+            boundingHeight = throttle(boundingHeight, throttleResize!);
+        }
+        if (keepRatio) {
+            if (sizeDirection[0] &amp;&amp; sizeDirection[1] &amp;&amp; snapDist[0] &amp;&amp; snapDist[1]) {
+                if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
+                    snapDist[1] = 0;
+                } else {
+                    snapDist[0] = 0;
+                }
+            }
+            const isNoSnap = !snapDist[0] &amp;&amp; !snapDist[1];
+
+            if (isNoSnap) {
+                // pre-compute before maintaining the ratio
+                computeSize();
+            }
+            if (
+                (sizeDirection[0] &amp;&amp; !sizeDirection[1])
+                || (snapDist[0] &amp;&amp; !snapDist[1])
+                || (isNoSnap &amp;&amp; isWidth)
+            ) {
+                boundingWidth += snapDist[0];
+                boundingHeight = boundingWidth / ratio;
+            } else if (
+                (!sizeDirection[0] &amp;&amp; sizeDirection[1])
+                || (!snapDist[0] &amp;&amp; snapDist[1])
+                || (isNoSnap &amp;&amp; !isWidth)
+            ) {
+                boundingHeight += snapDist[1];
+                boundingWidth = boundingHeight * ratio;
+            }
+        } else {
+            boundingWidth += snapDist[0];
+            boundingHeight += snapDist[1];
+
+            boundingWidth = Math.max(0, boundingWidth);
+            boundingHeight = Math.max(0, boundingHeight);
+        }
+
+        [boundingWidth, boundingHeight] = calculateBoundSize(
+            [boundingWidth, boundingHeight],
+            minSize,
+            maxSize,
+            keepRatio ? ratio : false,
+        );
+        computeSize();
+
+        if (keepRatio &amp;&amp; (isGroup || keepRatioFinally)) {
+            if (isWidth) {
+                boundingHeight = boundingWidth / ratio;
+            } else {
+                boundingWidth = boundingHeight * ratio;
+            }
+        }
+        distWidth = boundingWidth - startOffsetWidth;
+        distHeight = boundingHeight - startOffsetHeight;
+
+        const delta = [distWidth - prevWidth, distHeight - prevHeight];
+
+        datas.prevWidth = distWidth;
+        datas.prevHeight = distHeight;
+
+        const inverseDelta = getResizeDist(
+            moveable,
+            boundingWidth,
+            boundingHeight,
+            fixedPosition,
+            transformOrigin,
+            datas,
+        );
+
+        if (!parentMoveable &amp;&amp; delta.every(num => !num) &amp;&amp; inverseDelta.every(num => !num)) {
+            return;
+        }
+        const drag = Draggable.drag(
+            moveable,
+            setCustomDrag(e, moveable.state, inverseDelta, !!isPinch, false, "draggable"),
+        ) as OnDrag;
+        const transform = drag.transform;
+
+        const nextWidth = startWidth + distWidth;
+        const nextHeight = startHeight + distHeight;
+
+        const params = fillParams&lt;OnResize>(moveable, e, {
+            width: nextWidth,
+            height: nextHeight,
+            offsetWidth: Math.round(boundingWidth),
+            offsetHeight: Math.round(boundingHeight),
+            startRatio: ratio,
+            boundingWidth,
+            boundingHeight,
+            direction,
+            dist: [distWidth, distHeight],
+            delta,
+            isPinch: !!isPinch,
+            drag,
+            ...fillAfterTransform({
+                style: {
+                    width: `${nextWidth}px`,
+                    height: `${nextHeight}px`,
+                },
+                transform,
+            }, drag, e),
+        });
+        !parentEvent &amp;&amp; triggerEvent(moveable, "onResize", params);
+        return params;
+    },
+    dragControlAfter(
+        moveable: MoveableManagerInterface&lt;ResizableProps &amp; DraggableProps>,
+        e: any,
+    ) {
+        const datas = e.datas;
+        const {
+            isResize,
+            startOffsetWidth,
+            startOffsetHeight,
+            prevWidth,
+            prevHeight,
+        } = datas;
+
+        if (!isResize) {
+            return;
+        }
+        const {
+            width,
+            height,
+        } = moveable.state;
+        const errorWidth = width - (startOffsetWidth + prevWidth);
+        const errorHeight = height - (startOffsetHeight + prevHeight);
+        const isErrorWidth = Math.abs(errorWidth) > 3;
+        const isErrorHeight = Math.abs(errorHeight) > 3;
+
+        if (isErrorWidth) {
+            datas.startWidth += errorWidth;
+            datas.startOffsetWidth += errorWidth;
+            datas.prevWidth += errorWidth;
+        }
+        if (isErrorHeight) {
+            datas.startHeight += errorHeight;
+            datas.startOffsetHeight += errorHeight;
+            datas.prevHeight += errorHeight;
+        }
+        if (isErrorWidth || isErrorHeight) {
+            return this.dragControl(moveable, e);
+        }
+    },
+    dragControlEnd(
+        moveable: MoveableManagerInterface&lt;ResizableProps &amp; DraggableProps>,
+        e: any,
+    ) {
+        const { datas, parentEvent } = e;
+        if (!datas.isResize) {
+            return;
+        }
+        datas.isResize = false;
+
+        const params = fillEndParams&lt;OnResizeEnd>(moveable, e, {});
+        !parentEvent &amp;&amp; triggerEvent(moveable, "onResizeEnd", params);
+        return params;
+    },
+    dragGroupControlCondition: directionCondition,
+    dragGroupControlStart(moveable: MoveableGroupInterface&lt;any, any>, e: any) {
+        const { datas } = e;
+        const params = this.dragControlStart(moveable, {...e, isGroup: true });
+
+        if (!params) {
+            return false;
+        }
+        const originalEvents = fillChildEvents(moveable, "resizable", e);
+        function setDist(child: MoveableManagerInterface, ev: any) {
+            const fixedDirection = datas.fixedDirection;
+            const fixedPosition = datas.fixedPosition;
+
+            const startPositions = ev.datas.startPositions || getAbsolutePosesByState(child.state);
+            const pos = getPosByDirection(startPositions, fixedDirection);
+            const [originalX, originalY] = calculate(
+                createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
+                [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
+                3,
+            );
+            ev.datas.originalX = originalX;
+            ev.datas.originalY = originalY;
+
+            return ev;
+        }
+        const {
+            startOffsetWidth: parentStartOffsetWidth,
+            startOffsetHeight: parentStartOffsetHeight,
+        } = datas;
+
+        function updateGroupMin() {
+            const originalMinSize = datas.minSize;
+            originalEvents.forEach(ev => {
+                const {
+                    minSize: childMinSize,
+                    startOffsetWidth: childStartOffsetWidth,
+                    startOffsetHeight: childStartOffsetHeight,
+                } = ev.datas;
+
+                const parentMinWidth = parentStartOffsetWidth
+                    * (childStartOffsetWidth ? childMinSize[0] / childStartOffsetWidth : 0);
+                const parentMinHeight = parentStartOffsetHeight
+                    * (childStartOffsetHeight ? childMinSize[1] / childStartOffsetHeight : 0);
+
+                originalMinSize[0] = Math.max(originalMinSize[0], parentMinWidth);
+                originalMinSize[1] = Math.max(originalMinSize[1], parentMinHeight);
+            });
+        }
+
+        function updateGroupMax() {
+            const originalMaxSize = datas.maxSize;
+            originalEvents.forEach(ev => {
+                const {
+                    maxSize: childMaxSize,
+                    startOffsetWidth: childStartOffsetWidth,
+                    startOffsetHeight: childStartOffsetHeight,
+                } = ev.datas;
+
+                const parentMaxWidth = parentStartOffsetWidth
+                    * (childStartOffsetWidth ? childMaxSize[0] / childStartOffsetWidth : 0);
+                const parentMaxHeight = parentStartOffsetHeight
+                    * (childStartOffsetHeight ? childMaxSize[1] / childStartOffsetHeight : 0);
+
+                originalMaxSize[0] = Math.min(originalMaxSize[0], parentMaxWidth);
+                originalMaxSize[1] = Math.min(originalMaxSize[1], parentMaxHeight);
+            });
+        }
+        const events = triggerChildAbles(
+            moveable,
+            this,
+            "dragControlStart",
+            e,
+            (child, ev) => {
+                return setDist(child, ev);
+            },
+        );
+
+
+        updateGroupMin();
+        updateGroupMax();
+
+        const setFixedDirection = (fixedDirection: number[]) => {
+            params.setFixedDirection(fixedDirection);
+            events.forEach((ev, i) => {
+                ev.setFixedDirection(fixedDirection);
+                setDist(ev.moveable, originalEvents[i]);
+            });
+        };
+
+        datas.setFixedDirection = setFixedDirection;
+
+        const nextParams: OnResizeGroupStart = {
+            ...params,
+            targets: moveable.props.targets!,
+            events: events.map(ev => {
+                return {
+                    ...ev,
+                    setMin: (minSize: Array&lt;number | string>) => {
+                        ev.setMin(minSize);
+                        updateGroupMin();
+                    },
+                    setMax: (maxSize: Array&lt;number | string>) => {
+                        ev.setMax(maxSize);
+                        updateGroupMax();
+                    },
+                };
+            }),
+            setFixedDirection,
+            setMin: (minSize: Array&lt;number | string>) => {
+                params.setMin(minSize);
+                updateGroupMin();
+            },
+            setMax: (maxSize: Array&lt;number | string>) => {
+                params.setMax(maxSize);
+                updateGroupMax();
+            },
+        };
+        const result = triggerEvent(moveable, "onResizeGroupStart", nextParams);
+
+        datas.isResize = result !== false;
+        return datas.isResize ? params : false;
+    },
+    dragGroupControl(moveable: MoveableGroupInterface&lt;any, any>, e: any) {
+        const { datas } = e;
+        if (!datas.isResize) {
+            return;
+        }
+        const props = getProps(moveable.props, "resizable");
+
+        catchEvent(moveable, "onBeforeResize", parentEvent => {
+            triggerEvent(moveable, "onBeforeResizeGroup", fillParams&lt;OnBeforeResizeGroup>(moveable, e, {
+                ...parentEvent,
+                targets: props.targets!,
+            }, true));
+        });
+
+
+        const params = this.dragControl(moveable, {...e, isGroup: true });
+
+        if (!params) {
+            return;
+        }
+        const {
+            boundingWidth,
+            boundingHeight,
+            dist,
+        } = params;
+
+        const keepRatio = props.keepRatio;
+
+        const parentScale = [
+            boundingWidth / (boundingWidth - dist[0]),
+            boundingHeight / (boundingHeight - dist[1]),
+        ];
+        const fixedPosition = datas.fixedPosition;
+
+        const events = triggerChildAbles(
+            moveable,
+            this,
+            "dragControl",
+            e,
+            (_, ev) => {
+                const [clientX, clientY] = calculate(
+                    createRotateMatrix(moveable.rotation / 180 * Math.PI, 3),
+                    [
+                        ev.datas.originalX * parentScale[0],
+                        ev.datas.originalY * parentScale[1],
+                        1,
+                    ],
+                    3,
+                );
+
+                return {
+                    ...ev,
+                    parentDist: null,
+                    parentScale,
+                    dragClient: plus(fixedPosition, [clientX, clientY]),
+                    parentKeepRatio: keepRatio,
+                };
+            },
+        );
+        const nextParams: OnResizeGroup = {
+            targets: props.targets!,
+            events,
+            ...params,
+        };
+
+        triggerEvent(moveable, "onResizeGroup", nextParams);
+        return nextParams;
+    },
+    dragGroupControlEnd(moveable: MoveableGroupInterface&lt;any, any>, e: any) {
+        const { isDrag, datas } = e;
+
+        if (!datas.isResize) {
+            return;
+        }
+
+        this.dragControlEnd(moveable, e);
+        const events = triggerChildAbles(moveable, this, "dragControlEnd", e);
+
+        const nextParams: OnResizeGroupEnd = fillEndParams&lt;OnResizeGroupEnd>(moveable, e, {
+            targets: moveable.props.targets!,
+            events,
+        });
+
+        triggerEvent(moveable, "onResizeGroupEnd", nextParams);
+        return isDrag;
+    },
+    /**
+     * @method Moveable.Resizable#request
+     * @param {Moveable.Resizable.ResizableRequestParam} e - the Resizable's request parameter
+     * @return {Moveable.Requester} Moveable Requester
+     * @example
+
+     * // Instantly Request (requestStart - request - requestEnd)
+     * // Use Relative Value
+     * moveable.request("resizable", { deltaWidth: 10, deltaHeight: 10 }, true);
+     *
+     * // Use Absolute Value
+     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100 }, true);
+     *
+     * // requestStart
+     * const requester = moveable.request("resizable");
+     *
+     * // request
+     * // Use Relative Value
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     * requester.request({ deltaWidth: 10, deltaHeight: 10 });
+     *
+     * // Use Absolute Value
+     * moveable.request("resizable", { offsetWidth: 100, offsetHeight: 100 });
+     * moveable.request("resizable", { offsetWidth: 110, offsetHeight: 100 });
+     * moveable.request("resizable", { offsetWidth: 120, offsetHeight: 100 });
+     *
+     * // requestEnd
+     * requester.requestEnd();
+     */
+    request(moveable: MoveableManagerInterface&lt;any>) {
+        const datas: Record&lt;string, any> = {};
+        let distWidth = 0;
+        let distHeight = 0;
+        const rect = moveable.getRect();
+
+        return {
+            isControl: true,
+            requestStart(e: ResizableRequestParam) {
+                return { datas, parentDirection: e.direction || [1, 1], parentIsWidth: e?.horizontal ?? true };
+            },
+            request(e: ResizableRequestParam) {
+                if ("offsetWidth" in e) {
+                    distWidth = e.offsetWidth! - rect.offsetWidth;
+                } else if ("deltaWidth" in e) {
+                    distWidth += e.deltaWidth!;
+                }
+                if ("offsetHeight" in e) {
+                    distHeight = e.offsetHeight! - rect.offsetHeight;
+                } else if ("deltaHeight" in e) {
+                    distHeight += e.deltaHeight!;
+                }
+
+
+                return { datas, parentDist: [distWidth, distHeight], parentKeepRatio: e.keepRatio };
+            },
+            requestEnd() {
+                return { datas, isDrag: true };
+            },
+        };
+    },
+    unset(moveable: MoveableManagerInterface&lt;any, {}>) {
+        moveable.state.gestos.resizable = null;
+    },
+};
+
+/**
+ * Whether or not target can be resized.
+ * @name Moveable.Resizable#resizable
+ * @default false
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     resizable: false,
+ * });
+ *
+ * moveable.resizable = true;
+ */
+
+/**
+ * throttle of width, height when resize. If throttleResize is set to less than 1, the target may shake.
+ * @name Moveable.Resizable#throttleResize
+ * @default 1
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ *   throttleResize: 1,
+ * });
+ *
+ * moveable.throttleResize = 0;
+ */
+/**
+ * When resize or scale, keeps a ratio of the width, height.
+ * @name Moveable.Resizable#keepRatio
+ * @default false
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ * });
+ *
+ * moveable.keepRatio = true;
+ */
+/**
+ * Set directions to show the control box.
+ * @name Moveable.Resizable#renderDirections
+ * @default ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ *   renderDirections: ["n", "nw", "ne", "s", "se", "sw", "e", "w"],
+ * });
+ *
+ * moveable.renderDirections = ["nw", "ne", "sw", "se"];
+ */
+
+/**
+ * Function to convert size for resize
+ * @name Moveable.Resizable#resizeFormat
+ * @default oneself
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   resizable: true,
+ *   resizeFormat: v => v,
+ * });
+ *
+ * moveable.resizeFormat = (size: number[]) => ([Math.trunc(size[0]), Math.trunc(size[1])];
+ */
+
+/**
+ * When the resize starts, the resizeStart event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeStart
+ * @param {Moveable.Resizable.OnResizeStart} - Parameters for the resizeStart event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resizeStart", ({ target }) => {
+ *     console.log(target);
+ * });
+ */
+
+/**
+ * When resizing, `beforeResize` is called before `resize` occurs. In `beforeResize`, you can get and set the pre-value before resizing.
+ * @memberof Moveable.Resizable
+ * @event beforeResize
+ * @param {Moveable.Resizable.OnBeforeResize} - Parameters for the `beforeResize` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("beforeResize", ({ setFixedDirection }) => {
+ *     if (shiftKey) {
+ *        setFixedDirection([0, 0]);
+ *     }
+ * });
+ * moveable.on("resize", ({ target, width, height, drag }) => {
+ *     target.style.width = `${width}px`;
+ *     target.style.height = `${height}px`;
+ *     target.style.transform = drag.transform;
+ * });
+ */
+
+/**
+ * When resizing, the resize event is called.
+ * @memberof Moveable.Resizable
+ * @event resize
+ * @param {Moveable.Resizable.OnResize} - Parameters for the resize event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resize", ({ target, width, height }) => {
+ *     target.style.width = `${e.width}px`;
+ *     target.style.height = `${e.height}px`;
+ * });
+ */
+/**
+ * When the resize finishes, the resizeEnd event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeEnd
+ * @param {Moveable.Resizable.OnResizeEnd} - Parameters for the resizeEnd event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, { resizable: true });
+ * moveable.on("resizeEnd", ({ target, isDrag }) => {
+ *     console.log(target, isDrag);
+ * });
+ */
+
+/**
+* When the group resize starts, the `resizeGroupStart` event is called.
+* @memberof Moveable.Resizable
+* @event resizeGroupStart
+* @param {Moveable.Resizable.OnResizeGroupStart} - Parameters for the `resizeGroupStart` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     resizable: true
+* });
+* moveable.on("resizeGroupStart", ({ targets }) => {
+*     console.log("onResizeGroupStart", targets);
+* });
+*/
+
+/**
+* When the group resize, the `resizeGroup` event is called.
+* @memberof Moveable.Resizable
+* @event resizeGroup
+* @param {Moveable.Resizable.onResizeGroup} - Parameters for the `resizeGroup` event
+* @example
+* import Moveable from "moveable";
+*
+* const moveable = new Moveable(document.body, {
+*     target: [].slice.call(document.querySelectorAll(".target")),
+*     resizable: true
+* });
+* moveable.on("resizeGroup", ({ targets, events }) => {
+*     console.log("onResizeGroup", targets);
+*     events.forEach(ev => {
+*         const offset = [
+*             direction[0] &lt; 0 ? -ev.delta[0] : 0,
+*             direction[1] &lt; 0 ? -ev.delta[1] : 0,
+*         ];
+*         // ev.drag is a drag event that occurs when the group resize.
+*         const left = offset[0] + ev.drag.beforeDist[0];
+*         const top = offset[1] + ev.drag.beforeDist[1];
+*         const width = ev.width;
+*         const top = ev.top;
+*     });
+* });
+*/
+
+/**
+ * When the group resize finishes, the `resizeGroupEnd` event is called.
+ * @memberof Moveable.Resizable
+ * @event resizeGroupEnd
+ * @param {Moveable.Resizable.OnResizeGroupEnd} - Parameters for the `resizeGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ *     resizable: true
+ * });
+ * moveable.on("resizeGroupEnd", ({ targets, isDrag }) => {
+ *     console.log("onResizeGroupEnd", targets, isDrag);
+ * });
+ */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+<style>
+
+
+nav li[file="packages/react-moveable/src/ables/resizable"]:after {
+    display: none;
+}
+nav li[file="packages/react-moveable/src/ables/resizable"] h4, nav li[file="packages/react-moveable/src/ables/resizable"] ul {
+    display: block;
+}
+</style>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.4.3</a> on Tue Dec 06 2022 01:14:19 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/utils.min.js"></script>
+<script src="scripts/search.js"></script>
+<script src="scripts/custom.js"></script>
+</body>
+</html>

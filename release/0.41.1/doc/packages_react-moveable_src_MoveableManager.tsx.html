@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>packages/react-moveable/src/MoveableManager.tsx - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/daybrush.css">
+    <link type="text/css" rel="stylesheet" href="styles/custom.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="description" content="packages/react-moveable/src/MoveableManager.tsx - Documentation"/>
+
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h2 class="custom"><a href="https://github.com/daybrush/moveable" target="_blank" class="menu-item" id="repository" >Github repo</a></h2><div class="search"><div class="input-area"><input type="text"/></div><button></button></div><ul class="classes"><li file="moveable" class="parent"><a href="Moveable.html">Moveable</a><h4><a href="Moveable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.html#className">className</a></li><li data-type='method'><a href="Moveable.html#dragArea">dragArea</a></li><li data-type='method'><a href="Moveable.html#dragTarget">dragTarget</a></li><li data-type='method'><a href="Moveable.html#edge">edge</a></li><li data-type='method'><a href="Moveable.html#origin">origin</a></li><li data-type='method'><a href="Moveable.html#padding">padding</a></li><li data-type='method'><a href="Moveable.html#passDragArea">passDragArea</a></li><li data-type='method'><a href="Moveable.html#target">target</a></li><li data-type='method'><a href="Moveable.html#useResizeObserver">useResizeObserver</a></li><li data-type='method'><a href="Moveable.html#zoom">zoom</a></li></ul><h4><a href="Moveable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.html#destroy">destroy</a></li><li data-type='method'><a href="Moveable.html#dragStart">dragStart</a></li><li data-type='method'><a href="Moveable.html#emit">emit</a></li><li data-type='method'><a href="Moveable.html#getAble">getAble</a></li><li data-type='method'><a href="Moveable.html#getManager">getManager</a></li><li data-type='method'><a href="Moveable.html#getRect">getRect</a></li><li data-type='method'><a href="Moveable.html#hitTest">hitTest</a></li><li data-type='method'><a href="Moveable.html#isDragging">isDragging</a></li><li data-type='method'><a href="Moveable.html#isInside">isInside</a></li><li data-type='method'><a href="Moveable.html#isMoveableElement">isMoveableElement</a></li><li data-type='method'><a href="Moveable.html#off">off</a></li><li data-type='method'><a href="Moveable.html#on">on</a></li><li data-type='method'><a href="Moveable.html#once">once</a></li><li data-type='method'><a href="Moveable.html#request">request</a></li><li data-type='method'><a href="Moveable.html#stopDrag">stopDrag</a></li><li data-type='method'><a href="Moveable.html#trigger">trigger</a></li><li data-type='method'><a href="Moveable.html#updateRect">updateRect</a></li><li data-type='method'><a href="Moveable.html#updateSelectors">updateSelectors</a></li><li data-type='method'><a href="Moveable.html#updateTarget">updateTarget</a></li><li data-type='method'><a href="Moveable.html#waitToChangeTarget">waitToChangeTarget</a></li></ul><h4><a href="Moveable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.html#.event:click">click</a></li><li data-type='event'><a href="Moveable.html#.event:clickGroup">clickGroup</a></li><li data-type='event'><a href="Moveable.html#.event:render">render</a></li><li data-type='event'><a href="Moveable.html#.event:renderEnd">renderEnd</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroup">renderGroup</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroupEnd">renderGroupEnd</a></li><li data-type='event'><a href="Moveable.html#.event:renderGroupStart">renderGroupStart</a></li><li data-type='event'><a href="Moveable.html#.event:renderStart">renderStart</a></li></ul><h4><a href="Moveable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.html#.AbleRequestParam">AbleRequestParam</a></li><li data-type='typddef'><a href="Moveable.html#.CSSObject">CSSObject</a></li><li data-type='typddef'><a href="Moveable.html#.DefaultOptions">DefaultOptions</a></li><li data-type='typddef'><a href="Moveable.html#.DragAreaOptions">DragAreaOptions</a></li><li data-type='typddef'><a href="Moveable.html#.ElementSizes">ElementSizes</a></li><li data-type='typddef'><a href="Moveable.html#.GroupRect">GroupRect</a></li><li data-type='typddef'><a href="Moveable.html#.HitRect">HitRect</a></li><li data-type='typddef'><a href="Moveable.html#.In">In</a></li><li data-type='typddef'><a href="Moveable.html#.LineDirection">LineDirection</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableDefaultProps">MoveableDefaultProps</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableOptions">MoveableOptions</a></li><li data-type='typddef'><a href="Moveable.html#.MoveablePosition">MoveablePosition</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefObject">MoveableRefObject</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefTargetType">MoveableRefTargetType</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableRefType">MoveableRefType</a></li><li data-type='typddef'><a href="Moveable.html#.MoveableTargetGroupsType">MoveableTargetGroupsType</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRender">OnBeforeRender</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderEnd">OnBeforeRenderEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroup">OnBeforeRenderGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroupEnd">OnBeforeRenderGroupEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderGroupStart">OnBeforeRenderGroupStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnBeforeRenderStart">OnBeforeRenderStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnChangeTargets">OnChangeTargets</a></li><li data-type='typddef'><a href="Moveable.html#.OnClick">OnClick</a></li><li data-type='typddef'><a href="Moveable.html#.OnClickGroup">OnClickGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnEndEvent">OnEndEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnEvent">OnEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnRender">OnRender</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderEnd">OnRenderEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroup">OnRenderGroup</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroupEnd">OnRenderGroupEnd</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderGroupStart">OnRenderGroupStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnRenderStart">OnRenderStart</a></li><li data-type='typddef'><a href="Moveable.html#.OnTransformEvent">OnTransformEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OnTransformStartEvent">OnTransformStartEvent</a></li><li data-type='typddef'><a href="Moveable.html#.OriginOptions">OriginOptions</a></li><li data-type='typddef'><a href="Moveable.html#.PaddingBox">PaddingBox</a></li><li data-type='typddef'><a href="Moveable.html#.PaddingOptions">PaddingOptions</a></li><li data-type='typddef'><a href="Moveable.html#.PersistRectData">PersistRectData</a></li><li data-type='typddef'><a href="Moveable.html#.RectInfo">RectInfo</a></li><li data-type='typddef'><a href="Moveable.html#.RenderDirections">RenderDirections</a></li><li data-type='typddef'><a href="Moveable.html#.Requester">Requester</a></li><li data-type='typddef'><a href="Moveable.html#.TransformObject">TransformObject</a></li></ul></li><li file="eventemitter" class="parent"><a href="EventEmitter.html">EventEmitter</a><h4><a href="EventEmitter.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="EventEmitter.html#emit">emit</a></li><li data-type='method'><a href="EventEmitter.html#off">off</a></li><li data-type='method'><a href="EventEmitter.html#on">on</a></li><li data-type='method'><a href="EventEmitter.html#once">once</a></li><li data-type='method'><a href="EventEmitter.html#trigger">trigger</a></li><li data-type='method'><a href="EventEmitter.html#trigger">trigger</a></li></ul><h4><a href="EventEmitter.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="EventEmitter.html#.EmitterParam">EmitterParam</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventHash">EventHash</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventInfo">EventInfo</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventListener">EventListener</a></li><li data-type='typddef'><a href="EventEmitter.html#.EventOptions">EventOptions</a></li><li data-type='typddef'><a href="EventEmitter.html#.OnEvent">OnEvent</a></li><li data-type='typddef'><a href="EventEmitter.html#.TargetParam">TargetParam</a></li></ul></li></ul><ul class="namespaces"><li file="snappable" class="parent"><a href="Moveable.Snappable.html">Moveable.Snappable</a><h4><a href="Moveable.Snappable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Snappable.html#bounds">bounds</a></li><li data-type='method'><a href="Moveable.Snappable.html#elementGuidelines">elementGuidelines</a></li><li data-type='method'><a href="Moveable.Snappable.html#elementSnapDirections">elementSnapDirections</a></li><li data-type='method'><a href="Moveable.Snappable.html#horizontalGuidelines">horizontalGuidelines</a></li><li data-type='method'><a href="Moveable.Snappable.html#innerBounds">innerBounds</a></li><li data-type='method'><a href="Moveable.Snappable.html#isDisplayInnerSnapDigit">isDisplayInnerSnapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#isDisplaySnapDigit">isDisplaySnapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapContainer">snapContainer</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDigit">snapDigit</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDirections">snapDirections</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapDistFormat">snapDistFormat</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGap">snapGap</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGridHeight">snapGridHeight</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapGridWidth">snapGridWidth</a></li><li data-type='method'><a href="Moveable.Snappable.html#snappable">snappable</a></li><li data-type='method'><a href="Moveable.Snappable.html#snapThreshold">snapThreshold</a></li><li data-type='method'><a href="Moveable.Snappable.html#verticalGuidelines">verticalGuidelines</a></li></ul><h4><a href="Moveable.Snappable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Snappable.html#.event:snap">snap</a></li></ul><h4><a href="Moveable.Snappable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Snappable.html#.BoundType">BoundType</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValue">ElementGuidelineValue</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValue">ElementGuidelineValue</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.ElementGuidelineValueOption">ElementGuidelineValueOption</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.GapGuideline">GapGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.InnerBoundType">InnerBoundType</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.OnSnap">OnSnap</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.PosGuideline">PosGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.RenderGuidelineInfo">RenderGuidelineInfo</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnapDirections">SnapDirections</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnapGuideline">SnapGuideline</a></li><li data-type='typddef'><a href="Moveable.Snappable.html#.SnappableOptions">SnappableOptions</a></li></ul></li><li file="warpable" class="parent"><a href="Moveable.Warpable.html">Moveable.Warpable</a><h4><a href="Moveable.Warpable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Warpable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Warpable.html#warpable">warpable</a></li></ul><h4><a href="Moveable.Warpable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Warpable.html#.event:warp">warp</a></li><li data-type='event'><a href="Moveable.Warpable.html#.event:warpEnd">warpEnd</a></li><li data-type='event'><a href="Moveable.Warpable.html#.event:warpStart">warpStart</a></li></ul><h4><a href="Moveable.Warpable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarp">OnWarp</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarpEnd">OnWarpEnd</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.OnWarpStart">OnWarpStart</a></li><li data-type='typddef'><a href="Moveable.Warpable.html#.WarpableOptions">WarpableOptions</a></li></ul></li><li file="scrollable" class="parent"><a href="Moveable.Scrollable.html">Moveable.Scrollable</a><h4><a href="Moveable.Scrollable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Scrollable.html#getScrollPosition">getScrollPosition</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollable">scrollable</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollContainer">scrollContainer</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollThreshold">scrollThreshold</a></li><li data-type='method'><a href="Moveable.Scrollable.html#scrollThreshold">scrollThreshold</a></li></ul><h4><a href="Moveable.Scrollable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Scrollable.html#.event:scroll">scroll</a></li><li data-type='event'><a href="Moveable.Scrollable.html#.event:scrollGroup">scrollGroup</a></li></ul><h4><a href="Moveable.Scrollable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Scrollable.html#.OnScroll">OnScroll</a></li><li data-type='typddef'><a href="Moveable.Scrollable.html#.OnScrollGroup">OnScrollGroup</a></li><li data-type='typddef'><a href="Moveable.Scrollable.html#.ScrollableOptions">ScrollableOptions</a></li></ul></li><li file="scalable" class="parent"><a href="Moveable.Scalable.html">Moveable.Scalable</a><h4><a href="Moveable.Scalable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Scalable.html#keepRatio">keepRatio</a></li><li data-type='method'><a href="Moveable.Scalable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Scalable.html#scalable">scalable</a></li><li data-type='method'><a href="Moveable.Scalable.html#throttleScale">throttleScale</a></li></ul><h4><a href="Moveable.Scalable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Scalable.html#request">request</a></li></ul><h4><a href="Moveable.Scalable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Scalable.html#.event:beforeScale">beforeScale</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scale">scale</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleEnd">scaleEnd</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroup">scaleGroup</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroupEnd">scaleGroupEnd</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleGroupStart">scaleGroupStart</a></li><li data-type='event'><a href="Moveable.Scalable.html#.event:scaleStart">scaleStart</a></li></ul><h4><a href="Moveable.Scalable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Scalable.html#.OnBeforeScale">OnBeforeScale</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnBeforeScaleGroup">OnBeforeScaleGroup</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScale">OnScale</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleEnd">OnScaleEnd</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroup">OnScaleGroup</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroupEnd">OnScaleGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleGroupStart">OnScaleGroupStart</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.OnScaleStart">OnScaleStart</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.ScalableOptions">ScalableOptions</a></li><li data-type='typddef'><a href="Moveable.Scalable.html#.ScalableRequestParam">ScalableRequestParam</a></li></ul></li><li file="roundable" class="parent"><a href="Moveable.Roundable.html">Moveable.Roundable</a><h4><a href="Moveable.Roundable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Roundable.html#isDisplayShadowRoundControls">isDisplayShadowRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#maxRoundControls">maxRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#minRoundControls">minRoundControls</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundable">roundable</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundClickable">roundClickable</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundPadding">roundPadding</a></li><li data-type='method'><a href="Moveable.Roundable.html#roundRelative">roundRelative</a></li></ul><h4><a href="Moveable.Roundable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Roundable.html#.event:round">round</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundEnd">roundEnd</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundGroup">roundGroup</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundGroupEnd">roundGroupEnd</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundGroupStart">roundGroupStart</a></li><li data-type='event'><a href="Moveable.Roundable.html#.event:roundStart">roundStart</a></li></ul><h4><a href="Moveable.Roundable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRound">OnRound</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundEnd">OnRoundEnd</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundGroup">OnRoundGroup</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundGroupEnd">OnRoundGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundGroupStart">OnRoundGroupStart</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.OnRoundStart">OnRoundStart</a></li><li data-type='typddef'><a href="Moveable.Roundable.html#.RoundableOptions">RoundableOptions</a></li></ul></li><li file="rotatable" class="parent"><a href="Moveable.Rotatable.html">Moveable.Rotatable</a><h4><a href="Moveable.Rotatable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Rotatable.html#rotatable">rotatable</a></li><li data-type='method'><a href="Moveable.Rotatable.html#rotationPosition">rotationPosition</a></li><li data-type='method'><a href="Moveable.Rotatable.html#throttleRotate">throttleRotate</a></li></ul><h4><a href="Moveable.Rotatable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Rotatable.html#request">request</a></li></ul><h4><a href="Moveable.Rotatable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotate">rotate</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateEnd">rotateEnd</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroup">rotateGroup</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroupEnd">rotateGroupEnd</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateGroupStart">rotateGroupStart</a></li><li data-type='event'><a href="Moveable.Rotatable.html#.event:rotateStart">rotateStart</a></li></ul><h4><a href="Moveable.Rotatable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnBeforeRotate">OnBeforeRotate</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnBeforeRotateGroup">OnBeforeRotateGroup</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotate">OnRotate</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateEnd">OnRotateEnd</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroup">OnRotateGroup</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroupEnd">OnRotateGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateGroupStart">OnRotateGroupStart</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.OnRotateStart">OnRotateStart</a></li><li data-type='typddef'><a href="Moveable.Rotatable.html#.RotatableOptions">RotatableOptions</a></li></ul></li><li file="resizable" class="parent"><a href="Moveable.Resizable.html">Moveable.Resizable</a><h4><a href="Moveable.Resizable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Resizable.html#keepRatio">keepRatio</a></li><li data-type='method'><a href="Moveable.Resizable.html#renderDirections">renderDirections</a></li><li data-type='method'><a href="Moveable.Resizable.html#resizable">resizable</a></li><li data-type='method'><a href="Moveable.Resizable.html#resizeFormat">resizeFormat</a></li><li data-type='method'><a href="Moveable.Resizable.html#throttleResize">throttleResize</a></li></ul><h4><a href="Moveable.Resizable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Resizable.html#request">request</a></li></ul><h4><a href="Moveable.Resizable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Resizable.html#.event:beforeResize">beforeResize</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resize">resize</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeEnd">resizeEnd</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroup">resizeGroup</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroupEnd">resizeGroupEnd</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeGroupStart">resizeGroupStart</a></li><li data-type='event'><a href="Moveable.Resizable.html#.event:resizeStart">resizeStart</a></li></ul><h4><a href="Moveable.Resizable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Resizable.html#.OnBeforeResize">OnBeforeResize</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnBeforeResizeGroup">OnBeforeResizeGroup</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResize">OnResize</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeEnd">OnResizeEnd</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroup">OnResizeGroup</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroupEnd">OnResizeGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeGroupStart">OnResizeGroupStart</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.OnResizeStart">OnResizeStart</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.ResizableOptions">ResizableOptions</a></li><li data-type='typddef'><a href="Moveable.Resizable.html#.ResizableRequestParam">ResizableRequestParam</a></li></ul></li><li file="pinchable" class="parent"><a href="Moveable.Pinchable.html">Moveable.Pinchable</a><h4><a href="Moveable.Pinchable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Pinchable.html#pinchable">pinchable</a></li></ul><h4><a href="Moveable.Pinchable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinch">pinch</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchEnd">pinchEnd</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroup">pinchGroup</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroupEnd">pinchGroupEnd</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchGroupStart">pinchGroupStart</a></li><li data-type='event'><a href="Moveable.Pinchable.html#.event:pinchStart">pinchStart</a></li></ul><h4><a href="Moveable.Pinchable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinch">OnPinch</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchEnd">OnPinchEnd</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroup">OnPinchGroup</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroupEnd">OnPinchGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchGroupStart">OnPinchGroupStart</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.OnPinchStart">OnPinchStart</a></li><li data-type='typddef'><a href="Moveable.Pinchable.html#.PinchableOptions">PinchableOptions</a></li></ul></li><li file="origindraggable" class="parent"><a href="Moveable.OriginDraggable.html">Moveable.OriginDraggable</a><h4><a href="Moveable.OriginDraggable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.OriginDraggable.html#originDraggable">originDraggable</a></li><li data-type='method'><a href="Moveable.OriginDraggable.html#originRelative">originRelative</a></li></ul><h4><a href="Moveable.OriginDraggable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.OriginDraggable.html#request">request</a></li></ul><h4><a href="Moveable.OriginDraggable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOrigin">dragOrigin</a></li><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOriginEnd">dragOriginEnd</a></li><li data-type='event'><a href="Moveable.OriginDraggable.html#.event:dragOriginStart">dragOriginStart</a></li></ul><h4><a href="Moveable.OriginDraggable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOrigin">OnDragOrigin</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOriginEnd">OnDragOriginEnd</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OnDragOriginStart">OnDragOriginStart</a></li><li data-type='typddef'><a href="Moveable.OriginDraggable.html#.OriginDraggableOptions">OriginDraggableOptions</a></li></ul></li><li file="group" class="parent"><a href="Moveable.Group.html">Moveable.Group</a><h4><a href="Moveable.Group.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Group.html#defaultGroupOrigin">defaultGroupOrigin</a></li><li data-type='method'><a href="Moveable.Group.html#defaultGroupRotate">defaultGroupRotate</a></li><li data-type='method'><a href="Moveable.Group.html#hideChildMoveableDefaultLines">hideChildMoveableDefaultLines</a></li></ul><h4><a href="Moveable.Group.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Group.html#.GroupableOptions">GroupableOptions</a></li></ul></li><li file="draggable" class="parent"><a href="Moveable.Draggable.html">Moveable.Draggable</a><h4><a href="Moveable.Draggable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Draggable.html#draggable">draggable</a></li><li data-type='method'><a href="Moveable.Draggable.html#edgeDraggable">edgeDraggable</a></li><li data-type='method'><a href="Moveable.Draggable.html#startDragRotate">startDragRotate</a></li><li data-type='method'><a href="Moveable.Draggable.html#throttleDrag">throttleDrag</a></li><li data-type='method'><a href="Moveable.Draggable.html#throttleDragRotate">throttleDragRotate</a></li></ul><h4><a href="Moveable.Draggable.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="Moveable.Draggable.html#request">request</a></li></ul><h4><a href="Moveable.Draggable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Draggable.html#.event:drag">drag</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragEnd">dragEnd</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroup">dragGroup</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroupEnd">dragGroupEnd</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragGroupStart">dragGroupStart</a></li><li data-type='event'><a href="Moveable.Draggable.html#.event:dragStart">dragStart</a></li></ul><h4><a href="Moveable.Draggable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Draggable.html#.DraggableOptions">DraggableOptions</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDrag">OnDrag</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragEnd">OnDragEnd</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroup">OnDragGroup</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroupEnd">OnDragGroupEnd</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragGroupStart">OnDragGroupStart</a></li><li data-type='typddef'><a href="Moveable.Draggable.html#.OnDragStart">OnDragStart</a></li></ul></li><li file="clippable" class="parent"><a href="Moveable.Clippable.html">Moveable.Clippable</a><h4><a href="Moveable.Clippable.html#members">Members</a></h4><ul class='members'><li data-type='method'><a href="Moveable.Clippable.html#clipArea">clipArea</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipHorizontalGuidelines">clipHorizontalGuidelines</a></li><li data-type='method'><a href="Moveable.Clippable.html#clippable">clippable</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipRelative">clipRelative</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipSnapThreshold">clipSnapThreshold</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipTargetBounds">clipTargetBounds</a></li><li data-type='method'><a href="Moveable.Clippable.html#clipVerticalGuidelines">clipVerticalGuidelines</a></li><li data-type='method'><a href="Moveable.Clippable.html#customClipPath">customClipPath</a></li><li data-type='method'><a href="Moveable.Clippable.html#defaultClipPath">defaultClipPath</a></li><li data-type='method'><a href="Moveable.Clippable.html#dragWithClip">dragWithClip</a></li></ul><h4><a href="Moveable.Clippable.html#events">Events</a></h4><ul class='events'><li data-type='event'><a href="Moveable.Clippable.html#.event:clip">clip</a></li><li data-type='event'><a href="Moveable.Clippable.html#.event:clipEnd">clipEnd</a></li><li data-type='event'><a href="Moveable.Clippable.html#.event:clipStart">clipStart</a></li></ul><h4><a href="Moveable.Clippable.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typddef'><a href="Moveable.Clippable.html#.ClippableOptions">ClippableOptions</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClip">OnClip</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClipEnd">OnClipEnd</a></li><li data-type='typddef'><a href="Moveable.Clippable.html#.OnClipStart">OnClipStart</a></li></ul></li></ul><ul class="global"><li file="global"  class="parent"><a href="global.html">Global</a><h4><a href="global.html#type definitions">Type Definitions</a></h4><ul class='type definitions'><li data-type='typedef'><a href="global.html#MoveableDefaultOptions">MoveableDefaultOptions</a></li></ul><h4><a href="global.html#methods">Methods</a></h4><ul class='methods'><li data-type='method'><a href="global.html#Moveable#getTargetsimportMoveablefrom%2522moveable%2522;constmoveable=newMoveable(document.body,%257Btarget:%255BtargetRef,%2522.target%2522,document.querySelectorAll(%2522.target%2522)%255D,%257D);console.log(moveable.getTargets());">Moveable#getTargets
+import Moveable from "moveable";
+
+const moveable = new Moveable(document.body, {
+   target: [targetRef, ".target", document.querySelectorAll(".target")],
+});
+
+console.log(moveable.getTargets());</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">packages/react-moveable/src/MoveableManager.tsx</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as React from "react";
+import { createElement } from "react";
+import { PREFIX } from "./consts";
+import {
+    prefix,
+    unset,
+    getAbsolutePosesByState,
+    getRect,
+    filterAbles,
+    equals,
+    flat,
+    groupByMap,
+    calculatePadding,
+    getAbsoluteRotation,
+    defaultSync,
+    getRefTarget,
+    groupBy,
+} from "./utils";
+import Gesto from "gesto";
+import { ref } from "framework-utils";
+import {
+    MoveableManagerProps, MoveableManagerState, Able,
+    RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
+    MoveableDefaultOptions,
+    GroupableProps,
+} from "./types";
+import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
+import { plus } from "@scena/matrix";
+import {
+    addClass, cancelAnimationFrame, find,
+    getKeys, IObject, removeClass, requestAnimationFrame,
+} from "@daybrush/utils";
+import { renderLine } from "./renderDirections";
+import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
+import EventManager from "./EventManager";
+import styled from "react-css-styled";
+import EventEmitter from "@scena/event-emitter";
+import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
+import { VIEW_DRAGGING } from "./classNames";
+import { diff } from "@egjs/list-differ";
+import { getPersistState } from "./utils/persist";
+// import { getClipPath } from "./ables/clippable/utils";
+
+export default class MoveableManager&lt;T = {}>
+    extends React.PureComponent&lt;MoveableManagerProps&lt;T>, MoveableManagerState> {
+    public static defaultProps: Required&lt;MoveableManagerProps> = {
+        target: null,
+        dragTarget: null,
+        container: null,
+        rootContainer: null,
+        origin: true,
+        parentMoveable: null,
+        wrapperMoveable: null,
+        isWrapperMounted: false,
+        parentPosition: null,
+        portalContainer: null,
+        useResizeObserver: false,
+        ables: [],
+        pinchThreshold: 20,
+        dragArea: false,
+        passDragArea: false,
+        transformOrigin: "",
+        className: "",
+        zoom: 1,
+        triggerAblesSimultaneously: false,
+        padding: {},
+        pinchOutside: true,
+        checkInput: false,
+        groupable: false,
+        hideDefaultLines: false,
+        cspNonce: "",
+        translateZ: 0,
+        cssStyled: null,
+        customStyledMap: {},
+        props: {},
+        stopPropagation: false,
+        preventClickDefault: false,
+        preventClickEventOnDrag: true,
+        flushSync: defaultSync,
+        firstRenderState: null,
+        persistData: null,
+        viewContainer: null,
+    };
+    public state: MoveableManagerState = {
+        container: null,
+        gestos: {},
+        renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
+        disableNativeEvent: false,
+        posDelta: [0, 0],
+        ...getMoveableTargetInfo(null),
+    };
+    public renderState: Record&lt;string, any> = {};
+    public enabledAbles: Able[] = [];
+    public targetAbles: Able[] = [];
+    public controlAbles: Able[] = [];
+    public controlBox!: { getElement(): HTMLElement };
+    public areaElement!: HTMLElement;
+    public targetGesto!: Gesto;
+    public controlGesto!: Gesto;
+    public rotation = 0;
+    public scale: number[] = [1, 1];
+    public isMoveableMounted = false;
+    public isUnmounted = false;
+
+    public events: Record&lt;string, EventManager | null> = {
+        "mouseEnter": null,
+        "mouseLeave": null,
+    };
+
+    protected _emitter: EventEmitter = new EventEmitter();
+    protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
+    protected _prevDragArea = false;
+    protected _isPropTargetChanged = false;
+    protected _hasFirstTarget = false;
+
+    private _observer: ResizeObserver | null = null;
+    private _observerId = 0;
+    public _rootContainer: HTMLElement | null | undefined = null;
+    private _viewContainer: HTMLElement | null | undefined = null;
+    private _viewClassNames: string[] = [];
+
+    public render() {
+        const props = this.props;
+        const state = this.getState();
+        const {
+            parentPosition,
+            className,
+            target: propsTarget,
+            zoom, cspNonce,
+            translateZ,
+            cssStyled: ControlBoxElement,
+            portalContainer,
+            groupable,
+        } = props;
+
+        this._checkUpdateRootContainer();
+        this.checkUpdate();
+        this.updateRenderPoses();
+
+        const [parentLeft, parentTop] = parentPosition as number[] || [0, 0];
+        const {
+            left,
+            top,
+            target: stateTarget,
+            direction,
+            hasFixed,
+        } = state;
+        const groupTargets = (props as any).targets;
+        const isDragging = this.isDragging();
+        const ableAttributes: IObject&lt;boolean> = {};
+        this.getEnabledAbles().forEach(able => {
+            ableAttributes[`data-able-${able.name.toLowerCase()}`] = true;
+        });
+        const ableClassName = this._getAbleClassName();
+        const isDisplay
+            = (groupTargets &amp;&amp; groupTargets.length &amp;&amp; (stateTarget || groupable))
+            || propsTarget
+            || (!this._hasFirstTarget &amp;&amp; this.state.isPersisted);
+        const isVisible = this.controlBox || this.props.firstRenderState || this.props.persistData;
+
+        return (
+            &lt;ControlBoxElement
+                cspNonce={cspNonce}
+                ref={ref(this, "controlBox")}
+                className={`${prefix("control-box", direction === -1 ? "reverse" : "", isDragging ? "dragging" : "")} ${ableClassName} ${className}`}
+                {...ableAttributes}
+                onClick={this._onPreventClick}
+                portalContainer={portalContainer}
+                style={{
+                    "position": hasFixed ? "fixed" : "absolute",
+                    "display": isDisplay ? "block" : "none",
+                    "visibility": isVisible ? "visible" : "hidden",
+                    "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, ${translateZ})`,
+                    "--zoom": zoom,
+                    "--zoompx": `${zoom}px`,
+                }}>
+                {this.renderAbles()}
+                {this._renderLines()}
+            &lt;/ControlBoxElement>
+        );
+    }
+    public componentDidMount() {
+        this.isMoveableMounted = true;
+        this.isUnmounted = false;
+        this.controlBox.getElement();
+        const props = this.props;
+        const { parentMoveable, container, wrapperMoveable } = props;
+
+
+        this._checkUpdateRootContainer();
+        this._checkUpdateViewContainer();
+        this._updateTargets();
+        this._updateNativeEvents();
+        this._updateEvents();
+        this.updateCheckInput();
+        this._updateObserver(this.props);
+
+        if (!container &amp;&amp; !parentMoveable &amp;&amp; !wrapperMoveable &amp;&amp; !this.state.isPersisted) {
+            this.updateRect("", false, false);
+            this.forceUpdate();
+        }
+    }
+    public componentDidUpdate(prevProps: any) {
+        this._checkUpdateRootContainer();
+        this._checkUpdateViewContainer();
+        this._updateNativeEvents();
+        this._updateEvents();
+        this._updateTargets();
+        this.updateCheckInput();
+        this._updateObserver(prevProps);
+    }
+    public componentWillUnmount() {
+        this.isMoveableMounted = false;
+        this.isUnmounted = true;
+        this._emitter.off();
+
+        const viewContainer = this._viewContainer;
+
+        if (viewContainer) {
+            this._changeAbleViewClassNames([]);
+        }
+        unset(this, "targetGesto");
+        unset(this, "controlGesto");
+
+        const events = this.events;
+        for (const name in events) {
+            const manager = events[name];
+            manager &amp;&amp; manager.destroy();
+        }
+    }
+    public getTargets(): Array&lt;HTMLElement | SVGElement> {
+        const target = this.props.target;
+        return target ? [target] : [];
+    }
+    /**
+     * Get the able used in MoveableManager.
+     * @method Moveable#getAble
+     * @param - able name
+     */
+    public getAble&lt;T extends Able>(ableName: string): T | undefined {
+        const ables: Able[] = this.props.ables || [];
+
+        return find(ables, able => able.name === ableName) as T;
+    }
+    public getContainer(): HTMLElement | SVGElement {
+        const { parentMoveable, wrapperMoveable, container } = this.props;
+
+        return container!
+            || (wrapperMoveable &amp;&amp; wrapperMoveable.getContainer())
+            || (parentMoveable &amp;&amp; parentMoveable.getContainer())
+            || this.controlBox.getElement().parentElement!;
+    }
+    /**
+     * Check if the target is an element included in the moveable.
+     * @method Moveable#isMoveableElement
+     * @param - the target
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("click", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *         moveable.target = e.target;
+     *     }
+     * });
+     */
+    public isMoveableElement(target: Element) {
+        return target &amp;&amp; (target.getAttribute?.("class") || "").indexOf(PREFIX) > -1;
+    }
+    /**
+     * You can drag start the Moveable through the external `MouseEvent`or `TouchEvent`. (Angular: ngDragStart)
+     * @method Moveable#dragStart
+     * @param - external `MouseEvent`or `TouchEvent`
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (!moveable.isMoveableElement(e.target)) {
+     *          moveable.dragStart(e);
+     *     }
+     * });
+     */
+    public dragStart(e: MouseEvent | TouchEvent) {
+        const targetGesto = this.targetGesto;
+        const controlGesto = this.controlGesto;
+
+        if (targetGesto &amp;&amp; checkMoveableTarget(this)({ inputEvent: e })) {
+            if (!targetGesto.isFlag()) {
+                targetGesto.triggerDragStart(e);
+            }
+        } else if (controlGesto &amp;&amp; this.isMoveableElement(e.target as Element)) {
+            if (!controlGesto.isFlag()) {
+                controlGesto.triggerDragStart(e);
+            }
+        }
+        return this;
+    }
+    /**
+     * Hit test an element or rect on a moveable target.
+     * (100% = 100)
+     * @method Moveable#hitTest
+     * @param - element or rect to test
+     * @return - Get hit test rate (rate > 0 is hitted)
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.hitTest(e.target) > 0) {
+     *          console.log("hiited");
+     *     }
+     * });
+     */
+    public hitTest(el: Element | HitRect): number {
+        const { target, pos1, pos2, pos3, pos4, targetClientRect } = this.state;
+
+        if (!target) {
+            return 0;
+        }
+        let rect: Required&lt;HitRect>;
+
+        if (el instanceof Element) {
+            const clientRect = el.getBoundingClientRect();
+
+            rect = {
+                left: clientRect.left,
+                top: clientRect.top,
+                width: clientRect.width,
+                height: clientRect.height,
+            };
+        } else {
+            rect = { width: 0, height: 0, ...el };
+        }
+
+        const {
+            left: rectLeft,
+            top: rectTop,
+            width: rectWidth,
+            height: rectHeight,
+        } = rect;
+        const points = fitPoints([pos1, pos2, pos4, pos3], targetClientRect);
+        const size = getOverlapSize(points, [
+            [rectLeft, rectTop],
+            [rectLeft + rectWidth, rectTop],
+            [rectLeft + rectWidth, rectTop + rectHeight],
+            [rectLeft, rectTop + rectHeight],
+        ]);
+        const totalSize = getAreaSize(points);
+
+        if (!size || !totalSize) {
+            return 0;
+        }
+
+        return Math.min(100, size / totalSize * 100);
+    }
+    /**
+     * Whether the coordinates are inside Moveable
+     * @method Moveable#isInside
+     * @param - x coordinate
+     * @param - y coordinate
+     * @return - True if the coordinate is in moveable or false
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * document.body.addEventListener("mousedown", e => {
+     *     if (moveable.isInside(e.clientX, e.clientY)) {
+     *          console.log("inside");
+     *     }
+     * });
+     */
+    public isInside(clientX: number, clientY: number) {
+        const { target, pos1, pos2, pos3, pos4, targetClientRect } = this.state;
+
+        if (!target) {
+            return false;
+        }
+        return isInside([clientX, clientY], fitPoints([pos1, pos2, pos4, pos3], targetClientRect));
+    }
+    /**
+     * If the width, height, left, and top of all elements change, update the shape of the moveable.
+     * @method Moveable#updateRect
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * window.addEventListener("resize", e => {
+     *     moveable.updateRect();
+     * });
+     */
+    public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
+        const props = this.props;
+        const parentMoveable = props.parentMoveable;
+        const state = this.state;
+        const target = (state.target || this.props.target) as HTMLElement | SVGElement;
+        const container = this.getContainer();
+        const rootContainer = parentMoveable
+            ? (parentMoveable as any)._rootContainer
+            : this._rootContainer;
+        const nextState = getMoveableTargetInfo(
+            this.controlBox &amp;&amp; this.controlBox.getElement(),
+            target,
+            container,
+            container,
+            rootContainer || container,
+            this._getRequestStyles(),
+        );
+
+        if (!target &amp;&amp; this._hasFirstTarget &amp;&amp; props.persistData) {
+            const persistState = getPersistState(props.persistData);
+
+            for (const name in persistState) {
+                (nextState as any)[name] = (persistState as any)[name];
+            }
+        }
+        this.updateState(
+            nextState,
+            parentMoveable ? false : isSetState,
+        );
+    }
+    /**
+     * Check if the moveable state is being dragged.
+     * @method Moveable#isDragging
+     * @param - If you want to check if able is dragging, specify ableName.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // false
+     * console.log(moveable.isDragging());
+     *
+     * moveable.on("drag", () => {
+     *   // true
+     *   console.log(moveable.isDragging());
+     * });
+     */
+    public isDragging(ableName?: string) {
+        const targetGesto = this.targetGesto;
+        const controlGesto = this.controlGesto;
+
+        if (targetGesto?.isFlag()) {
+            if (!ableName) {
+                return true;
+            }
+            const data = targetGesto.getEventData();
+
+            return !!data[ableName]?.isEventStart;
+        }
+        if (controlGesto?.isFlag()) {
+            if (!ableName) {
+                return true;
+            }
+            const data = controlGesto.getEventData();
+
+            return !!data[ableName]?.isEventStart;
+        }
+        return false;
+    }
+    /**
+     * If the width, height, left, and top of the only target change, update the shape of the moveable.
+     * @method Moveable#updateTarget
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.updateTarget();
+     */
+    public updateTarget(type?: "Start" | "" | "End") {
+        this.updateRect(type, true);
+    }
+    /**
+     * You can get the vertex information, position and offset size information of the target based on the container.
+     * @method Moveable#getRect
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const rectInfo = moveable.getRect();
+     */
+    public getRect(): RectInfo {
+        const state = this.state;
+        const poses = getAbsolutePosesByState(this.state);
+        const [pos1, pos2, pos3, pos4] = poses;
+        const rect = getRect(poses);
+        const {
+            width: offsetWidth,
+            height: offsetHeight,
+        } = state;
+        const {
+            width,
+            height,
+            left,
+            top,
+        } = rect;
+        const statePos = [state.left, state.top];
+        const origin = plus(statePos, state.origin);
+        const beforeOrigin = plus(statePos, state.beforeOrigin);
+        const transformOrigin = state.transformOrigin;
+
+        return {
+            width,
+            height,
+            left,
+            top,
+            pos1,
+            pos2,
+            pos3,
+            pos4,
+            offsetWidth,
+            offsetHeight,
+            beforeOrigin,
+            origin,
+            transformOrigin,
+            rotation: this.getRotation(),
+        };
+    }
+    /**
+     * Get a manager that manages the moveable's state and props.
+     * @method Moveable#getManager
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * const manager = moveable.getManager(); // real moveable class instance
+     */
+    public getManager(): MoveableManagerInterface&lt;any, any> {
+        return this as any;
+    }
+    /**
+     * You can stop the dragging currently in progress through a method from outside.
+     * @method Moveable#stopDrag
+     * @return - The Rect Info
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.stopDrag();
+     */
+    public stopDrag(type?: "target" | "control"): void {
+        if (!type || type === "target") {
+            this.targetGesto?.stop();
+        }
+        if (!type || type === "control") {
+            this.controlGesto?.stop();
+        }
+    }
+    public getRotation() {
+        const {
+            pos1,
+            pos2,
+            direction,
+        } = this.state;
+
+        return getAbsoluteRotation(pos1, pos2, direction);
+    }
+    /**
+     * Request able through a method rather than an event.
+     * At the moment of execution, requestStart is executed,
+     * and then request and requestEnd can be executed through Requester.
+     * @method Moveable#request
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html#request|Draggable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request|Resizable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request|Scalable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request|Rotatable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.OriginDraggable.html#request|OriginDraggable Requester}
+     * @param - ableName
+     * @param - request to be able params.
+     * @param - If isInstant is true, request and requestEnd are executed immediately.
+     * @return - Able Requester. If there is no request in able, nothing will work.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10 }, true);
+     *
+     * // Start move
+     * const requester = moveable.request("draggable");
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.requestEnd();
+     */
+    public request(ableName: string, param: IObject&lt;any> = {}, isInstant?: boolean): Requester {
+        const { ables, groupable } = this.props as any;
+        const requsetAble: Able = ables!.filter((able: Able) => able.name === ableName)[0];
+
+        if (this.isDragging() || !requsetAble || !requsetAble.request) {
+            return {
+                request() {
+                    return this;
+                },
+                requestEnd() {
+                    return this;
+                },
+            };
+        }
+        const self = this;
+        const ableRequester = requsetAble.request(this);
+
+        const requestInstant = isInstant || param.isInstant;
+        const ableType = ableRequester.isControl ? "controlAbles" : "targetAbles";
+        const eventAffix = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;
+
+        const requester = {
+            request(ableParam: IObject&lt;any>) {
+                triggerAble(self, ableType, "drag", eventAffix, "", {
+                    ...ableRequester.request(ableParam),
+                    requestAble: ableName,
+                    isRequest: true,
+                }, requestInstant);
+                return this;
+            },
+            requestEnd() {
+                triggerAble(self, ableType, "drag", eventAffix, "End", {
+                    ...ableRequester.requestEnd(),
+                    requestAble: ableName,
+                    isRequest: true,
+                }, requestInstant);
+                return this;
+            },
+        };
+
+        triggerAble(self, ableType, "drag", eventAffix, "Start", {
+            ...ableRequester.requestStart(param),
+            requestAble: ableName,
+            isRequest: true,
+        }, requestInstant);
+
+        return requestInstant ? requester.request(param).requestEnd() : requester;
+    }
+    /**
+     * Remove the Moveable object and the events.
+     * @method Moveable#destroy
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * moveable.destroy();
+     */
+    public destroy(): void {
+        this.componentWillUnmount();
+    }
+    public updateRenderPoses() {
+        const state = this.getState();
+        const props = this.props;
+        const {
+            originalBeforeOrigin,
+            transformOrigin,
+            allMatrix, is3d,
+            pos1, pos2, pos3, pos4,
+            left: stateLeft,
+            top: stateTop,
+            // offsetWidth,
+            // offsetHeight,
+            isPersisted,
+        } = state;
+        const {
+            left = 0,
+            top = 0,
+            bottom = 0,
+            right = 0,
+        } = (props.padding || {}) as PaddingBox;
+        const n = is3d ? 4 : 3;
+
+        // const clipPathInfo = getClipPath(
+        //     props.target,
+        //     offsetWidth,
+        //     offsetHeight,
+        // );
+
+        // if (clipPathInfo) {
+        //     left -= Math.max(0, clipPathInfo.left);
+        //     top -= Math.max(0, clipPathInfo.top);
+        //     bottom -= Math.max(0, offsetHeight - clipPathInfo.bottom);
+        //     right -= Math.max(0, offsetWidth - clipPathInfo.right);
+        // }
+
+        let absoluteOrigin: number[] = [];
+
+        if (isPersisted) {
+            absoluteOrigin = transformOrigin;
+        } else if (this.controlBox &amp;&amp; props.groupable) {
+            absoluteOrigin = originalBeforeOrigin;
+        } else {
+            absoluteOrigin = plus(originalBeforeOrigin, [stateLeft, stateTop]);
+        }
+
+        state.renderPoses = [
+            plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos2, calculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
+            plus(pos3, calculatePadding(allMatrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
+            plus(pos4, calculatePadding(allMatrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
+        ];
+    }
+    public checkUpdate() {
+        this._isPropTargetChanged = false;
+        const { target, container, parentMoveable } = this.props;
+        const {
+            target: stateTarget,
+            container: stateContainer,
+        } = this.state;
+
+        if (!stateTarget &amp;&amp; !target) {
+            return;
+        }
+        this.updateAbles();
+
+        const isTargetChanged = !equals(stateTarget, target);
+        const isChanged = isTargetChanged || !equals(stateContainer, container);
+
+        if (!isChanged) {
+            return;
+        }
+        const moveableContainer = container || this.controlBox;
+
+        if (moveableContainer) {
+            this.unsetAbles();
+        }
+        this.updateState({ target, container });
+
+        if (!parentMoveable &amp;&amp; moveableContainer) {
+            this.updateRect("End", false, false);
+        }
+        this._isPropTargetChanged = isTargetChanged;
+    }
+    public waitToChangeTarget(): Promise&lt;void> {
+        return new Promise(() => { });
+    }
+    public triggerEvent(name: string, e: any): any {
+        this._emitter.trigger(name, e);
+        const callback = (this.props as any)[name];
+
+        return callback &amp;&amp; callback(e);
+    }
+    public useCSS(tag: string, css: string) {
+        const customStyleMap = this.props.customStyledMap as Record&lt;string, any>;
+
+        const key = tag + css;
+
+        if (!customStyleMap[key]) {
+            customStyleMap[key] = styled(tag, css);
+        }
+        return customStyleMap[key];
+    }
+    public checkUpdateRect = () => {
+        if (this.isDragging()) {
+            return;
+        }
+        const parentMoveable = this.props.parentMoveable;
+
+        if (parentMoveable) {
+            (parentMoveable as MoveableManager).checkUpdateRect();
+            return;
+        }
+        cancelAnimationFrame(this._observerId);
+        this._observerId = requestAnimationFrame(() => {
+            if (this.isDragging()) {
+                return;
+            }
+            this.updateRect();
+        });
+    }
+    public getState(): MoveableManagerState {
+        const props = this.props;
+        if (props.target || (props as any).targets?.length) {
+            this._hasFirstTarget = true;
+        }
+        const hasControlBox = this.controlBox;
+        const persistData = props.persistData;
+        const firstRenderState = props.firstRenderState;
+
+        if (firstRenderState &amp;&amp; !hasControlBox) {
+            return firstRenderState;
+        }
+        if (!this._hasFirstTarget &amp;&amp; persistData) {
+            const persistState = getPersistState(persistData);
+
+            if (persistState) {
+                this.updateState(persistState, false);
+                return this.state;
+            }
+        }
+        (this.state as any).isPersisted = false;
+        return this.state;
+    }
+    public updateSelectors() { }
+    protected unsetAbles() {
+        this.targetAbles.forEach(able => {
+            if (able.unset) {
+                able.unset(this);
+            }
+        });
+    }
+    protected updateAbles(
+        ables: Able[] = this.props.ables!,
+        eventAffix: string = "",
+    ) {
+        const props = this.props as any;
+        const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
+        const enabledAbles = this.getEnabledAbles(ables);
+
+        const dragStart = `drag${eventAffix}Start` as "dragStart";
+        const pinchStart = `pinch${eventAffix}Start` as "pinchStart";
+        const dragControlStart = `drag${eventAffix}ControlStart` as "dragControlStart";
+
+        const targetAbles = filterAbles(enabledAbles, [dragStart, pinchStart], triggerAblesSimultaneously);
+        const controlAbles = filterAbles(enabledAbles, [dragControlStart], triggerAblesSimultaneously);
+
+        this.enabledAbles = enabledAbles;
+        this.targetAbles = targetAbles;
+        this.controlAbles = controlAbles;
+    }
+    protected updateState(nextState: any, isSetState?: boolean) {
+        if (isSetState) {
+            if (this.isUnmounted) {
+                return;
+            }
+            this.setState(nextState);
+        } else {
+            const state = this.state;
+
+            for (const name in nextState) {
+                (state as any)[name] = nextState[name];
+            }
+        }
+    }
+    protected getEnabledAbles(ables: Able[] = this.props.ables!) {
+        const props = this.props as any;
+
+        return ables.filter(able => able &amp;&amp; (
+            (able.always &amp;&amp; props[able.name] !== false)
+            || props[able.name]));
+    }
+    protected renderAbles() {
+        const props = this.props as any;
+        const triggerAblesSimultaneously = props.triggerAblesSimultaneously;
+        const Renderer = {
+            createElement,
+        };
+
+        this.renderState = {};
+
+        return groupByMap(flat&lt;any>(
+            filterAbles(this.getEnabledAbles(), ["render"], triggerAblesSimultaneously).map(({ render }) => {
+                return render!(this, Renderer) || [];
+            })).filter(el => el), ({ key }) => key).map(group => group[0]);
+    }
+    protected updateCheckInput() {
+        this.targetGesto &amp;&amp; (this.targetGesto.options.checkInput = this.props.checkInput);
+    }
+    protected _getRequestStyles() {
+        const styleNames = this.getEnabledAbles().reduce((names, able) => {
+            const ableStyleNames = (able.requestStyle?.() ?? []) as Array&lt;keyof CSSStyleDeclaration>;
+
+            return [...names, ...ableStyleNames];
+        }, [] as Array&lt;keyof CSSStyleDeclaration>);
+
+
+        return styleNames;
+    }
+    protected _updateObserver(prevProps: MoveableDefaultOptions) {
+        const props = this.props;
+        const target = props.target;
+
+        if (!window.ResizeObserver || !target || !props.useResizeObserver) {
+            this._observer?.disconnect();
+            return;
+        }
+
+        if (prevProps.target === target &amp;&amp; this._observer) {
+            return;
+        }
+
+        const observer = new ResizeObserver(this.checkUpdateRect);
+
+        observer.observe(target!, {
+            box: "border-box",
+        });
+        this._observer = observer;
+
+        return;
+    }
+    protected _updateEvents() {
+        const controlBoxElement = this.controlBox.getElement();
+        const hasTargetAble = this.targetAbles.length;
+        const hasControlAble = this.controlAbles.length;
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const isUnset = (!hasTargetAble &amp;&amp; this.targetGesto)
+            || this._isTargetChanged(true);
+
+        if (isUnset) {
+            unset(this, "targetGesto");
+            this.updateState({ gesto: null });
+        }
+        if (!hasControlAble) {
+            unset(this, "controlGesto");
+        }
+
+        if (target &amp;&amp; hasTargetAble &amp;&amp; !this.targetGesto) {
+            this.targetGesto = getTargetAbleGesto(this, target!, "");
+        }
+        if (!this.controlGesto &amp;&amp; hasControlAble) {
+            this.controlGesto = getAbleGesto(this, controlBoxElement, "controlAbles", "Control");
+        }
+    }
+    protected _updateTargets() {
+        const props = this.props;
+
+        this._prevTarget = props.dragTarget || props.target;
+        this._prevDragArea = props.dragArea!;
+    }
+    private _renderLines() {
+        const props = this.props;
+        const {
+            zoom,
+            hideDefaultLines,
+            hideChildMoveableDefaultLines,
+            parentMoveable,
+        } = props as MoveableManagerProps&lt;GroupableProps>;
+
+        if (hideDefaultLines || (parentMoveable &amp;&amp; hideChildMoveableDefaultLines)) {
+            return [];
+        }
+        const renderPoses = this.getState().renderPoses;
+        const Renderer = {
+            createElement,
+        };
+
+        return [
+            [0, 1],
+            [1, 3],
+            [3, 2],
+            [2, 0],
+        ].map(([from, to], i) => {
+            return renderLine(Renderer, "", renderPoses[from], renderPoses[to], zoom!, `render-line-${i}`);
+        });
+    }
+    private _onPreventClick = (e: any) => {
+        e.stopPropagation();
+        e.preventDefault();
+        // removeEvent(window, "click", this._onPreventClick, true);
+    }
+    private _isTargetChanged(useDragArea?: boolean) {
+        const props = this.props;
+        const target = props.dragTarget || props.target;
+        const prevTarget = this._prevTarget;
+        const prevDragArea = this._prevDragArea;
+        const dragArea = props.dragArea;
+
+        // check target without dragArea
+        const isTargetChanged = !dragArea &amp;&amp; prevTarget !== target;
+        const isDragAreaChanged = (useDragArea || dragArea) &amp;&amp; prevDragArea !== dragArea;
+
+        return isTargetChanged || isDragAreaChanged;
+    }
+    private _updateNativeEvents() {
+        const props = this.props;
+        const target = props.dragArea ? this.areaElement : this.state.target;
+        const events = this.events;
+        const eventKeys = getKeys(events);
+
+        if (this._isTargetChanged()) {
+            for (const eventName in events) {
+                const manager = events[eventName];
+                manager &amp;&amp; manager.destroy();
+                events[eventName] = null;
+            }
+        }
+        if (!target) {
+            return;
+        }
+        const enabledAbles = this.enabledAbles;
+        eventKeys.forEach(eventName => {
+            const ables = filterAbles(enabledAbles, [eventName] as any);
+            const hasAbles = ables.length > 0;
+            let manager = events[eventName];
+
+            if (!hasAbles) {
+                if (manager) {
+                    manager.destroy();
+                    events[eventName] = null;
+                }
+                return;
+            }
+            if (!manager) {
+                manager = new EventManager(target, this, eventName);
+                events[eventName] = manager;
+            }
+            manager.setAbles(ables);
+        });
+    }
+    private _checkUpdateRootContainer() {
+        const rootContainer = this.props.rootContainer;
+
+        if (!this._rootContainer &amp;&amp; rootContainer) {
+            this._rootContainer = getRefTarget(rootContainer, true);
+        }
+    }
+    private _checkUpdateViewContainer() {
+        const viewContainerOption = this.props.viewContainer;
+
+        if (!this._viewContainer &amp;&amp; viewContainerOption) {
+            this._viewContainer = getRefTarget(viewContainerOption, true);
+        }
+        const viewContainer = this._viewContainer;
+
+        if (viewContainer) {
+            this._changeAbleViewClassNames([
+                ...this._getAbleViewClassNames(),
+                this.isDragging() ? VIEW_DRAGGING : "",
+            ]);
+        }
+    }
+    private _changeAbleViewClassNames(classNames: string[]) {
+        const viewContainer = this._viewContainer!;
+        const nextClassNames = groupBy(
+            classNames.filter(Boolean),
+            el => el,
+        ).map(([className]) => className);
+        const prevClassNames = this._viewClassNames;
+
+        const {
+            removed,
+            added,
+        } = diff(prevClassNames, nextClassNames);
+
+        removed.forEach(index => {
+            removeClass(viewContainer, prevClassNames[index]);
+        });
+        added.forEach(index => {
+            addClass(viewContainer, nextClassNames[index]);
+        });
+
+        this._viewClassNames = nextClassNames;
+
+    }
+    private _getAbleViewClassNames() {
+        return (this.getEnabledAbles().map(able => {
+            return (able.viewClassName?.(this) || "");
+        }).join(" ") + ` ${this._getAbleClassName("-view")}`).split(/\s+/g);
+    }
+    private _getAbleClassName(classPrefix = "") {
+        const ables = this.getEnabledAbles();
+
+        const targetGesto = this.targetGesto;
+        const controlGesto = this.controlGesto;
+        const targetGestoData: Record&lt;string, any> = targetGesto?.isFlag()
+            ? targetGesto.getEventData() : {};
+        const controlGestoData: Record&lt;string, any> = controlGesto?.isFlag()
+            ? controlGesto.getEventData() : {};
+
+        return ables.map(able => {
+            const name = able.name;
+            let className = able.className?.(this) || "";
+
+            if (
+                targetGestoData[name]?.isEventStart
+                || controlGestoData[name]?.isEventStart
+            ) {
+                className += ` ${prefix(`${name}${classPrefix}-dragging`)}`;
+            }
+            return className.trim();
+        }).filter(Boolean).join(" ");
+    }
+}
+
+/**
+ * The target to indicate Moveable Control Box.
+ * @name Moveable#target
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.target = document.querySelector(".target");
+ */
+/**
+ * Zooms in the elements of a moveable.
+ * @name Moveable#zoom
+ * @default 1
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.zoom = 2;
+ */
+
+/**
+ * Whether the target size is detected and updated whenever it changes.
+ * @name Moveable#useResizeObserver
+ * @default false
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.useResizeObserver = true;
+ */
+
+/**
+ * Resize, Scale Events at edges
+ * @name Moveable#edge
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.edge = true;
+ */
+
+/**
+ * You can specify the className of the moveable controlbox.
+ * @name Moveable#className
+ * @default ""
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *   className: "",
+ * });
+ *
+ * moveable.className = "moveable1";
+ */
+
+/**
+ * The target(s) to drag Moveable target(s)
+ * @name Moveable#dragTarget
+ * @default target
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body);
+ * moveable.target = document.querySelector(".target");
+ * moveable.dragTarget = document.querySelector(".dragTarget");
+ */
+
+/**
+ * `renderStart` event occurs at the first start of all events.
+ * @memberof Moveable
+ * @event renderStart
+ * @param {Moveable.OnRenderStart} - Parameters for the `renderStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("renderStart", ({ target }) => {
+ *     console.log("onRenderStart", target);
+ * });
+ */
+
+/**
+ * `render` event occurs before the target is drawn on the screen.
+ * @memberof Moveable
+ * @event render
+ * @param {Moveable.OnRender} - Parameters for the `render` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("render", ({ target }) => {
+ *     console.log("onRender", target);
+ * });
+ */
+
+/**
+ * `renderEnd` event occurs at the end of all events.
+ * @memberof Moveable
+ * @event renderEnd
+ * @param {Moveable.OnRenderEnd} - Parameters for the `renderEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: document.querySelector(".target"),
+ * });
+ * moveable.on("renderEnd", ({ target }) => {
+ *     console.log("onRenderEnd", target);
+ * });
+ */
+
+/**
+ * `renderGroupStart` event occurs at the first start of all events in group.
+ * @memberof Moveable
+ * @event renderGroupStart
+ * @param {Moveable.OnRenderGroupStart} - Parameters for the `renderGroupStart` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroupStart", ({ targets }) => {
+ *     console.log("onRenderGroupStart", targets);
+ * });
+ */
+
+/**
+ * `renderGroup` event occurs before the target is drawn on the screen in group.
+ * @memberof Moveable
+ * @event renderGroup
+ * @param {Moveable.OnRenderGroup} - Parameters for the `renderGroup` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroup", ({ targets }) => {
+ *     console.log("onRenderGroup", targets);
+ * });
+ */
+
+/**
+ * `renderGroupEnd` event occurs at the end of all events in group.
+ * @memberof Moveable
+ * @event renderGroupEnd
+ * @param {Moveable.OnRenderGroupEnd} - Parameters for the `renderGroupEnd` event
+ * @example
+ * import Moveable from "moveable";
+ *
+ * const moveable = new Moveable(document.body, {
+ *     target: [].slice.call(document.querySelectorAll(".target")),
+ * });
+ * moveable.on("renderGroupEnd", ({ targets }) => {
+ *     console.log("onRenderGroupEnd", targets);
+ * });
+ */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+<style>
+
+
+nav li[file="packages/react-moveable/src/moveablemanager"]:after {
+    display: none;
+}
+nav li[file="packages/react-moveable/src/moveablemanager"] h4, nav li[file="packages/react-moveable/src/moveablemanager"] ul {
+    display: block;
+}
+</style>
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.4.3</a> on Tue Dec 06 2022 01:14:19 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/utils.min.js"></script>
+<script src="scripts/search.js"></script>
+<script src="scripts/custom.js"></script>
+</body>
+</html>
