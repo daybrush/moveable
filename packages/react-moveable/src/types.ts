@@ -780,22 +780,42 @@ export interface OnDragOriginStart extends OnEvent {
  * @typedef
  * @memberof Moveable.OriginDraggable
  * @extends Moveable.OnEvent
- * @property - Offset width of target
- * @property - Offset height of target
- * @property - The delta of [x, y]
- * @property - The distance of [x, y]
- * @property - The target's moved transform-origin poses
- * @property - The target's moved transform-origin css
- * @property - `dragOrigin` causes a `drag` event.
+ * @extends Moveable.CSSObject
  */
-export interface OnDragOrigin extends OnEvent {
+export interface OnDragOrigin extends OnEvent, CSSObject {
+    /**
+     * Offset width of target
+     */
     width: number;
+    /**
+     * Offset height of target
+     */
     height: number;
+    /**
+     * The delta of [x, y]
+     */
     delta: number[];
+    /**
+     * The distance of [x, y]
+     */
     dist: number[];
+    /**
+     * The target's moved transform-origin poses
+     */
     origin: number[];
+    /**
+     * The target's moved transform-origin css
+     */
     transformOrigin: string;
+    /**
+     * A transform obtained by the simultaneous occurrence of other events in the current event
+     */
+    afterTransform: string;
+    /**
+     * `dragOrigin` causes a `drag` event.
+     */
     drag: OnDrag;
+
 }
 /**
  * @typedef
@@ -1302,17 +1322,28 @@ export interface OnWarpStart extends OnEvent, OnTransformStartEvent {
  * @typedef
  * @memberof Moveable.Warpable
  * @extends Moveable.OnEvent
- * @property - a target's transform
- * @property - The delta of warp matrix
- * @property - The dist of warp matrix
- * @property - The calculated warp matrix
- * @property - Multiply function that can multiply previous matrix by warp matrix
+ * @extends Moveable.CSSObject
  */
-export interface OnWarp extends OnEvent {
-    transform: string;
+export interface OnWarp extends OnEvent, CSSObject {
+    /**
+     * The delta of warp matrix
+     */
     delta: number[];
+    /**
+     * The dist of warp matrix
+     */
     dist: number[];
+    /**
+     * The calculated warp matrix
+     */
     matrix: number[];
+    /**
+     * a target's transform
+     */
+    transform: string;
+    /**
+     * Multiply function that can multiply previous matrix by warp matrix
+     */
     multiply: (matrix1: number[], matrix2: number[], n?: number) => number[];
 }
 /**

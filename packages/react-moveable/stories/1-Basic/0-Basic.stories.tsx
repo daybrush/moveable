@@ -69,3 +69,8 @@ group.add("Roundable", {
     app: require("./ReactRoundableApp").default,
     path: require.resolve("./ReactRoundableApp"),
 });
+
+group.add("OriginDraggable", {
+    app: require("./ReactOriginDraggableApp").default,
+    path: require.resolve("./ReactOriginDraggableApp"),
+});

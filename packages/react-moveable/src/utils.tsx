@@ -21,7 +21,7 @@ import {
     MoveableProps, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
     ElementSizes, MoveablePosition, TransformObject,
-    MoveableRefTargetsResultType, MoveableRefTargetType, MoveableManagerInterface,
+    MoveableRefTargetsResultType, MoveableRefTargetType, MoveableManagerInterface, CSSObject,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getBeforeRenderableDatas, getDragDist } from "./gesto/GestoUtils";
@@ -980,7 +980,7 @@ export function unset(self: any, name: string) {
     self[name] = null;
 }
 
-export function fillCSSObject(style: Record<string, any>, resolvedEvent?: any) {
+export function fillCSSObject(style: Record<string, any>, resolvedEvent?: any): CSSObject {
     if (resolvedEvent) {
         const originalDatas = getBeforeRenderableDatas(resolvedEvent);
 

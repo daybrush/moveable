@@ -1,6 +1,6 @@
 import {
     prefix, triggerEvent,
-    fillParams, calculatePoses, getRect, fillEndParams, convertCSSSize,
+    fillParams, calculatePoses, getRect, fillEndParams, convertCSSSize, fillCSSObject,
 } from "../utils";
 import {
     OnDragOriginStart, OnDragOrigin,
@@ -115,6 +115,10 @@ export default {
             convertCSSSize(targetOrigin[0], width, originRelative),
             convertCSSSize(targetOrigin[1], height, originRelative),
         ].join(" ");
+        const result = Draggable.drag(
+            moveable,
+            setCustomDrag(e, moveable.state, dragDelta, !!isPinch, false),
+        )!;
         const params = fillParams<OnDragOrigin>(moveable, e, {
             width,
             height,
@@ -122,10 +126,11 @@ export default {
             dist,
             delta,
             transformOrigin,
-            drag: Draggable.drag(
-                moveable,
-                setCustomDrag(e, moveable.state, dragDelta, !!isPinch, false),
-            )!,
+            drag: result,
+            ...fillCSSObject({
+                transform: result.transform,
+            }, e),
+            afterTransform: result.transform,
         });
         triggerEvent(moveable, "onDragOrigin", params);
         return params;

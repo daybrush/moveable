@@ -1,6 +1,6 @@
 import {
     prefix, getLineStyle, getDirection, getAbsolutePosesByState,
-    triggerEvent, fillParams, fillEndParams, getDirectionViewClassName,
+    triggerEvent, fillParams, fillEndParams, getDirectionViewClassName, fillCSSObject,
 } from "../utils";
 import {
     convertDimension, invert, multiply,
@@ -256,6 +256,9 @@ export default {
             dist: matrix,
             multiply,
             transform: nextTransform,
+            ...fillCSSObject({
+                transform: nextTransform,
+            }, e),
         }));
         return true;
     },
