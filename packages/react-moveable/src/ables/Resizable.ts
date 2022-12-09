@@ -65,6 +65,7 @@ export default {
         resizeFormat: Function,
         keepRatioFinally: Boolean,
         edge: Boolean,
+        checkResizableError: Boolean,
     } as const,
     events: {
         onResizeStart: "resizeStart",
@@ -122,8 +123,10 @@ export default {
         datas.prevHeight = 0;
 
         datas.minSize = [0, 0];
-        datas.startWidth = state.cssWidth;
-        datas.startHeight = state.cssHeight;
+
+
+        datas.startWidth = state.inlineCSSWidth || state.cssWidth;
+        datas.startHeight = state.inlineCSSHeight || state.cssHeight;
         datas.maxSize = [Infinity, Infinity];
 
         if (!isGroup) {
@@ -513,7 +516,7 @@ export default {
             prevHeight,
         } = datas;
 
-        if (!isResize) {
+        if (!isResize || moveable.props.checkResizableError === false) {
             return;
         }
         const {

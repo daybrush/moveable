@@ -659,6 +659,8 @@ export function getSize(
     let maxHeight = Infinity;
     let maxOffsetWidth = Infinity;
     let maxOffsetHeight = Infinity;
+    let inlineCSSWidth = 0;
+    let inlineCSSHeight = 0;
     let svg = false;
 
     if (target) {
@@ -732,20 +734,18 @@ export function getSize(
             if (isNaN(maxHeight)) {
                 maxHeight = Infinity;
             }
-            const inlineCSSWidth = convertUnitSize(targetStyle.width, 0) || 0;
-            const inlineCSSHeight = convertUnitSize(targetStyle.height, 0) || 0;
-            const computedWidth = parseFloat(style!.width) || 0;
-            const computedHeight = parseFloat(style!.height) || 0;
+            inlineCSSWidth = convertUnitSize(targetStyle.width, 0) || 0;
+            inlineCSSHeight = convertUnitSize(targetStyle.height, 0) || 0;
+            cssWidth = parseFloat(style!.width) || 0;
+            cssHeight = parseFloat(style!.height) || 0;
 
-            cssWidth = parseFloat(style!.width);
-            cssHeight = parseFloat(style!.height);
 
-            contentWidth = Math.abs(computedWidth - inlineCSSWidth) < 1
+            contentWidth = Math.abs(cssWidth - inlineCSSWidth) < 1
                 ? between(minWidth, inlineCSSWidth || cssWidth, maxWidth)
-                : computedWidth;
-            contentHeight = Math.abs(computedHeight - inlineCSSHeight) < 1
+                : cssWidth;
+            contentHeight = Math.abs(cssHeight - inlineCSSHeight) < 1
                 ? between(minHeight, inlineCSSHeight || cssHeight, maxHeight)
-                : computedHeight;
+                : cssHeight;
 
             offsetWidth = contentWidth;
             offsetHeight = contentHeight;
@@ -780,6 +780,8 @@ export function getSize(
         clientHeight,
         contentWidth,
         contentHeight,
+        inlineCSSWidth,
+        inlineCSSHeight,
         cssWidth,
         cssHeight,
         minWidth,

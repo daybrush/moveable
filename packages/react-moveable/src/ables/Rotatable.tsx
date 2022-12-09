@@ -770,13 +770,6 @@ export default {
 
         return params;
     },
-    dragControlAfter(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
-        const requestValue = e.datas.requestValue;
-
-        if (requestValue != null) {
-            // return this.dragControl(moveable, {...e, parentDist: });
-        }
-    },
     dragControlEnd(moveable: MoveableManagerInterface<RotatableProps>, e: any) {
         const { datas } = e;
 

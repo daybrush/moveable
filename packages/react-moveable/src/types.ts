@@ -234,6 +234,8 @@ export interface ElementSizes {
     offsetHeight: number;
     clientWidth: number;
     clientHeight: number;
+    inlineCSSWidth: number;
+    inlineCSSHeight: number;
     cssWidth: number;
     cssHeight: number;
     contentWidth: number;
@@ -1996,6 +1998,11 @@ export interface ResizableOptions extends RenderDirections {
      * @default false
      */
     edge?: boolean | Array<LineDirection>;
+    /**
+     * Whether to recalculate when the size to be calculated is different from the actual size
+     * @default true
+     */
+    checkResizableError?: boolean;
 }
 /**
  * @typedef
