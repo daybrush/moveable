@@ -583,6 +583,10 @@ export interface OnEvent {
      */
     inputEvent: any;
     /**
+     * Stop the currently working able.
+     */
+    stopAble(): void;
+    /**
      * Calling `stopDrag` in a drag-related event ends the drag.
      */
     stopDrag(): void;

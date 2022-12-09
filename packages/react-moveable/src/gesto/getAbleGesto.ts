@@ -101,7 +101,7 @@ export function triggerAble(
             if (isStart && result === false) {
                 nextDatas.isEventStart = false;
             }
-            resultCount += result ? 1 : 0;
+            resultCount += result || nextDatas.isEventStart ? 1 : 0;
             return result;
         }
         return false;
