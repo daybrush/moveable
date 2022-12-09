@@ -17,7 +17,6 @@ export default function App() {
                 transform: "translate(-16.8514px, 28.7599px) rotate(30.5213deg)",
             }}>No Target3</div>
             <Moveable
-                target={".target"}
                 draggable={true}
                 resizable={true}
                 rotatable={true}

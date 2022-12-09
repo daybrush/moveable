@@ -128,6 +128,7 @@ export default {
             transformOrigin,
             drag: result,
             ...fillCSSObject({
+                transformOrigin,
                 transform: result.transform,
             }, e),
             afterTransform: result.transform,

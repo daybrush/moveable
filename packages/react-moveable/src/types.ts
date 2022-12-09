@@ -175,6 +175,12 @@ export interface DefaultOptions {
      */
     persistData?: PersistRectData | null;
     /**
+     * Whether to accurately show the position of a movable control box
+     * Because getBoundingClientRect is used, css zoom, transform: rotate between container and rootContainer cannot be used.
+     * @default false
+     */
+    useAccuratePosition?: boolean;
+    /**
      * @private
      * single => group로 변환과정에 도형 유지를 위한 첫 렌더링 state
      */

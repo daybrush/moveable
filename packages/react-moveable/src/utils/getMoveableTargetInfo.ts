@@ -1,6 +1,7 @@
-import { plus, getOrigin, multiply } from "@scena/matrix";
+import { plus, getOrigin, multiply, minus } from "@scena/matrix";
 import { MoveableClientRect, Writable } from "../types";
 import {
+    calculateInversePosition,
     calculateMoveablePosition,
     getClientRect, getClientRectByPosition, getOffsetInfo, getTransformOrigin, resetClientRect,
 } from "../utils";
@@ -14,6 +15,7 @@ export interface MoveableTargetInfo extends MoveableElementInfo {
     rootContainerClientRect: MoveableClientRect;
     beforeDirection: 1 | -1;
     beforeOrigin: number[];
+    offsetDelta: number[],
     originalBeforeOrigin: number[];
     target: HTMLElement | SVGElement | null | undefined;
     style: Partial<Writable<CSSStyleDeclaration>>;
@@ -33,6 +35,7 @@ export function getMoveableTargetInfo(
     let moveableClientRect = resetClientRect();
     let containerClientRect = resetClientRect();
     let rootContainerClientRect = resetClientRect();
+    let offsetDelta = [0, 0];
     const style: Partial<Writable<CSSStyleDeclaration>> = {};
 
     const result = calculateElementInfo(
@@ -62,8 +65,6 @@ export function getMoveableTargetInfo(
 
         const offsetContainer = getOffsetInfo(parentContainer, parentContainer, true).offsetParent
             || result.offsetRootContainer!;
-
-
 
         if (result.hasZoom) {
             const absoluteTargetPosition = calculateMoveablePosition(
@@ -101,6 +102,21 @@ export function getMoveableTargetInfo(
             if (moveableElement) {
                 moveableClientRect = getClientRect(moveableElement);
             }
+            const {
+                left: containerClientRectLeft,
+                top: containerClientRectTop,
+                clientLeft: containterClientLeft,
+                clientTop: containerClientTop,
+            } = containerClientRect;
+            const clientDelta = [
+                targetClientRect.left - containerClientRectLeft,
+                targetClientRect.top - containerClientRectTop,
+            ];
+
+            offsetDelta = minus(
+                calculateInversePosition(result.rootMatrix, clientDelta, 4),
+                [containterClientLeft! + result.left, containerClientTop! + result.top],
+            );
         }
     }
 
@@ -114,6 +130,7 @@ export function getMoveableTargetInfo(
         originalBeforeOrigin: beforeOrigin,
         target,
         style,
+        offsetDelta,
         ...result,
     };
 }

@@ -80,6 +80,7 @@ export default class MoveableManager<T = {}>
         firstRenderState: null,
         persistData: null,
         viewContainer: null,
+        useAccuratePosition: false,
     };
     public state: MoveableManagerState = {
         container: null,
@@ -144,6 +145,7 @@ export default class MoveableManager<T = {}>
             target: stateTarget,
             direction,
             hasFixed,
+            offsetDelta,
         } = state;
         const groupTargets = (props as any).targets;
         const isDragging = this.isDragging();
@@ -157,7 +159,12 @@ export default class MoveableManager<T = {}>
             || propsTarget
             || (!this._hasFirstTarget && this.state.isPersisted);
         const isVisible = this.controlBox || this.props.firstRenderState || this.props.persistData;
+        const translate = [left - parentLeft, top - parentTop];
 
+        if (props.useAccuratePosition) {
+            translate[0] += offsetDelta[0];
+            translate[1] += offsetDelta[1];
+        }
         return (
             <ControlBoxElement
                 cspNonce={cspNonce}
@@ -170,7 +177,7 @@ export default class MoveableManager<T = {}>
                     "position": hasFixed ? "fixed" : "absolute",
                     "display": isDisplay ? "block" : "none",
                     "visibility": isVisible ? "visible" : "hidden",
-                    "transform": `translate3d(${left - parentLeft}px, ${top - parentTop}px, ${translateZ})`,
+                    "transform": `translate3d(${translate[0]}px, ${translate[1]}px, ${translateZ})`,
                     "--zoom": zoom,
                     "--zoompx": `${zoom}px`,
                 }}>

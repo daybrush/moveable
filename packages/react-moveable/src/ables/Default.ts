@@ -26,6 +26,7 @@ export default {
         preventClickDefault: Boolean,
         viewContainer: Object,
         persistData: Object,
+        useAccuratePosition: Boolean,
         firstRenderState: Object,
     } as const,
     events: {
