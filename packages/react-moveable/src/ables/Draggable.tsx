@@ -174,9 +174,11 @@ export default {
             distY = r * Math.sin(dragRotateRad);
         }
 
-        if (!isPinch && !parentEvent && !parentFlag && (!throttleDragRotate || distX || distY)) {
+        if (!isPinch && !parentEvent && !parentFlag) {
             const [verticalInfo, horizontalInfo] = checkSnapBoundsDrag(
-                moveable, distX, distY, throttleDragRotate, isRequest || deltaOffset, datas,
+                moveable, distX, distY,
+                throttleDragRotate,
+                isRequest || deltaOffset, datas,
             );
             isVerticalSnap = verticalInfo.isSnap;
             isVerticalBound = verticalInfo.isBound;

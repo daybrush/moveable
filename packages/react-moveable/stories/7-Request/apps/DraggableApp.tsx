@@ -2,8 +2,6 @@ import * as React from "react";
 import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
-    const [translate, setTranslate]  = React.useState([0, 0]);
-    const targetRef = React.useRef<HTMLDivElement>(null);
     const xInputRef = React.useRef<HTMLInputElement>(null);
     const yInputRef = React.useRef<HTMLInputElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
@@ -43,27 +41,19 @@ export default function App(props: Record<string, any>) {
             <div className="container" style={{
                 transform: `scale(${props.containerScale})`,
             }}>
-                <div className="target" ref={targetRef}>Target</div>
+                <div className="target">Target</div>
                 <Moveable
                     ref={moveableRef}
-                    target={targetRef}
+                    target={".target"}
                     draggable={true}
                     throttleDrag={props.throttleDrag}
                     edgeDraggable={props.edgeDraggable}
                     startDragRotate={props.startDragRotate}
                     throttleDragRotate={props.throttleDragRotate}
-                    onDragStart={e => {
-                        e.set(translate);
-                    }}
                     onDrag={e => {
-                        e.target.style.transform = `translate(${e.beforeTranslate[0]}px, ${e.beforeTranslate[1]}px)`;
+                        e.target.style.transform = e.transform;
                     }}
                     onDragEnd={e => {
-                        const lastEvent = e.lastEvent;
-                        if (lastEvent) {
-                            setTranslate(lastEvent.beforeTranslate);
-                        }
-
                         requestAnimationFrame(() => {
                             const rect = e.moveable.getRect();
 

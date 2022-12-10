@@ -3041,6 +3041,34 @@ export interface MoveableInterface {
     isMoveableElement(target: Element): boolean;
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
     updateTarget(): void;
+    /**
+     * Request able through a method rather than an event.
+     * At the moment of execution, requestStart is executed,
+     * and then request and requestEnd can be executed through Requester.
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Draggable.html#request Draggable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Resizable.html#request Resizable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Scalable.html#request Scalable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Rotatable.html#request Rotatable Requester}
+     * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.OriginDraggable.html#request OriginDraggable Requester}
+     * @param - ableName
+     * @param - request to be able params.
+     * @param - If isInstant is true, request and requestEnd are executed immediately.
+     * @return - Able Requester. If there is no request in able, nothing will work.
+     * @example
+     * import Moveable from "moveable";
+     *
+     * const moveable = new Moveable(document.body);
+     *
+     * // Instantly Request (requestStart - request - requestEnd)
+     * moveable.request("draggable", { deltaX: 10, deltaY: 10 }, true);
+     *
+     * // Start move
+     * const requester = moveable.request("draggable");
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.request({ deltaX: 10, deltaY: 10 });
+     * requester.requestEnd();
+     */
     request<RequestParam extends {} = AbleRequestParam>(
         ableName: string, params?: RequestParam, isInstant?: boolean): Requester<RequestParam>;
     destroy(): void;

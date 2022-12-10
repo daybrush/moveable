@@ -104,3 +104,9 @@ group.add("Test snap for scaled target", {
     app: require("./ReactZoomedSnapApp").default,
     path: require.resolve("./ReactZoomedSnapApp"),
 });
+
+
+group.add("Test request with bounds", {
+    app: require("./ReactRequestBoundsApp").default,
+    path: require.resolve("./ReactRequestBoundsApp"),
+});
