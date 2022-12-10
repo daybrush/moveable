@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.44.1...react-moveable@0.45.0) (2022-12-10)
+
+
+### :rocket: New Features
+
+* add `checkResizableError` prop #808 ([cb70b3b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/cb70b3b99f5da269a19ded412ac7cd0366cb7996))
+* add `stopAble` property ([c05ba1f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c05ba1feed36c8a4bc6107a713fb11208e685777))
+* add OrginDraggable, Warpable css object #807 ([32ba0ce](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/32ba0cee2a44bfcdc91cf3748282cccdfca37512))
+* add useAccuratePosition prop  #164 ([5c3898f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5c3898fc88704c5638133a35111767cd27a77808))
+
+
+### :bug: Bug Fix
+
+* fix request with bounds #809 ([43e08d1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/43e08d102827ba0f4437ce1d8883282566f3f86b))
+* fix useAccuratePosition for group ([e1b3ae7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e1b3ae78cb1d137ea85cf17afd51aa816e65aa87))
+
+
+### :mega: Other
+
+* publish packages ([ab42598](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ab42598cb7a6175450125c5e55093cf891a33692))
+
+
+
 ## [0.44.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.44.0...react-moveable@0.44.1) (2022-12-05)
 
 
