@@ -2679,10 +2679,10 @@
     taffydb "2.6.2"
     underscore "~1.8.3"
 
-"@daybrush/release@^0.5.2":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@daybrush/release/-/release-0.5.3.tgz#336ba0890a76d26305b21262e6a2f1af26487dfd"
-  integrity sha512-sJklgVXidKrE6e0X9MdyGyG3ycv8J2EAg3NYIvoMaGsPpW69vO4GwX0y/shfSybDxcgHAUI67oiex6fslRRtTg==
+"@daybrush/release@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.npmjs.org/@daybrush/release/-/release-0.7.1.tgz#2bf71cae4a51db36088865256e724458a5bb99ee"
+  integrity sha512-DaehIKh9XmiB57WZ4qHQNLCGk+/McN+GL+hdHIy1AuBrDGdn/x6CPIGRvNtDANuLgEwUivYYFI2sUdGd7V7JGg==
   dependencies:
     args "^5.0.1"
     commander "9.2.0"
