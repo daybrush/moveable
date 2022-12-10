@@ -177,6 +177,7 @@ export interface DefaultOptions {
     /**
      * Whether to accurately show the position of a movable control box
      * Because getBoundingClientRect is used, css zoom, transform: rotate between container and rootContainer cannot be used.
+     * group is not supported.
      * @default false
      */
     useAccuratePosition?: boolean;

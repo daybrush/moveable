@@ -161,7 +161,7 @@ export default class MoveableManager<T = {}>
         const isVisible = this.controlBox || this.props.firstRenderState || this.props.persistData;
         const translate = [left - parentLeft, top - parentTop];
 
-        if (props.useAccuratePosition) {
+        if (!groupable && props.useAccuratePosition) {
             translate[0] += offsetDelta[0];
             translate[1] += offsetDelta[1];
         }
