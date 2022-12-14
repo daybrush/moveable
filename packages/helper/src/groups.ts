@@ -4,11 +4,21 @@ import { GroupChild, TargetGroupsType } from "./types";
 export class Child {
     public type: "group" | "root" | "single" = "single";
     public depth = 0;
-    constructor(public parent?: GroupArrayChild) { }
+    protected _scope: string[] = [];
+    constructor(public parent?: GroupArrayChild) {}
+
+    public get scope(): string[] {
+        const parent = this.parent;
+
+        if (!parent || parent.type === "root") {
+            return [];
+        }
+        return [...parent.scope, parent.id];
+    }
 }
 
 export class GroupSingleChild extends Child {
-    public type: "single" = "single";
+    public type = "single" as const;
     constructor(parent: GroupArrayChild, public value: HTMLElement | SVGElement) {
         super(parent);
     }
@@ -18,6 +28,7 @@ export class GroupSingleChild extends Child {
 export class GroupArrayChild extends Child {
     public type: "group" | "root" = "group";
     public value: GroupChild[] = [];
+    public id = "";
     public map: Map<HTMLElement | SVGElement, GroupSingleChild> = new Map();
 
     public compare(groups: TargetGroupsType, checker: -1 | 0 | 1 = 0) {
@@ -104,11 +115,12 @@ export class GroupArrayChild extends Child {
     public findNextChild(
         target: HTMLElement | SVGElement,
         range: TargetGroupsType = this.toTargetGroups(),
-        isExact?: boolean,
+        isExact = true,
     ): GroupArrayChild | null {
         let nextChild: GroupArrayChild | null = null;
 
         const length = range.length;
+
         range.some(child => {
             if (!isExact && length === 1 && isArray(child)) {
                 nextChild = this.findNextChild(target, child);
@@ -177,7 +189,9 @@ export class GroupArrayChild extends Child {
         target: HTMLElement | SVGElement,
         range: Array<HTMLElement | SVGElement>,
     ): GroupArrayChild | null {
-        const nextChild = this.findNextChild(target);
+        const nextChild = this.findNextChild(
+            target,
+        );
 
         if (nextChild) {
             return nextChild.findPureChild(target, range);
@@ -193,7 +207,42 @@ export class GroupArrayChild extends Child {
             }
         });
     }
+    public findArrayChild(targets: TargetGroupsType): GroupArrayChild | null {
+        const {
+            map,
+            value,
+        } = this;
 
+        let result = false;
+
+        if (this.type !== "root") {
+            result = targets.every(target => {
+                if (isArray(target)) {
+                    return value.some(child => {
+                        return child.type === "group" && child.findArrayChild(target);
+                    });
+                } else {
+                    return map.get(target);
+                }
+            });
+        }
+
+        if (result) {
+            return this;
+        } else {
+            let childResult: GroupArrayChild | null = null;
+
+            value.some(child => {
+                if (child.type === "group") {
+                    childResult = child.findArrayChild(targets);
+
+                    return childResult;
+                }
+            });
+
+            return childResult;
+        }
+    }
     public groupByPerfect(selected: Array<HTMLElement | SVGElement>) {
         return this.value.filter(child => {
             if (child.type !== "single") {

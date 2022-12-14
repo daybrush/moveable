@@ -60,7 +60,7 @@
         "@daybrush/builder": "^0.1.0",
         "@daybrush/tester": "^0.1.3",
         "@egjs/build-helper": "^0.1.2",
-        "@moveable/helper": "~0.0.4",
+        "@moveable/helper": "~0.1.0",
         "@scena/react-guides": "^0.17.1",
         "@storybook/addon-actions": "6.5.10",
         "@storybook/addon-controls": "6.5.10",

@@ -1,6 +1,6 @@
 {
     "name": "@moveable/helper",
-    "version": "0.0.4",
+    "version": "0.1.0",
     "description": "Helper for demo of Moveable",
     "main": "./dist/helper.cjs.js",
     "module": "./dist/helper.esm.js",
