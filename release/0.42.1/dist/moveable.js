@@ -6918,7 +6918,8 @@ version: 0.42.1
     function getOffsetInfo(el, lastParent, isParent, checkZoom, targetStyle) {
       var _a, _b, _c;
 
-      var documentElement = document.documentElement || document.body;
+      var doc = el && el.ownerDocument ? el.ownerDocument : document;
+      var documentElement = doc.documentElement || doc.body;
       var hasSlot = false;
       var target;
       var parentSlotElement;
@@ -8331,6 +8332,22 @@ version: 0.42.1
           return plus(pos, origin);
         })
       };
+    }
+
+    function isDeepArrayEquals(arr1, arr2) {
+      return arr1.length === arr2.length && arr1.every(function (value1, i) {
+        var value2 = arr2[i];
+        var isArray1 = isArray(value1);
+        var isArray2 = isArray(value2);
+
+        if (isArray1 && isArray2) {
+          return isDeepArrayEquals(value1, value2);
+        } else if (!isArray1 && !isArray2) {
+          return value1 === value2;
+        }
+
+        return false;
+      });
     }
     /**
      * @namespace Moveable.Pinchable
@@ -16967,7 +16984,8 @@ version: 0.42.1
             customClipPath = _a.customClipPath,
             defaultClipPath = _a.defaultClipPath,
             clipArea = _a.clipArea,
-            zoom = _a.zoom;
+            zoom = _a.zoom,
+            groupable = _a.groupable;
 
         var _b = moveable.getState(),
             target = _b.target,
@@ -16985,7 +17003,7 @@ version: 0.42.1
             snapBoundInfos = _b.snapBoundInfos,
             rotationRad = _b.rotation;
 
-        if (!target) {
+        if (!target || groupable) {
           return [];
         }
 
@@ -21886,6 +21904,7 @@ version: 0.42.1
         _this.moveables = [];
         _this.transformOrigin = "50% 50%";
         _this.renderGroupRects = [];
+        _this._targetGroups = [];
         _this._hasFirstTargets = false;
         return _this;
       }
@@ -21930,7 +21949,8 @@ version: 0.42.1
             manager: moveable
           };
         });
-        var moveableGroups = findMoveableGroups(checkeds, this.props.targetGroups || []);
+        var targetGroups = this.props.targetGroups || [];
+        var moveableGroups = findMoveableGroups(checkeds, targetGroups);
         moveableGroups.push.apply(moveableGroups, checkeds.filter(function (_a) {
           var finded = _a.finded;
           return !finded;
@@ -22000,6 +22020,7 @@ version: 0.42.1
           this.scale = [1, 1];
         }
 
+        this._targetGroups = targetGroups;
         this.renderGroupRects = renderGroupRects;
         var transformOrigin = this.transformOrigin;
         var rotation = this.rotation;
@@ -22113,14 +22134,16 @@ version: 0.42.1
           state.container = props.container;
         }
 
-        var _a = this.differ.update(props.targets),
+        var targets = props.targets;
+
+        var _a = this.differ.update(targets),
             added = _a.added,
             changed = _a.changed,
             removed = _a.removed;
 
         var isTargetChanged = added.length || removed.length;
 
-        if (isContainerChanged || isTargetChanged || changed.length) {
+        if (isContainerChanged || isTargetChanged || changed.length || targets.length && isDeepArrayEquals(this._targetGroups, props.targetGroups || [])) {
           this.updateRect();
           this._hasFirstTargets = true;
         }
