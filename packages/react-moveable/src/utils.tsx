@@ -1618,3 +1618,19 @@ export function rotatePosesInfo(poses: number[][], origin: number[], rad: number
         result: nextPoses.map(pos => plus(pos, origin)),
     };
 }
+
+
+
+export function isDeepArrayEquals(arr1: any[], arr2: any[]): boolean {
+    return arr1.length === arr2.length && arr1.every((value1, i) => {
+        const value2 = arr2[i];
+        const isArray1 = isArray(value1);
+        const isArray2 = isArray(value2);
+        if (isArray1 && isArray2) {
+            return isDeepArrayEquals(value1, value2);
+        } else if (!isArray1 && !isArray2) {
+            return value1 === value2;
+        }
+        return false;
+    });
+}

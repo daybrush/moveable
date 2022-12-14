@@ -7,6 +7,7 @@ import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import {
     getAbsolutePosesByState, equals, unset, rotatePosesInfo,
     convertTransformOriginArray,
+    isDeepArrayEquals,
 } from "./utils";
 import { minus, plus } from "@scena/matrix";
 import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
@@ -220,6 +221,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     public moveables: MoveableManager[] = [];
     public transformOrigin = "50% 50%";
     public renderGroupRects: GroupRect[] = [];
+    private _targetGroups: MoveableTargetGroupsType = [];
     private _hasFirstTargets = false;
 
     public componentDidMount() {
@@ -246,9 +248,10 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const moveables = this.moveables;
         const target = state.target! || props.target!;
         const checkeds = moveables.map(moveable => ({ finded: false, manager: moveable }));
+        const targetGroups = this.props.targetGroups || [];
         const moveableGroups = findMoveableGroups(
             checkeds,
-            this.props.targetGroups || [],
+            targetGroups,
         );
 
         moveableGroups.push(...checkeds.filter(({ finded }) => !finded).map(({ manager }) => manager));
@@ -310,6 +313,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             this.scale = [1, 1];
         }
 
+
+        this._targetGroups = targetGroups;
         this.renderGroupRects = renderGroupRects;
         const transformOrigin = this.transformOrigin;
         const rotation = this.rotation;
@@ -436,10 +441,16 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         if (isContainerChanged) {
             state.container = props.container;
         }
-        const { added, changed, removed } = this.differ.update(props.targets!);
+        const targets = props.targets!;
+        const { added, changed, removed } = this.differ.update(targets);
         const isTargetChanged = added.length || removed.length;
 
-        if (isContainerChanged || isTargetChanged || changed.length) {
+        if (
+            isContainerChanged
+            || isTargetChanged
+            || changed.length
+            || targets.length && isDeepArrayEquals(this._targetGroups, props.targetGroups || [])
+        ) {
             this.updateRect();
             this._hasFirstTargets = true;
         }

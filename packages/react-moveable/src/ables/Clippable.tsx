@@ -319,6 +319,7 @@ export default {
             customClipPath,
             defaultClipPath,
             clipArea, zoom,
+            groupable,
         } = moveable.props;
         const {
             target, width, height, allMatrix, is3d, left, top,
@@ -328,7 +329,7 @@ export default {
             rotation: rotationRad,
         } = moveable.getState();
 
-        if (!target) {
+        if (!target || groupable) {
             return [];
         }
 
@@ -503,7 +504,7 @@ export default {
         return this.dragControlStart(moveable, e);
     },
     drag(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
-        return this.dragControl(moveable, {...e, isDragTarget: true });
+        return this.dragControl(moveable, { ...e, isDragTarget: true });
     },
     dragEnd(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, e: any) {
         return this.dragControlEnd(moveable, e);
