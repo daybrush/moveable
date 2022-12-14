@@ -130,7 +130,8 @@ export function getOffsetInfo(
     checkZoom?: boolean,
     targetStyle?: CSSStyleDeclaration,
 ) {
-    const documentElement = document.documentElement || document.body;
+    const doc = el && el.ownerDocument ? el.ownerDocument : document;
+    const documentElement = doc.documentElement || doc.body;
     let hasSlot = false;
     let target: HTMLElement | SVGElement | null | undefined;
     let parentSlotElement: HTMLElement | null | undefined;
