@@ -2640,6 +2640,7 @@ export interface SnappableState {
     enableSnap: boolean;
 }
 export interface SnapRenderInfo {
+    render?: boolean;
     direction?: number[];
     snap?: boolean;
     center?: boolean;

@@ -620,7 +620,7 @@ export default {
             snapRenderThreshold = 1,
         } = moveable.props;
 
-        if (!snapRenderInfo || !hasGuidelines(moveable, "")) {
+        if (!snapRenderInfo || !snapRenderInfo.render || !hasGuidelines(moveable, "")) {
             return [];
         }
         state.guidelines = getTotalGuidelines(moveable);
@@ -806,6 +806,9 @@ export default {
         const state = moveable.state;
         if (!checkSnapInfo(moveable)) {
             state.guidelines = getTotalGuidelines(moveable);
+        }
+        if (state.snapRenderInfo) {
+            state.snapRenderInfo.render = true;
         }
     },
     pinchStart(
