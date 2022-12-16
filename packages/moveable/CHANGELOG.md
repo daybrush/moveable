@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.2](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.42.1...moveable@0.42.2) (2022-12-16)
+
+
+### :mega: Other
+
+* publish packages ([d088ad9](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/d088ad9ed64889f4fd6143b89410f5d5e372105f))
+
+
+
 ## [0.42.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.41.1...moveable@0.42.1) (2022-12-10)
 
 

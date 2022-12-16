@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.45.0...react-moveable@0.45.1) (2022-12-16)
+
+
+### :bug: Bug Fix
+
+* fix helper's methods ([4bc6ef5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/4bc6ef511f7652966e1a87cd7d0a53e6687a1707))
+* fix snap rendering for first drag #810 ([170eaec](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/170eaeccb43ce051f34661a337fb7870e3e8b5d9))
+* fix targetGroups' compare condition ([21622f2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/21622f2f25d912f69b70ba5193b909bf7244db80))
+* fix targetGroups' compare condition ([959a9f0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/959a9f0abd3fa592aa7645096efc3df95477494a))
+
+
+### :mega: Other
+
+* publish packages ([d088ad9](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d088ad9ed64889f4fd6143b89410f5d5e372105f))
+
+
+
 ## [0.45.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.44.1...react-moveable@0.45.0) (2022-12-10)
 
 

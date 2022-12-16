@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.2](https://github.com/daybrush/moveable/compare/0.42.1...0.42.2) (2022-12-16)
+### :sparkles: Packages
+* `@moveable/helper` 0.1.0
+* `lit-moveable` 0.19.1
+* `moveable` 0.42.2
+* `preact-moveable` 0.44.1
+* `react-compat-moveable` 0.30.2
+* `react-moveable` 0.45.1
+* `svelte-moveable` 0.34.1
+* `vue-moveable` 2.0.0-beta.55
+* `vue3-moveable` 0.17.1
+* `ngx-moveable` 0.39.1
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `@moveable/helper`
+    * fix helper's methods ([4bc6ef5](https://github.com/daybrush/moveable/commit/4bc6ef511f7652966e1a87cd7d0a53e6687a1707))
+* `react-moveable`
+    * fix snap rendering for first drag #810 ([170eaec](https://github.com/daybrush/moveable/commit/170eaeccb43ce051f34661a337fb7870e3e8b5d9))
+    * fix targetGroups' compare condition ([21622f2](https://github.com/daybrush/moveable/commit/21622f2f25d912f69b70ba5193b909bf7244db80))
+    * fix targetGroups' compare condition ([959a9f0](https://github.com/daybrush/moveable/commit/959a9f0abd3fa592aa7645096efc3df95477494a))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([d088ad9](https://github.com/daybrush/moveable/commit/d088ad9ed64889f4fd6143b89410f5d5e372105f))
+
+
+
 ## [0.42.1](https://github.com/daybrush/moveable/compare/0.41.1...0.42.1) (2022-12-10)
 ### :sparkles: Packages
 * `@moveable/helper` 0.0.4
