@@ -449,7 +449,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             isContainerChanged
             || isTargetChanged
             || changed.length
-            || targets.length && isDeepArrayEquals(this._targetGroups, props.targetGroups || [])
+            || targets.length && !isDeepArrayEquals(this._targetGroups, props.targetGroups || [])
         ) {
             this.updateRect();
             this._hasFirstTargets = true;
