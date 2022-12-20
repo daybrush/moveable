@@ -127,7 +127,7 @@ import Moveable from "moveable";
 
 
 const moveable = new Moveable(document.body, {
-    target: document.querySelector(".target1");
+    target: document.querySelector(".target1")
 });
 
 window.addEventListener("mousedown", e => {
