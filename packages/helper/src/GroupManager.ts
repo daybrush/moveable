@@ -63,14 +63,15 @@ export function toTargetList(raw: GroupChild[]): TargetList {
 
         return arr;
     }
-    function flatten() {
-        return deepFlat(targets(raw));
-    }
+
     return {
         raw: () => raw,
-        targets: () => targets(raw),
-        flatten,
-
+        targets() {
+            return targets(this.raw());
+        },
+        flatten() {
+            return deepFlat(this.targets());
+        },
     };
 }
 
