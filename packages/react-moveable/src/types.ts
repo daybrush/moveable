@@ -2011,6 +2011,45 @@ export interface ResizableOptions extends RenderDirections {
 }
 /**
  * @typedef
+ * @memberof Moveable
+ * @extends Moveable.AbleRequestParam
+ * @description the Resizable's request parameter
+ */
+export interface AbleRequesters {
+    draggable: DraggableRequestParam;
+    resizable: ResizableRequestParam;
+    scalable: ScalableRequestParam;
+    rotatable: RotatableRequestParam;
+    [key: string]: AbleRequestParam;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Draggable
+ * @extends Moveable.AbleRequestParam
+ * @description the Draggable's request parameter
+ */
+export interface DraggableRequestParam extends AbleRequestParam {
+    /**
+     * x position
+     */
+    x?: number;
+    /**
+     * y position
+     */
+    y?: number;
+    /**
+     * X number to move
+     */
+    deltaX?: number;
+    /**
+     * Y number to move
+     */
+    deltaY?: number;
+}
+
+/**
+ * @typedef
  * @memberof Moveable.Resizable
  * @extends Moveable.AbleRequestParam
  * @description the Resizable's request parameter
@@ -2118,6 +2157,28 @@ export interface ScalableRequestParam extends AbleRequestParam {
      */
     deltaHeight?: number;
 }
+
+
+
+
+/**
+ * @typedef
+ * @memberof Moveable.Rotatable
+ * @extends Moveable.AbleRequestParam
+ * @description the Rotatable's request parameter
+ */
+export interface RotatableRequestParam extends AbleRequestParam {
+    /**
+     * delta number of rotation
+     */
+    deltaRotate?: number;
+    /**
+     * absolute number of moveable's rotation
+     */
+    rotate?: number;
+}
+
+
 export interface ScalableEvents {
     onScaleStart: OnScaleStart;
     onBeforeScale: OnBeforeScale;
@@ -3070,8 +3131,10 @@ export interface MoveableInterface {
      * requester.request({ deltaX: 10, deltaY: 10 });
      * requester.requestEnd();
      */
-    request<RequestParam extends {} = AbleRequestParam>(
-        ableName: string, params?: RequestParam, isInstant?: boolean): Requester<RequestParam>;
+    request<
+        RequestParam extends AbleRequesters[Name],
+        Name extends string = string,
+    >(ableName: Name, params?: RequestParam, isInstant?: boolean): Requester<RequestParam>;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;

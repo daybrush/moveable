@@ -1,5 +1,5 @@
 import * as React from "react";
-import Moveable, { ResizableRequestParam } from "@/react-moveable";
+import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
     const widthInputRef = React.useRef<HTMLInputElement>(null);
@@ -7,7 +7,7 @@ export default function App(props: Record<string, any>) {
     const moveableRef = React.useRef<Moveable>(null);
     const [requestCallbacks] = React.useState(() => {
         function request() {
-            moveableRef.current!.request<ResizableRequestParam>("resizable", {
+            moveableRef.current!.request("resizable", {
                 offsetWidth: parseInt(widthInputRef.current!.value),
                 offsetHeight: parseInt(heightInputRef.current!.value),
             }, true);
