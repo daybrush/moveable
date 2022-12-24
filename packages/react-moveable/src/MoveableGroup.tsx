@@ -448,6 +448,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         if (
             isContainerChanged
             || isTargetChanged
+            || this.transformOrigin !== (props.defaultGroupOrigin || "50% 50%")
             || changed.length
             || targets.length && !isDeepArrayEquals(this._targetGroups, props.targetGroups || [])
         ) {
