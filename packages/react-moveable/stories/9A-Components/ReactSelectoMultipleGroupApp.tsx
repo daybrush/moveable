@@ -51,7 +51,9 @@ export default function App() {
                         setSelectedTargets(childs.targets());
                         return;
                     }
-                    selectoRef.current!.clickTarget(e.inputEvent, e.moveableTarget);
+                    if (e.isTrusted) {
+                        selectoRef.current!.clickTarget(e.inputEvent, e.moveableTarget);
+                    }
                 }}
                 onDrag={e => {
                     e.target.style.transform = e.transform;
@@ -112,6 +114,7 @@ export default function App() {
                     } else {
                         nextChilds = groupManager.selectSameDepthChilds(targets, added, removed);
                     }
+                    e.currentTarget.setSelectedTargets(nextChilds.flatten());
                     setSelectedTargets(nextChilds.targets());
                 }}
             ></Selecto>

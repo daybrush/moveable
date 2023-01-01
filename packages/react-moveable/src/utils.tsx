@@ -1037,6 +1037,7 @@ export function fillParams<T extends IObject<any>>(
         moveable,
         datas: datas.datas,
         isFirstDrag: !!e.isFirstDrag,
+        isTrusted: e.isTrusted !== false,
         stopAble() {
             datas.isEventStart = false;
         },

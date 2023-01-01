@@ -591,6 +591,10 @@ export interface OnEvent {
      * Calling `stopDrag` in a drag-related event ends the drag.
      */
     stopDrag(): void;
+    /**
+     * Whether the event did not occur externally
+     */
+    isTrusted: boolean;
 
 }
 /**
