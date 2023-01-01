@@ -1,4 +1,4 @@
-import { isArray, deepFlat } from "@daybrush/utils";
+import { isArray, deepFlat, find } from "@daybrush/utils";
 import { GroupChild, TargetGroupsType } from "./types";
 
 export class Child {
@@ -53,6 +53,30 @@ export class GroupArrayChild extends Child {
     public has(target: HTMLElement | SVGElement) {
         return this.map.has(target);
     }
+    public contains(element: HTMLElement | SVGElement): boolean {
+        if (this.has(element)) {
+            return true;
+        }
+        return this.value.some(child => {
+            if (child.type === "group") {
+                return child.contains(element);
+            } else {
+                return false;
+            }
+        });
+    }
+    public findContainedChild(element: HTMLElement | SVGElement) {
+        return find(this.value, child => {
+            if (child.type === "single") {
+                return child.value === element;
+            } else {
+                return child.contains(element);
+            }
+        });
+    }
+    /**
+     * Exact group containing targets
+     */
     public findExactChild(target: TargetGroupsType[0]): GroupChild | undefined {
         const map = this.map;
 
@@ -70,7 +94,7 @@ export class GroupArrayChild extends Child {
         let parent: GroupArrayChild | undefined = single.parent;
 
         while (parent) {
-            if (parent.map.size === length) {
+            if (parent.map.size >= length) {
                 return parent;
             }
             parent = parent.parent;
@@ -127,6 +151,7 @@ export class GroupArrayChild extends Child {
                 return nextChild;
             }
 
+
             const nextGroupChild = this.findExactChild(child);
 
             if (!nextGroupChild) {
@@ -161,6 +186,9 @@ export class GroupArrayChild extends Child {
         }
         return null;
     }
+    /**
+     * Finds a group that does not overlap within the range and includes the target.
+     */
     public findPureChild(
         target: HTMLElement | SVGElement,
         range: Array<HTMLElement | SVGElement>,
@@ -189,9 +217,7 @@ export class GroupArrayChild extends Child {
         target: HTMLElement | SVGElement,
         range: Array<HTMLElement | SVGElement>,
     ): GroupArrayChild | null {
-        const nextChild = this.findNextChild(
-            target,
-        );
+        const nextChild = this.findNextChild(target);
 
         if (nextChild) {
             return nextChild.findPureChild(target, range);
@@ -209,25 +235,33 @@ export class GroupArrayChild extends Child {
     }
     public findArrayChild(targets: TargetGroupsType): GroupArrayChild | null {
         const {
-            map,
             value,
         } = this;
 
         let result = false;
 
         if (this.type !== "root") {
-            result = targets.every(target => {
-                if (isArray(target)) {
-                    return value.some(child => {
-                        return child.type === "group" && child.findArrayChild(target);
-                    });
+            result = value.every(child => {
+                if (child.type === "single")  {
+                    return targets.some(target => child.value === target);
                 } else {
-                    return map.get(target);
+                    return targets.some(target => {
+                        return isArray(target) && child.findArrayChild(target);
+                    });
                 }
             });
+            // result = targets.every(target => {
+            //     if (isArray(target)) {
+            //         return value.some(child => {
+            //             return child.type === "group" && child.findArrayChild(target);
+            //         });
+            //     } else {
+            //         return map.get(target);
+            //     }
+            // });
         }
 
-        if (result) {
+        if (result && targets.length === value.length) {
             return this;
         } else {
             let childResult: GroupArrayChild | null = null;

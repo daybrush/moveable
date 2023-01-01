@@ -1,3 +1,4 @@
+/* eslint-disable no-cond-assign */
 import { deepFlat, isArray } from "@daybrush/utils";
 import { GroupArrayChild, GroupSingleChild } from "./groups";
 import { GroupChild, TargetGroupsObject, TargetGroupsType, TargetList } from "./types";
@@ -186,13 +187,15 @@ export class GroupManager extends GroupArrayChild {
         });
 
         added.forEach(element => {
-            const pureChild = this.findNextPureChild(element, startSelected);
+            const parentGroup = this._findParentGroup(element, startSelected);
 
-            if (pureChild) {
-                nextTargets.push(pureChild.toTargetGroups());
-            } else {
-                nextTargets.push(element);
+            const nextChild = parentGroup.findContainedChild(element);
+
+            if (nextChild?.type === "group") {
+                nextTargets.push(nextChild.toTargetGroups());
+                return;
             }
+            nextTargets.push(element);
         });
         return toTargetList(this.toChilds(nextTargets));
     }
@@ -251,7 +254,6 @@ export class GroupManager extends GroupArrayChild {
     public toChilds(targets: TargetGroupsType): GroupChild[] {
         const childs: GroupChild[] = [];
 
-
         targets.forEach(target => {
             if (isArray(target)) {
                 const arrayChild = this.findArrayChild(target);
@@ -297,5 +299,27 @@ export class GroupManager extends GroupArrayChild {
         });
 
         return value;
+    }
+    protected _findParentGroup(
+        element: HTMLElement | SVGElement,
+        range: Array<HTMLElement | SVGElement>,
+    ) {
+        if (!range.length) {
+            return this;
+        }
+        const single = this.map.get(element);
+
+        if (!single) {
+            return this;
+        }
+        let parent: GroupArrayChild | undefined = single.parent;
+
+        while (parent) {
+            if (range.some(element => parent!.contains(element))) {
+                return parent;
+            }
+            parent = parent.parent;
+        }
+        return this;
     }
 }
