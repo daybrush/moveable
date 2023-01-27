@@ -32,9 +32,6 @@ export default function App(props: Record<string, any>) {
                     snapThreshold={props.snapThreshold}
                     verticalGuidelines={props.verticalGuidelines}
                     horizontalGuidelines={props.horizontalGuidelines}
-                    onBeforeRenderStart={e => {
-                        e.setTransform(e.target.style.transform);
-                    }}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}

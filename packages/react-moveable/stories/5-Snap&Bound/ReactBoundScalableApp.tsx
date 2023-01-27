@@ -30,9 +30,6 @@ export default function App(props: Record<string, any>) {
                     throttleScale={props.throttleScale}
                     snappable={props.snappable}
                     bounds={props.bounds}
-                    onBeforeRenderStart={e => {
-                        e.setTransform(e.target.style.transform);
-                    }}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}

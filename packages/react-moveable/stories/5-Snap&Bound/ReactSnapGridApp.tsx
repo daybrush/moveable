@@ -30,9 +30,6 @@ export default function App(props: Record<string, any>) {
                     snappable={props.snappable}
                     snapGridWidth={props.snapGridWidth}
                     snapGridHeight={props.snapGridHeight}
-                    onBeforeRenderStart={e => {
-                        e.setTransform(e.target.style.transform);
-                    }}
                     onDrag={e => {
                         e.target.style.transform = e.transform;
                     }}
