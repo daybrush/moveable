@@ -1,4 +1,4 @@
-import { makeArgType, makeLink } from "../utils";
+import { makeArgType, makeLink, makeOptionLink } from "../utils";
 
 export const SCALE_CONTROLS = {
     "containerScale": makeArgType({
@@ -17,6 +17,25 @@ export const DEFAULT_CONTROLS = {
     hideDefaultLines: makeArgType({
         type: "boolean",
         description: makeLink("Moveable", "hideDefaultLines"),
+        defaultValue: false,
+    }),
+};
+
+
+export const DEFAULT_SCROLLABLE_CONTROLS = {
+    threshold: makeArgType({
+        type: "number",
+        description: makeOptionLink("Scrollable", "ScrollableOptions", "threshold"),
+        defaultValue: 30,
+    }),
+    throttleTime: makeArgType({
+        type: "number",
+        description: makeOptionLink("Scrollable", "ScrollableOptions", "throttleTime"),
+        defaultValue: 0,
+    }),
+    checkScrollEvent: makeArgType({
+        type: "boolean",
+        description: makeOptionLink("Scrollable", "ScrollableOptions", "checkScrollEvent"),
         defaultValue: false,
     }),
 };

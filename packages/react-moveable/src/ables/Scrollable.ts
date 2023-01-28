@@ -27,22 +27,25 @@ export default {
         scrollThreshold: Number,
         scrollThrottleTime: Number,
         getScrollPosition: Function,
+        scrollOptions: Object,
     } as const,
     events: {
         onScroll: "scroll",
         onScrollGroup: "scrollGroup",
     } as const,
     dragRelation: "strong",
-    dragStart(moveable: MoveableManagerInterface<ScrollableProps>, e: any) {
+    dragStart(moveable: MoveableManagerInterface<ScrollableProps, Record<string, any>>, e: any) {
         const props = moveable.props;
         const {
             scrollContainer = moveable.getContainer() as HTMLElement,
+            scrollOptions,
         } = props;
 
         const dragScroll = new DragScroll();
         const scrollContainerElement = getRefTarget<HTMLElement>(scrollContainer, true);
 
         e.datas.dragScroll = dragScroll;
+        moveable.state.dragScroll = dragScroll;
 
         const gestoName = e.isControl ? "controlGesto" : "targetGesto";
         const targets = e.targets;
@@ -59,10 +62,13 @@ export default {
             }
             triggerEvent(moveable, eventName, params);
         }).on("move", ({ offsetX, offsetY, inputEvent }) => {
-            moveable[gestoName].scrollBy(offsetX, offsetY, inputEvent.inputEvent, false);
+            moveable[gestoName].scrollBy(offsetX, offsetY, inputEvent.inputEvent, true);
+        }).on("scrollDrag", ({ next }) => {
+            next(moveable[gestoName].getCurrentEvent());
         });
         dragScroll.dragStart(e, {
             container: scrollContainerElement!,
+            ...scrollOptions,
         });
     },
     checkScroll(moveable: MoveableManagerInterface<ScrollableProps>, e: any) {
@@ -76,6 +82,7 @@ export default {
             scrollThreshold = 0,
             scrollThrottleTime = 0,
             getScrollPosition = getDefaultScrollPosition,
+            scrollOptions,
         } = moveable.props;
 
         dragScroll.drag(e, {
@@ -85,6 +92,7 @@ export default {
             getScrollPosition: (ev: any) => {
                 return getScrollPosition({ scrollContainer: ev.container, direction: ev.direction });
             },
+            ...scrollOptions,
         });
 
         return true;
@@ -117,96 +125,19 @@ export default {
     dragGroupControlStart(moveable: MoveableGroupInterface, e: any) {
         return this.dragStart(moveable, { ...e, targets: moveable.props.targets, isControl: true });
     },
-    dragGroupContro(moveable: MoveableGroupInterface, e: any) {
+    dragGroupControl(moveable: MoveableGroupInterface, e: any) {
         return this.drag(moveable, { ...e, targets: moveable.props.targets });
     },
     dragGroupControEnd(moveable: MoveableGroupInterface, e: any) {
         return this.dragEnd(moveable, { ...e, targets: moveable.props.targets });
     },
+    unset(moveable: MoveableManagerInterface<ScrollableProps, Record<string, any>>) {
+        const state = moveable.state;
+
+        state.dragScroll?.dragEnd();
+        state.dragScroll = null;
+    },
 };
-
-/**
- * Whether or not target can be scrolled to the scroll container
- * @name Moveable.Scrollable#scrollable
- * @default false
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *   scrollable: true,
- *   scrollContainer: document.body,
- *   scrollThreshold: 100,
- *   scrollThrottleTime: 30,
- *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
- * });
- *
- * moveable.scrollable = true;
- */
-
-/**
- * The container to which scroll is applied
- * @name Moveable.Scrollable#scrollContainer
- * @default container
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *   scrollable: true,
- *   scrollContainer: document.body,
- *   scrollThreshold: 100,
- *   scrollThrottleTime: 30,
- *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
- * });
- */
-/**
- * Expand the range of the scroll check area.
- * @name Moveable.Scrollable#scrollThreshold
- * @default 0
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *   scrollable: true,
- *   scrollContainer: document.body,
- *   scrollThreshold: 100,
- *   scrollThrottleTime: 30,
- *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
- * });
- */
-
-/**
- * Time interval that occurs when scrolling occurs when dragging is maintained
- * If set to 0, it does not occur.
- * @name Moveable.Scrollable#scrollThreshold
- * @default 0
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *   scrollable: true,
- *   scrollContainer: document.body,
- *   scrollThreshold: 100,
- *   scrollThrottleTime: 30,
- *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
- * });
- */
-
-/**
- * Sets a function to get the scroll position.
- * @name Moveable.Scrollable#getScrollPosition
- * @default container's scroll pos array
- * @example
- * import Moveable from "moveable";
- *
- * const moveable = new Moveable(document.body, {
- *   scrollable: true,
- *   scrollContainer: document.body,
- *   scrollThreshold: 100,
- *   scrollThrottleTime: 30,
- *   getScrollPosition: ({ scrollContainer }) => ([scrollContainer.scrollLeft, scrollContainer.scrollTop]),
- * });
- *
- */
 
 /**
  * When the drag cursor leaves the scrollContainer, the `scroll` event occur to scroll.

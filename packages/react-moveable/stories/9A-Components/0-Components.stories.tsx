@@ -13,3 +13,9 @@ group.add("Use Selecto with Multiple Group", {
     app: require("./ReactSelectoMultipleGroupApp").default,
     path: require.resolve("./ReactSelectoMultipleGroupApp"),
 });
+
+
+group.add("Use Infinite Viewer", {
+    app: require("./ReactInfiniteViewerApp").default,
+    path: require.resolve("./ReactInfiniteViewerApp"),
+});

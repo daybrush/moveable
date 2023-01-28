@@ -2656,10 +2656,10 @@
     taffydb "2.6.2"
     underscore "~1.8.3"
 
-"@daybrush/jsdoc@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.npmjs.org/@daybrush/jsdoc/-/jsdoc-0.4.3.tgz#9073899e099e5faa5a7e8d34dcd22766b84e1681"
-  integrity sha512-0ZbqoitrE060eNOFQzW+TdzNqQSTQnWYHMqwLhrsFpPZy8GzorTdZwNll9XxKcDFoTR0sphcv1OKh9odHfLuvw==
+"@daybrush/jsdoc@^0.4.7":
+  version "0.4.7"
+  resolved "https://registry.npmjs.org/@daybrush/jsdoc/-/jsdoc-0.4.7.tgz#aefb53d1f15eeafbdb15b002bdb5b1ebcb2b255c"
+  integrity sha512-iR8P5Hdvcg4TvwRvS3XKlxF+4FlF5DSP7HnZoj4+01QEaFRID4HbBAEKu4t5CvGm6h9wypE4R+aVxfoin4IW1Q==
   dependencies:
     "@babel/parser" "^7.2.3"
     "@babel/types" "^7.2.2"
@@ -2722,7 +2722,7 @@
     sinon "^7.4.1"
     source-map-support "^0.5.13"
 
-"@daybrush/utils@1.6.0", "@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.0", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
+"@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.0", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
   version "1.10.0"
   resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-1.10.0.tgz"
   integrity sha512-IDT0DWAGcjxb2+WMr8pHrVTkHVKdilBumX1SubXJUlowN4rMSLphwDxvMNfv+vQOrdCPXSoPVZ3mhfrHsQ9Xow==
@@ -4634,12 +4634,12 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@scena/dragscroll@^1.2.1", "@scena/dragscroll@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@scena/dragscroll/-/dragscroll-1.3.0.tgz#3a9f30a4153eeb2d25df22004ddf602db6d55583"
-  integrity sha512-UlK/g9IX8fJ8+YczqfUT7WDjx/5KKQMU2/uZLYLXV8FWuzWS2WWpt2u1G6KCIF65380oCnCYOs7nOrYpedsOaQ==
+"@scena/dragscroll@^1.2.1", "@scena/dragscroll@^1.3.0", "@scena/dragscroll@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/@scena/dragscroll/-/dragscroll-1.4.0.tgz#220b2430c16119cd3e70044ee533a5b9a43cffd7"
+  integrity sha512-3O8daaZD9VXA9CP3dra6xcgt/qrm0mg0xJCwiX6druCteQ9FFsXffkF8PrqxY4Z4VJ58fFKEa0RlKqbsi/XnRA==
   dependencies:
-    "@daybrush/utils" "1.6.0"
+    "@daybrush/utils" "^1.6.0"
     "@scena/event-emitter" "^1.0.2"
 
 "@scena/event-emitter@^1.0.2", "@scena/event-emitter@^1.0.3", "@scena/event-emitter@^1.0.4", "@scena/event-emitter@^1.0.5":
@@ -10810,10 +10810,10 @@ dateformat@^3.0.0:
   resolved "https://registry.npmjs.org/dateformat/-/dateformat-3.0.3.tgz"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
-daybrush-jsdoc-template@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.npmjs.org/daybrush-jsdoc-template/-/daybrush-jsdoc-template-1.8.0.tgz#ea0aaa4eb9e5304fd89682d07330413ccddafb21"
-  integrity sha512-/d+XmFMaBxys49djBMpHUfER3f22OTKKKIfkg/JGY4oXf4hG5rH7PCFhyvk86jvJ6PP5okc+j3MXK60jreB3qQ==
+daybrush-jsdoc-template@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.npmjs.org/daybrush-jsdoc-template/-/daybrush-jsdoc-template-1.10.0.tgz#6fc0f2f90c689b1eaaf0d2d74e67062a5a593c25"
+  integrity sha512-9bj+MGARB1Spqn2WQYpnK6f5KOBFLcJLunUrGqjLKkwi9X2WrWCqPfjIATahwSA/I7I0+XNjavlYgegyc1y47g==
   dependencies:
     "@daybrush/jsdoc" "^0.4.0"
     "@daybrush/utils" "^1.6.0"
@@ -13366,10 +13366,10 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.0, gesto@^1.13.1, gesto@^1.14.0, gesto@^1.15.0, gesto@^1.3.0, gesto@^1.5.1:
-  version "1.15.0"
-  resolved "https://registry.npmjs.org/gesto/-/gesto-1.15.0.tgz#b5f3cbe456ca2016de58bd050a019d339f06dc9c"
-  integrity sha512-al19XPu2TA0KrVTDXIVzFqC/cgZv5hGyLj4IYOf+6iKx7AWag3rvt96C8fP9RaLaptGWgFrhr7c+KVu2F2pEOw==
+gesto@^1.13.0, gesto@^1.13.1, gesto@^1.14.0, gesto@^1.15.1, gesto@^1.3.0, gesto@^1.5.1:
+  version "1.15.1"
+  resolved "https://registry.npmjs.org/gesto/-/gesto-1.15.1.tgz#16eb927f5319995abca37bafafe90d423be0becf"
+  integrity sha512-mqdBeVeYpymupHojEEyH33u0KvL/hbG6gKbqoQKoR7aeWrN82CIXYZkAo4Ie81PUhxS5HNDdmJVcSzqOpPm0JQ==
   dependencies:
     "@daybrush/utils" "^1.7.1"
     "@scena/event-emitter" "^1.0.2"
@@ -24259,6 +24259,16 @@ storybook-addon-preview@^2.2.0:
     "@types/react-tabs" "^2.3.2"
     codesandbox "^2.1.10"
     prismjs "^1.17.1"
+    react-tabs "^3.0.0"
+
+storybook-addon-preview@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.npmjs.org/storybook-addon-preview/-/storybook-addon-preview-2.3.0.tgz#47fb20f3c8fdf94b882e072f233fe39ba43c61a8"
+  integrity sha512-pUiHaR/2ej7Y59jadsNK7hB2sfVSTEaZRWWjhiySKrqDJzShJ6pMlqOrLFkII7SDVB7IyJZv4hnrkny6k9r/zw==
+  dependencies:
+    "@storybook/addon-knobs" "^6.0.0"
+    "@types/react-tabs" "^2.3.2"
+    codesandbox "^2.1.10"
     react-tabs "^3.0.0"
 
 storybook-dark-mode@^1.0.9:

@@ -220,6 +220,7 @@ export class InitialMoveable<T = {}>
     /**
      * Get targets set in moveable through target or targets of props.
      * @method Moveable#getTargets
+     * @example
      * import Moveable from "moveable";
      *
      * const moveable = new Moveable(document.body, {
@@ -250,11 +251,8 @@ export class InitialMoveable<T = {}>
     /**
      * User changes target and waits for target to change.
      * @method Moveable#waitToChangeTarget
+     * @story combination-with-other-components--use-selecto
      * @example
-     * import Moveable from "moveable";
-     *
-     * const moveable = new Moveable(document.body);
-     *
      * document.querySelector(".target").addEventListener("mousedown", e => {
      *   moveable.waitToChangeTarget().then(() => {
      *      moveable.dragStart(e.currentTarget);

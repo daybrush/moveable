@@ -141,3 +141,25 @@ html:has(.margin), body:has(.margin) {
     border-top-color: green!important;
     border-left-color: green!important;
 }
+
+.scrollArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 100px);
+    overflow: auto;
+}
+.scrollArea:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 300%;
+    width: 100%;
+    background: linear-gradient(
+        #333,
+        #fff
+    );
+}

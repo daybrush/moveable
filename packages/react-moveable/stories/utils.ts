@@ -1,5 +1,8 @@
-export function makeLink(ableName: string, property: string) {
+export function makeLink(ableName: string, property: string, ) {
     return `<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.${ableName}.html#${property}" target="_blank">See API</a>`;
+}
+export function makeOptionLink(ableName: string, option: string, property: string) {
+    return `<a href="https://daybrush.com/moveable/release/latest/doc/Moveable.${ableName}.html#.${option}-${property}" target="_blank">See API</a>`;
 }
 
 export function makeArgType(param: {

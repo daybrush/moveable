@@ -1,5 +1,8 @@
 {
-    "plugins": [],
+    "plugins": [
+        "node_modules/daybrush-jsdoc-template/plugins/croffle",
+        "node_modules/daybrush-jsdoc-template/plugins/story"
+    ],
     "recurseDepth": 10,
     "opts": {
         "template": "./node_modules/daybrush-jsdoc-template",
@@ -39,9 +42,12 @@
         }
     },
     "linkMap": {
-        "IObject": "http://daybrush.com/utils/release/latest/doc/global.html#ObjectInterface"
+        "IObject": "http://daybrush.com/utils/release/latest/doc/global.html#ObjectInterface",
+        "DragScrollOptions": "https://daybrush.com/dragscroll/release/latest/doc/global.html#DragScrollOptions"
     },
+    "storybookUrl": "https://daybrush.com/moveable/storybook2",
     "docdash": {
+        "repo": "daybrush/moveable",
         "menu": {
             "Github repo": {
                 "href": "https://github.com/daybrush/moveable",

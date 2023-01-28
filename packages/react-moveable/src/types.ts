@@ -3,6 +3,7 @@ import Gesto, * as GestoTypes from "gesto";
 import CustomGesto from "./gesto/CustomGesto";
 import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
 import { MoveableTargetInfo } from "./utils/getMoveableTargetInfo";
+import { DragScrollOptions } from "@scena/dragscroll";
 
 export interface MoveableClientRect {
     left: number;
@@ -2651,13 +2652,19 @@ export interface SnappableProps extends SnappableOptions, EventInterface<Snappab
 /**
  * @typedef
  * @memberof Moveable.Snappable
- * @property - snapped verticalGuidelines, horizontalGuidelines,
- * @property - snapped elements (group by element)
- * @property - gaps is snapped guidelines that became gap snap between elements.
  */
 export interface OnSnap {
+    /**
+     * snapped verticalGuidelines, horizontalGuidelines,
+     */
     guidelines: SnapGuideline[];
+    /**
+     * snapped elements (group by element)
+     */
     elements: SnapGuideline[];
+    /**
+     * gaps is snapped guidelines that became gap snap between elements.
+     */
     gaps: SnapGuideline[];
 }
 /**
@@ -2673,9 +2680,12 @@ export interface InnerBoundType {
 /**
  * @typedef
  * @memberof Moveable.Snappable
- * @property - If position is css, right and bottom are calculated as css right and css bottom of container. (default: "client")
  */
 export interface BoundType {
+    /**
+     * If position is css, right and bottom are calculated as css right and css bottom of container.
+     * @default "client"
+     */
     position?: "client" | "css";
     left?: number;
     top?: number;
@@ -2716,6 +2726,7 @@ export interface SnapRenderInfo {
 
 /**
  * @typedef
+ * @options
  * @memberof Moveable.Scrollable
  */
 export interface ScrollableOptions {
@@ -2726,25 +2737,46 @@ export interface ScrollableOptions {
     scrollable?: boolean;
     /**
      * The container to which scroll is applied
+     * @deprecated
      * @default container
      */
     scrollContainer?: MoveableRefType<HTMLElement>;
     /**
      * Expand the range of the scroll check area.
+     * @deprecated
      * @default 0
      */
     scrollThreshold?: number;
     /**
      * Time interval that occurs when scrolling occurs when dragging is maintained
      * If set to 0, it does not occur.
+     * @deprecated
      * @default 0
      */
     scrollThrottleTime?: number;
     /**
      * Sets a function to get the scroll position.
+     * @deprecated
      * @default scrollContainer's scrollTop, scrollLeft
      */
     getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
+    /**
+     * Option to scroll with dragging
+     * @since 0.43.0
+     * @story support-scroll--use-scrollable
+     * @example
+     * const scrollOptions = {
+     *     container: () => viewer.getContainer(),
+     *     threshold: 20,
+     *     getScrollPosition: () => {
+     *         return [
+     *             viewer.getScrollLeft({ absolute: true }),
+     *             viewer.getScrollTop({ absolute: true }),
+     *         ];
+     *     },
+     * };
+     */
+    scrollOptions?: Partial<DragScrollOptions> | null;
 }
 export interface ScrollableEvents {
     onScroll: OnScroll;
@@ -3071,6 +3103,12 @@ export interface HitRect {
     width?: number;
     height?: number;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.MoveableInterface
+ */
 export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterface {
     moveables?: MoveableManagerInterface[];
     props: MoveableManagerProps<T>;
@@ -3094,12 +3132,23 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     getState(): MoveableManagerState<U>;
     triggerEvent(name: string, params: IObject<any>, isManager?: boolean): any;
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ * @extends Moveable.MoveableManagerInterface
+ */
 export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerInterface<T, U> {
     props: MoveableManagerProps<T> & { targets: Array<HTMLElement | SVGElement> };
     moveables: MoveableManagerInterface[];
     transformOrigin: string;
     renderGroupRects: GroupRect[];
 }
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
 export interface MoveableInterface {
     getManager(): MoveableManagerInterface<any, any>;
     getRect(): RectInfo;
