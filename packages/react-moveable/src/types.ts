@@ -186,6 +186,7 @@ export interface DefaultOptions {
     /**
      * By adding padding to the line, you can increase the area of the line that can be clicked and dragged.
      * @since 0.43.0
+     * @story options--linepadding
      * @default 0
      */
     linePadding?: number;
