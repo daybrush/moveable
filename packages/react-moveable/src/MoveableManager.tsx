@@ -55,6 +55,7 @@ export default class MoveableManager<T = {}>
         parentPosition: null,
         portalContainer: null,
         useResizeObserver: false,
+        linePadding: 0,
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
@@ -132,6 +133,7 @@ export default class MoveableManager<T = {}>
             cssStyled: ControlBoxElement,
             portalContainer,
             groupable,
+            linePadding,
         } = props;
 
         this._checkUpdateRootContainer();
@@ -165,6 +167,17 @@ export default class MoveableManager<T = {}>
             translate[0] += offsetDelta[0];
             translate[1] += offsetDelta[1];
         }
+        const style: Record<string, any> = {
+            "position": hasFixed ? "fixed" : "absolute",
+            "display": isDisplay ? "block" : "none",
+            "visibility": isVisible ? "visible" : "hidden",
+            "transform": `translate3d(${translate[0]}px, ${translate[1]}px, ${translateZ})`,
+            "--zoom": zoom,
+            "--zoompx": `${zoom}px`,
+        };
+        if (linePadding) {
+            style["--moveable-line-padding"] = linePadding;
+        }
         return (
             <ControlBoxElement
                 cspNonce={cspNonce}
@@ -173,14 +186,7 @@ export default class MoveableManager<T = {}>
                 {...ableAttributes}
                 onClick={this._onPreventClick}
                 portalContainer={portalContainer}
-                style={{
-                    "position": hasFixed ? "fixed" : "absolute",
-                    "display": isDisplay ? "block" : "none",
-                    "visibility": isVisible ? "visible" : "hidden",
-                    "transform": `translate3d(${translate[0]}px, ${translate[1]}px, ${translateZ})`,
-                    "--zoom": zoom,
-                    "--zoompx": `${zoom}px`,
-                }}>
+                style={style}>
                 {this.renderAbles()}
                 {this._renderLines()}
             </ControlBoxElement>

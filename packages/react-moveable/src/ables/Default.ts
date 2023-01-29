@@ -28,6 +28,7 @@ export default {
         persistData: Object,
         useAccuratePosition: Boolean,
         firstRenderState: Object,
+        linePadding: Boolean,
     } as const,
     events: {
         onChangeTargets: "changeTargets",

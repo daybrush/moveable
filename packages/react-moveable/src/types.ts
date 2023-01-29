@@ -52,6 +52,7 @@ export interface MoveablePosition {
 /**
  * @typedef
  * @memberof Moveable
+ * @options
  */
 export interface DefaultOptions {
     /**
@@ -182,6 +183,12 @@ export interface DefaultOptions {
      * @default false
      */
     useAccuratePosition?: boolean;
+    /**
+     * By adding padding to the line, you can increase the area of the line that can be clicked and dragged.
+     * @since 0.43.0
+     * @default 0
+     */
+    linePadding?: number;
     /**
      * @private
      * single => group로 변환과정에 도형 유지를 위한 첫 렌더링 state

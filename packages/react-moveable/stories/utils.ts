@@ -9,6 +9,7 @@ export function makeArgType(param: {
     type: "array" | "text" | "radio" | "object" | "number" | "boolean" | "inline-radio";
     description?: string;
     defaultValue: any;
+    value?: any;
     category?: string;
     control?: Record<string, any>;
     table?: Record<string, any>;
@@ -22,11 +23,12 @@ export function makeArgType(param: {
             ...(param.table || {}),
         },
         description: param.description,
+        value: "value" in param ? param.value : param.defaultValue,
     };
 }
 export function makeArgs(argTypes: any) {
     return Object.keys(argTypes).reduce((prev, cur) => {
-        prev[cur] = argTypes[cur].table.defaultValue.summary;
+        prev[cur] = argTypes[cur].value;
 
         return prev;
     }, {} as Record<string, any>);

@@ -1,4 +1,5 @@
 
+import { makeArgType, makeOptionLink } from "../utils";
 import { makeStoryGroup } from "../utils/story";
 
 
@@ -18,6 +19,20 @@ group.add("useResizeObserver (Group)", {
 group.add("useResizeObserver (Individual Group)", {
     app: require("./ReactUseResizeObserverIndividualGroupApp").default,
     path: require.resolve("./ReactUseResizeObserverIndividualGroupApp"),
+});
+
+
+group.add("linePadding", {
+    app: require("./ReactLinePaddingApp").default,
+    path: require.resolve("./ReactLinePaddingApp"),
+    argsTypes: {
+        linePadding: makeArgType({
+            type: "number",
+            description: makeOptionLink("Moveable", "DefaultOptions", "linePadding"),
+            defaultValue: 0,
+            value: 10,
+        }),
+    },
 });
 
 

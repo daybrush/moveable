@@ -134,6 +134,15 @@ ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
 	${getCursorCSS(degree)}
 }
 `).join("\n")}
+
+.line.direction:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: calc(var(--moveable-line-padding, 0) * 1px);
+    bottom: 0;
+    left: 0;
+}
 .group {
     z-index: -1;
 }
