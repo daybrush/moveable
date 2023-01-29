@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.31.1](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.30.2...react-compat-moveable@0.31.1) (2023-01-29)
+
+
+### :rocket: New Features
+
+* add isTrusted event property ([256c40c](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/256c40cf2a51277af5414a9bab07be321a586157))
+* add scrollOptions #841 ([a6dfc21](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/a6dfc2152ef9a06c6714c219b3ea057f0b6b8504))
+
+
+### :mega: Other
+
+* publish packages ([24c9567](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/24c9567e2ec00392d2d445298031c39de0331eae))
+* publish packages ([0e0a03d](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/commit/0e0a03dd6c234ded050db8206e585c5fa2da1848))
+
+
+
 ## [0.30.2](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.30.1...react-compat-moveable@0.30.2) (2022-12-16)
 
 

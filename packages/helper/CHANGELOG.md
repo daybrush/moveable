@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.1.0...@moveable/helper@0.1.2) (2023-01-29)
+
+
+### :bug: Bug Fix
+
+* fix selectCompletedChilds ([1274030](https://github.com/daybrush/moveable/blob/master/packages/helper/commit/127403091afe221411dd8c2fa4ba072638bf0688))
+* fix TargetList ([008116c](https://github.com/daybrush/moveable/blob/master/packages/helper/commit/008116cd0b6624b95c179a6eeed3e897de6e488c))
+
+
+
 ## [0.1.0](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.0.4...@moveable/helper@0.1.0) (2022-12-16)
 
 

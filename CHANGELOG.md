@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.1](https://github.com/daybrush/moveable/compare/0.42.2...0.43.1) (2023-01-29)
+### :sparkles: Packages
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.20.1
+* `moveable` 0.43.1
+* `preact-moveable` 0.45.1
+* `react-compat-moveable` 0.31.1
+* `react-moveable` 0.46.1
+* `svelte-moveable` 0.35.1
+* `vue-moveable` 2.0.0-beta.57
+* `vue3-moveable` 0.18.1
+* `ngx-moveable` 0.40.1
+
+
+### :rocket: New Features
+
+* `react-moveable`, `react-compat-moveable`
+    * add isTrusted event property ([256c40c](https://github.com/daybrush/moveable/commit/256c40cf2a51277af5414a9bab07be321a586157))
+    * add scrollOptions #841 ([a6dfc21](https://github.com/daybrush/moveable/commit/a6dfc2152ef9a06c6714c219b3ea057f0b6b8504))
+* `react-moveable`
+    * add `linePadding` prop #837 ([af818ab](https://github.com/daybrush/moveable/commit/af818abc467608e76f8bb15175b184fa440fddfb))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `@moveable/helper`
+    * fix TargetList ([008116c](https://github.com/daybrush/moveable/commit/008116cd0b6624b95c179a6eeed3e897de6e488c))
+* `react-moveable`
+    * fix changed defaultGroupOrigin ([8d0ed9b](https://github.com/daybrush/moveable/commit/8d0ed9b85c44091f65e1f4f233ce56ea91dbf10f))
+    * support able requester types ([c26e5a9](https://github.com/daybrush/moveable/commit/c26e5a94ca27b6b1739d3e6bf5d2882d22e06e3a))
+* `@moveable/helper`
+    * fix selectCompletedChilds ([1274030](https://github.com/daybrush/moveable/commit/127403091afe221411dd8c2fa4ba072638bf0688))
+
+
+### :memo: Documentation
+
+* fix typo (#820) ([1267b45](https://github.com/daybrush/moveable/commit/1267b451731c5e8d5018986f9f862432e4beb179))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([24c9567](https://github.com/daybrush/moveable/commit/24c9567e2ec00392d2d445298031c39de0331eae))
+    * publish packages ([0e0a03d](https://github.com/daybrush/moveable/commit/0e0a03dd6c234ded050db8206e585c5fa2da1848))
+
+
+
 ## [0.42.2](https://github.com/daybrush/moveable/compare/0.42.1...0.42.2) (2022-12-16)
 ### :sparkles: Packages
 * `@moveable/helper` 0.1.0
