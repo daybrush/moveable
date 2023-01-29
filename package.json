@@ -46,7 +46,7 @@
         "storybook": "npm run storybook --prefix ./packages/react-moveable",
         "bake": "npm run bake --prefix ./packages/react-moveable",
         "build": "npm run build --prefix ./packages/react-moveable",
-        "packages:update": "lerna-helper version && npm run update-type-consts",
+        "packages:update": "yarn && lerna-helper version && npm run update-type-consts",
         "update-type-consts": "node ./config/update-type-consts.js",
         "packages:build": "npm run build --prefix packages/react-moveable && npm run update-type-consts && lerna run build --ignore ngx-moveable --ignore moveable-storybook --ignore snappable --ignore react-moveable",
         "packages:publish": "lerna-helper publish --ignore ngx-moveable,@moveable/helper --commit 'chore: publish packages'",

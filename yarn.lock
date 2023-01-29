@@ -4634,7 +4634,7 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@scena/dragscroll@^1.2.1", "@scena/dragscroll@^1.3.0", "@scena/dragscroll@^1.4.0":
+"@scena/dragscroll@^1.2.1", "@scena/dragscroll@^1.4.0":
   version "1.4.0"
   resolved "https://registry.npmjs.org/@scena/dragscroll/-/dragscroll-1.4.0.tgz#220b2430c16119cd3e70044ee533a5b9a43cffd7"
   integrity sha512-3O8daaZD9VXA9CP3dra6xcgt/qrm0mg0xJCwiX6druCteQ9FFsXffkF8PrqxY4Z4VJ58fFKEa0RlKqbsi/XnRA==
@@ -13366,7 +13366,7 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.0, gesto@^1.13.1, gesto@^1.14.0, gesto@^1.15.1, gesto@^1.3.0, gesto@^1.5.1:
+gesto@^1.13.0, gesto@^1.13.1, gesto@^1.15.1, gesto@^1.3.0, gesto@^1.5.1:
   version "1.15.1"
   resolved "https://registry.npmjs.org/gesto/-/gesto-1.15.1.tgz#16eb927f5319995abca37bafafe90d423be0becf"
   integrity sha512-mqdBeVeYpymupHojEEyH33u0KvL/hbG6gKbqoQKoR7aeWrN82CIXYZkAo4Ie81PUhxS5HNDdmJVcSzqOpPm0JQ==
@@ -22164,24 +22164,6 @@ react-merge-refs@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-1.1.0.tgz"
   integrity sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==
-
-react-moveable@~0.45.1:
-  version "0.45.1"
-  resolved "https://registry.npmjs.org/react-moveable/-/react-moveable-0.45.1.tgz#228155ba7d4d578200a1f5ebec28457228694cd4"
-  integrity sha512-3ktIdg7spM4hTJFMJFcUab5i5XCGUuNG/V7A0pZFHs8jAwAyVXHKnjhOKasgHmYF9Z4/3YAdA9u25cSlACZHjw==
-  dependencies:
-    "@daybrush/utils" "^1.10.0"
-    "@egjs/agent" "^2.2.1"
-    "@egjs/children-differ" "^1.0.1"
-    "@egjs/list-differ" "^1.0.0"
-    "@scena/dragscroll" "^1.3.0"
-    "@scena/event-emitter" "^1.0.5"
-    "@scena/matrix" "^1.1.1"
-    css-to-mat "^1.0.3"
-    framework-utils "^1.1.0"
-    gesto "^1.14.0"
-    overlap-area "^1.1.0"
-    react-css-styled "^1.0.4"
 
 react-refresh@^0.11.0:
   version "0.11.0"
