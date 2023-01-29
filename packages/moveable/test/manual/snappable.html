@@ -1,0 +1,28 @@
+<div class="a1 a" style="top: 0;left: 100px;"></div>
+<div class="a2 a" style="top: 300px;left: 101px;"></div>
+<div class="target" style="width: 100px;height: 100px;position: absolute ;"></div>
+<style>
+    .a {
+        width: 100px;height: 100px;position: absolute;
+        background: #f55;
+    }
+</style>
+<script src="../../dist/moveable.js"></script>
+<script>
+const container = document.querySelector('.container');
+const moveable = new Moveable(document.body, {
+    target: ".target",
+    draggable: true,
+    scalable: true,
+    keepRatio: false,
+    snappable: true,
+    snapRenderThreshold: 0.9,
+    elementGuidelines: [".a1", ".a2"],
+});
+
+moveable.on("render", e => {
+    console.log(e.target.style.cssText + e.cssText);
+    e.target.style.cssText += e.cssText;
+});
+
+</script>

@@ -1,0 +1,21 @@
+<text class="target">aa</text>
+<style>
+</style>
+<script src="../../dist/moveable.js"></script>
+<script>
+const container = document.querySelector('.container');
+const moveable = new Moveable(document.body, {
+    target: ".target",
+    scalable: true,
+    keepRatio: false,
+    renderDirections: ['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'],
+    zoom: 1,
+    origin: true,
+    draggable: true,
+});
+
+moveable.on("render", e => {
+    e.target.style.cssText += e.csstext;
+});
+
+</script>
