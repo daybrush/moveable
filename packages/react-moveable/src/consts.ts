@@ -32,7 +32,11 @@ export const IS_WEBKIT605 = IS_WEBKIT && (() => {
     return res ? parseFloat(res[1]) < 605 : false;
 })();
 
-export const IS_FIREFOX = agent.browser.name === "firefox";
+const browserName = agent.browser.name;
+const browserVersion = parseInt(agent.browser.version, 10);
+
+export const IS_CHROME109 = browserName === "chrome" && browserVersion >= 109;
+export const IS_FIREFOX = browserName === "firefox";
 export const IS_SAFARI_ABOVE15
     = parseInt(agent.browser.webkitVersion, 10) >= 612
     || parseInt(agent.browser.version, 10) >= 15;

@@ -2,7 +2,7 @@ import {
     convertCSStoMatrix, convertDimension,
     createIdentityMatrix, createOriginMatrix, createScaleMatrix,
 } from "@scena/matrix";
-import { IS_WEBKIT, IS_SAFARI_ABOVE15, IS_FIREFOX } from "../consts";
+import { IS_WEBKIT, IS_SAFARI_ABOVE15, IS_FIREFOX, IS_CHROME109 } from "../consts";
 import { MatrixInfo } from "../types";
 import {
     getOffsetInfo, getElementTransform,
@@ -127,7 +127,7 @@ export function getMatrixStackInfo(
             if (offsetZoom !== 1 && isStatic) {
                 offsetLeft -= offsetParent.offsetLeft;
                 offsetTop -= offsetParent.offsetTop;
-            } else if (IS_FIREFOX) {
+            } else if (IS_FIREFOX || IS_CHROME109) {
                 const parentSlotElement = offsetInfo.parentSlotElement;
 
                 if (parentSlotElement) {
