@@ -580,6 +580,7 @@ export default {
     position: absolute;
     color: #f55;
     font-size: 12px;
+    font-size: calc(12px * var(--zoom));
     font-weight: bold;
 }
 .guideline-group.horizontal .size-value {
@@ -587,12 +588,14 @@ export default {
     transform: translateX(-50%);
     left: 50%;
     bottom: 5px;
+    bottom: calc(2px + 3px * var(--zoom));
 }
 .guideline-group.vertical .size-value {
     transform-origin: 0% 50%;
     top: 50%;
     transform: translateY(-50%);
     left: 5px;
+    left: calc(2px + 3px * var(--zoom));
 }
 .guideline.gap {
     background: #f55;
