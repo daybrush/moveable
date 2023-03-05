@@ -55,6 +55,7 @@ export default class MoveableManager<T = {}>
         parentPosition: null,
         portalContainer: null,
         useResizeObserver: false,
+        preventDefault: true,
         linePadding: 0,
         controlPadding: 0,
         ables: [],

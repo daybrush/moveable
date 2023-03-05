@@ -143,7 +143,7 @@ export function triggerAble(
             able.unset && able.unset(moveable);
         });
     }
-    if (isStart && !isForceEnd && !isRequest && isUpdate) {
+    if (isStart && !isForceEnd && !isRequest && isUpdate && moveable.props.preventDefault) {
         e?.preventDefault();
     }
     if (moveable.isUnmounted || isForceEnd) {
@@ -215,9 +215,10 @@ export function getAbleGesto(
         preventClickEventOnDrag,
         preventClickDefault,
         checkInput,
+        preventDefault = true,
     } = moveable.props;
     const options: GestoOptions = {
-        preventDefault: true,
+        preventDefault,
         preventRightClick: true,
         preventWheelClick: true,
         container: window,

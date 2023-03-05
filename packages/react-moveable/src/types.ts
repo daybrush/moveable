@@ -157,6 +157,12 @@ export interface DefaultOptions {
      */
     stopPropagation?: boolean;
     /**
+     * Whether to call preventDefault on touchstart or mousedown
+     * @since 0.44.0
+     * @default true
+     */
+    preventDefault?: boolean;
+    /**
      * Prevent click event on drag. (mousemove, touchmove)
      * @default true
      */

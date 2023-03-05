@@ -31,6 +31,7 @@ export default {
         linePadding: Boolean,
         displayAroundControls: Boolean,
         controlPadding: Number,
+        preventDefault: Boolean,
     } as const,
     events: {
         onChangeTargets: "changeTargets",
