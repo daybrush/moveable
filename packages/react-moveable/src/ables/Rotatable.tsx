@@ -39,7 +39,7 @@ import {
     getDirectionByPos,
 } from "../gesto/GestoUtils";
 import { DirectionControlInfo, renderAroundControls, renderDirectionControlsByInfos } from "../renderDirections";
-import { DIRECTIONS, DIRECTION_REGION_TO_DIRECTION } from "../consts";
+import { DIRECTION_REGION_TO_DIRECTION } from "../consts";
 import Resizable from "./Resizable";
 import Draggable from "./Draggable";
 
@@ -212,7 +212,7 @@ export function dragControlCondition(moveable: MoveableManagerInterface<Rotatabl
     const target = e.inputEvent.target as HTMLElement;
     if (
         hasClass(target, prefix("rotation-control"))
-        || hasClass(target, prefix("around-control"))
+        || (moveable.props.rotateAroundControls && hasClass(target, prefix("around-control")))
         || (hasClass(target, prefix("control")) && hasClass(target, prefix("rotatable")))
     ) {
         return true;
@@ -230,33 +230,6 @@ export function dragControlCondition(moveable: MoveableManagerInterface<Rotatabl
     return false;
 }
 
-const directionCSS = DIRECTIONS.map(dir => {
-    let top = "";
-    let left = "";
-    let originX = "center";
-    let originY = "center";
-
-    if (dir.indexOf("n") > -1) {
-        top = "top: -20px;";
-        originY = "bottom";
-    }
-    if (dir.indexOf("s") > -1) {
-        top = "top: 0px;";
-        originY = "top";
-    }
-    if (dir.indexOf("w") > -1) {
-        left = "left: -20px;";
-        originX = "right";
-    }
-    if (dir.indexOf("e") > -1) {
-        left = "left: 0px;";
-        originX = "left";
-    }
-    return `.around-control[data-direction*="${dir}"] {
-        ${left}${top}
-        transform-origin: ${originX} ${originY};
-    }`;
-}).join("\n");
 const css = `.rotation {
     position: absolute;
     height: 40px;
@@ -283,23 +256,9 @@ const css = `.rotation {
 :global .view-rotation-dragging, .rotatable.direction.control {
     cursor: alias;
 }
-.around-control {
-    position: absolute;
-    will-change: transform;
-    width: 20px;
-    height: 20px;
-    left: -10px;
-    top: -10px;
-    box-sizing: border-box;
-    background: transparent;
-    z-index: 8;
-    cursor: alias;
-    transform-origin: center center;
-}
 .rotatable.direction.control.move {
     cursor: move;
 }
-${directionCSS}
 `;
 export default {
     name: "rotatable",
@@ -563,7 +522,7 @@ export default {
         if (datas.isControl && datas.resolveAble) {
             const resolveAble = datas.resolveAble;
 
-            if  (resolveAble === "resizable") {
+            if (resolveAble === "resizable") {
                 resizeStart = Resizable.dragControlStart(moveable, {
                     ...(new CustomGesto("resizable").dragStart([0, 0], e)),
                     parentPosition: datas.controlPosition,

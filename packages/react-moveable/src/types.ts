@@ -80,19 +80,19 @@ export interface DefaultOptions {
     /**
      * Moveable Root Container (No Transformed Container)
      * @default parentElement
-     * @see {@link https://daybrush.com/moveable/storybook2/?path=/story/options--use-rootcontainer-with-transformed-container-css-transform See Storybook}
+     * @story options--use-rootcontainer-with-transformed-container-css-transform
      */
     rootContainer?: MoveableRefType<HTMLElement>;
     /**
      * If you want to set the dragging information to the viewer, refer to the following.
      * @default null
-     * @see {@link https://daybrush.com/moveable/storybook2/?path=/story/options--cursor-is-applied-in-viewer-during-dragging See Storybook}
+     * @story options--cursor-is-applied-in-viewer-during-dragging
      */
     viewContainer?: MoveableRefType<HTMLElement>;
     /**
      * Whether the target size is detected and updated whenever it changes.
      * @default false
-     * @see {@link https://daybrush.com/moveable/storybook2/?path=/story/options--useresizeobserver See Storybook}
+     * @story options--useresizeobserver
      */
     useResizeObserver?: boolean;
     /**
@@ -190,6 +190,14 @@ export interface DefaultOptions {
      * @default 0
      */
     linePadding?: number;
+    /**
+     * By adding padding to the control, you can increase the area of the control that can be clicked and dragged.
+     * Either `rotateAroundControls` or `displayAroundControls` can be used.
+     * @since 0.44.0
+     * @story options--controlPadding
+     * @default 0
+     */
+    controlPadding?: number;
     /**
      * @private
      * single => group로 변환과정에 도형 유지를 위한 첫 렌더링 state
@@ -2230,6 +2238,15 @@ export interface RenderDirections {
      * @default false
      */
     edge?: boolean | Array<LineDirection>;
+    /**
+     * You can expand the area around the control.
+     * Either `rotateAroundControls` or `displayAroundControls` can be used.
+     * You can set the area through the `controlPadding` value.
+     * @since 0.44.0
+     * @story options--controlPadding
+     * @default false
+     */
+    displayAroundControls?: boolean;
 }
 
 export type RotationPosition
@@ -2259,6 +2276,7 @@ export interface RotatableOptions extends RenderDirections {
     rotationPosition?: RotationPosition | RotationPosition[];
     /**
      * You can rotate around direction controls.
+     * Either `rotateAroundControls` or `displayAroundControls` can be used.
      * @default 0
      */
     rotateAroundControls?: boolean;

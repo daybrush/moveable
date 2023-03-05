@@ -29,6 +29,8 @@ export default {
         useAccuratePosition: Boolean,
         firstRenderState: Object,
         linePadding: Boolean,
+        displayAroundControls: Boolean,
+        controlPadding: Number,
     } as const,
     events: {
         onChangeTargets: "changeTargets",

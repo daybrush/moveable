@@ -35,6 +35,20 @@ group.add("linePadding", {
     },
 });
 
+group.add("controlPadding", {
+    app: require("./ReactControlPaddingApp").default,
+    path: require.resolve("./ReactControlPaddingApp"),
+    argsTypes: {
+        controlPadding: makeArgType({
+            type: "number",
+            description: makeOptionLink("Moveable", "DefaultOptions", "controlPadding"),
+            defaultValue: 0,
+            value: 20,
+        }),
+    },
+});
+
+
 
 group.add("checkInput", {
     app: require("./ReactCheckInputApp").default,

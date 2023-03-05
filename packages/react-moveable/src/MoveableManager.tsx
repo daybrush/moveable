@@ -56,6 +56,7 @@ export default class MoveableManager<T = {}>
         portalContainer: null,
         useResizeObserver: false,
         linePadding: 0,
+        controlPadding: 0,
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
@@ -134,6 +135,7 @@ export default class MoveableManager<T = {}>
             portalContainer,
             groupable,
             linePadding,
+            controlPadding,
         } = props;
 
         this._checkUpdateRootContainer();
@@ -177,6 +179,9 @@ export default class MoveableManager<T = {}>
         };
         if (linePadding) {
             style["--moveable-line-padding"] = linePadding;
+        }
+        if (controlPadding) {
+            style["--moveable-control-padding"] = controlPadding;
         }
         return (
             <ControlBoxElement

@@ -2,6 +2,11 @@ import getAgent from "@egjs/agent";
 import { IObject } from "@daybrush/utils";
 import { MoveableInterface } from "./types";
 
+
+export const DIRECTIONS4 = ["n", "w", "s", "e"];
+export const DIRECTIONS = ["n", "w", "s", "e", "nw", "ne", "sw", "se"];
+
+
 function getSVGCursor(scale: number, degree: number) {
     return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="${32 * scale}px" height="${32 * scale}px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(${degree}deg);transform-origin: 16px 16px"></path></svg>`;
 }
@@ -42,6 +47,36 @@ export const IS_SAFARI_ABOVE15
     || parseInt(agent.browser.version, 10) >= 15;
 
 export const PREFIX = "moveable-";
+
+
+const directionCSS = DIRECTIONS.map(dir => {
+    let top = "";
+    let left = "";
+    let originX = "center";
+    let originY = "center";
+
+    if (dir.indexOf("n") > -1) {
+        top = "top: -20px;";
+        originY = "bottom";
+    }
+    if (dir.indexOf("s") > -1) {
+        top = "top: 0px;";
+        originY = "top";
+    }
+    if (dir.indexOf("w") > -1) {
+        left = "left: -20px;";
+        originX = "right";
+    }
+    if (dir.indexOf("e") > -1) {
+        left = "left: 0px;";
+        originX = "left";
+    }
+    return `.around-control[data-direction*="${dir}"] {
+        ${left}${top}
+        transform-origin: ${originX} ${originY};
+    }`;
+}).join("\n");
+
 export const MOVEABLE_CSS = `
 {
 	position: absolute;
@@ -78,6 +113,20 @@ export const MOVEABLE_CSS = `
     border: 2px solid #fff;
     z-index: 10;
 }
+.around-control {
+    position: absolute;
+    will-change: transform;
+    width: calc(var(--moveable-control-padding, 20) * 1px);
+    height: calc(var(--moveable-control-padding, 20) * 1px);
+    left: -10px;
+    top: -10px;
+    box-sizing: border-box;
+    background: transparent;
+    z-index: 8;
+    cursor: alias;
+    transform-origin: center center;
+}
+${directionCSS}
 .padding {
     position: absolute;
     top: 0px;
@@ -188,10 +237,6 @@ export const TINY_NUM = 0.0000001;
 export const MIN_SCALE = 0.000000001;
 export const MAX_NUM = Math.pow(10, 10);
 export const MIN_NUM = -MAX_NUM;
-
-
-export const DIRECTIONS4 = ["n", "w", "s", "e"];
-export const DIRECTIONS = ["n", "w", "s", "e", "nw", "ne", "sw", "se"];
 
 export const DIRECTION_REGION_TO_DIRECTION: Record<string, number[]> = {
     n: [0, -1],
