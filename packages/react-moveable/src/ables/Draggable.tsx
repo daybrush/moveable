@@ -46,6 +46,9 @@ export default {
     requestStyle(): string[] {
         return ["left", "top", "right", "bottom"];
     },
+    requestChildStyle(): string[] {
+        return ["left", "top", "right", "bottom"];
+    },
     render(
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         React: Renderer,

@@ -189,13 +189,8 @@ function getStyleBorderRadius(moveable: MoveableManagerInterface<RoundableProps,
     let borderRadius = style.borderRadius || "";
 
     if (!borderRadius && moveable.props.groupable) {
-        const firstTarget = moveable.getTargets()[0];
-
-
-        if (firstTarget) {
-            borderRadius = getComputedStyle(firstTarget).borderRadius;
-            style.borderRadius = borderRadius;
-        }
+        borderRadius = moveable.moveables![0].state.style.borderRadius!;
+        style.borderRadius = borderRadius;
     }
     return borderRadius;
 }
@@ -248,6 +243,9 @@ export default {
         return roundClickable === true || roundClickable === "line" ? prefix("round-line-clickable") : "";
     },
     requestStyle(): Array<keyof CSSStyleDeclaration> {
+        return ["borderRadius"];
+    },
+    requestChildStyle(): Array<keyof CSSStyleDeclaration> {
         return ["borderRadius"];
     },
     render(moveable: MoveableManagerInterface<RoundableProps, RoundableState>, React: Renderer): any {

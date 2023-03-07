@@ -27,7 +27,7 @@ export function getMoveableTargetInfo(
     container?: HTMLElement | SVGElement | null,
     parentContainer?: HTMLElement | SVGElement | null,
     rootContainer?: HTMLElement | SVGElement | null,
-    requestStyle: Array<keyof CSSStyleDeclaration> = [],
+    requestStyles: Array<keyof CSSStyleDeclaration> = [],
 ): MoveableTargetInfo {
     let beforeDirection: 1 | -1 = 1;
     let beforeOrigin = [0, 0];
@@ -45,7 +45,7 @@ export function getMoveableTargetInfo(
     if (target) {
         const computedStyle = getComputedStyle(target);
 
-        requestStyle.forEach(name => {
+        requestStyles.forEach(name => {
             style[name] = computedStyle[name] as any;
         });
         const n = result.is3d ? 4 : 3;

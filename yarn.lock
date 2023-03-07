@@ -2500,10 +2500,10 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@croffle/bakery@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.10.tgz#e56cb7b96dd1926e4f91128b392e51816120c637"
-  integrity sha512-FUvZ2pZsNiu7SxJ6ihSpKtNDQwgNSZUBo+Pu2D8MWaILDh9HFExP4JxtQurjkmkwOSssvd8MvtjOJh/xbOMcDg==
+"@croffle/bakery@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.13.tgz#6a9fedaa937f7a114f988e11ce1a716ef7890a2e"
+  integrity sha512-uj9xu9xlP2GMGim8iyzKymBxqgTr/CBsuoOCq48D3bBkSV5DKlzBpvHZTfGHGQGRyCxyt853U3kjtg5BE8S2mw==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     commander "^9.4.0"
@@ -10311,10 +10311,10 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
-croffle@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.8.tgz#44d4146cbdadf212646d55297e7808f110d5c124"
-  integrity sha512-VOAFpc2yTvRqUxF/KnbrFKTVriAy/Gosv0aFVqbV1nXhHbEVLXpZei4IRKIDipiGQGNp6TQxyBP6FlmnukFuRw==
+croffle@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.9.tgz#8c33dbc626cb10936ed791365a527baf47701d7a"
+  integrity sha512-UQd8F8OKjGIS3g6UHYSqvPzpE6a3xdtzfawsftdHMsWl54/RcHfTaBKwf9KRmdTH/i/5b7If0I6SdSnHsKXtjQ==
   dependencies:
     "@daybrush/utils" "^1.10.0"
     "@scena/event-emitter" "^1.0.5"

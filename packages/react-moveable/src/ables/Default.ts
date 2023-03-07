@@ -32,6 +32,7 @@ export default {
         displayAroundControls: Boolean,
         controlPadding: Number,
         preventDefault: Boolean,
+        requestStyles: Array,
     } as const,
     events: {
         onChangeTargets: "changeTargets",

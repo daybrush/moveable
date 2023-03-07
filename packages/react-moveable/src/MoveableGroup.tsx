@@ -405,6 +405,16 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             this._emitter.trigger(name, e);
         }
     }
+    public getRequestChildStyles() {
+        const styleNames = this.getEnabledAbles().reduce((names, able) => {
+            const ableStyleNames = (able.requestChildStyle?.() ?? []) as Array<keyof CSSStyleDeclaration>;
+
+            return [...names, ...ableStyleNames];
+        }, [] as Array<keyof CSSStyleDeclaration>);
+
+
+        return styleNames;
+    }
     protected updateAbles() {
         super.updateAbles([...this.props.ables!, Groupable], "Group");
     }

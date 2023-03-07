@@ -32,7 +32,8 @@ export default function App(props: Record<string, any>) {
             rotationPosition={props.rotationPosition}
             onDragGroup={({ events }) => {
                 events.forEach(ev => {
-                    ev.target.style.transform = ev.transform;
+                    ev.target.style.left = `${ev.left}px`;
+                    ev.target.style.top = `${ev.top}px`;
                 });
             }}
             onResizeGroupStart={({ setMin, setMax }) => {

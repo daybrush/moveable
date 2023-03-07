@@ -83,6 +83,7 @@ export default class MoveableManager<T = {}>
         firstRenderState: null,
         persistData: null,
         viewContainer: null,
+        requestStyles: [],
         useAccuratePosition: false,
     };
     public state: MoveableManagerState = {
@@ -888,7 +889,7 @@ export default class MoveableManager<T = {}>
             const ableStyleNames = (able.requestStyle?.() ?? []) as Array<keyof CSSStyleDeclaration>;
 
             return [...names, ...ableStyleNames];
-        }, [] as Array<keyof CSSStyleDeclaration>);
+        }, [...(this.props.requestStyles || [])] as Array<keyof CSSStyleDeclaration>);
 
 
         return styleNames;

@@ -32,6 +32,7 @@ export default {
         } else {
             persistDatChildren = [];
         }
+        const requestStyles = moveable.getRequestChildStyles();
 
         return [
             ...targets.map((target, i) => {
@@ -40,6 +41,7 @@ export default {
                     ref={refs(moveable, "moveables", i)}
                     target={target}
                     origin={false}
+                    requestStyles={requestStyles}
                     cssStyled={props.cssStyled}
                     customStyledMap={props.customStyledMap}
                     useResizeObserver={props.useResizeObserver}

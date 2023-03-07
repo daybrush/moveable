@@ -210,6 +210,10 @@ export interface DefaultOptions {
      */
     firstRenderState?: MoveableManagerState | null;
     /**
+     * @private
+     */
+    requestStyles?: string[];
+    /**
      * If you are using React 18's concurrent mode, use `flushSync` for UI sync.
      * @default empty function
      * @example
@@ -494,6 +498,13 @@ export interface Able<Props extends IObject<any> = IObject<any>, Events extends 
      * ["borderRadius", "top", "left"]
      */
     requestStyle?(): string[];
+    /**
+     * If you use group, you can request child style. Specify the name of the style in camel case.
+     * You can check it with `moveable.state.style`
+     * @exmaple
+     * ["borderRadius", "top", "left"]
+     */
+    requestChildStyle?(): string[];
     /**
      * You can specify the class name to be added to the Moveable control box.
      */
@@ -3175,6 +3186,7 @@ export interface MoveableGroupInterface<T = {}, U = {}> extends MoveableManagerI
     moveables: MoveableManagerInterface[];
     transformOrigin: string;
     renderGroupRects: GroupRect[];
+    getRequestChildStyles(): string[];
 }
 
 /**

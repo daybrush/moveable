@@ -90,6 +90,12 @@ const config = [
             croissant.addSirup(ConvertDefaultModulePrefixSirup);
             return croissant;
         },
+        defrosted: (defrosted, croissant) => {
+            const app = defrosted.app;
+            const results = croissant._findUsedSpecifiers(app, "react-dom", "createPortal");
+
+            return !results.length;
+        },
         waffle: [
             // Vue 3
             (defrosted) => {
