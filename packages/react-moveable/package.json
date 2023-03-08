@@ -102,6 +102,7 @@
         "typescript": "^4.5.0 <4.6.0"
     },
     "dependencies": {
+        "@croffle/bakery": "^0.0.14",
         "@daybrush/utils": "^1.10.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
@@ -109,6 +110,7 @@
         "@scena/dragscroll": "^1.4.0",
         "@scena/event-emitter": "^1.0.5",
         "@scena/matrix": "^1.1.1",
+        "croffle": "^0.0.10",
         "css-to-mat": "^1.0.3",
         "framework-utils": "^1.1.0",
         "gesto": "^1.15.1",
