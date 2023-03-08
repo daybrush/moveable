@@ -2431,8 +2431,18 @@ export type MoveableTargetGroupsType = Array<HTMLElement | SVGElement | Moveable
 export interface IndividualGroupableOptions {
     /**
      * Create targets individually, not as a group.
+     * @story individual-group--draggable-scalable-rotatable
      */
     individualGroupable?: boolean;
+    /**
+     * When using individualGroupable you can pass props to child moveable.
+     * @story individual-group--use-individual-groupable-props
+     * @since 0.44.0
+     */
+    individualGroupableProps?: (
+        element: HTMLElement | SVGElement | null | undefined,
+        index: number,
+    ) => Record<string, any> | undefined | null | void;
 }
 
 export interface IndividualGroupableProps extends IndividualGroupableOptions {

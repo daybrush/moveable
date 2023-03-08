@@ -1,14 +1,14 @@
 import { ref, refs } from "framework-utils";
 import * as React from "react";
 import MoveableManager from "./MoveableManager";
-import { GroupableProps, RectInfo } from "./types";
+import { GroupableProps, IndividualGroupableProps, RectInfo } from "./types";
 import { prefix } from "./utils";
 
 /**
  * @namespace Moveable.IndividualGroup
  * @description Create targets individually, not as a group.Create targets individually, not as a group.
  */
-class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
+class MoveableIndividualGroup extends MoveableManager<GroupableProps & IndividualGroupableProps> {
     public moveables: MoveableManager[] = [];
     public render() {
         const props = this.props;
@@ -22,6 +22,7 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
         const length = targets.length;
         const canPersist = this.isUnmounted || !length;
         let persistDatChildren = persistData?.children ?? [];
+
         if (canPersist && !length && persistDatChildren.length) {
             targets = persistDatChildren.map(() => null);
         } else if (!canPersist) {
@@ -33,10 +34,12 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps> {
             ref={ref(this, "controlBox")}
             className={prefix("control-box")}>
             {targets!.map((target, i) => {
+                const individualProps = props.individualGroupableProps?.(target, i) ?? {};
                 return <MoveableManager
                     key={"moveable" + i}
                     ref={refs(this, "moveables", i)}
-                    {...this.props}
+                    {...props}
+                    {...individualProps}
                     target={target}
                     wrapperMoveable={this}
                     isWrapperMounted={this.isMoveableMounted}
