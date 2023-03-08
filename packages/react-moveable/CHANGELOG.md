@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.46.1...react-moveable@0.47.0) (2023-03-08)
+
+
+### :rocket: New Features
+
+* add `preventDefault` prop #821 ([b599e32](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b599e32aee6f3dfe10fec348c200bb1b4a0983d2))
+* add displayAroundControls, controlPadding #837 ([9ee0c72](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9ee0c7251daae929e5ec71a9cd5c61a473c44496))
+* add individualGroupableProps props #848 ([079e752](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/079e75261de5cf8163ced482e1f7171ae8705823))
+
+
+### :bug: Bug Fix
+
+* custom element offset with chrome 109 or higher #847 ([af20f7e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/af20f7e04a692e192bb6b27e4478c9d0cb0cfd29))
+* fix requestStyle #856 ([88c9ec2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/88c9ec2ce2b06e592f6548af2221989b7109456d))
+* fix zoomed font size #855 ([172f6d4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/172f6d448e9c855e8aaeefb0b83516548d127e83))
+
+
+### :memo: Documentation
+
+* fix story tag ([706c41c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/706c41c9bd44378e4c3571661d4a90d4b12ab3af))
+
+
+### :mega: Other
+
+* publish packages ([645e290](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/645e290a53b477b468042e05447e2f8f8aea6ed0))
+* update croffle ([9017260](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/901726035ba4122e048cdd1d0a0d3806c3c4809a))
+
+
+
 ## [0.46.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.45.1...react-moveable@0.46.1) (2023-01-29)
 
 
