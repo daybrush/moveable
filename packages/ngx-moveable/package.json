@@ -15,7 +15,7 @@
   "private": true,
   "lernaHelperPublishPath": "./dist/ngx-moveable",
   "dependencies": {
-    "moveable": "~0.44.0",
+    "moveable": "~0.44.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
