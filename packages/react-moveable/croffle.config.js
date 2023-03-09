@@ -3,12 +3,41 @@ const {
     VueWaffle,
     ConvertDefaultModulePrefixSirup,
     SvelteWaffle,
+    ScriptWaffle,
+    ScriptComponentSirupFactory,
+    createInlineNewExpression,
+    FACTORY,
 } = require("croffle");
+const {
+    cleanPaths,
+} = require("@croffle/bakery");
 
 
-/**
- * @param {import("croffle").Sirup} sirup
- */
+cleanPaths("stories/**/+([0-9A-Za-z])-*/{script,vue2,vue3,svelte}/");
+
+
+const scriptMoveableScriptComponentSirup = ScriptComponentSirupFactory({
+    path: ["moveable", "default"],
+    isContainerInstance: true,
+});
+
+const scriptSelectoComponentSirup = ScriptComponentSirupFactory({
+    path: ["selecto", "default"],
+    instance(node) {
+        const args = node.arguments;
+        const elementNode = args[0];
+        const optionsNode = args[1];
+
+        return createInlineNewExpression(
+            node.expression,
+            [FACTORY.createObjectLiteralExpression([
+                FACTORY.createPropertyAssignment("container", elementNode),
+                ...optionsNode.properties,
+            ])],
+        );
+    },
+});
+
 function vueKeyconSirup(sirup) {
     sirup.requestId({
         path: [/vue[3]?-keycon/g, "useKeycon"],
@@ -18,9 +47,6 @@ function vueKeyconSirup(sirup) {
         return sirup.utils.createInlinePropertyAccess(node, "value");
     });
 }
-/**
- * @param {import("croffle").Sirup} sirup
- */
 function svelteKeyconSirup(sirup){
     sirup.requestId({
         path: [/svelte-keycon/g, "useKeycon"],
@@ -97,12 +123,29 @@ const config = [
             return !results.length;
         },
         waffle: [
+            // Vanilla
+            (defrosted) => {
+                const hasKeycon = !!defrosted.allRequires["react-keycon"];
+
+                if (hasKeycon) {
+                    return;
+                }
+                const waffle = new ScriptWaffle();
+
+                waffle.addSirup(
+                    scriptMoveableScriptComponentSirup,
+                    scriptSelectoComponentSirup,
+                );
+
+                return {
+                    dist: `./{type}/{name}/App{ext}`,
+                    waffle,
+                };
+            },
             // Vue 3
             (defrosted) => {
                 const hasKeycon = !!defrosted.allRequires["react-keycon"];
                 const waffle = new VueWaffle();
-
-                waffle.addSirup(ConvertDefaultModulePrefixSirup);
 
 
                 if (hasKeycon) {
@@ -126,8 +169,6 @@ const config = [
                     useOptionsAPI: !hasKeycon,
                 });
 
-                waffle.addSirup(ConvertDefaultModulePrefixSirup);
-
                 if (hasKeycon) {
                     waffle.addSirup(
                         sirup => {
@@ -145,8 +186,6 @@ const config = [
             (defrosted) => {
                 const hasKeycon = !!defrosted.allRequires["react-keycon"];
                 const waffle = new SvelteWaffle();
-
-                waffle.addSirup(ConvertDefaultModulePrefixSirup);
 
                 if (hasKeycon) {
                     waffle.addSirup(svelteKeyconSirup);

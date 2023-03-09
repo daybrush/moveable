@@ -52,9 +52,8 @@
         "packages:publish": "lerna-helper publish --ignore ngx-moveable,@moveable/helper --commit 'chore: publish packages'",
         "changelog": "lerna-helper changelog --type all --base moveable",
         "doc": "rm -rf ./doc && jsdoc -c jsdoc.json",
-        "build:storybook": "npm run build --prefix ./packages/storybook",
-        "build:storybook2": "npm run build:storybook --prefix ./packages/react-moveable",
-        "demo:build": "npm run packages:build && npm run doc && npm run build:storybook && npm run build:storybook2",
+        "build:storybook": "npm run build:storybook --prefix ./packages/react-moveable",
+        "demo:build": "npm run packages:build && npm run doc && npm run build:storybook",
         "demo:deploy": "gh-pages -d ./demo --dest=./ --add --remote origin",
         "deploy": "lerna-helper deploy --base moveable",
         "release": "lerna-helper release --base moveable"

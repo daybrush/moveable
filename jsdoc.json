@@ -45,7 +45,7 @@
         "IObject": "http://daybrush.com/utils/release/latest/doc/global.html#ObjectInterface",
         "DragScrollOptions": "https://daybrush.com/dragscroll/release/latest/doc/global.html#DragScrollOptions"
     },
-    "storybookUrl": "https://daybrush.com/moveable/storybook2",
+    "storybookUrl": "https://daybrush.com/moveable/storybook",
     "docdash": {
         "repo": "daybrush/moveable",
         "menu": {

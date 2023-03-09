@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable max-len */
 import * as React from "react";
@@ -45,6 +46,32 @@ export function makeStoryGroup(title: string, module: NodeModule) {
                 // codesandbox: DEFAULT_REACT_CODESANDBOX(["react-moveable"]),
                 language: "tsx",
             });
+            // HTML
+            try {
+                const htmlCode = require(`!!raw-loader!@/stories/${directory}script/${fileName}/App.html`).default;
+
+                previews.push({
+                    tab: "Script",
+                    description: "HTML",
+                    template: htmlCode,
+                    copy: true,
+                    language: "html",
+                });
+            } catch (e) {
+            }
+            // Script
+            try {
+                const scriptCode = require(`!!raw-loader!@/stories/${directory}script/${fileName}/App.js`).default;
+
+                previews.push({
+                    tab: "Script",
+                    description: "JavaScript",
+                    template: convertTemplate(scriptCode, /"\$preview_([^"]+)"/g),
+                    copy: true,
+                    language: "tsx",
+                });
+            } catch (e) {
+            }
             // Vue3
             try {
                 const vueCode = require(`!!raw-loader!@/stories/${directory}vue3/${fileName}/App.vue`).default;
@@ -55,7 +82,6 @@ export function makeStoryGroup(title: string, module: NodeModule) {
                     copy: true,
                     language: "html",
                 });
-            // eslint-disable-next-line no-empty
             } catch (e) {
             }
             // Vue2
@@ -68,8 +94,7 @@ export function makeStoryGroup(title: string, module: NodeModule) {
                     copy: true,
                     language: "html",
                 });
-            // eslint-disable-next-line no-empty
-            } catch (e) {}
+            } catch (e) { }
             // Svelte
             try {
                 const svelteCode = require(`!!raw-loader!@/stories/${directory}svelte/${fileName}/App.svelte`).default;
@@ -80,8 +105,7 @@ export function makeStoryGroup(title: string, module: NodeModule) {
                     copy: true,
                     language: "html",
                 });
-            // eslint-disable-next-line no-empty
-            } catch (e) {}
+            } catch (e) { }
         } else if (text) {
             previews.unshift({
                 tab: "React",
@@ -95,7 +119,7 @@ export function makeStoryGroup(title: string, module: NodeModule) {
         stories.add(storyTitle, (props: any) => {
             const Component = app;
 
-            return <Component {...props}/>;
+            return <Component {...props} />;
         }, {
             argTypes: argsTypes || {},
             args: makeArgs(argsTypes || {}),

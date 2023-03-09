@@ -24,3 +24,4 @@ yarn-error.log*
 stories/**/vue3/
 stories/**/vue2/
 stories/**/svelte/
+stories/**/script/
