@@ -39,12 +39,14 @@ export const IS_WEBKIT605 = IS_WEBKIT && (() => {
 
 const browserName = agent.browser.name;
 const browserVersion = parseInt(agent.browser.version, 10);
+const IS_CHROMIUM = agent.browser.chromium;
+const chromiumVersion = parseInt(agent.browser.chromiumVersion, 10) || 0;
 
-export const IS_CHROME109 = browserName === "chrome" && browserVersion >= 109;
+export const IS_CHROME109 = IS_CHROMIUM && chromiumVersion >= 109;
 export const IS_FIREFOX = browserName === "firefox";
 export const IS_SAFARI_ABOVE15
     = parseInt(agent.browser.webkitVersion, 10) >= 612
-    || parseInt(agent.browser.version, 10) >= 15;
+    || browserVersion >= 15;
 
 export const PREFIX = "moveable-";
 
