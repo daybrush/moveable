@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.2](https://github.com/daybrush/moveable/compare/0.44.0...0.44.2) (2023-03-10)
+### :sparkles: Packages
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.21.2
+* `moveable` 0.44.2
+* `preact-moveable` 0.46.1
+* `react-compat-moveable` 0.32.2
+* `react-moveable` 0.47.1
+* `svelte-moveable` 0.36.2
+* `vue-moveable` 2.0.0-beta.60
+* `vue3-moveable` 0.19.2
+* `ngx-moveable` 0.41.2
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix chromium agent #847 ([f6a703b](https://github.com/daybrush/moveable/commit/f6a703b8286b25ec88e397f3363db6c69777fd72))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([5589402](https://github.com/daybrush/moveable/commit/55894029a463f96a1f42827330b092be3fb63bf2))
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-compat-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * update packages #856 #847 ([a78c8e3](https://github.com/daybrush/moveable/commit/a78c8e3c7ff8c3eb347a7617ddc76c807b57633e))
+
+
+
 ## [0.44.0](https://github.com/daybrush/moveable/compare/0.43.1...0.44.0) (2023-03-08)
 ### :sparkles: Packages
 * `@moveable/helper` 0.1.2

@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.0...react-moveable@0.47.1) (2023-03-10)
+
+
+### :bug: Bug Fix
+
+* fix chromium agent #847 ([f6a703b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f6a703b8286b25ec88e397f3363db6c69777fd72))
+
+
+### :mega: Other
+
+* publish packages ([5589402](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/55894029a463f96a1f42827330b092be3fb63bf2))
+
+
+
 ## [0.47.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.46.1...react-moveable@0.47.0) (2023-03-08)
 
 
