@@ -25,12 +25,14 @@ jobs:
         name: Install dependencies
         continue-on-error: true
         run: npm i
+        working-directory: ./packages/react-moveable
       - name: Run Storybook tests
         run: npm run test:ci
         working-directory: ./packages/react-moveable
       - name: Run Original Storybok
         if: ${{ failure() }}
         run: npm run test:fail-ci
+        working-directory: ./packages/react-moveable
       - name: Archive Failed Artifact
         uses: actions/upload-artifact@v2
         with:
