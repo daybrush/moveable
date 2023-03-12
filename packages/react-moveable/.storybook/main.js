@@ -1,3 +1,4 @@
+const { DefinePlugin } = require("webpack");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
@@ -12,7 +13,10 @@ module.exports = {
             propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
         },
     },
-    webpackFinal: config => {
+    webpackFinal: (config) => {
+        const definePlugin = new DefinePlugin({
+            SKIP_TEST: process.env.SKIP_TEST === "skip",
+        });
         config.module.rules.push({
             test: /\.(ts|tsx)$/,
             loader: 'ts-loader',
@@ -21,6 +25,7 @@ module.exports = {
                 transpileOnly: true
             },
         });
+        config.plugins.push(definePlugin);
         config.plugins.push(new ForkTsCheckerWebpackPlugin());
         config.resolve.alias["@/stories"] = path.resolve(__dirname, "../stories");
         config.resolve.alias["moveable-helper"] = path.resolve(__dirname, "../stories/moveable-helper");
@@ -37,6 +42,15 @@ module.exports = {
         "@storybook/addon-viewport/register",
         "storybook-dark-mode/register",
         "@storybook/addon-interactions",
+        {
+            name: "@storybook/addon-coverage",
+            options: {
+              istanbul: {
+                include: ["../src/**"],
+                exclude: ["../stories/**"],
+              },
+            },
+        },
     ],
     "framework": "@storybook/react",
 };

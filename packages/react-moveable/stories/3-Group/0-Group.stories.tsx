@@ -9,13 +9,13 @@ import {
     DEFAULT_RESIZABLE_GROUP_CONTROLS,
     DEFAULT_SCALABLE_GROUP_CONTROLS,
 } from "../controls/group";
-import { makeStoryGroup } from "../utils/story";
+import { add } from "../utils/story";
 
+export default {
+    title: "Group",
+};
 
-const group = makeStoryGroup("Group", module);
-
-
-group.add("Draggable & Resizable & Rotatable", {
+export const GroupDraggableResizableRotatebl = add("Draggable & Resizable & Rotatable", {
     app: require("./ReactDraggableResizableRotatableApp").default,
     path: require.resolve("./ReactDraggableResizableRotatableApp"),
     argsTypes: {
@@ -26,7 +26,7 @@ group.add("Draggable & Resizable & Rotatable", {
         ...DEFAULT_RESIZABLE_GROUP_CONTROLS,
     },
 });
-group.add("Draggable & Scalable & Rotatable", {
+export const GroupDraggableScalableRotatable = add("Draggable & Scalable & Rotatable", {
     app: require("./ReactDraggableScalableRotatableApp").default,
     path: require.resolve("./ReactDraggableScalableRotatableApp"),
     argsTypes: {
@@ -39,7 +39,7 @@ group.add("Draggable & Scalable & Rotatable", {
 });
 
 
-group.add("All in One", {
+export const GroupAllInOne = add("All in One", {
     app: require("./ReactAllInOneApp").default,
     path: require.resolve("./ReactAllInOneApp"),
     argsTypes: {
@@ -49,12 +49,12 @@ group.add("All in One", {
         ...DEFAULT_ROTATABLE_CONTROLS,
     },
 });
-group.add("Multiple Group", {
+export const GroupMultipleGroup = add("Multiple Group", {
     app: require("./ReactMultipleGroupApp").default,
     path: require.resolve("./ReactMultipleGroupApp"),
 });
 
-group.add("Roundable Group", {
+export const GroupRoundableGroup = add("Roundable Group", {
     app: require("./ReactRoundableGroupApp").default,
     path: require.resolve("./ReactRoundableGroupApp"),
 });

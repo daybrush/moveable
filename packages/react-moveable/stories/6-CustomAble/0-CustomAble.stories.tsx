@@ -1,25 +1,25 @@
-import { makeStoryGroup } from "../utils/story";
+import { add } from "../utils/story";
 
+export default {
+    title: "Make Custom Able",
+};
 
-const group = makeStoryGroup("Make Custom Able", module);
-
-
-group.add("DimensionViewable", {
+export const CustomAbleDimensionViewable = add("DimensionViewable", {
     app: require("./ReactDimensionViewableApp").default,
     path: require.resolve("./ReactDimensionViewableApp"),
 });
 
-group.add("Editable", {
+export const CustomAbleEditable = add("Editable", {
     app: require("./ReactEditableApp").default,
     path: require.resolve("./ReactEditableApp"),
 });
 
-group.add("Custom Rotatable", {
+export const CustomAbleRotatble = add("Custom Rotatable", {
     app: require("./ReactCustomRotatableApp").default,
     path: require.resolve("./ReactCustomRotatableApp"),
 });
 
-group.add("Mouse Enter & Leave", {
+export const CustomAbleMouseEnterLeave = add("Mouse Enter & Leave", {
     app: require("./ReactMouseEnterLeaveApp").default,
     path: require.resolve("./ReactMouseEnterLeaveApp"),
 });

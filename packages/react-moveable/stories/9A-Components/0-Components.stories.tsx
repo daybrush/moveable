@@ -1,21 +1,22 @@
-import { makeStoryGroup } from "../utils/story";
+import { add } from "../utils/story";
 
 
-const group = makeStoryGroup("Combination with Other Components", module);
+export default {
+    title: "Combination with Other Components",
+};
 
-
-group.add("Use Selecto", {
+export const ComponentsSelecto = add("Use Selecto", {
     app: require("./ReactSelectoApp").default,
     path: require.resolve("./ReactSelectoApp"),
 });
 
-group.add("Use Selecto with Multiple Group", {
+export const ComponentsSelectoWithMultipleGroup = add("Use Selecto with Multiple Group", {
     app: require("./ReactSelectoMultipleGroupApp").default,
     path: require.resolve("./ReactSelectoMultipleGroupApp"),
 });
 
 
-group.add("Use Infinite Viewer", {
+export const ComponentsInfiniteViewer = add("Use Infinite Viewer", {
     app: require("./ReactInfiniteViewerApp").default,
     path: require.resolve("./ReactInfiniteViewerApp"),
 });

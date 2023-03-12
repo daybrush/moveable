@@ -25,3 +25,4 @@ stories/**/vue3/
 stories/**/vue2/
 stories/**/svelte/
 stories/**/script/
+.nyc_output

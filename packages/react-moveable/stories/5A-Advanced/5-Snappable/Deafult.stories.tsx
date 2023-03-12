@@ -1,15 +1,16 @@
-import { makeStoryGroup } from "../../utils/story";
+import { add } from "../../utils/story";
 
 
-const group = makeStoryGroup("Advanced Snappable", module);
+export default {
+    title: "Advanced Snappable",
+};
 
-
-group.add("Guidelines with custom styles", {
+export const AdvancedSnappableCustomGuidelines = add("Guidelines with custom styles", {
     app: require("./ReactCustomGuidelinesApp").default,
     path: require.resolve("./ReactCustomGuidelinesApp"),
 });
 
-group.add("Element Guidelines with custom styles", {
+export const AdvancedSnappableCustomElementGuidelines = add("Element Guidelines with custom styles", {
     app: require("./ReactCustomElementGuidelinesApp").default,
     path: require.resolve("./ReactCustomElementGuidelinesApp"),
 });

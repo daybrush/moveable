@@ -1,10 +1,11 @@
-import { makeStoryGroup } from "../../utils/story";
+import { add } from "../../utils/story";
 
 
-const group = makeStoryGroup("Advanced Draggable", module);
+export default {
+    title: "advanced Draggable",
+};
 
-
-group.add("edgeDraggable with edge", {
+export const AdvancedDraggableEdgeDraggable = add("edgeDraggable with edge", {
     app: require("./ReactEdgeDraggableWithEdgeApp").default,
     path: require.resolve("./ReactEdgeDraggableWithEdgeApp"),
 });

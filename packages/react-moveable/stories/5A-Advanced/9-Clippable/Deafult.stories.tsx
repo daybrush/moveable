@@ -1,28 +1,28 @@
-import { makeStoryGroup } from "../../utils/story";
+import { add } from "../../utils/story";
 
 
-const group = makeStoryGroup("Advanced Clippable", module);
+export default {
+    title: "Adavanced Clippable",
+};
 
-
-
-group.add("Clippable with Drag, Resize, Rotate", {
+export const AdvancedClippable = add("Clippable with Drag, Resize, Rotate", {
     app: require("./ReactClippableApp").default,
     path: require.resolve("./ReactClippableApp"),
 });
 
 
-group.add("Drag, Resize, Rotate with Clipped Area (Testing)", {
+export const AdvancedClippableClippedArea = add("Drag, Resize, Rotate with Clipped Area (Testing)", {
     app: require("./ReactClippedAreaApp").default,
     path: require.resolve("./ReactClippedAreaApp"),
 });
 
 
-group.add("Clip & Snap", {
+export const AdvancedClippableClipSnap = add("Clip & Snap", {
     app: require("./ReactClipSnapApp").default,
     path: require.resolve("./ReactClipSnapApp"),
 });
 
-group.add("keepRatio for both clippable and resizeable", {
+export const AdvancedClippableResizableKeepRatio = add("keepRatio for both clippable and resizeable", {
     app: require("./ReactClippableResizableKeepRatioApp").default,
     path: require.resolve("./ReactClippableResizableKeepRatioApp"),
 });

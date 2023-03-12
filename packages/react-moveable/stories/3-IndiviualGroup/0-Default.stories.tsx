@@ -3,13 +3,14 @@ import {
     DEFAULT_DRAGGABLE_CONTROLS,
     DEFAULT_SCALABLE_CONTROLS,
 } from "../controls/default";
-import { makeStoryGroup } from "../utils/story";
+import { add } from "../utils/story";
 
 
-const group = makeStoryGroup("Individual Group", module);
+export default {
+    title: "Individual Group",
+};
 
-
-group.add("Draggable & Scalable & Rotatable", {
+export const IndividualGroupDraggableScalableRotatable = add("Draggable & Scalable & Rotatable", {
     app: require("./ReactDraggableScalableRotatableApp").default,
     path: require.resolve("./ReactDraggableScalableRotatableApp"),
     argsTypes: {
@@ -19,7 +20,7 @@ group.add("Draggable & Scalable & Rotatable", {
     },
 });
 
-group.add("Use Individual Groupable Props", {
+export const IndividualGroupGroupableProps = add("Use Individual Groupable Props", {
     app: require("./ReactIndividualGroupablePropsApp").default,
     path: require.resolve("./ReactIndividualGroupablePropsApp"),
 });

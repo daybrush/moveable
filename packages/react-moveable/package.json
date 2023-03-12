@@ -13,8 +13,10 @@
         "lint": "eslint ./src/ --ext .ts,.tsx",
         "storybook": "rm -rf node_modules/.cache && start-storybook -p 6006",
         "bake": "bake",
+        "test": "test-storybook",
+        "coverage": "test-storybook --maxWorkers=2 --coverage",
         "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
-        "build:storybook": "build-storybook -o ../../demo/storybook",
+        "build:storybook": "SKIP_TEST=true build-storybook -o ../../demo/storybook",
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
     },
     "keywords": [
@@ -64,6 +66,7 @@
         "@scena/react-guides": "^0.17.1",
         "@storybook/addon-actions": "6.5.10",
         "@storybook/addon-controls": "6.5.10",
+        "@storybook/addon-coverage": "^0.0.8",
         "@storybook/addon-docs": "6.5.10",
         "@storybook/addon-interactions": "6.5.10",
         "@storybook/addon-links": "6.5.10",

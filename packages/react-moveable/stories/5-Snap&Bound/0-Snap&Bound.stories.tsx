@@ -12,13 +12,14 @@ import {
     DEFAULT_SNAP_GRID_CONTROLS,
 } from "../controls/default";
 import { makeArgType, makeLink } from "../utils";
-import { makeStoryGroup } from "../utils/story";
+import { add } from "../utils/story";
 
 
-const group = makeStoryGroup("Snap & Bound", module);
+export default {
+    title: "Snap & Bound",
+};
 
-
-group.add("Snap Guidelines", {
+export const SnapGuidelines = add("Snap Guidelines", {
     app: require("./ReactSnapGuidelinesApp").default,
     path: require.resolve("./ReactSnapGuidelinesApp"),
     argsTypes: {
@@ -29,7 +30,7 @@ group.add("Snap Guidelines", {
     },
 });
 
-group.add("Snap Elements", {
+export const SnapElements = add("Snap Elements", {
     app: require("./ReactSnapElementsApp").default,
     path: require.resolve("./ReactSnapElementsApp"),
     argsTypes: {
@@ -39,7 +40,7 @@ group.add("Snap Elements", {
 });
 
 
-group.add("Snap Grid", {
+export const SnapGrid = add("Snap Grid", {
     app: require("./ReactSnapGridApp").default,
     path: require.resolve("./ReactSnapGridApp"),
     argsTypes: {
@@ -49,7 +50,7 @@ group.add("Snap Grid", {
     },
 });
 
-group.add("Bound Drag & Scale", {
+export const SnapBoundDragScale = add("Bound Drag & Scale", {
     app: require("./ReactBoundScalableApp").default,
     path: require.resolve("./ReactBoundScalableApp"),
     argsTypes: {
@@ -59,7 +60,7 @@ group.add("Bound Drag & Scale", {
     },
 });
 
-group.add("Bound Drag & Resize", {
+export const SnapBoundDragResize = add("Bound Drag & Resize", {
     app: require("./ReactBoundResizableApp").default,
     path: require.resolve("./ReactBoundResizableApp"),
     argsTypes: {
@@ -70,7 +71,7 @@ group.add("Bound Drag & Resize", {
 });
 
 
-group.add("Bound Drag & Rotate", {
+export const SnapDragRotate = add("Bound Drag & Rotate", {
     app: require("./ReactBoundRotatableApp").default,
     path: require.resolve("./ReactBoundRotatableApp"),
     argsTypes: {
@@ -80,12 +81,12 @@ group.add("Bound Drag & Rotate", {
     },
 });
 
-group.add("Bound Drag & Rotate Group", {
+export const SnapDragRotateGroup = add("Bound Drag & Rotate Group", {
     app: require("./ReactBoundRotatableGroupApp").default,
     path: require.resolve("./ReactBoundRotatableGroupApp"),
 });
 
-group.add("Use snapContainer option", {
+export const SnapSnapContainer = add("Use snapContainer option", {
     app: require("./ReactSnapContainerApp").default,
     path: require.resolve("./ReactSnapContainerApp"),
     argsTypes: {
@@ -97,7 +98,7 @@ group.add("Use snapContainer option", {
     },
 });
 
-group.add("inner bound with resize", {
+export const SnapInnerBoundResize = add("inner bound with resize", {
     app: require("./ReactInnerBoundResizableApp").default,
     path: require.resolve("./ReactInnerBoundResizableApp"),
     argsTypes: {
@@ -105,7 +106,7 @@ group.add("inner bound with resize", {
     },
 });
 
-group.add("Set maximum distance for guidelines", {
+export const SnapMaxiumDistance = add("Set maximum distance for guidelines", {
     app: require("./ReactMaxSnapElementApp").default,
     path: require.resolve("./ReactMaxSnapElementApp"),
     argsTypes: {
@@ -123,12 +124,10 @@ group.add("Set maximum distance for guidelines", {
 });
 
 
-group.add("Snap Elements (group)", {
+export const SnapElementsGroup = add("Snap Elements (group)", {
     app: require("./ReactSnapElementsGroupApp").default,
     path: require.resolve("./ReactSnapElementsGroupApp"),
 });
-
-
 
 
 // export * from "./9-maxSnapElement.stories";

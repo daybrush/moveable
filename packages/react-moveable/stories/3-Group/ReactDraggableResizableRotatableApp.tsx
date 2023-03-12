@@ -2,12 +2,7 @@ import * as React from "react";
 import Moveable from "@/react-moveable";
 
 export default function App(props: Record<string, any>) {
-    const moveableRef = React.useRef<Moveable>(null);
-
     return <div className="container">
-        <button onClick={() => {
-            moveableRef.current!.updateRect();
-        }}>Resize</button>
         <div className="target target1">Target1</div>
         <div className="target target2" style={{
             minWidth: "50px",
@@ -15,7 +10,6 @@ export default function App(props: Record<string, any>) {
         }}>Target2</div>
         <div className="target target3">Target3</div>
         <Moveable
-            ref={moveableRef}
             target={".target"}
             hideChildMoveableDefaultLines={props.hideChildMoveableDefaultLines}
             draggable={props.draggable}

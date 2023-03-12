@@ -1,28 +1,28 @@
 
 import { makeArgType, makeOptionLink } from "../utils";
-import { makeStoryGroup } from "../utils/story";
+import { add } from "../utils/story";
 
+export default {
+    title: "Options",
+};
 
-const group = makeStoryGroup("Options", module);
-
-
-group.add("useResizeObserver", {
+export const OptionsReizeObserver = add("useResizeObserver", {
     app: require("./ReactUseResizeObserverApp").default,
     path: require.resolve("./ReactUseResizeObserverApp"),
 });
 
-group.add("useResizeObserver (Group)", {
+export const OptionsResizeObserverGroup = add("useResizeObserver (Group)", {
     app: require("./ReactUseResizeObserverGroupApp").default,
     path: require.resolve("./ReactUseResizeObserverGroupApp"),
 });
 
-group.add("useResizeObserver (Individual Group)", {
+export const OptionsResizeObserverIndividualGroup = add("useResizeObserver (Individual Group)", {
     app: require("./ReactUseResizeObserverIndividualGroupApp").default,
     path: require.resolve("./ReactUseResizeObserverIndividualGroupApp"),
 });
 
 
-group.add("linePadding", {
+export const OptionsLinePadding = add("linePadding", {
     app: require("./ReactLinePaddingApp").default,
     path: require.resolve("./ReactLinePaddingApp"),
     argsTypes: {
@@ -35,7 +35,7 @@ group.add("linePadding", {
     },
 });
 
-group.add("controlPadding", {
+export const OptionsControlPadding = add("controlPadding", {
     app: require("./ReactControlPaddingApp").default,
     path: require.resolve("./ReactControlPaddingApp"),
     argsTypes: {
@@ -50,44 +50,44 @@ group.add("controlPadding", {
 
 
 
-group.add("checkInput", {
+export const OptionsCheckInput = add("checkInput", {
     app: require("./ReactCheckInputApp").default,
     path: require.resolve("./ReactCheckInputApp"),
 });
 
-group.add("viewContainer (Cursor is applied in viewer during dragging)", {
+export const OptionsViewContainer = add("viewContainer (Cursor is applied in viewer during dragging)", {
     app: require("./ReactViewContainerApp").default,
     path: require.resolve("./ReactViewContainerApp"),
 });
 
 
 
-group.add("persistData (First render with persisted data)", {
+export const OptionsPersistData = add("persistData (First render with persisted data)", {
     app: require("./ReactPersistDataApp").default,
     path: require.resolve("./ReactPersistDataApp"),
 });
 
-group.add("persistData (First render with persisted data, group)", {
+export const OptionsPersistDataGroup = add("persistData (First render with persisted data, group)", {
     app: require("./ReactGroupPersistDataApp").default,
     path: require.resolve("./ReactGroupPersistDataApp"),
 });
 
 
-group.add("persistData (First render with persisted data, individual group)", {
+export const OptionsPersistDataIndividualGroup = add(`persistData (First render with persisted data, individual group)`, {
     app: require("./ReactIndividualGroupPersistDataApp").default,
     path: require.resolve("./ReactIndividualGroupPersistDataApp"),
 });
 
-group.add("rootContainer (css transformed container)", {
+export const OptionsRootContainer = add("rootContainer (css transformed container)", {
     app: require("./ReactTransformedApp").default,
     path: require.resolve("./ReactTransformedApp"),
 });
 
-group.add("rootContainer (css zoomed container)", {
+export const OptionsRootContainerZoom = add("rootContainer (css zoomed container)", {
     app: require("./ReactZoomApp").default,
     path: require.resolve("./ReactZoomApp"),
 });
-group.add("useAccuratePosition (Render in a more accurate position)", {
+export const OptionsAccuratePosition = add("useAccuratePosition (Render in a more accurate position)", {
     app: require("./ReactUseAccuratePositionApp").default,
     path: require.resolve("./ReactUseAccuratePositionApp"),
 });
