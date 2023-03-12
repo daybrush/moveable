@@ -1,0 +1,17 @@
+name: Storybook Tests
+on: [push, pull_request]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - name: Install dependencies
+        run: npm i
+        working-directory: ./packages/react-moveable
+      - name: Run Storybook tests
+        run: npm run test:ci
+        working-directory: ./packages/react-moveable

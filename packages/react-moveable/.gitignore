@@ -26,3 +26,4 @@ stories/**/vue2/
 stories/**/svelte/
 stories/**/script/
 .nyc_output
+test-static

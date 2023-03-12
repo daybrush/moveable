@@ -6,7 +6,7 @@ import {
     DEFAULT_WARPABLE_CONTROLS,
     DEFAULT_CLIPPABLE_CONTROLS,
 } from "../controls/default";
-import { expect } from '@storybook/jest';
+import { expect } from "@storybook/jest";
 
 import { add } from "../utils/story";
 import { pan, rotate, wait } from "../utils/testing";

@@ -1,5 +1,6 @@
 import { add } from "../utils/story";
-
+import { findMoveable, wait } from "../utils/testing";
+import { expect } from "@storybook/jest";
 
 export default {
     title: "Variable Situations",
@@ -25,10 +26,23 @@ export const TestsSafari = add("Test Control Box in Safari", {
 export const TestsCustomElement = add("Test Custom Element Offset", {
     app: require("./ReactCustomElementApp").default,
     path: require.resolve("./ReactCustomElementApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const moveableElement = findMoveable(canvasElement);
+
+        expect(moveableElement.style.transform).toBe("translate3d(60px, 140px, 0px)");
+    },
 });
 export const TestsCustomElementBounds = add("Test Custom Element with Bounds", {
     app: require("./ReactCustomElementBoundsApp").default,
     path: require.resolve("./ReactCustomElementBoundsApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const customElement = canvasElement.querySelector("custom-element")!;
+        const innerMoveable = customElement!.shadowRoot!.querySelector<HTMLElement>(".moveable-control-box")!;
+
+        expect(innerMoveable.style.transform).toBe("translate3d(50px, 50px, 0px)");
+    },
 });
 export const TestsAccuracy = add("Check drag accuracy when using bounds", {
     app: require("./ReactAccuracyApp").default,
@@ -103,8 +117,12 @@ export const TestsZoomedSnap = add("Test snap for scaled target", {
     path: require.resolve("./ReactZoomedSnapApp"),
 });
 
-
 export const TestsRequestBounds = add("Test request with bounds", {
     app: require("./ReactRequestBoundsApp").default,
     path: require.resolve("./ReactRequestBoundsApp"),
+});
+
+export const TestRotateClippable = add("Test rotate & clippable", {
+    app: require("./ReactRotateClippableApp").default,
+    path: require.resolve("./ReactRotateClippableApp"),
 });

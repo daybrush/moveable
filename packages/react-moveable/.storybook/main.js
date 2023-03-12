@@ -42,15 +42,16 @@ module.exports = {
         "@storybook/addon-viewport/register",
         "storybook-dark-mode/register",
         "@storybook/addon-interactions",
-        {
-            name: "@storybook/addon-coverage",
-            options: {
-              istanbul: {
-                include: ["../src/**"],
-                exclude: ["../stories/**"],
-              },
-            },
-        },
+        // {
+        //     name: "@storybook/addon-coverage",
+        //     options: {
+        //         exclude: [
+        //             "**/stories/**",
+        //             "stories/**",
+        //             "*{App}.tsx",
+        //         ],
+        //     },
+        // },
     ],
     "framework": "@storybook/react",
 };

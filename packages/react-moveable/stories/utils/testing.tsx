@@ -137,3 +137,7 @@ export function userAction(options: {
         }, options.duration);
     });
 }
+
+export function findMoveable(canasElement: HTMLElement) {
+    return canasElement.querySelector<HTMLElement>(".moveable-control-box")!;
+}

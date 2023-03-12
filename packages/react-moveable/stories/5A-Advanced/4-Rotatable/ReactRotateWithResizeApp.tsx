@@ -20,16 +20,7 @@ export default function App() {
                     renderDirections: false,
                 }}
                 rotateAroundControls={true}
-                onDrag={e => {
-                    e.target.style.cssText += `transform: ${e.transform};`;
-                }}
-                onResize={e => {
-                }}
-                onRotateStart={e => {
-                    // e.setFixedDirection([0, 0]);
-                }}
-                onRotate={e => {
-                    // e.target.style.cssText = e.cssText;
+                onRender={e => {
                     e.target.style.cssText += e.cssText;
 
                 }}

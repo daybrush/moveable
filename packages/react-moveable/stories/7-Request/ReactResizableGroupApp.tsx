@@ -5,40 +5,41 @@ export default function App(props: Record<string, any>) {
     const widthInputRef = React.useRef<HTMLInputElement>(null);
     const heightInputRef = React.useRef<HTMLInputElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
-    const [requestCallbacks] = React.useState(() => {
-        function request(horizontal: boolean) {
+    const onInput = (e: any) => {
+        const ev = (e.nativeEvent || e) as InputEvent;
+        const horizontal = JSON.parse((ev.target as HTMLElement).getAttribute("data-horizontal")!);
+
+        if (typeof ev.data === "undefined") {
             moveableRef.current!.request("resizable", {
                 offsetWidth: parseFloat(widthInputRef.current!.value),
                 offsetHeight: parseFloat(heightInputRef.current!.value),
                 horizontal,
             }, true);
         }
-        return {
-            onInput(e: any) {
-                const ev = (e.nativeEvent || e) as InputEvent;
-                const horizontal = JSON.parse((ev.target as HTMLElement).getAttribute("data-horizontal")!);
+    };
+    const onKeyUp = (e: any) => {
+        const ev = (e.nativeEvent || e) as InputEvent;
+        const horizontal = JSON.parse((ev.target as HTMLElement).getAttribute("data-horizontal")!);
+        e.stopPropagation();
 
-                if (typeof ev.data === "undefined") {
-                    request(horizontal);
-                }
-            },
-            onKeyUp(e: any) {
-                const ev = (e.nativeEvent || e) as InputEvent;
-                const horizontal = JSON.parse((ev.target as HTMLElement).getAttribute("data-horizontal")!);
-                e.stopPropagation();
-
-                // enter
-                if (e.keyCode === 13) {
-                    request(horizontal);
-                }
-            },
-        };
-    });
+        // enter
+        if (e.keyCode === 13) {
+            moveableRef.current!.request("resizable", {
+                offsetWidth: parseFloat(widthInputRef.current!.value),
+                offsetHeight: parseFloat(heightInputRef.current!.value),
+                horizontal,
+            }, true);
+        }
+    };
 
     return <div className="root">
         <div>
-            width: <input ref={widthInputRef} type="number" defaultValue="280" {...requestCallbacks} data-horizontal="true"></input>&nbsp;
-            height: <input ref={heightInputRef} type="number" defaultValue="230" {...requestCallbacks} data-horizontal="false"></input>
+            width: <input ref={widthInputRef}
+                type="number" defaultValue="280"
+                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="true"></input>&nbsp;
+            height: <input ref={heightInputRef}
+                type="number" defaultValue="230"
+                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="false"></input>
         </div>
         <div className="container">
             <div className="target target1">Target1</div>

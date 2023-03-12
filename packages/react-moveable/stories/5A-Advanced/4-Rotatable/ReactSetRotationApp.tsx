@@ -24,35 +24,24 @@ export default function App() {
                     resizable={true}
                     draggable={true}
                     rotatable={true}
-                    onDrag={e => {
-                        e.target.style.transform = e.transform;
-                    }}
                     onBeforeRotate={e => {
                         e.setRotation(throttle(e.rotation, 45));
                     }}
-                    onResize={e => {
-                        e.target.style.cssText += `width: ${e.width}px; height: ${e.height}px`;
-                        e.target.style.transform = e.drag.transform;
-                    }}
-                    onRotate={e => {
-                        e.target.style.transform = e.drag.transform;
+                    onRender={e => {
+                        e.target.style.cssText += e.cssText;
+
                     }}
                 />
                 <Moveable
                     target={".target.group"}
                     draggable={true}
                     rotatable={true}
-                    onDragGroup={e => {
-                        e.events.forEach(ev => {
-                            ev.target.style.transform = ev.transform;
-                        });
-                    }}
                     onBeforeRotateGroup={e => {
                         e.setRotation(throttle(e.rotation, 45));
                     }}
-                    onRotateGroup={e => {
+                    onRenderGroup={e => {
                         e.events.forEach(ev => {
-                            ev.target.style.transform = ev.drag.transform;
+                            ev.target.style.cssText += ev.cssText;
                         });
                     }}
                 />

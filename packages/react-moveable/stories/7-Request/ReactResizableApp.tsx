@@ -5,36 +5,36 @@ export default function App(props: Record<string, any>) {
     const widthInputRef = React.useRef<HTMLInputElement>(null);
     const heightInputRef = React.useRef<HTMLInputElement>(null);
     const moveableRef = React.useRef<Moveable>(null);
-    const [requestCallbacks] = React.useState(() => {
-        function request() {
+    const onInput = (e: any) => {
+        const ev = (e.nativeEvent || e) as InputEvent;
+
+        if (typeof ev.data === "undefined") {
             moveableRef.current!.request("resizable", {
-                offsetWidth: parseInt(widthInputRef.current!.value),
-                offsetHeight: parseInt(heightInputRef.current!.value),
+                offsetWidth: parseFloat(widthInputRef.current!.value),
+                offsetHeight: parseFloat(heightInputRef.current!.value),
             }, true);
         }
-        return {
-            onInput(e: any) {
-                const ev = (e.nativeEvent || e) as InputEvent;
+    };
+    const onKeyUp = (e: any) => {
+        e.stopPropagation();
 
-                if (typeof ev.data === "undefined") {
-                    request();
-                }
-            },
-            onKeyUp(e: any) {
-                e.stopPropagation();
-
-                // enter
-                if (e.keyCode === 13) {
-                    request();
-                }
-            },
-        };
-    });
+        // enter
+        if (e.keyCode === 13) {
+            moveableRef.current!.request("resizable", {
+                offsetWidth: parseFloat(widthInputRef.current!.value),
+                offsetHeight: parseFloat(heightInputRef.current!.value),
+            }, true);
+        }
+    };
 
     return <div className="root">
         <div>
-            width: <input ref={widthInputRef} type="number" defaultValue="100" {...requestCallbacks}></input>&nbsp;
-            height: <input ref={heightInputRef} type="number" defaultValue="100" {...requestCallbacks}></input>
+            width: <input ref={widthInputRef}
+                type="number" defaultValue="280"
+                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="true"></input>&nbsp;
+            height: <input ref={heightInputRef}
+                type="number" defaultValue="230"
+                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="false"></input>
         </div>
         <div className="container">
             <div className="target">Target1</div>
