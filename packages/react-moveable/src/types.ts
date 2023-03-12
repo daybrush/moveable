@@ -80,19 +80,19 @@ export interface DefaultOptions {
     /**
      * Moveable Root Container (No Transformed Container)
      * @default parentElement
-     * @story options--use-rootcontainer-with-transformed-container-css-transform
+     * @story options--options-root-container
      */
     rootContainer?: MoveableRefType<HTMLElement>;
     /**
      * If you want to set the dragging information to the viewer, refer to the following.
      * @default null
-     * @story options--cursor-is-applied-in-viewer-during-dragging
+     * @story options--options-view-container
      */
     viewContainer?: MoveableRefType<HTMLElement>;
     /**
      * Whether the target size is detected and updated whenever it changes.
      * @default false
-     * @story options--useresizeobserver
+     * @story options--options-reize-observer
      */
     useResizeObserver?: boolean;
     /**
@@ -192,7 +192,7 @@ export interface DefaultOptions {
     /**
      * By adding padding to the line, you can increase the area of the line that can be clicked and dragged.
      * @since 0.43.0
-     * @story options--linepadding
+     * @story options--options-line-padding
      * @default 0
      */
     linePadding?: number;
@@ -200,7 +200,7 @@ export interface DefaultOptions {
      * By adding padding to the control, you can increase the area of the control that can be clicked and dragged.
      * Either `rotateAroundControls` or `displayAroundControls` can be used.
      * @since 0.44.0
-     * @story options--controlPadding
+     * @story options--options-control-padding
      * @default 0
      */
     controlPadding?: number;
@@ -2260,7 +2260,7 @@ export interface RenderDirections {
      * Either `rotateAroundControls` or `displayAroundControls` can be used.
      * You can set the area through the `controlPadding` value.
      * @since 0.44.0
-     * @story options--controlPadding
+     * @story options--options-control-padding
      * @default false
      */
     displayAroundControls?: boolean;
@@ -2431,12 +2431,12 @@ export type MoveableTargetGroupsType = Array<HTMLElement | SVGElement | Moveable
 export interface IndividualGroupableOptions {
     /**
      * Create targets individually, not as a group.
-     * @story individual-group--draggable-scalable-rotatable
+     * @story individual-group--individual-group-draggable-scalable-rotatable
      */
     individualGroupable?: boolean;
     /**
      * When using individualGroupable you can pass props to child moveable.
-     * @story individual-group--use-individual-groupable-props
+     * @story individual-group--individual-group-groupable-props
      * @since 0.44.0
      */
     individualGroupableProps?: (
@@ -2816,7 +2816,7 @@ export interface ScrollableOptions {
     /**
      * Option to scroll with dragging
      * @since 0.43.0
-     * @story support-scroll--use-scrollable
+     * @story support-scroll--scrolling-scrollable
      * @example
      * const scrollOptions = {
      *     container: () => viewer.getContainer(),

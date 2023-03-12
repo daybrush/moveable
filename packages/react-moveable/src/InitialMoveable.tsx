@@ -251,7 +251,7 @@ export class InitialMoveable<T = {}>
     /**
      * User changes target and waits for target to change.
      * @method Moveable#waitToChangeTarget
-     * @story combination-with-other-components--use-selecto
+     * @story combination-with-other-components--components-selecto
      * @example
      * document.querySelector(".target").addEventListener("mousedown", e => {
      *   moveable.waitToChangeTarget().then(() => {

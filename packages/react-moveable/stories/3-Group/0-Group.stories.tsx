@@ -15,7 +15,7 @@ export default {
     title: "Group",
 };
 
-export const GroupDraggableResizableRotatebl = add("Draggable & Resizable & Rotatable", {
+export const GroupDraggableResizableRotatable = add("Draggable & Resizable & Rotatable", {
     app: require("./ReactDraggableResizableRotatableApp").default,
     path: require.resolve("./ReactDraggableResizableRotatableApp"),
     argsTypes: {
