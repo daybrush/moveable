@@ -63,6 +63,7 @@ export default {
         warpable: Boolean,
         renderDirections: Array,
         edge: Boolean,
+        displayAroundControls: Boolean,
     } as const,
     events: {
         onWarpStart: "warpStart",

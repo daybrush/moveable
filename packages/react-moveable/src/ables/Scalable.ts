@@ -53,6 +53,7 @@ export default {
         renderDirections: String,
         keepRatio: Boolean,
         edge: Boolean,
+        displayAroundControls: Boolean,
     } as const,
     events: {
         onScaleStart: "scaleStart",

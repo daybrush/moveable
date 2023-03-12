@@ -15,7 +15,7 @@ module.exports = {
     },
     webpackFinal: (config) => {
         const definePlugin = new DefinePlugin({
-            SKIP_TEST: process.env.SKIP_TEST === "skip",
+            SKIP_TEST: process.env.SKIP_TEST,
         });
         config.module.rules.push({
             test: /\.(ts|tsx)$/,

@@ -61,6 +61,7 @@ export default {
         resizable: Boolean,
         throttleResize: Number,
         renderDirections: Array,
+        displayAroundControls: Boolean,
         keepRatio: Boolean,
         resizeFormat: Function,
         keepRatioFinally: Boolean,

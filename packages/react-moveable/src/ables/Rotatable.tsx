@@ -272,6 +272,7 @@ export default {
         rotateAroundControls: Boolean,
         edge: Boolean,
         resolveAblesWithRotatable: Object,
+        displayAroundControls: Boolean,
     } as const,
     events: {
         onRotateStart: "rotateStart",

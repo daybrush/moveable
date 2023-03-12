@@ -409,11 +409,23 @@ export interface MoveableProps extends
 /**
  * @memberof Moveable
  * @typedef
- * @extends Moveable.MoveableDefaultOptions
  */
-export interface MoveableDefaultProps extends ExcludeKeys<MoveableDefaultOptions, "target"> {
-    target?: MoveableRefTargetType;
+export interface MoveableDefaultEvents {
     onChangeTargets?: (e: OnChangeTargets) => void;
+}
+
+export interface MoveableInitalOptions extends ExcludeKeys<MoveableDefaultOptions, "target"> {
+    target?: MoveableRefTargetType;
+}
+
+/**
+ * @memberof Moveable
+ * @typedef
+ * @extends Moveable.MoveableDefaultOptions
+ * @extends Moveable.MoveableDefaultEvents
+ */
+export interface MoveableDefaultProps extends MoveableInitalOptions, MoveableDefaultEvents {
+
 }
 /**
  * @memberof Moveable
@@ -455,7 +467,7 @@ export interface MoveableRefObject<T extends Element = HTMLElement | SVGElement>
  * @extends Moveable.Clickable.ClickableOptions
  */
 export interface MoveableOptions extends
-    MoveableDefaultProps,
+    MoveableInitalOptions,
     DraggableOptions,
     DragAreaOptions,
     OriginDraggableOptions,

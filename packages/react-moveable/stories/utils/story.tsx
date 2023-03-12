@@ -7,7 +7,7 @@ import { ClientApi } from "@storybook/client-api";
 
 import { convertReactTemplate, convertPath, makeArgs, convertTemplate } from "../utils";
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
-import { getEntries, getValues, isFunction } from "@daybrush/utils";
+import { getEntries, isFunction } from "@daybrush/utils";
 
 declare const SKIP_TEST: boolean;
 
@@ -145,23 +145,18 @@ export function add(storyTitle: string, parameter: StoryParameter) {
         return <Component {...props} />;
     };
 
-    function inject(injectedFunc: any, isPlay?: boolean) {
-        injectedFunc.storyName = storyTitle;
-        injectedFunc.argTypes = argsTypes || {},
-        injectedFunc.args = makeArgs(argsTypes || {}),
-        injectedFunc.parameters = {
-            preview: previews,
-        };
+    func.storyName = storyTitle;
+    func.argTypes = argsTypes || {},
+    func.args = makeArgs(argsTypes || {}),
+    func.parameters = {
+        preview: previews,
+    };
 
-        if (isPlay) {
-            injectedFunc.play = play;
-        }
-    }
-
-    inject(func, true);
 
 
     if (!SKIP_TEST && play) {
+        func.play = play;
+
         const clientApi = (window as any).__STORYBOOK_CLIENT_API__ as ClientApi<any>;
         const facade = clientApi.facade;
         const csfExports = facade.csfExports;

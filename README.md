@@ -4,6 +4,7 @@
 <p align="middle">
 <a href="https://opencollective.com/moveable" alt="Financial Contributors on Open Collective"><img src="https://opencollective.com/moveable/all/badge.svg?label=financial+contributors" /></a>
 <a href="https://www.npmjs.com/package/moveable" target="_blank"><img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
+<a href="https://github.com/daybrush/moveable/actions" target="_blank"><img alt="Github actions" src="https://img.shields.io/github/actions/workflow/status/daybrush/moveable/run-e2e.yml?branch=master&style=flat-square" /></a>&nbsp;
 <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
 <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
 <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>

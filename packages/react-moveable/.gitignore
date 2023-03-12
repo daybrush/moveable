@@ -27,3 +27,4 @@ stories/**/svelte/
 stories/**/script/
 .nyc_output
 test-static
+__snapshots__
