@@ -20,7 +20,6 @@ export default {
         const props = moveable.props;
         let targets: Array<HTMLElement | SVGElement | undefined | null> = props.targets || [];
 
-        moveable.moveables = [];
         const { left, top, isPersisted } = moveable.getState();
         const position = [left, top];
         const zoom = props.zoom || 1;
@@ -34,6 +33,7 @@ export default {
         }
         const requestStyles = moveable.getRequestChildStyles();
 
+        moveable.moveables = moveable.moveables.slice(0, targets.length);
         return [
             ...targets.map((target, i) => {
                 return <MoveableManager<GroupableProps>

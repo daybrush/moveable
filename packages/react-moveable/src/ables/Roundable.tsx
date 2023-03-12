@@ -189,8 +189,20 @@ function getStyleBorderRadius(moveable: MoveableManagerInterface<RoundableProps,
     let borderRadius = style.borderRadius || "";
 
     if (!borderRadius && moveable.props.groupable) {
-        borderRadius = moveable.moveables![0].state.style.borderRadius!;
-        style.borderRadius = borderRadius;
+        const firstMoveable = moveable.moveables![0];
+        const firstTarget = moveable.getTargets()[0];
+
+
+        if (firstTarget) {
+            if (firstMoveable?.props.target === firstTarget) {
+                borderRadius = moveable.moveables![0]?.state.style.borderRadius ?? "";
+                style.borderRadius = borderRadius;
+            } else {
+                borderRadius = getComputedStyle(firstTarget).borderRadius;
+                style.borderRadius = borderRadius;
+            }
+        }
+
     }
     return borderRadius;
 }
