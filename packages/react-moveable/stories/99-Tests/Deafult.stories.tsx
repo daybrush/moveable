@@ -30,7 +30,7 @@ export const TestsCustomElement = add("Test Custom Element Offset", {
         await wait();
         const moveableElement = findMoveable(canvasElement);
 
-        expect(moveableElement.style.transform).toBe("translate3d(60px, 140px, 0px)");
+        expect(moveableElement.style.transform).toBe("translate3d(60px, 192px, 0px)");
     },
 });
 export const TestsCustomElementBounds = add("Test Custom Element with Bounds", {

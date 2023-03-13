@@ -196,12 +196,11 @@ export function getOffsetInfo(
         }
         const parentNode = slotParentNode || targetParentNode;
 
-
         if (parentNode && parentNode.nodeType === 11) {
             // Shadow Root
             target = (parentNode as ShadowRoot).host as HTMLElement;
             isCustomElement = true;
-
+            position = getComputedStyle(target).position;
             break;
         }
         target = parentNode as HTMLElement | SVGElement;
