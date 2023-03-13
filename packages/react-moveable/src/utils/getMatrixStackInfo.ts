@@ -124,7 +124,7 @@ export function getMatrixStackInfo(
             isStatic = offsetInfo.isStatic;
             zoom *= offsetZoom;
 
-            if (offsetZoom !== 1 && isStatic) {
+            if ((offsetInfo.isCustomElement || offsetZoom !== 1) && isStatic) {
                 offsetLeft -= offsetParent.offsetLeft;
                 offsetTop -= offsetParent.offsetTop;
             } else if (IS_FIREFOX || IS_CHROMIUM109) {

@@ -81,7 +81,10 @@ export default function App() {
     return <div className="container" style={{
         border: "1px solid black",
     }}>
-        {agent} <br/>
+        <p style={{
+            display: "block",
+            height: "20px",
+        }}>{agent}</p>
         <custom-element style={{
             display: "block",
             padding: "10px",
