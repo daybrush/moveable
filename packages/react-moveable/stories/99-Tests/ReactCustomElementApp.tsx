@@ -73,9 +73,15 @@ declare global {
 }
 
 export default function App() {
+    const [agent, setAgent] = React.useState("");
+
+    React.useEffect(() => {
+        setAgent(navigator.userAgent);
+    }, []);
     return <div className="container" style={{
         border: "1px solid black",
     }}>
+        {agent} <br/>
         <custom-element style={{
             display: "block",
             padding: "10px",
