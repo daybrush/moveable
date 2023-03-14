@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.1...react-moveable@0.47.2) (2023-03-14)
+
+
+### :bug: Bug Fix
+
+* fix chromium agent (#864) ([04ffe64](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/04ffe641c5383e2c992c06196d454967bdbd1e8a))
+* fix groupable moveables' calculation ([cd9970e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/cd9970e9a9bf3d942bc76182e40121399346894e))
+
+
+### :memo: Documentation
+
+* fix story url ([8977306](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/897730620480d8e830c4b53401a28d03b42b9a5f))
+
+
+### :mega: Other
+
+* fix ga id ([b034af5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b034af5f04d45c9ff3035451265773cac1334222))
+* fix test  runner config ([6f6e585](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6f6e5856773bccfb681dade0a2297e59338b8787))
+* update packages ([5b03d09](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5b03d09a0cd298d47597fc8c8c9c6fdd4cd5a267))
+
+
+
 ## [0.47.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.0...react-moveable@0.47.1) (2023-03-10)
 
 

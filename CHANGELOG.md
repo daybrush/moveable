@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.44.3](https://github.com/daybrush/moveable/compare/0.44.2...0.44.3) (2023-03-14)
+### :sparkles: Packages
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.21.3
+* `moveable` 0.44.3
+* `preact-moveable` 0.46.2
+* `react-compat-moveable` 0.32.3
+* `react-moveable` 0.47.2
+* `svelte-moveable` 0.36.3
+* `vue-moveable` 2.0.0-beta.61
+* `vue3-moveable` 0.19.3
+* `ngx-moveable` 0.41.3
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix chromium agent (#864) ([04ffe64](https://github.com/daybrush/moveable/commit/04ffe641c5383e2c992c06196d454967bdbd1e8a))
+    * fix groupable moveables' calculation ([cd9970e](https://github.com/daybrush/moveable/commit/cd9970e9a9bf3d942bc76182e40121399346894e))
+
+
+### :memo: Documentation
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`
+    * fix story url ([8977306](https://github.com/daybrush/moveable/commit/897730620480d8e830c4b53401a28d03b42b9a5f))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * update packages ([5b03d09](https://github.com/daybrush/moveable/commit/5b03d09a0cd298d47597fc8c8c9c6fdd4cd5a267))
+* `react-moveable`
+    * fix ga id ([b034af5](https://github.com/daybrush/moveable/commit/b034af5f04d45c9ff3035451265773cac1334222))
+    * fix test  runner config ([6f6e585](https://github.com/daybrush/moveable/commit/6f6e5856773bccfb681dade0a2297e59338b8787))
+* Other
+    * fix github actions workflow ([fd9b213](https://github.com/daybrush/moveable/commit/fd9b213c7bdc0a9c36db4ccd47b7b038f9718cb4))
+
+
+
 ## [0.44.2](https://github.com/daybrush/moveable/compare/0.44.0...0.44.2) (2023-03-10)
 ### :sparkles: Packages
 * `@moveable/helper` 0.1.2
