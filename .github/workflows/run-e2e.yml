@@ -12,6 +12,9 @@ jobs:
             cache: 'yarn'
       - name: Install dependencies
         run: yarn
+      - name: Build helepr
+        run: yarn build
+        working-directory: ./packages/helper
       - name: Run Storybook tests
         run: yarn test:ci
         working-directory: ./packages/react-moveable
