@@ -73,6 +73,7 @@
         "@storybook/addon-controls": "6.5.16",
         "@storybook/addon-coverage": "^0.0.8",
         "@storybook/addon-docs": "6.5.16",
+        "@storybook/addon-google-analytics": "^6.2.9",
         "@storybook/addon-interactions": "6.5.16",
         "@storybook/addon-links": "6.5.16",
         "@storybook/addon-storyshots": "6.5.16",

@@ -36,6 +36,7 @@ module.exports = {
         "../stories/**/*.stories.@(js|jsx|ts|tsx)"
     ],
     addons: [
+        "@storybook/addon-google-analytics",
         "@storybook/addon-docs/register",
         "storybook-addon-preview/register",
         "@storybook/addon-controls/register",

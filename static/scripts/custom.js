@@ -3,10 +3,10 @@
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
-    gtag('config', 'UA-128864447-1');
+    gtag('config', 'G-TRBNXHQ0ZF');
     var script = document.createElement("script");
 
-    script.src = "https://www.googletagmanager.com/gtag/js?id=UA-128864447-1";
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-TRBNXHQ0Z";
 
     document.body.appendChild(script);
 })();
