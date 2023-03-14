@@ -5,33 +5,19 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Cache Node Modules
-        id: cache-npm
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: './packages/react-moveable/node_modules'
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: Install dependencies
-        continue-on-error: true
-        run: npm i
-        working-directory: ./packages/react-moveable
+            node-version: '16'
+            cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
       - name: Run Storybook tests
-        run: npm run test:ci
+        run: yarn test:ci
         working-directory: ./packages/react-moveable
       - name: Run Original Storybok
         if: ${{ failure() }}
-        run: npm run test:fail-ci
+        run: yarn test:fail-ci
         working-directory: ./packages/react-moveable
       - name: Archive Failed Artifact
         if: ${{ failure() }}
