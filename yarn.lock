@@ -2638,12 +2638,12 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@croffle/bakery@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.15.tgz#03c8f218480b7f6756158d2fbb93cef6d71c9ead"
-  integrity sha512-HMf0USB68X5Bf8utqjUMCsH2zc2vIxK5n7pRt2+q6NUSmkqT6UtvN06LzeQ1t/EPFxA7UXRElPInwmNb+9HxOg==
+"@croffle/bakery@^0.0.19":
+  version "0.0.19"
+  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.19.tgz#250b4ffdf0b0a83864f803f86379d77d8ab98e3e"
+  integrity sha512-Wd/xdYnHPaC0rc7Glg9RpbMV2WAmPhoCNeqbwLRq71Lh1+0KBl/ttyTCYrC8qTy4R1ptvgsnvbGrcdyXxdrUWg==
   dependencies:
-    "@daybrush/utils" "^1.10.0"
+    "@daybrush/utils" "^1.10.3"
     commander "^9.4.0"
     glob "^8.0.3"
     tslib "^2.4.0"
@@ -2860,10 +2860,10 @@
     sinon "^7.4.1"
     source-map-support "^0.5.13"
 
-"@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.0", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
-  version "1.10.0"
-  resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-1.10.0.tgz"
-  integrity sha512-IDT0DWAGcjxb2+WMr8pHrVTkHVKdilBumX1SubXJUlowN4rMSLphwDxvMNfv+vQOrdCPXSoPVZ3mhfrHsQ9Xow==
+"@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.5.2", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.3", "@daybrush/utils@^1.3.1", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
+  version "1.10.3"
+  resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-1.10.3.tgz#6c0548f1d17d34e5d082e54db39e09b754365994"
+  integrity sha512-wLdO+AxqzexDvfp5EghgEPYlEY0TmjOqzXc+CAGvNnuZdn5DTrv0kAIpzNjCK/i+Xtjer0gw1FP7O+WfacTgYA==
 
 "@design-systems/utils@2.12.0":
   version "2.12.0"
@@ -10545,12 +10545,12 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
-croffle@^0.0.11:
-  version "0.0.11"
-  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.11.tgz#699b8a3ac143535cc12cb59c72055197be5bed93"
-  integrity sha512-zJbJmoRtg+dDde9R+hJuxwjMsuqC6MI+Iw/RC7ycXpo2N4YHB9kcZmdfcAMqdypFGmHAHHPvX5NhalHrJKmphg==
+croffle@^0.0.15:
+  version "0.0.15"
+  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.15.tgz#8550ea2f97d5e24d4280ce98415d04d3e8c3b0ed"
+  integrity sha512-ru/Ttp34hcK4TiNWDYnMoHGuLlI8l5zsZGdITLT7L8tA5YLewMn59IBiLc4LnSjwS+QuiGwFOTwHv0Ni5XsygA==
   dependencies:
-    "@daybrush/utils" "^1.10.0"
+    "@daybrush/utils" "^1.10.3"
     "@scena/event-emitter" "^1.0.5"
     source-map "^0.7.4"
     tslib "^2.4.0"

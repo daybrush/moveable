@@ -1,19 +1,25 @@
 const {
     ReactCroissant,
     VueWaffle,
-    ConvertDefaultModulePrefixSirup,
+    DefaultModulePrefixSirup,
+    ModuleSirupFactory,
+    TemplateSirupFactory,
     SvelteWaffle,
     ScriptWaffle,
     ScriptComponentSirupFactory,
     createInlineNewExpression,
-    FACTORY,
+    factory,
+    AngularWaffle,
 } = require("croffle");
 const {
     cleanPaths,
 } = require("@croffle/bakery");
+const {
+    decamelize,
+} = require("@daybrush/utils");
 
 
-cleanPaths("stories/**/+([0-9A-Za-z])-*/{script,vue2,vue3,svelte}/");
+cleanPaths("stories/**/+([0-9A-Za-z])-*/{script,vue2,vue3,svelte,angular}/");
 
 
 const scriptMoveableScriptComponentSirup = ScriptComponentSirupFactory({
@@ -30,13 +36,30 @@ const scriptSelectoComponentSirup = ScriptComponentSirupFactory({
 
         return createInlineNewExpression(
             node.expression,
-            [FACTORY.createObjectLiteralExpression([
-                FACTORY.createPropertyAssignment("container", elementNode),
+            [factory.createObjectLiteralExpression([
+                factory.createPropertyAssignment("container", elementNode),
                 ...optionsNode.properties,
             ])],
         );
     },
 });
+
+const NgxModuleSirup = ModuleSirupFactory(
+    {
+        module: /ngx-/g,
+        name: "default",
+    },
+    {
+        module: module => module,
+        name: (_, binding) => `Ngx${binding}Component`,
+    },
+);
+
+const NgxTemplateSirup = TemplateSirupFactory(
+    /^Ngx(.+)Component$/g,
+    text => decamelize(text.replace(/^Ngx/g, "ngx").replace(/Component$/g, ""), "-"),
+);
+
 
 function vueKeyconSirup(sirup) {
     sirup.requestId({
@@ -98,7 +121,7 @@ function PreviewPropsSirup(sirup) {
             },
         );
     });
-};
+}
 
 /**
  * @type {import("@croffle/bakery").CroffleConfig[]}
@@ -106,6 +129,7 @@ function PreviewPropsSirup(sirup) {
 const config = [
     {
         targets: "stories/**/+([0-9A-Za-z])-*/React*App.tsx",
+        // targets: "stories/1-Basic/**/React*App.tsx",
         croissant: () => {
             const croissant = new ReactCroissant();
 
@@ -113,7 +137,7 @@ const config = [
             croissant.addSirup(sirup => {
                 sirup.convertImport("@/react-moveable", "react-moveable");
             });
-            croissant.addSirup(ConvertDefaultModulePrefixSirup);
+            croissant.addSirup(DefaultModulePrefixSirup);
             return croissant;
         },
         defrosted: (defrosted, croissant) => {
@@ -192,6 +216,25 @@ const config = [
                 }
                 return {
                     dist: `./{type}/{name}/App{ext}`,
+                    waffle,
+                };
+            },
+            // Angular
+            (defrosted) => {
+                const hasKeycon = !!defrosted.allRequires["react-keycon"];
+
+                if (hasKeycon) {
+                    return;
+                }
+                const waffle = new AngularWaffle();
+
+                waffle.addSirup(
+                    NgxModuleSirup,
+                    NgxTemplateSirup,
+                );
+
+                return {
+                    dist: `./{type}/{name}/App.component{ext}`,
                     waffle,
                 };
             },

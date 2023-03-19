@@ -63,7 +63,7 @@
     "homepage": "https://daybrush.com/moveable",
     "devDependencies": {
         "@babel/core": "^7.7.2",
-        "@croffle/bakery": "^0.0.15",
+        "@croffle/bakery": "^0.0.19",
         "@daybrush/builder": "^0.1.0",
         "@daybrush/tester": "^0.1.3",
         "@egjs/build-helper": "^0.1.2",
@@ -90,7 +90,7 @@
         "@typescript-eslint/parser": "^3.9.1",
         "babel-loader": "^8.0.6",
         "concurrently": "^7.6.0",
-        "croffle": "^0.0.11",
+        "croffle": "^0.0.15",
         "css-loader": "^5.0.1",
         "eslint": "^7.7.0",
         "eslint-plugin-import": "^2.22.1",
@@ -116,7 +116,7 @@
         "wait-on": "^7.0.1"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.10.0",
+        "@daybrush/utils": "^1.10.3",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
         "@egjs/list-differ": "^1.0.0",

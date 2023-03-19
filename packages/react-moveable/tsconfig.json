@@ -40,5 +40,8 @@
         "./global.d.ts",
         "./stories/**/*.ts",
         "./stories/**/*.tsx"
+    ],
+    "exclude": [
+        "./stories/**/angular/**/*.ts"
     ]
 }
