@@ -1,4 +1,6 @@
-import { LitElement, html, customElement, property } from "lit-element";
+import { LitElement, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
 import VanillaMoveable, {
     PROPERTIES,
     EVENTS,
@@ -11,22 +13,37 @@ import { camelize, isUndefined } from "@daybrush/utils";
 import { LitMoveableOptions } from "./types";
 
 @Properties(PROPERTIES as any, (prototype, name) => {
-    const realName = name === "draggable" ? "mvDraggable" : name;
+    if (name === "draggable") {
+        property()(prototype, "mvDraggable");
+        property()(prototype, "litDraggable");
+    } else {
+        property()(prototype, name);
+    }
 
-    property()(prototype, realName);
 })
 @customElement("lit-moveable")
 export class LitMoveable extends LitElement {
-    @withMethods(METHODS as any, { dragStart: "dragStartMoveable" })
+    @withMethods(METHODS as any)
     private moveable!: VanillaMoveable;
+    public dragStartMoveable(e: MouseEvent | TouchEvent) {
+        return this.moveable.dragStart(e);
+    }
+    public litDragStart(e: MouseEvent | TouchEvent) {
+        return this.moveable.dragStart(e);
+    }
     public firstUpdated() {
         const options: Partial<MoveableOptions> = {};
 
         PROPERTIES.forEach(name => {
-            const litName = name === "draggable" ? "mvDraggable" : name;
+            let value: any;
+            if (name === "draggable") {
+                value = this.mvDraggable ?? this.litDraggable;
 
-            if (!isUndefined(this[litName])) {
-                options[name as any] = this[litName];
+            } else {
+                value = this[name];
+            }
+            if (!isUndefined(value)) {
+                options[name as any] = value;
             }
         });
 
@@ -55,7 +72,9 @@ export class LitMoveable extends LitElement {
     public updated(changedProperties) {
         const moveable = this.moveable;
         changedProperties.forEach((oldValue, propName) => {
-            const litName = propName === "mvDraggable" ? "draggable" : propName;
+            const litName = propName === "mvDraggable" || propName === "litMoveable"
+                ? "draggable"
+                : propName;
 
             if (PROPERTIES.indexOf(litName) > -1) {
                 moveable[litName] = this[propName];

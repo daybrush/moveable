@@ -35,7 +35,7 @@ $ npm install lit-moveable
 ## 🚀 How to use
 * The event name is prefixed with **lit** (`litDragStart`, `litDrag`).
 * `draggable` property is prefixed with **lit** (`litMoveable`).
-* `dragStart` method name is suffixed with **moveable** (`dragStartMoveable`)
+* `dragStart` method name is prefixed with **lite** (`litDragStart`)
 
 ```js
 import "lit-moveable";
@@ -45,7 +45,7 @@ render(html`
 <div class="target" style="width: 200px;height: 100px;">Target</div>
 <lit-moveable
     .target=${".target"}
-    .mvDraggable=${true}
+    .litMoveable=${true}
     .resizable=${true}
     @litDragStart=${({ detail: e }) => {
         e.set(translate);
