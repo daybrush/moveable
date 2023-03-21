@@ -129,17 +129,41 @@ export function add(storyTitle: string, parameter: StoryParameter) {
                 language: "html",
             });
         } catch (e) { }
-        // Angular
+        // Angular html
         try {
-            const angularCode = require(`!!raw-loader!@/stories/${directory}angular/${fileName}/App.component.ts`).default;
+            const angularCode = require(`!!raw-loader!@/stories/${directory}angular/${fileName}/App.component.html`).default;
 
             previews.push({
                 tab: "Angular",
-                template: convertTemplate(angularCode, /"\$preview_([^"]+)"/g),
+                template: angularCode,
+                description: "App.comoponent.html",
                 copy: true,
                 language: "tsx",
             });
         } catch (e) {}
+        // Angular
+        try {
+            const angularCode = require(`!!raw-loader!@/stories/${directory}angular/${fileName}/App.ts`).default;
+
+            previews.push({
+                tab: "Angular",
+                template: convertTemplate(angularCode, /"\$preview_([^"]+)"/g),
+                description: "App.comoponent.ts",
+                copy: true,
+                language: "tsx",
+            });
+        } catch (e) {}
+        // Lit
+        try {
+            const litCode = require(`!!raw-loader!@/stories/${directory}lit/${fileName}/App.ts`).default;
+
+            previews.push({
+                tab: "Lit",
+                template: convertTemplate(litCode, /"\$preview_([^"]+)"/g),
+                copy: true,
+                language: "tsx",
+            });
+        } catch (e) { }
     } else if (text) {
         previews.unshift({
             tab: "React",

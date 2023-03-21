@@ -163,3 +163,6 @@ html:has(.margin), body:has(.margin) {
         #fff
     );
 }
+.infinite-viewer {
+    height: 500px;
+}

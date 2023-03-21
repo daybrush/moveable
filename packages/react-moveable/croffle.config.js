@@ -10,6 +10,10 @@ const {
     createInlineNewExpression,
     factory,
     AngularWaffle,
+    LitWaffle,
+    transform,
+    copyJsxAttribute,
+    copyJsxElement,
 } = require("croffle");
 const {
     cleanPaths,
@@ -17,9 +21,9 @@ const {
 const {
     decamelize,
 } = require("@daybrush/utils");
+const ts = require("typescript");
 
-
-cleanPaths("stories/**/+([0-9A-Za-z])-*/{script,vue2,vue3,svelte,angular}/");
+cleanPaths("stories/**/+([0-9A-Za-z])-*/{script,vue2,vue3,svelte,angular,lit}/");
 
 
 const scriptMoveableScriptComponentSirup = ScriptComponentSirupFactory({
@@ -44,7 +48,7 @@ const scriptSelectoComponentSirup = ScriptComponentSirupFactory({
     },
 });
 
-const NgxModuleSirup = ModuleSirupFactory(
+const ngxModuleSirup = ModuleSirupFactory(
     {
         module: /ngx-/g,
         name: "default",
@@ -55,7 +59,7 @@ const NgxModuleSirup = ModuleSirupFactory(
     },
 );
 
-const NgxTemplateSirup = TemplateSirupFactory(
+const ngxTemplateSirup = TemplateSirupFactory(
     /^Ngx(.+)Component$/g,
     text => decamelize(text.replace(/^Ngx/g, "ngx").replace(/Component$/g, ""), "-"),
 );
@@ -79,6 +83,46 @@ function svelteKeyconSirup(sirup){
         return sirup.ts.factory.createIdentifier(`$${node.name.escapedText}`);
     });
 }
+
+
+const litTemplateAttributeSirup = sirup => {
+    sirup.requestTemplate({
+        module: /lit-moveable|lit-selecto/g,
+        name: "default",
+    }, info => {
+        const nextOpeningElement = transform(info.openingElement, node => {
+            if (!ts.isJsxAttribute(node)) {
+                return;
+            }
+            const attrName = node.name.escapedText;
+
+            if (attrName.match(/^on[A-Z]/g)) {
+                return copyJsxAttribute(node, {
+                    name: factory.createIdentifier(attrName.replace("on", "onLit")),
+                });
+            } else if (attrName === "draggable") {
+                return copyJsxAttribute(node, {
+                    name: factory.createIdentifier("litDraggable"),
+                });
+            }
+        });
+
+        const node = info.node;
+        if (ts.isJsxElement(node)) {
+            return copyJsxElement(node, {
+                openingElement: nextOpeningElement,
+            });
+        } else {
+            return nextOpeningElement;
+        }
+    });
+};
+
+const litTemplateSirup = TemplateSirupFactory(
+    { module: /lit-/g, name: "default" },
+    tagName => `lit-${decamelize(tagName).toLowerCase()}`,
+);
+
 
 /**
  * @param {import("croffle").Sirup} sirup
@@ -226,15 +270,36 @@ const config = [
                 if (hasKeycon) {
                     return;
                 }
-                const waffle = new AngularWaffle();
+                const waffle = new AngularWaffle({
+                    useTemplateUrl: true,
+                });
 
                 waffle.addSirup(
-                    NgxModuleSirup,
-                    NgxTemplateSirup,
+                    ngxModuleSirup,
+                    ngxTemplateSirup,
                 );
 
                 return {
-                    dist: `./{type}/{name}/App.component{ext}`,
+                    dist: `./{type}/{name}/App{ext}`,
+                    waffle,
+                };
+            },
+            // Lit
+            (defrosted) => {
+                const hasKeycon = !!defrosted.allRequires["react-keycon"];
+
+                if (hasKeycon) {
+                    return;
+                }
+                const waffle = new LitWaffle();
+
+                waffle.addSirup(
+                    litTemplateAttributeSirup,
+                    litTemplateSirup,
+                );
+
+                return {
+                    dist: `./{type}/{name}/App{ext}`,
                     waffle,
                 };
             },

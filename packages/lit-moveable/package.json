@@ -55,7 +55,7 @@
     },
     "devDependencies": {
         "@daybrush/builder": "^0.1.2",
-        "lit-element": "^2.2.1",
+        "lit": "^2.0",
         "tslint": "^5.20.1",
         "typescript": "^4.5.0 <4.6.0"
     },
