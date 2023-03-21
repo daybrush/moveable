@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.2...react-moveable@0.47.3) (2023-03-21)
+
+
+### :bug: Bug Fix
+
+* fix infinite loop (#873) ([179f950](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/179f95047d1aeae8d7bb2275ea0ab980feded486))
+
+
+### :memo: Documentation
+
+* fix README ([7426492](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7426492de210ab6f38d411d96e6d843d7423f555))
+
+
+### :mega: Other
+
+* publish packages ([ae54ef4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ae54ef4c660ae789867e4286990f234cc808a379))
+
+
+
 ## [0.47.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.1...react-moveable@0.47.2) (2023-03-14)
 
 
