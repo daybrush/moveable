@@ -30,3 +30,4 @@ stories/**/angular/
 .nyc_output
 test-static
 __snapshots__
+*.stories.mdx

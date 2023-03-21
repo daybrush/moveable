@@ -1,26 +1,26 @@
-
 <p align="middle" ><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/logo.png"/></p>
 <h2 align="middle">Moveable</h2>
 <p align="middle">
 <a href="https://opencollective.com/moveable" alt="Financial Contributors on Open Collective"><img src="https://opencollective.com/moveable/all/badge.svg?label=financial+contributors" /></a>
-<a href="https://www.npmjs.com/package/moveable" target="_blank"><img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
-<a href="https://github.com/daybrush/moveable/actions" target="_blank"><img alt="Github actions" src="https://img.shields.io/github/actions/workflow/status/daybrush/moveable/run-e2e.yml?branch=master&style=flat-square" /></a>&nbsp;
-<img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
-<a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"><img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img alt="Preact" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&color=C82B38"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/vue-moveable" target="_blank"><img
+ <a href="https://www.npmjs.com/package/moveable" target="_blank"><img src="https://img.shields.io/npm/v/moveable.svg?style=flat-square&color=007acc&label=version" alt="npm version" /></a>
+ <a href="https://github.com/daybrush/moveable/actions" target="_blank"><img alt="Github actions" src="https://img.shields.io/github/actions/workflow/status/daybrush/moveable/run-e2e.yml?branch=master&style=flat-square" /></a>
+ <img src="https://img.shields.io/badge/language-typescript-blue.svg?style=flat-square"/>
+ <a href="https://github.com/daybrush/moveable/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/github/license/daybrush/moveable.svg?style=flat-square&label=license&color=08CE5D"/></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/react-moveable" target="_blank"> <img alt="React" src="https://img.shields.io/static/v1.svg?label=&message=React&style=flat-square&color=61daeb" /></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/preact-moveable" target="_blank"><img alt="Preact" src="https://img.shields.io/static/v1.svg?label=&message=Preact&style=flat-square&color=673ab8" /></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/ngx-moveable" target="_blank"><img alt="Angular" src="https://img.shields.io/static/v1.svg?label=&message=Angular&style=flat-square&color=C82B38" /></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/vue-moveable" target="_blank"><img
     alt="Vue"
-    src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/vue3-moveable" target="_blank"><img
+    src="https://img.shields.io/static/v1.svg?label=&message=Vue&style=flat-square&color=3fb984" /></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/vue3-moveable" target="_blank"><img
     alt="Vue 3"
-    src="https://img.shields.io/static/v1.svg?label=&message=Vue%203&style=flat-square&color=3fb984"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/svelte-moveable" target="_blank"><img alt="Svelte" src="https://img.shields.io/static/v1.svg?label=&message=Svelte&style=flat-square&color=C82B38"></a>
-<a href="https://github.com/daybrush/moveable/tree/master/packages/lit-moveable" target="_blank"><img alt="Lit" src="https://img.shields.io/static/v1.svg?label=&message=Lit&style=flat-square&color=61daeb"></a>
+    src="https://img.shields.io/static/v1.svg?label=&message=Vue%203&style=flat-square&color=3fb984" /></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/svelte-moveable" target="_blank"><img alt="Svelte" src="https://img.shields.io/static/v1.svg?label=&message=Svelte&style=flat-square&color=C82B38" /></a>
+ <a href="https://github.com/daybrush/moveable/tree/master/packages/lit-moveable" target="_blank"><img alt="Lit" src="https://img.shields.io/static/v1.svg?label=&message=Lit&style=flat-square&color=61daeb" /></a>
 </p>
 <p align="middle">Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable</p>
 <p align="middle">
+    <a href="https://github.com/daybrush/moveable" target="_blank"><strong>Github</strong></a> /
     <a href="https://daybrush.com/moveable" target="_blank"><strong>Demo</strong></a> /
     <a href="https://daybrush.com/moveable/storybook/" target="_blank"><strong>Storybook</strong></a> /
     <a href="https://daybrush.com/moveable/release/latest/doc/" target="_blank"><strong>API</strong></a> /
@@ -39,16 +39,16 @@
 </tr>
 <tr>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/draggable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/draggable.gif" />
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif" />
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif" />
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif" />
 </td>
 </tr>
 <tr>
@@ -58,10 +58,10 @@
 <td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/snap-bound--snap-guidelines"><strong>Snappable</strong></a></td>
 </tr>
 <tr>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"/></td>
 </tr>
 <tr>
 <td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--basic-clippable"><strong>Clippable</strong></a></td>
@@ -70,10 +70,10 @@
 <td align="center"><a href="https://github.com/daybrush/selecto"><strong>Selecto</strong></a></td>
 </tr>
 <tr>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/clippable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/roundable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/origindraggable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/selecto.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/clippable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/roundable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/origindraggable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/selecto.gif"/></td>
 </tr>
 </table>
 
@@ -262,10 +262,10 @@ $ npm run bootstrap
 $ npm run storybook
 ```
 
-Runs the app in the development mode.<br>
+Runs the app in the development mode.<br/>
 Open [http://localhost:6006](http://localhost:6006) to view it in the browser.
 
-The page will reload if you make edits.<br>
+The page will reload if you make edits.<br/>
 You will also see any lint errors in the console.
 
 
@@ -304,22 +304,22 @@ Become a financial contributor and help us sustain our community. [[Contribute](
 
 #### Individuals
 
-<a href="https://opencollective.com/moveable"><img src="https://opencollective.com/moveable/individuals.svg?width=890"></a>
+<a href="https://opencollective.com/moveable"><img src="https://opencollective.com/moveable/individuals.svg?width=890" /></a>
 
 #### Organizations
 
 Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/moveable/contribute)]
 
-<a href="https://opencollective.com/moveable/organization/0/website"><img src="https://opencollective.com/moveable/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/1/website"><img src="https://opencollective.com/moveable/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/2/website"><img src="https://opencollective.com/moveable/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/3/website"><img src="https://opencollective.com/moveable/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/4/website"><img src="https://opencollective.com/moveable/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/5/website"><img src="https://opencollective.com/moveable/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/6/website"><img src="https://opencollective.com/moveable/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/7/website"><img src="https://opencollective.com/moveable/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/8/website"><img src="https://opencollective.com/moveable/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/moveable/organization/9/website"><img src="https://opencollective.com/moveable/organization/9/avatar.svg"></a>
+<a href="https://opencollective.com/moveable/organization/0/website"><img src="https://opencollective.com/moveable/organization/0/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/1/website"><img src="https://opencollective.com/moveable/organization/1/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/2/website"><img src="https://opencollective.com/moveable/organization/2/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/3/website"><img src="https://opencollective.com/moveable/organization/3/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/4/website"><img src="https://opencollective.com/moveable/organization/4/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/5/website"><img src="https://opencollective.com/moveable/organization/5/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/6/website"><img src="https://opencollective.com/moveable/organization/6/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/7/website"><img src="https://opencollective.com/moveable/organization/7/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/8/website"><img src="https://opencollective.com/moveable/organization/8/avatar.svg"/></a>
+<a href="https://opencollective.com/moveable/organization/9/website"><img src="https://opencollective.com/moveable/organization/9/avatar.svg"/></a>
 
 ## 📝 License
 

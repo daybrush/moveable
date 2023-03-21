@@ -35,16 +35,16 @@
 </tr>
 <tr>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/draggable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/draggable.gif"/>
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/resizable.gif"/>
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/scalable.gif"/>
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif">
+<img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/rotatable.gif"/>
 </td>
 </tr>
 <tr>
@@ -54,10 +54,10 @@
 <td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/snap-bound--snap-guidelines"><strong>Snappable</strong></a></td>
 </tr>
 <tr>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/warpable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/pinchable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/groupable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/snappable.gif"/></td>
 </tr>
 <tr>
 <td align="center"><a href="https://daybrush.com/moveable/storybook/index.html?path=/story/basic--basic-clippable"><strong>Clippable</strong></a></td>
@@ -66,10 +66,10 @@
 <td align="center"><a href="https://github.com/daybrush/selecto"><strong>Selecto</strong></a></td>
 </tr>
 <tr>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/clippable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/roundable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/origindraggable.gif"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/selecto.gif"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/clippable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/roundable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/origindraggable.gif"/></td>
+<td align="center"><img src="https://raw.githubusercontent.com/daybrush/moveable/master/demo/images/selecto.gif"/></td>
 </tr>
 </table>
 

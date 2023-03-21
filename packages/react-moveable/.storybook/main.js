@@ -1,3 +1,5 @@
+require("./readme");
+
 const { DefinePlugin } = require("webpack");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -5,6 +7,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 module.exports = {
     features: {
         interactionsDebugger: true,
+        previewMdx2: true, // 👈 MDX 2 enabled here
     },
     typescript: {
         reactDocgen: "react-docgen-typescript",
@@ -33,15 +36,21 @@ module.exports = {
         return config;
     },
     stories: [
+        "../stories/**/*.stories.mdx",
         "../stories/**/*.stories.@(js|jsx|ts|tsx)"
     ],
     addons: [
         "@storybook/addon-google-analytics",
-        "@storybook/addon-docs/register",
+        {
+            name: '@storybook/addon-docs',
+            options: { configureJSX: true },
+        },
         "storybook-addon-preview/register",
         "@storybook/addon-controls/register",
         "@storybook/addon-viewport/register",
         "storybook-dark-mode/register",
+        "@storybook/addon-links",
+        "@storybook/addon-essentials",
         "@storybook/addon-interactions",
         // {
         //     name: "@storybook/addon-coverage",
