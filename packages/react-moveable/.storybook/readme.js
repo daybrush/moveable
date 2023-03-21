@@ -10,8 +10,6 @@ import { Meta } from "@storybook/addon-docs";
 
 <Meta title="Introduction" />
 
-# aa
-<!-- README -->
 ${readmeText}`, {
   encoding: "utf-8",
 });
