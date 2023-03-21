@@ -194,7 +194,7 @@ export function getOffsetInfo(
             hasSlot = true;
             parentSlotElement = targetParentNode as HTMLElement;
         }
-        const parentNode = slotParentNode || targetParentNode;
+        const parentNode = targetParentNode;
 
         if (parentNode && parentNode.nodeType === 11) {
             // Shadow Root
