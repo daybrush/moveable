@@ -66,8 +66,8 @@ export interface DefaultOptions {
      */
     dragTarget?: SVGElement | HTMLElement | null;
     /**
-     * Moveable Container. Don't set it.
-     * @private
+     * A container into which Moveables are inserted.
+     * Set it only when used within the slot of Web Components or when the container is different.
      * @default parentElement
      */
     container?: SVGElement | HTMLElement | null;
@@ -3228,7 +3228,15 @@ export interface MoveableInterface {
     getRect(): RectInfo;
     getAble<T extends Able>(ableName: string): T | undefined;
     isMoveableElement(target: Element): boolean;
+    /**
+     * If the location or size of the target is changed, call the `.updateRect()` method.
+     * Use the `useResizeObserver` and `useMutationObserver` props to update automatically.
+     */
     updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState?: boolean): void;
+    /**
+     * @deprecated
+     * Use `.updateRect()` method
+     */
     updateTarget(): void;
     /**
      * Request able through a method rather than an event.

@@ -490,7 +490,9 @@ export default class MoveableManager<T = {}>
     }
     /**
      * If the width, height, left, and top of the only target change, update the shape of the moveable.
+     * Use `.updateRect()` method
      * @method Moveable#updateTarget
+     * @deprecated
      * @example
      * import Moveable from "moveable";
      *
