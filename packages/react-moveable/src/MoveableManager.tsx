@@ -55,6 +55,7 @@ export default class MoveableManager<T = {}>
         parentPosition: null,
         portalContainer: null,
         useResizeObserver: false,
+        useMutationObserver: false,
         preventDefault: true,
         linePadding: 0,
         controlPadding: 0,
@@ -118,8 +119,10 @@ export default class MoveableManager<T = {}>
     protected _isPropTargetChanged = false;
     protected _hasFirstTarget = false;
 
-    private _observer: ResizeObserver | null = null;
+    private _reiszeObserver: ResizeObserver | null = null;
     private _observerId = 0;
+    private _mutationObserver: MutationObserver | null = null;
+    private _mutationObserverId = 0;
     public _rootContainer: HTMLElement | null | undefined = null;
     private _viewContainer: HTMLElement | null | undefined = null;
     private _viewClassNames: string[] = [];
@@ -233,6 +236,8 @@ export default class MoveableManager<T = {}>
         this.isMoveableMounted = false;
         this.isUnmounted = true;
         this._emitter.off();
+        this._reiszeObserver?.disconnect();
+        this._mutationObserver?.disconnect();
 
         const viewContainer = this._viewContainer;
 
@@ -895,26 +900,8 @@ export default class MoveableManager<T = {}>
         return styleNames;
     }
     protected _updateObserver(prevProps: MoveableDefaultOptions) {
-        const props = this.props;
-        const target = props.target;
-
-        if (!window.ResizeObserver || !target || !props.useResizeObserver) {
-            this._observer?.disconnect();
-            return;
-        }
-
-        if (prevProps.target === target && this._observer) {
-            return;
-        }
-
-        const observer = new ResizeObserver(this.checkUpdateRect);
-
-        observer.observe(target!, {
-            box: "border-box",
-        });
-        this._observer = observer;
-
-        return;
+        this._updateResizeObserver(prevProps);
+        this._updateMutationObserver(prevProps);
     }
     protected _updateEvents() {
         const controlBoxElement = this.controlBox.getElement();
@@ -1098,6 +1085,52 @@ export default class MoveableManager<T = {}>
             }
             return className.trim();
         }).filter(Boolean).join(" ");
+    }
+    private _updateResizeObserver(prevProps: MoveableDefaultOptions) {
+        const props = this.props;
+        const target = props.target;
+
+        if (!window.ResizeObserver || !target || !props.useResizeObserver) {
+            this._reiszeObserver?.disconnect();
+            return;
+        }
+
+        if (prevProps.target === target && this._reiszeObserver) {
+            return;
+        }
+
+        const observer = new ResizeObserver(this.checkUpdateRect);
+
+        observer.observe(target!, {
+            box: "border-box",
+        });
+        this._reiszeObserver = observer;
+    }
+    private _updateMutationObserver(prevProps: MoveableDefaultOptions) {
+        const props = this.props;
+        const target = props.target;
+
+        if (!window.MutationObserver || !target || !props.useMutationObserver) {
+            this._mutationObserver?.disconnect();
+            return;
+        }
+
+        if (prevProps.target === target && this._mutationObserver) {
+            return;
+        }
+
+        const observer = new MutationObserver(records => {
+            for (const mutation of records) {
+                if (mutation.type === "attributes" && mutation.attributeName === "style") {
+                    this.checkUpdateRect();
+                }
+            }
+        });
+
+        observer.observe(target!, {
+            attributes: true,
+        });
+        this._mutationObserver = observer;
     }
 }
 

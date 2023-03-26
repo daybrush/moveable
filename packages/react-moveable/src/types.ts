@@ -91,10 +91,18 @@ export interface DefaultOptions {
     viewContainer?: MoveableRefType<HTMLElement>;
     /**
      * Whether the target size is detected and updated whenever it changes.
+     * It is more effective when used together with `useMutationObserver`.
      * @default false
-     * @story options--options-reize-observer
+     * @story options--options-resize-observer
      */
     useResizeObserver?: boolean;
+    /**
+     * Whether the target size, pos in inline style is detected and updated whenever it changes.
+     * It is more effective when used together with `useResizeObserver`.
+     * @default false
+     * @story options--options-mutation-observer
+     */
+    useMutationObserver?: boolean;
     /**
      * Zooms in the elements of a moveable.
      * @default 1

@@ -6,7 +6,7 @@ export default {
     title: "Options",
 };
 
-export const OptionsReizeObserver = add("useResizeObserver", {
+export const OptionsResizeObserver = add("useResizeObserver", {
     app: require("./ReactUseResizeObserverApp").default,
     path: require.resolve("./ReactUseResizeObserverApp"),
 });
@@ -21,6 +21,10 @@ export const OptionsResizeObserverIndividualGroup = add("useResizeObserver (Indi
     path: require.resolve("./ReactUseResizeObserverIndividualGroupApp"),
 });
 
+export const OptionsMutationObserver = add("useMutationObserver", {
+    app: require("./ReactUseMutationObserverApp").default,
+    path: require.resolve("./ReactUseMutationObserverApp"),
+});
 
 export const OptionsLinePadding = add("linePadding", {
     app: require("./ReactLinePaddingApp").default,

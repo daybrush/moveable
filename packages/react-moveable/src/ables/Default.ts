@@ -7,6 +7,7 @@ export default {
         portalContainer: Object,
         rootContainer: Object,
         useResizeObserver: Boolean,
+        useMutationObserver: Boolean,
         zoom: Number,
         transformOrigin: Array,
         edge: Object,
