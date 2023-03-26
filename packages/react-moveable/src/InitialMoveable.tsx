@@ -161,14 +161,15 @@ export class InitialMoveable<T = {}>
         if (persistData?.children) {
             isGroup = true;
         }
+        // Even one child is treated as a group if individualGroupable is enabled. #867
+        if (props.individualGroupable) {
+            return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
+                {...nextProps}
+                target={null}
+                targets={elementTargets}
+            />;
+        }
         if (isGroup) {
-            if (props.individualGroupable) {
-                return <MoveableIndividualGroup key="individual-group" ref={ref(this, "moveable")}
-                    {...nextProps}
-                    target={null}
-                    targets={elementTargets}
-                />;
-            }
             const targetGroups = getTargetGroups(refTargets, this.selectorMap);
 
             // manager
