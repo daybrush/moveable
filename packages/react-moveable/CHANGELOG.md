@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.3...react-moveable@0.48.0) (2023-03-26)
+
+
+### :rocket: New Features
+
+* add useMutationObserver prop #869 ([f3a9ee4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f3a9ee46144bfe0e0be37b7c8a086d70a9ffb5db))
+
+
+### :bug: Bug Fix
+
+* fix individualGroupable #867 ([6d98f76](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6d98f76bdb3bdc94ce99495c5729ebb706038e6c))
+
+
+### :memo: Documentation
+
+* fix container docs ([295d905](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/295d905cac0db04b6fa9301573c99ce1366a16ae))
+
+
+### :mega: Other
+
+* publish packages ([7580d27](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7580d272fe857aadfbdbc9df264e0a413dd56588))
+
+
+
 ## [0.47.3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.2...react-moveable@0.47.3) (2023-03-21)
 
 

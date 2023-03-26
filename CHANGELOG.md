@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.0](https://github.com/daybrush/moveable/compare/0.44.4...0.45.0) (2023-03-26)
+### :sparkles: Packages
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.22.0
+* `moveable` 0.45.0
+* `preact-moveable` 0.47.0
+* `react-compat-moveable` 0.33.0
+* `react-moveable` 0.48.0
+* `svelte-moveable` 0.37.0
+* `vue-moveable` 2.0.0-beta.63
+* `vue3-moveable` 0.20.0
+* `ngx-moveable` 0.42.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add useMutationObserver prop #869 ([f3a9ee4](https://github.com/daybrush/moveable/commit/f3a9ee46144bfe0e0be37b7c8a086d70a9ffb5db))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix individualGroupable #867 ([6d98f76](https://github.com/daybrush/moveable/commit/6d98f76bdb3bdc94ce99495c5729ebb706038e6c))
+
+
+### :memo: Documentation
+
+* `react-moveable`
+    * fix container docs ([295d905](https://github.com/daybrush/moveable/commit/295d905cac0db04b6fa9301573c99ce1366a16ae))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `react-compat-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`
+    * publish packages ([7580d27](https://github.com/daybrush/moveable/commit/7580d272fe857aadfbdbc9df264e0a413dd56588))
+
+
+
 ## [0.44.4](https://github.com/daybrush/moveable/compare/0.44.3...0.44.4) (2023-03-21)
 ### :sparkles: Packages
 * `@moveable/helper` 0.1.2
