@@ -7,15 +7,15 @@ import { flat } from "../utils";
 
 export default {
     name: "groupable",
-    props: {
-        defaultGroupRotate: Number,
-        defaultGroupOrigin: String,
-        groupable: Boolean,
-        groupableProps: Object,
-        targetGroups: Object,
-        hideChildMoveableDefaultLines: Boolean,
-    } as const,
-    events: {} as const,
+    props: [
+        "defaultGroupRotate",
+        "defaultGroupOrigin",
+        "groupable",
+        "groupableProps",
+        "targetGroups",
+        "hideChildMoveableDefaultLines",
+    ] as const,
+    events: [] as const,
     render(moveable: MoveableGroupInterface<GroupableProps>, React: Renderer): any[] {
         const props = moveable.props;
         let targets: Array<HTMLElement | SVGElement | undefined | null> = props.targets || [];

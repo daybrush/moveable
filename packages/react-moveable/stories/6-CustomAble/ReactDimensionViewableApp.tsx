@@ -3,8 +3,8 @@ import Moveable, { MoveableManagerInterface, Renderer } from "@/react-moveable";
 
 const DimensionViewable = {
     name: "dimensionViewable",
-    props: {},
-    events: {},
+    props: [],
+    events: [],
     render(moveable: MoveableManagerInterface<any, any>, React: Renderer) {
         const rect = moveable.getRect();
 

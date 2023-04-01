@@ -9,16 +9,15 @@ import { triggerEvent, fillParams, fillCSSObject } from "../utils";
 
 export default {
     name: "renderable",
-    props: {
-    } as const,
-    events: {
-        onRenderStart: "renderStart",
-        onRender: "render",
-        onRenderEnd: "renderEnd",
-        onRenderGroupStart: "renderGroupStart",
-        onRenderGroup: "renderGroup",
-        onRenderGroupEnd: "renderGroupEnd",
-    } as const,
+    props: [] as const,
+    events: [
+        "renderStart",
+        "render",
+        "renderEnd",
+        "renderGroupStart",
+        "renderGroup",
+        "renderGroupEnd",
+    ] as const,
     dragRelation: "weak",
     dragStart(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         triggerEvent(moveable, `onRenderStart`, fillParams<OnRenderStart>(moveable, e, {

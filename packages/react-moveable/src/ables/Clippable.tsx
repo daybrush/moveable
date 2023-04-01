@@ -258,60 +258,60 @@ function removeClipPath(moveable: MoveableManagerInterface<ClippableProps>, e: a
 
 export default {
     name: "clippable",
-    props: {
-        clippable: Boolean,
-        defaultClipPath: String,
-        customClipPath: String,
-        keepRatio: Boolean,
-        clipRelative: Boolean,
-        clipArea: Boolean,
-        dragWithClip: Boolean,
-        clipTargetBounds: Boolean,
-        clipVerticalGuidelines: Array,
-        clipHorizontalGuidelines: Array,
-        clipSnapThreshold: Boolean,
-    } as const,
-    events: {
-        onClipStart: "clipStart",
-        onClip: "clip",
-        onClipEnd: "clipEnd",
-    } as const,
+    props: [
+        "clippable",
+        "defaultClipPath",
+        "customClipPath",
+        "keepRatio",
+        "clipRelative",
+        "clipArea",
+        "dragWithClip",
+        "clipTargetBounds",
+        "clipVerticalGuidelines",
+        "clipHorizontalGuidelines",
+        "clipSnapThreshold",
+    ] as const,
+    events: [
+        "clipStart",
+        "clip",
+        "clipEnd",
+    ] as const,
     css: [
         `.control.clip-control {
-    background: #6d6;
-    cursor: pointer;
+background: #6d6;
+cursor: pointer;
 }
 .control.clip-control.clip-radius {
-    background: #d66;
+background: #d66;
 }
 .line.clip-line {
-    background: #6e6;
-    cursor: move;
-    z-index: 1;
+background: #6e6;
+cursor: move;
+z-index: 1;
 }
 .clip-area {
-    position: absolute;
-    top: 0;
-    left: 0;
+position: absolute;
+top: 0;
+left: 0;
 }
 .clip-ellipse {
-    position: absolute;
-    cursor: move;
-    border: 1px solid #6d6;
-    border: var(--zoompx) solid #6d6;
-    border-radius: 50%;
-    transform-origin: 0px 0px;
+position: absolute;
+cursor: move;
+border: 1px solid #6d6;
+border: var(--zoompx) solid #6d6;
+border-radius: 50%;
+transform-origin: 0px 0px;
 }`,
         `:host {
-    --bounds-color: #d66;
+--bounds-color: #d66;
 }`,
         `.guideline {
-    pointer-events: none;
-    z-index: 2;
+pointer-events: none;
+z-index: 2;
 }`,
         `.line.guideline.bounds {
-    background: #d66;
-    background: var(--bounds-color);
+background: #d66;
+background: var(--bounds-color);
 }`,
     ],
     render(moveable: MoveableManagerInterface<ClippableProps, ClippableState>, React: Renderer): any[] {

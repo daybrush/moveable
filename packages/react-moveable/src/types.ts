@@ -1,9 +1,9 @@
 import { IObject } from "@daybrush/utils";
 import Gesto, * as GestoTypes from "gesto";
 import CustomGesto from "./gesto/CustomGesto";
-import { MOVEABLE_EVENTS_MAP, MOVEABLE_PROPS_MAP } from "./ables/consts";
 import { MoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 import { DragScrollOptions } from "@scena/dragscroll";
+import { MOVEABLE_PROPS, MOVEABLE_EVENTS } from "./ables/consts";
 
 export interface MoveableClientRect {
     left: number;
@@ -501,10 +501,13 @@ export type MoveableState = MoveableManagerState;
  * In Able, you can manage drag events, props, state, fire event props, and render elements.
  * @memberof Moveable
  */
-export interface Able<Props extends IObject<any> = IObject<any>, Events extends IObject<any> = IObject<any>> {
+export interface Able<
+    Props extends IObject<any> = IObject<any>,
+    Events extends IObject<any> = IObject<any>
+> {
     name: string;
-    props?: { [key in keyof Props]: any };
-    events?: { [key in keyof Events]: string };
+    props?: readonly (keyof Props)[];
+    events?: readonly (keyof Events)[];
     // Whether to always include in able. It is recommended to use always in frameworks other than react
     always?: boolean;
     ableGroup?: string;
@@ -3300,7 +3303,8 @@ export type UnionToIntersection<U> =
 
 // export type MoveableEventsProps = Parameters<Required<MoveableProps>[keyof typeof MOVEABLE_EVENTS_PROPS_MAP]>[0];
 export type MoveableEvents = {
-    [key in keyof typeof MOVEABLE_EVENTS_MAP]: Parameters<Required<MoveableProps>[typeof MOVEABLE_EVENTS_MAP[key]]>[0];
+    [key in typeof MOVEABLE_EVENTS[number]]
+    : Parameters<Required<MoveableProps>[`on${Capitalize<key>}`]>[0];
 };
 
 export type Writable<T> = {
@@ -3308,7 +3312,7 @@ export type Writable<T> = {
 };
 
 export type MoveableProperties = {
-    -readonly [key in keyof typeof MOVEABLE_PROPS_MAP]: MoveableProps[key];
+    -readonly [key in typeof MOVEABLE_PROPS[number]]?: MoveableProps[key];
 };
 
 export interface SnappableRenderType {

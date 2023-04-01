@@ -6,10 +6,8 @@ export function makeAble<
     Props extends DefaultProps<Name, AbleObject>,
 >(name: Name, able: AbleObject) {
     return {
-        events: {} as const,
-        props: {
-            [name]: Boolean,
-        } as Props,
+        events: [] as const,
+        props: [] as Array<keyof Props>,
         name,
         ...able,
     } as const;

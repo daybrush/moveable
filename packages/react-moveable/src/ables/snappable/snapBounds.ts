@@ -19,7 +19,6 @@ interface DirectionSnapType<T> {
     horizontal: T;
 }
 
-
 export function solveEquation(
     pos1: number[],
     pos2: number[],

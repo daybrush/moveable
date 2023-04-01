@@ -1,6 +1,6 @@
 
-import builder from "@daybrush/builder";
-import reactCompat from "rollup-plugin-react-compat";
+const builder = require("@daybrush/builder");
+const reactCompat = require("rollup-plugin-react-compat");
 
 const external = {
     "react-simple-compat": "react-simple-compat",
@@ -32,7 +32,7 @@ const reactPlugin = reactCompat({
 
 
 
-export default builder([
+module.exports = builder([
     {
         sourcemap: false,
         input: "src/index.ts",

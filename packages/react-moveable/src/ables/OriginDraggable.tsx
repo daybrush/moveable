@@ -19,18 +19,18 @@ import CustomGesto, { setCustomDrag } from "../gesto/CustomGesto";
  */
 export default {
     name: "originDraggable",
-    props: {
-        originDraggable: Boolean,
-        originRelative: Boolean,
-    } as const,
-    events: {
-        onDragOriginStart: "dragOriginStart",
-        onDragOrigin: "dragOrigin",
-        onDragOriginEnd: "dragOriginEnd",
-    } as const,
+    props: [
+        "originDraggable",
+        "originRelative",
+    ] as const,
+    events: [
+        "dragOriginStart",
+        "dragOrigin",
+        "dragOriginEnd",
+    ] as const,
     css: [
         `:host[data-able-origindraggable] .control.origin {
-    pointer-events: auto;
+pointer-events: auto;
 }`,
     ],
     dragControlCondition(_: any, e: any) {

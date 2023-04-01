@@ -83,151 +83,150 @@ const directionCSS = DIRECTIONS.map(dir => {
 
 export const MOVEABLE_CSS = `
 {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	left: 0;
-	top: 0;
-    z-index: 3000;
-    --moveable-color: #4af;
-    --zoom: 1;
-    --zoompx: 1px;
-    will-change: transform;
-    outline: 1px solid transparent;
+position: absolute;
+width: 1px;
+height: 1px;
+left: 0;
+top: 0;
+z-index: 3000;
+--moveable-color: #4af;
+--zoom: 1;
+--zoompx: 1px;
+will-change: transform;
+outline: 1px solid transparent;
 }
 .control-box {
-    z-index: 0;
+z-index: 0;
 }
 .line, .control {
-    position: absolute;
-	left: 0;
-    top: 0;
-    will-change: transform;
+position: absolute;
+left: 0;
+top: 0;
+will-change: transform;
 }
 .control {
-	width: 14px;
-	height: 14px;
-	border-radius: 50%;
-	border: 2px solid #fff;
-	box-sizing: border-box;
-    background: #4af;
-    background: var(--moveable-color);
-	margin-top: -7px;
-    margin-left: -7px;
-    border: 2px solid #fff;
-    z-index: 10;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+border: 2px solid #fff;
+box-sizing: border-box;
+background: #4af;
+background: var(--moveable-color);
+margin-top: -7px;
+margin-left: -7px;
+border: 2px solid #fff;
+z-index: 10;
 }
 .around-control {
-    position: absolute;
-    will-change: transform;
-    width: calc(var(--moveable-control-padding, 20) * 1px);
-    height: calc(var(--moveable-control-padding, 20) * 1px);
-    left: -10px;
-    top: -10px;
-    box-sizing: border-box;
-    background: transparent;
-    z-index: 8;
-    cursor: alias;
-    transform-origin: center center;
+position: absolute;
+will-change: transform;
+width: calc(var(--moveable-control-padding, 20) * 1px);
+height: calc(var(--moveable-control-padding, 20) * 1px);
+left: -10px;
+top: -10px;
+box-sizing: border-box;
+background: transparent;
+z-index: 8;
+cursor: alias;
+transform-origin: center center;
 }
 ${directionCSS}
 .padding {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100px;
-    height: 100px;
-    transform-origin: 0 0;
+position: absolute;
+top: 0px;
+left: 0px;
+width: 100px;
+height: 100px;
+transform-origin: 0 0;
 }
 .line {
-	width: 1px;
-    height: 1px;
-    background: #4af;
-    background: var(--moveable-color);
-	transform-origin: 0px 50%;
+width: 1px;
+height: 1px;
+background: #4af;
+background: var(--moveable-color);
+transform-origin: 0px 50%;
 }
 .line.edge {
-    z-index: 1;
-    background: transparent;
+z-index: 1;
+background: transparent;
 }
 .line.dashed {
-    box-sizing: border-box;
-    background: transparent;
+box-sizing: border-box;
+background: transparent;
 }
 .line.dashed.horizontal {
-    border-top: 1px dashed #4af;
-    border-top-color: #4af;
-    border-top-color: var(--moveable-color);
+border-top: 1px dashed #4af;
+border-top-color: #4af;
+border-top-color: var(--moveable-color);
 }
 .line.dashed.vertical {
-    border-left: 1px dashed #4af;
-    border-left-color: #4af;
-    border-left-color: var(--moveable-color);
+border-left: 1px dashed #4af;
+border-left-color: #4af;
+border-left-color: var(--moveable-color);
 }
 .line.vertical {
-    transform: translateX(-50%);
+transform: translateX(-50%);
 }
 .line.horizontal {
-    transform: translateY(-50%);
+transform: translateY(-50%);
 }
 .line.vertical.bold {
-    width: 2px;
+width: 2px;
 }
 .line.horizontal.bold {
-    height: 2px;
+height: 2px;
 }
 
 .control.origin {
-	border-color: #f55;
-	background: #fff;
-	width: 12px;
-	height: 12px;
-	margin-top: -6px;
-    margin-left: -6px;
-	pointer-events: none;
+border-color: #f55;
+background: #fff;
+width: 12px;
+height: 12px;
+margin-top: -6px;
+margin-left: -6px;
+pointer-events: none;
 }
 ${[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(degree => `
 .direction[data-rotation="${degree}"], :global .view-control-rotation${degree} {
-	${getCursorCSS(degree)}
+${getCursorCSS(degree)}
 }
 `).join("\n")}
 
 .line.direction:before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: calc(var(--moveable-line-padding, 0) * 1px);
-    bottom: 0;
-    left: 0;
+content: "";
+position: absolute;
+width: 100%;
+height: calc(var(--moveable-line-padding, 0) * 1px);
+bottom: 0;
+left: 0;
 }
 .group {
-    z-index: -1;
+z-index: -1;
 }
 .area {
-    position: absolute;
+position: absolute;
 }
 .area-pieces {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: none;
+position: absolute;
+top: 0;
+left: 0;
+display: none;
 }
 .area.avoid, .area.pass {
-    pointer-events: none;
+pointer-events: none;
 }
 .area.avoid+.area-pieces {
-    display: block;
+display: block;
 }
 .area-piece {
-    position: absolute;
+position: absolute;
 }
 
 ${IS_WEBKIT605 ? `:global svg *:before {
-	content:"";
-	transform-origin: inherit;
+content:"";
+transform-origin: inherit;
 }` : ""}
 `;
-export const DRAGGER_EVENTS = ["dragstart", "drag", "dragend", "pinchstart", "pinch", "pinchend"];
 
 export const NEARBY_POS = [
     [0, 1, 2],

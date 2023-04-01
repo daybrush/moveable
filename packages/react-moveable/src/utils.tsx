@@ -1,5 +1,5 @@
 import { PREFIX, IS_WEBKIT605, TINY_NUM } from "./consts";
-import { prefixNames, InvertObject } from "framework-utils";
+import { prefixNames } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
@@ -817,7 +817,7 @@ export function getExtendsRect(el: HTMLElement | SVGElement, rect: MoveableClien
     const isRoot = el === document.body || el === document.documentElement;
 
 
-    const extendsRect =  {
+    const extendsRect = {
         clientLeft: el.clientLeft,
         clientTop: el.clientTop,
         clientWidth: el.clientWidth,
@@ -1265,15 +1265,6 @@ export function getDirectionCondition(ableName: string, checkAbles: string[] = [
     };
 }
 
-export function invertObject<T extends IObject<any>>(obj: T): InvertObject<T> {
-    const nextObj: IObject<any> = {};
-
-    for (const name in obj) {
-        nextObj[obj[name]] = name;
-    }
-    return nextObj as any;
-}
-
 export function convertTransformInfo(transforms: string[], index: number) {
     const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
     const beforeFunctionTexts2 = transforms.slice(0, index < 0 ? undefined : index + 1);
@@ -1633,4 +1624,11 @@ export function isDeepArrayEquals(arr1: any[], arr2: any[]): boolean {
         }
         return false;
     });
+}
+
+
+export function pushUnique<T>(elements: T[], element: T) {
+    if (elements.indexOf(element) === -1) {
+        elements.push(element);
+    }
 }

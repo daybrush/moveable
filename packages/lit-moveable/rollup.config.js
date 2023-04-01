@@ -5,7 +5,7 @@ const defaultOptions = {
   tsconfig: "tsconfig.build.json",
   sourcemap: true,
 };
-export default buildHelper([
+module.exports = buildHelper([
   {
     ...defaultOptions,
     format: "es",

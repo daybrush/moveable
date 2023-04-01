@@ -6,11 +6,12 @@ const defaultOptions = {
     input: "./src/index.ts",
     exports: "named",
     external: true,
+    typescript2: true,
     plugins: [
         vuePlugin(),
     ]
 };
-export default buildHelper([
+module.exports = buildHelper([
     {
         ...defaultOptions,
         format: "es",

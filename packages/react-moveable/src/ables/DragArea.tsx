@@ -32,14 +32,14 @@ function renderPieces(React: Renderer): any {
 }
 export default {
     name: "dragArea",
-    props: {
-        dragArea: Boolean,
-        passDragArea: Boolean,
-    } as const,
-    events: {
-        onClick: "click",
-        onClickGroup: "clickGroup",
-    } as const,
+    props: [
+        "dragArea",
+        "passDragArea",
+    ] as const,
+    events: [
+        "click",
+        "clickGroup",
+    ] as const,
     render(moveable: MoveableManagerInterface<GroupableProps>, React: Renderer): any[] {
         const { target, dragArea, groupable, passDragArea } = moveable.props;
         const { width, height, renderPoses } = moveable.getState();

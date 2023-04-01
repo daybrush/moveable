@@ -1,5 +1,4 @@
 import {
-    MOVEABLE_PROPS_MAP,
     MOVEABLE_PROPS,
     MOVEABLE_METHODS,
     MOVEABLE_EVENTS,
@@ -8,4 +7,3 @@ import {
 export const PROPERTIES: string[] = MOVEABLE_PROPS;
 export const METHODS: string[] = MOVEABLE_METHODS;
 export const EVENTS: string[] = MOVEABLE_EVENTS;
-export const PROPS_MAP: Record<string, any> = MOVEABLE_PROPS_MAP;

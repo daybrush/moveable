@@ -92,7 +92,7 @@ type DefaultAbles = GroupableProps & IndividualGroupableProps & BeforeRenderable
 
 export class InitialMoveable<T = {}>
     extends React.PureComponent<MoveableDefaultProps & DefaultAbles & T> {
-    public static defaultAbles: Able[] = [];
+    public static defaultAbles: readonly Able<any>[] = [];
     public static customStyledMap: Record<string, any> = {};
     public static defaultStyled: any = null;
     public static makeStyled() {

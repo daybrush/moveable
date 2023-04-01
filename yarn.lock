@@ -2740,9 +2740,9 @@
   resolved "https://registry.npmjs.org/@csstools/selector-specificity/-/selector-specificity-2.0.0.tgz"
   integrity sha512-rZ6vufeY/UjAgtyiJ4WvfF6XP6HizIyOfbZOg0RnecIwjrvH8Am3nN1BpKnnPZunYAkUcPPXDhwbxOtGop8cfQ==
 
-"@daybrush/builder@^0.1.0", "@daybrush/builder@^0.1.2":
+"@daybrush/builder@^0.1.2":
   version "0.1.2"
-  resolved "https://registry.npmjs.org/@daybrush/builder/-/builder-0.1.2.tgz"
+  resolved "https://registry.npmjs.org/@daybrush/builder/-/builder-0.1.2.tgz#1298a1fff8c49192658f689f426fcee4a93b509b"
   integrity sha512-Yk+lZLFRPGFsKLKjiLwzSYlF83Bav+B8PhSsUsvhVyl/f30hjOS/lM3sdCF8WI9lWWcCG/XpNUf/O16qDvLKqQ==
   dependencies:
     "@daybrush/rollup-plugin-prototype-minify" "^1.1.2"
@@ -2757,7 +2757,7 @@
 
 "@daybrush/demo@0.0.2":
   version "0.0.2"
-  resolved "https://registry.npmjs.org/@daybrush/demo/-/demo-0.0.2.tgz"
+  resolved "https://registry.npmjs.org/@daybrush/demo/-/demo-0.0.2.tgz#a663f7b25c0d16037c2d0c834a712c7f6ee4fb43"
   integrity sha512-/Drq8P4FFXd+3YePtD0lC8xZlMnDqrvcYCn18KCjiVKj+sBIuzWdkePCSC59QS6WeMp8zsoTUlCsh/l1daZuUw==
   dependencies:
     print-sizes "0.0.4"
@@ -2833,7 +2833,7 @@
 
 "@daybrush/rollup-plugin-prototype-minify@^1.1.2":
   version "1.1.2"
-  resolved "https://registry.npmjs.org/@daybrush/rollup-plugin-prototype-minify/-/rollup-plugin-prototype-minify-1.1.2.tgz"
+  resolved "https://registry.npmjs.org/@daybrush/rollup-plugin-prototype-minify/-/rollup-plugin-prototype-minify-1.1.2.tgz#85f7506f67125d2aca6a0f100e90c202205b4df8"
   integrity sha512-mrIzM0unFQ6jXv/jJtHiwmQg/2zF4GsuEyFiKd3G9Wl26gMM8b4H55wMzAXRzBTnZLVEagTz4MvNVO758uZf8A==
   dependencies:
     prototype-minify "^1.0.0"
@@ -2925,20 +2925,6 @@
   version "2.4.2"
   resolved "https://registry.npmjs.org/@egjs/agent/-/agent-2.4.2.tgz"
   integrity sha512-UZQzdpPl0g0M1wDAiq4EY2vUzUI6P5SKGOAPkf0yxSnlcwrU8/zuoyUWbYj11ROFeHV8iW0IetGsmia83z1Hbw==
-
-"@egjs/build-helper@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.npmjs.org/@egjs/build-helper/-/build-helper-0.1.2.tgz#cce62a1e8d355e38069c876ff835b84d635c07d5"
-  integrity sha512-VdTllKles30qLgutKwIxapwXGEuU5kS95b+u01unphw3TouGROskPvLqEJ7SIubqgPc6q3vRlTgOe75yhaYF8w==
-  dependencies:
-    rollup "^1.7.4"
-    rollup-plugin-commonjs "^9.3.4"
-    rollup-plugin-node-resolve "^4.0.1"
-    rollup-plugin-prototype-minify "^1.0.5"
-    rollup-plugin-replace "^2.1.1"
-    rollup-plugin-typescript "^1.0.1"
-    rollup-plugin-uglify "^6.0.2"
-    rollup-plugin-visualizer "^1.1.0"
 
 "@egjs/children-differ@^1.0.1":
   version "1.0.1"
@@ -4823,6 +4809,14 @@
   dependencies:
     "@types/estree" "0.0.39"
     estree-walker "^1.0.1"
+    picomatch "^2.2.2"
+
+"@rollup/pluginutils@^4.1.0":
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-4.2.1.tgz#e6c6c3aba0744edce3fb2074922d3776c0af2a6d"
+  integrity sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==
+  dependencies:
+    estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
 "@scena/dragscroll@^1.2.1", "@scena/dragscroll@^1.4.0":
@@ -11806,7 +11800,7 @@ duplexer3@^0.1.4:
   resolved "https://registry.npmjs.org/duplexer3/-/duplexer3-0.1.4.tgz"
   integrity sha512-CEj8FwwNA4cVH2uFCoHUrmojhYh1vmCdOaneKJXwkeY1i9jnlslVo9dx+hQ5Hl9GnH/Bwy/IjxAyOePyPKYnzA==
 
-duplexer@^0.1.1:
+duplexer@^0.1.1, duplexer@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npmjs.org/duplexer/-/duplexer-0.1.2.tgz"
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
@@ -12757,7 +12751,7 @@ estree-walker@^1.0.1:
   resolved "https://registry.npmjs.org/estree-walker/-/estree-walker-1.0.1.tgz"
   integrity sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==
 
-estree-walker@^2.0.2:
+estree-walker@^2.0.1, estree-walker@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/estree-walker/-/estree-walker-2.0.2.tgz"
   integrity sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==
@@ -14337,6 +14331,13 @@ gzip-size@^5.0.0:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
+gzip-size@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/gzip-size/-/gzip-size-6.0.0.tgz#065367fd50c239c0671cbcbad5be3e2eeb10e462"
+  integrity sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==
+  dependencies:
+    duplexer "^0.1.2"
+
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/handle-thing/-/handle-thing-2.0.1.tgz"
@@ -15904,7 +15905,7 @@ is-redirect@^1.0.0:
 
 is-reference@^1.1.2:
   version "1.2.1"
-  resolved "https://registry.npmjs.org/is-reference/-/is-reference-1.2.1.tgz"
+  resolved "https://registry.npmjs.org/is-reference/-/is-reference-1.2.1.tgz#8b2dac0b371f4bc994fdeaba9eb542d03002d0b7"
   integrity sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==
   dependencies:
     "@types/estree" "*"
@@ -18386,13 +18387,13 @@ lit@^2.0:
     lit-html "^2.6.0"
 
 livereload-js@^3.3.1:
-  version "3.4.0"
-  resolved "https://registry.npmjs.org/livereload-js/-/livereload-js-3.4.0.tgz"
-  integrity sha512-F/pz9ZZP+R+arY94cECTZco7PXgBXyL+KVWUPZq8AQE9TOu14GV6fYeKOviv02JCvFa4Oi3Rs1hYEpfeajc+ow==
+  version "3.4.1"
+  resolved "https://registry.npmjs.org/livereload-js/-/livereload-js-3.4.1.tgz#ba90fbc708ed1b9a024bb89c4ee12c96ea03d66f"
+  integrity sha512-5MP0uUeVCec89ZbNOT/i97Mc+q3SxXmiUGhRFOTmhrGPn//uWVQdCvcLJDy64MSBR5MidFdOR7B9viumoavy6g==
 
 livereload@^0.9.1:
   version "0.9.3"
-  resolved "https://registry.npmjs.org/livereload/-/livereload-0.9.3.tgz"
+  resolved "https://registry.npmjs.org/livereload/-/livereload-0.9.3.tgz#a714816375ed52471408bede8b49b2ee6a0c55b1"
   integrity sha512-q7Z71n3i4X0R9xthAryBdNGVGAO2R5X+/xXpmKeuPMrteg+W2U8VusTKV3YiJbXZwKsOlFlHe+go6uSNjfxrZw==
   dependencies:
     chokidar "^3.5.0"
@@ -20862,7 +20863,7 @@ optionator@^0.9.1:
 
 "opts@>= 1.2.0":
   version "2.0.2"
-  resolved "https://registry.npmjs.org/opts/-/opts-2.0.2.tgz"
+  resolved "https://registry.npmjs.org/opts/-/opts-2.0.2.tgz#a17e189fbbfee171da559edd8a42423bc5993ce1"
   integrity sha512-k41FwbcLnlgnFh69f4qdUfvDQ+5vaSDnVPFI/y5XuhKRq97EnVVneO9F1ESVCdiVu4fCS2L8usX3mU331hB7pg==
 
 ora@5.4.1, ora@^5.1.0, ora@^5.4.1:
@@ -22672,17 +22673,18 @@ print-coveralls@^1.2.2:
 
 print-sizes@0.0.4:
   version "0.0.4"
-  resolved "https://registry.npmjs.org/print-sizes/-/print-sizes-0.0.4.tgz"
+  resolved "https://registry.npmjs.org/print-sizes/-/print-sizes-0.0.4.tgz#a515258129a3e225ca6a2430fd2bd5f6dfbfbb6b"
   integrity sha512-L6GdpB7v9hyxl4zOl/0zhTqlI0cGCIpOtPA/+nYD15Cpi3rRi/7AzjkrBIZS6VXoaphH5TI3dl9U34amY+h7Bg==
   dependencies:
     filesize "^3.6.1"
 
-print-sizes@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/print-sizes/-/print-sizes-0.1.0.tgz"
-  integrity sha512-W5f2LCf5LzuxCdmW0or7zkeR2IZ1TJAAyYyn/hbS+bpIN1BfcNHPKX4V1jgFwp+5KXaYJEEo7vFrOqbMn7X+YA==
+print-sizes@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/print-sizes/-/print-sizes-0.2.0.tgz#2744086d32dda2ca06df73333335dcc3405d43da"
+  integrity sha512-LnouKxAF8sziraUNg38NNiidpWm7/8qZStb0WF27krIK/wCz22eM+iD6O6Bpjmzsy5Vc77Y7nDWW5IoeLNNAiQ==
   dependencies:
     filesize "^3.6.1"
+    gzip-size "^6.0.0"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -23385,13 +23387,15 @@ react-simple-compat@^1.2.2:
     "@daybrush/utils" "^1.0.0"
     "@egjs/list-differ" "^1.0.0"
 
-react-simple-compat@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.npmjs.org/react-simple-compat/-/react-simple-compat-1.2.3.tgz"
-  integrity sha512-vYepRjSriGRyEmFtSsTQoHWVQRbBMYR4ONATeZtuf8GDY8jWGkc6R4+lIb5rVhPBIkx3ru68bpl+9r8V4YA/nA==
+react-simple-compat@^1.3.0-beta.1:
+  version "1.3.0-beta.1"
+  resolved "https://registry.npmjs.org/react-simple-compat/-/react-simple-compat-1.3.0-beta.1.tgz#a2043840c54dd40b1bb78687e438356ce0a10101"
+  integrity sha512-nqutuZn/u1vNpUjvL2gwRhYERgRWu6MZGo1UKT7zWRFXac4nQoUrFew5IWgSy/tWkets8oUprUVdrfZ+TIUn3w==
   dependencies:
     "@daybrush/utils" "^1.0.0"
     "@egjs/list-differ" "^1.0.0"
+    "@scena/event-emitter" "^1.0.5"
+    tslib "^2.3.1"
 
 react-tabs@^3.0.0:
   version "3.2.3"
@@ -23995,11 +23999,6 @@ require-main-filename@^2.0.0:
   resolved "https://registry.npmjs.org/require-main-filename/-/require-main-filename-2.0.0.tgz"
   integrity sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==
 
-require-relative@^0.8.7:
-  version "0.8.7"
-  resolved "https://registry.npmjs.org/require-relative/-/require-relative-0.8.7.tgz"
-  integrity sha512-AKGr4qvHiryxRb19m3PsLRGuKVAbJLUD7E6eOaHkfKhwc+vSgVOCY5xNvm9EkolBKTOf0GrQAZKLimOCz81Khg==
-
 requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz"
@@ -24070,6 +24069,11 @@ resolve.exports@^1.1.0:
   resolved "https://registry.npmjs.org/resolve.exports/-/resolve.exports-1.1.0.tgz"
   integrity sha512-J1l+Zxxp4XK3LUDZ9m60LRJF/mAe4z6a4xyabPHk7pvK5t35dACV32iIjJDFeWZFfZlO29w6SZ67knR0tHzJtQ==
 
+resolve.exports@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/resolve.exports/-/resolve.exports-2.0.2.tgz#f8c934b8e6a13f539e38b7098e2e36134f01e800"
+  integrity sha512-X2UW6Nw3n/aMgDVy+0rSqgHlv39WZAlZrXCdnbyEiKm17DSqHX4MmQMaST3FbeWR5FTuRcUwYAziZajji0Y7mg==
+
 resolve@1.1.7, resolve@1.1.x:
   version "1.1.7"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.1.7.tgz"
@@ -24083,7 +24087,7 @@ resolve@1.20.0:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
-resolve@1.x, resolve@^1.1.7, resolve@^1.10.0, resolve@^1.11.0, resolve@^1.11.1, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.15.1, resolve@^1.19.0, resolve@^1.20.0, resolve@^1.22.0, resolve@^1.3.2:
+resolve@1.x, resolve@^1.1.7, resolve@^1.10.0, resolve@^1.11.1, resolve@^1.12.0, resolve@^1.14.2, resolve@^1.15.1, resolve@^1.19.0, resolve@^1.20.0, resolve@^1.22.0, resolve@^1.3.2:
   version "1.22.0"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.0.tgz"
   integrity sha512-Hhtrw0nLeSrFQ7phPp4OOcVjLPIeMnRlr5mcnVuMe7M/7eBn98A3hmFRLoFo3DLZkivSYwhRUJTyPyWAk56WLw==
@@ -24092,7 +24096,7 @@ resolve@1.x, resolve@^1.1.7, resolve@^1.10.0, resolve@^1.11.0, resolve@^1.11.1, 
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
-resolve@^1.18.1:
+resolve@^1.11.0, resolve@^1.18.1:
   version "1.22.1"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.1.tgz#27cb2ebb53f91abb49470a928bba7558066ac177"
   integrity sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==
@@ -24189,7 +24193,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
 
 rollup-plugin-commonjs@^10.0.0:
   version "10.1.0"
-  resolved "https://registry.npmjs.org/rollup-plugin-commonjs/-/rollup-plugin-commonjs-10.1.0.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-commonjs/-/rollup-plugin-commonjs-10.1.0.tgz#417af3b54503878e084d127adf4d1caf8beb86fb"
   integrity sha512-jlXbjZSQg8EIeAAvepNwhJj++qJWNJw1Cl0YnOqKtP5Djx+fFGkp3WRh+W0ASCaFG5w1jhmzDxgu3SJuVxPF4Q==
   dependencies:
     estree-walker "^0.6.1"
@@ -24200,7 +24204,7 @@ rollup-plugin-commonjs@^10.0.0:
 
 rollup-plugin-commonjs@^9.3.4:
   version "9.3.4"
-  resolved "https://registry.npmjs.org/rollup-plugin-commonjs/-/rollup-plugin-commonjs-9.3.4.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-commonjs/-/rollup-plugin-commonjs-9.3.4.tgz#2b3dddbbbded83d45c36ff101cdd29e924fd23bc"
   integrity sha512-DTZOvRoiVIHHLFBCL4pFxOaJt8pagxsVldEXBOn6wl3/V21wVaj17HFfyzTsQUuou3sZL3lEJZVWKPFblJfI6w==
   dependencies:
     estree-walker "^0.6.0"
@@ -24218,14 +24222,14 @@ rollup-plugin-css-bundle@^1.0.4:
 
 rollup-plugin-livereload@^1.0.4:
   version "1.3.0"
-  resolved "https://registry.npmjs.org/rollup-plugin-livereload/-/rollup-plugin-livereload-1.3.0.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-livereload/-/rollup-plugin-livereload-1.3.0.tgz#8da90df13df6502b9d982997d6ac871092f15fdd"
   integrity sha512-abyqXaB21+nFHo+vJULBqfzNx6zXABC19UyvqgDfdoxR/8pFAd041GO+GIUe8ZYC2DbuMUmioh1Lvbk14YLZgw==
   dependencies:
     livereload "^0.9.1"
 
 rollup-plugin-node-resolve@^4.0.0, rollup-plugin-node-resolve@^4.0.1:
   version "4.2.4"
-  resolved "https://registry.npmjs.org/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-4.2.4.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-4.2.4.tgz#7d370f8d6fd3031006a0032c38262dd9be3c6250"
   integrity sha512-t/64I6l7fZ9BxqD3XlX4ZeO6+5RLKyfpwE2CiPNUKa+GocPlQhf/C208ou8y3AwtNsc6bjSk/8/6y/YAyxCIvw==
   dependencies:
     "@types/resolve" "0.0.8"
@@ -24271,7 +24275,7 @@ rollup-plugin-react-compat@^0.1.0:
 
 rollup-plugin-replace@^2.1.1:
   version "2.2.0"
-  resolved "https://registry.npmjs.org/rollup-plugin-replace/-/rollup-plugin-replace-2.2.0.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-replace/-/rollup-plugin-replace-2.2.0.tgz#f41ae5372e11e7a217cde349c8b5d5fd115e70e3"
   integrity sha512-/5bxtUPkDHyBJAKketb4NfaeZjL5yLZdeUihSfbF2PQMz+rSTEb8ARKoOl3UBT4m7/X+QOXJo3sLTcq+yMMYTA==
   dependencies:
     magic-string "^0.25.2"
@@ -24286,16 +24290,16 @@ rollup-plugin-sourcemaps@^0.6.3:
     source-map-resolve "^0.6.0"
 
 rollup-plugin-svelte@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.npmjs.org/rollup-plugin-svelte/-/rollup-plugin-svelte-7.1.0.tgz"
-  integrity sha512-vopCUq3G+25sKjwF5VilIbiY6KCuMNHP1PFvx2Vr3REBNMDllKHFZN2B9jwwC+MqNc3UPKkjXnceLPEjTjXGXg==
+  version "7.1.4"
+  resolved "https://registry.npmjs.org/rollup-plugin-svelte/-/rollup-plugin-svelte-7.1.4.tgz#abd71aebe709c3d5f1e50ad98d9399ee18bdeb41"
+  integrity sha512-Jm0FCydR7k8bBGe7wimXAes8x2zEK10Ew3f3lEZwYor/Zya3X0AZVeSAPRH7yiXB9hWQVzJu597EUeNwGDTdjQ==
   dependencies:
-    require-relative "^0.8.7"
-    rollup-pluginutils "^2.8.2"
+    "@rollup/pluginutils" "^4.1.0"
+    resolve.exports "^2.0.0"
 
 rollup-plugin-terser@^5.2.0:
   version "5.3.1"
-  resolved "https://registry.npmjs.org/rollup-plugin-terser/-/rollup-plugin-terser-5.3.1.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-terser/-/rollup-plugin-terser-5.3.1.tgz#8c650062c22a8426c64268548957463bf981b413"
   integrity sha512-1pkwkervMJQGFYvM9nscrUoncPwiKR/K+bHdjv6PFgRo3cgPHoRT83y2Aa3GvINj4539S15t/tpFPb775TDs6w==
   dependencies:
     "@babel/code-frame" "^7.5.5"
@@ -24306,7 +24310,7 @@ rollup-plugin-terser@^5.2.0:
 
 rollup-plugin-typescript@^1.0.0, rollup-plugin-typescript@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.npmjs.org/rollup-plugin-typescript/-/rollup-plugin-typescript-1.0.1.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-typescript/-/rollup-plugin-typescript-1.0.1.tgz#86565033b714c3d1f3aba510aad3dc519f7091e9"
   integrity sha512-rwJDNn9jv/NsKZuyBb/h0jsclP4CJ58qbvZt2Q9zDIGILF2LtdtvCqMOL+Gq9IVq5MTrTlHZNrn8h7VjQgd8tw==
   dependencies:
     resolve "^1.10.0"
@@ -24314,7 +24318,7 @@ rollup-plugin-typescript@^1.0.0, rollup-plugin-typescript@^1.0.1:
 
 rollup-plugin-uglify@^6.0.2:
   version "6.0.4"
-  resolved "https://registry.npmjs.org/rollup-plugin-uglify/-/rollup-plugin-uglify-6.0.4.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-uglify/-/rollup-plugin-uglify-6.0.4.tgz#65a0959d91586627f1e46a7db966fd504ec6c4e6"
   integrity sha512-ddgqkH02klveu34TF0JqygPwZnsbhHVI6t8+hGTcYHngPkQb5MIHI0XiztXIN/d6V9j+efwHAqEL7LspSxQXGw==
   dependencies:
     "@babel/code-frame" "^7.0.0"
@@ -24324,7 +24328,7 @@ rollup-plugin-uglify@^6.0.2:
 
 rollup-plugin-visualizer@^1.1.0:
   version "1.1.1"
-  resolved "https://registry.npmjs.org/rollup-plugin-visualizer/-/rollup-plugin-visualizer-1.1.1.tgz"
+  resolved "https://registry.npmjs.org/rollup-plugin-visualizer/-/rollup-plugin-visualizer-1.1.1.tgz#454ae0aed23845407ebfb81cc52114af308d6d90"
   integrity sha512-7xkSKp+dyJmSC7jg2LXqViaHuOnF1VvIFCnsZEKjrgT5ZVyiLLSbeszxFcQSfNJILphqgAEmWAUz0Z4xYScrRw==
   dependencies:
     mkdirp "^0.5.1"
@@ -24365,7 +24369,7 @@ rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.5.0, rollup-pluginutils@^2.6.0,
 
 rollup@^1.1.2, rollup@^1.12.0, rollup@^1.7.4:
   version "1.32.1"
-  resolved "https://registry.npmjs.org/rollup/-/rollup-1.32.1.tgz"
+  resolved "https://registry.npmjs.org/rollup/-/rollup-1.32.1.tgz#4480e52d9d9e2ae4b46ba0d9ddeaf3163940f9c4"
   integrity sha512-/2HA0Ec70TvQnXdzynFffkjA6XN+1e2pEv/uKS5Ulca40g2L7KuOE3riasHoNVHOsFD5KKZgDsMk1CP3Tw9s+A==
   dependencies:
     "@types/estree" "*"
@@ -24708,7 +24712,7 @@ serialize-javascript@^1.4.0:
 
 serialize-javascript@^2.1.2:
   version "2.1.2"
-  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-2.1.2.tgz"
+  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-2.1.2.tgz#ecec53b0e0317bdc95ef76ab7074b7384785fa61"
   integrity sha512-rs9OggEUF0V4jUSecXazOYsLfu7OGK2qIn3c7IPBiffz32XniEp/TX9Xmc9LQfK2nQ2QKHvZ2oygKUGU0lG4jQ==
 
 serialize-javascript@^4.0.0:
@@ -24813,7 +24817,7 @@ shallow-clone@^3.0.0:
 
 shape-svg@^0.3.0:
   version "0.3.3"
-  resolved "https://registry.npmjs.org/shape-svg/-/shape-svg-0.3.3.tgz"
+  resolved "https://registry.npmjs.org/shape-svg/-/shape-svg-0.3.3.tgz#b388c99c4debb0c494457ed1f553b6239b7054df"
   integrity sha512-d2Tpr4kLs4dLKEVBmJVFFep0FD4ktQ76YI409OAibqjOD/nnb2vMcBzOMDyp0jKctxbzPXeHXf+acagnthcn/Q==
   dependencies:
     "@daybrush/utils" "^0.5.2"
@@ -26268,10 +26272,19 @@ terser@5.10.0:
     source-map "~0.7.2"
     source-map-support "~0.5.20"
 
-terser@^4.1.2, terser@^4.6.2, terser@^4.6.3:
+terser@^4.1.2, terser@^4.6.3:
   version "4.8.0"
   resolved "https://registry.npmjs.org/terser/-/terser-4.8.0.tgz"
   integrity sha512-EAPipTNeWsb/3wLPeup1tVPaXfIaU68xMnVdPafIL1TV05OhASArYyIfFvnvJCNrR2NIOvDVNNTFRa+Re2MWyw==
+  dependencies:
+    commander "^2.20.0"
+    source-map "~0.6.1"
+    source-map-support "~0.5.12"
+
+terser@^4.6.2:
+  version "4.8.1"
+  resolved "https://registry.npmjs.org/terser/-/terser-4.8.1.tgz#a00e5634562de2239fd404c649051bf6fc21144f"
+  integrity sha512-4GnLC0x667eJG0ewJTa6z/yXrbLGv80D9Ru6HIpCQmO+Q4PfEtBFi0ObSckqwL6VyQv/7ENJieXHo2ANmdQwgw==
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
@@ -26668,25 +26681,10 @@ tsconfig-paths@^3.14.1:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tslib@2.3.1:
-  version "2.3.1"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
-  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
-
-tslib@^1.10.0, tslib@^1.13.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
-  version "1.14.1"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
-  integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
-
-tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0:
+tslib@2.3.1, tslib@^1.10.0, tslib@^1.13.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3, tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0, tslib@~2.1.0:
   version "2.4.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.4.0.tgz"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
-
-tslib@~2.1.0:
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.1.0.tgz"
-  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
 
 tslint@^5.15.0, tslint@^5.16.0, tslint@^5.20.1:
   version "5.20.1"
@@ -26848,7 +26846,7 @@ typedarray@^0.0.6:
 
 typeface-oswald@0.0.54:
   version "0.0.54"
-  resolved "https://registry.npmjs.org/typeface-oswald/-/typeface-oswald-0.0.54.tgz"
+  resolved "https://registry.npmjs.org/typeface-oswald/-/typeface-oswald-0.0.54.tgz#1e253011622cdd50f580c04e7d625e7f449763d7"
   integrity sha512-U1WMNp4qfy4/3khIfHMVAIKnNu941MXUfs3+H9R8PFgnoz42Hh9pboSFztWr86zut0eXC8byalmVhfkiKON/8Q==
 
 typescript@^3.3.3, "typescript@^4.5.0 <4.6.0":
@@ -26874,10 +26872,15 @@ uglify-js@3.4.x:
     commander "~2.19.0"
     source-map "~0.6.1"
 
-uglify-js@^3.1.4, uglify-js@^3.4.9:
+uglify-js@^3.1.4:
   version "3.16.0"
   resolved "https://registry.npmjs.org/uglify-js/-/uglify-js-3.16.0.tgz"
   integrity sha512-FEikl6bR30n0T3amyBh3LoiBdqHRy/f4H80+My34HOesOKyHfOsxAPAxOoqC0JUnC1amnO0IwkYC3sko51caSw==
+
+uglify-js@^3.4.9:
+  version "3.17.4"
+  resolved "https://registry.npmjs.org/uglify-js/-/uglify-js-3.17.4.tgz#61678cf5fa3f5b7eb789bb345df29afb8257c22c"
+  integrity sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==
 
 uid-number@0.0.6:
   version "0.0.6"
@@ -28351,9 +28354,9 @@ ws@^6.0.0, ws@^6.2.1:
     async-limiter "~1.0.0"
 
 ws@^7.4.3:
-  version "7.5.8"
-  resolved "https://registry.npmjs.org/ws/-/ws-7.5.8.tgz"
-  integrity sha512-ri1Id1WinAX5Jqn9HejiGb8crfRio0Qgu8+MtL36rlTA6RLsMdWt1Az/19A2Qij6uSHUMphEFaTKa4WG+UNHNw==
+  version "7.5.9"
+  resolved "https://registry.npmjs.org/ws/-/ws-7.5.9.tgz#54fa7db29f4c7cec68b1ddd3a89de099942bb591"
+  integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
 
 ws@^8.1.0, ws@^8.2.3:
   version "8.7.0"

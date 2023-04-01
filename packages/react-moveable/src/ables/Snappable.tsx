@@ -528,80 +528,72 @@ const directionCondition = getDirectionCondition("", ["resizable", "scalable"]);
 export default {
     name: "snappable",
     dragRelation: "strong",
-    props: {
-        snappable: [Boolean, Array],
-        snapContainer: Object,
-
-        snapDirections: [Boolean, Object],
-        elementSnapDirections: [Boolean, Object],
-
-        snapGap: Boolean,
-        snapGridWidth: Number,
-        snapGridHeight: Number,
-        isDisplaySnapDigit: Boolean,
-        isDisplayInnerSnapDigit: Boolean,
-        snapDigit: Number,
-        snapThreshold: Number,
-        snapRenderThreshold: Number,
-
-        horizontalGuidelines: Array,
-        verticalGuidelines: Array,
-        elementGuidelines: Array,
-
-        bounds: Object,
-        innerBounds: Object,
-        snapDistFormat: Function,
-
-
-        maxSnapElementGuidelineDistance: Number,
-        maxSnapElementGapDistance: Number,
-    } as const,
-    events: {
-        onSnap: "snap",
-    } as const,
+    props: [
+        "snappable",
+        "snapContainer",
+        "snapDirections",
+        "elementSnapDirections",
+        "snapGap",
+        "snapGridWidth",
+        "snapGridHeight",
+        "isDisplaySnapDigit",
+        "isDisplayInnerSnapDigit",
+        "snapDigit",
+        "snapThreshold",
+        "snapRenderThreshold",
+        "horizontalGuidelines",
+        "verticalGuidelines",
+        "elementGuidelines",
+        "bounds",
+        "innerBounds",
+        "snapDistFormat",
+        "maxSnapElementGuidelineDistance",
+        "maxSnapElementGapDistance",
+    ] as const,
+    events: ["snap"] as const,
     css: [
         `:host {
-    --bounds-color: #d66;
+--bounds-color: #d66;
 }
 .guideline {
-    pointer-events: none;
-    z-index: 2;
+pointer-events: none;
+z-index: 2;
 }
 .guideline.bounds {
-    background: #d66;
-    background: var(--bounds-color);
+background: #d66;
+background: var(--bounds-color);
 }
 .guideline-group {
-    position: absolute;
-    top: 0;
-    left: 0;
+position: absolute;
+top: 0;
+left: 0;
 }
 .guideline-group .size-value {
-    position: absolute;
-    color: #f55;
-    font-size: 12px;
-    font-size: calc(12px * var(--zoom));
-    font-weight: bold;
+position: absolute;
+color: #f55;
+font-size: 12px;
+font-size: calc(12px * var(--zoom));
+font-weight: bold;
 }
 .guideline-group.horizontal .size-value {
-    transform-origin: 50% 100%;
-    transform: translateX(-50%);
-    left: 50%;
-    bottom: 5px;
-    bottom: calc(2px + 3px * var(--zoom));
+transform-origin: 50% 100%;
+transform: translateX(-50%);
+left: 50%;
+bottom: 5px;
+bottom: calc(2px + 3px * var(--zoom));
 }
 .guideline-group.vertical .size-value {
-    transform-origin: 0% 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 5px;
-    left: calc(2px + 3px * var(--zoom));
+transform-origin: 0% 50%;
+top: 50%;
+transform: translateY(-50%);
+left: 5px;
+left: calc(2px + 3px * var(--zoom));
 }
 .guideline.gap {
-    background: #f55;
+background: #f55;
 }
 .size-value.gap {
-    color: #f55;
+color: #f55;
 }
 `,
     ],

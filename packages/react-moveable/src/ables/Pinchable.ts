@@ -10,14 +10,17 @@ import {
  * @description Whether or not target can be pinched with draggable, resizable, scalable, rotatable (default: false)
  */
 export default makeAble("pinchable", {
-    events: {
-        onPinchStart: "pinchStart",
-        onPinch: "pinch",
-        onPinchEnd: "pinchEnd",
-        onPinchGroupStart: "pinchGroupStart",
-        onPinchGroup: "pinchGroup",
-        onPinchGroupEnd: "pinchGroupEnd",
-    } as const,
+    props: [
+        "pinchable",
+    ] as const,
+    events: [
+        "pinchStart",
+        "pinch",
+        "pinchEnd",
+        "pinchGroupStart",
+        "pinchGroup",
+        "pinchGroupEnd",
+    ] as const,
     dragStart() {
         return true;
     },

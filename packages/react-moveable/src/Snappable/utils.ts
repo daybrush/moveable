@@ -4,6 +4,7 @@ export function solveConstantsDistance(
 ) {
     return (a * pos[0] + b * pos[1] + c) / Math.sqrt(a * a + b * b);
 }
+
 export function solveC(
     [a, b]: [number, number],
     pos: number[],

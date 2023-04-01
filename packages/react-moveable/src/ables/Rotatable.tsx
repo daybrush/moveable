@@ -231,59 +231,59 @@ export function dragControlCondition(moveable: MoveableManagerInterface<Rotatabl
 }
 
 const css = `.rotation {
-    position: absolute;
-    height: 40px;
-    width: 1px;
-    transform-origin: 50% 100%;
-    height: calc(40px * var(--zoom));
-    top: auto;
-    left: 0;
-    bottom: 100%;
-    will-change: transform;
+position: absolute;
+height: 40px;
+width: 1px;
+transform-origin: 50% 100%;
+height: calc(40px * var(--zoom));
+top: auto;
+left: 0;
+bottom: 100%;
+will-change: transform;
 }
 .rotation .rotation-line {
-    display: block;
-    width: 100%;
-    height: 100%;
-    transform-origin: 50% 50%;
+display: block;
+width: 100%;
+height: 100%;
+transform-origin: 50% 50%;
 }
 .rotation .rotation-control {
-    border-color: #4af;
-    border-color: var(--moveable-color);
-    background:#fff;
-    cursor: alias;
+border-color: #4af;
+border-color: var(--moveable-color);
+background:#fff;
+cursor: alias;
 }
 :global .view-rotation-dragging, .rotatable.direction.control {
-    cursor: alias;
+cursor: alias;
 }
 .rotatable.direction.control.move {
-    cursor: move;
+cursor: move;
 }
 `;
 export default {
     name: "rotatable",
     canPinch: true,
-    props: {
-        rotatable: Boolean,
-        rotationPosition: String,
-        throttleRotate: Number,
-        renderDirections: Object,
-        rotationTarget: Object,
-        rotateAroundControls: Boolean,
-        edge: Boolean,
-        resolveAblesWithRotatable: Object,
-        displayAroundControls: Boolean,
-    } as const,
-    events: {
-        onRotateStart: "rotateStart",
-        onBeforeRotate: "beforeRotate",
-        onRotate: "rotate",
-        onRotateEnd: "rotateEnd",
-        onRotateGroupStart: "rotateGroupStart",
-        onBeforeRotateGroup: "beforeRotateGroup",
-        onRotateGroup: "rotateGroup",
-        onRotateGroupEnd: "rotateGroupEnd",
-    } as const,
+    props: [
+        "rotatable",
+        "rotationPosition",
+        "throttleRotate",
+        "renderDirections",
+        "rotationTarget",
+        "rotateAroundControls",
+        "edge",
+        "resolveAblesWithRotatable",
+        "displayAroundControls",
+    ] as const,
+    events: [
+        "rotateStart",
+        "beforeRotate",
+        "rotate",
+        "rotateEnd",
+        "rotateGroupStart",
+        "beforeRotateGroup",
+        "rotateGroup",
+        "rotateGroupEnd",
+    ] as const,
     css: [css],
     viewClassName(moveable: MoveableManagerInterface<RotatableProps>) {
         if (!moveable.isDragging("rotatable")) {

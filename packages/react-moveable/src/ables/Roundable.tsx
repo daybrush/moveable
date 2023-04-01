@@ -214,39 +214,39 @@ function getStyleBorderRadius(moveable: MoveableManagerInterface<RoundableProps,
 
 export default {
     name: "roundable",
-    props: {
-        roundable: Boolean,
-        roundRelative: Boolean,
-        minRoundControls: Array,
-        maxRoundControls: Array,
-        roundClickable: Boolean,
-        roundPadding: Number,
-        isDisplayShadowRoundControls: Boolean,
-    } as const,
-    events: {
-        onRoundStart: "roundStart",
-        onRound: "round",
-        onRoundEnd: "roundEnd",
-        onRoundGroupStart: "roundGroupStart",
-        onRoundGroup: "roundGroup",
-        onRoundGroupEnd: "roundGroupEnd",
-    } as const,
+    props: [
+        "roundable",
+        "roundRelative",
+        "minRoundControls",
+        "maxRoundControls",
+        "roundClickable",
+        "roundPadding",
+        "isDisplayShadowRoundControls",
+    ] as const,
+    events: [
+        "roundStart",
+        "round",
+        "roundEnd",
+        "roundGroupStart",
+        "roundGroup",
+        "roundGroupEnd",
+    ] as const,
     css: [
         `.control.border-radius {
-    background: #d66;
-    cursor: pointer;
-    z-index: 3;
+background: #d66;
+cursor: pointer;
+z-index: 3;
 }`,
         `.control.border-radius.vertical {
-    background: #d6d;
-    z-index: 2;
+background: #d6d;
+z-index: 2;
 }`,
         `.control.border-radius.virtual {
-    opacity: 0.5;
-    z-index: 1;
+opacity: 0.5;
+z-index: 1;
 }`,
         `:host.round-line-clickable .line.direction {
-    cursor: pointer;
+cursor: pointer;
 }`,
     ],
     className(moveable: MoveableManagerInterface<RoundableProps, RoundableState>) {

@@ -53,7 +53,7 @@
         "@daybrush/builder": "^0.1.2",
         "keycon": "^0.3.0",
         "preact": "^10.0.0",
-        "print-sizes": "^0.1.0",
+        "print-sizes": "^0.2.0",
         "pvu": "^0.3.1",
         "rollup-plugin-css-bundle": "^1.0.4",
         "rollup-plugin-preact": "^0.5.2",

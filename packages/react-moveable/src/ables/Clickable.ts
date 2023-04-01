@@ -7,13 +7,13 @@ import { findIndex } from "@daybrush/utils";
 import { makeAble } from "./AbleManager";
 
 export default makeAble("clickable", {
-    props: {
-        clickable: Boolean,
-    },
-    events: {
-        onClick: "click",
-        onClickGroup: "clickGroup",
-    } as const,
+    props: [
+        "clickable",
+    ] as const,
+    events: [
+        "click",
+        "clickGroup",
+    ] as const,
     always: true,
     dragRelation: "weak",
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

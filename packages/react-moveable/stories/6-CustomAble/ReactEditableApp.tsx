@@ -3,8 +3,8 @@ import Moveable, { MoveableManagerInterface, Renderer } from "@/react-moveable";
 
 const Editable = {
     name: "editable",
-    props: {},
-    events: {},
+    props: [],
+    events: [],
     render(moveable: MoveableManagerInterface<any, any>, React: Renderer) {
         const rect = moveable.getRect();
         const { pos2 } = moveable.state;

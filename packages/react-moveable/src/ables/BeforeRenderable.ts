@@ -20,16 +20,15 @@ function isIdentityMatrix(matrix: string, is3d?: boolean) {
 export default {
     isPinch: true,
     name: "beforeRenderable",
-    props: {
-    } as const,
-    events: {
-        onBeforeRenderStart: "beforeRenderStart",
-        onBeforeRender: "beforeRender",
-        onBeforeRenderEnd: "beforeRenderEnd",
-        onBeforeRenderGroupStart: "beforeRenderGroupStart",
-        onBeforeRenderGroup: "beforeRenderGroup",
-        onBeforeRenderGroupEnd: "beforeRenderGroupEnd",
-    } as const,
+    props: [] as const,
+    events: [
+        "beforeRenderStart",
+        "beforeRender",
+        "beforeRenderEnd",
+        "beforeRenderGroupStart",
+        "beforeRenderGroup",
+        "beforeRenderGroupEnd",
+    ] as const,
     dragRelation: "weak",
     setTransform(moveable: MoveableManagerInterface<BeforeRenderableProps>, e: any) {
         const {

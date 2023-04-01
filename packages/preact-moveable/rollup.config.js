@@ -1,4 +1,4 @@
-import builder from "@daybrush/builder";
+const builder = require("@daybrush/builder");
 const preact = require("rollup-plugin-preact");
 
 
@@ -37,7 +37,7 @@ const defaultOptions = {
     ],
 };
 
-export default builder([
+module.exports = builder([
     {
         ...defaultOptions,
         input: "src/preact-moveable/Moveable.ts",

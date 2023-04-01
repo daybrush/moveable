@@ -1,6 +1,6 @@
 
-import builder from "@daybrush/builder";
-import compat from "rollup-plugin-react-compat";
+const builder = require("@daybrush/builder");
+const compat = require("rollup-plugin-react-compat");
 
 const compatPlugin = compat({
     useReactCompat: true,
@@ -37,13 +37,14 @@ const external = {
     "@scena/matrix": "@scena/matrix",
     "@egjs/list-differ": "eg.ListDiffer",
 };
-export default builder([
+module.exports = builder([
     {
         name: "Moveable",
         input: "src/index.umd.ts",
         output: "./dist/moveable.js",
         exports: "default",
         format: "umd",
+        minifyPrototype: true,
         plugins: [resolveCompatPlugin],
     },
     {
@@ -52,6 +53,7 @@ export default builder([
         output: "./dist/moveable.min.js",
         exports: "default",
         format: "umd",
+        minifyPrototype: true,
         plugins: [resolveCompatPlugin],
         uglify: true,
     },
@@ -60,6 +62,7 @@ export default builder([
         output: "./dist/moveable.esm.js",
         exports: "named",
         format: "es",
+        minifyPrototype: true,
         plugins: [compatPlugin],
         external,
     },
@@ -68,6 +71,7 @@ export default builder([
         output: "./dist/moveable.cjs.js",
         exports: "named",
         format: "cjs",
+        minifyPrototype: true,
         plugins: [compatPlugin],
         external,
     },

@@ -5,6 +5,7 @@ const defaultOptions = {
     sourcemap: true,
     input: "./src/index.ts",
     exports: "named",
+    typescript2: true,
     plugins: [
         vuePlugin(),
     ],
@@ -12,7 +13,7 @@ const defaultOptions = {
         "vue": "Vue",
     },
 };
-export default buildHelper([
+module.exports = buildHelper([
     {
         ...defaultOptions,
         format: "es",

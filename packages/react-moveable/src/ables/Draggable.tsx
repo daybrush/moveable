@@ -28,21 +28,21 @@ import { TINY_NUM } from "../consts";
  */
 export default {
     name: "draggable",
-    props: {
-        draggable: Boolean,
-        throttleDrag: Number,
-        throttleDragRotate: Number,
-        startDragRotate: Number,
-        edgeDraggable: Boolean,
-    } as const,
-    events: {
-        onDragStart: "dragStart",
-        onDrag: "drag",
-        onDragEnd: "dragEnd",
-        onDragGroupStart: "dragGroupStart",
-        onDragGroup: "dragGroup",
-        onDragGroupEnd: "dragGroupEnd",
-    } as const,
+    props: [
+        "draggable",
+        "throttleDrag",
+        "throttleDragRotate",
+        "startDragRotate",
+        "edgeDraggable",
+    ] as const,
+    events: [
+        "dragStart",
+        "drag",
+        "dragEnd",
+        "dragGroupStart",
+        "dragGroup",
+        "dragGroupEnd",
+    ] as const,
     requestStyle(): string[] {
         return ["left", "top", "right", "bottom"];
     },

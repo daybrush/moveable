@@ -59,17 +59,17 @@ function isValidPos(poses1: number[][], poses2: number[][]) {
 export default {
     name: "warpable",
     ableGroup: "size",
-    props: {
-        warpable: Boolean,
-        renderDirections: Array,
-        edge: Boolean,
-        displayAroundControls: Boolean,
-    } as const,
-    events: {
-        onWarpStart: "warpStart",
-        onWarp: "warp",
-        onWarpEnd: "warpEnd",
-    } as const,
+    props: [
+        "warpable",
+        "renderDirections",
+        "edge",
+        "displayAroundControls",
+    ] as const,
+    events: [
+        "warpStart",
+        "warp",
+        "warpEnd",
+    ] as const,
     viewClassName: getDirectionViewClassName("warpable"),
     render(moveable: MoveableManagerInterface<ResizableProps & ScalableProps & WarpableProps>, React: Renderer): any[] {
         const { resizable, scalable, warpable, zoom } = moveable.props;

@@ -1,11 +1,11 @@
-import builder from "@daybrush/builder";
-import css from "rollup-plugin-css-bundle";
+const builder = require("@daybrush/builder");
+const css = require("rollup-plugin-css-bundle");
 const preact = require("rollup-plugin-preact");
 
 
 
 
-export default builder({
+modulex.exports = builder({
     input: "./src/demo/index.tsx",
     tsconfig: "./tsconfig.build.json",
     sourcemap: false,

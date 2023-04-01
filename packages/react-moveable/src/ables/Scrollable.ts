@@ -21,18 +21,18 @@ function getDefaultScrollPosition(e: { scrollContainer: HTMLElement, direction: 
 export default {
     name: "scrollable",
     canPinch: true,
-    props: {
-        scrollable: Boolean,
-        scrollContainer: Object,
-        scrollThreshold: Number,
-        scrollThrottleTime: Number,
-        getScrollPosition: Function,
-        scrollOptions: Object,
-    } as const,
-    events: {
-        onScroll: "scroll",
-        onScrollGroup: "scrollGroup",
-    } as const,
+    props: [
+        "scrollable",
+        "scrollContainer",
+        "scrollThreshold",
+        "scrollThrottleTime",
+        "getScrollPosition",
+        "scrollOptions",
+    ] as const,
+    events: [
+        "scroll",
+        "scrollGroup",
+    ] as const,
     dragRelation: "strong",
     dragStart(moveable: MoveableManagerInterface<ScrollableProps, Record<string, any>>, e: any) {
         const props = moveable.props;

@@ -70,11 +70,11 @@ interface CustomAbleProps {
 }
 const CustomAble = {
     name: "customAble",
-    props: {
-        customAble: Boolean,
-        prop1: Number,
-    },
-    events: {},
+    props: [
+        "customAble",
+        "prop1",
+    ],
+    events: [],
     render(moveable: MoveableManagerInterface<CustomAbleProps>, React: Renderer) {
         const CustomElement = React.useCSS("div", `
         {

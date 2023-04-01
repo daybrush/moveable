@@ -16,7 +16,7 @@ function getDraggableEvent(e: any) {
 export default makeAble("edgeDraggable", {
     css: [
         `.edge.edgeDraggable.line {
-    cursor: move;
+cursor: move;
 }`,
     ],
     render(moveable: MoveableManagerInterface<DraggableProps>, React: Renderer) {
