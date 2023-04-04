@@ -26,6 +26,7 @@ import {
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getBeforeRenderableDatas, getDragDist } from "./gesto/GestoUtils";
 import { getGestoData } from "./gesto/GestoData";
+import { GetStyle, getCachedStyle } from "./store/Store";
 
 export function round(num: number) {
     return Math.round(num);
@@ -83,19 +84,20 @@ export function getBeforeTransformOrigin(el: SVGElement) {
         return value * measureSVGSize(el, unit, i === 0);
     });
 }
-export function getTransformOrigin(style: CSSStyleDeclaration) {
-    const transformOrigin = style.transformOrigin;
-
+export function getTransformOriginArray(transformOrigin: string) {
     return transformOrigin ? transformOrigin.split(" ") : ["0", "0"];
+}
+export function getTransformOrigin(style: CSSStyleDeclaration) {
+    return getTransformOriginArray(style.transformOrigin);
 }
 export function getElementTransform(
     target: HTMLElement | SVGElement,
-    computedStyle = getComputedStyle(target),
-) {
-    const computedTransform = computedStyle.transform;
+): string {
+    const getStyle = getCachedStyle(target);
+    const computedTransform = getStyle("transform");
 
     if (computedTransform && computedTransform !== "none") {
-        return computedStyle.transform;
+        return computedTransform;
     }
     if ("transform" in target) {
         const list = (target as any).transform as SVGAnimatedTransformList;
@@ -128,7 +130,7 @@ export function getOffsetInfo(
     lastParent: SVGElement | HTMLElement | null | undefined,
     isParent?: boolean,
     checkZoom?: boolean,
-    targetStyle?: CSSStyleDeclaration,
+    getTargetStyle?: GetStyle,
 ) {
     const doc = el && el.ownerDocument ? el.ownerDocument : document;
     const documentElement = doc.documentElement || doc.body;
@@ -157,8 +159,8 @@ export function getOffsetInfo(
     let offsetZoom = 1;
 
 
-    const targetZoom = parseFloat((targetStyle as any)?.zoom) || 1;
-    const targetPosition = targetStyle?.position;
+    const targetZoom = parseFloat(getTargetStyle?.("zoom")) || 1;
+    const targetPosition = getTargetStyle?.("position");
 
 
 
@@ -166,13 +168,13 @@ export function getOffsetInfo(
         if (lastParent === target) {
             isEnd = true;
         }
-        const style = getComputedStyle(target);
+        const getStyle = getCachedStyle(target);
         const tagName = target.tagName.toLowerCase();
-        const transform = getElementTransform(target as SVGElement, style);
-        const willChange = style.willChange;
-        const zoom = parseFloat((style as any).zoom) || 1;
-        position = style.position!;
+        const transform = getElementTransform(target as SVGElement);
+        const willChange = getStyle("willChange");
+        const zoom = parseFloat(getStyle("zoom")) || 1;
 
+        position = getStyle("position");
         if (checkZoom && zoom !== 1) {
             offsetZoom = zoom;
             break;
@@ -200,7 +202,7 @@ export function getOffsetInfo(
             // Shadow Root
             target = (parentNode as ShadowRoot).host as HTMLElement;
             isCustomElement = true;
-            position = getComputedStyle(target).position;
+            position = getCachedStyle(target)("position");
             break;
         }
         target = parentNode as HTMLElement | SVGElement;
@@ -220,12 +222,11 @@ export function getOffsetInfo(
 export function getOffsetPosInfo(
     el: HTMLElement | SVGElement,
     target: HTMLElement | SVGElement,
-    style: CSSStyleDeclaration,
 ) {
     const tagName = el.tagName.toLowerCase();
     let offsetLeft = (el as HTMLElement).offsetLeft;
     let offsetTop = (el as HTMLElement).offsetTop;
-
+    const getStyle = getCachedStyle(el);
     // svg
     const isSVG = isUndefined(offsetLeft);
     let hasOffset = !isSVG;
@@ -235,7 +236,7 @@ export function getOffsetPosInfo(
     if (!hasOffset && tagName !== "svg") {
         origin = IS_WEBKIT605
             ? getBeforeTransformOrigin(el as SVGElement)
-            : getTransformOrigin(style).map(pos => parseFloat(pos));
+            : getTransformOriginArray(getStyle("transformOrigin")).map(pos => parseFloat(pos));
 
         targetOrigin = origin.slice();
         hasOffset = true;
@@ -248,7 +249,7 @@ export function getOffsetPosInfo(
             el === target && target.tagName.toLowerCase() === "g",
         );
     } else {
-        origin = getTransformOrigin(style).map(pos => parseFloat(pos));
+        origin = getTransformOriginArray(getStyle("transformOrigin")).map(pos => parseFloat(pos));
         targetOrigin = origin.slice();
     }
     return {
@@ -263,22 +264,22 @@ export function getOffsetPosInfo(
 export function getBodyOffset(
     el: HTMLElement | SVGElement,
     isSVG: boolean,
-    style: CSSStyleDeclaration = getComputedStyle(el),
 ) {
-    const bodyStyle = getComputedStyle(document.body);
-    const bodyPosition = bodyStyle.position;
+    const getStyle = getCachedStyle(el);
+    const getBodyStyle = getCachedStyle(document.body);
+    const bodyPosition = getBodyStyle("position");
     if (!isSVG && (!bodyPosition || bodyPosition === "static")) {
         return [0, 0];
     }
 
-    let marginLeft = parseInt(bodyStyle.marginLeft, 10);
-    let marginTop = parseInt(bodyStyle.marginTop, 10);
+    let marginLeft = parseInt(getBodyStyle("marginLeft"), 10);
+    let marginTop = parseInt(getBodyStyle("marginTop"), 10);
 
-    if (style.position === "absolute") {
-        if (style.top !== "auto" || style.bottom !== "auto") {
+    if (getStyle("position") === "absolute") {
+        if (getStyle("top") !== "auto" || getStyle("bottom") !== "auto") {
             marginTop = 0;
         }
-        if (style.left !== "auto" || style.right !== "auto") {
+        if (getStyle("left") !== "auto" || getStyle("right") !== "auto") {
             marginLeft = 0;
         }
     }
@@ -614,14 +615,6 @@ export function getControlTransform(rotation: number, zoom: number, ...poses: nu
         transform: `translateZ(0px) translate(${x}px, ${y}px) rotate(${rotation}rad) scale(${zoom})`,
     };
 }
-export function getCSSSize(target: SVGElement | HTMLElement) {
-    const style = getComputedStyle(target);
-
-    return [
-        parseFloat(style.width!),
-        parseFloat(style.height!),
-    ];
-}
 
 export function getProps<Props>(props: Props, ableName: keyof Props): Props {
     const self = props[ableName];
@@ -637,7 +630,6 @@ export function getProps<Props>(props: Props, ableName: keyof Props): Props {
 
 export function getSize(
     target?: SVGElement | HTMLElement | null,
-    style: CSSStyleDeclaration | null = target ? getComputedStyle(target) : null,
 ): ElementSizes {
     const hasOffset = target && !isUndefined((target as any).offsetWidth);
 
@@ -665,6 +657,7 @@ export function getSize(
 
     if (target) {
         if (!hasOffset && target!.tagName.toLowerCase() !== "svg") {
+            // check svg elements
             const bbox = (target as SVGGraphicsElement).getBBox();
 
             svg = true;
@@ -677,16 +670,18 @@ export function getSize(
             clientWidth = offsetWidth;
             clientHeight = offsetHeight;
         } else {
+            // check html elements
+            const getStyle = getCachedStyle(target);
             const targetStyle = target.style;
-            const boxSizing = style!.boxSizing === "border-box";
-            const borderLeft = parseFloat(style!.borderLeftWidth!) || 0;
-            const borderRight = parseFloat(style!.borderRightWidth!) || 0;
-            const borderTop = parseFloat(style!.borderTopWidth!) || 0;
-            const borderBottom = parseFloat(style!.borderBottomWidth!) || 0;
-            const paddingLeft = parseFloat(style!.paddingLeft!) || 0;
-            const paddingRight = parseFloat(style!.paddingRight!) || 0;
-            const paddingTop = parseFloat(style!.paddingTop!) || 0;
-            const paddingBottom = parseFloat(style!.paddingBottom!) || 0;
+            const boxSizing = getStyle("boxSizing") === "border-box";
+            const borderLeft = parseFloat(getStyle("borderLeftWidth")) || 0;
+            const borderRight = parseFloat(getStyle("borderRightWidth")) || 0;
+            const borderTop = parseFloat(getStyle("borderTopWidth")) || 0;
+            const borderBottom = parseFloat(getStyle("borderBottomWidth")) || 0;
+            const paddingLeft = parseFloat(getStyle("paddingLeft")) || 0;
+            const paddingRight = parseFloat(getStyle("paddingRight")) || 0;
+            const paddingTop = parseFloat(getStyle("paddingTop")) || 0;
+            const paddingBottom = parseFloat(getStyle("paddingBottom")) || 0;
 
             const horizontalPadding = paddingLeft + paddingRight;
             const verticalPadding = paddingTop + paddingBottom;
@@ -694,7 +689,7 @@ export function getSize(
             const verticalBorder = borderTop + borderBottom;
             const horizontalOffset = horizontalPadding + horizontalBorder;
             const verticalOffset = verticalPadding + verticalBorder;
-            const position = style!.position;
+            const position = getStyle("position");
 
             let containerWidth = 0;
             let containerHeight = 0;
@@ -711,22 +706,22 @@ export function getSize(
                     parentElement = target.parentElement;
                 }
                 if (parentElement) {
-                    const parentStyle = getComputedStyle(parentElement);
+                    const getParentStyle = getCachedStyle(parentElement);
 
-                    containerWidth = parseFloat(parentStyle.width);
-                    containerHeight = parseFloat(parentStyle.height);
+                    containerWidth = parseFloat(getParentStyle("width"));
+                    containerHeight = parseFloat(getParentStyle("height"));
                 }
             }
             minWidth = Math.max(
                 horizontalPadding,
-                convertUnitSize(style!.minWidth, containerWidth) || 0,
+                convertUnitSize(getStyle("minWidth"), containerWidth) || 0,
             );
             minHeight = Math.max(
                 verticalPadding,
-                convertUnitSize(style!.minHeight, containerHeight) || 0,
+                convertUnitSize(getStyle("minHeight"), containerHeight) || 0,
             );
-            maxWidth = convertUnitSize(style!.maxWidth, containerWidth);
-            maxHeight = convertUnitSize(style!.maxHeight, containerHeight);
+            maxWidth = convertUnitSize(getStyle("maxWidth"), containerWidth);
+            maxHeight = convertUnitSize(getStyle("maxHeight"), containerHeight);
 
             if (isNaN(maxWidth)) {
                 maxWidth = Infinity;
@@ -736,8 +731,8 @@ export function getSize(
             }
             inlineCSSWidth = convertUnitSize(targetStyle.width, 0) || 0;
             inlineCSSHeight = convertUnitSize(targetStyle.height, 0) || 0;
-            cssWidth = parseFloat(style!.width) || 0;
-            cssHeight = parseFloat(style!.height) || 0;
+            cssWidth = parseFloat(getStyle("width")) || 0;
+            cssHeight = parseFloat(getStyle("height")) || 0;
 
 
             contentWidth = Math.abs(cssWidth - inlineCSSWidth) < 1
@@ -813,7 +808,10 @@ export function resetClientRect(): MoveableClientRect {
     };
 }
 
-export function getExtendsRect(el: HTMLElement | SVGElement, rect: MoveableClientRect): MoveableClientRect {
+export function getExtendsRect(
+    el: HTMLElement | SVGElement,
+    rect: MoveableClientRect,
+): MoveableClientRect {
     const isRoot = el === document.body || el === document.documentElement;
 
 
@@ -831,7 +829,8 @@ export function getExtendsRect(el: HTMLElement | SVGElement, rect: MoveableClien
         extendsRect.clientHeight = Math.max(rect.height, extendsRect.clientHeight);
         extendsRect.scrollHeight = Math.max(rect.height, extendsRect.scrollHeight);
     }
-    extendsRect.overflow = getComputedStyle(el).overflow !== "visible";
+
+    extendsRect.overflow = getCachedStyle(el)("overflow") !== "visible";
 
     return {
         ...rect,
@@ -868,7 +867,7 @@ export function getClientRectByPosition(
     }
     return rect;
 }
-export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean) {
+export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean): MoveableClientRect {
     let left = 0;
     let top = 0;
     let width = 0;
@@ -876,21 +875,12 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     // let isRoot = false;
 
     if (el) {
-        // isRoot = el === document.body || el === document.documentElement;
-        // if (isRoot) {
-        //     width = window.innerWidth;
-        //     height = window.innerHeight;
-        //     const scrollPos = getBodyScrollPos();
-
-        //     [left, top] = [-scrollPos[0], -scrollPos[1]];
-        // } else {
         const clientRect = el.getBoundingClientRect();
 
         left = clientRect.left;
         top = clientRect.top;
         width = clientRect.width;
         height = clientRect.height;
-        // }
     }
 
     const rect: MoveableClientRect = {
@@ -1627,8 +1617,21 @@ export function isDeepArrayEquals(arr1: any[], arr2: any[]): boolean {
 }
 
 
-export function pushUnique<T>(elements: T[], element: T) {
-    if (elements.indexOf(element) === -1) {
-        elements.push(element);
+export function watchValue<T>(
+    store: Record<string, any>,
+    property: string,
+    nextValue: T,
+    valueKey: (value: T) => string | number,
+): T {
+    const prevValue = store[property];
+
+    if (
+        property in store
+        && (prevValue === nextValue || valueKey(prevValue) === valueKey(nextValue))
+    ) {
+        return prevValue;
     }
+
+    store[property] = nextValue;
+    return nextValue;
 }

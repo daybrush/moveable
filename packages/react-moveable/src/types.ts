@@ -72,11 +72,11 @@ export interface DefaultOptions {
      */
     container?: SVGElement | HTMLElement | null;
     /**
-     * Moveable Portal Container to support other frameworks. Don't set it.
+     * Whether to warp itself to the container itself. Don't set it.
      * @private
-     * @default parentElement
+     * @default false
      */
-    portalContainer?: HTMLElement | null;
+    warpSelf?: boolean;
     /**
      * Moveable Root Container (No Transformed Container)
      * @default parentElement
@@ -3198,9 +3198,7 @@ export interface MoveableManagerInterface<T = {}, U = {}> extends MoveableInterf
     controlAbles: Able[];
     targetAbles: Able[];
     areaElement: HTMLElement;
-    controlBox: {
-        getElement(): HTMLElement,
-    };
+    controlBox: HTMLElement,
     isUnmounted: boolean;
     useCSS(tag: string, css: string): any;
     getContainer(): HTMLElement | SVGElement;

@@ -4,7 +4,7 @@ export default {
         "target",
         "dragTarget",
         "container",
-        "portalContainer",
+        "warpSelf",
         "rootContainer",
         "useResizeObserver",
         "useMutationObserver",

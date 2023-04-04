@@ -19,8 +19,7 @@ import Renderable from "./Renderable";
 import Clickable from "./Clickable";
 import edgeDraggable from "./edgeDraggable";
 import IndividualGroupable from "./IndividualGroupable";
-import { camelize } from "@daybrush/utils";
-import { pushUnique } from "../utils";
+import { camelize, pushSet } from "@daybrush/utils";
 import { Able } from "../types";
 
 export const MOVEABLE_ABLES = /*#__PURE__*/[
@@ -39,14 +38,14 @@ export const MOVEABLE_ABLES = /*#__PURE__*/[
 
 export const MOVEABLE_EVENTS = /*#__PURE__*/(MOVEABLE_ABLES as readonly Able[]).reduce((current, able) => {
     (able.events || []).forEach(name => {
-        pushUnique(current, name);
+        pushSet(current, name);
     });
     return current;
 }, [] as any[]) as Array<typeof MOVEABLE_ABLES[number]["events"][number]>;
 
 export const MOVEABLE_PROPS = /*#__PURE__*/(MOVEABLE_ABLES as readonly Able[]).reduce((current, able) => {
     (able.props || []).forEach(name => {
-        pushUnique(current, name);
+        pushSet(current, name);
     });
     return current;
 }, [] as any[]) as Array<typeof MOVEABLE_ABLES[number]["props"][number]>;

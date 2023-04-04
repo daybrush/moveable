@@ -1,9 +1,11 @@
 import { plus, getOrigin, multiply, minus } from "@scena/matrix";
+import { getCachedClientRect, getCachedStyle } from "../store/Store";
 import { MoveableClientRect, Writable } from "../types";
 import {
     calculateInversePosition,
     calculateMoveablePosition,
-    getClientRect, getClientRectByPosition, getOffsetInfo, getTransformOrigin, resetClientRect,
+    getClientRect, getClientRectByPosition, getOffsetInfo, resetClientRect,
+    getTransformOriginArray,
 } from "../utils";
 import { calculateElementInfo, MoveableElementInfo } from "./getElementInfo";
 
@@ -43,10 +45,10 @@ export function getMoveableTargetInfo(
         true,
     );
     if (target) {
-        const computedStyle = getComputedStyle(target);
+        const getStyle = getCachedStyle(target);
 
         requestStyles.forEach(name => {
-            style[name] = computedStyle[name] as any;
+            style[name] = getStyle(name as any);
         });
         const n = result.is3d ? 4 : 3;
         const beforePosition = calculateMoveablePosition(
@@ -74,7 +76,7 @@ export function getMoveableTargetInfo(
             );
             const absoluteContainerPosition = calculateMoveablePosition(
                 result.originalRootMatrix,
-                getTransformOrigin(getComputedStyle(offsetContainer)).map(pos => parseFloat(pos)),
+                getTransformOriginArray(getCachedStyle(offsetContainer)("transformOrigin")).map(pos => parseFloat(pos)),
                 offsetContainer.offsetWidth, offsetContainer.offsetHeight,
             );
             targetClientRect = getClientRectByPosition(absoluteTargetPosition, rootContainerClientRect);
@@ -97,7 +99,7 @@ export function getMoveableTargetInfo(
             }
         } else {
             targetClientRect = getClientRect(target);
-            containerClientRect = getClientRect(offsetContainer, true);
+            containerClientRect = getCachedClientRect(offsetContainer);
 
             if (moveableElement) {
                 moveableClientRect = getClientRect(moveableElement);

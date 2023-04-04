@@ -3,7 +3,7 @@ import { refs } from "framework-utils";
 import MoveableManager from "../MoveableManager";
 import { renderLine } from "../renderDirections";
 import { Renderer, MoveableGroupInterface, GroupableProps } from "../types";
-import { flat } from "../utils";
+import { flat, watchValue } from "../utils";
 
 export default {
     name: "groupable",
@@ -21,7 +21,6 @@ export default {
         let targets: Array<HTMLElement | SVGElement | undefined | null> = props.targets || [];
 
         const { left, top, isPersisted } = moveable.getState();
-        const position = [left, top];
         const zoom = props.zoom || 1;
         const renderGroupRects = moveable.renderGroupRects;
         let persistDatChildren = props.persistData?.children || [];
@@ -31,7 +30,19 @@ export default {
         } else {
             persistDatChildren = [];
         }
-        const requestStyles = moveable.getRequestChildStyles();
+        const store = (moveable as any)._store;
+        const parentPosition = watchValue(
+            store,
+            "parentPosition",
+            [left, top],
+            styles => styles.join(","),
+        );
+        const requestStyles = watchValue(
+            store,
+            "requestStyles",
+            moveable.getRequestChildStyles(),
+            styles => styles.join(","),
+        );
 
         moveable.moveables = moveable.moveables.slice(0, targets.length);
         return [
@@ -47,7 +58,7 @@ export default {
                     useResizeObserver={props.useResizeObserver}
                     hideChildMoveableDefaultLines={props.hideChildMoveableDefaultLines}
                     parentMoveable={moveable}
-                    parentPosition={position}
+                    parentPosition={[left, top]}
                     persistData={persistDatChildren[i]}
                     zoom={zoom}
                 />;
@@ -64,8 +75,8 @@ export default {
                     return renderLine(
                         React,
                         "",
-                        minus(poses[from], position),
-                        minus(poses[to], position),
+                        minus(poses[from], parentPosition),
+                        minus(poses[to], parentPosition),
                         zoom,
                         `group-rect-${i}-${j}`,
                     );

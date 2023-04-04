@@ -3,6 +3,7 @@ import {
     fillParams, fillEndParams, calculatePosition,
     fillCSSObject,
     catchEvent,
+    getComputedStyle,
 } from "../utils";
 import {
     Renderer, RoundableProps, OnRoundStart,

@@ -14,6 +14,7 @@ import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
 import { find, isArray, throttle } from "@daybrush/utils";
 import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 import { solveC, solveConstantsDistance } from "./Snappable/utils";
+import { setStoreCache } from "./store/Store";
 
 function getMaxPos(poses: number[][][], index: number) {
     return Math.max(...poses.map(([pos1, pos2, pos3, pos4]) => {
@@ -240,6 +241,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         if (!this.controlBox || state.isPersisted) {
             return;
         }
+        setStoreCache(true);
         this.moveables.forEach(moveable => {
             moveable.updateRect(type, false, false);
         });
@@ -336,7 +338,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             + ` scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
         const transform = `translate(${-deltaX}px, ${-deltaY}px)${rotateScale}`;
 
-        this.controlBox.getElement().style.transform
+        this.controlBox.style.transform
             = `translate3d(${minX}px, ${minY}px, ${this.props.translateZ || 0})`;
 
         target.style.cssText += `left:0px;top:0px;`
@@ -348,9 +350,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const container = this.getContainer();
         const info = getMoveableTargetInfo(
-            this.controlBox.getElement(),
+            this.controlBox,
             target,
-            this.controlBox.getElement(),
+            this.controlBox,
             this.getContainer(),
             this._rootContainer || container,
             [],
@@ -382,6 +384,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         target.style.transform
             = `translate(${-deltaX - delta[0]}px, ${-deltaY - delta[1]}px)`
             + rotateScale;
+
+        setStoreCache();
         this.updateState(
             {
                 ...info,
@@ -436,14 +440,14 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         }
         if (!state.target) {
             state.target = this.areaElement;
-            this.controlBox.getElement().style.display = "block";
+            this.controlBox.style.display = "block";
         }
         if (state.target) {
             if (!this.targetGesto) {
                 this.targetGesto = getTargetAbleGesto(this, nextTarget, "Group");
             }
             if (!this.controlGesto) {
-                this.controlGesto = getAbleGesto(this, this.controlBox.getElement(), "controlAbles", "GroupControl");
+                this.controlGesto = getAbleGesto(this, this.controlBox, "controlAbles", "GroupControl");
             }
         }
         const isContainerChanged = !equals(state.container, props.container);

@@ -116,7 +116,7 @@
         "wait-on": "^7.0.1"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.10.3",
+        "@daybrush/utils": "^1.11.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
         "@egjs/list-differ": "^1.0.0",

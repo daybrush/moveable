@@ -174,7 +174,7 @@ export function checkMoveableTarget(moveable: MoveableManagerInterface) {
 
         return dragTarget && (eventTarget === dragTarget || dragTarget.contains(eventTarget))
             || eventTarget === areaElement
-            || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.getElement().contains(eventTarget))
+            || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.contains(eventTarget))
             || hasClass(eventTarget, "moveable-area")
             || hasClass(eventTarget, "moveable-padding")
             || hasClass(eventTarget, "moveable-edgeDraggable");
@@ -186,7 +186,7 @@ export function getTargetAbleGesto(
     moveableTarget: HTMLElement | SVGElement,
     eventAffix: string,
 ) {
-    const controlBox = moveable.controlBox.getElement();
+    const controlBox = moveable.controlBox;
     const targets: Array<HTMLElement | SVGElement> = [];
     const dragTarget = moveable.props.dragTarget;
 
@@ -227,7 +227,7 @@ export function getAbleGesto(
         preventClickEventOnDrag: isTargetAbles ? preventClickEventOnDrag : false,
         preventClickEventOnDragStart: isTargetAbles ? preventClickDefault : false,
         preventClickEventByCondition: isTargetAbles ? null : (e: MouseEvent) => {
-            return moveable.controlBox.getElement().contains(e.target as Element);
+            return moveable.controlBox.contains(e.target as Element);
         },
         checkInput: isTargetAbles ? checkInput : false,
     };

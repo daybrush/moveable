@@ -33,12 +33,13 @@ import {
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
 import EventManager from "./EventManager";
-import styled from "react-css-styled";
+import { styled } from "react-css-styled";
 import EventEmitter from "@scena/event-emitter";
 import { getMoveableTargetInfo } from "./utils/getMoveableTargetInfo";
 import { VIEW_DRAGGING } from "./classNames";
 import { diff } from "@egjs/list-differ";
 import { getPersistState } from "./utils/persist";
+import { setStoreCache } from "./store/Store";
 // import { getClipPath } from "./ables/clippable/utils";
 
 export default class MoveableManager<T = {}>
@@ -53,7 +54,7 @@ export default class MoveableManager<T = {}>
         wrapperMoveable: null,
         isWrapperMounted: false,
         parentPosition: null,
-        portalContainer: null,
+        warpSelf: false,
         useResizeObserver: false,
         useMutationObserver: false,
         preventDefault: true,
@@ -99,7 +100,7 @@ export default class MoveableManager<T = {}>
     public enabledAbles: Able[] = [];
     public targetAbles: Able[] = [];
     public controlAbles: Able[] = [];
-    public controlBox!: { getElement(): HTMLElement };
+    public controlBox!: HTMLElement;
     public areaElement!: HTMLElement;
     public targetGesto!: Gesto;
     public controlGesto!: Gesto;
@@ -122,10 +123,10 @@ export default class MoveableManager<T = {}>
     private _reiszeObserver: ResizeObserver | null = null;
     private _observerId = 0;
     private _mutationObserver: MutationObserver | null = null;
-    private _mutationObserverId = 0;
     public _rootContainer: HTMLElement | null | undefined = null;
     private _viewContainer: HTMLElement | null | undefined = null;
     private _viewClassNames: string[] = [];
+    private _store: Record<string, any> = {};
 
     public render() {
         const props = this.props;
@@ -137,7 +138,6 @@ export default class MoveableManager<T = {}>
             zoom, cspNonce,
             translateZ,
             cssStyled: ControlBoxElement,
-            portalContainer,
             groupable,
             linePadding,
             controlPadding,
@@ -195,7 +195,6 @@ export default class MoveableManager<T = {}>
                 className={`${prefix("control-box", direction === -1 ? "reverse" : "", isDragging ? "dragging" : "")} ${ableClassName} ${className}`}
                 {...ableAttributes}
                 onClick={this._onPreventClick}
-                portalContainer={portalContainer}
                 style={style}>
                 {this.renderAbles()}
                 {this._renderLines()}
@@ -205,7 +204,6 @@ export default class MoveableManager<T = {}>
     public componentDidMount() {
         this.isMoveableMounted = true;
         this.isUnmounted = false;
-        this.controlBox.getElement();
         const props = this.props;
         const { parentMoveable, container, wrapperMoveable } = props;
 
@@ -273,7 +271,7 @@ export default class MoveableManager<T = {}>
         return container!
             || (wrapperMoveable && wrapperMoveable.getContainer())
             || (parentMoveable && parentMoveable.getContainer())
-            || this.controlBox.getElement().parentElement!;
+            || this.controlBox.parentElement!;
     }
     /**
      * Check if the target is an element included in the moveable.
@@ -420,6 +418,11 @@ export default class MoveableManager<T = {}>
      * });
      */
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
+        const isSingle = !this.props.parentPosition;
+
+        if (isSingle) {
+            setStoreCache(true);
+        }
         const props = this.props;
         const parentMoveable = props.parentMoveable;
         const state = this.state;
@@ -429,7 +432,7 @@ export default class MoveableManager<T = {}>
             ? (parentMoveable as any)._rootContainer
             : this._rootContainer;
         const nextState = getMoveableTargetInfo(
-            this.controlBox && this.controlBox.getElement(),
+            this.controlBox,
             target,
             container,
             container,
@@ -443,6 +446,10 @@ export default class MoveableManager<T = {}>
             for (const name in persistState) {
                 (nextState as any)[name] = (persistState as any)[name];
             }
+        }
+
+        if (isSingle) {
+            setStoreCache();
         }
         this.updateState(
             nextState,
@@ -906,7 +913,7 @@ export default class MoveableManager<T = {}>
         this._updateMutationObserver(prevProps);
     }
     protected _updateEvents() {
-        const controlBoxElement = this.controlBox.getElement();
+        const controlBoxElement = this.controlBox;
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
         const props = this.props;

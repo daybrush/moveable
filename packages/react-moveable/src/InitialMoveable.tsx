@@ -12,7 +12,7 @@ import { MOVEABLE_METHODS, PREFIX, MOVEABLE_CSS } from "./consts";
 import Default from "./ables/Default";
 import Groupable from "./ables/Groupable";
 import DragArea from "./ables/DragArea";
-import styled from "react-css-styled";
+import { styled } from "react-css-styled";
 import { getRefTargets } from "./utils";
 import IndividualGroupable from "./ables/IndividualGroupable";
 import MoveableIndividualGroup from "./MoveableIndividualGroup";

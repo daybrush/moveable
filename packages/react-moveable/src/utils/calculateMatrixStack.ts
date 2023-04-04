@@ -1,4 +1,5 @@
 import { createIdentityMatrix, convertDimension, multiply, createOriginMatrix, ignoreDimension } from "@scena/matrix";
+import { getCachedMatrixContainerInfo } from "../store/Store";
 import { convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
 import { getMatrixStackInfo } from "./getMatrixStackInfo";
 
@@ -38,12 +39,13 @@ export function calculateMatrixStack(
         hasFixed,
         zoom: containerZoom,
     } = getMatrixStackInfo(target, container); // prevMatrix
+
     const {
         matrixes: rootMatrixes,
         is3d: isRoot3d,
         offsetContainer: offsetRootContainer,
         zoom: rootZoom,
-    } = getMatrixStackInfo(offsetContainer, rootContainer, true); // prevRootMatrix
+    } = getCachedMatrixContainerInfo(offsetContainer, rootContainer); // prevRootMatrix
 
     // if (rootContainer === document.body) {
     //     console.log(offsetContainer, rootContainer, rootMatrixes);
@@ -61,7 +63,7 @@ export function calculateMatrixStack(
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
 
-    rootMatrixes.reverse();
+    const nextRootMatrixes = [...rootMatrixes].reverse();
     matrixes.reverse();
 
     if (!is3d && isNext3d) {
@@ -70,7 +72,7 @@ export function calculateMatrixStack(
         convert3DMatrixes(matrixes);
     }
     if (!isRoot3d && isNext3d) {
-        convert3DMatrixes(rootMatrixes);
+        convert3DMatrixes(nextRootMatrixes);
     }
 
 
@@ -79,13 +81,13 @@ export function calculateMatrixStack(
     // beforeMatrix = (... -> container -> offset -> absolute) -> offset -> absolute(targetMatrix)
     // offsetMatrix = (... -> container -> offset -> absolute -> offset) -> absolute(targetMatrix)
 
-    rootMatrixes.forEach(info => {
+    nextRootMatrixes.forEach(info => {
         rootMatrix = multiply(rootMatrix, info.matrix!, n);
     });
     const originalRootContainer = rootContainer || document.body;
-    const endContainer = rootMatrixes[0]?.target
+    const endContainer = nextRootMatrixes[0]?.target
         || getOffsetInfo(originalRootContainer, originalRootContainer, true).offsetParent;
-    const rootMatrixBeforeOffset = rootMatrixes.slice(1).reduce((matrix, info) => {
+    const rootMatrixBeforeOffset = nextRootMatrixes.slice(1).reduce((matrix, info) => {
         return multiply(matrix, info.matrix!, n);
     }, createIdentityMatrix(n));
     matrixes.forEach((info, i) => {

@@ -2,6 +2,7 @@ import {
     convertCSStoMatrix, convertDimension,
     createIdentityMatrix, createOriginMatrix, createScaleMatrix,
 } from "@scena/matrix";
+import { getCachedStyle } from "../store/Store";
 import { IS_WEBKIT, IS_SAFARI_ABOVE15, IS_FIREFOX, IS_CHROMIUM109 } from "../consts";
 import { MatrixInfo } from "../types";
 import {
@@ -23,11 +24,21 @@ export function getShadowRoot(parentElement: HTMLElement | SVGElement) {
     return;
 }
 
+export interface MatrixStackInfo {
+    zoom: number;
+    offsetContainer: HTMLElement;
+    matrixes: MatrixInfo[];
+    targetMatrix: number[];
+    transformOrigin: number[];
+    targetOrigin: number[];
+    is3d: boolean;
+    hasFixed: boolean;
+}
 export function getMatrixStackInfo(
     target: SVGElement | HTMLElement,
     container?: SVGElement | HTMLElement | null,
     checkContainer?: boolean,
-) {
+): MatrixStackInfo {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
     const documentElement = document.documentElement || document.body;
@@ -45,11 +56,18 @@ export function getMatrixStackInfo(
 
     while (el && !isEnd) {
         isEnd = requestEnd;
-        const style: CSSStyleDeclaration = getComputedStyle(el);
-        const position = style.position;
-        const transform = getElementTransform(el, style);
-        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
+        const getStyle = getCachedStyle(el);
+        const position = getStyle("position");
+        const transform = getElementTransform(el);
         const isFixed = position === "fixed";
+        let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
+        let offsetParent: HTMLElement;
+        let isOffsetEnd = false;
+        let isStatic = false;
+        let parentClientLeft = 0;
+        let parentClientTop = 0;
+        let fixedClientLeft = 0;
+        let fixedClientTop = 0;
         let fixedInfo: {
             hasTransform: boolean;
             fixedContainer: HTMLElement | null;
@@ -57,10 +75,10 @@ export function getMatrixStackInfo(
             hasTransform: false,
             fixedContainer: null,
         };
+
         if (isFixed) {
             hasFixed = true;
             fixedInfo = getPositionFixedInfo(el);
-
             offsetContainer = fixedInfo.fixedContainer!;
         }
 
@@ -86,7 +104,7 @@ export function getMatrixStackInfo(
             origin,
             targetOrigin,
             offset: offsetPos,
-        } = getOffsetPosInfo(el, target, style);
+        } = getOffsetPosInfo(el, target);
         let [
             offsetLeft,
             offsetTop,
@@ -106,17 +124,14 @@ export function getMatrixStackInfo(
             });
         }
 
-        let offsetParent: HTMLElement;
-        let isOffsetEnd = false;
-        let isStatic = false;
 
-        const targetZoom = parseFloat((style as any).zoom) || 1;
+        const targetZoom = parseFloat(getStyle("zoom")) || 1;
 
         if (isFixed) {
             offsetParent = fixedInfo.fixedContainer!;
             isOffsetEnd = true;
         } else {
-            const offsetInfo = getOffsetInfo(el, container, false, true, style);
+            const offsetInfo = getOffsetInfo(el, container, false, true, getStyle);
             const offsetZoom = offsetInfo.offsetZoom;
 
             offsetParent = offsetInfo.offsetParent;
@@ -159,10 +174,6 @@ export function getMatrixStackInfo(
             requestEnd = requestEnd || isOffsetEnd;
         }
 
-        let parentClientLeft = 0;
-        let parentClientTop = 0;
-        let fixedClientLeft = 0;
-        let fixedClientTop = 0;
 
         if (isFixed) {
             if (hasOffset && fixedInfo.hasTransform) {
@@ -177,7 +188,7 @@ export function getMatrixStackInfo(
                 parentClientTop = offsetParent.clientTop;
             }
             if (hasOffset && offsetParent === documentElement) {
-                const margin = getBodyOffset(el, false, style);
+                const margin = getBodyOffset(el, false);
 
                 offsetLeft += margin[0];
                 offsetTop += margin[1];
