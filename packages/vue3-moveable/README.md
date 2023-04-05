@@ -118,8 +118,7 @@ If you want to check the methods and events, please refer to the [**API document
 </div>
 </template>
 <script>
-// `VueMoveableInstance` is Vue Moveable's Instance type.
-import Moveable, { VueMoveableInstance } from "vue3-moveable";
+import Moveable from "vue3-moveable";
 
 export default {
   name: "app",

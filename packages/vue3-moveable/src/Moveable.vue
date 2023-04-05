@@ -29,7 +29,7 @@ PROPERTIES.forEach((name) => {
     };
 });
 
-export default defineComponent<
+const VueMoveable = defineComponent<
     Partial<MoveableProperties>,
     {},
     {},
@@ -58,7 +58,7 @@ export default defineComponent<
 
         const moveable = new VanillaMoveable(moveableElement, {
             ...options,
-            portalContainer: moveableElement,
+            warpSelf: true,
         });
 
         EVENTS.forEach((name) => {
@@ -72,4 +72,9 @@ export default defineComponent<
         this.$_moveable.destroy();
     },
 } as any);
+
+interface VueMoveable extends Partial<MoveableProperties>, MoveableInterface {
+}
+
+export default VueMoveable;
 </script>
