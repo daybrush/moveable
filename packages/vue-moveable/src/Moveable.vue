@@ -44,7 +44,7 @@ export default {
 
     const moveable = new VanillaMoveable(moveableElement, {
       ...options,
-      portalContainer: moveableElement,
+      warpSelf: true,
     });
 
     EVENTS.forEach((name) => {

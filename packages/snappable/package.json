@@ -61,7 +61,7 @@
         "typescript": "^4.5.0 <4.6.0"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.10.3",
+        "@daybrush/utils": "^1.11.0",
         "overlap-area": "^1.1.0"
     }
 }

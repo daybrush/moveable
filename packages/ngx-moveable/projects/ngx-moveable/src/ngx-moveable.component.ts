@@ -47,7 +47,7 @@ export class NgxMoveableComponent
 
     this.moveable = new Moveable(container, {
       ...options,
-      portalContainer: container,
+      warpSelf: true,
     });
     this.moveable.on(events);
   }

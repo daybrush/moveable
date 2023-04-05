@@ -48,7 +48,7 @@ export class LitMoveable extends LitElement {
         });
 
         this.moveable = new VanillaMoveable(this, {
-            portalContainer: this,
+            warpSelf: true,
             ...options,
         });
 

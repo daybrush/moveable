@@ -23387,15 +23387,13 @@ react-simple-compat@^1.2.2:
     "@daybrush/utils" "^1.0.0"
     "@egjs/list-differ" "^1.0.0"
 
-react-simple-compat@^1.3.0-beta.1:
-  version "1.3.0-beta.1"
-  resolved "https://registry.npmjs.org/react-simple-compat/-/react-simple-compat-1.3.0-beta.1.tgz#a2043840c54dd40b1bb78687e438356ce0a10101"
-  integrity sha512-nqutuZn/u1vNpUjvL2gwRhYERgRWu6MZGo1UKT7zWRFXac4nQoUrFew5IWgSy/tWkets8oUprUVdrfZ+TIUn3w==
+react-simple-compat@^1.3.0-beta.3:
+  version "1.3.0-beta.3"
+  resolved "https://registry.npmjs.org/react-simple-compat/-/react-simple-compat-1.3.0-beta.3.tgz#ba57bc3954d10c06da907de211dc5a4da78c76b3"
+  integrity sha512-gRWyOo0FHd7DJYN9Uo9a+9xudZhpB+U+mPGZX4r8smBe25ZeMpTvZQMFOFWSk6tns1DVaO6SxjFIQbgBEq4jYQ==
   dependencies:
-    "@daybrush/utils" "^1.0.0"
+    "@daybrush/utils" "^1.11.0"
     "@egjs/list-differ" "^1.0.0"
-    "@scena/event-emitter" "^1.0.5"
-    tslib "^2.3.1"
 
 react-tabs@^3.0.0:
   version "3.2.3"
