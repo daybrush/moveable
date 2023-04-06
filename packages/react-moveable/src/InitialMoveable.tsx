@@ -18,7 +18,6 @@ import IndividualGroupable from "./ables/IndividualGroupable";
 import MoveableIndividualGroup from "./MoveableIndividualGroup";
 import ChildrenDiffer from "@egjs/children-differ";
 
-
 function getElementTargets(
     refTargets: MoveableRefTargetsResultType,
     selectorMap: IObject<Array<HTMLElement | SVGElement>>,
@@ -70,6 +69,7 @@ function getTargetGroups(
 
     return targetGroups;
 }
+
 function compareRefTargets(
     prevRefTargets: MoveableRefTargetsResultType,
     nextRefTargets: MoveableRefTargetsResultType,

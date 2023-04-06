@@ -114,8 +114,8 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.15.1",
         "overlap-area": "^1.1.0",
-        "croact-css-styled": "^1.1.0",
-        "react-css-styled": "^1.1.0",
+        "croact-css-styled": "^1.1.2",
+        "react-css-styled": "^1.1.2",
         "tslib": "^2.3.1"
     },
     "overrides": {
@@ -138,8 +138,8 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.15.1",
         "overlap-area": "^1.1.0",
-        "croact-css-styled": "^1.1.0",
-        "react-css-styled": "^1.1.0",
+        "croact-css-styled": "^1.1.2",
+        "react-css-styled": "^1.1.2",
         "tslib": "^2.3.1"
     }
 }

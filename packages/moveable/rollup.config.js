@@ -5,7 +5,7 @@ const compat = require("rollup-plugin-react-compat");
 const compatPlugin = compat({
     useCroact: true,
     aliasModules: {
-        "react-moveable": "react-compat-moveable"
+        "react-moveable": "croact-moveable"
     }
 });
 const resolveCompatPlugin = compat({
@@ -19,10 +19,10 @@ const resolveCompatPlugin = compat({
     "release:before": "npm run build && npm run doc && npm run demo:build && npm run storybook",
 */
 const external = {
-    "react-simple-compat": "react-simple-compat",
-    "react-compat-ruler": "react-compat-ruler",
-    "react-compat-moveable": "react-compat-moveable",
-    "react-compat-css-styled": "react-compat-css-styled",
+    "croact": "croact",
+    "croact-ruler": "croact-ruler",
+    "croact-moveable": "croact-moveable",
+    "croact-css-styled": "croact-css-styled",
     "@daybrush/utils": "utils",
     "css-styled": "css-styled",
     "framework-utils": "framework-utils",

@@ -60,7 +60,7 @@
         "pvu": "^0.6.1",
         "croact": "^1.0.0",
         "rollup-plugin-css-bundle": "^1.0.4",
-        "rollup-plugin-react-compat": "^0.1.0",
+        "rollup-plugin-react-compat": "^0.1.1",
         "tslint": "^5.16.0",
         "typescript": "^4.5.0 <4.6.0"
     },
@@ -76,8 +76,8 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.15.1",
         "overlap-area": "^1.1.0",
-        "croact-css-styled": "^1.1.0",
-        "react-css-styled": "^1.1.0",
+        "croact-css-styled": "^1.1.2",
+        "react-css-styled": "^1.1.2",
         "react-moveable": "~0.48.0"
     }
 }

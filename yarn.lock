@@ -10674,10 +10674,10 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
-croact-css-styled@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/croact-css-styled/-/croact-css-styled-1.1.0.tgz#af28602bffd9ff6faecaede12f2f06853c531372"
-  integrity sha512-/WWMq9fDoRHs7IMx5S4Grqxkmx9zMpnh7oZ/XDVT4uNyuT2844snKjR+VYDZnCfJ8wqNdBXEqK6XZqIAZgV4uw==
+croact-css-styled@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/croact-css-styled/-/croact-css-styled-1.1.2.tgz#258bf20424d668eeb6c57d904742d801044fd96a"
+  integrity sha512-v1RBvTyltY3B1kYDiT1lvG+rbk1ziqAsPNH5VGD8JItTt359KeLV1xdYlaRrdXq7oYjPw4rUG9ZBG+4XzzW9qQ==
   dependencies:
     "@daybrush/utils" "^1.0.0"
     css-styled "~1.0.1"
@@ -22550,10 +22550,10 @@ preact-context@^1.1.3:
   resolved "https://registry.npmjs.org/preact-context/-/preact-context-1.1.4.tgz"
   integrity sha512-gcCjPJ65R0MiW9hDu8W/3WAmyTElIvwLyEO6oLQiM6/TbLKLxCpBCWV8GJjx52TTEyUr60HLDcmoCXZlslelzQ==
 
-preact-css-styled@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/preact-css-styled/-/preact-css-styled-1.1.0.tgz#42bd97c83de7b7982b96ad4d4f7ff9b3fa41f2d7"
-  integrity sha512-AoBhV1GHrPWLSsm4OrSaQ0Oj+7BRS7idKZWy8FxVOD6l1ReW/tkJoF8BcjfvqN2bHzNmDEnVbOYGGDYM7tJL1Q==
+preact-css-styled@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/preact-css-styled/-/preact-css-styled-1.1.2.tgz#78db6e6de31fe1ed3f2fbf7c9f1da4eb232d2203"
+  integrity sha512-9Ee4kzsghu5Klm7YQdlBfe/Br42xTntmZ0LLcs/707yVgMR3x0F5sHPCisGqTy80YlUGpWtZc5+ikM29eCfwAw==
   dependencies:
     css-styled "~1.0.1"
     framework-utils "^1.1.0"
@@ -23252,10 +23252,10 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^1.0.2, react-css-styled@^1.1.0, react-css-styled@~1.0.4:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.1.0.tgz#0658a45b5ad870be61470e3a9899a47bc772a7cf"
-  integrity sha512-Z+Se7vQDGr7CuABG2Eae9oNigVHh4R0RTZ0tYo6nn3yc5OS9Rx1EhemR9sQn3kdXDYj5KNvZuhQT/68jmy6jfQ==
+react-css-styled@^1.0.2, react-css-styled@^1.1.2, react-css-styled@~1.0.4:
+  version "1.1.2"
+  resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.1.2.tgz#c382da7d5afe7fb08a03ccfc82c8ec7822503481"
+  integrity sha512-YHTGOWaCLf7pASGRY3awG8rv67qyOjaUXUKfa3jFwzWges22SxYWQdMWIhCz7I8PXTrNRcIkemc6o2vVpd+gUA==
   dependencies:
     css-styled "~1.0.1"
     framework-utils "^1.1.0"
@@ -24271,13 +24271,12 @@ rollup-plugin-prototype-minify@^1.0.5, rollup-plugin-prototype-minify@^1.1.0:
   dependencies:
     prototype-minify "^1.1.0"
 
-rollup-plugin-react-compat@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/rollup-plugin-react-compat/-/rollup-plugin-react-compat-0.1.0.tgz"
-  integrity sha512-iZa0w8b+sdVQaiorjauEJTz3GV+AsmduAgJnpF12KbUxiEepMwKBqRUA9NGnYXuubyZtFLgZimyJ6Hgvgiu1KA==
+rollup-plugin-react-compat@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/rollup-plugin-react-compat/-/rollup-plugin-react-compat-0.1.1.tgz#e57556e9a168ebf376668107123eaf2c0f21962b"
+  integrity sha512-9wu6K7RABBcke4HzsL+gZFPExhcPIKj2lThHew8QAlqCL217nfz1KnKQ7juNn9bXrjdGCBAJDDyDngyRJJkWjQ==
   dependencies:
     preact-compat "^3.19.0"
-    preact-compat2 "^0.1.0"
     rollup-plugin-node-resolve "^5.2.0"
 
 rollup-plugin-replace@^2.1.1:

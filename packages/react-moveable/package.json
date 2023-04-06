@@ -127,7 +127,7 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.15.1",
         "overlap-area": "^1.1.0",
-        "react-css-styled": "^1.1.0"
+        "react-css-styled": "^1.1.2"
     },
     "browserslist": {
         "production": [
