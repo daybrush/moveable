@@ -44,6 +44,7 @@ function getElementTargets(
 
     return elementTargets;
 }
+
 function getTargetGroups(
     refTargets: MoveableRefTargetsResultType,
     selectorMap: IObject<Array<HTMLElement | SVGElement>>,
@@ -112,7 +113,6 @@ export class InitialMoveable<T = {}>
         this.defaultStyled = styled("div", prefixCSS(PREFIX, MOVEABLE_CSS + style));
     }
     public static getTotalAbles(): Able[] {
-
         return [Default, Groupable, IndividualGroupable, DragArea, ...this.defaultAbles];
     }
     @withMethods(MOVEABLE_METHODS)

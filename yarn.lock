@@ -10674,6 +10674,23 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
+croact-css-styled@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/croact-css-styled/-/croact-css-styled-1.1.0.tgz#af28602bffd9ff6faecaede12f2f06853c531372"
+  integrity sha512-/WWMq9fDoRHs7IMx5S4Grqxkmx9zMpnh7oZ/XDVT4uNyuT2844snKjR+VYDZnCfJ8wqNdBXEqK6XZqIAZgV4uw==
+  dependencies:
+    "@daybrush/utils" "^1.0.0"
+    css-styled "~1.0.1"
+    framework-utils "^1.1.0"
+
+croact@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/croact/-/croact-1.0.0.tgz#fb0fe8281b736acba4ca78e2545eff0e314fb414"
+  integrity sha512-VpPknTd65rB3VgRVchQiX5pQAqx/qaZVCNVzY3rwCpqYjQKVPHZ5YwdkHX9jTxkg5lKxrUmFzj/5SNUJ7S4dNA==
+  dependencies:
+    "@daybrush/utils" "^1.11.0"
+    "@egjs/list-differ" "^1.0.0"
+
 croffle@^0.0.17:
   version "0.0.17"
   resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.17.tgz#a08ccee1d1811a831134c22e07e908209442674d"
@@ -22533,12 +22550,12 @@ preact-context@^1.1.3:
   resolved "https://registry.npmjs.org/preact-context/-/preact-context-1.1.4.tgz"
   integrity sha512-gcCjPJ65R0MiW9hDu8W/3WAmyTElIvwLyEO6oLQiM6/TbLKLxCpBCWV8GJjx52TTEyUr60HLDcmoCXZlslelzQ==
 
-preact-css-styled@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/preact-css-styled/-/preact-css-styled-1.0.4.tgz"
-  integrity sha512-5OHQIiBilia8udywc1KyDGqiWMHqcWXCBelf70D9tiCY/rmtbrLJ58AThjNRWrdjaVeHgZ2odOHpaOSimQOTBA==
+preact-css-styled@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/preact-css-styled/-/preact-css-styled-1.1.0.tgz#42bd97c83de7b7982b96ad4d4f7ff9b3fa41f2d7"
+  integrity sha512-AoBhV1GHrPWLSsm4OrSaQ0Oj+7BRS7idKZWy8FxVOD6l1ReW/tkJoF8BcjfvqN2bHzNmDEnVbOYGGDYM7tJL1Q==
   dependencies:
-    css-styled "^1.0.0"
+    css-styled "~1.0.1"
     framework-utils "^1.1.0"
 
 preact-render-to-string@^3.8.2:
@@ -23209,7 +23226,7 @@ react-colorful@^5.1.2:
   resolved "https://registry.npmjs.org/react-colorful/-/react-colorful-5.5.1.tgz"
   integrity sha512-M1TJH2X3RXEt12sWkpa6hLc/bbYS0H6F4rIqjQZ+RxNBstpY67d9TrFXtqdZwhpmBXcCwEi7stKqFue3ZRkiOg==
 
-react-compat-css-styled@^1.0.6, react-compat-css-styled@^1.0.9:
+react-compat-css-styled@^1.0.6:
   version "1.0.9"
   resolved "https://registry.npmjs.org/react-compat-css-styled/-/react-compat-css-styled-1.0.9.tgz"
   integrity sha512-YpUgTpXU1wR58aPQJVGAWq6QeEFWkafV0qq4Y8KRUwpQJLbJF2GYu5ZQ/kafHGvN3dqQX2e340NlNZ+zbZZv2w==
@@ -23235,10 +23252,10 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^1.0.2, react-css-styled@^1.0.4, react-css-styled@~1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.0.4.tgz"
-  integrity sha512-nRske1bAKOCaf7Gf3o76tKQFIYggaW1qH4rutBlitH5lYnRPA7WoAYKrcxqdUPZd00oASg3SvFZSh3Mc1Wvj3w==
+react-css-styled@^1.0.2, react-css-styled@^1.1.0, react-css-styled@~1.0.4:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.1.0.tgz#0658a45b5ad870be61470e3a9899a47bc772a7cf"
+  integrity sha512-Z+Se7vQDGr7CuABG2Eae9oNigVHh4R0RTZ0tYo6nn3yc5OS9Rx1EhemR9sQn3kdXDYj5KNvZuhQT/68jmy6jfQ==
   dependencies:
     css-styled "~1.0.1"
     framework-utils "^1.1.0"
@@ -23385,14 +23402,6 @@ react-simple-compat@^1.2.2:
   integrity sha512-DYa9MHplwzjL/9xDKmTvM70umky8R162aZsKsWC2XRD7d+mIXyr8IQmAoRMlH2uwl4yGGgZbg7bj20qlCMhIYA==
   dependencies:
     "@daybrush/utils" "^1.0.0"
-    "@egjs/list-differ" "^1.0.0"
-
-react-simple-compat@^1.3.0-beta.3:
-  version "1.3.0-beta.3"
-  resolved "https://registry.npmjs.org/react-simple-compat/-/react-simple-compat-1.3.0-beta.3.tgz#ba57bc3954d10c06da907de211dc5a4da78c76b3"
-  integrity sha512-gRWyOo0FHd7DJYN9Uo9a+9xudZhpB+U+mPGZX4r8smBe25ZeMpTvZQMFOFWSk6tns1DVaO6SxjFIQbgBEq4jYQ==
-  dependencies:
-    "@daybrush/utils" "^1.11.0"
     "@egjs/list-differ" "^1.0.0"
 
 react-tabs@^3.0.0:

@@ -250,7 +250,7 @@ The `moveable` repo is managed as a [monorepo](https://github.com/lerna/lerna) w
 yarn config set registry https://registry.npmjs.org/
 ```
 
-The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
+The main project was made with `react` and I used [`croact`](https://github.com/daybrush/croact) to make it lighter with umd.
 
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
 

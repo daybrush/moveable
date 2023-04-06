@@ -23,7 +23,7 @@ const external = {
 
 
 const reactPlugin = reactCompat({
-    useReactCompat: true,
+    useCroact: true,
     aliasModules: {
         "@scena/react-ruler": "react-compat-ruler",
         "react-css-styled": "react-compat-css-styled",

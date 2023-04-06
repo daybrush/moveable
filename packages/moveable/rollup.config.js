@@ -3,13 +3,13 @@ const builder = require("@daybrush/builder");
 const compat = require("rollup-plugin-react-compat");
 
 const compatPlugin = compat({
-    useReactCompat: true,
+    useCroact: true,
     aliasModules: {
         "react-moveable": "react-compat-moveable"
     }
 });
 const resolveCompatPlugin = compat({
-    useReactCompat: true,
+    useCroact: true,
     resolveCompat: true,
 });
 /*

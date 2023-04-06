@@ -244,7 +244,7 @@ root.render(
 ## ⚙️ Developments
 ### `npm start`
 
-The main project was made with `react` and I used [`react-simple-compat`](https://github.com/daybrush/react-simple-compat) to make it lighter with umd.
+The main project was made with `react` and I used [`croact`](https://github.com/daybrush/croact) to make it lighter with umd.
 
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
 

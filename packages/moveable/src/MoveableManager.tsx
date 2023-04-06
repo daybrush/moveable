@@ -1,6 +1,6 @@
 import { ref, Properties } from "framework-utils";
 import * as React from "react";
-import { renderSelf } from "react-simple-compat";
+import { renderSelf, ContainerProvider } from "croact";
 import InnerMoveable from "./InnerMoveable";
 import {
     MoveableInterface,
@@ -10,7 +10,6 @@ import { camelize, isArray } from "@daybrush/utils";
 import { MoveableEventsParameters } from "./types";
 import { PROPERTIES, EVENTS, METHODS } from "./consts";
 import EventEmitter from "@scena/event-emitter";
-import { ContainerProvider } from "react-simple-compat";
 /**
  * Moveable is Draggable! Resizable! Scalable! Rotatable!
  * @sort 1
