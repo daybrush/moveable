@@ -2546,12 +2546,12 @@ export interface SnappableOptions {
      * Add guidelines in the horizontal direction.
      * @default []
      */
-    horizontalGuidelines?: Array<PosGuideline | number>;
+    horizontalGuidelines?: Array<PosGuideline | number | string>;
     /**
      * Add guidelines in the vertical direction.
      * @default []
      */
-    verticalGuidelines?: Array<PosGuideline | number>;
+    verticalGuidelines?: Array<PosGuideline | number | string>;
     /**
      * Add guidelines for the element.
      * @default []
@@ -2690,12 +2690,19 @@ export interface PosGuideline {
     /**
      * guideline pos
      */
-    pos: number;
+    pos: number | string;
     /**
      * class names to add to guideline
      * @default ""
      */
     className?: string;
+}
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface NumericPosGuideline extends PosGuideline {
+    pos: number;
 }
 /**
  * @typedef

@@ -1,4 +1,4 @@
-import { isObject, throttle } from "@daybrush/utils";
+import { convertUnitSize, isNumber, isObject, throttle } from "@daybrush/utils";
 import { diff } from "@egjs/children-differ";
 import { minus } from "@scena/matrix";
 import { getMinMaxs } from "overlap-area";
@@ -7,6 +7,7 @@ import {
     SnappableState, SnapGuideline, SnapDirectionPoses,
     PosGuideline, ElementGuidelineValue,
     SnapElementRect,
+    NumericPosGuideline,
 } from "../../types";
 import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, roundSign } from "../../utils";
 import {
@@ -397,9 +398,28 @@ export function getElementGuidelines(
 }
 
 
+function getObjectGuidelines(
+    guidelines: Array<PosGuideline | number | string> | false,
+    containerSize: number,
+): NumericPosGuideline[] {
+    return guidelines ? guidelines.map(info => {
+        const posGuideline = isObject(info) ? info : { pos: info };
+        const pos = posGuideline.pos;
+
+        if (isNumber(pos)) {
+            return posGuideline as NumericPosGuideline;
+        } else {
+            return {
+                ...posGuideline,
+                pos: convertUnitSize(pos, containerSize),
+            };
+        }
+    }) : [];
+}
+
 export function getDefaultGuidelines(
-    horizontalGuidelines: Array<PosGuideline | number> | false,
-    verticalGuidelines: Array<PosGuideline | number> | false,
+    horizontalGuidelines: Array<PosGuideline | number | string> | false,
+    verticalGuidelines: Array<PosGuideline | number | string> | false,
     width: number,
     height: number,
     clientLeft = 0,
@@ -416,30 +436,26 @@ export function getDefaultGuidelines(
     const snapWidth = width! + snapOffsetRight - snapOffsetLeft;
     const snapHeight = height! + snapOffsetBottom - snapOffsetTop;
 
-    horizontalGuidelines && horizontalGuidelines!.forEach(posInfo => {
-        const nextPosInfo = isObject(posInfo) ? posInfo : { pos: posInfo };
-
+    getObjectGuidelines(horizontalGuidelines, snapHeight).forEach(posInfo => {
         guidelines.push({
             type: "horizontal",
             pos: [
                 snapOffsetLeft,
-                throttle(nextPosInfo.pos - clientTop + snapOffsetTop, 0.1),
+                throttle(posInfo.pos - clientTop + snapOffsetTop, 0.1),
             ],
             size: snapWidth,
-            className: nextPosInfo.className,
+            className: posInfo.className,
         });
     });
-    verticalGuidelines && verticalGuidelines!.forEach(posInfo => {
-        const nextPosInfo = isObject(posInfo) ? posInfo : { pos: posInfo };
-
+    getObjectGuidelines(horizontalGuidelines, snapWidth).forEach(posInfo => {
         guidelines.push({
             type: "vertical",
             pos: [
-                throttle(nextPosInfo.pos - clientLeft + snapOffsetLeft, 0.1),
+                throttle(posInfo.pos - clientLeft + snapOffsetLeft, 0.1),
                 snapOffsetTop,
             ],
             size: snapHeight,
-            className: nextPosInfo.className,
+            className: posInfo.className,
         });
     });
     return guidelines;

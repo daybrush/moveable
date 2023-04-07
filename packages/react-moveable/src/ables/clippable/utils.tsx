@@ -1,9 +1,10 @@
 import { splitBracket, splitComma, convertUnitSize, splitSpace, splitUnit } from "@daybrush/utils";
 import { minus } from "@scena/matrix";
-import { convertCSSSize, getComputedStyle } from "../../utils";
+import { convertCSSSize } from "../../utils";
 import { getRadiusStyles, getRadiusValues } from "../roundable/borderRadius";
 import { MoveableManagerInterface, ClippableProps, ControlPose } from "../../types";
 import { getMinMaxs } from "overlap-area";
+import { getCachedStyle } from "../../store/Store";
 
 
 export const CLIP_DIRECTIONS = [
@@ -149,10 +150,10 @@ export function getClipPath(
     let clipText: string | undefined = customClip;
 
     if (!clipText) {
-        const style = getComputedStyle(target!);
-        const clipPath = style.clipPath!;
+        const getStyle = getCachedStyle(target!);
+        const clipPath = getStyle("clipPath");
 
-        clipText = clipPath !== "none" ? clipPath : style.clip!;
+        clipText = clipPath !== "none" ? clipPath : getStyle("clip");
     }
     if (!clipText || clipText === "none" || clipText === "auto") {
         clipText = defaultClip;

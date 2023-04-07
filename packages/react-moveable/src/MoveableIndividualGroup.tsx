@@ -3,6 +3,7 @@ import * as React from "react";
 import MoveableManager from "./MoveableManager";
 import { GroupableProps, IndividualGroupableProps, RectInfo } from "./types";
 import { prefix } from "./utils";
+import { setStoreCache } from "./store/Store";
 
 /**
  * @namespace Moveable.IndividualGroup
@@ -54,9 +55,11 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
         return this.props.targets!;
     }
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
+        setStoreCache(true);
         this.moveables.forEach(moveable => {
             moveable.updateRect(type, isTarget, isSetState);
         });
+        setStoreCache();
     }
     public getRect(): RectInfo {
         return {

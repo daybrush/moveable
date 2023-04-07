@@ -418,15 +418,15 @@ export default class MoveableManager<T = {}>
      * });
      */
     public updateRect(type?: "Start" | "" | "End", isTarget?: boolean, isSetState: boolean = true) {
-        const isSingle = !this.props.parentPosition;
+        const props = this.props;
+        const isSingle = !props.parentPosition && !props.wrapperMoveable;
 
         if (isSingle) {
             setStoreCache(true);
         }
-        const props = this.props;
         const parentMoveable = props.parentMoveable;
         const state = this.state;
-        const target = (state.target || this.props.target) as HTMLElement | SVGElement;
+        const target = (state.target || props.target) as HTMLElement | SVGElement;
         const container = this.getContainer();
         const rootContainer = parentMoveable
             ? (parentMoveable as any)._rootContainer
