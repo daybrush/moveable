@@ -1424,14 +1424,49 @@ export function getSizeDistByDist(
             distHeight = distWidth / ratio;
         } else {
             // two-way
-            const startWidthSize = direction[0] * 2 * startOffsetWidth;
-            const startHeightSize = direction[1] * 2 * startOffsetHeight;
-            const distSize = getDistSize([startWidthSize + dist[0], startHeightSize + dist[1]])
-                - getDistSize([startWidthSize, startHeightSize]);
-            const ratioRad = getRad([0, 0], [ratio, 1]);
+            const startWidthSize = direction[0] * startOffsetWidth;
+            const startHeightSize = direction[1] * startOffsetHeight;
 
-            distWidth = Math.cos(ratioRad) * distSize;
-            distHeight = Math.sin(ratioRad) * distSize;
+            let secondRad = Math.atan2(startWidthSize + dist[0], startHeightSize + dist[1]);
+            let firstRad = Math.atan2(startWidthSize, startHeightSize);
+
+            if (secondRad < 0) {
+                secondRad += Math.PI * 2;
+            }
+            if (firstRad < 0) {
+                firstRad += Math.PI * 2;
+            }
+            let rad = 0;
+
+            if (Math.abs(secondRad - firstRad) < Math.PI / 2 || Math.abs(secondRad - firstRad) > Math.PI / 2 * 3) {
+                rad = secondRad - firstRad;
+            } else {
+                firstRad += Math.PI;
+                rad = secondRad - firstRad;
+            }
+            if (rad > Math.PI * 2) {
+                rad -= Math.PI * 2;
+            } else if (rad > Math.PI) {
+                rad = 2 * Math.PI - rad;
+            } else if (rad < -Math.PI) {
+                rad = -2 * Math.PI - rad;
+            }
+            //       180
+            // -1, -1,  // 1, -1
+            // 270            90
+            // -1, 1    // 1, 1
+            //       0
+            const distSize = getDistSize([startWidthSize + dist[0], startHeightSize + dist[1]]) * Math.cos(rad);
+
+            distWidth = distSize * Math.sin(firstRad) - startWidthSize;
+            distHeight = distSize * Math.cos(firstRad) - startHeightSize;
+
+            if (direction[0] < 0) {
+                distWidth *= -1;
+            }
+            if (direction[1] < 0) {
+                distHeight *= -1;
+            }
         }
     } else {
         distWidth = direction[0] * dist[0];
