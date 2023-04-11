@@ -81,11 +81,35 @@ export const BasicScalable = add("Scalable", {
         await pan({
             target: resizeControl,
             start: [0, 0],
-            end: [100, 100],
+            end: [50, 100],
             duration: 100,
             interval: 10,
         });
-        expect(target.style.transform).toBe("translate(50px, 50px) scale(2, 2)");
+        expect(target.style.transform).toBe("translate(25px, 50px) scale(1.5, 2)");
+    },
+});
+export const BasicScalableKeepRatioTest = add("Scalable keepRatio Test", {
+    app: require("./ReactScalableApp").default,
+    argsTypes: {
+        ...DEFAULT_SCALABLE_CONTROLS,
+    },
+    args: {
+        keepRatio: true,
+    },
+    play: async ({ canvasElement }) => {
+        await wait();
+
+        const target = canvasElement.querySelector<HTMLElement>(".target")!;
+        const resizeControl = canvasElement.querySelector<HTMLElement>(`.moveable-control-box [data-direction="nw"]`)!;
+
+        await pan({
+            target: resizeControl,
+            start: [0, 0],
+            end: [300, 300],
+            duration: 100,
+            interval: 10,
+        });
+        expect(target.style.transform).toBe("translate(150px, 150px) scale(-2, -2)");
     },
 });
 

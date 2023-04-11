@@ -9,13 +9,17 @@ import { convertReactTemplate, convertPath, makeArgs, convertTemplate } from "..
 import { DEFAULT_CSS_TEMPLATE } from "../templates/default";
 import { getEntries, isFunction } from "@daybrush/utils";
 
+// production 모드거나, 실패시 true
 declare const SKIP_TEST: boolean;
+// test 여부
+declare const EXEC_TEST: boolean;
 
 export interface StoryParameter {
     app: any;
     text?: string;
     path?: string;
     argsTypes?: Record<string, any>;
+    args?: Record<string, any>;
     texts?: Record<string, any>;
     play?: (context: StoryContext<ReactFramework>) => Promise<void> | void;
 }
@@ -43,6 +47,7 @@ export function add(storyTitle: string, parameter: StoryParameter) {
     const {
         text,
         argsTypes,
+        args,
         path,
         play,
         app,
@@ -56,7 +61,15 @@ export function add(storyTitle: string, parameter: StoryParameter) {
         },
     ];
 
-    if (path) {
+    // test라면 play가 없는 스토리는 전부 빈공백으로 표시
+    if (EXEC_TEST && !play) {
+        return function Empty() {
+            return null;
+        };
+    }
+
+    // test가 아니라면 code preview 표시
+    if (!EXEC_TEST && path) {
         const filePath = path.replace("./stories/", "");
         const directory = filePath.replace(/\/([^/]+)$/g, "/");
         const fileName = filePath.replace(/\S+\/(\S+)\.\S+$/g, "$1");
@@ -140,7 +153,7 @@ export function add(storyTitle: string, parameter: StoryParameter) {
                 copy: true,
                 language: "tsx",
             });
-        } catch (e) {}
+        } catch (e) { }
         // Angular
         try {
             const angularCode = require(`!!raw-loader!@/stories/${directory}angular/${fileName}/App.ts`).default;
@@ -152,7 +165,7 @@ export function add(storyTitle: string, parameter: StoryParameter) {
                 copy: true,
                 language: "tsx",
             });
-        } catch (e) {}
+        } catch (e) { }
         // Lit
         try {
             const litCode = require(`!!raw-loader!@/stories/${directory}lit/${fileName}/App.ts`).default;
@@ -181,69 +194,90 @@ export function add(storyTitle: string, parameter: StoryParameter) {
     };
 
     func.storyName = storyTitle;
-    func.argTypes = argsTypes || {},
-    func.args = makeArgs(argsTypes || {}),
+    func.argTypes = argsTypes || {};
+    func.args = {
+        ...makeArgs(argsTypes || {}),
+        args,
+    };
     func.parameters = {
         preview: previews,
     };
 
-
-
-    if (!SKIP_TEST && play) {
-        func.play = play;
-
+    // dev에서만 표시
+    if (play) {
         const clientApi = (window as any).__STORYBOOK_CLIENT_API__ as ClientApi<any>;
         const facade = clientApi.facade;
         const csfExports = facade.csfExports;
         const allStories = facade.stories;
 
-        type StoryFunction = ((...args: any[]) => any) & {
-            storyName: string;
-            play: any;
-            args: any;
-            argTypes: any;
-            parameters: any;
-            isSkip?: boolean;
-        };
+        if (!SKIP_TEST) {
+            // dev mode or test mode
+            func.play = play;
 
-        if (!("__PROXY__" in csfExports)) {
-            facade.csfExports = makeProxyObject({
-                __PROXY__: () => {},
-                ...csfExports,
-            }, (obj, prop, value) => {
-                obj[prop] = makeProxyObject(value, (child, childProp, childValue: StoryFunction) => {
-                    if (!isFunction(childValue) || !childValue.play || childValue.isSkip) {
-                        return;
-                    }
+            type StoryFunction = ((...args: any[]) => any) & {
+                storyName: string;
+                play: any;
+                args: any;
+                argTypes: any;
+                parameters: any;
+                isSkip?: boolean;
+            };
 
-                    const copied = childValue.bind({}) as StoryFunction;
+            if (!("__PROXY__" in csfExports)) {
+                facade.csfExports = makeProxyObject({
+                    __PROXY__: () => { },
+                    ...csfExports,
+                }, (obj, prop, value) => {
+                    obj[prop] = makeProxyObject(value, (child, childProp, childValue: StoryFunction) => {
+                        if (!isFunction(childValue) || !childValue.play || childValue.isSkip) {
+                            return;
+                        }
+                        if (childValue.storyName.match(/Test$/g)) {
+                            return;
+                        }
 
-                    copied.storyName = `${childValue.storyName} (original)`;
-                    copied.argTypes = childValue.argTypes;
-                    copied.args = childValue.args;
-                    copied.parameters = childValue.parameters;
-                    // copied.play = childValue.play;
-                    copied.isSkip = true;
+                        const copied = childValue.bind({}) as StoryFunction;
 
-                    child[`${childProp}Original`] = copied;
+                        copied.storyName = `${childValue.storyName} (original)`;
+                        copied.argTypes = childValue.argTypes;
+                        copied.args = childValue.args;
+                        copied.parameters = childValue.parameters;
+                        // copied.play = childValue.play;
+                        copied.isSkip = true;
 
-                    // childValue.play = null;
-                    childValue.isSkip = true;
-                    childValue.storyName = `${childValue.storyName} (test)`;
+                        child[`${childProp}Original`] = copied;
+
+                        // childValue.play = null;
+                        childValue.isSkip = true;
+                        childValue.storyName = `${childValue.storyName} (test)`;
+                    });
+
+                    return true;
                 });
-
-                return true;
-            });
-            facade.stories = makeProxyObject(allStories, (obj, prop, value) => {
-                if (value.name?.includes(" (test)")) {
-                    const id = `${prop}-original`;
-                    obj[`${prop}-original`] = {
-                        ...value,
-                        id,
-                        name: value.name.replace(" (original)", " (test)"),
-                    };
-                }
-            });
+                facade.stories = makeProxyObject(allStories, (obj, prop, value) => {
+                    if (value.name?.includes(" (test)")) {
+                        const id = `${prop}-original`;
+                        obj[`${prop}-original`] = {
+                            ...value,
+                            id,
+                            name: value.name.replace(" (original)", " (test)"),
+                        };
+                    }
+                });
+            }
+        } else if (!EXEC_TEST) {
+            // production mode
+            if (!("__PROXY__" in csfExports)) {
+                facade.csfExports = makeProxyObject({
+                    __PROXY__: () => { },
+                    ...csfExports,
+                });
+                facade.stories = makeProxyObject(allStories, (obj, prop, value) => {
+                    if (value.name?.match(/Test$/g)) {
+                        return true;
+                    }
+                });
+            }
         }
     }
 

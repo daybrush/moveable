@@ -14,7 +14,7 @@
         "storybook": "rm -rf node_modules/.cache && start-storybook -p 6006",
         "bake": "bake",
         "test": "test-storybook",
-        "test:build": "build-storybook -o ./test-static",
+        "test:build": "EXEC_TEST=true build-storybook -o ./test-static",
         "test:ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"yarn test:build --quiet && npx http-server ./test-static --port 6006 --silent\" \"wait-on tcp:6006 && yarn test\"",
         "test:fail": "SKIP_TEST=true test-storybook",
         "test:fail-build": "SKIP_TEST=true build-storybook -o ./test-static",
