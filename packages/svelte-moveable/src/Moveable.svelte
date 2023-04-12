@@ -4,7 +4,6 @@
     EVENTS,
   } from "moveable";
   import { camelize, isUndefined } from "@daybrush/utils";
-
   import {
     onMount,
     onDestroy,
@@ -40,7 +39,7 @@
   onMount(() => {
     moveable = new VanillaMoveable(moveableElement, {
       ...options,
-      portalContainer: moveableElement,
+      warpSelf: true,
     });
 
     EVENTS.forEach(name => {
