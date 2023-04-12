@@ -10,6 +10,11 @@ jobs:
         with:
             node-version: '16'
             cache: 'yarn'
+      - name: restore lerna
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn
       - name: Build helepr
