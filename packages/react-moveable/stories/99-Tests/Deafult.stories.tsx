@@ -48,30 +48,37 @@ export const TestsAccuracy = add("Check drag accuracy when using bounds", {
     app: require("./ReactAccuracyApp").default,
     path: require.resolve("./ReactAccuracyApp"),
 });
+
 export const TestsLargeZoom = add("Check element guidelines accuracy when zoom is large", {
     app: require("./ReactLargeZoomElementGuidelinesApp").default,
     path: require.resolve("./ReactLargeZoomElementGuidelinesApp"),
 });
+
 export const TestsFlex = add("Test flex element", {
     app: require("./ReactFlexApp").default,
     path: require.resolve("./ReactFlexApp"),
 });
+
 export const TestsWillChange = add("Test Container with will change", {
     app: require("./ReactWillChangeApp").default,
     path: require.resolve("./ReactWillChangeApp"),
 });
+
 export const TestsStopDrag = add("Stop drag if target is select, input, textarea", {
     app: require("./ReactStopDragApp").default,
     path: require.resolve("./ReactStopDragApp"),
 });
+
 export const TestsClick = add("Stop Click event's Propagation for dragStart", {
     app: require("./ReactClickApp").default,
     path: require.resolve("./ReactClickApp"),
 });
+
 export const TestsNestedTarget = add("Nested Moveable's target", {
     app: require("./ReactNestedTargetApp").default,
     path: require.resolve("./ReactNestedTargetApp"),
 });
+
 export const TestsZoomedCursor = add("Zoomed Cursor", {
     app: require("./ReactZoomedCursorApp").default,
     path: require.resolve("./ReactZoomedCursorApp"),
@@ -86,15 +93,16 @@ export const TestsOverflow = add("Test overflow: auto target", {
     app: require("./ReactOverflowApp").default,
     path: require.resolve("./ReactOverflowApp"),
 });
+
 export const TestsDragtarget = add("Test Drag Target", {
     app: require("./ReactDragTargetApp").default,
     path: require.resolve("./ReactDragTargetApp"),
 });
+
 export const TestsDragStart = add("Test Drag Start Group Manually", {
     app: require("./ReactDragStartGroupApp").default,
     path: require.resolve("./ReactDragStartGroupApp"),
 });
-
 
 export const TestsChangingSnapContainer = add("Test Changing Snap Container", {
     app: require("./ReactChangingSnapContainerApp").default,
@@ -111,6 +119,8 @@ export const TestsZoomedTarget = add("Test css zoomed target", {
     app: require("./ReactZoomedTargetApp").default,
     path: require.resolve("./ReactZoomedTargetApp"),
 });
+
+
 export const TestsScaleTarget = add("Test css scale target", {
     app: require("./ReactScaleTargetApp").default,
     path: require.resolve("./ReactScaleTargetApp"),
@@ -152,7 +162,28 @@ export const TestsRequestBounds = add("Test request with bounds", {
     path: require.resolve("./ReactRequestBoundsApp"),
 });
 
-export const TestRotateClippable = add("Test rotate & clippable", {
+export const TestsRotateClippable = add("Test rotate & clippable", {
     app: require("./ReactRotateClippableApp").default,
     path: require.resolve("./ReactRotateClippableApp"),
+});
+
+
+export const TestsAccurateElementGuidelines = add("Test Accurate Element Guidelines", {
+    app: require("./ReactAccurateElementGuidelineApp").default,
+    path: require.resolve("./ReactAccurateElementGuidelineApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".target2")!;
+        // const controlBox = canvasElement.querySelector<HTMLElement>(".moveable-control-box")!;
+
+        await pan({
+            target,
+            start: [0, 0],
+            end: [-1, -1],
+            duration: 10,
+            interval: 10,
+        });
+        expect(target.style.transform).toBe("translate(0px, 0px)");
+        // expect(controlBox.style.transform).toBe("translate3d(200px, 200px, 0px)");
+    },
 });

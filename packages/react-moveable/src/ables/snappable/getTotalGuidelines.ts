@@ -479,6 +479,7 @@ export function getSnapElementRects(
         },
         rootMatrix,
         is3d,
+        offsetDelta,
     } = state;
     const n = is3d ? 4 : 3;
     const [containerLeft, containerTop] = calculateContainerPos(rootMatrix, containerClientRect, n);
@@ -494,8 +495,8 @@ export function getSnapElementRects(
 
     return values.map(value => {
         const rect = value.element.getBoundingClientRect();
-        const left = rect.left - containerLeft;
-        const top = rect.top - containerTop;
+        const left = rect.left - containerLeft + offsetDelta[0];
+        const top = rect.top - containerTop + offsetDelta[1];
         const bottom = top + rect.height;
         const right = left + rect.width;
         const [elementLeft, elementTop] = calculateInversePosition(rootMatrix, [left, top], n);

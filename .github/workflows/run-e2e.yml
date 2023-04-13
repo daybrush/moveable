@@ -16,9 +16,10 @@ jobs:
         with:
           path: |
             '**/node_modules'
-            ~/.cache/ms-playwright
+            '~/.cache/ms-playwright'
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
+        if: steps.cache-lerna.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
       - name: Build helepr
         run: yarn build
