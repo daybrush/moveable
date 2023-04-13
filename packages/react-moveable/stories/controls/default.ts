@@ -209,7 +209,7 @@ export const DEFAULT_SNAPPABLE_GUIDELINES_CONTROLS = {
     verticalGuidelines: makeArgType({
         type: "object",
         description: makeLink("Snappable", "verticalGuidelines"),
-        defaultValue: [0, 100, 200, 400, 500],
+        defaultValue: [50, 150, 250, 450, 550],
     }),
     horizontalGuidelines: makeArgType({
         type: "object",

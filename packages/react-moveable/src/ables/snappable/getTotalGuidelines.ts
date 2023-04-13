@@ -447,7 +447,7 @@ export function getDefaultGuidelines(
             className: posInfo.className,
         });
     });
-    getObjectGuidelines(horizontalGuidelines, snapWidth).forEach(posInfo => {
+    getObjectGuidelines(verticalGuidelines, snapWidth).forEach(posInfo => {
         guidelines.push({
             type: "vertical",
             pos: [

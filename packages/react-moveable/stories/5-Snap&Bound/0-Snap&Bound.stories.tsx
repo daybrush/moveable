@@ -1,3 +1,4 @@
+import { expect } from "@storybook/jest";
 import {
     DEFAULT_BOUNDS_CONTROLS,
     DEFAULT_DRAGGABLE_CONTROLS,
@@ -13,6 +14,7 @@ import {
 } from "../controls/default";
 import { makeArgType, makeLink } from "../utils";
 import { add } from "../utils/story";
+import { pan, wait } from "../utils/testing";
 
 
 export default {
@@ -27,6 +29,22 @@ export const SnapGuidelines = add("Snap Guidelines", {
         ...DEFAULT_SNAPPABLE_GUIDELINES_CONTROLS,
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_SCALABLE_CONTROLS,
+    },
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".target")!;
+
+        // from: left 100, top 150
+        // to: left 52, top 2
+        // result: left 49, top -1
+        await pan({
+            target,
+            start: [0, 0],
+            end: [-48, -148],
+            duration: 20,
+            interval: 10,
+        });
+        expect(target.style.transform).toBe("translate(-51px, -151px)");
     },
 });
 
