@@ -1,6 +1,6 @@
 import {
     convertCSStoMatrix, convertDimension,
-    createIdentityMatrix, createOriginMatrix, createScaleMatrix, multiply,
+    createIdentityMatrix, createOriginMatrix, createScaleMatrix,
 } from "@scena/matrix";
 import { getCachedStyle } from "../store/Store";
 import { IS_WEBKIT, IS_SAFARI_ABOVE15, IS_FIREFOX, IS_CHROMIUM109 } from "../consts";
@@ -11,7 +11,6 @@ import {
     convert3DMatrixes, getOffsetPosInfo,
     getSVGMatrix, getBodyOffset, getAbsoluteMatrix,
 } from "../utils";
-import { createMatrix } from "css-to-mat";
 
 
 export function getShadowRoot(parentElement: HTMLElement | SVGElement) {
