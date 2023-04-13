@@ -19,6 +19,7 @@ jobs:
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
+        if: steps.cache-lerna.outputs.cache-hit != 'true'
         run: yarn
       - name: Build helepr
         run: yarn build
