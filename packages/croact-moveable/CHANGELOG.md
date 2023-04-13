@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.2.0 (2023-04-13)
+
+
+### :rocket: New Features
+
+* add croact ([b94c41c](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/b94c41c50cdf37da0136bd4d04f2237529253f45))
+* add croact compat ([233c6d0](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/233c6d0a905953b51c3fd5df1f7c58e7b1d03432))
+
+
+### :mega: Other
+
+* publish packages ([1177427](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/11774277bafd9c60e9cef3c9a6fa38a3e1c4077d))
+
+
+
 ## [0.33.0](https://github.com/daybrush/moveable/blob/master/packages/react-compat-moveable/compare/react-compat-moveable@0.32.4...react-compat-moveable@0.33.0) (2023-03-26)
 
 

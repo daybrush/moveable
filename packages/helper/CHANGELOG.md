@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.1.2...@moveable/helper@0.1.2) (2023-04-13)
+
+
+### :bug: Bug Fix
+
+* fix warpSelf ([8c86a3f](https://github.com/daybrush/moveable/blob/master/packages/helper/commit/8c86a3f95e5d0b8832b1d9b65bf72f598eb8d0cb))
+
+
+
 ## [0.1.2](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.1.2...@moveable/helper@0.1.2) (2023-03-26)
 
 **Note:** Version bump only for package @moveable/helper

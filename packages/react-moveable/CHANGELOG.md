@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.48.0...react-moveable@0.49.0) (2023-04-13)
+
+
+### :rocket: New Features
+
+* add croact ([b94c41c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b94c41c50cdf37da0136bd4d04f2237529253f45))
+* add croact compat ([233c6d0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/233c6d0a905953b51c3fd5df1f7c58e7b1d03432))
+* add string guideline pos #884 ([2036328](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/20363284f0ab6b7a38c042283cd55e7cbc528809))
+* support scale css property #891 ([28c4226](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/28c4226e9566067c14399a59d728babf692fcfc8))
+
+
+### :bug: Bug Fix
+
+* fix delta offset for element guidelines #888 ([526bec1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/526bec100ab5b45a61a88a50fa2931cf7c2841a2))
+* fix github workflow ([0fd81b8](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/0fd81b8e43dca21086c9f00a5c3a9ac13eabf410))
+* fix Scalable's keepRatio calculation #887 ([680c161](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/680c16181791b4764e7c31a14684c83575f8ab6b))
+* fix vertical guidelines ([1abcc37](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1abcc3785caf0db184649508eb63f14bde7291c4))
+* resolve transform matrix ([090e1b2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/090e1b26c1e2d9ff742c50f9e8e901378e5969f9))
+
+
+### :mega: Other
+
+* publish packages ([1177427](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/11774277bafd9c60e9cef3c9a6fa38a3e1c4077d))
+
+
+
 ## [0.48.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.47.3...react-moveable@0.48.0) (2023-03-26)
 
 

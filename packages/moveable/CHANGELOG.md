@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.46.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.45.0...moveable@0.46.0) (2023-04-13)
+
+
+### :rocket: New Features
+
+* add croact ([b94c41c](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/b94c41c50cdf37da0136bd4d04f2237529253f45))
+* add croact compat ([233c6d0](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/233c6d0a905953b51c3fd5df1f7c58e7b1d03432))
+
+
+### :bug: Bug Fix
+
+* fix warpSelf ([8c86a3f](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/8c86a3f95e5d0b8832b1d9b65bf72f598eb8d0cb))
+
+
+### :mega: Other
+
+* publish packages ([1177427](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/11774277bafd9c60e9cef3c9a6fa38a3e1c4077d))
+
+
+
 ## [0.45.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.44.4...moveable@0.45.0) (2023-03-26)
 
 

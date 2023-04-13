@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.43.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.42.0...ngx-moveable@0.43.0) (2023-04-13)
+
+
+### :bug: Bug Fix
+
+* fix warpSelf ([8c86a3f](https://github.com/daybrush/moveable/commit/8c86a3f95e5d0b8832b1d9b65bf72f598eb8d0cb))
+
+
+### :mega: Other
+
+* publish packages ([1177427](https://github.com/daybrush/moveable/commit/11774277bafd9c60e9cef3c9a6fa38a3e1c4077d))
+
+
+
 ## [0.42.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.41.4...ngx-moveable@0.42.0) (2023-03-26)
 
 
