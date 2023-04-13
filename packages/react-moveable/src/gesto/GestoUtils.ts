@@ -76,7 +76,7 @@ export function resolveTransformEvent(event: any, functionName: string) {
     const nextTransforms = originalDatas.nextTransforms as string[];
     const length = nextTransforms.length;
     const nextTransformAppendedIndexes: any[] = originalDatas.nextTransformAppendedIndexes;
-    let nextIndex = 0;
+    let nextIndex = -1;
 
     if (index === -1) {
         // translate => rotate => scale
