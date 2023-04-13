@@ -14,20 +14,13 @@ jobs:
         uses: actions/cache@v3
         id: cache-lerna
         with:
-          path: '**/node_modules'
+          path: |
+            **/node_modules
+            ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         if: steps.cache-lerna.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
-      - name: Cache Playwright
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-1.26.1
-      - name: Install Playwright
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright@1.26.1 install --with-deps
       - name: Build Helper
         run: yarn build
         working-directory: ./packages/helper
