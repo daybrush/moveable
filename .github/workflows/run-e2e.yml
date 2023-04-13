@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache-lerna.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
-      - name: Build helepr
+      - name: Build Helper
         run: yarn build
         working-directory: ./packages/helper
       - name: Run Storybook tests
