@@ -1,5 +1,5 @@
 import { add } from "../utils/story";
-import { findMoveable, wait } from "../utils/testing";
+import { findMoveable, pan, wait } from "../utils/testing";
 import { expect } from "@storybook/jest";
 
 export default {
@@ -110,6 +110,36 @@ export const TestsFixedSnap = add("Test Snap with position: fixed", {
 export const TestsZoomedTarget = add("Test css zoomed target", {
     app: require("./ReactZoomedTargetApp").default,
     path: require.resolve("./ReactZoomedTargetApp"),
+});
+export const TestsScaleTarget = add("Test css scale target", {
+    app: require("./ReactScaleTargetApp").default,
+    path: require.resolve("./ReactScaleTargetApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".target")!;
+        const controlBox = canvasElement.querySelector<HTMLElement>(".moveable-control-box")!;
+
+
+        // x1 => x2
+        const line1 = controlBox.querySelector<HTMLElement>(`[data-line-key="render-line-0"]`)!;
+        // y1 => y2
+        const line2 = controlBox.querySelector<HTMLElement>(`[data-line-key="render-line-1"]`)!;
+
+        // 100x 200
+        expect(line1.style.width).toBe("100px");
+        expect(line2.style.width).toBe("200px");
+        expect(controlBox.style.transform).toBe("translate3d(100px, 200px, 0px)");
+
+        await pan({
+            target,
+            start: [0, 0],
+            end: [100, 0],
+            duration: 100,
+            interval: 10,
+        });
+        expect(target.style.transform).toBe("translate(100px, 0px)");
+        expect(controlBox.style.transform).toBe("translate3d(200px, 200px, 0px)");
+    },
 });
 
 export const TestsZoomedSnap = add("Test snap for scaled target", {

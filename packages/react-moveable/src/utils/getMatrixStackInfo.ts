@@ -1,6 +1,6 @@
 import {
     convertCSStoMatrix, convertDimension,
-    createIdentityMatrix, createOriginMatrix, createScaleMatrix,
+    createIdentityMatrix, createOriginMatrix, createScaleMatrix, multiply,
 } from "@scena/matrix";
 import { getCachedStyle } from "../store/Store";
 import { IS_WEBKIT, IS_SAFARI_ABOVE15, IS_FIREFOX, IS_CHROMIUM109 } from "../consts";
@@ -11,6 +11,7 @@ import {
     convert3DMatrixes, getOffsetPosInfo,
     getSVGMatrix, getBodyOffset, getAbsoluteMatrix,
 } from "../utils";
+import { createMatrix } from "css-to-mat";
 
 
 export function getShadowRoot(parentElement: HTMLElement | SVGElement) {
@@ -58,6 +59,7 @@ export function getMatrixStackInfo(
         isEnd = requestEnd;
         const getStyle = getCachedStyle(el);
         const position = getStyle("position");
+        const scale = getStyle("scale") as string;
         const transform = getElementTransform(el);
         const isFixed = position === "fixed";
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
@@ -201,6 +203,25 @@ export function getMatrixStackInfo(
             matrix: getAbsoluteMatrix(matrix, n, origin),
         });
 
+        if (scale && scale !== "1" && scale !== "none") {
+            const [
+                scaleX,
+                scaleY = scaleX,
+            ] = scale.split(" ").map(scale => parseFloat(scale)) as number[];
+            const scaleMatrix = createScaleMatrix([scaleX, scaleY], n);
+
+            matrixes.push({
+                type: "offset",
+                target: el,
+                matrix: createIdentityMatrix(n),
+            });
+
+            matrixes.push({
+                type: "target",
+                target: el,
+                matrix: getAbsoluteMatrix(scaleMatrix, n, origin),
+            });
+        }
         if (hasOffset) {
             const isElementTarget = el === target;
             const scrollLeft = isElementTarget ? 0 : el.scrollLeft;
