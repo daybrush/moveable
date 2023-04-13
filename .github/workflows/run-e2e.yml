@@ -12,11 +12,17 @@ jobs:
             cache: 'yarn'
       - name: restore lerna
         uses: actions/cache@v3
+        id: cache-lerna
         with:
-          path: '**/node_modules'
+          path: |
+            '**/node_modules'
+            ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn
+      - name: Install playwright deps
+        if: steps.cache-lerna.outputs.cache-hit != 'true'
+        run: yarn add playwright -D -W
       - name: Build helepr
         run: yarn build
         working-directory: ./packages/helper
