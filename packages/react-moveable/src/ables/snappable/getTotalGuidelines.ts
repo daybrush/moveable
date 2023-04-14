@@ -1,7 +1,5 @@
 import { convertUnitSize, isNumber, isObject, throttle } from "@daybrush/utils";
 import { diff } from "@egjs/children-differ";
-import { minus } from "@scena/matrix";
-import { getMinMaxs } from "overlap-area";
 import {
     MoveableManagerInterface, SnappableProps,
     SnappableState, SnapGuideline, SnapDirectionPoses,
@@ -9,7 +7,7 @@ import {
     SnapElementRect,
     NumericPosGuideline,
 } from "../../types";
-import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, roundSign } from "../../utils";
+import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition } from "../../utils";
 import {
     splitSnapDirectionPoses, getSnapDirections,
     HORIZONTAL_NAMES_MAP, VERTICAL_NAMES_MAP, calculateContainerPos,
@@ -473,30 +471,30 @@ export function getSnapElementRects(
     const state = moveable.state;
     const {
         containerClientRect,
-        targetClientRect: {
-            top: clientTop,
-            left: clientLeft,
-        },
+        // targetClientRect: {
+        //     top: clientTop,
+        //     left: clientLeft,
+        // },
         rootMatrix,
         is3d,
         offsetDelta,
     } = state;
     const n = is3d ? 4 : 3;
     const [containerLeft, containerTop] = calculateContainerPos(rootMatrix, containerClientRect, n);
-    const poses = getAbsolutePosesByState(state);
-    const {
-        minX: targetLeft,
-        minY: targetTop,
-    } = getMinMaxs(poses);
-    const [distLeft, distTop] = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [
-        clientLeft - containerLeft,
-        clientTop - containerTop,
-    ], n)).map(pos => roundSign(pos));
+    // const poses = getAbsolutePosesByState(state);
+    // const {
+    //     minX: targetLeft,
+    //     minY: targetTop,
+    // } = getMinMaxs(poses);
+    // const [distLeft, distTop] = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [
+    //     clientLeft - containerLeft,
+    //     clientTop - containerTop,
+    // ], n)).map(pos => roundSign(pos));
 
     return values.map(value => {
         const rect = value.element.getBoundingClientRect();
-        const left = rect.left - containerLeft + offsetDelta[0];
-        const top = rect.top - containerTop + offsetDelta[1];
+        const left = rect.left - containerLeft - offsetDelta[0];
+        const top = rect.top - containerTop - offsetDelta[1];
         const bottom = top + rect.height;
         const right = left + rect.width;
         const [elementLeft, elementTop] = calculateInversePosition(rootMatrix, [left, top], n);
@@ -505,12 +503,12 @@ export function getSnapElementRects(
         return {
             ...value,
             rect: {
-                left: elementLeft + distLeft,
-                right: elementRight + distLeft,
-                top: elementTop + distTop,
-                bottom: elementBottom + distTop,
-                center: (elementLeft + elementRight) / 2 + distLeft,
-                middle: (elementTop + elementBottom) / 2 + distTop,
+                left: elementLeft,
+                right: elementRight,
+                top: elementTop,
+                bottom: elementBottom,
+                center: (elementLeft + elementRight) / 2,
+                middle: (elementTop + elementBottom) / 2,
             },
         };
     });

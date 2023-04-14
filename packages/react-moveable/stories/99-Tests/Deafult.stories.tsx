@@ -187,3 +187,23 @@ export const TestsAccurateElementGuidelines = add("Test Accurate Element Guideli
         // expect(controlBox.style.transform).toBe("translate3d(200px, 200px, 0px)");
     },
 });
+
+
+
+export const TestsAccurateElementGuidelines2 = add("Test Accurate Element Guidelines 0.2", {
+    app: require("./ReactAccurateElementGuideline2App").default,
+    path: require.resolve("./ReactAccurateElementGuideline2App"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".target2")!;
+
+        await pan({
+            target,
+            start: [0, 0],
+            end: [-1, -1],
+            duration: 10,
+            interval: 10,
+        });
+        expect(target.style.transform).toBe("translate(0px, 0px)");
+    },
+});
