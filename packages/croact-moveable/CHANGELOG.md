@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.2.0...croact-moveable@0.2.1) (2023-04-16)
+
+
+### :bug: Bug Fix
+
+* fix pinchable's operation #892 ([f4d8df3](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/f4d8df3f81f69f0c00e2b865e6f3368ee9795b01))
+
+
+### :mega: Other
+
+* publish packages ([a623eda](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/a623eda2702067397159742dd0c6ed16b99bbe22))
+
+
+
 ## 0.2.0 (2023-04-13)
 
 

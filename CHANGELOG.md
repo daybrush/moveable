@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.46.1](https://github.com/daybrush/moveable/compare/0.46.0...0.46.1) (2023-04-16)
+### :sparkles: Packages
+* `croact-moveable` 0.2.1
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.23.1
+* `moveable` 0.46.1
+* `preact-moveable` 0.48.1
+* `react-moveable` 0.49.2
+* `svelte-moveable` 0.38.1
+* `vue-moveable` 2.0.0-beta.65
+* `vue3-moveable` 0.21.1
+* `ngx-moveable` 0.43.1
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `croact-moveable`
+    * fix pinchable's operation #892 ([f4d8df3](https://github.com/daybrush/moveable/commit/f4d8df3f81f69f0c00e2b865e6f3368ee9795b01))
+* `react-moveable`
+    * fix 0.2 guideline offset delta  #888 ([d85c041](https://github.com/daybrush/moveable/commit/d85c0414d55e08b3669e3f88bb10c301cc99c59c))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([a623eda](https://github.com/daybrush/moveable/commit/a623eda2702067397159742dd0c6ed16b99bbe22))
+
+
+
 ## [0.46.0](https://github.com/daybrush/moveable/compare/0.45.0...0.46.0) (2023-04-13)
 ### :sparkles: Packages
 * `croact-moveable` 0.2.0

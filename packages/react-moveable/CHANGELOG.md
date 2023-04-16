@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.49.0...react-moveable@0.49.2) (2023-04-16)
+
+
+### :bug: Bug Fix
+
+* fix 0.2 guideline offset delta  #888 ([d85c041](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d85c0414d55e08b3669e3f88bb10c301cc99c59c))
+* fix pinchable's operation #892 ([f4d8df3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f4d8df3f81f69f0c00e2b865e6f3368ee9795b01))
+
+
+### :mega: Other
+
+* publish packages ([a623eda](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/a623eda2702067397159742dd0c6ed16b99bbe22))
+
+
+
 ## [0.49.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.48.0...react-moveable@0.49.0) (2023-04-13)
 
 
