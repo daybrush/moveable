@@ -3,7 +3,7 @@ import { prefixNames } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
-    getShapeDirection, isFunction, convertUnitSize, between, getKeys, decamelize,
+    getShapeDirection, isFunction, convertUnitSize, between, getKeys, decamelize, isNumber,
 } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -1491,6 +1491,7 @@ export function getOffsetSizeDist(
     const {
         distX,
         distY,
+        pinchScale,
         parentDistance,
         parentDist,
         parentScale,
@@ -1518,6 +1519,9 @@ export function getOffsetSizeDist(
                 distHeight = distWidth / ratio;
             }
         }
+    } else if (isNumber(pinchScale)) {
+        distWidth = (pinchScale - 1) * startOffsetWidth;
+        distHeight = (pinchScale - 1) * startOffsetHeight;
     } else if (parentScale) {
         distWidth = (parentScale[0] - 1) * startOffsetWidth;
         distHeight = (parentScale[1] - 1) * startOffsetHeight;

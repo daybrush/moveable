@@ -10,9 +10,9 @@ import {
     getScaleDist,
     fillTransformStartEvent,
     fillTransformEvent,
-    getAbsolutePosition,
     setDefaultTransformIndex,
     getPosByDirection,
+    getTranslateFixedPosition,
 } from "../gesto/GestoUtils";
 import { getRenderDirections } from "../renderDirections";
 import {
@@ -25,6 +25,7 @@ import {
 } from "../types";
 import {
     fillChildEvents,
+    startChildDist,
     triggerChildAbles,
 } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -172,6 +173,7 @@ export default {
             parentFlag, isPinch,
             dragClient,
             isRequest,
+            resolveMatrix,
         } = e;
         const {
             prevDist,
@@ -241,7 +243,6 @@ export default {
                 datas.setFixedDirection(nextFixedDirection);
 
                 scale = getNextScale();
-
                 return scale;
             },
             startFixedDirection: datas.startFixedDirection,
@@ -254,13 +255,12 @@ export default {
         let fixedPosition = dragClient;
         let snapDist = [0, 0];
 
+        const isSelfPinch = !dragClient && !parentFlag && isPinch;
 
-        if (!dragClient) {
-            if (!parentFlag && isPinch) {
-                fixedPosition = getAbsolutePosition(moveable, [0, 0]);
-            } else {
-                fixedPosition = datas.fixedPosition;
-            }
+        if (isSelfPinch || resolveMatrix) {
+            fixedPosition = getTranslateFixedPosition(moveable, datas.targetAllTransform, [0, 0], datas);
+        } else if (!dragClient) {
+            fixedPosition = datas.fixedPosition;
         }
         if (!isPinch) {
             snapDist = checkSnapScale(
@@ -330,7 +330,7 @@ export default {
         scale = multiply2(dist, startValue);
 
         const inverseDist = getScaleDist(moveable, dist, datas.fixedDirection, fixedPosition, datas);
-        const inverseDelta = minus(inverseDist, datas.prevInverseDist || [0, 0]);
+        const inverseDelta = isSelfPinch ? inverseDist : minus(inverseDist, datas.prevInverseDist || [0, 0]);
 
         datas.prevDist = dist;
         datas.prevInverseDist = inverseDist;
@@ -338,6 +338,7 @@ export default {
             scale[0] === prevDist[0] && scale[1] === prevDist[1]
             && inverseDelta.every(num => !num)
             && !parentMoveable
+            && !isSelfPinch
         ) {
             return false;
         }
@@ -390,21 +391,6 @@ export default {
         }
         const originalEvents = fillChildEvents(moveable, "resizable", e);
 
-        function setDist(child: MoveableManagerInterface, ev: any) {
-            const fixedDirection = datas.fixedDirection;
-            const fixedPosition = datas.fixedPosition;
-            const startPositions = ev.datas.startPositions || getAbsolutePosesByState(child.state);
-            const pos = getPosByDirection(startPositions, fixedDirection);
-            const [originalX, originalY] = calculate(
-                createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
-                [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
-                3,
-            );
-            ev.datas.originalX = originalX;
-            ev.datas.originalY = originalY;
-
-            return ev;
-        }
 
         datas.moveableScale = moveable.scale;
 
@@ -414,7 +400,7 @@ export default {
             "dragControlStart",
             e,
             (child, ev) => {
-                return setDist(child, ev);
+                return startChildDist(moveable, child, datas, ev);
             },
         );
 
@@ -422,7 +408,7 @@ export default {
             params.setFixedDirection(fixedDirection);
             events.forEach((ev, i) => {
                 ev.setFixedDirection(fixedDirection);
-                setDist(ev.moveable, originalEvents[i]);
+                startChildDist(moveable, ev.moveable, datas, originalEvents[i]);
             });
         };
 

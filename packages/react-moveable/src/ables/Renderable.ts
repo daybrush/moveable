@@ -28,9 +28,7 @@ export default {
         triggerEvent(moveable, `onRender`, this.fillDragParams(moveable, e));
     },
     dragAfter(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
-        if (e.resultCount) {
-            return this.drag(moveable, e);
-        }
+        return this.drag(moveable, e);
     },
     dragEnd(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
         triggerEvent(moveable, `onRenderEnd`, this.fillDragEndParams(moveable, e));

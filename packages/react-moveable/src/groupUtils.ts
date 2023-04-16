@@ -1,5 +1,8 @@
 import { Able, MoveableGroupInterface, MoveableManagerInterface, MoveableManagerState } from "./types";
 import CustomGesto, { setCustomDrag } from "./gesto/CustomGesto";
+import { getAbsolutePosesByState } from "./utils";
+import { calculate, createRotateMatrix } from "@scena/matrix";
+import { getPosByDirection } from "./gesto/GestoUtils";
 
 export function fillChildEvents(
     moveable: MoveableGroupInterface<any, any>,
@@ -101,4 +104,27 @@ export function triggerChildAbles<T extends Able>(
     });
 
     return childs;
+}
+
+
+export function startChildDist(
+    moveable: MoveableGroupInterface,
+    child: MoveableManagerInterface,
+    parentDatas: any,
+    childEvent: any,
+) {
+    const fixedDirection = parentDatas.fixedDirection;
+    const fixedPosition = parentDatas.fixedPosition;
+
+    const startPositions = childEvent.datas.startPositions || getAbsolutePosesByState(child.state);
+    const pos = getPosByDirection(startPositions, fixedDirection);
+    const [originalX, originalY] = calculate(
+        createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
+        [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
+        3,
+    );
+    childEvent.datas.originalX = originalX;
+    childEvent.datas.originalY = originalY;
+
+    return childEvent;
 }

@@ -8,7 +8,7 @@ import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
     calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo, fillCSSObject,
 } from "../utils";
-import { splitUnit, isArray, splitSpace, findIndex, dot, find } from "@daybrush/utils";
+import { splitUnit, isArray, splitSpace, findIndex, dot, find, isString } from "@daybrush/utils";
 import {
     MoveableManagerState, ResizableProps, MoveableManagerInterface,
     OnTransformEvent, OnTransformStartEvent, DraggableProps, OnDrag,
@@ -71,7 +71,6 @@ export function resolveTransformEvent(event: any, functionName: string) {
     } = event;
 
     const index = datas.transformIndex;
-
 
     const nextTransforms = originalDatas.nextTransforms as string[];
     const length = nextTransforms.length;
@@ -333,29 +332,39 @@ export function getNextMatrix(
 export function getNextTransformMatrix(
     state: MoveableManagerState<any>,
     datas: any,
-    transform: string,
+    transform: string | number[],
 ) {
     const {
         transformOrigin,
         offsetMatrix,
         is3d,
     } = state;
-    const {
-        beforeTransform,
-        afterTransform,
-    } = datas;
     const n = is3d ? 4 : 3;
-    const targetTransform = parseMat([transform]);
+    let targetTransform!: number[];
+
+    if (isString(transform)) {
+        const {
+            beforeTransform,
+            afterTransform,
+        } = datas;
+
+        targetTransform = convertDimension(
+            multiply(multiply(beforeTransform, parseMat([transform]), 4), afterTransform, 4),
+            4, n,
+        );
+    } else {
+        targetTransform = transform;
+    }
 
     return getNextMatrix(
         offsetMatrix,
-        convertDimension(multiply(multiply(beforeTransform, targetTransform as any, 4), afterTransform, 4), 4, n),
+        targetTransform,
         transformOrigin,
         n,
     );
 }
 export function scaleMatrix(
-    state: MoveableManagerState<any>,
+    state: any,
     scale: number[],
 ) {
     const {
@@ -363,12 +372,13 @@ export function scaleMatrix(
         offsetMatrix,
         is3d,
         targetMatrix,
+        targetAllTransform,
     } = state;
     const n = is3d ? 4 : 3;
 
     return getNextMatrix(
         offsetMatrix,
-        multiply(targetMatrix, createScaleMatrix(scale, n), n),
+        multiply(targetAllTransform || targetMatrix, createScaleMatrix(scale, n), n),
         transformOrigin,
         n,
     );
@@ -461,6 +471,19 @@ export function fillTransformEvent(
         afterTransform,
     };
 }
+
+export function getTranslateFixedPosition(
+    moveable: MoveableManagerInterface<any>,
+    transform: string | number[],
+    fixedDirection: number[],
+    datas: any,
+) {
+    const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform);
+    const nextFixedPosition = getDirectionOffset(moveable, fixedDirection, nextMatrix);
+
+    return nextFixedPosition;
+}
+
 export function getTranslateDist(
     moveable: MoveableManagerInterface<any>,
     transform: string,
@@ -468,6 +491,7 @@ export function getTranslateDist(
     fixedPosition: number[],
     datas: any,
 ) {
+    const nextFixedPosition = getTranslateFixedPosition(moveable, transform, fixedDirection, datas);
     const state = moveable.state;
     const {
         left,
@@ -475,11 +499,10 @@ export function getTranslateDist(
     } = state;
 
     const groupable = moveable.props.groupable;
-    const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform);
     const groupLeft = groupable ? left : 0;
     const groupTop = groupable ? top : 0;
-    const nextFixedPosition = getDirectionOffset(moveable, fixedDirection, nextMatrix);
     const dist = minus(fixedPosition, nextFixedPosition);
+
     return minus(dist, [groupLeft, groupTop]);
 }
 export function getScaleDist(
@@ -521,7 +544,8 @@ export function getDirectionByPos(
     ];
 }
 export function getDirectionOffset(
-    moveable: MoveableManagerInterface, direction: number[],
+    moveable: MoveableManagerInterface,
+    direction: number[],
     nextMatrix: number[] = moveable.state.allMatrix,
 ) {
     const {

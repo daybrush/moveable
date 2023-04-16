@@ -37,6 +37,7 @@ import {
     getTransformDirection,
     getPosByDirection,
     getDirectionByPos,
+    getTranslateFixedPosition,
 } from "../gesto/GestoUtils";
 import { DirectionControlInfo, renderAroundControls, renderDirectionControlsByInfos } from "../renderDirections";
 import { DIRECTION_REGION_TO_DIRECTION } from "../consts";
@@ -562,7 +563,11 @@ export default {
         moveable: MoveableManagerInterface<RotatableProps & DraggableProps>,
         e: any,
     ) {
-        const { datas, clientDistX, clientDistY, parentRotate, parentFlag, isPinch, groupDelta } = e;
+        const {
+            datas, clientDistX, clientDistY,
+            parentRotate, parentFlag, isPinch, groupDelta,
+            resolveMatrix,
+        } = e;
         const {
             beforeDirection,
             beforeInfo,
@@ -656,13 +661,16 @@ export default {
             absoluteRotation,
         ] = getRotateInfo(moveable, rect, absoluteInfo, absoluteDist, absoluteStartRotation, isSnap);
 
-        if (!absoluteDelta && !delta && !beforeDelta && !parentMoveable) {
+        if (!absoluteDelta && !delta && !beforeDelta && !parentMoveable && !resolveMatrix) {
             return;
         }
 
         const nextTransform = convertTransformFormat(
             datas, `rotate(${rotation}deg)`, `rotate(${dist}deg)`,
         );
+        if (resolveMatrix) {
+            datas.fixedPosition = getTranslateFixedPosition(moveable, datas.targetAllTransform, [0, 0], datas);
+        }
 
         const inverseDist = getRotateDist(moveable, dist, datas);
         const inverseDelta = minus(
@@ -670,7 +678,6 @@ export default {
             datas.prevInverseDist || [0, 0],
         );
         datas.prevInverseDist = inverseDist;
-
         datas.requestValue = null;
 
         const dragEvent = fillTransformEvent(

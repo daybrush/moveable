@@ -9,7 +9,7 @@ import {
 import { expect } from "@storybook/jest";
 
 import { add } from "../utils/story";
-import { pan, rotate, wait } from "../utils/testing";
+import { pan, pinch, rotate, wait } from "../utils/testing";
 import { throttle } from "@daybrush/utils";
 
 
@@ -40,6 +40,7 @@ export const BasicDraggable = add("Draggable", {
         expect(controlBox.style.transform).toBe("translate3d(200px, 150px, 0px)");
     },
 });
+
 export const BasicResizable = add("Resizable", {
     app: require("./ReactResizableApp").default,
     path: require.resolve("./ReactResizableApp"),
@@ -254,5 +255,29 @@ export const BasicOriginDraggable = add("OriginDraggable", {
         const clientRect2 = target.getBoundingClientRect();
         expect(throttle(clientRect1.left, 0.1)).toBe(throttle(clientRect2.left, 0.1));
         expect(throttle(clientRect1.top, 0.1)).toBe(throttle(clientRect2.top, 0.1));
+    },
+});
+
+
+
+export const BasicPinchable = add("Pinchable", {
+    app: require("./ReactPinchableApp").default,
+    path: require.resolve("./ReactPinchableApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".target")!;
+        // const controlBox = canvasElement.querySelector<HTMLElement>(".moveable-control-box")!;
+
+        await pinch({
+            target,
+            start: [0, 0],
+            end: [100, 0],
+            startOffset: [100, 0],
+            endOffset: [-200, 0],
+            duration: 100,
+            interval: 10,
+        });
+
+        expect(target.style.transform).toBe(`translate(100px, 0px) rotate(-180deg) scale(2, 2)`);
     },
 });

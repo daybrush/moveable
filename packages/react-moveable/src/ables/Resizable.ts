@@ -30,6 +30,7 @@ import {
 import { getRenderDirections } from "../renderDirections";
 import {
     fillChildEvents,
+    startChildDist,
     triggerChildAbles,
 } from "../groupUtils";
 import Draggable from "./Draggable";
@@ -565,22 +566,6 @@ export default {
             return false;
         }
         const originalEvents = fillChildEvents(moveable, "resizable", e);
-        function setDist(child: MoveableManagerInterface, ev: any) {
-            const fixedDirection = datas.fixedDirection;
-            const fixedPosition = datas.fixedPosition;
-
-            const startPositions = ev.datas.startPositions || getAbsolutePosesByState(child.state);
-            const pos = getPosByDirection(startPositions, fixedDirection);
-            const [originalX, originalY] = calculate(
-                createRotateMatrix(-moveable.rotation / 180 * Math.PI, 3),
-                [pos[0] - fixedPosition[0], pos[1] - fixedPosition[1], 1],
-                3,
-            );
-            ev.datas.originalX = originalX;
-            ev.datas.originalY = originalY;
-
-            return ev;
-        }
         const {
             startOffsetWidth: parentStartOffsetWidth,
             startOffsetHeight: parentStartOffsetHeight,
@@ -629,7 +614,7 @@ export default {
             "dragControlStart",
             e,
             (child, ev) => {
-                return setDist(child, ev);
+                return startChildDist(moveable, child, datas, ev);
             },
         );
 
@@ -641,7 +626,7 @@ export default {
             params.setFixedDirection(fixedDirection);
             events.forEach((ev, i) => {
                 ev.setFixedDirection(fixedDirection);
-                setDist(ev.moveable, originalEvents[i]);
+                startChildDist(moveable, ev.moveable, datas, originalEvents[i]);
             });
         };
 

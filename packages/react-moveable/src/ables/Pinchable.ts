@@ -110,6 +110,8 @@ export default makeAble("pinchable", {
                 ...e,
                 datas: originalDatas[able.name],
                 inputEvent,
+                resolveMatrix: true,
+                pinchScale: pinchScale,
                 parentDistance,
                 parentRotate: angle,
                 isPinch: true,

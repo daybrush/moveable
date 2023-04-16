@@ -8,13 +8,19 @@ import Renderable from "../ables/Renderable";
 export function triggerAble(
     moveable: MoveableManagerInterface,
     ableType: string,
-    eventOperation: string,
+    eventOperations: string[],
     eventAffix: string,
     eventType: any,
     e: any,
     requestInstant?: boolean,
 ) {
+    // pre setting
+    e.clientDistX = e.distX;
+    e.clientDistY = e.distY;
+
     const isStart = eventType === "Start";
+    const isEnd = eventType === "End";
+    const isAfter = eventType === "After";
     const target = moveable.state.target;
     const isRequest = e.isRequest;
 
@@ -25,26 +31,6 @@ export function triggerAble(
     ) {
         return false;
     }
-    // "drag" "Control" "After"
-    const eventName = `${eventOperation}${eventAffix}${eventType}`;
-    const conditionName = `${eventOperation}${eventAffix}Condition`;
-    const isEnd = eventType === "End";
-    const isAfter = eventType === "After";
-    const isFirstStart = isStart && (
-        !moveable.targetGesto || !moveable.controlGesto
-        || (!moveable.targetGesto.isFlag() || !moveable.controlGesto.isFlag())
-    );
-
-    if (isFirstStart) {
-        moveable.updateRect(eventType, true, false);
-    }
-    e.clientDistX = e.distX;
-    e.clientDistY = e.distY;
-    if (eventType === "" && !isRequest) {
-        // Convert distX, distY
-        convertDragDist(moveable.state, e);
-    }
-    // const isGroup = eventAffix.indexOf("Group") > -1;
     const ables: Able[] = [...(moveable as any)[ableType]];
 
     if (isRequest) {
@@ -57,14 +43,7 @@ export function triggerAble(
     if (!ables.length || ables.every(able => able.dragRelation)) {
         return false;
     }
-    const eventAbles: Able[] = [BeforeRenderable, ...ables, Renderable].filter((able: any) => able[eventName]);
-    const datas = e.datas;
-
-    if (isFirstStart) {
-        eventAbles.forEach(able => {
-            able.unset && able.unset(moveable);
-        });
-    }
+    // "drag" "Control" "After"
 
     const inputEvent = e.inputEvent;
     let inputTarget: Element;
@@ -72,66 +51,120 @@ export function triggerAble(
     if (isEnd && inputEvent) {
         inputTarget = document.elementFromPoint(e.clientX, e.clientY) || inputEvent.target;
     }
-    let resultCount = 0;
-
     let isDragStop = false;
     const stop = () => {
         isDragStop = true;
         e.stop?.();
     };
-    const results = eventAbles.filter((able: any) => {
+    const isFirstStart = isStart && (
+        !moveable.targetGesto || !moveable.controlGesto
+        || (!moveable.targetGesto.isFlag() || !moveable.controlGesto.isFlag())
+    );
+
+    if (isFirstStart) {
+        moveable.updateRect(eventType, true, false);
+    }
+
+
+    // trigger ables
+    const datas = e.datas;
+    const trigger = (able: any, eventName: string, conditionName?: string) => {
+        if (!(eventName in able)) {
+            return false;
+        }
         const ableName = able.name;
         const nextDatas = datas[ableName] || (datas[ableName] = {});
 
         if (isStart) {
-            nextDatas.isEventStart = !able[conditionName] || able[conditionName](moveable, e);
+            nextDatas.isEventStart = !conditionName
+                || !able[conditionName] || able[conditionName](moveable, e);
         }
 
-        if (nextDatas.isEventStart) {
-            const result = able[eventName](moveable, {
-                ...e,
-                stop,
-                resultCount,
-                datas: nextDatas,
-                originalDatas: datas,
-                inputTarget,
-            });
-
-            (moveable as any)._emitter.off();
-            if (isStart && result === false) {
-                nextDatas.isEventStart = false;
-            }
-            resultCount += result || nextDatas.isEventStart ? 1 : 0;
-            return result;
+        if (!nextDatas.isEventStart) {
+            return false;
         }
-        return false;
+        const result = able[eventName](moveable, {
+            ...e,
+            stop,
+            datas: nextDatas,
+            originalDatas: datas,
+            inputTarget,
+        });
+        (moveable as any)._emitter.off();
+
+        if (isStart && result === false) {
+            nextDatas.isEventStart = false;
+        }
+        return result;
+    };
+
+    // unset ables for first drag start
+    if (isFirstStart) {
+        ables.forEach(able => {
+            able.unset && able.unset(moveable);
+        });
+    }
+    // BeforeRenderable
+    trigger(BeforeRenderable, `drag${eventAffix}${eventType}`);
+
+    let forceEndedCount = 0;
+    let updatedCount = 0;
+
+    eventOperations.forEach(eventOperation => {
+        if (isDragStop) {
+            return false;
+        }
+        const eventName = `${eventOperation}${eventAffix}${eventType}`;
+        const conditionName = `${eventOperation}${eventAffix}Condition`;
+
+        if (eventType === "" && !isRequest) {
+            // Convert distX, distY
+            convertDragDist(moveable.state, e);
+        }
+        // const isGroup = eventAffix.indexOf("Group") > -1;
+        let eventAbles: Able[] = ables.filter((able: any) => able[eventName]);
+
+        eventAbles = eventAbles.filter((able, i) => {
+            return able.name && eventAbles.indexOf(able) === i;
+        });
+
+        const results = eventAbles.filter(able => trigger(able, eventName, conditionName));
+        const isUpdate = results.length;
+
+        // end ables
+        if (isDragStop) {
+            ++forceEndedCount;
+        }
+        if (isUpdate) {
+            ++updatedCount;
+        }
+
+        if (!isDragStop && isStart && eventAbles.length && !isUpdate) {
+            forceEndedCount += eventAbles.filter(able => {
+                const ableName = able.name;
+                const nextDatas = datas[ableName];
+
+                if (nextDatas.isEventStart) {
+                    if (able.dragRelation === "strong") {
+                        return false;
+                    }
+                    // stop drag
+                    return true;
+                }
+                // pre stop drag
+                return false;
+            }).length ? 1 : 0;
+        }
     });
 
-    const isUpdate = results.length;
-    let isForceEnd = false;
-
-    // end ables
-    if (isDragStop) {
-        isForceEnd = true;
-    }
-    if (!isForceEnd && isStart && eventAbles.length && !isUpdate) {
-        isForceEnd = eventAbles.filter(able => {
-            const ableName = able.name;
-            const nextDatas = datas[ableName];
-
-            if (nextDatas.isEventStart) {
-                if (able.dragRelation === "strong") {
-                    return false;
-                }
-                // start drag
-                return true;
-            }
-            // cancel event
-            return false;
-        }).length as any;
+    if (!isAfter || updatedCount) {
+        trigger(Renderable, `drag${eventAffix}${eventType}`);
     }
 
-    if (isEnd || isForceEnd) {
+
+    // stop gesto condition
+    const isForceEnd = forceEndedCount === eventOperations.length;
+    if (isEnd || isDragStop || isForceEnd) {
         moveable.state.gestos = {};
 
         if ((moveable as MoveableGroupInterface).moveables) {
@@ -139,17 +172,17 @@ export function triggerAble(
                 childMoveable.state.gestos = {};
             });
         }
-        eventAbles.forEach(able => {
+        ables.forEach(able => {
             able.unset && able.unset(moveable);
         });
     }
-    if (isStart && !isForceEnd && !isRequest && isUpdate && moveable.props.preventDefault) {
+    if (isStart && !isForceEnd && !isRequest && updatedCount && moveable.props.preventDefault) {
         e?.preventDefault();
     }
     if (moveable.isUnmounted || isForceEnd) {
         return false;
     }
-    if ((!isStart && isUpdate && !requestInstant) || isEnd) {
+    if ((!isStart && updatedCount && !requestInstant) || isEnd) {
         const flushSync = moveable.props.flushSync || defaultSync;
 
         flushSync(() => {
@@ -158,8 +191,8 @@ export function triggerAble(
         });
 
     }
-    if (!isStart && !isEnd && !isAfter && isUpdate && !requestInstant) {
-        triggerAble(moveable, ableType, eventOperation, eventAffix, eventType + "After", e);
+    if (!isStart && !isEnd && !isAfter && updatedCount && !requestInstant) {
+        triggerAble(moveable, ableType, eventOperations, eventAffix, eventType + "After", e);
     }
     return true;
 }
@@ -239,12 +272,19 @@ export function getAbleGesto(
 
             gesto.on(`${eventOperation}${eventType}` as any, e => {
                 const eventName = e.eventType;
+                const isPinchScheduled = eventOperation === "drag" && e.isPinch;
 
                 if (conditionFunctions[eventName] && !conditionFunctions[eventName](e)) {
                     e.stop();
                     return;
                 }
-                const result = triggerAble(moveable, ableType, eventOperation, eventAffix, eventType, e);
+
+                if (isPinchScheduled) {
+                    return;
+                }
+                const eventOperations = eventOperation === "drag" ? [eventOperation] : ["drag", eventOperation];
+
+                const result = triggerAble(moveable, ableType, eventOperations, eventAffix, eventType, e);
 
                 if (!result) {
                     e.stop();
