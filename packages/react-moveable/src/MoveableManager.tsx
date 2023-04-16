@@ -652,7 +652,7 @@ export default class MoveableManager<T = {}>
 
         const requester = {
             request(ableParam: IObject<any>) {
-                triggerAble(self, ableType, "drag", eventAffix, "", {
+                triggerAble(self, ableType, ["drag"], eventAffix, "", {
                     ...ableRequester.request(ableParam),
                     requestAble: ableName,
                     isRequest: true,
@@ -660,7 +660,7 @@ export default class MoveableManager<T = {}>
                 return this;
             },
             requestEnd() {
-                triggerAble(self, ableType, "drag", eventAffix, "End", {
+                triggerAble(self, ableType, ["drag"], eventAffix, "End", {
                     ...ableRequester.requestEnd(),
                     requestAble: ableName,
                     isRequest: true,
@@ -669,7 +669,7 @@ export default class MoveableManager<T = {}>
             },
         };
 
-        triggerAble(self, ableType, "drag", eventAffix, "Start", {
+        triggerAble(self, ableType, ["drag"], eventAffix, "Start", {
             ...ableRequester.requestStart(param),
             requestAble: ableName,
             isRequest: true,
