@@ -49,14 +49,6 @@ export function getTotalGuidelines(
             moveable, targetRect, snapThreshold,
         ));
     }
-    totalGuidelines.push(...getGridGuidelines(
-        snapGridWidth,
-        snapGridHeight,
-        overflow ? containerWidth! : containerClientWidth!,
-        overflow ? containerHeight! : containerClientHeight!,
-        clientLeft,
-        clientTop,
-    ));
     const snapOffset = {
         ...(state.snapOffset || {
             left: 0,
@@ -65,6 +57,16 @@ export function getTotalGuidelines(
             right: 0,
         }),
     };
+
+    totalGuidelines.push(...getGridGuidelines(
+        snapGridWidth,
+        snapGridHeight,
+        overflow ? containerWidth! : containerClientWidth!,
+        overflow ? containerHeight! : containerClientHeight!,
+        clientLeft,
+        clientTop,
+        snapOffset,
+    ));
 
 
     if (hasFixed) {
@@ -245,14 +247,21 @@ export function getGridGuidelines(
     containerHeight: number,
     clientLeft = 0,
     clientTop = 0,
+    snapOffset: { left: number, top: number, right: number, bottom: number },
 ): SnapGuideline[] {
     const guidelines: SnapGuideline[] = [];
-
+    const {
+        left: snapOffsetLeft,
+        top: snapOffsetTop,
+    } = snapOffset;
     if (snapGridHeight) {
         for (let pos = 0; pos <= containerHeight; pos += snapGridHeight) {
             guidelines.push({
                 type: "horizontal",
-                pos: [0, throttle(pos - clientTop, 0.1)],
+                pos: [
+                    snapOffsetLeft,
+                    throttle(pos - clientTop + snapOffsetTop, 0.1),
+                ],
                 size: containerWidth!,
                 hide: true,
             });
@@ -262,7 +271,10 @@ export function getGridGuidelines(
         for (let pos = 0; pos <= containerWidth; pos += snapGridWidth) {
             guidelines.push({
                 type: "vertical",
-                pos: [throttle(pos - clientLeft, 0.1), 0],
+                pos: [
+                    throttle(pos - clientLeft + snapOffsetLeft, 0.1),
+                    snapOffsetTop,
+                ],
                 size: containerHeight!,
                 hide: true,
             });
