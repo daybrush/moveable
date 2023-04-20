@@ -205,6 +205,10 @@ export function checkMoveableTarget(moveable: MoveableManagerInterface) {
         const eventTarget = e.inputEvent.target as Element;
         const areaElement = moveable.areaElement;
 
+        if (moveable.controlGesto?.isFlag()) {
+            return false;
+        }
+
         return dragTarget && (eventTarget === dragTarget || dragTarget.contains(eventTarget))
             || eventTarget === areaElement
             || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.contains(eventTarget))
