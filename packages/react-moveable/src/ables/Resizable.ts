@@ -16,10 +16,8 @@ import {
     setDragStart,
     getResizeDist,
     getAbsolutePosition,
-    getPosByDirection,
     getNextMatrix,
     getNextTransforms,
-    getDirectionByPos,
 } from "../gesto/GestoUtils";
 import {
     ResizableProps, OnResizeGroup, OnResizeGroupEnd,
@@ -45,6 +43,7 @@ import {
 } from "@daybrush/utils";
 import { TINY_NUM } from "../consts";
 import { parseMat } from "css-to-mat";
+import { getFixedDirectionInfo, getOffsetFixedPositionInfo } from "../utils/getFixedDirection";
 
 /**
  * @namespace Resizable
@@ -159,17 +158,18 @@ export default {
         datas.startPositions = getAbsolutePosesByState(moveable.state);
 
         function setFixedDirection(fixedDirection: number[]) {
-            datas.fixedDirection = fixedDirection;
-            datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
+            const result = getFixedDirectionInfo(datas.startPositions, fixedDirection);
+
+            datas.fixedDirection = result.fixedDirection;
+            datas.fixedPosition = result.fixedPosition;
+            datas.fixedOffset = result.fixedOffset;
         }
         function setFixedPosition(fixedPosition: number[]) {
-            const {
-                width,
-                height,
-            } = moveable.state;
+            const result = getOffsetFixedPositionInfo(moveable.state, fixedPosition);
 
-            datas.fixedPosition = fixedPosition;
-            datas.fixedDirection = getDirectionByPos(fixedPosition, width, height);
+            datas.fixedDirection = result.fixedDirection;
+            datas.fixedPosition = result.fixedPosition;
+            datas.fixedOffset = result.fixedOffset;
         }
         function setMin(minSize: Array<string | number>)  {
             datas.minSize = [

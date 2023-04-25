@@ -11,7 +11,6 @@ import {
     fillTransformStartEvent,
     fillTransformEvent,
     setDefaultTransformIndex,
-    getPosByDirection,
     getTranslateFixedPosition,
 } from "../gesto/GestoUtils";
 import { getRenderDirections } from "../renderDirections";
@@ -36,6 +35,7 @@ import {
     isArray, IObject, getDist,
     throttle,
 } from "@daybrush/utils";
+import { getFixedDirectionInfo } from "../utils/getFixedDirection";
 
 const directionCondition = getDirectionCondition("scalable");
 
@@ -127,8 +127,11 @@ export default {
 
         datas.startPositions = getAbsolutePosesByState(moveable.state);
         function setFixedDirection(fixedDirection: number[]) {
-            datas.fixedDirection = fixedDirection;
-            datas.fixedPosition = getPosByDirection(datas.startPositions, fixedDirection);
+            const result = getFixedDirectionInfo(datas.startPositions, fixedDirection);
+
+            datas.fixedDirection = result.fixedDirection;
+            datas.fixedPosition = result.fixedPosition;
+            datas.fixedOffset = result.fixedOffset;
         }
 
 
@@ -258,7 +261,13 @@ export default {
         const isSelfPinch = !dragClient && !parentFlag && isPinch;
 
         if (isSelfPinch || resolveMatrix) {
-            fixedPosition = getTranslateFixedPosition(moveable, datas.targetAllTransform, [0, 0], datas);
+            fixedPosition = getTranslateFixedPosition(
+                moveable,
+                datas.targetAllTransform,
+                [0, 0],
+                [0, 0],
+                datas,
+            );
         } else if (!dragClient) {
             fixedPosition = datas.fixedPosition;
         }
@@ -329,7 +338,14 @@ export default {
         const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
         scale = multiply2(dist, startValue);
 
-        const inverseDist = getScaleDist(moveable, dist, datas.fixedDirection, fixedPosition, datas);
+        const inverseDist = getScaleDist(
+            moveable,
+            dist,
+            datas.fixedDirection,
+            fixedPosition,
+            datas.fixedOffset,
+            datas,
+        );
         const inverseDelta = isSelfPinch ? inverseDist : minus(inverseDist, datas.prevInverseDist || [0, 0]);
 
         datas.prevDist = dist;

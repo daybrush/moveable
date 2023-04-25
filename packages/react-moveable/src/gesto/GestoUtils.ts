@@ -249,6 +249,7 @@ export function calculateTransformOrigin(
         return size * value / 100;
     });
 }
+
 export function getPosIndexesByDirection(direction: number[]) {
     const indexes: number[] = [];
 
@@ -281,6 +282,7 @@ export function getPosesByDirection(
     */
     return getPosIndexesByDirection(direction).map(index => poses[index]);
 }
+
 export function getPosByDirection(
     poses: number[][],
     direction: number[],
@@ -476,10 +478,16 @@ export function getTranslateFixedPosition(
     moveable: MoveableManagerInterface<any>,
     transform: string | number[],
     fixedDirection: number[],
+    fixedOffset: number[],
     datas: any,
 ) {
     const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform);
-    const nextFixedPosition = getDirectionOffset(moveable, fixedDirection, nextMatrix);
+    const nextFixedPosition = getDirectionOffset(
+        moveable,
+        fixedDirection,
+        fixedOffset,
+        nextMatrix,
+    );
 
     return nextFixedPosition;
 }
@@ -489,9 +497,16 @@ export function getTranslateDist(
     transform: string,
     fixedDirection: number[],
     fixedPosition: number[],
+    fixedOffset: number[],
     datas: any,
 ) {
-    const nextFixedPosition = getTranslateFixedPosition(moveable, transform, fixedDirection, datas);
+    const nextFixedPosition = getTranslateFixedPosition(
+        moveable,
+        transform,
+        fixedDirection,
+        fixedOffset,
+        datas,
+    );
     const state = moveable.state;
     const {
         left,
@@ -510,6 +525,7 @@ export function getScaleDist(
     scaleDist: number[],
     fixedDirection: number[],
     fixedPosition: number[],
+    fixedOffset: number[],
     datas: any,
 ) {
     const dist = getTranslateDist(
@@ -517,6 +533,7 @@ export function getScaleDist(
         `scale(${scaleDist.join(", ")})`,
         fixedDirection,
         fixedPosition,
+        fixedOffset,
         datas,
     );
 
@@ -539,13 +556,14 @@ export function getDirectionByPos(
     height: number,
 ) {
     return [
-        -1 + pos[0] / (width / 2),
-        -1 + pos[1] / (height / 2),
+        width ? -1 + pos[0] / (width / 2) : 0,
+        height ? -1 + pos[1] / (height / 2) : 0,
     ];
 }
 export function getDirectionOffset(
     moveable: MoveableManagerInterface,
-    direction: number[],
+    fixedDirection: number[],
+    fixedOffset: number[],
     nextMatrix: number[] = moveable.state.allMatrix,
 ) {
     const {
@@ -554,11 +572,11 @@ export function getDirectionOffset(
         is3d,
     } = moveable.state;
     const n = is3d ? 4 : 3;
-    const nextFixedOffset = [
-        width / 2 * (1 + direction[0]),
-        height / 2 * (1 + direction[1]),
+    const fixedOffsetPosition = [
+        width / 2 * (1 + fixedDirection[0]) + fixedOffset[0],
+        height / 2 * (1 + fixedDirection[1]) + fixedOffset[1],
     ];
-    return calculatePosition(nextMatrix, nextFixedOffset, n);
+    return calculatePosition(nextMatrix, fixedOffsetPosition, n);
 }
 export function getRotateDist(
     moveable: MoveableManagerInterface<any>,
@@ -567,12 +585,14 @@ export function getRotateDist(
 ) {
     const fixedDirection = datas.fixedDirection;
     const fixedPosition = datas.fixedPosition;
+    const fixedOffset = datas.fixedOffset;
 
     return getTranslateDist(
         moveable,
         `rotate(${rotateDist}deg)`,
         fixedDirection,
         fixedPosition,
+        fixedOffset,
         datas,
     );
 }

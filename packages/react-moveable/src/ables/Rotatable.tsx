@@ -30,19 +30,18 @@ import { checkSnapRotate } from "./Snappable";
 import {
     fillTransformStartEvent,
     convertTransformFormat, getRotateDist,
-    getDirectionOffset,
     fillTransformEvent,
     setDefaultTransformIndex,
     resolveTransformEvent,
     getTransformDirection,
     getPosByDirection,
-    getDirectionByPos,
     getTranslateFixedPosition,
 } from "../gesto/GestoUtils";
 import { DirectionControlInfo, renderAroundControls, renderDirectionControlsByInfos } from "../renderDirections";
 import { DIRECTION_REGION_TO_DIRECTION } from "../consts";
 import Resizable from "./Resizable";
 import Draggable from "./Draggable";
+import { getOffsetFixedDirectionInfo, getOffsetFixedPositionInfo } from "../utils/getFixedDirection";
 
 /**
  * @namespace Rotatable
@@ -395,23 +394,23 @@ export default {
         datas.left = left;
         datas.top = top;
         let setFixedPosition = (fixedPosition: number[]) => {
-            const {
-                allMatrix,
-                is3d,
-                width,
-                height,
-            } = moveable.state;
-            const fixedDirection = getDirectionByPos(fixedPosition, width, height);
-            datas.fixedDirection = fixedDirection;
-            datas.fixedPosition = calculatePosition(allMatrix, fixedPosition, is3d ? 4 : 3);
+            const result = getOffsetFixedPositionInfo(moveable.state, fixedPosition);
+
+            datas.fixedDirection = result.fixedDirection;
+            datas.fixedOffset = result.fixedOffset;
+            datas.fixedPosition = result.fixedPosition;
+
 
             if (resizeStart) {
                 resizeStart.setFixedPosition(fixedPosition);
             }
         };
         let setFixedDirection: OnRotateStart["setFixedDirection"] = (fixedDirection: number[]) => {
-            datas.fixedDirection = fixedDirection;
-            datas.fixedPosition = getDirectionOffset(moveable, fixedDirection);
+            const result = getOffsetFixedDirectionInfo(moveable.state, fixedDirection);
+
+            datas.fixedDirection = result.fixedDirection;
+            datas.fixedOffset = result.fixedOffset;
+            datas.fixedPosition = result.fixedPosition;
 
             if (resizeStart) {
                 resizeStart.setFixedDirection(fixedDirection);
@@ -669,7 +668,13 @@ export default {
             datas, `rotate(${rotation}deg)`, `rotate(${dist}deg)`,
         );
         if (resolveMatrix) {
-            datas.fixedPosition = getTranslateFixedPosition(moveable, datas.targetAllTransform, [0, 0], datas);
+            datas.fixedPosition = getTranslateFixedPosition(
+                moveable,
+                datas.targetAllTransform,
+                datas.fixedDirection,
+                datas.fixedOffset,
+                datas,
+            );
         }
 
         const inverseDist = getRotateDist(moveable, dist, datas);
