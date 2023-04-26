@@ -34,3 +34,9 @@ export const SVGTargetG = add("SVGElement with target G tag", {
     app: require("./ReactSVGTargetGApp").default,
     text: require("!!raw-loader!./ReactSVGTargetGApp").default,
 });
+
+
+export const SVGOrigin = add("SVGPathElement with center origin", {
+    app: require("./ReactOriginApp").default,
+    text: require("!!raw-loader!./ReactOriginApp").default,
+});

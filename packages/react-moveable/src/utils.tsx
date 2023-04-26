@@ -897,6 +897,28 @@ export function getClientRect(el: HTMLElement | SVGElement, isExtends?: boolean)
     }
     return rect;
 }
+
+
+export function getTotalOrigin(moveable: MoveableManagerInterface<any>) {
+    const {
+        groupable,
+        svgOrigin,
+    } = moveable.props;
+    const {
+        offsetWidth,
+        offsetHeight,
+        svg,
+        transformOrigin,
+    } = moveable.getState();
+
+    if (!groupable && svg && svgOrigin) {
+        return convertTransformOriginArray(svgOrigin, offsetWidth, offsetHeight);
+    }
+
+    return transformOrigin;
+}
+
+
 export function getTotalDirection(
     parentDirection: number[],
     isPinch: boolean,

@@ -1946,6 +1946,11 @@ export interface OriginOptions {
      * @default true
      */
     origin?: boolean;
+    /**
+     * Sets the transform origin based on the svg target. If not set, it is set as the transform origin based on the owner of svg.
+     * @default ""
+     */
+    svgOrigin?: string;
 }
 /**
  * @typedef

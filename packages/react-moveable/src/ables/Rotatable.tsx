@@ -3,6 +3,7 @@ import {
     calculatePosition, fillEndParams, getRotationRad, getRefTargets,
     catchEvent, getProps, calculateMoveableClientPositions,
     fillAfterTransform,
+    getTotalOrigin,
 } from "../utils";
 import {
     IObject, hasClass, getRad,
@@ -539,7 +540,7 @@ export default {
             );
         }
 
-        setFixedPosition(state.transformOrigin);
+        setFixedPosition(getTotalOrigin(moveable));
         const params = fillParams<OnRotateStart>(moveable, e, {
             set: (rotatation: number) => {
                 datas.startValue = rotatation * Math.PI / 180;
