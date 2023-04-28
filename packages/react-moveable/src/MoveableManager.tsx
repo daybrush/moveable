@@ -55,6 +55,7 @@ export default class MoveableManager<T = {}>
         isWrapperMounted: false,
         parentPosition: null,
         warpSelf: false,
+        svgOrigin: "",
         useResizeObserver: false,
         useMutationObserver: false,
         preventDefault: true,

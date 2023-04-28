@@ -10683,10 +10683,10 @@ croact-css-styled@^1.1.2:
     css-styled "~1.0.1"
     framework-utils "^1.1.0"
 
-croact@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/croact/-/croact-1.0.0.tgz#fb0fe8281b736acba4ca78e2545eff0e314fb414"
-  integrity sha512-VpPknTd65rB3VgRVchQiX5pQAqx/qaZVCNVzY3rwCpqYjQKVPHZ5YwdkHX9jTxkg5lKxrUmFzj/5SNUJ7S4dNA==
+croact@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/croact/-/croact-1.0.1.tgz#202f744e010cfaa9943203dbacf06d9c2b152147"
+  integrity sha512-C/qbr/TYXuFv13vu6Dra1+uxRtud/3FdxviW8+Wy3JtCTE1CTQRQ0KrSX3nJs55NHTl6Pf8rjoZX5H2eAZNOUg==
   dependencies:
     "@daybrush/utils" "^1.11.0"
     "@egjs/list-differ" "^1.0.0"

@@ -480,6 +480,7 @@ export function getSnapElementRects(
     if (!values.length) {
         return [];
     }
+    const groupable = moveable.props.groupable;
     const state = moveable.state;
     const {
         containerClientRect,
@@ -503,10 +504,13 @@ export function getSnapElementRects(
     //     clientTop - containerTop,
     // ], n)).map(pos => roundSign(pos));
 
+    const offsetLeft = groupable ? 0 : offsetDelta[0];
+    const offsetTop = groupable ? 0 : offsetDelta[1];
+
     return values.map(value => {
         const rect = value.element.getBoundingClientRect();
-        const left = rect.left - containerLeft - offsetDelta[0];
-        const top = rect.top - containerTop - offsetDelta[1];
+        const left = rect.left - containerLeft - offsetLeft;
+        const top = rect.top - containerTop - offsetTop;
         const bottom = top + rect.height;
         const right = left + rect.width;
         const [elementLeft, elementTop] = calculateInversePosition(rootMatrix, [left, top], n);
