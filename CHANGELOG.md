@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.0](https://github.com/daybrush/moveable/compare/0.46.1...0.47.0) (2023-05-01)
+### :sparkles: Packages
+* `croact-moveable` 0.3.0
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.24.0
+* `moveable` 0.47.0
+* `preact-moveable` 0.49.0
+* `react-moveable` 0.50.0
+* `svelte-moveable` 0.39.0
+* `vue-moveable` 2.0.0-beta.66
+* `vue3-moveable` 0.22.0
+* `ngx-moveable` 0.44.0
+
+
+### :rocket: New Features
+
+* `react-moveable`, `croact-moveable`
+    * add dragFocusedInput prop #896 ([a29c9de](https://github.com/daybrush/moveable/commit/a29c9de3d9371a3cd7406432dcdd437168d42fdb))
+* `react-moveable`
+    * add svgOrigin prop #894 ([619d57d](https://github.com/daybrush/moveable/commit/619d57dc00c96c50fba77709526e6d3f48c0654a))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix element guidelines for group #900 ([d42c032](https://github.com/daybrush/moveable/commit/d42c0325d78150f18d07b33b6a20c02d98ee4b97))
+    * fix fixedOffset ([a00ab2a](https://github.com/daybrush/moveable/commit/a00ab2ae05b802aeb8850b4b9a87e6600f17b8fb))
+    * fix invidualGroup's mount code #905 ([d2388e5](https://github.com/daybrush/moveable/commit/d2388e54e75ae3e2de5896b8f7018b4e2a5a0963))
+    * fix snapGrid's offset #897 ([97d89de](https://github.com/daybrush/moveable/commit/97d89de0ee14ecc7d4f9b8d1c750fbb5db91730e))
+    * prevent multitouch for target and control #898 ([0b4d328](https://github.com/daybrush/moveable/commit/0b4d3287de5da268132fdcd0bf0781a3f8d0902f))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([24934e3](https://github.com/daybrush/moveable/commit/24934e317de2e5ff622bd9ab0dec8d75a7c05c48))
+* `moveable`, `croact-moveable`
+    * update croact 1.0.1 #902 ([34433f3](https://github.com/daybrush/moveable/commit/34433f3ab1266fff29f1f74bf6a5176d238348b6))
+
+
+
 ## [0.46.1](https://github.com/daybrush/moveable/compare/0.46.0...0.46.1) (2023-04-16)
 ### :sparkles: Packages
 * `croact-moveable` 0.2.1

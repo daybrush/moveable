@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.0](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.2.1...croact-moveable@0.3.0) (2023-05-01)
+
+
+### :rocket: New Features
+
+* add dragFocusedInput prop #896 ([a29c9de](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/a29c9de3d9371a3cd7406432dcdd437168d42fdb))
+
+
+### :mega: Other
+
+* publish packages ([24934e3](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/24934e317de2e5ff622bd9ab0dec8d75a7c05c48))
+* update croact 1.0.1 #902 ([34433f3](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/34433f3ab1266fff29f1f74bf6a5176d238348b6))
+
+
+
 ## [0.2.1](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.2.0...croact-moveable@0.2.1) (2023-04-16)
 
 
