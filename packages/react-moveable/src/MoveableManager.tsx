@@ -207,7 +207,7 @@ export default class MoveableManager<T = {}>
         this.isMoveableMounted = true;
         this.isUnmounted = false;
         const props = this.props;
-        const { parentMoveable, container, wrapperMoveable } = props;
+        const { parentMoveable, container } = props;
 
 
         this._checkUpdateRootContainer();
@@ -218,7 +218,7 @@ export default class MoveableManager<T = {}>
         this.updateCheckInput();
         this._updateObserver(this.props);
 
-        if (!container && !parentMoveable && !wrapperMoveable && !this.state.isPersisted) {
+        if (!container && !parentMoveable && !this.state.isPersisted) {
             this.updateRect("", false, false);
             this.forceUpdate();
         }

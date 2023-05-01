@@ -50,6 +50,7 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
             })}
         </ControlBoxElement>;
     }
+    public componentDidMount() {}
     public componentDidUpdate() {}
     public getTargets() {
         return this.props.targets!;
