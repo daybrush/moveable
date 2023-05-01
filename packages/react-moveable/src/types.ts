@@ -176,6 +176,13 @@ export interface DefaultOptions {
      */
     preventClickEventOnDrag?: boolean;
     /**
+     * Whether to drag the focused input
+     * If `checkInput` is true, this option is not applied.
+     * @since 0.47.0
+     * @default false
+     */
+    dragFocusedInput?: boolean;
+    /**
      * Prevent click event on dragStart. (mousedown, touchstart)
      * @default false
      */
@@ -1948,6 +1955,7 @@ export interface OriginOptions {
     origin?: boolean;
     /**
      * Sets the transform origin based on the svg target. If not set, it is set as the transform origin based on the owner of svg.
+     * @since 0.47.0
      * @default ""
      */
     svgOrigin?: string;

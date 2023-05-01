@@ -72,6 +72,7 @@ export default class MoveableManager<T = {}>
         padding: {},
         pinchOutside: true,
         checkInput: false,
+        dragFocusedInput: false,
         groupable: false,
         hideDefaultLines: false,
         cspNonce: "",

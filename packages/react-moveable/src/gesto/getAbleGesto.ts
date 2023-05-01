@@ -252,6 +252,7 @@ export function getAbleGesto(
         preventClickEventOnDrag,
         preventClickDefault,
         checkInput,
+        dragFocusedInput,
         preventDefault = true,
     } = moveable.props;
     const options: GestoOptions = {
@@ -267,6 +268,7 @@ export function getAbleGesto(
             return moveable.controlBox.contains(e.target as Element);
         },
         checkInput: isTargetAbles ? checkInput : false,
+        dragFocusedInput,
     };
     const gesto = new Gesto(target!, options);
     const isControl = eventAffix === "Control";
