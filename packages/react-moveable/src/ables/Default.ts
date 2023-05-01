@@ -9,6 +9,7 @@ export default {
         "useResizeObserver",
         "useMutationObserver",
         "zoom",
+        "dragFocusedInput",
         "transformOrigin",
         "edge",
         "ables",

@@ -145,6 +145,20 @@ export const SnapMaxiumDistance = add("Set maximum distance for guidelines", {
 export const SnapElementsGroup = add("Snap Elements (group)", {
     app: require("./ReactSnapElementsGroupApp").default,
     path: require.resolve("./ReactSnapElementsGroupApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const moveable = canvasElement.querySelector<HTMLElement>(".moveable-control-box")!;
+        const target = canvasElement.querySelector<HTMLElement>(".moveable-area")!;
+
+        await pan({
+            target,
+            start: [0, 0],
+            end: [-118, -118],
+            duration: 20,
+            interval: 10,
+        });
+        expect(moveable.style.transform).toBe("translate3d(-1px, -1px, 0px)");
+    },
 });
 
 
