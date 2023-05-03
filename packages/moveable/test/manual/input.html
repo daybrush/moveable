@@ -1,7 +1,7 @@
 <body>
     <input class="target target1" />
     <input class="target target2" />
-    <div id="a", data-styled-id="rCS7rstfg" data-able-draggable="true" data-able-padding="true" data-able-origin="true" data-able-clickable="true" class="moveable-control-box     rCS7rstfg" style="position: absolute; display: block; visibility: visible; transform: translate3d(164px, 63px, 0px); --zoom:1; --zoompx:1px;"><div class="moveable-control moveable-origin" style="transform: translateZ(0px) translate(73.5px, 10.75px) rotate(0rad) scale(1);"></div><div data-rotation="-1" data-line-key="render-line-0" data-direction="" class="moveable-line moveable-direction  " style="transform: translateY(-50%) translate(0px, 0px) rotate(0rad) scaleY(1); width: 147px;"></div><div data-rotation="-1" data-line-key="render-line-1" data-direction="" class="moveable-line moveable-direction  " style="transform: translateY(-50%) translate(147px, 0px) rotate(1.5708rad) scaleY(1); width: 21.5px;"></div><div data-rotation="-1" data-line-key="render-line-2" data-direction="" class="moveable-line moveable-direction  " style="transform: translateY(-50%) translate(147px, 21.5px) rotate(3.14159rad) scaleY(1); width: 147px;"></div><div data-rotation="-1" data-line-key="render-line-3" data-direction="" class="moveable-line moveable-direction  " style="transform: translateY(-50%) translate(0px, 21.5px) rotate(4.71239rad) scaleY(1); width: 21.5px;"></div></div>
+    <div id="a"></div>
 </body>
 <script src ="../../dist/moveable.js"></script>
 <script>
@@ -12,10 +12,10 @@
     //     e.target.style.transform = e.transform;
     // });
     const target = document.querySelector("#a");
-    new Moveable(document.querySelector("#a"), {
-        portalContainer: document.querySelector("#a"),
+    const moveable = new Moveable(document.querySelector("#a"), {
+        warpSelf: true,
         draggable: true,
-        target: document.querySelector(".target2"),
+        target: [document.querySelector(".target2")],
     }).on("drag", e => {
         e.target.style.transform = e.transform;
     });
