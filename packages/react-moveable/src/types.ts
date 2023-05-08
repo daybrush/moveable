@@ -179,6 +179,7 @@ export interface DefaultOptions {
      * Whether to drag the focused input
      * If `checkInput` is true, this option is not applied.
      * @since 0.47.0
+     * @story options--options-drag-focused-input
      * @default false
      */
     dragFocusedInput?: boolean;
