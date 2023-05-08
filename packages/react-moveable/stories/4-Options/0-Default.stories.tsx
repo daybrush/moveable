@@ -53,11 +53,17 @@ export const OptionsControlPadding = add("controlPadding", {
 });
 
 
-
 export const OptionsCheckInput = add("checkInput", {
     app: require("./ReactCheckInputApp").default,
     path: require.resolve("./ReactCheckInputApp"),
 });
+
+
+export const OptionsDragFocusedInput = add("dragFocusedInput", {
+    app: require("./ReactDragFocusedInputApp").default,
+    path: require.resolve("./ReactDragFocusedInputApp"),
+});
+
 
 export const OptionsViewContainer = add("viewContainer (Cursor is applied in viewer during dragging)", {
     app: require("./ReactViewContainerApp").default,
