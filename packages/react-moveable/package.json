@@ -1,14 +1,17 @@
 {
     "name": "react-moveable",
-    "version": "0.50.3",
+    "version": "0.50.4",
     "description": "A React Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
     "sideEffects": false,
     "types": "declaration/index.d.ts",
     "files": [
-        "./*"
-    ],
+        "./*",
+        "src/*",
+        "dist/*",
+        "declaration/*"
+      ],
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
         "storybook": "rm -rf node_modules/.cache && start-storybook -p 6006",

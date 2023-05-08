@@ -1,6 +1,6 @@
 {
     "name": "lit-moveable",
-    "version": "0.24.4",
+    "version": "0.24.6",
     "description": "A Lit Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "types": "declaration/index.d.ts",
     "main": "dist/moveable.cjs.js",
@@ -46,7 +46,10 @@
     },
     "homepage": "https://daybrush.com/moveable",
     "files": [
-        "./*"
+        "./*",
+        "src/*",
+        "dist/*",
+        "declaration/*"
     ],
     "scripts": {
         "start": "rollup -c rollup.demo.config.js -w",
@@ -62,6 +65,6 @@
     "dependencies": {
         "@daybrush/utils": "^1.11.0",
         "framework-utils": "^1.1.0",
-        "moveable": "~0.47.4"
+        "moveable": "~0.47.6"
     }
 }

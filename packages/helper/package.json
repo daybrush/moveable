@@ -7,8 +7,11 @@
     "sideEffects": false,
     "types": "declaration/index.d.ts",
     "files": [
-        "./*"
-    ],
+        "./*",
+        "src/*",
+        "dist/*",
+        "declaration/*"
+      ],
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
         "start": "rollup -c -w",
