@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.6](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.47.0...moveable@0.47.6) (2023-05-08)
+
+
+### :rocket: New Features
+
+* update croact version #902 ([e328e21](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/e328e2170438fe27f60f307ae976183fbfb5e96e))
+
+
+### :bug: Bug Fix
+
+* fix files filed #910 #909 #907 ([a4995ab](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/a4995ab1acb3a34974e1d5a20d17fb2ee17ddc0c))
+
+
+### :mega: Other
+
+* publish packages ([d0f0532](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/d0f0532bfb42fe98ee95748839a639fddbe4b9d6))
+* publish packages ([e1e86a9](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/e1e86a95ebff9d18ad7a5ebede3bd5bd66465b5d))
+* publish packages ([60a747e](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/60a747ee3c373f83fb759a8482e2365e77dcb5e8))
+
+
+
 ## [0.47.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.46.1...moveable@0.47.0) (2023-05-01)
 
 

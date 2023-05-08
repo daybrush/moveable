@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.0...react-moveable@0.50.4) (2023-05-08)
+
+
+### :bug: Bug Fix
+
+* add dragFcousedInput prop ([e96f9fc](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e96f9fc80493696fdbb94047e9375a8d991da05b))
+* fix dragFocusedInput #896 ([94cb92d](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/94cb92d239846ef7a45c0ea2f4ceec0ec2e3b4ac))
+* fix files filed #910 #909 #907 ([a4995ab](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/a4995ab1acb3a34974e1d5a20d17fb2ee17ddc0c))
+
+
+### :memo: Documentation
+
+* fix dragFcousedInput story ([2b78a4e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/2b78a4e276000ab017396a94d1502a4c94b8ef70))
+
+
+### :mega: Other
+
+* publish packages ([d0f0532](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d0f0532bfb42fe98ee95748839a639fddbe4b9d6))
+* publish packages ([e1e86a9](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e1e86a95ebff9d18ad7a5ebede3bd5bd66465b5d))
+* publish packages ([60a747e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/60a747ee3c373f83fb759a8482e2365e77dcb5e8))
+
+
+
 ## [0.50.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.49.2...react-moveable@0.50.0) (2023-05-01)
 
 
