@@ -62,8 +62,12 @@ export function calculateMatrixStack(
     let beforeMatrix = createIdentityMatrix(n);
     let offsetMatrix = createIdentityMatrix(n);
     const length = matrixes.length;
-
-    const nextRootMatrixes = [...rootMatrixes].reverse();
+    const nextRootMatrixes = rootMatrixes.map(info => {
+        return {
+            ...info,
+            matrix: info.matrix ? [...info.matrix] : undefined,
+        };
+    }).reverse();
     matrixes.reverse();
 
     if (!is3d && isNext3d) {

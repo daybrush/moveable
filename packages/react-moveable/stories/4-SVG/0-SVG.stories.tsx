@@ -1,6 +1,8 @@
 import { add } from "../utils/story";
 import "../common.css";
 import "../templates/default.css";
+import { expect } from "@storybook/jest";
+import { wait } from "../utils/testing";
 
 export default {
     title: "SVG",
@@ -33,6 +35,21 @@ export const SVGG = add("SVGElement with G tag", {
 export const SVGTargetG = add("SVGElement with target G tag", {
     app: require("./ReactSVGTargetGApp").default,
     text: require("!!raw-loader!./ReactSVGTargetGApp").default,
+});
+
+
+export const SVGGroup = add("SVG Group", {
+    app: require("./ReactSVGGroupApp").default,
+    text: require("!!raw-loader!./ReactSVGGroupApp").default,
+    play: async ({ canvasElement }) => {
+        await wait();
+
+        const area = canvasElement.querySelector<HTMLElement>(".moveable-area")!;
+
+        expect(area.style.width).toBe("191px");
+        expect(area.style.height).toBe("57px");
+        expect(area.style.transform).toBe("translate(0px, 0px) rotate(0deg) scale(1, 1)");
+    },
 });
 
 
