@@ -10,7 +10,8 @@
         "./*",
         "src/*",
         "dist/*",
-        "declaration/*"
+        "declaration/*",
+        "types/*"
       ],
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",

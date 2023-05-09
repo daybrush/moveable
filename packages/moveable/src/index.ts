@@ -5,3 +5,4 @@ export * from "./consts";
 export * from "./utils";
 
 export default Moveable;
+
