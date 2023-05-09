@@ -1,6 +1,6 @@
 {
     "name": "croact-moveable",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "description": "A React Compat Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -44,7 +44,7 @@
         "src/*",
         "dist/*",
         "declaration/*"
-      ],
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/daybrush/moveable/blob/master/packages/croact-moveable"
@@ -81,6 +81,6 @@
         "gesto": "^1.17.1",
         "overlap-area": "^1.1.0",
         "react-css-styled": "^1.1.2",
-        "react-moveable": "~0.50.4"
+        "react-moveable": "~0.50.5"
     }
 }
