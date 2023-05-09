@@ -249,9 +249,10 @@ The main project was made with `react` and I used [`croact`](https://github.com/
 For development and testing, check in [packages/react-moveable](https://github.com/daybrush/moveable/blob/master/packages/react-moveable).
 
 
-```bash
-$ cd packages/react-moveable
-$ npm i
+
+```
+$ yarn
+$ npm run packages:build
 $ npm run storybook
 ```
 

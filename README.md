@@ -257,8 +257,8 @@ For development and testing, check in [packages/react-moveable](https://github.c
 ### `npm run storybook`
 
 ```
-$ yarn install
-$ npm run bootstrap
+$ yarn
+$ npm run packages:build
 $ npm run storybook
 ```
 
