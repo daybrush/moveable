@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.7](https://github.com/daybrush/moveable/compare/0.47.6...0.47.7) (2023-05-09)
+### :sparkles: Packages
+* `croact-moveable` 0.3.6
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.24.7
+* `moveable` 0.47.7
+* `preact-moveable` 0.49.5
+* `react-moveable` 0.50.5
+* `svelte-moveable` 0.39.7
+* `vue-moveable` 2.0.0-beta.73
+* `vue3-moveable` 0.22.7
+* `ngx-moveable` 0.44.7
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `moveable`
+    * fix missing type #911 ([0f26c75](https://github.com/daybrush/moveable/commit/0f26c75261fe8996f8b1317ec2da473a9feb57d0))
+* `react-moveable`
+    * fix svg group #914 ([9be5170](https://github.com/daybrush/moveable/commit/9be5170b14215bf76e29830136046cb358461f17))
+
+
+### :memo: Documentation
+
+* `react-moveable`
+    * fix README #913 ([337e36a](https://github.com/daybrush/moveable/commit/337e36a422fa1e2d5f96c0426957f6be401e8248))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([40dd902](https://github.com/daybrush/moveable/commit/40dd9022c41244ab009d621861ddc2ac63768748))
+
+
+
 ## [0.47.6](https://github.com/daybrush/moveable/compare/0.47.0...0.47.6) (2023-05-08)
 ### :sparkles: Packages
 * `croact-moveable` 0.3.5

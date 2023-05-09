@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.4...react-moveable@0.50.5) (2023-05-09)
+
+
+### :bug: Bug Fix
+
+* fix missing type #911 ([0f26c75](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/0f26c75261fe8996f8b1317ec2da473a9feb57d0))
+* fix svg group #914 ([9be5170](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9be5170b14215bf76e29830136046cb358461f17))
+
+
+### :memo: Documentation
+
+* fix README #913 ([337e36a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/337e36a422fa1e2d5f96c0426957f6be401e8248))
+
+
+### :mega: Other
+
+* publish packages ([40dd902](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/40dd9022c41244ab009d621861ddc2ac63768748))
+
+
+
 ## [0.50.4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.0...react-moveable@0.50.4) (2023-05-08)
 
 

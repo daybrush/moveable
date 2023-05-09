@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.47.7](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.47.6...moveable@0.47.7) (2023-05-09)
+
+
+### :bug: Bug Fix
+
+* fix missing type #911 ([0f26c75](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/0f26c75261fe8996f8b1317ec2da473a9feb57d0))
+
+
+### :mega: Other
+
+* publish packages ([40dd902](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/40dd9022c41244ab009d621861ddc2ac63768748))
+
+
+
 ## [0.47.6](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.47.0...moveable@0.47.6) (2023-05-08)
 
 
