@@ -443,7 +443,7 @@ export function getNextTransforms(e: any) {
     return originalDatas.nextTransforms;
 }
 export function getNextTransformText(e: any) {
-    return getNextTransforms(e).join(" ");
+    return (getNextTransforms(e) || []).join(" ");
 }
 
 export function getNextStyle(e: any) {
