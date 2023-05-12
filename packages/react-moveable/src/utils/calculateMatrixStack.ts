@@ -16,6 +16,7 @@ export interface MoveableElementMatrixInfo {
     targetOrigin: number[];
     is3d: boolean;
     targetTransform: string;
+    inlineTransform: string;
     offsetContainer: HTMLElement | null,
     offsetRootContainer: HTMLElement | null,
 }
@@ -142,6 +143,7 @@ export function calculateMatrixStack(
         allMatrix,
         targetMatrix,
         targetTransform,
+        inlineTransform: target.style.transform,
         transformOrigin,
         targetOrigin,
         is3d: isNext3d,

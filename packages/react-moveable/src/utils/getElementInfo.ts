@@ -65,6 +65,7 @@ export function calculateElementInfo(
         allMatrix: createIdentityMatrix(n),
         targetMatrix: createIdentityMatrix(n),
         targetTransform: "",
+        inlineTransform: "",
         transformOrigin: [0, 0],
         targetOrigin: [0, 0],
         is3d: !!isAbsolute3d,
