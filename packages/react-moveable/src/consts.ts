@@ -92,6 +92,8 @@ z-index: 3000;
 --moveable-color: #4af;
 --zoom: 1;
 --zoompx: 1px;
+--moveable-line-padding: 0;
+--moveable-control-padding: 0;
 will-change: transform;
 outline: 1px solid transparent;
 }
