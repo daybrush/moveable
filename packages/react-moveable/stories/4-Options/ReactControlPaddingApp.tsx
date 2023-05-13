@@ -6,8 +6,10 @@ export default function App(props: Record<string, any>) {
         <div className="target"></div>
         <Moveable
             target={".target"}
+            className="control-padding"
             draggable={true}
             resizable={true}
+            rotatable={true}
             displayAroundControls={true}
             controlPadding={props.controlPadding}
             onRender={e => {

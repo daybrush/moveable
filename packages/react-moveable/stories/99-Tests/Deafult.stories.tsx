@@ -188,8 +188,6 @@ export const TestsAccurateElementGuidelines = add("Test Accurate Element Guideli
     },
 });
 
-
-
 export const TestsAccurateElementGuidelines2 = add("Test Accurate Element Guidelines 0.2", {
     app: require("./ReactAccurateElementGuideline2App").default,
     path: require.resolve("./ReactAccurateElementGuideline2App"),
@@ -206,4 +204,9 @@ export const TestsAccurateElementGuidelines2 = add("Test Accurate Element Guidel
         });
         expect(target.style.transform).toBe("translate(0px, 0px)");
     },
+});
+
+export const TestDragAPI = add("Test Drag API", {
+    app: require("./ReactDragAPIApp").default,
+    path: require.resolve("./ReactDragAPIApp"),
 });

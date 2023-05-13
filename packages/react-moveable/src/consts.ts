@@ -58,22 +58,23 @@ const directionCSS = DIRECTIONS.map(dir => {
     let left = "";
     let originX = "center";
     let originY = "center";
+    const offset =  `calc(var(--moveable-control-padding, 20) * -1px)`;
 
     if (dir.indexOf("n") > -1) {
-        top = "top: -20px;";
-        originY = "bottom";
+        top = `top: ${offset};`;
+        originY = `bottom`;
     }
-    if (dir.indexOf("s") > -1) {
-        top = "top: 0px;";
-        originY = "top";
+    if (dir.indexOf(`s`) > -1) {
+        top = `top: 0px;`;
+        originY = `top`;
     }
-    if (dir.indexOf("w") > -1) {
-        left = "left: -20px;";
-        originX = "right";
+    if (dir.indexOf(`w`) > -1) {
+        left = `left: ${offset};`;
+        originX = `right`;
     }
-    if (dir.indexOf("e") > -1) {
-        left = "left: 0px;";
-        originX = "left";
+    if (dir.indexOf(`e`) > -1) {
+        left = `left: 0px;`;
+        originX = `left`;
     }
     return `.around-control[data-direction*="${dir}"] {
         ${left}${top}
@@ -124,8 +125,8 @@ position: absolute;
 will-change: transform;
 width: calc(var(--moveable-control-padding, 20) * 1px);
 height: calc(var(--moveable-control-padding, 20) * 1px);
-left: -10px;
-top: -10px;
+left: calc(var(--moveable-control-padding, 20) * -0.5px);
+top: calc(var(--moveable-control-padding, 20) * -0.5px);
 box-sizing: border-box;
 background: transparent;
 z-index: 8;

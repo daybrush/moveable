@@ -1,6 +1,7 @@
 
 import { makeArgType, makeOptionLink } from "../utils";
 import { add } from "../utils/story";
+import "../templates/default.css";
 
 export default {
     title: "Options",

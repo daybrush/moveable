@@ -166,3 +166,7 @@ html:has(.margin), body:has(.margin) {
 .infinite-viewer {
     height: 500px;
 }
+
+.control-padding .moveable-around-control {
+    background: #f55!important;
+}
