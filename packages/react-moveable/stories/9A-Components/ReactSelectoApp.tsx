@@ -1,7 +1,6 @@
 import * as React from "react";
 import Selecto from "react-selecto";
 import Moveable from "@/react-moveable";
-import "./cube.css";
 
 
 export default function App() {

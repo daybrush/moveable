@@ -210,3 +210,10 @@ export const TestDragAPI = add("Test Drag API", {
     app: require("./ReactDragAPIApp").default,
     path: require.resolve("./ReactDragAPIApp"),
 });
+
+
+export const TestChangeTargetsOnClick = add("Test Change Target on Click Group", {
+    app: require("./ReactChangeTargetsOnClickApp").default,
+    path: require.resolve("./ReactChangeTargetsOnClickApp"),
+});
+

@@ -3,7 +3,6 @@ import * as React from "react";
 import { useKeycon } from "react-keycon";
 import Selecto from "react-selecto";
 import Moveable, { MoveableTargetGroupsType } from "@/react-moveable";
-import "./cube.css";
 import { GroupManager, TargetList } from "@moveable/helper";
 
 export default function App() {

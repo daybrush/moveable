@@ -23,11 +23,11 @@ export function triggerAble(
     const isAfter = eventType === "After";
     const target = moveable.state.target;
     const isRequest = e.isRequest;
+    const isControl = eventAffix.indexOf("Control") > -1;
 
     if (
         !target
-        || (isStart && eventAffix.indexOf("Control") > -1
-            && !isRequest && moveable.areaElement === e.inputEvent.target)
+        || (isStart && isControl && !isRequest && moveable.areaElement === e.inputEvent.target)
     ) {
         return false;
     }
@@ -68,8 +68,11 @@ export function triggerAble(
 
     // trigger ables
     const datas = e.datas;
+    const gestoType = isControl ? "controlGesto" : "targetGesto";
+    const prevGesto = moveable[gestoType];
+
     const trigger = (able: any, eventName: string, conditionName?: string) => {
-        if (!(eventName in able)) {
+        if (!(eventName in able) || prevGesto !== moveable[gestoType]) {
             return false;
         }
         const ableName = able.name;
@@ -157,13 +160,14 @@ export function triggerAble(
         }
     });
 
+
     if (!isAfter || updatedCount) {
         trigger(Renderable, `drag${eventAffix}${eventType}`);
     }
 
 
     // stop gesto condition
-    const isForceEnd = forceEndedCount === eventOperations.length;
+    const isForceEnd = prevGesto !== moveable[gestoType] || forceEndedCount === eventOperations.length;
     if (isEnd || isDragStop || isForceEnd) {
         moveable.state.gestos = {};
 

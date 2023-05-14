@@ -432,10 +432,15 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const prevTarget = this._prevTarget;
         const nextTarget = props.dragTarget || this.areaElement;
+        const targets = props.targets!;
+        const { added, changed, removed } = this.differ.update(targets);
+        const isTargetChanged = added.length || removed.length;
 
-        if (prevTarget !== nextTarget) {
+        if (isTargetChanged || prevTarget !== nextTarget) {
             unset(this, "targetGesto");
             unset(this, "controlGesto");
+        }
+        if (prevTarget !== nextTarget) {
             state.target = null;
         }
         if (!state.target) {
@@ -455,9 +460,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         if (isContainerChanged) {
             state.container = props.container;
         }
-        const targets = props.targets!;
-        const { added, changed, removed } = this.differ.update(targets);
-        const isTargetChanged = added.length || removed.length;
+
 
         if (
             isContainerChanged

@@ -1,39 +1,51 @@
-html, body {
+html,
+body {
     position: relative;
     height: 100%;
     margin: 0;
     padding: 0;
 }
-html:has(.no-relative), body:has(.no-relative) {
+
+html:has(.no-relative),
+body:has(.no-relative) {
     margin: 8px;
     padding: 8px;
     position: static;
     /* border: 8px solid red; */
 }
+
 html:has(.no-relative) {
     position: relative;
 }
-html:has(.margin), body:has(.margin) {
+
+html:has(.margin),
+body:has(.margin) {
     /* margin-top: 50px; */
 }
+
 .margin .root {
     position: static;
 }
+
 .description {
     padding: 10px;
 }
+
 .root {
     position: relative;
 }
+
 .container {
     position: relative;
     margin-top: 50px;
 }
+
 .will-change-container {
     padding-left: 100px;
     padding-top: 100px;
     will-change: transform;
 }
+
 .will-change-target {
     position: relative;
     width: 100px;
@@ -46,6 +58,7 @@ html:has(.margin), body:has(.margin) {
     border: 1px solid #333;
     box-sizing: border-box;
 }
+
 .target {
     position: absolute;
     width: 100px;
@@ -108,38 +121,44 @@ html:has(.margin), body:has(.margin) {
 
 /* pos guidelines */
 .moveable-normal.red {
-    background: red!important;
+    background: red !important;
 }
+
 /* gap guidelines */
 .moveable-gap.red {
-    background: red!important;
+    background: red !important;
 }
+
 /* When snapped to an element in elementGuidelines */
 .moveable-bold.red {
-    background: red!important;
+    background: red !important;
 }
+
 /* A dashed line between target and element */
 .moveable-dashed.red {
-    border-top-color: red!important;
-    border-left-color: red!important;
+    border-top-color: red !important;
+    border-left-color: red !important;
 }
 
 /* pos guidelines */
 .moveable-normal.green {
-    background: green!important;
+    background: green !important;
 }
+
 /* gap guidelines */
 .moveable-gap.green {
-    background: green!important;
+    background: green !important;
 }
+
 /* When snapped to an element in elementGuidelines */
 .moveable-bold.green {
-    background: green!important;
+    background: green !important;
 }
+
 /* A dashed line between target and element */
 .moveable-dashed.green {
-    border-top-color: green!important;
-    border-left-color: green!important;
+    border-top-color: green !important;
+    border-left-color: green !important;
 }
 
 .scrollArea {
@@ -150,6 +169,7 @@ html:has(.margin), body:has(.margin) {
     height: calc(100vh - 100px);
     overflow: auto;
 }
+
 .scrollArea:before {
     content: "";
     display: block;
@@ -158,15 +178,28 @@ html:has(.margin), body:has(.margin) {
     left: 0;
     height: 300%;
     width: 100%;
-    background: linear-gradient(
-        #333,
-        #fff
-    );
+    background: linear-gradient(#333,
+            #fff);
 }
+
 .infinite-viewer {
     height: 500px;
 }
 
 .control-padding .moveable-around-control {
-    background: #f55!important;
+    background: #f55 !important;
+}
+
+
+.cube {
+    display: inline-block;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    margin: 4px;
+    background: #eee;
+    --color: #4af;
+    color: #333;
+    line-height: 40px;
+    text-align: center;
 }
