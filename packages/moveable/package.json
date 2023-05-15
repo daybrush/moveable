@@ -65,7 +65,7 @@
   ],
   "dependencies": {
     "@scena/event-emitter": "^1.0.5",
-    "croact": "^1.0.2",
+    "croact": "^1.0.3",
     "croact-moveable": "~0.3.6",
     "react-moveable": "~0.50.5"
   },

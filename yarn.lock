@@ -10674,19 +10674,19 @@ critters@0.0.16:
     postcss "^8.3.7"
     pretty-bytes "^5.3.0"
 
-croact-css-styled@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/croact-css-styled/-/croact-css-styled-1.1.2.tgz#258bf20424d668eeb6c57d904742d801044fd96a"
-  integrity sha512-v1RBvTyltY3B1kYDiT1lvG+rbk1ziqAsPNH5VGD8JItTt359KeLV1xdYlaRrdXq7oYjPw4rUG9ZBG+4XzzW9qQ==
+croact-css-styled@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/croact-css-styled/-/croact-css-styled-1.1.5.tgz#1eb62fb8ddde807547317ff4cc6cb4593d51db9e"
+  integrity sha512-q1AzFR3b35AeZsbbuau5ny4RMDBiLwwy8ldnTwD0D5aLeIY+3Imezxi8vV1DEQ6/PBL1Er9ZEJIKes2iVzyhfw==
   dependencies:
     "@daybrush/utils" "^1.0.0"
-    css-styled "~1.0.1"
+    css-styled "~1.0.4"
     framework-utils "^1.1.0"
 
-croact@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/croact/-/croact-1.0.2.tgz#403b0d5cfa89d570c56106b2b87465f6862e1c36"
-  integrity sha512-0hwt1OjN+6MCeVLcmsWyLyIdc2F/A8B3q3ESGxCOW7ha0G3JQpwfg2nX39x8NGWS0vxn46iE4/z5c74xayuEhQ==
+croact@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/croact/-/croact-1.0.3.tgz#796cb6bf8966eea3e6cc7546781dc9c7631c6e3c"
+  integrity sha512-BgediQptaQjOnJmttpC3DM8ShuOXnY3pJ/T4lnupO1Aoyb4LOI+mu9AzjPnoWantiitpRSkR2WMxg7JhDgaNQQ==
   dependencies:
     "@daybrush/utils" "^1.11.0"
     "@egjs/list-differ" "^1.0.0"
@@ -10906,13 +10906,20 @@ css-styled@^1.0.0:
     "@daybrush/utils" "^1.0.0"
     string-hash "^1.1.3"
 
-css-styled@^1.0.1, css-styled@~1.0.1:
+css-styled@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/css-styled/-/css-styled-1.0.1.tgz"
   integrity sha512-psJCbNDPPusDBWH/gszP6BetPh577QaqpvaysTNPitxX0nxdGiTgELiOCus0gZ0yXk3gvjShBrFP07nvn58/TQ==
   dependencies:
     "@daybrush/utils" "^1.0.0"
     string-hash "^1.1.3"
+
+css-styled@~1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/css-styled/-/css-styled-1.0.4.tgz#6ed68d21849307846483188f332b942b982edbe5"
+  integrity sha512-lj4XNXsKhsLfvhDHE9D/NfDkdlNq3vU7AAJnjph3rRUUJsP5O1AzJKzdIs/VfYOmvirK1hnL+0IKTLkdbY32iw==
+  dependencies:
+    "@daybrush/utils" "^1.11.0"
 
 css-to-mat@^1.0.3:
   version "1.0.3"
@@ -13845,10 +13852,10 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.0, gesto@^1.13.1, gesto@^1.17.1, gesto@^1.5.1:
-  version "1.17.1"
-  resolved "https://registry.npmjs.org/gesto/-/gesto-1.17.1.tgz#f35026c90a1ced7816d7d303b6edad452763c037"
-  integrity sha512-9MMYuTYhxoNf4uSPnXez9lte7O5fpj7Sbui7vNkPcW9Tgg4wFRWC9q/9raVZkWWiKr+MTDKFfMOM+4rEt9GvkQ==
+gesto@^1.13.0, gesto@^1.13.1, gesto@^1.17.1, gesto@^1.17.2, gesto@^1.5.1:
+  version "1.17.2"
+  resolved "https://registry.npmjs.org/gesto/-/gesto-1.17.2.tgz#f6953a747340e57a3e5e533fe01b9f681f4c4877"
+  integrity sha512-hKGK1aMbOWfx7eAZ/fyAwO945xDPSHCIzz0bnQEjMEO1yE1s1u/26a4KQteFqqmmnVSVUJEJBrR7ApQX7dCGiA==
   dependencies:
     "@daybrush/utils" "^1.7.1"
     "@scena/event-emitter" "^1.0.2"
@@ -22550,12 +22557,12 @@ preact-context@^1.1.3:
   resolved "https://registry.npmjs.org/preact-context/-/preact-context-1.1.4.tgz"
   integrity sha512-gcCjPJ65R0MiW9hDu8W/3WAmyTElIvwLyEO6oLQiM6/TbLKLxCpBCWV8GJjx52TTEyUr60HLDcmoCXZlslelzQ==
 
-preact-css-styled@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/preact-css-styled/-/preact-css-styled-1.1.2.tgz#78db6e6de31fe1ed3f2fbf7c9f1da4eb232d2203"
-  integrity sha512-9Ee4kzsghu5Klm7YQdlBfe/Br42xTntmZ0LLcs/707yVgMR3x0F5sHPCisGqTy80YlUGpWtZc5+ikM29eCfwAw==
+preact-css-styled@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/preact-css-styled/-/preact-css-styled-1.1.5.tgz#9711362f1f695c71f7b58462c79ce3efd966d328"
+  integrity sha512-wgDnoMNjpMQTkFG3Dcw3RmfjDz6f1BC0JC+dDj3+FUY1byLB9+86OMj3eNm006H3YoHmg1Mm9c5VJFt8QmJepg==
   dependencies:
-    css-styled "~1.0.1"
+    css-styled "~1.0.4"
     framework-utils "^1.1.0"
 
 preact-render-to-string@^3.8.2:
@@ -23252,12 +23259,12 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^1.0.2, react-css-styled@^1.1.2, react-css-styled@~1.0.4:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.1.2.tgz#c382da7d5afe7fb08a03ccfc82c8ec7822503481"
-  integrity sha512-YHTGOWaCLf7pASGRY3awG8rv67qyOjaUXUKfa3jFwzWges22SxYWQdMWIhCz7I8PXTrNRcIkemc6o2vVpd+gUA==
+react-css-styled@^1.0.2, react-css-styled@^1.1.2, react-css-styled@^1.1.3, react-css-styled@^1.1.5, react-css-styled@~1.0.4:
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.1.5.tgz#b3b00fbb60a23a0fd43eba048a4369e5a2e38f8a"
+  integrity sha512-0RUHT3rtlnQ/v6ba4denvbA7H8OGMBUP5TXE4xAgOfI8bZFFgBJ5xtGEgU9WNW2RdU/T/8PgeyNojmotybT2yQ==
   dependencies:
-    css-styled "~1.0.1"
+    css-styled "~1.0.4"
     framework-utils "^1.1.0"
 
 react-docgen-typescript@^2.1.1:
@@ -23361,6 +23368,24 @@ react-merge-refs@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-1.1.0.tgz"
   integrity sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==
+
+react-moveable@~0.50.5:
+  version "0.50.5"
+  resolved "https://registry.npmjs.org/react-moveable/-/react-moveable-0.50.5.tgz#bf07fca22189ee1e597990e7739f881044da1767"
+  integrity sha512-LCtZUyyNOTQeCiiq+TMj9GJxpNwsdxgwRUyp2xyPZRsBHE5OWYYX5xiOh/NREyB3XEL/Bxsp3AnBX8UoldP/6w==
+  dependencies:
+    "@daybrush/utils" "^1.11.0"
+    "@egjs/agent" "^2.2.1"
+    "@egjs/children-differ" "^1.0.1"
+    "@egjs/list-differ" "^1.0.0"
+    "@scena/dragscroll" "^1.4.0"
+    "@scena/event-emitter" "^1.0.5"
+    "@scena/matrix" "^1.1.1"
+    css-to-mat "^1.0.3"
+    framework-utils "^1.1.0"
+    gesto "^1.17.1"
+    overlap-area "^1.1.0"
+    react-css-styled "^1.1.2"
 
 react-refresh@^0.11.0:
   version "0.11.0"
