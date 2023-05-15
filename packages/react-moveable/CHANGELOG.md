@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.6](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.5...react-moveable@0.50.6) (2023-05-15)
+
+
+### :rocket: New Features
+
+* add drag api demo ([7c46df1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7c46df1c3026b5d836bc082e5e1dc2cdd093b77c))
+
+
+### :bug: Bug Fix
+
+* add defense logic for added element on dragStart #917 ([ef37c3b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ef37c3b6775fdfc8baa365bc793fe264c5a79764))
+* fix controlPadding  #918 ([685c459](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/685c4598deff805e0e952a1095ab3305a39a22c8))
+* fix initial gestos ([84afabb](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/84afabb1af183a231b6b70b5b6a2904cd981706e))
+* fix line, control padding appearing #919 ([63b9ecd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/63b9ecd6fc83314216f1d29c57c22ded27d8098e))
+* fix not initialized target #917 ([f291bf3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f291bf3f615e6daedb5da01ff16a42f43a39d441))
+* unset gesto when target changed #917 ([9d6c0d7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9d6c0d7c7f4b24b936d3ea9fa996dc536c84f816))
+* update croact, css-styled version #916 ([b517b64](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b517b6498a612c072eadc9354d6383363771ea6d))
+
+
+### :mega: Other
+
+* publish packages ([91aa8bc](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/91aa8bc1bdefc65cde8c032f1c7ba13ca54ad2fa))
+
+
+
 ## [0.50.5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.4...react-moveable@0.50.5) (2023-05-09)
 
 

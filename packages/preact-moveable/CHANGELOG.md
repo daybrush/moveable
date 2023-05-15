@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.6](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.49.5...preact-moveable@0.49.6) (2023-05-15)
+
+
+### :bug: Bug Fix
+
+* update croact, css-styled version #916 ([b517b64](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/b517b6498a612c072eadc9354d6383363771ea6d))
+
+
+### :mega: Other
+
+* publish packages ([91aa8bc](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/91aa8bc1bdefc65cde8c032f1c7ba13ca54ad2fa))
+
+
+
 ## [0.49.5](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.49.4...preact-moveable@0.49.5) (2023-05-09)
 
 
