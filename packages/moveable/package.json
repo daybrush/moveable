@@ -1,6 +1,6 @@
 {
   "name": "moveable",
-  "version": "0.47.7",
+  "version": "0.47.8",
   "description": "Moveable is Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "main": "./dist/moveable.cjs.js",
   "module": "./dist/moveable.esm.js",
@@ -66,8 +66,8 @@
   "dependencies": {
     "@scena/event-emitter": "^1.0.5",
     "croact": "^1.0.3",
-    "croact-moveable": "~0.3.6",
-    "react-moveable": "~0.50.5"
+    "croact-moveable": "~0.3.7",
+    "react-moveable": "~0.50.6"
   },
   "devDependencies": {
     "@daybrush/builder": "^0.1.2",

@@ -13852,7 +13852,7 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.0, gesto@^1.13.1, gesto@^1.17.1, gesto@^1.17.2, gesto@^1.5.1:
+gesto@^1.13.0, gesto@^1.13.1, gesto@^1.17.2, gesto@^1.5.1:
   version "1.17.2"
   resolved "https://registry.npmjs.org/gesto/-/gesto-1.17.2.tgz#f6953a747340e57a3e5e533fe01b9f681f4c4877"
   integrity sha512-hKGK1aMbOWfx7eAZ/fyAwO945xDPSHCIzz0bnQEjMEO1yE1s1u/26a4KQteFqqmmnVSVUJEJBrR7ApQX7dCGiA==
@@ -23259,7 +23259,7 @@ react-compat-ruler@~0.8.1:
   dependencies:
     "@scena/react-ruler" "~0.9.1"
 
-react-css-styled@^1.0.2, react-css-styled@^1.1.2, react-css-styled@^1.1.3, react-css-styled@^1.1.5, react-css-styled@~1.0.4:
+react-css-styled@^1.0.2, react-css-styled@^1.1.3, react-css-styled@^1.1.5, react-css-styled@~1.0.4:
   version "1.1.5"
   resolved "https://registry.npmjs.org/react-css-styled/-/react-css-styled-1.1.5.tgz#b3b00fbb60a23a0fd43eba048a4369e5a2e38f8a"
   integrity sha512-0RUHT3rtlnQ/v6ba4denvbA7H8OGMBUP5TXE4xAgOfI8bZFFgBJ5xtGEgU9WNW2RdU/T/8PgeyNojmotybT2yQ==
@@ -23368,24 +23368,6 @@ react-merge-refs@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/react-merge-refs/-/react-merge-refs-1.1.0.tgz"
   integrity sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==
-
-react-moveable@~0.50.5:
-  version "0.50.5"
-  resolved "https://registry.npmjs.org/react-moveable/-/react-moveable-0.50.5.tgz#bf07fca22189ee1e597990e7739f881044da1767"
-  integrity sha512-LCtZUyyNOTQeCiiq+TMj9GJxpNwsdxgwRUyp2xyPZRsBHE5OWYYX5xiOh/NREyB3XEL/Bxsp3AnBX8UoldP/6w==
-  dependencies:
-    "@daybrush/utils" "^1.11.0"
-    "@egjs/agent" "^2.2.1"
-    "@egjs/children-differ" "^1.0.1"
-    "@egjs/list-differ" "^1.0.0"
-    "@scena/dragscroll" "^1.4.0"
-    "@scena/event-emitter" "^1.0.5"
-    "@scena/matrix" "^1.1.1"
-    css-to-mat "^1.0.3"
-    framework-utils "^1.1.0"
-    gesto "^1.17.1"
-    overlap-area "^1.1.0"
-    react-css-styled "^1.1.2"
 
 react-refresh@^0.11.0:
   version "0.11.0"
