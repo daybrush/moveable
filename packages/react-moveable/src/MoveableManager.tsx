@@ -925,7 +925,7 @@ export default class MoveableManager<T = {}>
 
         if (isUnset) {
             unset(this, "targetGesto");
-            this.updateState({ gesto: null });
+            this.updateState({ gestos: {} });
         }
         if (!hasControlAble) {
             unset(this, "controlGesto");

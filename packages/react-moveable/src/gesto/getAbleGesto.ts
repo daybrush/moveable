@@ -164,10 +164,9 @@ export function triggerAble(
     if (!isAfter || updatedCount) {
         trigger(Renderable, `drag${eventAffix}${eventType}`);
     }
-
-
     // stop gesto condition
     const isForceEnd = prevGesto !== moveable[gestoType] || forceEndedCount === eventOperations.length;
+
     if (isEnd || isDragStop || isForceEnd) {
         moveable.state.gestos = {};
 

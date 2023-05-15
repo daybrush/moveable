@@ -439,6 +439,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         if (isTargetChanged || prevTarget !== nextTarget) {
             unset(this, "targetGesto");
             unset(this, "controlGesto");
+            this.updateState({ gestos: {} });
         }
         if (prevTarget !== nextTarget) {
             state.target = null;
