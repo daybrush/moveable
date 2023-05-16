@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.6...react-moveable@0.50.7) (2023-05-16)
+
+
+### :bug: Bug Fix
+
+* fix css-styled version #916 ([875fc19](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/875fc19fa7fac50cbbb3166dfaa512b18f7c790d))
+* occur unset for idle state #917 ([a9d1de8](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/a9d1de80fd7f48957fd730d577105d64c5a54fe3))
+
+
+### :mega: Other
+
+* publish packages ([5bd22bb](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5bd22bb009e10a4f8032f35c2ae3b490f4d94e5b))
+
+
+
 ## [0.50.6](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.5...react-moveable@0.50.6) (2023-05-15)
 
 
