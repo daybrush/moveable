@@ -20,12 +20,14 @@ export default function App() {
                 ref={moveableRef}
                 draggable={true}
                 target={targets}
-                onClickGroup={() => {
-                    if (targets.length === 2) {
-                        setTargets([".cube1", ".cube2", ".cube3"]);
-                    } else if (targets.length === 3) {
-                        setTargets([".cube1", ".cube2", ".cube3", ".cube4"]);
-                    }
+                onDragGroupStart={() => {
+                    requestAnimationFrame(() => {
+                        if (targets.length === 2) {
+                            setTargets([".cube1", ".cube2", ".cube3"]);
+                        } else if (targets.length === 3) {
+                            setTargets([".cube1", ".cube2", ".cube3", ".cube4"]);
+                        }
+                    });
                 }}
                 onDrag={e => {
                     e.target.style.cssText += e.cssText;

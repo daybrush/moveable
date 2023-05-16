@@ -989,9 +989,17 @@ export function roundSign(num: number) {
     return Math.round(num % 1 === -0.5 ? num - 1 : num);
 }
 
-export function unset(self: any, name: string) {
-    self[name]?.unset();
-    self[name] = null;
+export function unset(self: MoveableManagerInterface, isControl: boolean) {
+    const gestoName = isControl ? "controlGesto" : "targetGesto";
+    const gesto = self[gestoName];
+
+    if (gesto?.isIdle() === false) {
+        self[isControl ? "controlAbles" : "targetAbles"].forEach(able => {
+            able.unset && able.unset(self);
+        });
+    }
+    gesto?.unset();
+    self[gestoName] = null as any;
 }
 
 export function fillCSSObject(style: Record<string, any>, resolvedEvent?: any): CSSObject {

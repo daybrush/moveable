@@ -244,8 +244,8 @@ export default class MoveableManager<T = {}>
         if (viewContainer) {
             this._changeAbleViewClassNames([]);
         }
-        unset(this, "targetGesto");
-        unset(this, "controlGesto");
+        unset(this, false);
+        unset(this, true);
 
         const events = this.events;
         for (const name in events) {
@@ -924,11 +924,11 @@ export default class MoveableManager<T = {}>
             || this._isTargetChanged(true);
 
         if (isUnset) {
-            unset(this, "targetGesto");
+            unset(this, false);
             this.updateState({ gestos: {} });
         }
         if (!hasControlAble) {
-            unset(this, "controlGesto");
+            unset(this, true);
         }
 
         if (target && hasTargetAble && !this.targetGesto) {
