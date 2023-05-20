@@ -1,12 +1,15 @@
-import { SvelteComponentDev } from "svelte/internal";
-import Moveable, { MoveableInterface, MoveableOptions } from "moveable";
+/// <reference types="svelte" />
+import { SvelteComponentTyped } from "svelte";
+import { MoveableInterface, MoveableOptions, MoveableEvents } from "moveable";
 
-export default class MoveableComponent<T={}> extends SvelteComponentDev {
-    $$prop_def: MoveableOptions & T;
-    getInstance(): Moveable;
+export type SvelteMoveableEvents = {
+    [key in keyof MoveableEvents]: CustomEvent<MoveableEvents[key]>;
 }
+export default class MoveableComponent<T = {}> extends SvelteComponentTyped<
+    MoveableOptions & T,
+    SvelteMoveableEvents
+> { }
+
 export default interface MoveableComponent extends MoveableInterface {
 }
-
-
 export * from "moveable";
