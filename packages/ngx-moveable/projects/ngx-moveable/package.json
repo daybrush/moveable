@@ -1,6 +1,6 @@
 {
   "name": "ngx-moveable",
-  "version": "0.44.9",
+  "version": "0.44.10",
   "description": "An Angular Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable, Snappable.",
   "repository": {
     "type": "git",
