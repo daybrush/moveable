@@ -275,6 +275,9 @@ export default class MoveableManager<T = {}>
             || (parentMoveable && parentMoveable.getContainer())
             || this.controlBox.parentElement!;
     }
+    public getControlBoxElement(): HTMLElement {
+        return this.controlBox;
+    }
     /**
      * Check if the target is an element included in the moveable.
      * @method Moveable#isMoveableElement

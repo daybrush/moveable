@@ -9,7 +9,7 @@ import {
     getOffsetInfo, getElementTransform,
     getTransformMatrix, getPositionFixedInfo,
     convert3DMatrixes, getOffsetPosInfo,
-    getSVGMatrix, getBodyOffset, getAbsoluteMatrix,
+    getSVGMatrix, getBodyOffset, getAbsoluteMatrix, getDocumentElement, getDocumentBody,
 } from "../utils";
 
 
@@ -41,7 +41,7 @@ export function getMatrixStackInfo(
 ): MatrixStackInfo {
     let el: SVGElement | HTMLElement | null = target;
     const matrixes: MatrixInfo[] = [];
-    const documentElement = document.documentElement || document.body;
+    const documentElement = getDocumentElement(target) || getDocumentBody(target);
     let requestEnd = !checkContainer && target === container || target === documentElement;
     let isEnd = requestEnd;
     let is3d = false;

@@ -294,4 +294,5 @@ export const MOVEABLE_METHODS: Array<keyof MoveableInterface> = [
     "updateSelectors",
     "getTargets",
     "stopDrag",
+    "getControlBoxElement",
 ];

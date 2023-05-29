@@ -3292,6 +3292,10 @@ export interface MoveableInterface {
         RequestParam extends AbleRequesters[Name],
         Name extends string = string,
     >(ableName: Name, params?: RequestParam, isInstant?: boolean): Requester<RequestParam>;
+    /**
+     * Returns the element of the control box.
+     */
+    getControlBoxElement(): HTMLElement;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;

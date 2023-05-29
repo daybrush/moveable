@@ -1,6 +1,6 @@
 import { createIdentityMatrix, convertDimension, multiply, createOriginMatrix, ignoreDimension } from "@scena/matrix";
 import { getCachedMatrixContainerInfo } from "../store/Store";
-import { convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
+import { convert3DMatrixes, getDocumentBody, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
 import { getMatrixStackInfo } from "./getMatrixStackInfo";
 
 export interface MoveableElementMatrixInfo {
@@ -89,7 +89,7 @@ export function calculateMatrixStack(
     nextRootMatrixes.forEach(info => {
         rootMatrix = multiply(rootMatrix, info.matrix!, n);
     });
-    const originalRootContainer = rootContainer || document.body;
+    const originalRootContainer = rootContainer || getDocumentBody(target);
     const endContainer = nextRootMatrixes[0]?.target
         || getOffsetInfo(originalRootContainer, originalRootContainer, true).offsetParent;
     const rootMatrixBeforeOffset = nextRootMatrixes.slice(1).reduce((matrix, info) => {

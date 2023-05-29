@@ -132,8 +132,8 @@ export function getOffsetInfo(
     checkZoom?: boolean,
     getTargetStyle?: GetStyle,
 ) {
-    const doc = el && el.ownerDocument ? el.ownerDocument : document;
-    const documentElement = doc.documentElement || doc.body;
+
+    const documentElement = getDocumentElement(el) || getDocumentBody(el);
     let hasSlot = false;
     let target: HTMLElement | SVGElement | null | undefined;
     let parentSlotElement: HTMLElement | null | undefined;
@@ -266,7 +266,7 @@ export function getBodyOffset(
     isSVG: boolean,
 ) {
     const getStyle = getCachedStyle(el);
-    const getBodyStyle = getCachedStyle(document.body);
+    const getBodyStyle = getCachedStyle(getDocumentBody(el));
     const bodyPosition = getBodyStyle("position");
     if (!isSVG && (!bodyPosition || bodyPosition === "static")) {
         return [0, 0];
@@ -296,16 +296,10 @@ export function convert3DMatrixes(matrixes: MatrixInfo[]) {
     });
 }
 
-export function getBodyScrollPos() {
-    return [
-        document.documentElement.scrollLeft || document.body.scrollLeft,
-        document.documentElement.scrollTop || document.body.scrollTop,
-    ];
-}
-
 export function getPositionFixedInfo(el: HTMLElement | SVGElement) {
     let fixedContainer = el.parentElement;
     let hasTransform = false;
+    const body = getDocumentBody(el);
 
     while (fixedContainer) {
         const transform = getComputedStyle(fixedContainer).transform;
@@ -315,14 +309,14 @@ export function getPositionFixedInfo(el: HTMLElement | SVGElement) {
             hasTransform = true;
             break;
         }
-        if (fixedContainer === document.body) {
+        if (fixedContainer === body) {
             break;
         }
         fixedContainer = fixedContainer.parentElement;
     }
 
     return {
-        fixedContainer: fixedContainer || document.body,
+        fixedContainer: fixedContainer || body,
         hasTransform,
     };
 }
@@ -463,7 +457,7 @@ export function getSVGOffset(
     const containerClientRect = container.getBoundingClientRect();
     let margin = [0, 0];
 
-    if (container === document.body) {
+    if (container === getDocumentBody(container)) {
         margin = getBodyOffset(target, true);
     }
 
@@ -699,7 +693,7 @@ export function getSize(
                 let parentElement: HTMLElement | null = null;
 
                 if (position === "absolute") {
-                    const offsetInfo = getOffsetInfo(target, document.body);
+                    const offsetInfo = getOffsetInfo(target, getDocumentBody(target));
                     parentElement = offsetInfo.offsetParent;
 
                 } else {
@@ -812,7 +806,7 @@ export function getExtendsRect(
     el: HTMLElement | SVGElement,
     rect: MoveableClientRect,
 ): MoveableClientRect {
-    const isRoot = el === document.body || el === document.documentElement;
+    const isRoot = el === getDocumentBody(el) || el === getDocumentElement(el);
 
 
     const extendsRect = {
@@ -1703,4 +1697,15 @@ export function watchValue<T>(
 
     store[property] = nextValue;
     return nextValue;
+}
+
+
+export function getDocument(el: Node | null | undefined) {
+    return el?.ownerDocument || document;
+}
+export function getDocumentBody(el: Node | null | undefined) {
+    return getDocument(el).body;
+}
+export function getDocumentElement(el: Node | null | undefined) {
+    return getDocument(el).documentElement;
 }
