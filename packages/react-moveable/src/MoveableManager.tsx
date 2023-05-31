@@ -3,7 +3,7 @@ import { createElement } from "react";
 import { PREFIX } from "./consts";
 import {
     prefix,
-    unset,
+    unsetGesto,
     getAbsolutePosesByState,
     getRect,
     filterAbles,
@@ -15,6 +15,7 @@ import {
     defaultSync,
     getRefTarget,
     groupBy,
+    unsetAbles,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
@@ -244,8 +245,8 @@ export default class MoveableManager<T = {}>
         if (viewContainer) {
             this._changeAbleViewClassNames([]);
         }
-        unset(this, false);
-        unset(this, true);
+        unsetGesto(this, false);
+        unsetGesto(this, true);
 
         const events = this.events;
         for (const name in events) {
@@ -590,10 +591,20 @@ export default class MoveableManager<T = {}>
      */
     public stopDrag(type?: "target" | "control"): void {
         if (!type || type === "target") {
-            this.targetGesto?.stop();
+            const gesto = this.targetGesto;
+
+            if (gesto?.isIdle() === false) {
+                unsetAbles(this, false);
+            }
+            gesto?.stop();
         }
         if (!type || type === "control") {
-            this.controlGesto?.stop();
+            const gesto = this.controlGesto;
+
+            if (gesto?.isIdle() === false) {
+                unsetAbles(this, true);
+            }
+            gesto?.stop();
         }
     }
     public getRotation() {
@@ -927,11 +938,11 @@ export default class MoveableManager<T = {}>
             || this._isTargetChanged(true);
 
         if (isUnset) {
-            unset(this, false);
+            unsetGesto(this, false);
             this.updateState({ gestos: {} });
         }
         if (!hasControlAble) {
-            unset(this, true);
+            unsetGesto(this, true);
         }
 
         if (target && hasTargetAble && !this.targetGesto) {

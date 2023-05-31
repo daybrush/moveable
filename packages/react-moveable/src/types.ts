@@ -2418,7 +2418,6 @@ export interface GroupableOptions {
     /**
      * Sets the initial rotation of the group.
      * @default 0
-     * @deprecated
      */
     defaultGroupRotate?: number;
     /**

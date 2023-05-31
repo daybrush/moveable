@@ -5,7 +5,7 @@ import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import {
-    getAbsolutePosesByState, equals, unset, rotatePosesInfo,
+    getAbsolutePosesByState, equals, unsetGesto, rotatePosesInfo,
     convertTransformOriginArray,
     isDeepArrayEquals,
 } from "./utils";
@@ -437,8 +437,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const isTargetChanged = added.length || removed.length;
 
         if (isTargetChanged || prevTarget !== nextTarget) {
-            unset(this, false);
-            unset(this, true);
+            unsetGesto(this, false);
+            unsetGesto(this, true);
             this.updateState({ gestos: {} });
         }
         if (prevTarget !== nextTarget) {

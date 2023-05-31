@@ -19,8 +19,8 @@ export const CombinationDraggableResizableRotatble = add("Draggable & Resizable 
     },
 });
 export const CombinationDraggableScalableRotatable = add("Draggable & Scalable & Rotatable", {
-    app: require("./ReactDraggableResizableRotatableApp").default,
-    path: require.resolve("./ReactDraggableResizableRotatableApp"),
+    app: require("./ReactDraggableScalableRotatableApp").default,
+    path: require.resolve("./ReactDraggableScalableRotatableApp"),
     argsTypes: {
         ...DEFAULT_DRAGGABLE_CONTROLS,
         ...DEFAULT_SCALABLE_CONTROLS,
