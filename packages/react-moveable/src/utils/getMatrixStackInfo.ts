@@ -9,8 +9,9 @@ import {
     getOffsetInfo, getElementTransform,
     getTransformMatrix, getPositionFixedInfo,
     convert3DMatrixes, getOffsetPosInfo,
-    getSVGMatrix, getBodyOffset, getAbsoluteMatrix, getDocumentElement, getDocumentBody,
+    getSVGMatrix, getBodyOffset, getAbsoluteMatrix,
 } from "../utils";
+import { getDocumentBody, getDocumentElement } from "@daybrush/utils";
 
 
 export function getShadowRoot(parentElement: HTMLElement | SVGElement) {

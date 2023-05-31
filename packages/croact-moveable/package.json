@@ -68,7 +68,7 @@
         "typescript": "^4.5.0 <4.6.0"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.11.0",
+        "@daybrush/utils": "^1.12.1",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
         "@egjs/list-differ": "^1.0.0",
@@ -78,7 +78,7 @@
         "croact-css-styled": "^1.1.8",
         "css-to-mat": "^1.0.3",
         "framework-utils": "^1.1.0",
-        "gesto": "^1.18.0",
+        "gesto": "^1.18.1",
         "overlap-area": "^1.1.0",
         "react-css-styled": "^1.1.8",
         "react-moveable": "~0.50.7"

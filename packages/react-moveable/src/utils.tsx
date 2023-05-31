@@ -4,6 +4,9 @@ import {
     isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
     getShapeDirection, isFunction, convertUnitSize, between, getKeys, decamelize, isNumber,
+    getDocumentBody,
+    getDocumentElement,
+    getWindow,
 } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -133,7 +136,7 @@ export function getOffsetInfo(
     getTargetStyle?: GetStyle,
 ) {
 
-    const documentElement = getDocumentElement(el) || getDocumentBody(el);
+    const documentElement = getDocumentElement(el!) || getDocumentBody(el!);
     let hasSlot = false;
     let target: HTMLElement | SVGElement | null | undefined;
     let parentSlotElement: HTMLElement | null | undefined;
@@ -1111,7 +1114,7 @@ export function triggerEvent<EventName extends keyof Props, Props extends IObjec
 }
 
 export function getComputedStyle(el: Element, pseudoElt?: string | null) {
-    return window.getComputedStyle(el, pseudoElt);
+    return getWindow(el).getComputedStyle(el, pseudoElt);
 }
 
 export function filterAbles(
@@ -1697,15 +1700,4 @@ export function watchValue<T>(
 
     store[property] = nextValue;
     return nextValue;
-}
-
-
-export function getDocument(el: Node | null | undefined) {
-    return el?.ownerDocument || document;
-}
-export function getDocumentBody(el: Node | null | undefined) {
-    return getDocument(el).body;
-}
-export function getDocumentElement(el: Node | null | undefined) {
-    return getDocument(el).documentElement;
 }

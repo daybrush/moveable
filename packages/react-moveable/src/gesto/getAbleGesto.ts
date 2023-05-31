@@ -1,5 +1,5 @@
 import { Able, MoveableManagerInterface, MoveableGroupInterface } from "../types";
-import { hasClass, IObject } from "@daybrush/utils";
+import { getWindow, hasClass, IObject } from "@daybrush/utils";
 import { convertDragDist, defaultSync } from "../utils";
 import Gesto, { GestoOptions } from "gesto";
 import BeforeRenderable from "../ables/BeforeRenderable";
@@ -262,7 +262,7 @@ export function getAbleGesto(
         preventDefault,
         preventRightClick: true,
         preventWheelClick: true,
-        container: window,
+        container: getWindow(moveable.getControlBoxElement()),
         pinchThreshold,
         pinchOutside,
         preventClickEventOnDrag: isTargetAbles ? preventClickEventOnDrag : false,

@@ -1,4 +1,4 @@
-import { find } from "@daybrush/utils";
+import { find, getWindow } from "@daybrush/utils";
 import { getClientRect } from "../utils";
 import { MoveableClientRect } from "../types";
 import { getMatrixStackInfo, MatrixStackInfo } from "../utils/getMatrixStackInfo";
@@ -65,7 +65,7 @@ export function getCachedStyle(element: Element): GetStyle {
     let cache = cacheStyleMap?.get(element);
 
     if (!cache) {
-        const nextStyle = window.getComputedStyle(element);
+        const nextStyle = getWindow(element).getComputedStyle(element);
 
         if (!cacheStyleMap) {
             return (property: string) => {

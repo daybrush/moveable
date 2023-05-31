@@ -1,7 +1,8 @@
 import { createIdentityMatrix, convertDimension, multiply, createOriginMatrix, ignoreDimension } from "@scena/matrix";
 import { getCachedMatrixContainerInfo } from "../store/Store";
-import { convert3DMatrixes, getDocumentBody, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
+import { convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
 import { getMatrixStackInfo } from "./getMatrixStackInfo";
+import { getDocumentBody } from "@daybrush/utils";
 
 export interface MoveableElementMatrixInfo {
     hasZoom: boolean;
