@@ -7,7 +7,6 @@
     "module": "dist/moveable.esm.js",
     "sideEffects": false,
     "lernaHelperReleaseType": "prerelease",
-    "lernaHelperPublishTag": "beta",
     "scripts": {
         "serve": "vue-cli-service serve demo",
         "build": "rm -rf dist && rollup -c && npm run declaration",
