@@ -1903,6 +1903,11 @@ export interface DraggableOptions {
      */
     throttleDragRotate?: number;
     /**
+     * Hides the guidelines that appear when using the `throttleDragRotate` prop.
+     * @default false
+     */
+    hideThrottleDragRotateLine?: boolean;
+    /**
      * start angle(degree) of x,y for throttleDragRotate when drag.
      * @default 0
      */

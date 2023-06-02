@@ -32,6 +32,7 @@ export default {
         "draggable",
         "throttleDrag",
         "throttleDragRotate",
+        "hideThrottleDragRotateLine",
         "startDragRotate",
         "edgeDraggable",
     ] as const,
@@ -53,10 +54,10 @@ export default {
         moveable: MoveableManagerInterface<DraggableProps, DraggableState>,
         React: Renderer,
     ): any[] {
-        const { throttleDragRotate, zoom } = moveable.props;
+        const { hideThrottleDragRotateLine, throttleDragRotate, zoom } = moveable.props;
         const { dragInfo, beforeOrigin } = moveable.getState();
 
-        if (!throttleDragRotate || !dragInfo) {
+        if (hideThrottleDragRotateLine || !throttleDragRotate || !dragInfo) {
             return [];
         }
         const dist = dragInfo.dist;
