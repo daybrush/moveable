@@ -538,6 +538,7 @@ export default {
         "snapGridHeight",
         "isDisplaySnapDigit",
         "isDisplayInnerSnapDigit",
+        "isDisplayGridGuidelines",
         "snapDigit",
         "snapThreshold",
         "snapRenderThreshold",

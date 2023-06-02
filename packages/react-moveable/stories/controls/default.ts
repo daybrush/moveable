@@ -260,6 +260,11 @@ export const DEFAULT_SNAP_GRID_CONTROLS = {
         description: makeLink("Snappable", "snappable"),
         defaultValue: true,
     }),
+    isDisplayGridGuidelines: makeArgType({
+        type: "boolean",
+        description: makeLink("Snappable", "isDisplayGridGuidelines"),
+        defaultValue: false,
+    }),
     snapGridWidth: makeArgType({
         type: "number",
         description: makeLink("Snappable", "snapGridWidth"),

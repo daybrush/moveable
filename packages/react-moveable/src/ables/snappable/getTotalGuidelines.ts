@@ -7,7 +7,7 @@ import {
     SnapElementRect,
     NumericPosGuideline,
 } from "../../types";
-import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition } from "../../utils";
+import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, prefix } from "../../utils";
 import {
     splitSnapDirectionPoses, getSnapDirections,
     HORIZONTAL_NAMES_MAP, VERTICAL_NAMES_MAP, calculateContainerPos,
@@ -38,6 +38,7 @@ export function getTotalGuidelines(
         snapGridWidth = 0,
         snapGridHeight = 0,
         maxSnapElementGuidelineDistance = Infinity,
+        isDisplayGridGuidelines,
     } = moveable.props;
     const { top, left, bottom, right } = getRect(getAbsolutePosesByState(moveable.state));
     const targetRect = { top, left, bottom, right, center: (left + right) / 2, middle: (top + bottom) / 2 };
@@ -66,6 +67,7 @@ export function getTotalGuidelines(
         clientLeft,
         clientTop,
         snapOffset,
+        isDisplayGridGuidelines,
     ));
 
 
@@ -248,6 +250,7 @@ export function getGridGuidelines(
     clientLeft = 0,
     clientTop = 0,
     snapOffset: { left: number, top: number, right: number, bottom: number },
+    isDisplayGridGuidelines?: boolean,
 ): SnapGuideline[] {
     const guidelines: SnapGuideline[] = [];
     const {
@@ -262,8 +265,9 @@ export function getGridGuidelines(
                     snapOffsetLeft,
                     throttle(pos - clientTop + snapOffsetTop, 0.1),
                 ],
+                className: prefix("grid-guideline"),
                 size: containerWidth!,
-                hide: true,
+                hide: !isDisplayGridGuidelines,
             });
         }
     }
@@ -275,8 +279,9 @@ export function getGridGuidelines(
                     throttle(pos - clientLeft + snapOffsetLeft, 0.1),
                     snapOffsetTop,
                 ],
+                className: prefix("grid-guideline"),
                 size: containerHeight!,
-                hide: true,
+                hide: !isDisplayGridGuidelines,
             });
         }
     }

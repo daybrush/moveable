@@ -2536,6 +2536,11 @@ export interface SnappableOptions {
      */
     snapDigit?: number;
     /**
+     * Whether to show guideline of snap by grid
+     * @default false
+     */
+    isDisplayGridGuidelines?: boolean;
+    /**
      * If width size is greater than 0, you can vertical snap to the grid.
      * @default 0 (0 is not used)
      */
