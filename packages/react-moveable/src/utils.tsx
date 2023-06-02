@@ -1286,17 +1286,20 @@ export function getDirectionCondition(ableName: string, checkAbles: string[] = [
 }
 
 export function convertTransformInfo(transforms: string[], index: number) {
+    const matrixInfos = parse(transforms);
+
     const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
     const beforeFunctionTexts2 = transforms.slice(0, index < 0 ? undefined : index + 1);
     const targetFunctionText = transforms[index] || "";
     const afterFunctionTexts = index < 0 ? [] : transforms.slice(index);
     const afterFunctionTexts2 = index < 0 ? [] : transforms.slice(index + 1);
 
-    const beforeFunctions = parse(beforeFunctionTexts);
-    const beforeFunctions2 = parse(beforeFunctionTexts2);
-    const targetFunctions = parse([targetFunctionText]);
-    const afterFunctions = parse(afterFunctionTexts);
-    const afterFunctions2 = parse(afterFunctionTexts2);
+    const beforeFunctions = matrixInfos.slice(0, index < 0 ? undefined : index);
+    const beforeFunctions2 = matrixInfos.slice(0, index < 0 ? undefined : index + 1);
+    const targetFunction = matrixInfos[index] ?? parse([""])[0];
+    const afterFunctions = index < 0 ? [] : matrixInfos.slice(index);
+    const afterFunctions2 = index < 0 ? [] : matrixInfos.slice(index + 1);
+    const targetFunctions = targetFunction ? [targetFunction] : [];
 
 
     const beforeFunctionMatrix = toMat(beforeFunctions);

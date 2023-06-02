@@ -59,9 +59,18 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
     datas.startDragBeforeDist = calculate(datas.inverseBeforeMatrix, datas.absoluteOrigin, n);
     datas.startDragDist = calculate(datas.inverseMatrix, datas.absoluteOrigin, n);
 }
+
 export function getTransformDirection(e: any) {
     return calculateMoveablePosition(e.datas.beforeTransform, [50, 50], 100, 100).direction;
 }
+
+
+export interface OriginalDataTransformInfos {
+    startTransforms: string[];
+    nextTransforms: string[];
+    nextTransformAppendedIndexes: number[];
+}
+
 export function resolveTransformEvent(event: any, functionName: string) {
     const {
         datas,
@@ -440,7 +449,7 @@ export function getNextTransforms(e: any) {
         },
     } = e;
 
-    return originalDatas.nextTransforms;
+    return originalDatas.nextTransforms as string[];
 }
 export function getNextTransformText(e: any) {
     return (getNextTransforms(e) || []).join(" ");

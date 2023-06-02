@@ -1,4 +1,5 @@
-import { getNextStyle, getNextTransformText } from "../gesto/GestoUtils";
+import { parse } from "css-to-mat";
+import { getNextStyle, getNextTransformText, getNextTransforms } from "../gesto/GestoUtils";
 import { fillChildEvents } from "../groupUtils";
 import {
     MoveableManagerInterface, RenderableProps, OnRenderStart, OnRender,
@@ -52,6 +53,7 @@ export default {
             isPinch: !!e.isPinch,
             targets: moveable.props.targets,
             transform: getNextTransformText(e),
+            transformObject: {},
             ...fillCSSObject(getNextStyle(e)),
             events: params,
         },));
@@ -70,6 +72,7 @@ export default {
             isDrag: e.isDrag,
             targets: moveable.props.targets,
             events: params,
+            transformObject: {},
             transform: getNextTransformText(e),
             ...fillCSSObject(getNextStyle(e)),
         }));
@@ -96,16 +99,29 @@ export default {
         return this.dragGroupEnd(moveable, e);
     },
     fillDragParams(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
+        const transformObject: Record<string, any> = {};
+
+        parse(getNextTransforms(e) || []).forEach(matrixInfo => {
+            transformObject[matrixInfo.name] = matrixInfo.functionValue;
+        });
+
         return fillParams<OnRender>(moveable, e, {
             isPinch: !!e.isPinch,
+            transformObject,
             transform: getNextTransformText(e),
             ...fillCSSObject(getNextStyle(e)),
         });
     },
     fillDragEndParams(moveable: MoveableManagerInterface<RenderableProps>, e: any) {
+        const transformObject: Record<string, any> = {};
+
+        parse(getNextTransforms(e) || []).forEach(matrixInfo => {
+            transformObject[matrixInfo.name] = matrixInfo.functionValue;
+        });
         return fillParams<OnRenderEnd>(moveable, e, {
             isPinch: !!e.isPinch,
             isDrag: e.isDrag,
+            transformObject,
             transform: getNextTransformText(e),
             ...fillCSSObject(getNextStyle(e)),
         });

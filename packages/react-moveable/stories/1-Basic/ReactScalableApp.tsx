@@ -14,8 +14,30 @@ export default function App(props: Record<string, any>) {
                     keepRatio={props.keepRatio}
                     throttleScale={props.throttleScale}
                     renderDirections={props.renderDirections}
+                    snappable={true}
+                    snapThreshold={5}
+                    snapDigit={0}
+                    snapGap={true}
+                    elementGuidelines={[".target"]}
+                    snapDirections={{
+                        top: true,
+                        right: true,
+                        bottom: true,
+                        left: true,
+                    }}
+                    elementSnapDirections={{
+                        top: true,
+                        right: true,
+                        bottom: true,
+                        left: true,
+                    }}
+                    elementSn
                     onScale={e => {
-                        e.target.style.transform = e.drag.transform;
+                        // e.target.style.transform = e.drag.transform;
+                        e.target.style.cssText += e.cssText;
+                    }}
+                    onRender={e => {
+                        // e.target.style.cssText += e.cssText;
                     }}
                 />
             </div>

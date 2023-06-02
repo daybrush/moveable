@@ -1798,6 +1798,11 @@ export interface OnRender extends OnEvent, CSSObject {
      * Whether or not it is being pinched.
      */
     isPinch: boolean;
+    /**
+     * Return transform as a transform object.
+     * `rotate` is a number and everything else is an array of numbers.
+     */
+    transformObject: Record<string, any>;
 }
 
 /**
@@ -1820,6 +1825,11 @@ export interface OnRenderEnd extends OnEvent, CSSObject {
      * Whether or not it is being pinched.
      */
     isDrag: boolean;
+    /**
+     * Return transform as a transform object.
+     * `rotate` is a number and everything else is an array of numbers.
+     */
+    transformObject: Record<string, any>;
 }
 
 export type EventInterface<T extends IObject<any> = {}> = {
