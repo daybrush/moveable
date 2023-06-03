@@ -133,10 +133,15 @@ function getRotateInfo(
     let isSnap = false;
 
     if (checkSnap) {
-        const result = checkSnapRotate(moveable, moveableRect, dist);
+        const result = checkSnapRotate(
+            moveable,
+            moveableRect,
+            dist,
+            startValue + dist,
+        );
 
         isSnap = result.isSnap;
-        snapRotation = startValue + result.rotation;
+        snapRotation = startValue + result.dist;
     }
 
     if (!isSnap) {

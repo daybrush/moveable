@@ -24,6 +24,7 @@ import {
     getDragDistByState,
     triggerEvent,
     getDirectionCondition,
+    abs,
 } from "../utils";
 import {
     findIndex, hasClass, throttle,
@@ -137,9 +138,8 @@ function getNextFixedPoses(
 }
 
 export function normalized(value: number) {
-    return value ? value / Math.abs(value) : 0;
+    return value ? value / abs(value) : 0;
 }
-
 
 export function getSizeOffsetInfo(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
@@ -181,6 +181,7 @@ export function getSizeOffsetInfo(
         },
     };
 }
+
 export function recheckSizeByTwoDirection(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     poses: number[][],
@@ -221,6 +222,7 @@ export function recheckSizeByTwoDirection(
     }
     return [0, 0];
 }
+
 export function checkSizeDist(
     moveable: MoveableManagerInterface<any, any>,
     getNextPoses: (widthOffset: number, heightOffset: number) => number[][],
@@ -270,9 +272,9 @@ export function checkSizeDist(
         }
         if (keepRatio) {
             const widthDist =
-                Math.abs(nextWidthOffset) * (width ? 1 / width : 1);
+                abs(nextWidthOffset) * (width ? 1 / width : 1);
             const heightDist =
-                Math.abs(nextHeightOffset) * (height ? 1 / height : 1);
+                abs(nextHeightOffset) * (height ? 1 / height : 1);
             const isGetWidthOffset =
                 isWidthBound && isHeightBound
                     ? widthDist < heightDist
@@ -318,43 +320,99 @@ export function checkSizeDist(
     return [widthOffset, heightOffset];
 }
 
+export function absDegree(deg: number) {
+    if (deg < 0) {
+        deg = deg % 360 + 360;
+    }
+    deg %= 360;
+    return deg;
+}
+
+export function bumpDegree(baseDeg: number, snapDeg: number) {
+    // baseDeg -80
+    // snapDeg 270
+    // return -90
+    snapDeg = absDegree(snapDeg);
+
+    const count = Math.floor(baseDeg / 360);
+
+
+    const deg1 = count * 360 + 360 - snapDeg;
+    const deg2 = count * 360 + snapDeg;
+
+    return abs(baseDeg - deg1) < abs(baseDeg - deg2) ? deg1 : deg2;
+}
+
+export function getMinDegreeDistance(deg1: number, deg2: number) {
+    deg1 = absDegree(deg1);
+    deg2 = absDegree(deg2);
+
+    const deg3 = absDegree(deg1 - deg2);
+
+    return Math.min(deg3, 360 - deg3);
+}
+
 export function checkSnapRotate(
     moveable: MoveableManagerInterface<SnappableProps & RotatableProps, any>,
     rect: RectInfo,
-    rotation: number
+    dist: number,
+    rotation: number,
 ) {
-    if (!hasGuidelines(moveable, "rotatable")) {
-        return {
-            isSnap: false,
-            rotation,
-        };
+    const props = moveable.props;
+    const snapRotationThreshold = props[NAME_snapRotationThreshold] ?? 5;
+    const snapRotationDegress = props[NAME_snapRotationDegress];
+
+    if (hasGuidelines(moveable, "rotatable")) {
+        const { pos1, pos2, pos3, pos4, origin: origin2 } = rect;
+        const rad = (dist * Math.PI) / 180;
+        const prevPoses = [pos1, pos2, pos3, pos4].map((pos) => minus(pos, origin2));
+        const nextPoses = prevPoses.map((pos) => rotate(pos, rad));
+
+        // console.log(moveable.state.left, moveable.state.top, moveable.state.origin);
+        // console.log(pos1, pos2, pos3, pos4, origin, rad, prevPoses, nextPoses);
+        const result = [
+            ...checkRotateBounds(moveable, prevPoses, nextPoses, origin2, dist),
+            ...checkRotateInnerBounds(
+                moveable,
+                prevPoses,
+                nextPoses,
+                origin2,
+                dist
+            ),
+        ];
+        result.sort((a, b) => abs(a - dist) - abs(b - dist));
+        const isSnap = result.length > 0;
+
+        if (isSnap) {
+            return {
+                isSnap,
+                dist: isSnap ? result[0] : dist,
+            };
+        }
     }
+    if (snapRotationDegress?.length && snapRotationThreshold) {
 
-    const { pos1, pos2, pos3, pos4, origin: origin2 } = rect;
-    const rad = (rotation * Math.PI) / 180;
-    const prevPoses = [pos1, pos2, pos3, pos4].map((pos) => minus(pos, origin2));
-    const nextPoses = prevPoses.map((pos) => rotate(pos, rad));
 
-    // console.log(moveable.state.left, moveable.state.top, moveable.state.origin);
-    // console.log(pos1, pos2, pos3, pos4, origin, rad, prevPoses, nextPoses);
-    const result = [
-        ...checkRotateBounds(moveable, prevPoses, nextPoses, origin2, rotation),
-        ...checkRotateInnerBounds(
-            moveable,
-            prevPoses,
-            nextPoses,
-            origin2,
-            rotation
-        ),
-    ];
-    result.sort((a, b) => Math.abs(a - rotation) - Math.abs(b - rotation));
-    const isSnap = result.length > 0;
+        const sorted = snapRotationDegress.slice().sort((a, b) => {
+            return getMinDegreeDistance(a, rotation) - getMinDegreeDistance(b, rotation);
+        });
+        const firstDegree = sorted[0];
 
+        if (getMinDegreeDistance(firstDegree, rotation) <= snapRotationThreshold) {
+
+            return {
+                isSnap: true,
+                dist: dist + bumpDegree(rotation, firstDegree) - rotation,
+            };
+        }
+    }
     return {
-        isSnap,
-        rotation: isSnap ? result[0] : rotation,
+        isSnap: false,
+        dist,
     };
+
 }
+
 export function checkSnapResize(
     moveable: MoveableManagerInterface<{}, {}>,
     width: number,
@@ -520,6 +578,10 @@ function addBoundGuidelines(
 
 const directionCondition = getDirectionCondition("", ["resizable", "scalable"]);
 
+
+const NAME_snapRotationThreshold = "snapRotationThreshold";
+const NAME_snapRotationDegress = "snapRotationDegress";
+
 /**
  * @namespace Moveable.Snappable
  * @description Whether or not target can be snapped to the guideline. (default: false)
@@ -542,6 +604,8 @@ export default {
         "snapDigit",
         "snapThreshold",
         "snapRenderThreshold",
+        NAME_snapRotationThreshold,
+        NAME_snapRotationDegress,
         "horizontalGuidelines",
         "verticalGuidelines",
         "elementGuidelines",

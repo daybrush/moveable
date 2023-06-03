@@ -2556,6 +2556,16 @@ export interface SnappableOptions {
      */
     isDisplayGridGuidelines?: boolean;
     /**
+     * Snap works if `abs(current rotation - snapRotationDegress) < snapRotationThreshold`.
+     * @default 5
+     */
+    snapRotationThreshold?: number;
+    /**
+     * degree angles to snap to rotation
+     * @default []
+     */
+    snapRotationDegress?: number[];
+    /**
      * If width size is greater than 0, you can vertical snap to the grid.
      * @default 0 (0 is not used)
      */

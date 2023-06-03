@@ -1707,3 +1707,7 @@ export function watchValue<T>(
     store[property] = nextValue;
     return nextValue;
 }
+
+export function abs(value: number) {
+    return Math.abs(value);
+}
