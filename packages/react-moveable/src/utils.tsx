@@ -513,7 +513,7 @@ export function getSVGOffset(
         const distLeft = nextLeft - rectLeft;
         const distTop = nextTop - rectTop;
 
-        if (Math.abs(distLeft) < 2 && Math.abs(distTop) < 2) {
+        if (abs(distLeft) < 2 && abs(distTop) < 2) {
             break;
         }
         rectOrigin[0] -= distLeft;
@@ -576,7 +576,7 @@ export function calculateMoveablePosition(
 
     const sx = matrix[0];
     const sy = matrix[n + 1];
-    const direction = sx * sy >= 0 ? 1 : -1;
+    const direction = sign(sx * sy);
 
     return {
         left,
@@ -737,10 +737,10 @@ export function getSize(
             cssHeight = parseFloat(getStyle("height")) || 0;
 
 
-            contentWidth = Math.abs(cssWidth - inlineCSSWidth) < 1
+            contentWidth = abs(cssWidth - inlineCSSWidth) < 1
                 ? between(minWidth, inlineCSSWidth || cssWidth, maxWidth)
                 : cssWidth;
-            contentHeight = Math.abs(cssHeight - inlineCSSHeight) < 1
+            contentHeight = abs(cssHeight - inlineCSSHeight) < 1
                 ? between(minHeight, inlineCSSHeight || cssHeight, maxHeight)
                 : cssHeight;
 
@@ -1211,12 +1211,12 @@ export function equalSign(a: number, b: number) {
 }
 
 export function maxOffset(...args: number[]) {
-    args.sort((a, b) => Math.abs(b) - Math.abs(a));
+    args.sort((a, b) => abs(b) - abs(a));
 
     return args[0];
 }
 export function minOffset(...args: number[]) {
-    args.sort((a, b) => Math.abs(a) - Math.abs(b));
+    args.sort((a, b) => abs(a) - abs(b));
 
     return args[0];
 }
@@ -1256,7 +1256,7 @@ export function convertCSSSize(value: number, size: number, isRelative?: boolean
 }
 
 export function getTinyDist(v: number) {
-    return Math.abs(v) <= TINY_NUM ? 0 : v;
+    return abs(v) <= TINY_NUM ? 0 : v;
 }
 
 export function viewDraggingPrefix(ableName: string) {
@@ -1476,7 +1476,7 @@ export function getSizeDistByDist(
             }
             let rad = 0;
 
-            if (Math.abs(secondRad - firstRad) < Math.PI / 2 || Math.abs(secondRad - firstRad) > Math.PI / 2 * 3) {
+            if (abs(secondRad - firstRad) < Math.PI / 2 || abs(secondRad - firstRad) > Math.PI / 2 * 3) {
                 rad = secondRad - firstRad;
             } else {
                 firstRad += Math.PI;
@@ -1536,7 +1536,7 @@ export function getOffsetSizeDist(
     } = e;
     const startFixedDirection = datas.fixedDirection;
     const directionsDists = [0, 1].map(index => {
-        return Math.abs(sizeDirection[index] - startFixedDirection[index]);
+        return abs(sizeDirection[index] - startFixedDirection[index]);
     });
     const directionRatios = [0, 1].map(index => {
         let dist = directionsDists[index];
@@ -1712,6 +1712,12 @@ export function watchValue<T>(
     store[property] = nextValue;
     return nextValue;
 }
+
+
+export function sign(value: number) {
+    return value >= 0 ? 1 : -1;
+}
+
 
 export function abs(value: number) {
     return Math.abs(value);

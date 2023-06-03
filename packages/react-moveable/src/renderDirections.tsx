@@ -1,4 +1,4 @@
-import { prefix, getControlTransform, getLineStyle, getProps } from "./utils";
+import { prefix, getControlTransform, getLineStyle, getProps, sign } from "./utils";
 import {
     Renderer, MoveableManagerInterface,
     RenderDirections,
@@ -31,7 +31,6 @@ export function renderDirectionControlsByInfos(
         zoom,
     } = getProps(moveable.props, ableName as any);
 
-    const sign = (direction > 0 ? 1 : -1);
     const degRotation = absDegree(rotationRad / Math.PI * 180);
     const directionMap: IObject<boolean> = {};
     const renderState = moveable.renderState;
@@ -44,6 +43,7 @@ export function renderDirectionControlsByInfos(
         directionMap[dir] = true;
     });
 
+    const directionSign = sign(direction);
     return renderDirections.map(({ data, classNames, dir }) => {
         const indexes = DIRECTION_INDEXES[dir];
 
@@ -51,7 +51,7 @@ export function renderDirectionControlsByInfos(
             return null;
         }
         renderDirectionMap[dir] = true;
-        const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
+        const directionRotation = (throttle(degRotation, 15) + directionSign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
         const dataAttrs: Record<string, string> = {};
 
@@ -199,7 +199,7 @@ export function renderAroundControls(
     const {
         zoom,
     } = moveable.props;
-    const sign = (direction > 0 ? 1 : -1);
+    const directionSign = sign(direction);
     const degRotation = rotationRad / Math.PI * 180;
 
     return (renderDirections || getKeys(renderDirectionMap)).map(dir => {
@@ -208,7 +208,7 @@ export function renderAroundControls(
         if (!indexes) {
             return null;
         }
-        const directionRotation = (throttle(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
+        const directionRotation = (throttle(degRotation, 15) + directionSign * DIRECTION_ROTATIONS[dir] + 720) % 180;
 
         const classNames: string[] = ["around-control"];
 

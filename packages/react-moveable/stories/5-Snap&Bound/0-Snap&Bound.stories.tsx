@@ -14,7 +14,7 @@ import {
 } from "../controls/default";
 import { makeArgType, makeLink } from "../utils";
 import { add } from "../utils/story";
-import { pan, wait } from "../utils/testing";
+import { pan, rotate, wait } from "../utils/testing";
 
 
 export default {
@@ -165,20 +165,22 @@ export const SnapElementsGroup = add("Snap Elements (group)", {
 export const SnapRotations = add("Snap Rotations", {
     app: require("./ReactSnapRotationsApp").default,
     path: require.resolve("./ReactSnapRotationsApp"),
-    // play: async ({ canvasElement }) => {
-    //     await wait();
-    //     const moveable = canvasElement.querySelector<HTMLElement>(".moveable-control-box")!;
-    //     const target = canvasElement.querySelector<HTMLElement>(".moveable-area")!;
+    play: async ({ canvasElement }) => {
+        await wait();
 
-    //     await pan({
-    //         target,
-    //         start: [0, 0],
-    //         end: [-118, -118],
-    //         duration: 20,
-    //         interval: 10,
-    //     });
-    //     expect(moveable.style.transform).toBe("translate3d(-1px, -1px, 0px)");
-    // },
+        const target = canvasElement.querySelector<HTMLElement>(".target")!;
+        const rotationControl = canvasElement.querySelector<HTMLElement>(`.moveable-control-box .moveable-rotation-control`)!;
+
+        await rotate({
+            target: rotationControl,
+            start: 0,
+            end: 85,
+            duration: 100,
+            interval: 10,
+            baseTarget: target,
+        });
+        expect(target.style.transform).toBe("translate(0px, 0px) rotate(90deg)");
+    },
 });
 
 

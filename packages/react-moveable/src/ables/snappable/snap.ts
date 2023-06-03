@@ -4,7 +4,7 @@ import {
     SnapOffsetInfo, MoveableManagerInterface, SnapDirectionPoses,
 } from "../../types";
 import {
-    selectValue, getTinyDist,
+    selectValue, getTinyDist, abs,
 } from "../../utils";
 import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
@@ -209,7 +209,7 @@ function checkSnap(
 
             return {
                 offset,
-                dist: Math.abs(offset),
+                dist: abs(offset),
                 guideline,
             };
         }).filter(({ guideline, dist }) => {
@@ -295,8 +295,8 @@ export function checkSnapBoundPriority(
     a: { isBound: boolean, isSnap: boolean, offset: number },
     b: { isBound: boolean, isSnap: boolean, offset: number },
 ) {
-    const aDist = Math.abs(a.offset);
-    const bDist = Math.abs(b.offset);
+    const aDist = abs(a.offset);
+    const bDist = abs(b.offset);
 
     if (a.isBound && b.isBound) {
         return bDist - aDist;
@@ -350,7 +350,7 @@ export function getCheckSnapDirections(
     // const fixedDirection = [-direction[0], -direction[1]];
 
     if (keepRatio) {
-        if (Math.abs(fixedDirection[0]) !== 1 || Math.abs(fixedDirection[1]) !== 1) {
+        if (abs(fixedDirection[0]) !== 1 || abs(fixedDirection[1]) !== 1) {
             directions.push(
                 [fixedDirection, [-1, -1]],
                 [fixedDirection, [-1, 1]],
@@ -382,7 +382,7 @@ export function getCheckSnapDirections(
                 });
             });
         } else if (direction[0]) {
-            const signs = Math.abs(fixedDirection[0]) === 1 ? [1] : [1, -1];
+            const signs = abs(fixedDirection[0]) === 1 ? [1] : [1, -1];
 
             signs.forEach(sign => {
                 directions.push(
@@ -401,7 +401,7 @@ export function getCheckSnapDirections(
                 );
             });
         } else if (direction[1]) {
-            const signs = Math.abs(fixedDirection[1]) === 1 ? [1] : [1, -1];
+            const signs = abs(fixedDirection[1]) === 1 ? [1] : [1, -1];
 
             signs.forEach(sign => {
                 directions.push(

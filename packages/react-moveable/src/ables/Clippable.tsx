@@ -11,6 +11,8 @@ import {
     getSizeDistByDist,
     getProps,
     fillCSSObject,
+    abs,
+    sign,
 } from "../utils";
 import { plus, minus, multiply } from "@scena/matrix";
 import { getDragDist, calculatePointerDist, setDragStart } from "../gesto/GestoUtils";
@@ -52,7 +54,6 @@ export function moveControlPos(
             // 0 1 2
             // 7   3
             // 6 5 4
-
             const fixedIndex = (index + 4) % 8;
             const fixedPosition = controlPoses[fixedIndex].pos;
             const sizeDirection = [0, 0];
@@ -594,8 +595,8 @@ background: var(--bounds-color);
         if (isControl && !isAll) {
             const { horizontal, vertical } = clipPoses[clipIndex];
             const dist = [
-                distX * Math.abs(horizontal),
-                distY * Math.abs(vertical),
+                distX * abs(horizontal),
+                distY * abs(vertical),
             ];
             dists = moveControlPos(clipPoses, clipIndex, dist, isRect, keepRatio);
         } else if (isAll) {
@@ -610,8 +611,8 @@ background: var(--bounds-color);
 
         if (isCircle || isEllipse) {
             const guideRect = getRect(nextPoses);
-            const ry = Math.abs(guideRect.bottom - guideRect.top);
-            const rx = Math.abs(isEllipse ? guideRect.right - guideRect.left : ry);
+            const ry = abs(guideRect.bottom - guideRect.top);
+            const rx = abs(isEllipse ? guideRect.right - guideRect.left : ry);
             const bottom = nextPoses[0][1] + ry;
             const left = nextPoses[0][0] - rx;
             const right = nextPoses[0][0] + rx;
@@ -677,10 +678,10 @@ background: var(--bounds-color);
 
 
             const distSnapX = verticalSnapInfo.isBound
-                ? Math.abs(snapOffsetX)
+                ? abs(snapOffsetX)
                 : (verticalSnapInfo.snapIndex === 0 ? -snapOffsetX : snapOffsetX);
             const distSnapY = horizontalSnapInfo.isBound
-                ? Math.abs(snapOffsetY)
+                ? abs(snapOffsetY)
                 : (horizontalSnapInfo.snapIndex === 0 ? -snapOffsetY : snapOffsetY);
             cx -= distSnapX;
             cy -= distSnapY;
@@ -705,11 +706,10 @@ background: var(--bounds-color);
             let left = guidePoses[7][0];
             let right = guidePoses[3][0];
 
-
-            if (snapOffsetY <= snapOffsetX) {
-                snapOffsetY = snapOffsetX / ratio;
+            if (abs(snapOffsetY) <= abs(snapOffsetX)) {
+                snapOffsetY = sign(snapOffsetY) * abs(snapOffsetX) / ratio;
             } else {
-                snapOffsetX = snapOffsetY * ratio;
+                snapOffsetX = sign(snapOffsetX) * abs(snapOffsetY) * ratio;
             }
             if (direction!.indexOf("w") > -1) {
                 left -= snapOffsetX;
@@ -727,7 +727,6 @@ background: var(--bounds-color);
                 top += snapOffsetY / 2;
                 bottom -= snapOffsetY / 2;
             }
-
             const nextControlPoses = getRectPoses(top, right, bottom, left);
 
             guidePoses.forEach((pos, i) => {

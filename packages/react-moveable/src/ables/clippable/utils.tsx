@@ -1,6 +1,6 @@
 import { splitBracket, splitComma, convertUnitSize, splitSpace, splitUnit } from "@daybrush/utils";
 import { minus } from "@scena/matrix";
-import { convertCSSSize } from "../../utils";
+import { abs, convertCSSSize } from "../../utils";
 import { getRadiusStyles, getRadiusValues } from "../roundable/borderRadius";
 import { MoveableManagerInterface, ClippableProps, ControlPose } from "../../types";
 import { getMinMaxs } from "overlap-area";
@@ -85,13 +85,13 @@ export function getClipStyles(
     } else if (isCircle || clipType === "ellipse") {
         const center = poses[0];
         const ry = convertCSSSize(
-            Math.abs(poses[1][1] - center[1]),
+            abs(poses[1][1] - center[1]),
             isCircle ? Math.sqrt((width * width + height * height) / 2) : height,
             clipRelative,
         );
 
         const clipStyles = isCircle ? [ry]
-            : [convertCSSSize(Math.abs(poses[2][0] - center[0]), width, clipRelative), ry];
+            : [convertCSSSize(abs(poses[2][0] - center[0]), width, clipRelative), ry];
 
         clipStyles.push(
             "at", convertCSSSize(center[0], width, clipRelative),
@@ -109,8 +109,8 @@ export function getRectPoses(top: number, right: number, bottom: number, left: n
         const x = xs[dirx + 1];
         const y = ys[diry + 1];
         return {
-            vertical: Math.abs(diry),
-            horizontal: Math.abs(dirx),
+            vertical: abs(diry),
+            horizontal: abs(dirx),
             direction: dir,
             pos: [x, y],
         };
@@ -131,8 +131,8 @@ export function getControlSize(
     });
 
     return [
-        Math.abs(xRange[1] - xRange[0]),
-        Math.abs(yRange[1] - yRange[0]),
+        abs(xRange[1] - xRange[0]),
+        abs(yRange[1] - yRange[0]),
     ];
 }
 
@@ -230,7 +230,7 @@ export function getClipPath(
                 direction: "nesw",
             },
             ...CLIP_DIRECTIONS.slice(0, isCircle ? 1 : 2).map(dir => ({
-                vertical: Math.abs(dir[1]),
+                vertical: abs(dir[1]),
                 horizontal: dir[0],
                 direction: dir[2],
                 sub: true,

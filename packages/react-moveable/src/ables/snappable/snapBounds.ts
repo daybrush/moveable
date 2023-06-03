@@ -1,6 +1,6 @@
 import { getDist, getRad, IObject, TINY_NUM } from "@daybrush/utils";
 import { minus } from "@scena/matrix";
-import { getAbsolutePoses, getDistSize, getRect, maxOffset } from "../../utils";
+import { abs, getAbsolutePoses, getDistSize, getRect, maxOffset } from "../../utils";
 import { getDragDist, getPosByDirection } from "../../gesto/GestoUtils";
 import {
     BoundInfo, SnapInfo, MoveableManagerInterface, SnappableProps,
@@ -28,10 +28,10 @@ export function solveEquation(
     let dx = pos2[0] - pos1[0];
     let dy = pos2[1] - pos1[1];
 
-    if (Math.abs(dx) < TINY_NUM) {
+    if (abs(dx) < TINY_NUM) {
         dx = 0;
     }
-    if (Math.abs(dy) < TINY_NUM) {
+    if (abs(dy) < TINY_NUM) {
         dy = 0;
     }
     if (!dx) {
@@ -145,33 +145,33 @@ export function checkThrottleDragRotate(
             });
             const adjustPos = adjustPoses[0];
 
-            if (adjustPos[0] && Math.abs(distX) > TINY_NUM) {
+            if (adjustPos[0] && abs(distX) > TINY_NUM) {
                 offsetX = -adjustPos[0];
                 offsetY =
-                    (distY * Math.abs(distX + offsetX)) / Math.abs(distX) -
+                    (distY * abs(distX + offsetX)) / abs(distX) -
                     distY;
-            } else if (adjustPos[1] && Math.abs(distY) > TINY_NUM) {
+            } else if (adjustPos[1] && abs(distY) > TINY_NUM) {
                 const prevDistY = distY;
                 offsetY = -adjustPos[1];
                 offsetX =
-                    (distX * Math.abs(distY + offsetY)) / Math.abs(prevDistY) -
+                    (distX * abs(distY + offsetY)) / abs(prevDistY) -
                     distX;
             }
             if (throttleDragRotate && isHorizontalBound && isVerticalBound) {
                 if (
-                    Math.abs(offsetX) > TINY_NUM &&
-                    Math.abs(offsetX) < Math.abs(verticalOffset)
+                    abs(offsetX) > TINY_NUM &&
+                    abs(offsetX) < abs(verticalOffset)
                 ) {
-                    const scale = Math.abs(verticalOffset) / Math.abs(offsetX);
+                    const scale = abs(verticalOffset) / abs(offsetX);
 
                     offsetX *= scale;
                     offsetY *= scale;
                 } else if (
-                    Math.abs(offsetY) > TINY_NUM &&
-                    Math.abs(offsetY) < Math.abs(horizontalOffset)
+                    abs(offsetY) > TINY_NUM &&
+                    abs(offsetY) < abs(horizontalOffset)
                 ) {
                     const scale =
-                        Math.abs(horizontalOffset) / Math.abs(offsetY);
+                        abs(horizontalOffset) / abs(offsetY);
 
                     offsetX *= scale;
                     offsetY *= scale;
@@ -305,8 +305,8 @@ export function checkMoveableSnapBounds(
         verticalSnapInfo
     );
 
-    const horizontalDist = Math.abs(horizontalOffset);
-    const verticalDist = Math.abs(verticalOffset);
+    const horizontalDist = abs(horizontalOffset);
+    const verticalDist = abs(verticalOffset);
 
     return {
         horizontal: {
@@ -359,8 +359,8 @@ export function checkSnapBounds(
         verticalSnapInfo
     );
 
-    const horizontalDist = Math.abs(horizontalOffset);
-    const verticalDist = Math.abs(verticalOffset);
+    const horizontalDist = abs(horizontalOffset);
+    const verticalDist = abs(verticalOffset);
 
     return {
         horizontal: {
@@ -500,8 +500,8 @@ export function getSnapBoundInfo(
 
         if (
             !keepRatio
-            && Math.abs(endDirection[0]) === 1
-            && Math.abs(endDirection[1]) === 1
+            && abs(endDirection[0]) === 1
+            && abs(endDirection[1]) === 1
             && startDirection[0] !== endDirection[0]
             && startDirection[1] !== endDirection[1]
         ) {
@@ -568,8 +568,8 @@ export function checkSnapBoundsKeepRatio(
         verticalSnapInfo
     );
 
-    const horizontalDist = Math.abs(horizontalOffset);
-    const verticalDist = Math.abs(verticalOffset);
+    const horizontalDist = abs(horizontalOffset);
+    const verticalDist = abs(verticalOffset);
 
     return {
         horizontal: {
@@ -621,7 +621,7 @@ export function checkMaxBounds(
             if (isCheckHorizontal) {
                 const nextOtherPos = otherPos.slice();
 
-                if (Math.abs(deg - 360) < 2 || Math.abs(deg - 180) < 2) {
+                if (abs(deg - 360) < 2 || abs(deg - 180) < 2) {
                     nextOtherPos[1] = fixedPosition[1];
                 }
                 const {
@@ -636,13 +636,13 @@ export function checkMaxBounds(
                     datas
                 );
                 if (!isNaN(heightOffset)) {
-                    maxHeight = height + (isHeightOutside ? 1 : -1) * Math.abs(heightOffset);
+                    maxHeight = height + (isHeightOutside ? 1 : -1) * abs(heightOffset);
                 }
             }
             if (isCheckVertical) {
                 const nextOtherPos = otherPos.slice();
 
-                if (Math.abs(deg - 90) < 2 || Math.abs(deg - 270) < 2) {
+                if (abs(deg - 90) < 2 || abs(deg - 270) < 2) {
                     nextOtherPos[0] = fixedPosition[0];
                 }
                 const {
@@ -656,7 +656,7 @@ export function checkMaxBounds(
                     datas
                 );
                 if (!isNaN(widthOffset)) {
-                    maxWidth = width + (isWidthOutside ? 1 : -1) * Math.abs(widthOffset);
+                    maxWidth = width + (isWidthOutside ? 1 : -1) * abs(widthOffset);
                 }
             }
         });

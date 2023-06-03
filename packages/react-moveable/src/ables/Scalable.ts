@@ -1,7 +1,7 @@
 import {
     triggerEvent, multiply2,
     fillParams, fillEndParams, getAbsolutePosesByState,
-    catchEvent, getOffsetSizeDist, getDirectionCondition, getDirectionViewClassName, getTotalDirection,
+    catchEvent, getOffsetSizeDist, getDirectionCondition, getDirectionViewClassName, getTotalDirection, sign,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -229,10 +229,10 @@ export default {
             scaleY = (sizeDirection[1] || keepRatio ? scaleY : 1) * tempStartY;
 
             if (scaleX === 0) {
-                scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+                scaleX = sign(prevDist[0]) * MIN_SCALE;
             }
             if (scaleY === 0) {
-                scaleY = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+                scaleY = sign(prevDist[1]) * MIN_SCALE;
             }
             return [scaleX, scaleY];
         }
@@ -342,10 +342,10 @@ export default {
         }
 
         if (dist[0] === 0) {
-            dist[0] = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
+            dist[0] = sign(prevDist[0]) * MIN_SCALE;
         }
         if (dist[1] === 0) {
-            dist[1] = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
+            dist[1] = sign(prevDist[1]) * MIN_SCALE;
         }
         const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
         scale = multiply2(dist, [tempStartX, tempStartY]);

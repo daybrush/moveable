@@ -4,7 +4,7 @@ import {
     RotatableProps, MoveableManagerInterface, SnappableState,
 } from "../../types";
 import { rotate, minus } from "@scena/matrix";
-import { getDistSize } from "../../utils";
+import { abs, getDistSize } from "../../utils";
 import { TINY_NUM } from "../../consts";
 
 export function checkBoundPoses(
@@ -89,10 +89,10 @@ export function checkBoundKeepRatio(
     const [endX, endY] = endPos;
     let [dx, dy] = minus(endPos, startPos);
 
-    if (Math.abs(dx) < TINY_NUM) {
+    if (abs(dx) < TINY_NUM) {
         dx = 0;
     }
-    if (Math.abs(dy) < TINY_NUM) {
+    if (abs(dy) < TINY_NUM) {
         dy = 0;
     }
     const isBottom = dy > 0;
@@ -223,7 +223,7 @@ function checkBounds(
         });
     }
 
-    return boundInfos.sort((a, b) => Math.abs(b.offset) - Math.abs(a.offset));
+    return boundInfos.sort((a, b) => abs(b.offset) - abs(a.offset));
 }
 export function isBoundRotate(
     relativePoses: number[][],
@@ -233,10 +233,10 @@ export function isBoundRotate(
     const nextPoses = rad ? relativePoses.map(pos => rotate(pos, rad)) : relativePoses;
 
     return nextPoses.some(pos => {
-        return (pos[0] < boundRect.left && Math.abs(pos[0] - boundRect.left) > 0.1)
-            || (pos[0] > boundRect.right && Math.abs(pos[0] - boundRect.right) > 0.1)
-            || (pos[1] < boundRect.top && Math.abs(pos[1] - boundRect.top) > 0.1)
-            || (pos[1] > boundRect.bottom && Math.abs(pos[1] - boundRect.bottom) > 0.1);
+        return (pos[0] < boundRect.left && abs(pos[0] - boundRect.left) > 0.1)
+            || (pos[0] > boundRect.right && abs(pos[0] - boundRect.right) > 0.1)
+            || (pos[1] < boundRect.top && abs(pos[1] - boundRect.top) > 0.1)
+            || (pos[1] > boundRect.bottom && abs(pos[1] - boundRect.bottom) > 0.1);
     });
 }
 export function boundRotate(
@@ -248,7 +248,7 @@ export function boundRotate(
     const nextPos = Math.sqrt(r * r - boundPos * boundPos) || 0;
 
     return [nextPos, -nextPos].sort((a, b) => {
-        return Math.abs(a - vec[index ? 0 : 1]) - Math.abs(b - vec[index ? 0 : 1]);
+        return abs(a - vec[index ? 0 : 1]) - abs(b - vec[index ? 0 : 1]);
     }).map(pos => {
         return getRad([0, 0], index ? [pos, boundPos] : [boundPos, pos]);
     });

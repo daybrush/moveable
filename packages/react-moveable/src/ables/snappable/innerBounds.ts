@@ -1,6 +1,6 @@
 import { average, getRad, throttle } from "@daybrush/utils";
 import { rotate } from "@scena/matrix";
-import { maxOffset, getDistSize, getTinyDist, calculatePoses } from "../../utils";
+import { maxOffset, getDistSize, getTinyDist, calculatePoses, abs } from "../../utils";
 
 import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterface } from "../../types";
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../gesto/GestoUtils";
@@ -26,10 +26,10 @@ function hitTestLine(
     let dx = pos2[0] - pos1[0];
     let dy = pos2[1] - pos1[1];
 
-    if (Math.abs(dx) < TINY_NUM) {
+    if (abs(dx) < TINY_NUM) {
         dx = 0;
     }
-    if (Math.abs(dy) < TINY_NUM) {
+    if (abs(dy) < TINY_NUM) {
         dy = 0;
     }
     let test1: number;
@@ -53,7 +53,7 @@ function isSameStartLine(dots: number[][], line: number[][], centerSign: boolean
     return dots.every(dot => {
         const value = hitTestLine(dot, line);
         const sign = value <= 0;
-        return sign === centerSign || Math.abs(value) <= error;
+        return sign === centerSign || abs(value) <= error;
     });
 }
 function checkInnerBoundDot(
@@ -135,7 +135,7 @@ function checkInnerBound(
     let isBound = false;
     let isAllBound = false;
 
-    if (Math.abs(horizontalOffset) < Math.abs(verticalOffset)) {
+    if (abs(horizontalOffset) < abs(verticalOffset)) {
         offset = [verticalOffset, 0];
         isBound = isVerticalBound;
         isAllBound = isAllVerticalBound;
@@ -197,7 +197,7 @@ function checkLineBoundCollision(
             // ax + c = 0
             const offset = boundDot1[0] - dot1[0];
 
-            const isBound = Math.abs(offset) <= (threshold || 0);
+            const isBound = abs(offset) <= (threshold || 0);
 
             return {
                 isBound,
@@ -224,7 +224,7 @@ function checkLineBoundCollision(
         } else {
             const offset = boundDot1[1] - dot1[1];
 
-            const isBound = Math.abs(offset) <= (threshold || 0);
+            const isBound = abs(offset) <= (threshold || 0);
 
             return {
                 isBound,
@@ -277,7 +277,7 @@ export function getInnerBoundDragInfo(
     const lines = getCheckInnerBoundLineInfos(moveable, poses, [0, 0], false).map(info => {
         return {
             ...info,
-            multiple: info.multiple.map(dir => Math.abs(dir) * 2),
+            multiple: info.multiple.map(dir => abs(dir) * 2),
         };
     });
     const innerBoundInfo = getInnerBoundInfo(moveable, lines, datas);
@@ -426,17 +426,17 @@ function getDistPointLine([pos1, pos2]: number[][]) {
     const dy = pos2[1] - pos1[1];
 
     if (!dx) {
-        return Math.abs(pos1[0]);
+        return abs(pos1[0]);
     }
     if (!dy) {
-        return Math.abs(pos1[1]);
+        return abs(pos1[1]);
     }
     // y - y1 = a(x - x1)
     // 0 = ax -y + -a * x1 + y1
 
     const a = dy / dx;
 
-    return Math.abs((-a * pos1[0] + pos1[1]) / Math.sqrt(Math.pow(a, 2) + 1));
+    return abs((-a * pos1[0] + pos1[1]) / Math.sqrt(Math.pow(a, 2) + 1));
 }
 function solveReverseLine([pos1, pos2]: number[][]) {
     const dx = pos2[0] - pos1[0];

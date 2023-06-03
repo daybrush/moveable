@@ -7,7 +7,7 @@ import {
     SnapElementRect,
     NumericPosGuideline,
 } from "../../types";
-import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, prefix } from "../../utils";
+import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, prefix, abs } from "../../utils";
 import {
     splitSnapDirectionPoses, getSnapDirections,
     HORIZONTAL_NAMES_MAP, VERTICAL_NAMES_MAP, calculateContainerPos,
@@ -190,7 +190,7 @@ export function getGapGuidelines(
                 gap = ((rect2Start - rect1End) - (targetEnd - targetStart)) / 2;
                 pos = rect1End + gap + (targetEnd - targetStart) / 2;
 
-                if (Math.abs(pos - targetCenter) > snapThreshold) {
+                if (abs(pos - targetCenter) > snapThreshold) {
                     return;
                 }
             } else if (rect1End < rect2Start && rect2End < targetStart + snapThreshold) {
@@ -200,7 +200,7 @@ export function getGapGuidelines(
                 gap = rect2Start - rect1End;
                 pos = rect2End + gap;
 
-                if (Math.abs(pos - targetStart) > snapThreshold) {
+                if (abs(pos - targetStart) > snapThreshold) {
                     return;
                 }
             } else if (rect1End < rect2Start && targetEnd - snapThreshold < rect1Start) {
@@ -210,7 +210,7 @@ export function getGapGuidelines(
                 gap = rect2Start - rect1End;
                 pos = rect1Start - gap;
 
-                if (Math.abs(pos - targetEnd) > snapThreshold) {
+                if (abs(pos - targetEnd) > snapThreshold) {
                     return;
                 }
             } else {
@@ -295,12 +295,12 @@ export function checkBetweenRects(
     distance: number,
 ) {
     if (type === "horizontal") {
-        return Math.abs(rect1.right! - rect2.left!) <= distance
-            || Math.abs(rect1.left! - rect2.right!) <= distance
+        return abs(rect1.right! - rect2.left!) <= distance
+            || abs(rect1.left! - rect2.right!) <= distance
             || rect1.left! <= rect2.right! && rect2.left! <= rect1.right!;
     } else if (type === "vertical") {
-        return Math.abs(rect1.bottom! - rect2.top!) <= distance
-            || Math.abs(rect1.top! - rect2.bottom!) <= distance
+        return abs(rect1.bottom! - rect2.top!) <= distance
+            || abs(rect1.top! - rect2.bottom!) <= distance
             || rect1.top! <= rect2.bottom! && rect2.top! <= rect1.bottom!;
     }
     return true;

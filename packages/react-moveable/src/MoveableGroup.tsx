@@ -8,6 +8,7 @@ import {
     getAbsolutePosesByState, equals, unsetGesto, rotatePosesInfo,
     convertTransformOriginArray,
     isDeepArrayEquals,
+    sign,
 } from "./utils";
 import { minus, plus } from "@scena/matrix";
 import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
@@ -335,7 +336,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const { minX: deltaX, minY: deltaY } = getMinMaxs(posesInfo.result);
         const rotateScale = ` rotate(${rotation}deg)`
-            + ` scale(${scale[0] >= 0 ? 1 : -1}, ${scale[1] >= 0 ? 1 : -1})`;
+            + ` scale(${sign(scale[0])}, ${sign(scale[1])})`;
         const transform = `translate(${-deltaX}px, ${-deltaY}px)${rotateScale}`;
 
         this.controlBox.style.transform
@@ -367,7 +368,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
 
         const minPos = getMinMaxs([pos1, pos2, pos3, pos4]);
         const delta = [minPos.minX, minPos.minY];
-        const direction = scale[0] * scale[1] > 0 ? 1 : -1;
+        const direction = sign(scale[0] * scale[1]);
 
         info.pos1 = minus(pos1, delta);
         info.pos2 = minus(pos2, delta);

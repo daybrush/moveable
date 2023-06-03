@@ -11,6 +11,7 @@ import {
     fillAfterTransform,
     getDirectionViewClassName,
     getTotalDirection,
+    abs,
 } from "../utils";
 import {
     setDragStart,
@@ -401,7 +402,7 @@ export default {
         }
         if (keepRatio) {
             if (sizeDirection[0] && sizeDirection[1] && snapDist[0] && snapDist[1]) {
-                if (Math.abs(snapDist[0]) > Math.abs(snapDist[1])) {
+                if (abs(snapDist[0]) > abs(snapDist[1])) {
                     snapDist[1] = 0;
                 } else {
                     snapDist[0] = 0;
@@ -526,8 +527,8 @@ export default {
         } = moveable.state;
         const errorWidth = width - (startOffsetWidth + prevWidth);
         const errorHeight = height - (startOffsetHeight + prevHeight);
-        const isErrorWidth = Math.abs(errorWidth) > 3;
-        const isErrorHeight = Math.abs(errorHeight) > 3;
+        const isErrorWidth = abs(errorWidth) > 3;
+        const isErrorHeight = abs(errorHeight) > 3;
 
         if (isErrorWidth) {
             datas.startWidth += errorWidth;
