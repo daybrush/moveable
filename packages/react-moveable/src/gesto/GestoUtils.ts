@@ -344,6 +344,7 @@ export function getNextTransformMatrix(
     state: MoveableManagerState<any>,
     datas: any,
     transform: string | number[],
+    isAllTransform?: boolean,
 ) {
     const {
         transformOrigin,
@@ -359,10 +360,14 @@ export function getNextTransformMatrix(
             afterTransform,
         } = datas;
 
-        targetTransform = convertDimension(
-            multiply(multiply(beforeTransform, parseMat([transform]), 4), afterTransform, 4),
-            4, n,
-        );
+        if (isAllTransform) {
+            targetTransform = convertDimension(parseMat(transform), 4, n);
+        } else {
+            targetTransform = convertDimension(
+                multiply(multiply(beforeTransform, parseMat([transform]), 4), afterTransform, 4),
+                4, n,
+            );
+        }
     } else {
         targetTransform = transform;
     }
@@ -489,8 +494,9 @@ export function getTranslateFixedPosition(
     fixedDirection: number[],
     fixedOffset: number[],
     datas: any,
+    isAllTransform?: boolean,
 ) {
-    const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform);
+    const nextMatrix = getNextTransformMatrix(moveable.state, datas, transform, isAllTransform);
     const nextFixedPosition = getDirectionOffset(
         moveable,
         fixedDirection,
@@ -508,6 +514,7 @@ export function getTranslateDist(
     fixedPosition: number[],
     fixedOffset: number[],
     datas: any,
+    isAllTransform?: boolean,
 ) {
     const nextFixedPosition = getTranslateFixedPosition(
         moveable,
@@ -515,6 +522,7 @@ export function getTranslateDist(
         fixedDirection,
         fixedOffset,
         datas,
+        isAllTransform,
     );
     const state = moveable.state;
     const {
@@ -531,19 +539,21 @@ export function getTranslateDist(
 }
 export function getScaleDist(
     moveable: MoveableManagerInterface<any>,
-    scaleDist: number[],
+    transform: string,
     fixedDirection: number[],
     fixedPosition: number[],
     fixedOffset: number[],
     datas: any,
+    isAllTransform?: boolean,
 ) {
     const dist = getTranslateDist(
         moveable,
-        `scale(${scaleDist.join(", ")})`,
+        transform,
         fixedDirection,
         fixedPosition,
         fixedOffset,
         datas,
+        isAllTransform,
     );
 
     return dist;

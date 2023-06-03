@@ -206,6 +206,9 @@ export default {
         const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
         const state = moveable.state;
 
+        let tempStartX = startValue[0];
+        let tempStartY = startValue[1];
+
         function getNextScale() {
             const {
                 distWidth,
@@ -216,8 +219,14 @@ export default {
             let scaleX = startOffsetWidth ? (startOffsetWidth + distWidth) / startOffsetWidth : 1;
             let scaleY = startOffsetHeight ? (startOffsetHeight + distHeight) / startOffsetHeight : 1;
 
-            scaleX = sizeDirection[0] || keepRatio ? scaleX * startValue[0] : startValue[0];
-            scaleY = sizeDirection[1] || keepRatio ? scaleY * startValue[1] : startValue[1];
+            if (!startValue[0]) {
+                tempStartX = distWidth / startOffsetWidth;
+            }
+            if (!startValue[1]) {
+                tempStartY = distHeight / startOffsetHeight;
+            }
+            scaleX = (sizeDirection[0] || keepRatio ? scaleX : 1) * tempStartX;
+            scaleY = (sizeDirection[1] || keepRatio ? scaleY : 1) * tempStartY;
 
             if (scaleX === 0) {
                 scaleX = (prevDist[0] > 0 ? 1 : -1) * MIN_SCALE;
@@ -254,7 +263,10 @@ export default {
             },
         }, true));
 
-        const dist = [scale[0] / startValue[0], scale[1] / startValue[1]];
+        const dist = [
+            scale[0] / tempStartX,
+            scale[1] / tempStartY,
+        ];
         let fixedPosition = dragClient;
         let snapDist = [0, 0];
 
@@ -294,9 +306,9 @@ export default {
 
             if (isNoSnap) {
                 if (isWidth) {
-                    dist[0] = throttle(dist[0] * startValue[0], throttleScale!) / startValue[0];
+                    dist[0] = throttle(dist[0] * tempStartX, throttleScale!) / tempStartX;
                 } else {
-                    dist[1] = throttle(dist[1] * startValue[1], throttleScale!) / startValue[1];
+                    dist[1] = throttle(dist[1] * tempStartY, throttleScale!) / tempStartY;
                 }
             }
             if (
@@ -305,27 +317,27 @@ export default {
                 || (isNoSnap && isWidth)
             ) {
                 dist[0] += snapDist[0];
-                const snapHeight = startOffsetWidth * dist[0] * startValue[0] / ratio;
+                const snapHeight = startOffsetWidth * dist[0] * tempStartX / ratio;
 
-                dist[1] = snapHeight / startOffsetHeight / startValue[1];
+                dist[1] = snapHeight / startOffsetHeight / tempStartY;
             } else if (
                 (!sizeDirection[0] && sizeDirection[1])
                 || (!snapDist[0] && snapDist[1])
                 || (isNoSnap && !isWidth)
             ) {
                 dist[1] += snapDist[1];
-                const snapWidth = startOffsetHeight * dist[1] * startValue[1] * ratio;
+                const snapWidth = startOffsetHeight * dist[1] * tempStartY * ratio;
 
-                dist[0] = snapWidth / startOffsetWidth / startValue[0];
+                dist[0] = snapWidth / startOffsetWidth / tempStartX;
             }
         } else {
             dist[0] += snapDist[0];
             dist[1] += snapDist[1];
             if (!snapDist[0]) {
-                dist[0] = throttle(dist[0] * startValue[0], throttleScale!) / startValue[0];
+                dist[0] = throttle(dist[0] * tempStartX, throttleScale!) / tempStartX;
             }
             if (!snapDist[1]) {
-                dist[1] = throttle(dist[1] * startValue[1], throttleScale!) / startValue[1];
+                dist[1] = throttle(dist[1] * tempStartY, throttleScale!) / tempStartY;
             }
         }
 
@@ -336,15 +348,24 @@ export default {
             dist[1] = (prevDist[1] > 0 ? 1 : -1) * MIN_SCALE;
         }
         const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
-        scale = multiply2(dist, startValue);
+        scale = multiply2(dist, [tempStartX, tempStartY]);
+
+
+
+        const distText = `scale(${dist.join(", ")})`;
+        const scaleText = `scale(${scale.join(", ")})`;
+        const nextTransform = convertTransformFormat(
+            datas, scaleText, distText);
+        const isZeroScale = !startValue[0] || !startValue[1];
 
         const inverseDist = getScaleDist(
             moveable,
-            dist,
+            isZeroScale ? scaleText : distText,
             datas.fixedDirection,
             fixedPosition,
             datas.fixedOffset,
             datas,
+            isZeroScale,
         );
         const inverseDelta = isSelfPinch ? inverseDist : minus(inverseDist, datas.prevInverseDist || [0, 0]);
 
@@ -360,8 +381,6 @@ export default {
         }
 
 
-        const nextTransform = convertTransformFormat(
-            datas, `scale(${scale.join(", ")})`, `scale(${dist.join(", ")})`);
         const params = fillParams<OnScale>(moveable, e, {
             offsetWidth: startOffsetWidth,
             offsetHeight: startOffsetHeight,

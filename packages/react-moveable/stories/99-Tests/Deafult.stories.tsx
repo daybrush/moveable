@@ -217,3 +217,11 @@ export const TestChangeTargetsOnClick = add("Test Change Target on Click Group",
     path: require.resolve("./ReactChangeTargetsOnClickApp"),
 });
 
+
+
+export const TestScalableKeepRatio = add("Even if the size is 0, the ratio is maintained.", {
+    app: require("./ReactScalableKeepRatioApp").default,
+    path: require.resolve("./ReactScalableKeepRatioApp"),
+});
+
+

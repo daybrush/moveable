@@ -5,6 +5,7 @@ import {
 } from "./types";
 import { DIRECTION_INDEXES, DIRECTION_ROTATIONS, DIRECTIONS, DIRECTIONS4 } from "./consts";
 import { IObject, throttle, getRad, getKeys } from "@daybrush/utils";
+import { absDegree } from "./ables/Snappable";
 
 export interface DirectionControlInfo {
     data: Record<string, any>;
@@ -25,15 +26,14 @@ export function renderDirectionControlsByInfos(
         rotation: rotationRad,
         direction,
     } = moveable.getState();
+
     const {
         zoom,
     } = getProps(moveable.props, ableName as any);
 
-
     const sign = (direction > 0 ? 1 : -1);
-    const degRotation = rotationRad / Math.PI * 180;
+    const degRotation = absDegree(rotationRad / Math.PI * 180);
     const directionMap: IObject<boolean> = {};
-
     const renderState = moveable.renderState;
     if (!renderState.renderDirectionMap) {
         renderState.renderDirectionMap = {};

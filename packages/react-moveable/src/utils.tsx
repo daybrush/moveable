@@ -3,7 +3,7 @@ import { prefixNames } from "framework-utils";
 import {
     isUndefined, isObject, splitUnit,
     IObject, hasClass, isArray, isString, getRad,
-    getShapeDirection, isFunction, convertUnitSize, between, getKeys, decamelize, isNumber,
+    isFunction, convertUnitSize, between, getKeys, decamelize, isNumber,
     getDocumentBody,
     getDocumentElement,
     getWindow,
@@ -537,6 +537,7 @@ export function calculateMoveableClientPositions(
     });
 
 }
+
 export function calculateMoveablePosition(
     matrix: number[],
     origin: number[],
@@ -572,7 +573,11 @@ export function calculateMoveablePosition(
     originX = (originX - left) || 0;
     originY = (originY - top) || 0;
 
-    const direction = getShapeDirection(calculatePoses(matrix, 100, 100, n));
+
+    const sx = matrix[0];
+    const sy = matrix[n + 1];
+    const direction = sx * sy >= 0 ? 1 : -1;
+
     return {
         left,
         top,
