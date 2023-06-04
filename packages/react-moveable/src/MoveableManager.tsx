@@ -29,7 +29,7 @@ import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } fr
 import { plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
-    getKeys, IObject, isNode, removeClass, requestAnimationFrame,
+    getKeys, getWindow, IObject, isNode, removeClass, requestAnimationFrame,
 } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
@@ -1115,8 +1115,9 @@ export default class MoveableManager<T = {}>
     private _updateResizeObserver(prevProps: MoveableDefaultOptions) {
         const props = this.props;
         const target = props.target;
+        const win = getWindow(this.getControlBoxElement());
 
-        if (!window.ResizeObserver || !target || !props.useResizeObserver) {
+        if (!win.ResizeObserver || !target || !props.useResizeObserver) {
             this._reiszeObserver?.disconnect();
             return;
         }
@@ -1125,7 +1126,7 @@ export default class MoveableManager<T = {}>
             return;
         }
 
-        const observer = new ResizeObserver(this.checkUpdateRect);
+        const observer = new win.ResizeObserver(this.checkUpdateRect);
 
         observer.observe(target!, {
             box: "border-box",
@@ -1135,8 +1136,9 @@ export default class MoveableManager<T = {}>
     private _updateMutationObserver(prevProps: MoveableDefaultOptions) {
         const props = this.props;
         const target = props.target;
+        const win = getWindow(this.getControlBoxElement());
 
-        if (!window.MutationObserver || !target || !props.useMutationObserver) {
+        if (!win.MutationObserver || !target || !props.useMutationObserver) {
             this._mutationObserver?.disconnect();
             return;
         }
@@ -1145,7 +1147,7 @@ export default class MoveableManager<T = {}>
             return;
         }
 
-        const observer = new MutationObserver(records => {
+        const observer = new win.MutationObserver(records => {
             for (const mutation of records) {
                 if (mutation.type === "attributes" && mutation.attributeName === "style") {
                     this.checkUpdateRect();
