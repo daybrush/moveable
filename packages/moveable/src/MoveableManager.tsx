@@ -6,7 +6,7 @@ import {
     MoveableInterface,
     MoveableOptions, MoveableProperties,
 } from "react-moveable/types";
-import { camelize, isArray } from "@daybrush/utils";
+import { camelize, getDocument, isArray } from "@daybrush/utils";
 import { MoveableEventsParameters } from "./types";
 import { PROPERTIES, EVENTS, METHODS } from "./consts";
 import EventEmitter from "@scena/event-emitter";
@@ -67,7 +67,7 @@ class MoveableManager extends EventEmitter<MoveableEventsParameters> {
             this._warp = true;
             selfElement = parentElement;
         } else {
-            selfElement = document.createElement("div");
+            selfElement = getDocument(parentElement).createElement("div");
             parentElement.appendChild(selfElement);
         }
         this.containerProvider = renderSelf(
@@ -78,6 +78,8 @@ class MoveableManager extends EventEmitter<MoveableEventsParameters> {
             /> as any,
             selfElement,
         );
+
+        this.selfElement = selfElement;
         const target = nextOptions.target!;
         if (isArray(target) && target.length > 1) {
             this.updateRect();

@@ -84,7 +84,7 @@
         "typescript": "^4.5.0 <4.6.0"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.11.0"
+        "@daybrush/utils": "^1.13.0"
     },
     "browserslist": {
         "production": [

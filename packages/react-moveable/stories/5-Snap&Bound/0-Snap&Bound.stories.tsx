@@ -174,7 +174,7 @@ export const SnapRotations = add("Snap Rotations", {
         await rotate({
             target: rotationControl,
             start: 0,
-            end: 85,
+            end: 87,
             duration: 100,
             interval: 10,
             baseTarget: target,

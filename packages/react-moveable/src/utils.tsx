@@ -7,6 +7,8 @@ import {
     getDocumentBody,
     getDocumentElement,
     getWindow,
+    isNode,
+    isWindow,
 } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -1341,7 +1343,7 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
     if (!arr || !isObject(arr)) {
         return false;
     }
-    if (arr instanceof Element) {
+    if (isNode(arr)) {
         return false;
     }
     return isArray(arr) || "length" in arr;
@@ -1358,7 +1360,7 @@ export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
     if (!target) {
         return null;
     }
-    if (target instanceof Node) {
+    if (isNode(target)) {
         return target;
     }
     if (isString(target)) {
@@ -1724,8 +1726,4 @@ export function sign(value: number) {
 
 export function abs(value: number) {
     return Math.abs(value);
-}
-
-export function isWindow(val: any): val is Window {
-    return val && "postMessage" in val && "blur" in val && "self" in val;
 }

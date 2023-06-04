@@ -64,8 +64,9 @@
     "declaration/*"
   ],
   "dependencies": {
+    "@daybrush/utils": "^1.13.0",
     "@scena/event-emitter": "^1.0.5",
-    "croact": "^1.0.3",
+    "croact": "^1.0.4",
     "croact-moveable": "~0.3.8",
     "react-moveable": "~0.50.7"
   },

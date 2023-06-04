@@ -29,7 +29,7 @@ import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } fr
 import { plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
-    getKeys, IObject, removeClass, requestAnimationFrame,
+    getKeys, IObject, isNode, removeClass, requestAnimationFrame,
 } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
@@ -353,7 +353,7 @@ export default class MoveableManager<T = {}>
         }
         let rect: Required<HitRect>;
 
-        if (el instanceof Element) {
+        if (isNode(el)) {
             const clientRect = el.getBoundingClientRect();
 
             rect = {

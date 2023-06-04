@@ -1,6 +1,7 @@
 <body>
     <iframe id="iframe" width="1000" height="1000"></iframe>
 </body>
+<script src="https://daybrush.com/selecto/release/latest/dist/selecto.js"></script>
 <script src="../../dist/moveable.js"></script>
 
 <script>
@@ -8,78 +9,204 @@
     const iframeDocument = iframeWindow.document;
     const iframeBody = iframeDocument.body;
     iframeBody.innerHTML = `
-    <div id="artwork" class="target target1"></div>
-    <div class="target2"></div>
-    <button>aa</button>
-<style>
-    .target1,
-    .target2 {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        background: #f55;
-        border: 1px solid #333;
+    <style>
+html, body, #root {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    color: #333;
+    background: #fdfdfd;
+}
+
+.app {
+    position: relative;
+    min-height: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 800px;
+    ;
+}
+
+body {
+    background: #fff;
+}
+
+.logo {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0px auto;
+    font-size: 0;
+    text-align: left;
+}
+
+.logo.logos {
+    width: 320px;
+    text-align: center;
+}
+
+.logos .selecto {
+    padding: 16px;
+}
+
+.logo img {
+    position: relative;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.cube {
+    display: inline-block;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    margin: 4px;
+    background: #eee;
+    --color: #4af;
+}
+
+h1, .description {
+    text-align: center;
+}
+
+.button {
+    border: 1px solid #333;
+    color: #333;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    width: 120px;
+    height: 42px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: all ease 0.2s;
+    margin: 0px 5px;
+}
+
+.button:hover {
+    background: #333;
+    color: white;
+}
+
+.elements {
+    margin-top: 40px;
+    border: 2px solid #eee;
+}
+
+.selecto-area {
+    padding: 20px;
+}
+
+#selecto1 .cube {
+    transition: all ease 0.2s;
+}
+
+.moveable #selecto1 .cube {
+    transition: none;
+}
+
+.selecto-area .selected {
+    color: #fff;
+    background: var(--color);
+}
+
+.scroll {
+    overflow: auto;
+    padding-top: 10px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.infinite-viewer, .scroll {
+    width: 100%;
+    height: 300px;
+    box-sizing: border-box;
+}
+
+.infinite-viewer .viewport {
+    padding-top: 10px;
+}
+
+.empty.elements {
+    border: none;
+}
+</style>
+<div class="moveable app">
+    <div class="container">
+        <div class="logo logos" id="logo">
+            <a href="https://github.com/daybrush/selecto" target="_blank"><img src="https://daybrush.com/selecto/images/256x256.png" class="selecto" /></a>
+            <a href="https://github.com/daybrush/moveable" target="_blank"><img src="https://daybrush.com/moveable/images/256x256.png" /></a>
+        </div>
+        <h1>Change the Moveable targets by selecting it.</h1>
+        <p class="description">You can drag and move targets and select them.</p>
+        <div class="elements selecto-area"></div>
+    </div>
+</div>`;
+
+
+    const container = iframeBody.querySelector(".container");
+    const cubes = [];
+    let targets = [];
+
+    for (let i = 0; i < 30; ++i) {
+        cubes.push(i);
     }
-</style>`;
+    container.querySelector(".selecto-area").innerHTML
+        = cubes.map(i => `<div class="cube"></div>`).join("");
+    const selecto = new Selecto({
+        container,
+        dragContainer: iframeWindow,
+        selectableTargets: [".selecto-area .cube"],
+        hitRate: 0,
+        selectByClick: true,
+        selectFromInside: false,
+        toggleContinueSelect: ["shift"],
+        ratio: 0,
+    });
 
-    let hasInteracted = false;
-    let isActive = true;
-    let moveable;
-
-    moveable = new Moveable(iframeBody, {
-        target: iframeDocument.querySelector("#artwork"),
-        className: "moveable",
+    const moveable = new Moveable(container, {
         draggable: true,
-        resizable: true,
-        scalable: false,
-        rotatable: true,
-        isDisplaySnapDigit: false,
-        snappable: true,
-        snapThreshold: 5,
-        snapGap: false,
-        snapDirections: {
-            top: true,
-            right: true,
-            bottom: true,
-            left: true,
-            center: true,
-            middle: true,
-        },
-        elementSnapDirections: {
-            top: true,
-            right: true,
-            bottom: true,
-            left: true,
-            center: true,
-            middle: true,
-        },
-        // Enabling pinchable lets you use events that
-        // can be used in draggable, resizable, scalable, and rotateable.
-        pinchable: false, // ["resizable", "scalable", "rotatable"]
-        origin: false,
-        keepRatio: true,
-        // Resize, Scale Events at edges.
-        // edge: true,
-        throttleDrag: 0,
-        throttleResize: 0,
-        throttleRotate: 0,
-        padding: { left: 0, top: 0, right: 0, bottom: 0 },
+    }).on("clickGroup", e => {
+        selecto.clickTarget(e.inputEvent, e.inputTarget);
+    }).on("drag", e => {
+        e.target.style.transform = e.transform;
+    }).on("dragGroup", e => {
+        e.events.forEach(ev => {
+            ev.target.style.transform = ev.transform;
+        });
     });
 
-    /* draggable */
-    moveable.on("drag", e => {
-        console.log("drag", e.cssText);
-        e.target.style.cssText += e.cssText;
-    });
+    selecto.on("dragStart", e => {
+        const target = e.inputEvent.target;
+        if (
+            moveable.isMoveableElement(target)
+            || targets.some(t => t === target || t.contains(target))
+        ) {
+            e.stop();
+        }
+    }).on("selectEnd", e => {
+        targets = e.selected;
+        moveable.target = targets;
 
-    moveable.on("resize", e => {
-        console.log("resize", e.cssText);
-        e.target.style.cssText += e.cssText;
-    });
+        console.log(targets);
+        if (e.isDragStart) {
+            e.inputEvent.preventDefault();
 
-    /* rotatable */
-    moveable.on("rotate", e => {
-        console.log("onRotate", e.cssText);
-        e.target.style.cssText += e.cssText;
+            setTimeout(() => {
+                moveable.dragStart(e.inputEvent);
+            });
+        }
     });
 </script>

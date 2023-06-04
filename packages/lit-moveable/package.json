@@ -63,7 +63,7 @@
         "typescript": "^4.5.0 <4.6.0"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.12.1",
+        "@daybrush/utils": "^1.13.0",
         "framework-utils": "^1.1.0",
         "moveable": "~0.47.9"
     }

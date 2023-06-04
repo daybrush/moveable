@@ -120,7 +120,7 @@
         "wait-on": "^7.0.1"
     },
     "dependencies": {
-        "@daybrush/utils": "^1.12.1",
+        "@daybrush/utils": "^1.13.0",
         "@egjs/agent": "^2.2.1",
         "@egjs/children-differ": "^1.0.1",
         "@egjs/list-differ": "^1.0.0",
@@ -131,7 +131,7 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.19.0",
         "overlap-area": "^1.1.0",
-        "react-css-styled": "^1.1.8"
+        "react-css-styled": "^1.1.9"
     },
     "browserslist": {
         "production": [
