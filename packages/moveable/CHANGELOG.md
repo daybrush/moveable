@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.47.9...moveable@0.48.0) (2023-06-04)
+
+
+### :rocket: New Features
+
+* support drag api #920 ([8f1a839](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/8f1a8396c429cf108da5417bc36cccd3ef46013c))
+
+
+### :bug: Bug Fix
+
+* support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+
+
+### :mega: Other
+
+* update packages ([8d65572](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/8d65572384ae0fdff288fe78fbeb5d249b070eb7))
+
+
+
 ## [0.47.9](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.47.8...moveable@0.47.9) (2023-05-16)
 
 

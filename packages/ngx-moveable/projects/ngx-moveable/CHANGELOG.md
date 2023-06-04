@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.45.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.44.9...ngx-moveable@0.45.0) (2023-06-04)
+
+
+### :rocket: New Features
+
+* add useDefaultGroupRotate prop #929 ([5846e50](https://github.com/daybrush/moveable/commit/5846e50c18dc2e1aa628e41a8d235ee4851325db))
+
+
+### :bug: Bug Fix
+
+* support angular 16 ([d41af9c](https://github.com/daybrush/moveable/commit/d41af9c141785c272eb4148270feb8dc11e5d46c))
+* support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+
+
+### :mega: Other
+
+* update packages ([8d65572](https://github.com/daybrush/moveable/commit/8d65572384ae0fdff288fe78fbeb5d249b070eb7))
+* update packages ([9e137aa](https://github.com/daybrush/moveable/commit/9e137aa7455fdf85766ca1ff77dd3d8ea2a4c1c9))
+
+
+
 ## [0.44.9](https://github.com/daybrush/moveable/compare/ngx-moveable@0.44.8...ngx-moveable@0.44.9) (2023-05-16)
 
 

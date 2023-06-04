@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.0](https://github.com/daybrush/moveable/compare/0.47.9...0.48.0) (2023-06-04)
+### :sparkles: Packages
+* `croact-moveable` 0.4.0
+* `@moveable/helper` 0.1.2
+* `lit-moveable` 0.25.0
+* `moveable` 0.48.0
+* `preact-moveable` 0.50.0
+* `react-moveable` 0.51.0
+* `svelte-moveable` 0.40.0
+* `vue-moveable` 2.0.0-beta.76
+* `vue3-moveable` 0.23.0
+* `ngx-moveable` 0.45.0
+
+
+### :rocket: New Features
+
+* `react-moveable`, `moveable`, `croact-moveable`
+    * support drag api #920 ([8f1a839](https://github.com/daybrush/moveable/commit/8f1a8396c429cf108da5417bc36cccd3ef46013c))
+* `react-moveable`, `ngx-moveable`
+    * add useDefaultGroupRotate prop #929 ([5846e50](https://github.com/daybrush/moveable/commit/5846e50c18dc2e1aa628e41a8d235ee4851325db))
+* `react-moveable`
+    * add hideThrottleDragRotateLine prop #923 ([e091d39](https://github.com/daybrush/moveable/commit/e091d396f2436ef0ad8d8dfa8922dcd86ec08bfd))
+    * add isDisplayGridGuidelines prop #935 ([589bb9d](https://github.com/daybrush/moveable/commit/589bb9d888b99768be153a8c0a8dc89ec3fe238a))
+    * add snapRotationThreshold, snapRotationDegress #928 ([d63283c](https://github.com/daybrush/moveable/commit/d63283c604d3aea9e4f60f8c72f64c2fa2cde0e9))
+    * add transformObject property in render events #933 ([317ddde](https://github.com/daybrush/moveable/commit/317ddde1e65a2104b0c05ec331d5f468a85fb0b8))
+* `svelte-moveable`
+    * support svelte type ([2022d49](https://github.com/daybrush/moveable/commit/2022d49ae2ebf5daaf21edb4043a557ff3f6eac5))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`, `@moveable/helper`
+    * support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+* `react-moveable`, `preact-moveable`, `croact-moveable`
+    * fix ownerDocument css #932 ([76a852a](https://github.com/daybrush/moveable/commit/76a852ade3ffb41a1b246649945994f50e52b1f0))
+* `react-moveable`, `lit-moveable`, `croact-moveable`
+    * support iframe #932 ([15abedb](https://github.com/daybrush/moveable/commit/15abedb5f5770b8380d0b6ebedbc4ab7834cb9e8))
+* `react-moveable`
+    * add defense code for `.stopDrag` #930 ([be743bc](https://github.com/daybrush/moveable/commit/be743bcb1ab211a647da4d53f7d34570e25ac4be))
+    * fix bounds keepRatio sign #924 ([8ccc8fd](https://github.com/daybrush/moveable/commit/8ccc8fdfbf71079417194f1b1dbef9a797726788))
+    * fix keepRatio for zero scale #927 ([7b936ac](https://github.com/daybrush/moveable/commit/7b936ac77eb8e48d1f736e2a4dd0141946d3d968))
+    * support iframe #932 ([7b4cbad](https://github.com/daybrush/moveable/commit/7b4cbad8548e717f6ec31c14f939cbdfaffb650c))
+* `vue-moveable`
+    * fix vue prerelease ([ad7ea7c](https://github.com/daybrush/moveable/commit/ad7ea7ce85c79f6283b668228eb68358a05c4f3e))
+* `ngx-moveable`
+    * support angular 16 ([d41af9c](https://github.com/daybrush/moveable/commit/d41af9c141785c272eb4148270feb8dc11e5d46c))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * update packages ([8d65572](https://github.com/daybrush/moveable/commit/8d65572384ae0fdff288fe78fbeb5d249b070eb7))
+* `svelte-moveable`, `ngx-moveable`
+    * update packages ([9e137aa](https://github.com/daybrush/moveable/commit/9e137aa7455fdf85766ca1ff77dd3d8ea2a4c1c9))
+
+
+
 ## [0.47.9](https://github.com/daybrush/moveable/compare/0.47.8...0.47.9) (2023-05-16)
 ### :sparkles: Packages
 * `croact-moveable` 0.3.8

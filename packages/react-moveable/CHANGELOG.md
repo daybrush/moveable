@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.7...react-moveable@0.51.0) (2023-06-04)
+
+
+### :rocket: New Features
+
+* add hideThrottleDragRotateLine prop #923 ([e091d39](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/e091d396f2436ef0ad8d8dfa8922dcd86ec08bfd))
+* add isDisplayGridGuidelines prop #935 ([589bb9d](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/589bb9d888b99768be153a8c0a8dc89ec3fe238a))
+* add snapRotationThreshold, snapRotationDegress #928 ([d63283c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d63283c604d3aea9e4f60f8c72f64c2fa2cde0e9))
+* add transformObject property in render events #933 ([317ddde](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/317ddde1e65a2104b0c05ec331d5f468a85fb0b8))
+* add useDefaultGroupRotate prop #929 ([5846e50](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5846e50c18dc2e1aa628e41a8d235ee4851325db))
+* support drag api #920 ([8f1a839](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8f1a8396c429cf108da5417bc36cccd3ef46013c))
+
+
+### :bug: Bug Fix
+
+* add defense code for `.stopDrag` #930 ([be743bc](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/be743bcb1ab211a647da4d53f7d34570e25ac4be))
+* fix bounds keepRatio sign #924 ([8ccc8fd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8ccc8fdfbf71079417194f1b1dbef9a797726788))
+* fix keepRatio for zero scale #927 ([7b936ac](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7b936ac77eb8e48d1f736e2a4dd0141946d3d968))
+* fix ownerDocument css #932 ([76a852a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/76a852ade3ffb41a1b246649945994f50e52b1f0))
+* support iframe #932 ([15abedb](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/15abedb5f5770b8380d0b6ebedbc4ab7834cb9e8))
+* support iframe #932 ([7b4cbad](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7b4cbad8548e717f6ec31c14f939cbdfaffb650c))
+* support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+
+
+### :mega: Other
+
+* update packages ([8d65572](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8d65572384ae0fdff288fe78fbeb5d249b070eb7))
+
+
+
 ## [0.50.7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.6...react-moveable@0.50.7) (2023-05-16)
 
 

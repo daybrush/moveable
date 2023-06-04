@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.25.0](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.24.9...lit-moveable@0.25.0) (2023-06-04)
+
+
+### :bug: Bug Fix
+
+* support iframe #932 ([15abedb](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/15abedb5f5770b8380d0b6ebedbc4ab7834cb9e8))
+* support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+
+
+### :mega: Other
+
+* update packages ([8d65572](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/commit/8d65572384ae0fdff288fe78fbeb5d249b070eb7))
+
+
+
 ## [0.24.9](https://github.com/daybrush/moveable/blob/master/packages/lit-moveable/compare/lit-moveable@0.24.8...lit-moveable@0.24.9) (2023-05-16)
 
 

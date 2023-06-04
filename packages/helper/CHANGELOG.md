@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.1.2...@moveable/helper@0.1.2) (2023-06-04)
+
+
+### :bug: Bug Fix
+
+* support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/blob/master/packages/helper/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+
+
+
 ## [0.1.2](https://github.com/daybrush/moveable/blob/master/packages/helper/compare/@moveable/helper@0.1.2...@moveable/helper@0.1.2) (2023-05-16)
 
 **Note:** Version bump only for package @moveable/helper

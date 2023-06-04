@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.0](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.49.7...preact-moveable@0.50.0) (2023-06-04)
+
+
+### :bug: Bug Fix
+
+* fix ownerDocument css #932 ([76a852a](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/76a852ade3ffb41a1b246649945994f50e52b1f0))
+* support iframe context #932 ([3e87cc7](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/3e87cc7fed43160ca342630fed2f413876f8a518))
+
+
+### :mega: Other
+
+* update packages ([8d65572](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/8d65572384ae0fdff288fe78fbeb5d249b070eb7))
+
+
+
 ## [0.49.7](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.49.6...preact-moveable@0.49.7) (2023-05-16)
 
 
