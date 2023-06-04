@@ -2,12 +2,13 @@
   "name": "ngx-moveable-app",
   "version": "0.0.0",
   "scripts": {
+    "postinstall": "ngcc --tsconfig ./tsconfig.base.json",
     "ng": "ng",
     "start": "ng serve",
-    "start:aot": "ng serve --aot",
-    "start:prod": "ng serve --aot",
+    "start:aot": "ng serve",
+    "start:prod": "ng serve",
     "build": "ng build ngx-moveable --configuration production",
-    "build:app": "ng build --aot",
+    "build:app": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
