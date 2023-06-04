@@ -12,27 +12,26 @@ export default function App() {
                 width: "500px",
                 height: "500px",
                 border: "1px solid black",
-            }} onDragEnter={e => {
-                const nativeEvent = e.nativeEvent;
-
-                if (!target) {
-                    moveableRef.current!.waitToChangeTarget().then(() => {
-                        moveableRef.current!.dragStart(nativeEvent);
-                    });
-                    setTarget(document.querySelector<HTMLElement>("#drag1"));
-                }
             }}></div>
             <img
                 id="drag1"
                 src="https://www.w3schools.com/html/img_w3slogo.gif"
                 draggable="true"
-                onDragOver={e => {
-                    e.preventDefault();
+                onDragStart={e => {
+                    const nativeEvent = e.nativeEvent;
+
+                    if (!target) {
+                        moveableRef.current!.waitToChangeTarget().then(() => {
+                            moveableRef.current!.dragStart(nativeEvent);
+                        });
+                        setTarget(document.querySelector<HTMLElement>("#drag1"));
+                    }
                 }}
             />
             <Moveable
                 ref={moveableRef}
                 target={target}
+                dragContainer={".container"}
                 draggable={true}
                 preventDefault={false}
                 onDrag={e => {

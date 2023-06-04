@@ -1348,17 +1348,17 @@ export function isArrayFormat<T = any>(arr: any): arr is ArrayFormat<T> {
 }
 
 export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
-    target: MoveableRefType<T>, isSelector: true): T | null;
+    target: MoveableRefType<T> | Window, isSelector: true): T | null;
 export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
-    target: MoveableRefType<T>, isSelector?: boolean): T | string | null;
+    target: MoveableRefType<T> | Window, isSelector?: boolean): T | string | null;
 export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
-    target: MoveableRefType<T>,
+    target: MoveableRefType<T> | Window,
     isSelector?: boolean,
 ): any {
     if (!target) {
         return null;
     }
-    if (target instanceof Element) {
+    if (target instanceof Node) {
         return target;
     }
     if (isString(target)) {
@@ -1369,6 +1369,9 @@ export function getRefTarget<T extends Element = HTMLElement | SVGElement>(
     }
     if (isFunction(target)) {
         return target();
+    }
+    if (isWindow(target)) {
+        return target;
     }
     if ("current" in target) {
         return target.current;
@@ -1721,4 +1724,8 @@ export function sign(value: number) {
 
 export function abs(value: number) {
     return Math.abs(value);
+}
+
+export function isWindow(val: any): val is Window {
+    return val && "postMessage" in val && "blur" in val && "self" in val;
 }

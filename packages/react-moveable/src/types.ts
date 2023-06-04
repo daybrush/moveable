@@ -66,6 +66,11 @@ export interface DefaultOptions {
      */
     dragTarget?: SVGElement | HTMLElement | null;
     /**
+     * Container area where drag works
+     * @default window
+     */
+    dragContainer?: null | Window | MoveableRefType<HTMLElement>;
+    /**
      * A container into which Moveables are inserted.
      * Set it only when used within the slot of Web Components or when the container is different.
      * @default parentElement

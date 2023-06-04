@@ -1,0 +1,178 @@
+<html>
+
+<body>
+    <!-- <b>Works currently only in Chrome and Edge (not in FF)</b> -->
+    <!--Original idea by James Pistell (https://codepen.io/pistell/pen/XWWdZrv)-->
+    <div style="width:100%; height:100%; padding-top: 20px; float: left;">
+        <div id="container-left"
+            style="position:static; left:10px; top:20px; width:300; height:660; z-index:-1; overflow: auto">
+            <h3>Drag me</h3>
+            <div class="item" draggable="true" ondragstart="dragstart(event)">
+                A
+            </div>
+            <br>
+            <div class="item" draggable="true" ondragstart="dragstart(event)">
+                B
+            </div>
+        </div>
+        <div class="container" id="container" ondragover="dragover(event)">
+            <h3>Dropzone</h3>
+
+            <div class="item selectable">
+                ITEM
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #container-left {
+            width: 150px;
+            height: 330px;
+            float: left;
+            background-color: #fff;
+        }
+
+        #container {
+            width: 800px;
+            height: 550px;
+            float: left;
+            background-color: #ff1;
+            display: initial;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        svg {
+            overflow: visible;
+        }
+
+        svg:hover {
+            cursor: grab;
+        }
+
+        /* Demo stuff */
+
+        h3 {
+            text-align: center;
+            font-family: Helvetica;
+            line-height: 1.7rem;
+            /* Prevent users from selecting demo text */
+            user-select: none;
+        }
+
+        .explain {
+            width: 50%;
+            float: right;
+        }
+
+        /* Hide the explainer text on small screens */
+        @media (max-width: 100rem) {
+            .explain {
+                display: none;
+            }
+        }
+
+        .item {
+            border: solid;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 60px;
+            background-color: orange;
+            cursor: pointer;
+        }
+    </style>
+    <script src="../../dist/moveable.js"></script>
+    <script>
+        let moveableRef = null;
+        let newDiv;
+        let entered = false;
+
+        function dragstart(e) {
+            const newContent = document.createTextNode(e.target.innerHTML);
+            const container = document.querySelector('#container-left');
+
+            let img = new Image();
+            img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+            e.dataTransfer.setDragImage(img, 0, 0);
+            newDiv = document.createElement("div");
+            newDiv.appendChild(newContent);
+            newDiv.classList.add('item');
+
+            const rect = e.target.getBoundingClientRect();
+            dx = e.clientX - e.target.getBoundingClientRect().left;
+            dy = e.clientY - e.target.getBoundingClientRect().top;
+            newDiv.style.left = `${rect.left}px`;
+            newDiv.style.top = `${rect.top}px`;
+            newDiv.style.position = 'absolute';
+            newDiv.style.pointerEvents = "none";
+
+            container.appendChild(newDiv);
+
+            moveableRef.setState({
+                target: newDiv,
+                hideDefaultLines: true,
+                resizable: false,
+                origin: false,
+            }, () => {
+                moveableRef.dragStart(e);
+            });
+        }
+
+        function dragover(e) {
+            e.preventDefault();
+        }
+
+        const container = document.querySelector('#container');
+
+        moveableRef = new Moveable(container, {
+            draggable: true,
+        });
+
+        moveableRef.on("render", e => {
+            e.target.style.cssText += e.cssText;
+        });
+        moveableRef.on("drag", e => {
+            e.inputEvent?.preventDefault();
+            const dropRect = document.querySelector('#container').getBoundingClientRect();
+
+            if (dropRect.top < e.clientY && dropRect.bottom > e.clientY && dropRect.left < e.clientX && dropRect.right > e.clientX  ){
+                entered = true;
+                moveableRef.setState({
+                    hideDefaultLines: false,
+                    resizable: true,
+                });
+            } else {
+                entered = false;
+                moveableRef.setState({
+                    hideDefaultLines: true,
+                    resizable: false,
+                });
+            }
+        });
+        moveableRef.on("dragEnd", e => {
+            if (entered) {
+                const container = document.querySelector('#container');
+                container.appendChild(newDiv);
+                newDiv.classList.add('selectable');
+                entered = false;
+                newDiv.style.removeProperty("pointer-events");
+            } else {
+                // remove newDiv
+                newDiv.remove();
+                newDiv = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

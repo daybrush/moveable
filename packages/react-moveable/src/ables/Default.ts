@@ -3,6 +3,7 @@ export default {
     props: [
         "target",
         "dragTarget",
+        "dragContainer",
         "container",
         "warpSelf",
         "rootContainer",
