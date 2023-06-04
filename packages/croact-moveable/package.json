@@ -67,6 +67,9 @@
         "tslint": "^5.16.0",
         "typescript": "^4.5.0 <4.6.0"
     },
+    "peerDependencies": {
+        "croact": "^1.0.4"
+    },
     "dependencies": {
         "@daybrush/utils": "^1.13.0",
         "@egjs/agent": "^2.2.1",
