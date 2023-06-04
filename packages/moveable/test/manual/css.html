@@ -1,0 +1,72 @@
+<body>
+    <div id="artwork" class="target target1"></div>
+    <div class="target2"></div>
+    <button>aa</button>
+</body>
+<style>
+    .target1,
+    .target2 {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        top: 100px;
+        background: #f55;
+        border: 1px solid #333;
+    }
+    .moveable-control-box .moveable-rotation .moveable-rotation-control {
+        border-radius: 0;
+        background: #f55;
+        border: 0;
+    }
+</style>
+<script src="https://daybrush.com/moveable/release/latest/dist/moveable.js"></script>
+
+<script>
+    let hasInteracted = false;
+    let isActive = true;
+
+    const editor = document.body;
+    let moveable;
+    moveable = new Moveable(editor, {
+        target: ".target",
+        className: "moveable",
+        // If the container is null, the position is fixed. (default: parentElement(document.body))
+        container: editor,
+        draggable: true,
+        resizable: true,
+        scalable: false,
+        rotatable: true,
+        isDisplaySnapDigit: false,
+        elementGuidelines: [document.body],
+        snappable: true,
+        snapThreshold: 5,
+        snapGap: false,
+        snapDirections: {
+            top: true,
+            right: true,
+            bottom: true,
+            left: true,
+            center: true,
+            middle: true,
+        },
+        elementSnapDirections: {
+            top: true,
+            right: true,
+            bottom: true,
+            left: true,
+            center: true,
+            middle: true,
+        },
+        // Enabling pinchable lets you use events that
+        // can be used in draggable, resizable, scalable, and rotateable.
+        pinchable: false, // ["resizable", "scalable", "rotatable"]
+        origin: false,
+        keepRatio: true,
+        // Resize, Scale Events at edges.
+        // edge: true,
+        throttleDrag: 0,
+        throttleResize: 0,
+        throttleRotate: 0,
+        padding: { left: 0, top: 0, right: 0, bottom: 0 },
+    });
+</script>
