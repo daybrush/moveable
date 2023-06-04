@@ -256,6 +256,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             checkeds,
             targetGroups,
         );
+        const useDefaultGroupRotate = props.useDefaultGroupRotate;
 
         moveableGroups.push(...checkeds.filter(({ finded }) => !finded).map(({ manager }) => manager));
 
@@ -264,7 +265,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         let defaultGroupRotate = props.defaultGroupRotate || 0;
 
         if (!this._hasFirstTargets) {
-            const persistedRoatation = this.props.persistData?.rotation;
+            const persistedRoatation = props.persistData?.rotation;
 
             if (persistedRoatation != null) {
                 defaultGroupRotate = persistedRoatation;
@@ -295,9 +296,9 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
             });
 
             if (isReset) {
-                groupRotation = isSameRotation ? firstRotation : defaultGroupRotate;
+                groupRotation = !useDefaultGroupRotate && isSameRotation ? firstRotation : defaultGroupRotate;
             } else {
-                groupRotation = !isRoot && isSameRotation ? firstRotation : parentRotation;
+                groupRotation = !useDefaultGroupRotate && !isRoot && isSameRotation ? firstRotation : parentRotation;
             }
             const groupPoses = posesRotations.map(({ poses }) => poses);
             const groupRect = getGroupRect(

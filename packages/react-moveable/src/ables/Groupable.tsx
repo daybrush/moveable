@@ -5,10 +5,13 @@ import { renderLine } from "../renderDirections";
 import { Renderer, MoveableGroupInterface, GroupableProps } from "../types";
 import { flat, watchValue } from "../utils";
 
+
+
 export default {
     name: "groupable",
     props: [
         "defaultGroupRotate",
+        "useDefaultGroupRotate",
         "defaultGroupOrigin",
         "groupable",
         "groupableProps",

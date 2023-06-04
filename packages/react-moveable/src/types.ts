@@ -2441,6 +2441,11 @@ export interface GroupableOptions {
      */
     defaultGroupRotate?: number;
     /**
+     * Use the defaultGroupRotate even if the children's rotations match.
+     * @default false
+     */
+    useDefaultGroupRotate?: boolean;
+    /**
      * Sets the initial transform origin of the group.
      * @default  "50% 50%"
      */
