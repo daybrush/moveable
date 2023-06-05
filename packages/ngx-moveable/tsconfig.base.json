@@ -14,17 +14,9 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": false,
     "target": "es2015",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "paths": {
-      "ngx-moveable": [
-        "dist/ngx-moveable"
-      ],
-      "ngx-moveable/*": [
-        "dist/ngx-moveable/*"
-      ]
+      "ngx-moveable": ["projects/ngx-moveable/src/public-api.ts"]
     }
   },
   "angularCompilerOptions": {
