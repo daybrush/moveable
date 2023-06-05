@@ -5,7 +5,7 @@ import Moveable, {
 } from 'moveable';
 import { MethodInterface, withMethods } from 'framework-utils';
 
-import { NgxMoveableEvents } from './types';
+import { NgxMoveableEvents, NgxPincheableEvents } from './types';
 
 export class NgxMoveableInterface {
   @withMethods(METHODS, { dragStart: 'ngDragStart' })
@@ -14,6 +14,7 @@ export class NgxMoveableInterface {
 
 export interface NgxMoveableInterface
   extends NgxMoveableEvents,
+    NgxPincheableEvents,
     MoveableProperties,
     MethodInterface<
       MoveableInterface,
