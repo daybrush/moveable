@@ -45,6 +45,7 @@ export default function App(props: Record<string, any>) {
                     snappable={props.snappable}
                     isDisplaySnapDigit={props.isDisplaySnapDigit}
                     isDisplayInnerSnapDigit={props.isDisplayInnerSnapDigit}
+                    snapGap={props.snapGap}
                     snapDirections={props.snapDirections}
                     elementSnapDirections={props.elementSnapDirections}
                     snapThreshold={props.snapThreshold}
