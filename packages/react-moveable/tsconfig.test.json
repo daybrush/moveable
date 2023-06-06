@@ -1,25 +1,11 @@
 {
     "extends": "./tsconfig",
     "compilerOptions": {
-      "module": "commonjs",
-      "noImplicitAny": false,
       "jsx": "react",
-      "types": [
-        "karma-chai",
-        "mocha"
-      ],
-      "strict": false,
-      "strictNullChecks": false,
-      "forceConsistentCasingInFileNames": false,
-      "resolveJsonModule": false,
-      "isolatedModules": false,
-      "noEmit": false,
-      "allowUnreachableCode": true,
-      "allowUnusedLabels": true
+      "noEmit": true
     },
     "include": [
-      "./src/**/*.ts",
-      "./test/**/*.ts",
-      "./test/**/*.tsx"
+      "./tests/**/*.ts",
+      "./tests/**/*.tsx"
     ]
   }

@@ -4,6 +4,7 @@ import { createWarpMatrix } from "@scena/matrix";
 import { makeAble } from "./AbleManager";
 
 export default makeAble("padding", {
+    props: ["padding"] as const,
     render(moveable: MoveableManagerInterface, React: Renderer): any[] {
         const props = moveable.props;
         if (props.dragArea) {

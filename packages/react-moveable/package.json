@@ -23,8 +23,9 @@
         "test:fail": "SKIP_TEST=true test-storybook",
         "test:fail-build": "SKIP_TEST=true build-storybook -o ./test-static",
         "test:fail-ci": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"yarn test:fail-build --quiet && npx http-server ./test-static --port 6006 --silent\" \"wait-on tcp:6006 && yarn test:fail\"",
+        "test:type": "tsc -p tsconfig.test.json",
         "coverage": "test-storybook --maxWorkers=2 --coverage",
-        "build": "npm run lint && rollup -c && npm run declaration && print-sizes ./dist ",
+        "build": "npm run lint && npm run test:type && rollup -c && npm run declaration && print-sizes ./dist",
         "build:storybook": "SKIP_TEST=true build-storybook -o ../../demo/storybook",
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
     },
