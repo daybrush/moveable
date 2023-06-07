@@ -61,7 +61,7 @@
         "rollup-plugin-css-bundle": "^1.0.4",
         "rollup-plugin-preact": "^0.5.2",
         "tslint": "^5.16.0",
-        "typescript": "^4.5.0 <4.6.0"
+        "typescript": "^4.9.3 <5.1.0"
     },
     "dependencies": {
         "preact-css-styled": "^1.1.9",
