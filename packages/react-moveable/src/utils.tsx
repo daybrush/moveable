@@ -9,6 +9,7 @@ import {
     getWindow,
     isNode,
     isWindow,
+    counter,
 } from "@daybrush/utils";
 import {
     multiply, invert,
@@ -1726,4 +1727,9 @@ export function sign(value: number) {
 
 export function abs(value: number) {
     return Math.abs(value);
+}
+
+
+export function countEach<T>(count: number, callback: (index: number) => T): T[] {
+    return counter(count).map(index => callback(index));
 }

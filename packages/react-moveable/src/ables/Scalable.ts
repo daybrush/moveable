@@ -1,7 +1,7 @@
 import {
     triggerEvent, multiply2,
     fillParams, fillEndParams, getAbsolutePosesByState,
-    catchEvent, getOffsetSizeDist, getDirectionCondition, getDirectionViewClassName, getTotalDirection, sign,
+    catchEvent, getOffsetSizeDist, getDirectionCondition, getDirectionViewClassName, getTotalDirection, sign, countEach,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -34,6 +34,7 @@ import { checkSnapScale } from "./Snappable";
 import {
     isArray, IObject, getDist,
     throttle,
+    calculateBoundSize,
 } from "@daybrush/utils";
 import { getFixedDirectionInfo } from "../utils/getFixedDirection";
 
@@ -134,11 +135,23 @@ export default {
             datas.fixedOffset = result.fixedOffset;
         }
 
-
         datas.setFixedDirection = setFixedDirection;
         setRatio(getDist(pos1, pos2) / getDist(pos2, pos4));
         setFixedDirection([-direction[0], -direction[1]]);
 
+        const setMinScaleSize = (min: number[]) => {
+            datas.minScaleSize = min;
+        };
+        const setMaxScaleSize = (max: number[]) => {
+            datas.maxScaleSize = max;
+        };
+        // const setMinScale = (min: number[]) => {
+        // };
+        // const setMaxScale = (max: number[]) => {
+        // };
+
+        setMinScaleSize([-Infinity, -Infinity]);
+        setMinScaleSize([Infinity, Infinity]);
         const params = fillParams<OnScaleStart>(moveable, e, {
             direction,
             set: (scale: number[]) => {
@@ -146,6 +159,8 @@ export default {
             },
             setRatio,
             setFixedDirection,
+            setMinScaleSize,
+            setMaxScaleSize,
             ...fillTransformStartEvent(e),
             dragStart: Draggable.dragStart(
                 moveable,
@@ -206,8 +221,10 @@ export default {
         const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
         const state = moveable.state;
 
-        let tempStartX = startValue[0];
-        let tempStartY = startValue[1];
+        const tempScaleValue  = [
+            startValue[0],
+            startValue[1],
+        ];
 
         function getNextScale() {
             const {
@@ -220,13 +237,13 @@ export default {
             let scaleY = startOffsetHeight ? (startOffsetHeight + distHeight) / startOffsetHeight : 1;
 
             if (!startValue[0]) {
-                tempStartX = distWidth / startOffsetWidth;
+                tempScaleValue[0] = distWidth / startOffsetWidth;
             }
             if (!startValue[1]) {
-                tempStartY = distHeight / startOffsetHeight;
+                tempScaleValue[1] = distHeight / startOffsetHeight;
             }
-            scaleX = (sizeDirection[0] || keepRatio ? scaleX : 1) * tempStartX;
-            scaleY = (sizeDirection[1] || keepRatio ? scaleY : 1) * tempStartY;
+            scaleX = (sizeDirection[0] || keepRatio ? scaleX : 1) * tempScaleValue[0];
+            scaleY = (sizeDirection[1] || keepRatio ? scaleY : 1) * tempScaleValue[1];
 
             if (scaleX === 0) {
                 scaleX = sign(prevDist[0]) * MIN_SCALE;
@@ -263,9 +280,9 @@ export default {
             },
         }, true));
 
-        const dist = [
-            scale[0] / tempStartX,
-            scale[1] / tempStartY,
+        let dist = [
+            scale[0] / tempScaleValue[0],
+            scale[1] / tempScaleValue[1],
         ];
         let fixedPosition = dragClient;
         let snapDist = [0, 0];
@@ -305,10 +322,12 @@ export default {
             const isNoSnap = !snapDist[0] && !snapDist[1];
 
             if (isNoSnap) {
+
+                // throttle scale value (not absolute scale size)
                 if (isWidth) {
-                    dist[0] = throttle(dist[0] * tempStartX, throttleScale!) / tempStartX;
+                    dist[0] = throttle(dist[0] * tempScaleValue[0], throttleScale!) / tempScaleValue[0];
                 } else {
-                    dist[1] = throttle(dist[1] * tempStartY, throttleScale!) / tempStartY;
+                    dist[1] = throttle(dist[1] * tempScaleValue[1], throttleScale!) / tempScaleValue[1];
                 }
             }
             if (
@@ -317,27 +336,27 @@ export default {
                 || (isNoSnap && isWidth)
             ) {
                 dist[0] += snapDist[0];
-                const snapHeight = startOffsetWidth * dist[0] * tempStartX / ratio;
+                const snapHeight = startOffsetWidth * dist[0] * tempScaleValue[0] / ratio;
 
-                dist[1] = snapHeight / startOffsetHeight / tempStartY;
+                dist[1] = snapHeight / startOffsetHeight / tempScaleValue[1];
             } else if (
                 (!sizeDirection[0] && sizeDirection[1])
                 || (!snapDist[0] && snapDist[1])
                 || (isNoSnap && !isWidth)
             ) {
                 dist[1] += snapDist[1];
-                const snapWidth = startOffsetHeight * dist[1] * tempStartY * ratio;
+                const snapWidth = startOffsetHeight * dist[1] * tempScaleValue[1] * ratio;
 
-                dist[0] = snapWidth / startOffsetWidth / tempStartX;
+                dist[0] = snapWidth / startOffsetWidth / tempScaleValue[0];
             }
         } else {
             dist[0] += snapDist[0];
             dist[1] += snapDist[1];
             if (!snapDist[0]) {
-                dist[0] = throttle(dist[0] * tempStartX, throttleScale!) / tempStartX;
+                dist[0] = throttle(dist[0] * tempScaleValue[0], throttleScale!) / tempScaleValue[0];
             }
             if (!snapDist[1]) {
-                dist[1] = throttle(dist[1] * tempStartY, throttleScale!) / tempStartY;
+                dist[1] = throttle(dist[1] * tempScaleValue[1], throttleScale!) / tempScaleValue[1];
             }
         }
 
@@ -347,9 +366,39 @@ export default {
         if (dist[1] === 0) {
             dist[1] = sign(prevDist[1]) * MIN_SCALE;
         }
-        const delta = [dist[0] / prevDist[0], dist[1] / prevDist[1]];
-        scale = multiply2(dist, [tempStartX, tempStartY]);
+        scale = multiply2(dist, [tempScaleValue[0], tempScaleValue[1]]);
 
+
+        const startOffsetSize = [
+            startOffsetWidth,
+            startOffsetHeight,
+        ];
+        let scaleSize = [
+            startOffsetWidth * scale[0],
+            startOffsetHeight * scale[1],
+        ];
+        scaleSize = calculateBoundSize(
+            scaleSize,
+            datas.minScaleSize,
+            datas.maxScaleSize,
+            keepRatio ? ratio : false,
+        );
+
+        // if (keepRatio && (isGroup || keepRatioFinally)) {
+        //     if (isWidth) {
+        //         boundingHeight = boundingWidth / ratio;
+        //     } else {
+        //         boundingWidth = boundingHeight * ratio;
+        //     }
+        // }
+        scale = countEach(2, i => {
+            return startOffsetSize[i] ? scaleSize[i] / startOffsetSize[i] : scaleSize[i];
+        });
+        dist = countEach(2, i => {
+            return scale[i] / tempScaleValue[i];
+        });
+
+        const delta = countEach(2, i => prevDist[i] ? dist[i] / prevDist[i] : dist[i]);
 
 
         const distText = `scale(${dist.join(", ")})`;

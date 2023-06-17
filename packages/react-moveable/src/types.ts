@@ -1028,7 +1028,19 @@ export interface OnScaleStart extends OnEvent, OnTransformStartEvent {
      * Set the ratio of width and height.
      * @default offsetWidth / offsetHeight
      */
-    setRatio: (ratio: number) => any;
+    setRatio: (ratio: number) => void;
+    /**
+     * You can set the min scale width, height value.
+     * scale size = scale value * offset size
+     * @default [-Infinity, -Infinity]
+     */
+    setMinScaleSize: (min: number[]) => void;
+    /**
+     * You can set the max scale width, height value.
+     * scale size = scale value * offset size
+     * @default [Infinity, Infinity]
+     */
+    setMaxScaleSize: (max: number[]) => void;
 }
 
 /**
