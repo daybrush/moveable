@@ -27,12 +27,13 @@ import {
     MoveableProps, ArrayFormat, MoveableRefType,
     MatrixInfo, ExcludeEndParams, ExcludeParams,
     ElementSizes, MoveablePosition, TransformObject,
-    MoveableRefTargetsResultType, MoveableRefTargetType, MoveableManagerInterface, CSSObject,
+    MoveableRefTargetsResultType, MoveableRefTargetType, MoveableManagerInterface, CSSObject, PaddingBox,
 } from "./types";
 import { parse, toMat, calculateMatrixDist, parseMat } from "css-to-mat";
 import { getBeforeRenderableDatas, getDragDist } from "./gesto/GestoUtils";
 import { getGestoData } from "./gesto/GestoData";
 import { GetStyle, getCachedStyle } from "./store/Store";
+import { normalized } from "./ables/Snappable";
 
 export function round(num: number) {
     return Math.round(num);
@@ -1247,11 +1248,21 @@ export function convertDragDist(state: MoveableManagerState, e: any) {
 export function calculatePadding(
     matrix: number[],
     pos: number[],
-    transformOrigin: number[],
-    origin: number[],
+    added: number[],
     n: number,
 ) {
-    return minus(calculatePosition(matrix, plus(transformOrigin, pos), n), origin);
+    if (!added[0] && !added[1]) {
+        return pos;
+    }
+
+    const xAdded = calculatePosition(matrix, [normalized(added[0]), 0], n);
+    const yAdded = calculatePosition(matrix, [0, normalized(added[1])], n);
+    const nextAdded = calculatePosition(matrix, [
+        added[0] / getDistSize(xAdded),
+        added[1] / getDistSize(yAdded),
+    ], n);
+
+    return plus(pos, nextAdded);
 }
 
 export function convertCSSSize(value: number, size: number, isRelative?: boolean) {
@@ -1732,4 +1743,23 @@ export function abs(value: number) {
 
 export function countEach<T>(count: number, callback: (index: number) => T): T[] {
     return counter(count).map(index => callback(index));
+}
+
+
+export function getPaddingBox(padding: PaddingBox | number) {
+    if (isNumber(padding)) {
+        return {
+            top: padding,
+            left: padding,
+            right: padding,
+            bottom: padding,
+        };
+    }
+
+    return {
+        left: padding.left || 0,
+        top: padding.top || 0,
+        right: padding.right || 0,
+        bottom: padding.bottom || 0,
+    };
 }

@@ -16,17 +16,18 @@ import {
     getRefTarget,
     groupBy,
     unsetAbles,
+    getPaddingBox,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
 import {
     MoveableManagerProps, MoveableManagerState, Able,
-    RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
+    RectInfo, Requester, HitRect, MoveableManagerInterface,
     MoveableDefaultOptions,
     GroupableProps,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
-import { plus } from "@scena/matrix";
+import { createOriginMatrix, multiplies, plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
     getKeys, getWindow, IObject, isNode, removeClass, requestAnimationFrame,
@@ -41,7 +42,6 @@ import { VIEW_DRAGGING } from "./classNames";
 import { diff } from "@egjs/list-differ";
 import { getPersistState } from "./utils/persist";
 import { setStoreCache } from "./store/Store";
-// import { getClipPath } from "./ables/clippable/utils";
 
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
@@ -710,6 +710,7 @@ export default class MoveableManager<T = {}>
     public updateRenderPoses() {
         const state = this.getState();
         const props = this.props;
+        const padding = props.padding;
         const {
             originalBeforeOrigin,
             transformOrigin,
@@ -717,16 +718,24 @@ export default class MoveableManager<T = {}>
             pos1, pos2, pos3, pos4,
             left: stateLeft,
             top: stateTop,
-            // offsetWidth,
-            // offsetHeight,
             isPersisted,
         } = state;
+
+        if (!padding) {
+            state.renderPoses = [
+                pos1,
+                pos2,
+                pos3,
+                pos4,
+            ];
+            return;
+        }
         const {
-            left = 0,
-            top = 0,
-            bottom = 0,
-            right = 0,
-        } = (props.padding || {}) as PaddingBox;
+            left,
+            top,
+            bottom,
+            right,
+        } = getPaddingBox(padding);
         const n = is3d ? 4 : 3;
 
         // const clipPathInfo = getClipPath(
@@ -752,11 +761,18 @@ export default class MoveableManager<T = {}>
             absoluteOrigin = plus(originalBeforeOrigin, [stateLeft, stateTop]);
         }
 
+        const nextMatrix = multiplies(
+            n,
+            createOriginMatrix(absoluteOrigin.map(v => -v), n),
+            allMatrix,
+            createOriginMatrix(transformOrigin, n),
+        );
+
         state.renderPoses = [
-            plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos2, calculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos3, calculatePadding(allMatrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
-            plus(pos4, calculatePadding(allMatrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
+            calculatePadding(nextMatrix, pos1, [-left, -top], n),
+            calculatePadding(nextMatrix, pos2, [right, -top], n),
+            calculatePadding(nextMatrix, pos3, [-left, bottom], n),
+            calculatePadding(nextMatrix, pos4, [right, bottom], n),
         ];
     }
     public checkUpdate() {

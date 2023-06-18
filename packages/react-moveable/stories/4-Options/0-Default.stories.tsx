@@ -1,7 +1,9 @@
+import { expect } from "@storybook/jest";
 
 import { makeArgType, makeOptionLink } from "../utils";
 import { add } from "../utils/story";
 import "../templates/default.css";
+import { pan, wait } from "../utils/testing";
 
 export default {
     title: "Options",
@@ -25,6 +27,46 @@ export const OptionsResizeObserverIndividualGroup = add("useResizeObserver (Indi
 export const OptionsMutationObserver = add("useMutationObserver", {
     app: require("./ReactUseMutationObserverApp").default,
     path: require.resolve("./ReactUseMutationObserverApp"),
+});
+
+
+export const OptionsPadding = add("padding", {
+    app: require("./ReactPaddingApp").default,
+    path: require.resolve("./ReactPaddingApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+
+        // se direction control
+        const seControl = canvasElement.querySelector<HTMLElement>(`.moveable-se`)!;
+
+        await pan({
+            target: seControl,
+            start: [0, 0],
+            end: [100, 50],
+            duration: 100,
+            interval: 10,
+        });
+        // width 100 + padding (10 + 20) 130 => 230
+        // height 100 + padding (30 + 40) 170 => 220
+
+
+        const paddingAreas = canvasElement.querySelectorAll<HTMLElement>(`.moveable-padding`);
+        const widthLine = canvasElement.querySelector<HTMLElement>(`[data-line-key="render-line-0"]`)!;
+        const heightLine = canvasElement.querySelector<HTMLElement>(`[data-line-key="render-line-1"]`)!;
+
+        expect(Math.round(parseFloat(widthLine.style.width))).toBe(230);
+        expect(Math.round(parseFloat(heightLine.style.width))).toBe(220);
+
+        // left
+        expect(Math.round(paddingAreas[0].getBoundingClientRect().width)).toBe(10);
+        // top
+        expect(Math.round(paddingAreas[1].getBoundingClientRect().height)).toBe(30);
+        // right
+        expect(Math.round(paddingAreas[2].getBoundingClientRect().width)).toBe(20);
+        // bottom
+        expect(Math.round(paddingAreas[3].getBoundingClientRect().height)).toBe(40);
+        // expect(canvasElement.querySelector(`[data-line-key="render-line-0"]`)
+    },
 });
 
 export const OptionsLinePadding = add("linePadding", {

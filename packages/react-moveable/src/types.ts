@@ -624,11 +624,11 @@ export interface OnEvent {
     /**
      * The Moveable instance
      */
-    currentTarget: MoveableManagerInterface<any, any>;
+    currentTarget: MoveableManagerInterface<Record<string, any>, Record<string, any>>;
     /**
      * The Moveable instance
      */
-    moveable: MoveableManagerInterface<any, any>;
+    moveable: MoveableManagerInterface<Record<string, any>, Record<string, any>>;
     /**
      * The Moveable's target
      */
@@ -1974,7 +1974,7 @@ export interface PaddingOptions {
      * Add padding around the target to increase the drag area.
      * @default null
      */
-    padding?: PaddingBox;
+    padding?: PaddingBox | number;
 }
 /**
  * @typedef
