@@ -26,7 +26,7 @@ export default function App(props: Record<string, any>) {
                     ev.target.style.transform = ev.transform;
                 });
             }}
-            onScaleGroup={({ events }) => {
+            onScaleGroup={({ scale, dist, events }) => {
                 events.forEach(ev => {
                     ev.target.style.transform = ev.drag.transform;
                 });

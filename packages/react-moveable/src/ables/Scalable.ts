@@ -105,19 +105,16 @@ export default {
         datas.startOffsetHeight = height;
         datas.startValue = [1, 1];
 
-        const scaleWidth = getDist(pos1, pos2);
-        const scaleHeight = getDist(pos2, pos4);
+        // const scaleWidth = getDist(pos1, pos2);
+        // const scaleHeight = getDist(pos2, pos4);
         const isWidth = (!direction[0] && !direction[1]) || direction[0] || !direction[1];
 
-
-        datas.scaleWidth = scaleWidth;
-        datas.scaleHeight = scaleHeight;
-        datas.scaleXRatio = scaleWidth / width;
-        datas.scaleYRatio = scaleHeight / height;
+        // datas.scaleWidth = scaleWidth;
+        // datas.scaleHeight = scaleHeight;
+        // datas.scaleXRatio = scaleWidth / width;
+        // datas.scaleYRatio = scaleHeight / height;
 
         setDefaultTransformIndex(e, "scale");
-
-
 
         datas.isWidth = isWidth;
 
@@ -188,7 +185,8 @@ export default {
         const {
             datas,
             parentKeepRatio,
-            parentFlag, isPinch,
+            parentFlag,
+            isPinch,
             dragClient,
             isRequest,
             resolveMatrix,
@@ -233,8 +231,8 @@ export default {
             } = getOffsetSizeDist(sizeDirection, keepRatio, datas, e);
 
 
-            let scaleX = startOffsetWidth ? (startOffsetWidth + distWidth) / startOffsetWidth : 1;
-            let scaleY = startOffsetHeight ? (startOffsetHeight + distHeight) / startOffsetHeight : 1;
+            const distX = startOffsetWidth ? (startOffsetWidth + distWidth) / startOffsetWidth : 1;
+            const distY = startOffsetHeight ? (startOffsetHeight + distHeight) / startOffsetHeight : 1;
 
             if (!startValue[0]) {
                 tempScaleValue[0] = distWidth / startOffsetWidth;
@@ -242,8 +240,8 @@ export default {
             if (!startValue[1]) {
                 tempScaleValue[1] = distHeight / startOffsetHeight;
             }
-            scaleX = (sizeDirection[0] || keepRatio ? scaleX : 1) * tempScaleValue[0];
-            scaleY = (sizeDirection[1] || keepRatio ? scaleY : 1) * tempScaleValue[1];
+            let scaleX = (sizeDirection[0] || keepRatio ? distX : 1) * tempScaleValue[0];
+            let scaleY = (sizeDirection[1] || keepRatio ? distY : 1) * tempScaleValue[1];
 
             if (scaleX === 0) {
                 scaleX = sign(prevDist[0]) * MIN_SCALE;
@@ -526,17 +524,16 @@ export default {
         if (!params) {
             return;
         }
-
+        const { dist } = params;
         const moveableScale = datas.moveableScale;
         moveable.scale = [
-            params.scale[0] * moveableScale[0],
-            params.scale[1] * moveableScale[1],
+            dist[0] * moveableScale[0],
+            dist[1] * moveableScale[1],
         ];
         const keepRatio = moveable.props.keepRatio;
-        const { dist, scale } = params;
+
 
         const fixedPosition = datas.fixedPosition;
-
         const events = triggerChildAbles(
             moveable,
             this,
@@ -556,8 +553,9 @@ export default {
                 return {
                     ...ev,
                     parentDist: null,
-                    parentScale: scale,
+                    parentScale: dist,
                     parentKeepRatio: keepRatio,
+                    // recalculate child fixed position for parent group's dragging.
                     dragClient: plus(fixedPosition, [clientX, clientY]),
                 };
             },
