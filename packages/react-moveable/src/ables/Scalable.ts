@@ -151,7 +151,7 @@ export default {
         // };
 
         setMinScaleSize([-Infinity, -Infinity]);
-        setMinScaleSize([Infinity, Infinity]);
+        setMaxScaleSize([Infinity, Infinity]);
         const params = fillParams<OnScaleStart>(moveable, e, {
             direction,
             set: (scale: number[]) => {
@@ -377,6 +377,7 @@ export default {
             startOffsetWidth * scale[0],
             startOffsetHeight * scale[1],
         ];
+
         scaleSize = calculateBoundSize(
             scaleSize,
             datas.minScaleSize,
