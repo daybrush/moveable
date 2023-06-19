@@ -128,7 +128,7 @@
         "@scena/dragscroll": "^1.4.0",
         "@scena/event-emitter": "^1.0.5",
         "@scena/matrix": "^1.1.1",
-        "css-to-mat": "^1.0.3",
+        "css-to-mat": "^1.1.1",
         "framework-utils": "^1.1.0",
         "gesto": "^1.19.0",
         "overlap-area": "^1.1.0",
