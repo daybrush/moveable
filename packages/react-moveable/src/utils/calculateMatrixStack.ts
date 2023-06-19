@@ -3,6 +3,7 @@ import { getCachedMatrixContainerInfo } from "../store/Store";
 import { convert3DMatrixes, getOffsetInfo, getSVGOffset, makeMatrixCSS } from "../utils";
 import { getMatrixStackInfo } from "./getMatrixStackInfo";
 import { getDocumentBody } from "@daybrush/utils";
+import { MatrixInfo } from "../types";
 
 export interface MoveableElementMatrixInfo {
     hasZoom: boolean;
@@ -18,8 +19,9 @@ export interface MoveableElementMatrixInfo {
     is3d: boolean;
     targetTransform: string;
     inlineTransform: string;
-    offsetContainer: HTMLElement | null,
-    offsetRootContainer: HTMLElement | null,
+    offsetContainer: HTMLElement | null;
+    offsetRootContainer: HTMLElement | null;
+    matrixes: MatrixInfo[];
 }
 
 export function calculateMatrixStack(
@@ -137,6 +139,7 @@ export function calculateMatrixStack(
     return {
         hasZoom: containerZoom !== 1 || rootZoom !== 1,
         hasFixed,
+        matrixes,
         rootMatrix,
         originalRootMatrix,
         beforeMatrix,

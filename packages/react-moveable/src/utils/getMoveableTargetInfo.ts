@@ -3,11 +3,11 @@ import { getCachedClientRect, getCachedStyle } from "../store/Store";
 import { MoveableClientRect, Writable } from "../types";
 import {
     calculateInversePosition,
-    calculateMoveablePosition,
     getClientRect, getClientRectByPosition, getOffsetInfo, resetClientRect,
     getTransformOriginArray,
 } from "../utils";
 import { calculateElementInfo, MoveableElementInfo } from "./getElementInfo";
+import { calculateElementPosition } from "./calculateElementPosition";
 
 
 export interface MoveableTargetInfo extends MoveableElementInfo {
@@ -51,7 +51,7 @@ export function getMoveableTargetInfo(
             style[name] = getStyle(name as any);
         });
         const n = result.is3d ? 4 : 3;
-        const beforePosition = calculateMoveablePosition(
+        const beforePosition = calculateElementPosition(
             result.offsetMatrix,
             plus(result.transformOrigin, getOrigin(result.targetMatrix, n)),
             result.width, result.height,
@@ -69,12 +69,12 @@ export function getMoveableTargetInfo(
             || result.offsetRootContainer!;
 
         if (result.hasZoom) {
-            const absoluteTargetPosition = calculateMoveablePosition(
+            const absoluteTargetPosition = calculateElementPosition(
                 multiply(result.originalRootMatrix, result.allMatrix),
                 result.transformOrigin,
                 result.width, result.height,
             );
-            const absoluteContainerPosition = calculateMoveablePosition(
+            const absoluteContainerPosition = calculateElementPosition(
                 result.originalRootMatrix,
                 getTransformOriginArray(getCachedStyle(offsetContainer)("transformOrigin")).map(pos => parseFloat(pos)),
                 offsetContainer.offsetWidth, offsetContainer.offsetHeight,

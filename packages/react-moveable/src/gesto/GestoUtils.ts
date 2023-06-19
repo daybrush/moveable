@@ -6,7 +6,7 @@ import {
 } from "@scena/matrix";
 import {
     calculatePoses, getAbsoluteMatrix, getAbsolutePosesByState,
-    calculatePosition, calculateInversePosition, calculateMoveablePosition, convertTransformInfo, fillCSSObject,
+    calculatePosition, calculateInversePosition, convertTransformInfo, fillCSSObject,
 } from "../utils";
 import { splitUnit, isArray, splitSpace, findIndex, dot, find, isString } from "@daybrush/utils";
 import {
@@ -16,6 +16,7 @@ import {
 import { setCustomDrag } from "./CustomGesto";
 import { parse, parseMat } from "css-to-mat";
 import { Draggable } from "../index.esm";
+import { calculateElementPosition } from "../utils/calculateElementPosition";
 
 export function calculatePointerDist(moveable: MoveableManagerInterface, e: any) {
     const { clientX, clientY, datas } = e;
@@ -61,7 +62,7 @@ export function setDragStart(moveable: MoveableManagerInterface<any>, { datas }:
 }
 
 export function getTransformDirection(e: any) {
-    return calculateMoveablePosition(e.datas.beforeTransform, [50, 50], 100, 100).direction;
+    return calculateElementPosition(e.datas.beforeTransform, [50, 50], 100, 100).direction;
 }
 
 

@@ -1,7 +1,8 @@
 import { createIdentityMatrix } from "@scena/matrix";
 import { ElementSizes, MoveablePosition } from "../types";
-import { calculateMoveablePosition, getSize, getRotationRad } from "../utils";
+import { getSize, getRotationRad } from "../utils";
 import { calculateMatrixStack, MoveableElementMatrixInfo } from "./calculateMatrixStack";
+import { calculateElementPosition } from "./calculateElementPosition";
 
 export interface MoveableElementInfo extends MoveableElementMatrixInfo, MoveablePosition, ElementSizes {
     width: number;
@@ -36,7 +37,7 @@ export function calculateElementInfo(
             // prevMatrix, prevRootMatrix, prevN,
         );
 
-        const position = calculateMoveablePosition(
+        const position = calculateElementPosition(
             result.allMatrix,
             result.transformOrigin,
             width, height,
@@ -45,7 +46,7 @@ export function calculateElementInfo(
             ...result,
             ...position,
         };
-        const rotationPosition = calculateMoveablePosition(
+        const rotationPosition = calculateElementPosition(
             result.allMatrix, [50, 50], 100, 100,
         );
         rotation = getRotationRad([rotationPosition.pos1, rotationPosition.pos2], rotationPosition.direction);
@@ -82,6 +83,7 @@ export function calculateElementInfo(
         hasFixed: false,
         offsetContainer: null,
         offsetRootContainer: null,
+        matrixes: [],
         ...allResult,
     };
 }
