@@ -7,10 +7,10 @@ repository: https://github.com/daybrush/moveable/blob/master/packages/helper
 version: 0.1.3
 */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@daybrush/utils')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@daybrush/utils'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.helper = {}, global.utils));
-})(this, (function (exports, utils) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.MoveableHelper = {}));
+})(this, (function (exports) { 'use strict';
 
     /******************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -58,6 +58,85 @@ version: 0.1.3
         }
       }
       return to.concat(ar || Array.prototype.slice.call(from));
+    }
+
+    /*
+    Copyright (c) 2018 Daybrush
+    @name: @daybrush/utils
+    license: MIT
+    author: Daybrush
+    repository: https://github.com/daybrush/utils
+    @version 1.13.0
+    */
+    /**
+    * Check the type that the value is isArray.
+    * @memberof Utils
+    * @param {string} value - Value to check the type
+    * @return {} true if the type is correct, false otherwise
+    * @example
+    import {isArray} from "@daybrush/utils";
+
+    console.log(isArray([])); // true
+    console.log(isArray({})); // false
+    console.log(isArray(undefined)); // false
+    console.log(isArray(null)); // false
+    */
+    function isArray(value) {
+      return Array.isArray(value);
+    }
+    /**
+    * Returns the index of the first element in the array that satisfies the provided testing function.
+    * @function
+    * @memberof CrossBrowser
+    * @param - The array `findIndex` was called upon.
+    * @param - A function to execute on each value in the array until the function returns true, indicating that the satisfying element was found.
+    * @param - Returns defaultIndex if not found by the function.
+    * @example
+    import { findIndex } from "@daybrush/utils";
+
+    findIndex([{a: 1}, {a: 2}, {a: 3}, {a: 4}], ({ a }) => a === 2); // 1
+    */
+    function findIndex(arr, callback, defaultIndex) {
+      if (defaultIndex === void 0) {
+        defaultIndex = -1;
+      }
+      var length = arr.length;
+      for (var i = 0; i < length; ++i) {
+        if (callback(arr[i], i, arr)) {
+          return i;
+        }
+      }
+      return defaultIndex;
+    }
+    /**
+    * Returns the value of the first element in the array that satisfies the provided testing function.
+    * @function
+    * @memberof CrossBrowser
+    * @param - The array `find` was called upon.
+    * @param - A function to execute on each value in the array,
+    * @param - Returns defalutValue if not found by the function.
+    * @example
+    import { find } from "@daybrush/utils";
+
+    find([{a: 1}, {a: 2}, {a: 3}, {a: 4}], ({ a }) => a === 2); // {a: 2}
+    */
+    function find(arr, callback, defalutValue) {
+      var index = findIndex(arr, callback);
+      return index > -1 ? arr[index] : defalutValue;
+    }
+    /**
+    * @function
+    * @memberof Utils
+    */
+    function deepFlat(arr) {
+      return arr.reduce(function (prev, cur) {
+        if (isArray(cur)) {
+          prev.push.apply(prev, deepFlat(cur));
+        } else {
+          prev.push(cur);
+        }
+        return prev;
+      }, []);
     }
 
     var Child =
@@ -129,7 +208,7 @@ version: 0.1.3
           checker = 0;
         }
 
-        var elements = utils.deepFlat(groups);
+        var elements = deepFlat(groups);
         var map = this.map;
         var elementsLength = elements.length;
         var mapSize = map.size;
@@ -169,7 +248,7 @@ version: 0.1.3
       };
 
       __proto.findContainedChild = function (element) {
-        return utils.find(this.value, function (child) {
+        return find(this.value, function (child) {
           if (child.type === "single") {
             return child.value === element;
           } else {
@@ -185,11 +264,11 @@ version: 0.1.3
       __proto.findExactChild = function (target) {
         var map = this.map;
 
-        if (!utils.isArray(target)) {
+        if (!isArray(target)) {
           return map.get(target);
         }
 
-        var flatted = utils.deepFlat(target);
+        var flatted = deepFlat(target);
         var length = flatted.length;
         var single = map.get(flatted[0]);
 
@@ -282,7 +361,7 @@ version: 0.1.3
         var nextChild = null;
         var length = range.length;
         range.some(function (child) {
-          if (!isExact && length === 1 && utils.isArray(child)) {
+          if (!isExact && length === 1 && isArray(child)) {
             nextChild = _this.findNextChild(target, child);
             return nextChild;
           }
@@ -383,7 +462,7 @@ version: 0.1.3
               });
             } else {
               return targets.some(function (target) {
-                return utils.isArray(target) && child.findArrayChild(target);
+                return isArray(target) && child.findArrayChild(target);
               });
             }
           }); // result = targets.every(target => {
@@ -436,7 +515,7 @@ version: 0.1.3
             group.depth = depth + 1;
             value.push(group);
             group.add(child.children);
-          } else if (utils.isArray(child)) {
+          } else if (isArray(child)) {
             var group = new GroupArrayChild(_this);
             group.depth = depth + 1;
             value.push(group);
@@ -489,7 +568,7 @@ version: 0.1.3
           return targets(this.raw());
         },
         flatten: function () {
-          return utils.deepFlat(this.targets());
+          return deepFlat(this.targets());
         }
       };
     }
@@ -577,7 +656,7 @@ version: 0.1.3
 
         var nextTargets = __spreadArray([], targets, true);
 
-        var startSelected = utils.deepFlat(nextTargets); // group can be added, removed.
+        var startSelected = deepFlat(nextTargets); // group can be added, removed.
 
         removed.forEach(function (element) {
           // Single Target
@@ -596,7 +675,7 @@ version: 0.1.3
 
           if (removedChild) {
             var groupIndex = nextTargets.findIndex(function (target) {
-              return utils.isArray(target) && removedChild.compare(target);
+              return isArray(target) && removedChild.compare(target);
             });
 
             if (groupIndex > -1) {
@@ -639,7 +718,7 @@ version: 0.1.3
 
           if (removedChild) {
             var groupIndex = nextTargets.findIndex(function (target) {
-              return utils.isArray(target) && removedChild.compare(target);
+              return isArray(target) && removedChild.compare(target);
             });
 
             if (groupIndex > -1) {
@@ -653,7 +732,7 @@ version: 0.1.3
             nextTargets.push(child.value);
           } else {
             var groupIndex = nextTargets.findIndex(function (target) {
-              return utils.isArray(target) && child.compare(target, 1);
+              return isArray(target) && child.compare(target, 1);
             });
 
             if (groupIndex > -1) {
@@ -671,7 +750,7 @@ version: 0.1.3
 
         var childs = [];
         targets.forEach(function (target) {
-          if (utils.isArray(target)) {
+          if (isArray(target)) {
             var arrayChild = _this.findArrayChild(target);
 
             if (arrayChild) {
@@ -720,7 +799,7 @@ version: 0.1.3
 
         var commonParent = this.findCommonParent(targets);
         var groupChilds = targets.map(function (target) {
-          if (utils.isArray(target)) {
+          if (isArray(target)) {
             return _this.findArrayChild(target);
           }
 
@@ -739,7 +818,7 @@ version: 0.1.3
           return groupChilds.indexOf(target) === -1;
         });
         nextChilds.unshift(group);
-        group.add(flatten ? utils.deepFlat(targets) : targets);
+        group.add(flatten ? deepFlat(targets) : targets);
         commonParent.value = nextChilds;
         this.set(this.toTargetGroups(), this._targets);
         return group.toTargetGroups();
@@ -748,13 +827,13 @@ version: 0.1.3
       __proto.ungroup = function (targets) {
         var _this = this;
 
-        if (targets.length === 1 && utils.isArray(targets[0])) {
+        if (targets.length === 1 && isArray(targets[0])) {
           targets = targets[0];
         }
 
         var commonParent = this.findCommonParent(targets);
         var groupChilds = targets.map(function (target) {
-          if (utils.isArray(target)) {
+          if (isArray(target)) {
             return _this.findArrayChild(target);
           }
 
