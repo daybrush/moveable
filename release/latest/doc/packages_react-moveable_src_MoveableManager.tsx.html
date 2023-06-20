@@ -60,20 +60,21 @@ import {
     getRefTarget,
     groupBy,
     unsetAbles,
+    getPaddingBox,
 } from "./utils";
 import Gesto from "gesto";
 import { ref } from "framework-utils";
 import {
     MoveableManagerProps, MoveableManagerState, Able,
-    RectInfo, Requester, PaddingBox, HitRect, MoveableManagerInterface,
+    RectInfo, Requester, HitRect, MoveableManagerInterface,
     MoveableDefaultOptions,
     GroupableProps,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
-import { plus } from "@scena/matrix";
+import { createOriginMatrix, multiplies, plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
-    getKeys, IObject, isNode, removeClass, requestAnimationFrame,
+    getKeys, getWindow, IObject, isNode, removeClass, requestAnimationFrame,
 } from "@daybrush/utils";
 import { renderLine } from "./renderDirections";
 import { fitPoints, getAreaSize, getOverlapSize, isInside } from "overlap-area";
@@ -85,7 +86,6 @@ import { VIEW_DRAGGING } from "./classNames";
 import { diff } from "@egjs/list-differ";
 import { getPersistState } from "./utils/persist";
 import { setStoreCache } from "./store/Store";
-// import { getClipPath } from "./ables/clippable/utils";
 
 export default class MoveableManager&lt;T = {}>
     extends React.PureComponent&lt;MoveableManagerProps&lt;T>, MoveableManagerState> {
@@ -754,6 +754,7 @@ export default class MoveableManager&lt;T = {}>
     public updateRenderPoses() {
         const state = this.getState();
         const props = this.props;
+        const padding = props.padding;
         const {
             originalBeforeOrigin,
             transformOrigin,
@@ -761,16 +762,24 @@ export default class MoveableManager&lt;T = {}>
             pos1, pos2, pos3, pos4,
             left: stateLeft,
             top: stateTop,
-            // offsetWidth,
-            // offsetHeight,
             isPersisted,
         } = state;
+
+        if (!padding) {
+            state.renderPoses = [
+                pos1,
+                pos2,
+                pos3,
+                pos4,
+            ];
+            return;
+        }
         const {
-            left = 0,
-            top = 0,
-            bottom = 0,
-            right = 0,
-        } = (props.padding || {}) as PaddingBox;
+            left,
+            top,
+            bottom,
+            right,
+        } = getPaddingBox(padding);
         const n = is3d ? 4 : 3;
 
         // const clipPathInfo = getClipPath(
@@ -796,11 +805,18 @@ export default class MoveableManager&lt;T = {}>
             absoluteOrigin = plus(originalBeforeOrigin, [stateLeft, stateTop]);
         }
 
+        const nextMatrix = multiplies(
+            n,
+            createOriginMatrix(absoluteOrigin.map(v => -v), n),
+            allMatrix,
+            createOriginMatrix(transformOrigin, n),
+        );
+
         state.renderPoses = [
-            plus(pos1, calculatePadding(allMatrix, [-left, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos2, calculatePadding(allMatrix, [right, -top], transformOrigin, absoluteOrigin, n)),
-            plus(pos3, calculatePadding(allMatrix, [-left, bottom], transformOrigin, absoluteOrigin, n)),
-            plus(pos4, calculatePadding(allMatrix, [right, bottom], transformOrigin, absoluteOrigin, n)),
+            calculatePadding(nextMatrix, pos1, [-left, -top], n),
+            calculatePadding(nextMatrix, pos2, [right, -top], n),
+            calculatePadding(nextMatrix, pos3, [-left, bottom], n),
+            calculatePadding(nextMatrix, pos4, [right, bottom], n),
         ];
     }
     public checkUpdate() {
@@ -1159,8 +1175,9 @@ export default class MoveableManager&lt;T = {}>
     private _updateResizeObserver(prevProps: MoveableDefaultOptions) {
         const props = this.props;
         const target = props.target;
+        const win = getWindow(this.getControlBoxElement());
 
-        if (!window.ResizeObserver || !target || !props.useResizeObserver) {
+        if (!win.ResizeObserver || !target || !props.useResizeObserver) {
             this._reiszeObserver?.disconnect();
             return;
         }
@@ -1169,7 +1186,7 @@ export default class MoveableManager&lt;T = {}>
             return;
         }
 
-        const observer = new ResizeObserver(this.checkUpdateRect);
+        const observer = new win.ResizeObserver(this.checkUpdateRect);
 
         observer.observe(target!, {
             box: "border-box",
@@ -1179,8 +1196,9 @@ export default class MoveableManager&lt;T = {}>
     private _updateMutationObserver(prevProps: MoveableDefaultOptions) {
         const props = this.props;
         const target = props.target;
+        const win = getWindow(this.getControlBoxElement());
 
-        if (!window.MutationObserver || !target || !props.useMutationObserver) {
+        if (!win.MutationObserver || !target || !props.useMutationObserver) {
             this._mutationObserver?.disconnect();
             return;
         }
@@ -1189,7 +1207,7 @@ export default class MoveableManager&lt;T = {}>
             return;
         }
 
-        const observer = new MutationObserver(records => {
+        const observer = new win.MutationObserver(records => {
             for (const mutation of records) {
                 if (mutation.type === "attributes" &amp;&amp; mutation.attributeName === "style") {
                     this.checkUpdateRect();
@@ -1390,7 +1408,7 @@ nav li[file="packages/react-moveable/src/moveablemanager"] h4, nav li[file="pack
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.4.7</a> on Mon Jun 05 2023 00:48:13 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/daybrush/jsdoc">JSDoc 0.4.7</a> on Wed Jun 21 2023 04:34:21 GMT+0900 (대한민국 표준시) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
