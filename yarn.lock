@@ -2638,10 +2638,10 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@croffle/bakery@^0.0.21":
-  version "0.0.21"
-  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.21.tgz#dc0b8ac45508547e51e924a2834806f1f4633434"
-  integrity sha512-W70NKR0mcNnn2t0mdMJjE+PIbM2CkfTOFL68IKOYlqqFPHyY+PPWHUUFXUQlOy/448zJh5Jx/XA7sNwMPhGDCA==
+"@croffle/bakery@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.npmjs.org/@croffle/bakery/-/bakery-0.0.22.tgz#55f9d181f12e78626c0be97bc3d318d8753623bf"
+  integrity sha512-748hFA3qslEyZM0LjGkrUYGCmyC+l8am501M9nzV/rOik/rKkwGCTHQINHxqHlCBPrNK/Xo6DKFP5/UvjVLtDQ==
   dependencies:
     "@daybrush/utils" "^1.10.3"
     commander "^9.4.0"
@@ -10691,10 +10691,10 @@ croact@^1.0.4:
     "@daybrush/utils" "^1.13.0"
     "@egjs/list-differ" "^1.0.0"
 
-croffle@^0.0.17:
-  version "0.0.17"
-  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.17.tgz#a08ccee1d1811a831134c22e07e908209442674d"
-  integrity sha512-jK00WRyw2viC29BCc8RT4VUHjes6N+o3K/9aoQD7uFXMYjgGYwelkG/bLQ+UjUNFzQFenQWe23bTnAOFqsIPSw==
+croffle@^0.0.18:
+  version "0.0.18"
+  resolved "https://registry.npmjs.org/croffle/-/croffle-0.0.18.tgz#93763f43a97913189b569f3cc0713c228a88144f"
+  integrity sha512-1LuT1s4KQ1sQNjKkIQrKJrIW79f1/ki0PrBLa8USYmBmagWgxYLIcAUX9Kk+Xt8yy0DUf925aTrzh/aW+7DRAQ==
   dependencies:
     "@daybrush/utils" "^1.10.3"
     "@scena/event-emitter" "^1.0.5"

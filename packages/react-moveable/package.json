@@ -12,7 +12,7 @@
         "dist/*",
         "declaration/*",
         "types/*"
-      ],
+    ],
     "scripts": {
         "lint": "eslint ./src/ --ext .ts,.tsx",
         "storybook": "rm -rf node_modules/.cache && start-storybook -p 6006",
@@ -68,7 +68,7 @@
     "homepage": "https://daybrush.com/moveable",
     "devDependencies": {
         "@babel/core": "^7.7.2",
-        "@croffle/bakery": "^0.0.21",
+        "@croffle/bakery": "^0.0.22",
         "@daybrush/builder": "^0.1.2",
         "@daybrush/tester": "^0.1.3",
         "@scena/react-guides": "^0.17.1",
@@ -94,7 +94,7 @@
         "@typescript-eslint/parser": "^3.9.1",
         "babel-loader": "^8.0.6",
         "concurrently": "^7.6.0",
-        "croffle": "^0.0.17",
+        "croffle": "^0.0.18",
         "css-loader": "^5.0.1",
         "eslint": "^7.7.0",
         "eslint-plugin-import": "^2.22.1",

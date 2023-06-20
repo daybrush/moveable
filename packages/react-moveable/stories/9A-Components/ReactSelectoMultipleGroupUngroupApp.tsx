@@ -18,6 +18,7 @@ export default function App() {
         selectoRef.current!.setSelectedTargets(deepFlat(nextTargetes));
         setTargets(nextTargetes);
     }, []);
+
     React.useEffect(() => {
         // [[0, 1], 2], 3, 4, [5, 6], 7, 8, 9
         const elements = selectoRef.current!.getSelectableElements();
@@ -41,7 +42,7 @@ export default function App() {
                 if (nextGroup) {
                     setTargets(nextGroup);
                 }
-            }}>Ungrooup</button>
+            }}>Ungroup</button>
             <Moveable
                 ref={moveableRef}
                 draggable={true}
