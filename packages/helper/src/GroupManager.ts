@@ -4,52 +4,6 @@ import { GroupArrayChild, GroupSingleChild } from "./groups";
 import { GroupChild, TargetGroupsObject, TargetGroupsType, TargetList } from "./types";
 
 
-function createGroupChildren(
-    targetGroups: TargetGroupsObject,
-    parent: GroupArrayChild,
-) {
-    const {
-        value,
-        map,
-    } = parent;
-    targetGroups.forEach(child => {
-        if ("groupId" in child) {
-            const group = new GroupArrayChild(parent);
-
-            group.id = child.groupId;
-            group.depth = parent.depth + 1;
-            value.push(group);
-
-            createGroupChildren(child.children, group);
-        } else if (isArray(child)) {
-            const group = new GroupArrayChild(parent);
-
-            group.depth = parent.depth + 1;
-            value.push(group);
-
-            createGroupChildren(child, group);
-        } else {
-            const element = "current" in child ? child.current : child;
-            const single = new GroupSingleChild(parent, element!);
-
-            single.depth = parent.depth + 1;
-            value.push(single);
-            map.set(element!, single);
-        }
-    });
-
-    value.forEach(child => {
-        if (child.type === "single") {
-            map.set(child.value, child);
-        } else {
-            child.map.forEach((nextChild, element) => {
-                map.set(element, nextChild);
-            });
-        }
-    });
-    return parent;
-}
-
 export function toTargetList(raw: GroupChild[]): TargetList {
     function targets(childs: GroupChild[] = []) {
         const arr: TargetGroupsType = [];
@@ -78,6 +32,8 @@ export function toTargetList(raw: GroupChild[]): TargetList {
 
 export class GroupManager extends GroupArrayChild {
     public type = "root" as const;
+    private _targets:  Array<HTMLElement | SVGElement> = [];
+
     constructor(
         targetGroups: TargetGroupsType,
         targets?: Array<HTMLElement | SVGElement>,
@@ -95,8 +51,7 @@ export class GroupManager extends GroupArrayChild {
         const map = this.map;
         const value = this.value;
 
-        createGroupChildren(targetGroups, this);
-
+        this.add(targetGroups);
         targets.forEach(target => {
             if (map.has(target)) {
                 return;
@@ -107,6 +62,7 @@ export class GroupManager extends GroupArrayChild {
             value.push(single);
             map.set(target, single);
         });
+        this._targets = targets;
     }
     public selectSubChilds(targets: TargetGroupsType, target: HTMLElement | SVGElement) {
         const root = this;
@@ -299,6 +255,62 @@ export class GroupManager extends GroupArrayChild {
         });
 
         return value;
+    }
+    public group(targets: TargetGroupsType, flatten?: boolean): TargetGroupsType | null {
+        const commonParent = this.findCommonParent(targets);
+        const groupChilds = targets.map(target => {
+            if (isArray(target)) {
+                return this.findArrayChild(target);
+            }
+            return this.toSingleChild(target);
+        });
+        const isGroupable = groupChilds.every(child => child?.parent === commonParent);
+
+        if (!isGroupable) {
+            return null;
+        }
+        const group = new GroupArrayChild(commonParent);
+        const nextChilds = commonParent.value.filter(target => groupChilds.indexOf(target) === -1);
+
+        nextChilds.unshift(group);
+
+        group.add(flatten ? deepFlat(targets) : targets);
+        commonParent.value = nextChilds;
+
+        this.set(this.toTargetGroups(), this._targets);
+
+        return group.toTargetGroups();
+    }
+    public ungroup(targets: TargetGroupsType) {
+        if (targets.length === 1 && isArray(targets[0])) {
+            targets = targets[0];
+        }
+        const commonParent = this.findCommonParent(targets);
+        const groupChilds = targets.map(target => {
+            if (isArray(target)) {
+                return this.findArrayChild(target);
+            }
+            return this.toSingleChild(target);
+        });
+        const isGroupable = commonParent.value.every(child => groupChilds.indexOf(child) > -1);
+
+        if (!isGroupable || commonParent === this) {
+            // has no group
+            return null;
+        }
+
+        const parent = commonParent.parent;
+
+        if (!parent) {
+            return null;
+        }
+        const nextChilds = parent.value.filter(target => target !== commonParent);
+
+        nextChilds.push(...commonParent.value);
+        parent.value = nextChilds;
+
+        this.set(this.toTargetGroups(), this._targets);
+        return commonParent.toTargetGroups();
     }
     protected _findParentGroup(
         element: HTMLElement | SVGElement,

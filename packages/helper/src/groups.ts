@@ -1,11 +1,15 @@
 import { isArray, deepFlat, find } from "@daybrush/utils";
-import { GroupChild, TargetGroupsType } from "./types";
+import { GroupChild, TargetGroupsObject, TargetGroupsType } from "./types";
 
 export class Child {
     public type: "group" | "root" | "single" = "single";
     public depth = 0;
     protected _scope: string[] = [];
-    constructor(public parent?: GroupArrayChild) {}
+    constructor(public parent?: GroupArrayChild) {
+        if (parent) {
+            this.depth = parent.depth + 1;
+        }
+    }
 
     public get scope(): string[] {
         const parent = this.parent;
@@ -284,5 +288,49 @@ export class GroupArrayChild extends Child {
             }
             return selected.indexOf(child.value) > -1;
         });
+    }
+    public add(targets: TargetGroupsObject) {
+        const {
+            value,
+            map,
+        } = this;
+        const depth = this.depth;
+
+        targets.forEach(child => {
+            if ("groupId" in child) {
+                const group = new GroupArrayChild(this);
+
+                group.id = child.groupId;
+                group.depth = depth + 1;
+                value.push(group);
+
+                group.add(child.children);
+            } else if (isArray(child)) {
+                const group = new GroupArrayChild(this);
+
+                group.depth = depth + 1;
+                value.push(group);
+
+                group.add(child);
+            } else {
+                const element = "current" in child ? child.current : child;
+                const single = new GroupSingleChild(this, element!);
+
+                single.depth = depth + 1;
+                value.push(single);
+                map.set(element!, single);
+            }
+        });
+
+        value.forEach(child => {
+            if (child.type === "single") {
+                map.set(child.value, child);
+            } else {
+                child.map.forEach((nextChild, element) => {
+                    map.set(element, nextChild);
+                });
+            }
+        });
+        return parent;
     }
 }
