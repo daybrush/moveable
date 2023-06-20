@@ -15,6 +15,12 @@ export const ComponentsSelectoWithMultipleGroup = add("Use Selecto with Multiple
     path: require.resolve("./ReactSelectoMultipleGroupApp"),
 });
 
+export const ComponentsSelectoWitGroupUngroup = add("Use Selecto with Group & Ungroup", {
+    app: require("./ReactSelectoMultipleGroupUngroupApp").default,
+    path: require.resolve("./ReactSelectoMultipleGroupUngroupApp"),
+});
+
+
 
 export const ComponentsInfiniteViewer = add("Use Infinite Viewer", {
     app: require("./ReactInfiniteViewerApp").default,

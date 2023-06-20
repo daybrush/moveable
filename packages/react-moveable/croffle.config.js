@@ -180,6 +180,7 @@ const config = [
             croissant.addSirup(PreviewPropsSirup);
             croissant.addSirup(sirup => {
                 sirup.convertImport("@/react-moveable", "react-moveable");
+                sirup.convertImport("@/helper", "@moveable/helper");
             });
             croissant.addSirup(DefaultModulePrefixSirup);
             return croissant;

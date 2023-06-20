@@ -16,6 +16,13 @@
                 ]
             },
             {
+                "basePath": "packages/helper/dist",
+                "dists": [
+                    "demo/helper/release/{{version}}/dist",
+                    "demo/helper/release/latest/dist"
+                ]
+            },
+            {
                 "basePath": "doc",
                 "dists": [
                     "demo/release/{{version}}/doc",
