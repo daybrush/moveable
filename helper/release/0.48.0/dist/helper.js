@@ -7,10 +7,10 @@ repository: https://github.com/daybrush/moveable/blob/master/packages/helper
 version: 0.1.3
 */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-    typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.MoveableHelper = {}));
-})(this, (function (exports) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.MoveableHelper = factory());
+})(this, (function () { 'use strict';
 
     /******************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -901,14 +901,7 @@ version: 0.1.3
         GroupManager: GroupManager
     };
 
-    module.exports = modules;
-
-    exports.Child = Child;
-    exports.GroupArrayChild = GroupArrayChild;
-    exports.GroupManager = GroupManager;
-    exports.GroupSingleChild = GroupSingleChild;
-    exports["default"] = modules;
-    exports.toTargetList = toTargetList;
+    return modules;
 
 }));
 //# sourceMappingURL=helper.js.map
