@@ -20,7 +20,7 @@ export default function App() {
                     rotatable={true}
                     scalable={true}
                     snapRotataionThreshold={5}
-                    snapRotationDegress={[0, 90, 180, 270]}
+                    snapRotationDegrees={[0, 90, 180, 270]}
                     onRender={e => {
                         e.target.style.cssText += e.cssText;
                     }}

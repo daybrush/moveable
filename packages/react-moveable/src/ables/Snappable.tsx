@@ -360,7 +360,7 @@ export function checkSnapRotate(
 ) {
     const props = moveable.props;
     const snapRotationThreshold = props[NAME_snapRotationThreshold] ?? 5;
-    const snapRotationDegress = props[NAME_snapRotationDegress];
+    const snapRotationDegrees = props[NAME_snapRotationDegrees];
 
     if (hasGuidelines(moveable, "rotatable")) {
         const { pos1, pos2, pos3, pos4, origin: origin2 } = rect;
@@ -390,10 +390,10 @@ export function checkSnapRotate(
             };
         }
     }
-    if (snapRotationDegress?.length && snapRotationThreshold) {
+    if (snapRotationDegrees?.length && snapRotationThreshold) {
 
 
-        const sorted = snapRotationDegress.slice().sort((a, b) => {
+        const sorted = snapRotationDegrees.slice().sort((a, b) => {
             return getMinDegreeDistance(a, rotation) - getMinDegreeDistance(b, rotation);
         });
         const firstDegree = sorted[0];
@@ -580,7 +580,7 @@ const directionCondition = getDirectionCondition("", ["resizable", "scalable"]);
 
 
 const NAME_snapRotationThreshold = "snapRotationThreshold";
-const NAME_snapRotationDegress = "snapRotationDegress";
+const NAME_snapRotationDegrees = "snapRotationDegrees";
 
 /**
  * @namespace Moveable.Snappable
@@ -605,7 +605,7 @@ export default {
         "snapThreshold",
         "snapRenderThreshold",
         NAME_snapRotationThreshold,
-        NAME_snapRotationDegress,
+        NAME_snapRotationDegrees,
         "horizontalGuidelines",
         "verticalGuidelines",
         "elementGuidelines",
