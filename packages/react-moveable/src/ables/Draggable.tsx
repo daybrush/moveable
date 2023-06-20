@@ -182,7 +182,8 @@ export default {
             const [verticalInfo, horizontalInfo] = checkSnapBoundsDrag(
                 moveable, distX, distY,
                 throttleDragRotate,
-                isRequest || deltaOffset, datas,
+                isRequest || deltaOffset,
+                datas,
             );
             isVerticalSnap = verticalInfo.isSnap;
             isVerticalBound = verticalInfo.isBound;

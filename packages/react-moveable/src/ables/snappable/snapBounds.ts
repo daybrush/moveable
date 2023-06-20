@@ -193,7 +193,7 @@ export function checkSnapBoundsDrag(
     distX: number,
     distY: number,
     throttleDragRotate: number,
-    isRequest: boolean,
+    ignoreSnap: boolean,
     datas: any
 ) {
     if (!hasGuidelines(moveable, "draggable")) {
@@ -228,7 +228,7 @@ export function checkSnapBoundsDrag(
     const {
         vertical: verticalSnapBoundInfo,
         horizontal: horizontalSnapBoundInfo,
-    } = checkMoveableSnapBounds(moveable, isRequest, snapPoses, boundPoses);
+    } = checkMoveableSnapBounds(moveable, ignoreSnap, snapPoses, boundPoses);
     const {
         vertical: verticalInnerBoundInfo,
         horizontal: horizontalInnerBoundInfo,
@@ -273,7 +273,7 @@ export function checkSnapBoundsDrag(
 
 export function checkMoveableSnapBounds(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
-    isRequest: boolean,
+    ignoreSnap: boolean,
     poses: { vertical: number[]; horizontal: number[]; },
     boundPoses: { vertical: number[]; horizontal: number[]; } = poses,
 ): DirectionSnapType<Required<SnapBoundInfo>> {
@@ -288,7 +288,7 @@ export function checkMoveableSnapBounds(
     const {
         horizontal: horizontalSnapInfo,
         vertical: verticalSnapInfo,
-    } = isRequest ? {
+    } = ignoreSnap ? {
         horizontal: { isSnap: false, index: -1 } as SnapInfo,
         vertical: { isSnap: false, index: -1 } as SnapInfo,
     } : checkMoveableSnapPoses(
