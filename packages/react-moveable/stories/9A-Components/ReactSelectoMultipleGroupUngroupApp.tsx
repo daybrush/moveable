@@ -57,6 +57,21 @@ export default function App() {
                         ev.target.style.cssText += ev.cssText;
                     });
                 }}
+                onClickGroup={e => {
+                    if (!e.moveableTarget) {
+                        setSelectedTargets([]);
+                        return;
+                    }
+                    if (e.isDouble) {
+                        const childs = groupManager.selectSubChilds(targets, e.moveableTarget);
+
+                        setSelectedTargets(childs.targets());
+                        return;
+                    }
+                    if (e.isTrusted) {
+                        selectoRef.current!.clickTarget(e.inputEvent, e.moveableTarget);
+                    }
+                }}
             ></Moveable>
             <Selecto
                 ref={selectoRef}
@@ -83,6 +98,7 @@ export default function App() {
                 onSelectEnd={e => {
                     const {
                         isDragStart,
+                        isClick,
                         added,
                         removed,
                         inputEvent,
@@ -98,7 +114,7 @@ export default function App() {
                     }
                     let nextChilds: TargetList;
 
-                    if (isDragStart) {
+                    if (isDragStart || isClick) {
                         nextChilds = groupManager.selectCompletedChilds(targets, added, removed);
                     } else {
                         nextChilds = groupManager.selectSameDepthChilds(targets, added, removed);
