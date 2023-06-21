@@ -9,6 +9,7 @@ import {
     convertTransformOriginArray,
     isDeepArrayEquals,
     sign,
+    getRefTarget,
 } from "./utils";
 import { minus, plus } from "@scena/matrix";
 import { getIntersectionPointsByConstants, getMinMaxs } from "overlap-area";
@@ -426,13 +427,14 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     }
     protected _updateTargets() {
         super._updateTargets();
-        this._prevTarget = this.props.dragTarget || this.areaElement;
+        this._prevDragTarget = this.props.dragTarget || this.areaElement;
+        this._dragTarget = getRefTarget(this._prevDragTarget, true);
     }
     protected _updateEvents() {
         const state = this.state;
         const props = this.props;
 
-        const prevTarget = this._prevTarget;
+        const prevTarget = this._prevDragTarget;
         const nextTarget = props.dragTarget || this.areaElement;
         const targets = props.targets!;
         const { added, changed, removed } = this.differ.update(targets);
@@ -452,7 +454,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         }
         if (state.target) {
             if (!this.targetGesto) {
-                this.targetGesto = getTargetAbleGesto(this, nextTarget, "Group");
+                this.targetGesto = getTargetAbleGesto(this, this._dragTarget!, "Group");
             }
             if (!this.controlGesto) {
                 this.controlGesto = getAbleGesto(this, this.controlBox, "controlAbles", "GroupControl");

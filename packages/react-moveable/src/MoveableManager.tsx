@@ -25,6 +25,7 @@ import {
     RectInfo, Requester, HitRect, MoveableManagerInterface,
     MoveableDefaultOptions,
     GroupableProps,
+    MoveableRefType,
 } from "./types";
 import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
 import { createOriginMatrix, multiplies, plus } from "@scena/matrix";
@@ -119,7 +120,9 @@ export default class MoveableManager<T = {}>
     };
 
     protected _emitter: EventEmitter = new EventEmitter();
-    protected _prevTarget: HTMLElement | SVGElement | null | undefined = null;
+    protected _prevDragTarget: MoveableRefType | null = null;
+    protected _dragTarget: HTMLElement | SVGElement | null | undefined = null;
+
     protected _prevDragArea = false;
     protected _isPropTargetChanged = false;
     protected _hasFirstTarget = false;
@@ -229,8 +232,8 @@ export default class MoveableManager<T = {}>
         this._checkUpdateRootContainer();
         this._checkUpdateViewContainer();
         this._updateNativeEvents();
-        this._updateEvents();
         this._updateTargets();
+        this._updateEvents();
         this.updateCheckInput();
         this._updateObserver(prevProps);
     }
@@ -949,8 +952,7 @@ export default class MoveableManager<T = {}>
         const controlBoxElement = this.controlBox;
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
-        const props = this.props;
-        const target = props.dragTarget || props.target;
+        const target = this._dragTarget;
         const isUnset = (!hasTargetAble && this.targetGesto)
             || this._isTargetChanged(true);
 
@@ -972,7 +974,8 @@ export default class MoveableManager<T = {}>
     protected _updateTargets() {
         const props = this.props;
 
-        this._prevTarget = props.dragTarget || props.target;
+        this._prevDragTarget = props.dragTarget || props.target;
+        this._dragTarget = getRefTarget(this._prevDragTarget, true);
         this._prevDragArea = props.dragArea!;
     }
     private _renderLines() {
@@ -1008,16 +1011,16 @@ export default class MoveableManager<T = {}>
     }
     private _isTargetChanged(useDragArea?: boolean) {
         const props = this.props;
-        const target = props.dragTarget || props.target;
-        const prevTarget = this._prevTarget;
+        const nextTarget = props.dragTarget || props.target;
+        const prevTarget = this._prevDragTarget;
         const prevDragArea = this._prevDragArea;
         const dragArea = props.dragArea;
 
         // check target without dragArea
-        const isTargetChanged = !dragArea && prevTarget !== target;
+        const isDragTargetChanged = !dragArea && prevTarget !== nextTarget;
         const isDragAreaChanged = (useDragArea || dragArea) && prevDragArea !== dragArea;
 
-        return isTargetChanged || isDragAreaChanged;
+        return isDragTargetChanged || isDragAreaChanged;
     }
     private _updateNativeEvents() {
         const props = this.props;

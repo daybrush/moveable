@@ -64,7 +64,7 @@ export interface DefaultOptions {
      * The target(s) to drag Moveable target(s)
      * @default target
      */
-    dragTarget?: SVGElement | HTMLElement | null;
+    dragTarget?: MoveableRefType | null;
     /**
      * Container area where drag works
      * @default window

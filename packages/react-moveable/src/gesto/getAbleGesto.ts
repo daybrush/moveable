@@ -202,17 +202,16 @@ export function triggerAble(
 
 export function checkMoveableTarget(moveable: MoveableManagerInterface) {
     return (e: { inputEvent: Event }) => {
-        const {
-            dragTarget,
-        } = moveable.props;
         const eventTarget = e.inputEvent.target as Element;
         const areaElement = moveable.areaElement;
+        const dragTargetElement = (moveable as any)._dragTarget;
 
         if (moveable.controlGesto?.isFlag()) {
             return false;
         }
 
-        return dragTarget && (eventTarget === dragTarget || dragTarget.contains(eventTarget))
+        return eventTarget === dragTargetElement
+            || dragTargetElement.contains(eventTarget)
             || eventTarget === areaElement
             || (!moveable.isMoveableElement(eventTarget) && !moveable.controlBox.contains(eventTarget))
             || hasClass(eventTarget, "moveable-area")

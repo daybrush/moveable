@@ -144,3 +144,10 @@ export const OptionsAccuratePosition = add("useAccuratePosition (Render in a mor
     app: require("./ReactUseAccuratePositionApp").default,
     path: require.resolve("./ReactUseAccuratePositionApp"),
 });
+
+
+
+export const OptionsDragTarget = add("other dragTarget", {
+    app: require("./ReactDragTargetApp").default,
+    path: require.resolve("./ReactDragTargetApp"),
+});
