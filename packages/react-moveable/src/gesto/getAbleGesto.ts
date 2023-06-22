@@ -206,7 +206,7 @@ export function checkMoveableTarget(moveable: MoveableManagerInterface) {
         const areaElement = moveable.areaElement;
         const dragTargetElement = (moveable as any)._dragTarget;
 
-        if (moveable.controlGesto?.isFlag()) {
+        if (!dragTargetElement || moveable.controlGesto?.isFlag()) {
             return false;
         }
 

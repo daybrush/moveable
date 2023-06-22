@@ -111,7 +111,7 @@
         "react-dom": "^16.8.6",
         "react-infinite-viewer": "^0.19.1",
         "react-keycon": "^0.1.2",
-        "react-selecto": "^1.20.2",
+        "react-selecto": "^1.24.0",
         "storybook-addon-preview": "^2.3.0",
         "storybook-dark-mode": "^1.0.9",
         "ts-loader": "^8.3.0",
@@ -131,7 +131,8 @@
         "framework-utils": "^1.1.0",
         "gesto": "^1.19.0",
         "overlap-area": "^1.1.0",
-        "react-css-styled": "^1.1.9"
+        "react-css-styled": "^1.1.9",
+        "react-selecto": "^1.25.0"
     },
     "browserslist": {
         "production": [

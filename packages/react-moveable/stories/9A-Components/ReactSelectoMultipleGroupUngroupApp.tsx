@@ -94,10 +94,29 @@ export default function App() {
                     ) {
                         e.stop();
                     }
+                    e.data.startTargets = targets;
+                }}
+                onSelect={e => {
+                    const {
+                        startAdded,
+                        startRemoved,
+                        isDragStartEnd,
+                    } = e;
+
+                    if (isDragStartEnd) {
+                        return;
+                    }
+                    const nextChilds = groupManager.selectSameDepthChilds(
+                        e.data.startTargets,
+                        startAdded,
+                        startRemoved,
+                    );
+
+                    setSelectedTargets(nextChilds.targets());
                 }}
                 onSelectEnd={e => {
                     const {
-                        isDragStart,
+                        isDragStartEnd,
                         isClick,
                         added,
                         removed,
@@ -105,7 +124,7 @@ export default function App() {
                     } = e;
                     const moveable = moveableRef.current!;
 
-                    if (isDragStart) {
+                    if (isDragStartEnd) {
                         inputEvent.preventDefault();
 
                         moveable.waitToChangeTarget().then(() => {
@@ -114,12 +133,11 @@ export default function App() {
                     }
                     let nextChilds: TargetList;
 
-                    if (isDragStart || isClick) {
-                        nextChilds = groupManager.selectCompletedChilds(targets, added, removed);
+                    if (isDragStartEnd || isClick) {
+                        nextChilds = groupManager.selectCompletedChilds(e.data.startTargets, added, removed);
                     } else {
-                        nextChilds = groupManager.selectSameDepthChilds(targets, added, removed);
+                        nextChilds = groupManager.selectSameDepthChilds(e.data.startTargets, added, removed);
                     }
-
                     e.currentTarget.setSelectedTargets(nextChilds.flatten());
                     setSelectedTargets(nextChilds.targets());
                 }}
