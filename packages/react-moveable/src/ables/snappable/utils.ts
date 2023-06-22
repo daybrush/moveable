@@ -94,6 +94,8 @@ export function splitSnapDirectionPoses(
     const verticalNames = VERTICAL_NAMES.filter(name => name in nextSnapPoses);
 
     return {
+        horizontalNames,
+        verticalNames,
         horizontal: horizontalNames.map(name => nextSnapPoses[name]!),
         vertical: verticalNames.map(name => nextSnapPoses[name]!),
     };

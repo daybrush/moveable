@@ -3,7 +3,6 @@ import {
     SnappableProps,
     SnappableState,
     SnapGuideline,
-    SnapInfo,
     ScalableProps,
     SnapPosInfo,
     RotatableProps,
@@ -12,6 +11,7 @@ import {
     SnappableRenderType,
     BoundType,
     MoveableGroupInterface,
+    SnapDirectionInfo,
 } from "../types";
 import {
     prefix,
@@ -27,6 +27,7 @@ import {
     abs,
 } from "../utils";
 import {
+    find,
     findIndex, hasClass, throttle,
 } from "@daybrush/utils";
 import {
@@ -494,18 +495,24 @@ export function startCheckSnapDrag(
 
 
 function getSnapGuidelines(posInfos: SnapPosInfo[]) {
-    const guidelines: SnapGuideline[] = [];
+    const guidelines: Array<{ guideline: SnapGuideline, posInfo: SnapPosInfo }> = [];
 
     posInfos.forEach((posInfo) => {
         posInfo.guidelineInfos.forEach(({ guideline }) => {
-            if (guidelines.indexOf(guideline) > -1) {
+            if (find(guidelines, info => info.guideline === guideline)) {
                 return;
             }
-            guidelines.push(guideline);
+            guideline.direction = "";
+            guidelines.push({ guideline, posInfo });
         });
     });
 
-    return guidelines;
+    return guidelines.map(({ guideline, posInfo }) => {
+        return {
+            ...guideline,
+            direction: posInfo.direction,
+        };
+    });
 }
 
 function addBoundGuidelines(
@@ -695,8 +702,8 @@ color: #f55;
         const verticalGuidelines: SnapGuideline[] = [];
         const horizontalGuidelines: SnapGuideline[] = [];
         const snapInfos: Array<{
-            vertical: SnapInfo;
-            horizontal: SnapInfo;
+            vertical: SnapDirectionInfo;
+            horizontal: SnapDirectionInfo;
         }> = [];
         const { width, height, top, left, bottom, right } = getRect(poses);
         const targetRect = { left, right, top, bottom, center: (left + right) / 2, middle: (top + bottom) / 2 };
@@ -758,6 +765,7 @@ color: #f55;
                         } as const)
                     )
                 );
+
                 verticalGuidelines.push(...getSnapGuidelines(verticalPosInfos));
                 horizontalGuidelines.push(...getSnapGuidelines(horizontalPosInfos));
             });

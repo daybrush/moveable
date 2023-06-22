@@ -237,6 +237,7 @@ export function getGapGuidelines(
                 gap,
                 hide: true,
                 gapRects: [snapRect1, snapRect2],
+                direction: "",
             });
         });
     });
@@ -268,6 +269,7 @@ export function getGridGuidelines(
                 className: prefix("grid-guideline"),
                 size: containerWidth!,
                 hide: !isDisplayGridGuidelines,
+                direction: "",
             });
         }
     }
@@ -282,6 +284,7 @@ export function getGridGuidelines(
                 className: prefix("grid-guideline"),
                 size: containerHeight!,
                 hide: !isDisplayGridGuidelines,
+                direction: "",
             });
         }
     }
@@ -394,6 +397,7 @@ export function getElementGuidelines(
                 sizes,
                 className,
                 elementRect: snapRect,
+                direction: "",
             });
         });
         horizontal.forEach(pos => {
@@ -405,6 +409,7 @@ export function getElementGuidelines(
                 sizes,
                 className,
                 elementRect: snapRect,
+                direction: "",
             });
         });
     });
@@ -460,6 +465,7 @@ export function getDefaultGuidelines(
             ],
             size: snapWidth,
             className: posInfo.className,
+            direction: "",
         });
     });
     getObjectGuidelines(verticalGuidelines, snapWidth).forEach(posInfo => {
@@ -471,6 +477,7 @@ export function getDefaultGuidelines(
             ],
             size: snapHeight,
             className: posInfo.className,
+            direction: "",
         });
     });
     return guidelines;

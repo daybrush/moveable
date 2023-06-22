@@ -216,12 +216,14 @@ export function groupByElementGuidelines(
                     pos: nextPos1,
                     size: 0,
                     elementRect: elementRect1,
+                    direction: "",
                 });
                 end.push({
                     type,
                     pos: nextPos2,
                     size: 0,
                     elementRect: elementRect2,
+                    direction: "",
                 });
                 // inner.push(guideline);
             }

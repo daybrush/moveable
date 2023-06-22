@@ -348,7 +348,7 @@ export function checkSnapBounds(
     const {
         horizontal: horizontalSnapInfo,
         vertical: verticalSnapInfo,
-    } = checkSnapPoses(guideines, posesX, posesY, snapThreshold);
+    } = checkSnapPoses(guideines, posesX, posesY, [], [], snapThreshold);
 
     const horizontalOffset = getSnapBound(
         horizontalBoundInfos[0],

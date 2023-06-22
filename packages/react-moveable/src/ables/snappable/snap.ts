@@ -1,7 +1,7 @@
 import {
     SnapInfo, SnappableProps, SnappableState,
     SnapGuideline, ResizableProps, ScalableProps,
-    SnapOffsetInfo, MoveableManagerInterface, SnapDirectionPoses,
+    SnapOffsetInfo, MoveableManagerInterface, SnapDirectionPoses, SnapDirectionInfo,
 } from "../../types";
 import {
     selectValue, getTinyDist, abs,
@@ -17,6 +17,8 @@ export function checkMoveableSnapPoses(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     posesX: number[],
     posesY: number[],
+    dirXs: string[] = [],
+    dirYs: string[] = [],
     customSnapThreshold?: number,
 ) {
     const props = moveable.props;
@@ -26,6 +28,8 @@ export function checkMoveableSnapPoses(
         moveable.state.guidelines,
         posesX,
         posesY,
+        dirXs,
+        dirYs,
         snapThreshold,
     );
 }
@@ -34,11 +38,13 @@ export function checkSnapPoses(
     guidelines: SnapGuideline[],
     posesX: number[],
     posesY: number[],
+    dirXs: string[],
+    dirYs: string[],
     snapThreshold: number,
 ) {
     return {
-        vertical: checkSnap(guidelines, "vertical", posesX, snapThreshold),
-        horizontal: checkSnap(guidelines, "horizontal", posesY, snapThreshold),
+        vertical: checkSnap(guidelines, "vertical", posesX, snapThreshold, dirXs),
+        horizontal: checkSnap(guidelines, "horizontal", posesY, snapThreshold, dirYs),
     };
 }
 export function checkSnapKeepRatio(
@@ -142,19 +148,49 @@ export function checkSnapKeepRatio(
     };
 }
 
+
+function getStringDirection(dir: number | string) {
+    let stringDirection = "";
+
+    if (dir === -1 || dir === "top" || dir === "left") {
+        stringDirection = "start";
+    } else if (dir === 0 || dir === "center" || dir === "middle") {
+        stringDirection = "center";
+    } else if (dir === 1 || dir === "right" || dir === "bottom") {
+        stringDirection = "end";
+    }
+    return stringDirection;
+}
+
+
 export function checkSnaps(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     rect: SnapDirectionPoses,
     customSnapThreshold?: number,
-) {
+): { vertical: SnapDirectionInfo; horizontal: SnapDirectionInfo } {
     const poses = splitSnapDirectionPoses(moveable.props.snapDirections, rect);
 
-    return checkMoveableSnapPoses(
+    const result = checkMoveableSnapPoses(
         moveable,
         poses.vertical,
         poses.horizontal,
+        poses.verticalNames.map(name => getStringDirection(name)),
+        poses.horizontalNames.map(name => getStringDirection(name)),
         customSnapThreshold,
     );
+    const horizontalDirection = getStringDirection(poses.horizontalNames[result.horizontal.index]);
+    const verticalDirection = getStringDirection(poses.verticalNames[result.vertical.index]);
+
+    return {
+        vertical: {
+            ...result.vertical,
+            direction: verticalDirection,
+        },
+        horizontal: {
+            ...result.horizontal,
+            direction: horizontalDirection,
+        },
+    };
 }
 
 export function getNearestSnapGuidelineInfo(
@@ -191,11 +227,13 @@ function checkSnap(
     targetType: "horizontal" | "vertical",
     targetPoses: number[],
     snapThreshold: number,
+    dirs: string[] = [],
 ): SnapInfo {
     if (!guidelines || !guidelines.length) {
         return {
             isSnap: false,
             index: -1,
+            direction: "",
             posInfos: [],
         };
     }
@@ -203,6 +241,8 @@ function checkSnap(
     const posType = isVertical ? 0 : 1;
 
     const snapPosInfos = targetPoses.map((targetPos, index) => {
+        const direction = dirs[index] || "";
+
         const guidelineInfos = guidelines.map(guideline => {
             const { pos } = guideline;
             const offset = targetPos - pos[posType];
@@ -211,6 +251,7 @@ function checkSnap(
                 offset,
                 dist: abs(offset),
                 guideline,
+                direction,
             };
         }).filter(({ guideline, dist }) => {
             const { type } = guideline;
@@ -230,6 +271,7 @@ function checkSnap(
             pos: targetPos,
             index,
             guidelineInfos,
+            direction,
         };
     }).filter(snapPosInfo => {
         return snapPosInfo.guidelineInfos.length > 0;
@@ -241,54 +283,88 @@ function checkSnap(
     return {
         isSnap,
         index: isSnap ? snapPosInfos[0].index : -1,
+        direction: snapPosInfos[0]?.direction ?? "",
         posInfos: snapPosInfos,
     };
 }
 
 export function getSnapInfosByDirection(
     moveable: MoveableManagerInterface<SnappableProps & (ResizableProps | ScalableProps), SnappableState>,
+    // pos1 pos2 pos3 pos4
     poses: number[][],
     snapDirection: number[],
     snapThreshold = 1,
-) {
-    let nextPoses: number[][] = [];
+): { vertical: SnapDirectionInfo; horizontal: SnapDirectionInfo } {
+    let dirs: number[][] = [];
+
     if (snapDirection[0] && snapDirection[1]) {
-        nextPoses = [
+        dirs = [
             snapDirection,
             [-snapDirection[0], snapDirection[1]],
             [snapDirection[0], -snapDirection[1]],
-        ].map(direction => getPosByDirection(poses, direction));
+        ];
     } else if (!snapDirection[0] && !snapDirection[1]) {
-        const alignPoses = [poses[0], poses[1], poses[3], poses[2], poses[0]];
-
-        for (let i = 0; i < 4; ++i) {
-            nextPoses.push(alignPoses[i]);
-            nextPoses.push([
-                (alignPoses[i][0] + alignPoses[i + 1][0]) / 2,
-                (alignPoses[i][1] + alignPoses[i + 1][1]) / 2,
+        [
+            [-1, -1],
+            [1, -1],
+            [1, 1],
+            [-1, 1],
+        ].forEach((dir, i, arr) => {
+            const nextDir = (arr[i + 1] || arr[0]);
+            dirs.push(dir);
+            dirs.push([
+                (dir[0] + nextDir[0]) / 2,
+                (dir[1] + nextDir[1]) / 2,
             ]);
-        }
+        });
     } else {
         if (moveable.props.keepRatio) {
-            nextPoses = [
+            dirs.push(
                 [-1, -1],
                 [-1, 1],
                 [1, -1],
                 [1, 1],
                 snapDirection,
-            ].map(dir => getPosByDirection(poses, dir));
+            );
         } else {
-            nextPoses = getPosesByDirection(poses, snapDirection);
+            dirs.push(...getPosesByDirection([
+                [-1, -1],
+                [1, -1],
+                [-1, -1],
+                [1, 1],
+            ], snapDirection));
 
-            if (nextPoses.length > 1) {
-                nextPoses.push([
-                    (nextPoses[0][0] + nextPoses[1][0]) / 2,
-                    (nextPoses[0][1] + nextPoses[1][1]) / 2,
+            if (dirs.length > 1) {
+                dirs.push([
+                    (dirs[0][0] + dirs[1][0]) / 2,
+                    (dirs[0][1] + dirs[1][1]) / 2,
                 ]);
             }
         }
     }
-    return checkMoveableSnapPoses(moveable, nextPoses.map(pos => pos[0]), nextPoses.map(pos => pos[1]), snapThreshold);
+    const nextPoses = dirs.map(dir => getPosByDirection(poses, dir));
+    const xs = nextPoses.map(pos => pos[0]);
+    const ys = nextPoses.map(pos => pos[1]);
+    const result = checkMoveableSnapPoses(
+        moveable,
+        xs, ys,
+        dirs.map(dir => getStringDirection(dir[0])),
+        dirs.map(dir => getStringDirection(dir[1])),
+        snapThreshold
+    );
+    const verticalDirection = getStringDirection(dirs.map(dir => dir[0])[result.vertical.index]);
+    const horizontalDirection = getStringDirection(dirs.map(dir => dir[1])[result.horizontal.index]);
+
+    return {
+        vertical: {
+            ...result.vertical,
+            direction: verticalDirection,
+        },
+        horizontal: {
+            ...result.horizontal,
+            direction: horizontalDirection,
+        },
+    };
 }
 
 export function checkSnapBoundPriority(

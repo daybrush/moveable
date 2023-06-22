@@ -54,6 +54,9 @@ export default function App(props: Record<string, any>) {
                     onRender={e => {
                         e.target.style.cssText += e.cssText;
                     }}
+                    onSnap={e => {
+                        console.log(e.guidelines, e.elements);
+                    }}
                 />
             </div>
         </div>

@@ -329,6 +329,7 @@ export interface Renderer {
  */
 export interface SnapGuideline {
     type: "horizontal" | "vertical";
+    direction: string;
     hide?: boolean;
     element?: Element | null;
 
@@ -365,19 +366,25 @@ export interface SnapOffsetInfo {
     offset: number;
     pos: number;
 }
+export interface SnapDirectionInfo extends SnapInfo {
+    direction: string;
+}
 export interface SnapInfo {
     isSnap: boolean;
     index: number;
+    direction: string;
     posInfos: SnapPosInfo[];
 }
 export interface SnapPosInfo {
     pos: number;
     index: number;
+    direction: string;
     guidelineInfos: SnapGuidelineInfo[];
 }
 export interface SnapGuidelineInfo {
     dist: number;
     offset: number;
+    direction: string;
     guideline: SnapGuideline;
 }
 
