@@ -225,3 +225,9 @@ export const TestScalableKeepRatio = add("Even if the size is 0, the ratio is ma
 });
 
 
+
+export const TestIframe = add("Test Iframe", {
+    app: require("./ReactIframeApp").default,
+    path: require.resolve("./ReactIframeApp"),
+});
+
