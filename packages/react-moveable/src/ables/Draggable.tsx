@@ -17,7 +17,7 @@ import {
 } from "../types";
 import { triggerChildGesto } from "../groupUtils";
 import { startCheckSnapDrag } from "./Snappable";
-import { IObject, getRad, throttle, throttleArray } from "@daybrush/utils";
+import { getRad, throttle, throttleArray } from "@daybrush/utils";
 import { checkSnapBoundsDrag } from "./snappable/snapBounds";
 import { TINY_NUM } from "../consts";
 
@@ -140,7 +140,12 @@ export default {
         }
         resolveTransformEvent(e, "translate");
 
-        const { datas, parentEvent, parentFlag, isPinch, isRequest, deltaOffset } = e;
+        const {
+            datas, parentEvent,
+            parentFlag, isPinch, deltaOffset,
+            useSnap,
+            isRequest,
+        } = e;
         let { distX, distY } = e;
         const { isDrag, prevDist, prevBeforeDist, startValue } = datas;
 
@@ -182,7 +187,7 @@ export default {
             const [verticalInfo, horizontalInfo] = checkSnapBoundsDrag(
                 moveable, distX, distY,
                 throttleDragRotate,
-                isRequest || deltaOffset,
+                (!useSnap && isRequest) || deltaOffset,
                 datas,
             );
             isVerticalSnap = verticalInfo.isSnap;
@@ -398,13 +403,15 @@ export default {
         const rect = moveable.getRect();
         let distX = 0;
         let distY = 0;
+        let useSnap = false;
 
         return {
             isControl: false,
-            requestStart() {
-                return { datas };
+            requestStart(e: Record<string, any>) {
+                useSnap = e.useSnap;
+                return { datas, useSnap };
             },
-            request(e: IObject<any>) {
+            request(e: Record<string, any>) {
                 if ("x" in e) {
                     distX = e.x - rect.left;
                 } else if ("deltaX" in e) {
@@ -416,10 +423,10 @@ export default {
                     distY += e.deltaY;
                 }
 
-                return { datas, distX, distY };
+                return { datas, distX, distY, useSnap };
             },
             requestEnd() {
-                return { datas, isDrag: true };
+                return { datas, isDrag: true, useSnap };
             },
         };
     },

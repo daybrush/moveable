@@ -243,6 +243,7 @@ export default {
             parentKeepRatio,
             dragClient,
             parentDist,
+            useSnap,
             isRequest,
             isGroup,
             parentEvent,
@@ -378,13 +379,14 @@ export default {
         let snapDist = [0, 0];
 
         if (!isPinch) {
+            console.log(useSnap, isRequest);
             snapDist = checkSnapResize(
                 moveable,
                 boundingWidth,
                 boundingHeight,
                 direction,
                 fixedPosition,
-                isRequest,
+                !useSnap && isRequest,
                 datas,
             );
         }
@@ -784,12 +786,19 @@ export default {
         const datas: Record<string, any> = {};
         let distWidth = 0;
         let distHeight = 0;
+        let useSnap = false;
         const rect = moveable.getRect();
 
         return {
             isControl: true,
             requestStart(e: ResizableRequestParam) {
-                return { datas, parentDirection: e.direction || [1, 1], parentIsWidth: e?.horizontal ?? true };
+                useSnap = e.useSnap!;
+
+                return {
+                    datas, parentDirection: e.direction || [1, 1],
+                    parentIsWidth: e?.horizontal ?? true,
+                    useSnap,
+                };
             },
             request(e: ResizableRequestParam) {
                 if ("offsetWidth" in e) {
@@ -804,10 +813,15 @@ export default {
                 }
 
 
-                return { datas, parentDist: [distWidth, distHeight], parentKeepRatio: e.keepRatio };
+                return {
+                    datas,
+                    parentDist: [distWidth, distHeight],
+                    parentKeepRatio: e.keepRatio,
+                    useSnap,
+                };
             },
             requestEnd() {
-                return { datas, isDrag: true };
+                return { datas, isDrag: true, useSnap };
             },
         };
     },

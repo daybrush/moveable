@@ -2160,6 +2160,10 @@ export interface DraggableRequestParam extends AbleRequestParam {
      * Y number to move
      */
     deltaY?: number;
+    /**
+     * whether to use with `snappable`
+     */
+    useSnap?: boolean;
 }
 
 /**
@@ -2198,6 +2202,10 @@ export interface ResizableRequestParam extends AbleRequestParam {
      *
      */
     horizontal?: boolean;
+    /**
+     * whether to use with `snappable`
+     */
+    useSnap?: boolean;
 }
 
 export interface ResizableEvents {
@@ -2270,6 +2278,10 @@ export interface ScalableRequestParam extends AbleRequestParam {
      * delta number of height
      */
     deltaHeight?: number;
+    /**
+     * whether to use with `snappable`
+     */
+    useSnap?: boolean;
 }
 
 

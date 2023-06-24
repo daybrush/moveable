@@ -44,3 +44,15 @@ export const RequestResizableGroup = add("Resizable Group", {
         ...DEFAULT_RESIZABLE_CONTROLS,
     },
 });
+
+
+
+export const RequestDraggableSnappable = add("Draggable With Snappable", {
+    app: require("./ReactDraggableSnappableApp").default,
+    path: require.resolve("./ReactDraggableSnappableApp"),
+});
+
+export const RequestResizableSnappable = add("Resizable With Snappable", {
+    app: require("./ReactResizableSnappableApp").default,
+    path: require.resolve("./ReactResizableSnappableApp"),
+});

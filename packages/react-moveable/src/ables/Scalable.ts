@@ -189,6 +189,7 @@ export default {
             isPinch,
             dragClient,
             isRequest,
+            useSnap,
             resolveMatrix,
         } = e;
         const {
@@ -219,7 +220,7 @@ export default {
         const keepRatio = (ratio && (parentKeepRatio != null ? parentKeepRatio : props.keepRatio)) || false;
         const state = moveable.state;
 
-        const tempScaleValue  = [
+        const tempScaleValue = [
             startValue[0],
             startValue[1],
         ];
@@ -303,7 +304,7 @@ export default {
                 moveable,
                 dist,
                 direction,
-                isRequest,
+                !useSnap && isRequest,
                 datas,
             );
         }
@@ -610,20 +611,32 @@ export default {
         const datas = {};
         let distWidth = 0;
         let distHeight = 0;
+        let useSnap = false;
 
         return {
             isControl: true,
             requestStart(e: IObject<any>) {
-                return { datas, parentDirection: e.direction || [1, 1] };
+                useSnap = e.useSnap;
+
+                return {
+                    datas,
+                    parentDirection: e.direction || [1, 1],
+                    useSnap,
+                };
             },
             request(e: IObject<any>) {
                 distWidth += e.deltaWidth;
                 distHeight += e.deltaHeight;
 
-                return { datas, parentDist: [distWidth, distHeight], parentKeepRatio: e.keepRatio };
+                return {
+                    datas,
+                    parentDist: [distWidth, distHeight],
+                    parentKeepRatio: e.keepRatio,
+                    useSnap,
+                };
             },
             requestEnd() {
-                return { datas, isDrag: true };
+                return { datas, isDrag: true, useSnap };
             },
         };
     },
