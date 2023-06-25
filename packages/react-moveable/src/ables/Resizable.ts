@@ -379,7 +379,6 @@ export default {
         let snapDist = [0, 0];
 
         if (!isPinch) {
-            console.log(useSnap, isRequest);
             snapDist = checkSnapResize(
                 moveable,
                 boundingWidth,

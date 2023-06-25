@@ -86,7 +86,7 @@ export default function App() {
                 }}
                 onSelectEnd={e => {
                     const {
-                        isDragStart,
+                        isDragStartEnd,
                         isClick,
                         added,
                         removed,
@@ -94,7 +94,7 @@ export default function App() {
                     } = e;
                     const moveable = moveableRef.current!;
 
-                    if (isDragStart) {
+                    if (isDragStartEnd) {
                         inputEvent.preventDefault();
 
                         moveable.waitToChangeTarget().then(() => {
@@ -104,7 +104,7 @@ export default function App() {
                     const groupManager = groupManagerRef.current!;
                     let nextChilds: TargetList;
 
-                    if (isDragStart || isClick) {
+                    if (isDragStartEnd || isClick) {
                         if (isCommand) {
                             nextChilds = groupManager.selectSingleChilds(targets, added, removed);
                         } else {

@@ -5,7 +5,7 @@
         "sourceMap": true,
         "module": "esnext",
         "target": "es5",
-
+        "downlevelIteration": true,
         "experimentalDecorators": true,
         "skipLibCheck": true,
         "moduleResolution": "node",

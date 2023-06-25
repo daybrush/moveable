@@ -5,7 +5,7 @@ export class Child {
     public type: "group" | "root" | "single" = "single";
     public depth = 0;
     protected _scope: string[] = [];
-    constructor(public parent?: GroupArrayChild) {
+    constructor(public parent?: ArrayChild) {
         if (parent) {
             this.depth = parent.depth + 1;
         }
@@ -21,19 +21,21 @@ export class Child {
     }
 }
 
-export class GroupSingleChild extends Child {
+export class SingleChild extends Child {
     public type = "single" as const;
-    constructor(parent: GroupArrayChild, public value: HTMLElement | SVGElement) {
+    public isGroupElement = false;
+    constructor(parent: ArrayChild, public value: HTMLElement | SVGElement) {
         super(parent);
     }
 }
 
 
-export class GroupArrayChild extends Child {
+export class ArrayChild extends Child {
     public type: "group" | "root" = "group";
     public value: GroupChild[] = [];
     public id = "";
-    public map: Map<HTMLElement | SVGElement, GroupSingleChild> = new Map();
+    public groupElement?: HTMLElement | SVGElement | null = null;
+    public map: Map<HTMLElement | SVGElement, SingleChild> = new Map();
 
     public compare(groups: TargetGroupsType, checker: -1 | 0 | 1 = 0) {
         const elements = deepFlat(groups);
@@ -95,7 +97,7 @@ export class GroupArrayChild extends Child {
             return;
         }
 
-        let parent: GroupArrayChild | undefined = single.parent;
+        let parent: ArrayChild | undefined = single.parent;
 
         while (parent) {
             if (parent.map.size >= length) {
@@ -105,7 +107,7 @@ export class GroupArrayChild extends Child {
         }
         return;
     }
-    public findCommonParent(targets: TargetGroupsType): GroupArrayChild {
+    public findCommonParent(targets: TargetGroupsType): ArrayChild {
         let depth = Infinity;
         let childs = targets.map(target => this.findExactChild(target));
 
@@ -136,7 +138,7 @@ export class GroupArrayChild extends Child {
                 break;
             }
         }
-        const commonParent = childs.find(child => child) as GroupArrayChild;
+        const commonParent = childs.find(child => child) as ArrayChild;
 
         return commonParent || this;
     }
@@ -144,8 +146,8 @@ export class GroupArrayChild extends Child {
         target: HTMLElement | SVGElement,
         range: TargetGroupsType = this.toTargetGroups(),
         isExact = true,
-    ): GroupArrayChild | null {
-        let nextChild: GroupArrayChild | null = null;
+    ): ArrayChild | null {
+        let nextChild: ArrayChild | null = null;
 
         const length = range.length;
 
@@ -176,7 +178,7 @@ export class GroupArrayChild extends Child {
         target: HTMLElement | SVGElement,
         selected: Array<HTMLElement | SVGElement>,
         range: TargetGroupsType = this.toTargetGroups(),
-    ): GroupArrayChild | null {
+    ): ArrayChild | null {
         // [[1, 2]] => group([1, 2]) exact
         // [[[1, 2], 3]] => group([1, 2])
         const nextChild = this.findNextChild(target, range, true);
@@ -196,8 +198,8 @@ export class GroupArrayChild extends Child {
     public findPureChild(
         target: HTMLElement | SVGElement,
         range: Array<HTMLElement | SVGElement>,
-    ): GroupArrayChild | null {
-        let nextGroupChild: GroupArrayChild | null = null;
+    ): ArrayChild | null {
+        let nextGroupChild: ArrayChild | null = null;
 
         const childSelected = range.filter(element => this.has(element));
 
@@ -220,11 +222,23 @@ export class GroupArrayChild extends Child {
     public findNextPureChild(
         target: HTMLElement | SVGElement,
         range: Array<HTMLElement | SVGElement>,
-    ): GroupArrayChild | null {
+    ): ArrayChild | null {
         const nextChild = this.findNextChild(target);
 
         if (nextChild) {
             return nextChild.findPureChild(target, range);
+        }
+        return null;
+    }
+    public getSingleChild(): SingleChild | null {
+        const groupElement = this.groupElement;
+
+        if (groupElement) {
+            const singleChild = this.parent?.value.find(t => t.value === groupElement);
+
+            if (singleChild) {
+                return singleChild as SingleChild;
+            }
         }
         return null;
     }
@@ -237,7 +251,7 @@ export class GroupArrayChild extends Child {
             }
         });
     }
-    public findArrayChild(targets: TargetGroupsType): GroupArrayChild | null {
+    public findArrayChild(targets: TargetGroupsType): ArrayChild | null {
         const {
             value,
         } = this;
@@ -268,7 +282,7 @@ export class GroupArrayChild extends Child {
         if (result && targets.length === value.length) {
             return this;
         } else {
-            let childResult: GroupArrayChild | null = null;
+            let childResult: ArrayChild | null = null;
 
             value.some(child => {
                 if (child.type === "group") {
@@ -287,6 +301,15 @@ export class GroupArrayChild extends Child {
                 return child.compare(selected, -1);
             }
             return selected.indexOf(child.value) > -1;
+        }).map(child => {
+            if (child.type !== "single") {
+                const singleChild = child.getSingleChild();
+
+                if (singleChild) {
+                    return singleChild;
+                }
+            }
+            return child;
         });
     }
     public add(targets: TargetGroupsObject) {
@@ -294,29 +317,23 @@ export class GroupArrayChild extends Child {
             value,
             map,
         } = this;
-        const depth = this.depth;
 
         targets.forEach(child => {
             if ("groupId" in child) {
-                const group = new GroupArrayChild(this);
+                const group = new ArrayChild(this);
 
                 group.id = child.groupId;
-                group.depth = depth + 1;
                 value.push(group);
-
                 group.add(child.children);
             } else if (isArray(child)) {
-                const group = new GroupArrayChild(this);
+                const group = new ArrayChild(this);
 
-                group.depth = depth + 1;
                 value.push(group);
-
                 group.add(child);
             } else {
                 const element = "current" in child ? child.current : child;
-                const single = new GroupSingleChild(this, element!);
+                const single = new SingleChild(this, element!);
 
-                single.depth = depth + 1;
                 value.push(single);
                 map.set(element!, single);
             }
@@ -329,6 +346,32 @@ export class GroupArrayChild extends Child {
                 child.map.forEach((nextChild, element) => {
                     map.set(element, nextChild);
                 });
+            }
+        });
+
+        value.forEach(child => {
+            if  (child.type !== "single") {
+                return;
+            }
+            // single
+            const singleElement = child.value;
+            const groupChild = value.find(child2 => {
+                if (child2.type === "single") {
+                    return;
+                }
+                const firstElement = [...child2.map.keys()][0];
+
+                if (!firstElement) {
+                    return;
+                }
+
+                return singleElement.contains(firstElement);
+            });
+
+            (child as SingleChild).isGroupElement = !!groupChild;
+
+            if (groupChild) {
+                (groupChild as ArrayChild).groupElement = child.value;
             }
         });
         return parent;

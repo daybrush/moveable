@@ -203,3 +203,8 @@ body:has(.margin) {
     line-height: 40px;
     text-align: center;
 }
+
+.cube .cube {
+    background: #ddd;
+    margin-left: 20px;
+}

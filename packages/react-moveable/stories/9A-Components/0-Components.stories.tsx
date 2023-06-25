@@ -15,10 +15,18 @@ export const ComponentsSelectoWithMultipleGroup = add("Use Selecto with Multiple
     path: require.resolve("./ReactSelectoMultipleGroupApp"),
 });
 
-export const ComponentsSelectoWitGroupUngroup = add("Use Selecto with Group & Ungroup", {
+export const ComponentsSelectoWithGroupUngroup = add("Use Selecto with Group & Ungroup", {
     app: require("./ReactSelectoMultipleGroupUngroupApp").default,
     path: require.resolve("./ReactSelectoMultipleGroupUngroupApp"),
 });
+
+
+export const ComponentsSelectoWithNestedGroup = add("Use Selecto with Nested Group", {
+    app: require("./ReactSelectoNestedGroupApp").default,
+    path: require.resolve("./ReactSelectoNestedGroupApp"),
+});
+
+
 
 
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-cond-assign */
 import { deepFlat, isArray } from "@daybrush/utils";
-import { GroupArrayChild, GroupSingleChild } from "./groups";
+import { ArrayChild, SingleChild } from "./groups";
 import { GroupChild, TargetGroupsObject, TargetGroupsType, TargetList } from "./types";
 
 
@@ -30,7 +30,7 @@ export function toTargetList(raw: GroupChild[]): TargetList {
     };
 }
 
-export class GroupManager extends GroupArrayChild {
+export class GroupManager extends ArrayChild {
     public type = "root" as const;
     private _targets:  Array<HTMLElement | SVGElement> = [];
 
@@ -56,7 +56,7 @@ export class GroupManager extends GroupArrayChild {
             if (map.has(target)) {
                 return;
             }
-            const single = new GroupSingleChild(this, target);
+            const single = new SingleChild(this, target);
 
             single.depth = 1;
             value.push(single);
@@ -110,7 +110,6 @@ export class GroupManager extends GroupArrayChild {
         removed: Array<HTMLElement | SVGElement>,
         continueSelect?: boolean,
     ) {
-
         const nextTargets = [...targets];
         const startSelected = deepFlat(nextTargets);
 
@@ -144,11 +143,16 @@ export class GroupManager extends GroupArrayChild {
 
         added.forEach(element => {
             const parentGroup = this._findParentGroup(element, startSelected);
-
             const nextChild = parentGroup.findContainedChild(element);
 
             if (nextChild?.type === "group") {
-                nextTargets.push(nextChild.toTargetGroups());
+                const singleChild = nextChild.getSingleChild();
+
+                if (singleChild) {
+                    nextTargets.push(singleChild.value);
+                } else {
+                    nextTargets.push(nextChild.toTargetGroups());
+                }
                 return;
             }
             nextTargets.push(element);
@@ -215,6 +219,11 @@ export class GroupManager extends GroupArrayChild {
                 const arrayChild = this.findArrayChild(target);
 
                 if (arrayChild) {
+                    const singleChild = arrayChild.getSingleChild();
+
+                    if (singleChild) {
+                        return singleChild;
+                    }
                     childs.push(arrayChild);
                 }
             } else {
@@ -223,25 +232,31 @@ export class GroupManager extends GroupArrayChild {
                 if (single) {
                     childs.push(single);
                 } else {
-                    childs.push(new GroupSingleChild(this, target));
+                    childs.push(new SingleChild(this, target));
                 }
             }
         });
 
         return childs;
     }
-    public toSingleChild(element: HTMLElement | SVGElement, isAuto: true): GroupSingleChild;
-    public toSingleChild(element: HTMLElement | SVGElement, isAuto?: boolean): GroupSingleChild | undefined;
-    public toSingleChild(element: HTMLElement | SVGElement, isAuto?: boolean): GroupSingleChild | undefined {
+    public findChild(element: HTMLElement | SVGElement, isAuto: true): SingleChild | ArrayChild;
+    public findChild(
+        element: HTMLElement | SVGElement,
+        isAuto?: boolean,
+    ): SingleChild | ArrayChild | undefined;
+    public findChild(
+        element: HTMLElement | SVGElement,
+        isAuto?: boolean,
+    ): SingleChild | ArrayChild | undefined {
         const value = this.map.get(element);
 
         if (isAuto) {
-            return value || new GroupSingleChild(this, element);
+            return value || new SingleChild(this, element);
         }
         return value;
     }
-    public findArrayChildById(id: string): GroupArrayChild | null {
-        let value: GroupArrayChild | null = null;
+    public findArrayChildById(id: string): ArrayChild | null {
+        let value: ArrayChild | null = null;
 
         this.value.some(function find(child: GroupChild) {
             if (child.type !== "single") {
@@ -262,18 +277,20 @@ export class GroupManager extends GroupArrayChild {
             if (isArray(target)) {
                 return this.findArrayChild(target);
             }
-            return this.toSingleChild(target);
+            return this.findChild(target);
         });
         const isGroupable = groupChilds.every(child => child?.parent === commonParent);
 
         if (!isGroupable) {
             return null;
         }
-        const group = new GroupArrayChild(commonParent);
+        const group = new ArrayChild(commonParent);
         const nextChilds = commonParent.value.filter(target => groupChilds.indexOf(target) === -1);
 
+        if (!nextChilds.length) {
+            return null;
+        }
         nextChilds.unshift(group);
-
         group.add(flatten ? deepFlat(targets) : targets);
         commonParent.value = nextChilds;
 
@@ -290,8 +307,14 @@ export class GroupManager extends GroupArrayChild {
             if (isArray(target)) {
                 return this.findArrayChild(target);
             }
-            return this.toSingleChild(target);
+            return this.findChild(target);
         });
+
+        if (commonParent.groupElement) {
+            return null;
+        }
+
+        // all children is targets
         const isGroupable = commonParent.value.every(child => groupChilds.indexOf(child) > -1);
 
         if (!isGroupable || commonParent === this) {
@@ -324,7 +347,7 @@ export class GroupManager extends GroupArrayChild {
         if (!single) {
             return this;
         }
-        let parent: GroupArrayChild | undefined = single.parent;
+        let parent: ArrayChild | undefined = single.parent;
 
         while (parent) {
             if (range.some(element => parent!.contains(element))) {

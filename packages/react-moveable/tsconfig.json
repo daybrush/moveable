@@ -15,6 +15,7 @@
             "dom"
         ],
         "allowJs": true,
+        "downlevelIteration": true,
         "allowSyntheticDefaultImports": true,
         "strict": true,
         "strictNullChecks": true,
