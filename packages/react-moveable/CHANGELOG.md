@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.52.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.51.0...react-moveable@0.52.0) (2023-06-25)
+
+
+### :rocket: New Features
+
+* add direciton on snap event #949 ([69312fd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/69312fd6eb0c3ca48f446bcc680f91abab189dfd))
+* export matrixes in getElementInfo ([c1aad6a](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c1aad6a0aa19c9f5060fe9d9c3277c95a0ad2c5f))
+* setMin, setMax scale size in onScaleStart ([ea4cd95](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ea4cd9527cd599fec9f211f0713dbccb9e2ec343))
+* support multiple dragTarget type #953 ([4a347d2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/4a347d2b7f36570ba882cfe7894207210650d3ec))
+* support snappable in request #954 ([863ad42](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/863ad42876e08c0e1cea6324e241dba0d6842946))
+
+
+### :bug: Bug Fix
+
+* bump react-selecto version ([c3eb9c7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c3eb9c7e52e7144f7accdd8298cd44e00b092d0f))
+* fix isRequest naming ([fb90fbd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/fb90fbddc94698cf9c88b1e9d8b54a8182f03d88))
+* fix max scale size ([9cd9761](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9cd9761ad109bd941ef474d7af940dbc086251a2))
+* fix padding for scalized target #951 ([70d938f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/70d938fe3255ae5f4cc875c9213412ad5ad09740))
+* fix props and event types missing #941 ([bd91b08](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/bd91b08ba04a50644e3d1ed91729563260b5a01b))
+* fix ResizeObserver, MutationObserver contexts ([71152cb](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/71152cbb055b0148ebf501d9156b9af6a542fc69))
+* fix scalable group's negative scale dist #950 ([f4bb504](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f4bb504d7f7f537d63f44f74a90f0cbe59886a16))
+* fix typo (degress => degrees) #928 ([835be5b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/835be5be701c8b3740ff9dfc16101a9b9ed60cbb))
+* support useMutationObserver in Group ([def4db3](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/def4db354db052379789cfc7e342d36f7b781699))
+
+
+### :mega: Other
+
+* bump croffle version ([0a0cb93](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/0a0cb931bff2d4cdb7809351212f83cd59fd047c))
+* publish packages ([f893cca](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f893ccaa176d31ef9ddb241d2cd4a1fb098cdae0))
+
+
+
 ## [0.51.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.50.7...react-moveable@0.51.0) (2023-06-04)
 
 

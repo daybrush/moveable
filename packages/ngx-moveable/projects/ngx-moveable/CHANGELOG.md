@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.46.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.45.0...ngx-moveable@0.46.0) (2023-06-25)
+
+
+### :bug: Bug Fix
+
+* fix props and event types missing #941 ([bd91b08](https://github.com/daybrush/moveable/commit/bd91b08ba04a50644e3d1ed91729563260b5a01b))
+* fix typo (degress => degrees) #928 ([835be5b](https://github.com/daybrush/moveable/commit/835be5be701c8b3740ff9dfc16101a9b9ed60cbb))
+* **ngx-moveable:** reduce change detection cycles (#939) ([b8ff60c](https://github.com/daybrush/moveable/commit/b8ff60cfda90aac4a5420c3620f798a8a184cdb9))
+
+
+### :mega: Other
+
+* publish packages ([f893cca](https://github.com/daybrush/moveable/commit/f893ccaa176d31ef9ddb241d2cd4a1fb098cdae0))
+
+
+
 ## [0.45.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.44.9...ngx-moveable@0.45.0) (2023-06-04)
 
 
