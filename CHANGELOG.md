@@ -20,7 +20,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### :rocket: New Features
 
 * `react-moveable`
-    * add direciton on snap event #949 ([69312fd](https://github.com/daybrush/moveable/commit/69312fd6eb0c3ca48f446bcc680f91abab189dfd))
+    * add direction on snap event #949 ([69312fd](https://github.com/daybrush/moveable/commit/69312fd6eb0c3ca48f446bcc680f91abab189dfd))
     * export matrixes in getElementInfo ([c1aad6a](https://github.com/daybrush/moveable/commit/c1aad6a0aa19c9f5060fe9d9c3277c95a0ad2c5f))
     * setMin, setMax scale size in onScaleStart ([ea4cd95](https://github.com/daybrush/moveable/commit/ea4cd9527cd599fec9f211f0713dbccb9e2ec343))
     * support multiple dragTarget type #953 ([4a347d2](https://github.com/daybrush/moveable/commit/4a347d2b7f36570ba882cfe7894207210650d3ec))
