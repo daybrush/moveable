@@ -1,0 +1,70 @@
+{
+    "compilerOptions": {
+        "outDir": "./outjs/",
+        "esModuleInterop": false,
+        "sourceMap": true,
+        "module": "esnext",
+        "target": "es5",
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "moduleResolution": "node",
+        "jsx": "react",
+        "lib": [
+            "es2019",
+            "es2015",
+            "dom"
+        ],
+        "allowJs": true,
+        "downlevelIteration": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/stories/*": [
+                "./stories/*"
+            ],
+            "moveable": [
+                "../packages/moveable/src/"
+            ],
+            "croact-moveable": [
+                "../packages/croact-moveable/src/"
+            ],
+            "@/react-moveable": [
+                "../packages/react-moveable/src/"
+            ],
+            "react-moveable": [
+                "../packages/react-moveable/src/"
+            ],
+            "vue3-moveable": [
+                "../packages/vue3-moveable/src/"
+            ],
+            "svelte-moveable": [
+                "../packages/svelte-moveable/src/"
+            ],
+            "ngx-moveable": [
+                "../packages/ngx-moveable/projects/ngx-moveable/public-api.ts"
+            ],
+            "@moveable/helper": [
+                "../packages/helper/src/"
+            ]
+        }
+    },
+    "include": [
+        "./src/**/*.ts",
+        "./src/**/*.tsx",
+        "./test/**/*.ts",
+        "./test/**/*.tsx",
+        "./global.d.ts",
+        "./stories/**/*.ts",
+        "./stories/**/*.tsx"
+    ],
+    "exclude": [
+        "./stories/**/angular/**/*.ts",
+        "./stories/**/lit/**/*.ts"
+    ]
+}
