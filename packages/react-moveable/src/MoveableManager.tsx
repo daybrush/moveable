@@ -120,7 +120,9 @@ export default class MoveableManager<T = {}>
     };
 
     protected _emitter: EventEmitter = new EventEmitter();
-    protected _prevDragTarget: MoveableRefType | null = null;
+    protected _prevOriginalDragTarget: MoveableRefType | null = null;
+    protected _originalDragTarget: MoveableRefType | null = null;
+    protected _prevDragTarget: HTMLElement | SVGElement | null | undefined = null;
     protected _dragTarget: HTMLElement | SVGElement | null | undefined = null;
 
     protected _prevDragArea = false;
@@ -974,8 +976,11 @@ export default class MoveableManager<T = {}>
     protected _updateTargets() {
         const props = this.props;
 
-        this._prevDragTarget = props.dragTarget || props.target;
-        this._dragTarget = getRefTarget(this._prevDragTarget, true);
+        this._prevDragTarget = this._dragTarget;
+        this._prevOriginalDragTarget = this._originalDragTarget;
+
+        this._originalDragTarget = props.dragTarget || props.target;
+        this._dragTarget = getRefTarget(this._originalDragTarget, true);
         this._prevDragArea = props.dragArea!;
     }
     private _renderLines() {
@@ -1012,7 +1017,7 @@ export default class MoveableManager<T = {}>
     private _isTargetChanged(useDragArea?: boolean) {
         const props = this.props;
         const nextTarget = props.dragTarget || props.target;
-        const prevTarget = this._prevDragTarget;
+        const prevTarget = this._prevOriginalDragTarget;
         const prevDragArea = this._prevDragArea;
         const dragArea = props.dragArea;
 

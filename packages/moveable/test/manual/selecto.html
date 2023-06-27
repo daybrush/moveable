@@ -1,0 +1,155 @@
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    #container-left {
+        width: 150px;
+        height: 330px;
+        float: left;
+        background-color: #fff;
+    }
+
+    #container {
+        width: 800px;
+        height: 550px;
+        float: left;
+        margin: auto;
+        box-shadow: 0px 0px 9px #e0e0e0;
+        background-image: radial-gradient(#e8e8e8 1px, #ffffff 0);
+        background-size: 10px 10px;
+        background-position: -5px -5px;
+    }
+
+    svg {
+        overflow: visible;
+    }
+
+    svg:hover {
+        cursor: grab;
+    }
+
+    /* Demo stuff */
+
+    h3 {
+        text-align: center;
+        font-family: Helvetica;
+        line-height: 1.7rem;
+        /* Prevent users from selecting demo text */
+        user-select: none;
+    }
+
+    .explain {
+        width: 50%;
+        float: right;
+    }
+
+    /* Hide the explainer text on small screens */
+    @media (max-width: 100rem) {
+        .explain {
+            display: none;
+        }
+    }
+
+    .item {
+        /* border: solid;*/
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 50px;
+        background-color: orange;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    window.console = window.console || function (t) { };
+</script>
+
+
+
+</head>
+
+<body translate="no">
+    <!-- <b>Works currently only in Chrome and Edge (not in FF)</b> -->
+    <!--Original idea by James Pistell (https://codepen.io/pistell/pen/XWWdZrv)-->
+    <div style="width:100%; height:100%; padding-top: 20px; float: left;">
+
+        <div class="container" id="container" ondragover="dragover(event)">
+            <div class="item selectable">
+                ITEM
+            </div>
+
+            <div class="item selectable">
+                ITEM2
+            </div>
+
+        </div>
+    </div>
+
+    <script src='../../dist/moveable.js'></script>
+    <script src='https://daybrush.com/selecto/release/latest/dist/selecto.min.js'></script>
+    <script id="rendered-js">
+        let moveableRef = null;
+        let selectoRef = null;
+        let targets = [];
+        let newDiv;
+        let entered = false;
+
+        const container = document.querySelector("#container");
+
+        moveableRef = new Moveable(container, {
+            draggable: true,
+            target: targets,
+            resizable: true,
+            snappable: true,
+            snapGridWidth: 10,
+            snapGridHeight: 10,
+            snapThreshold: 10,
+            throttleDrag: 1,
+            throttleScale: 0
+        });
+
+
+        selectoRef = new Selecto({
+            container: document.querySelector("#container"),
+            dragContainer: document.querySelector("#container"),
+            selectableTargets: [".selectable"],
+            hitRate: 0,
+            selectByClick: true,
+            selectFromInside: false,
+            toggleContinueSelect: ["shift"],
+            ratio: 0
+        });
+
+
+        function setTargets(nextTargets) {
+            targets = nextTargets;
+            moveableRef.target = targets;
+        }
+
+        moveableRef.on("render", e => {
+            e.target.style.cssText += e.cssText;
+        });
+
+        //moveableRef.on("drag", (e) => {
+        //  e.target.style.transform = e.transform;
+        //});
+
+        selectoRef.on("selectEnd", e => {
+            const moveable = moveableRef;
+            if (e.isDragStart) {
+                e.inputEvent.preventDefault();
+                moveable.waitToChangeTarget().then(() => {
+                    console.log("W C T");
+                    moveable.dragStart(e.inputEvent);
+                });
+            }
+            setTargets(e.selected);
+        });
+    //# sourceURL=pen.js
+    </script>

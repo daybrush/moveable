@@ -427,8 +427,8 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
     }
     protected _updateTargets() {
         super._updateTargets();
-        this._prevDragTarget = this.props.dragTarget || this.areaElement;
-        this._dragTarget = getRefTarget(this._prevDragTarget, true);
+        this._originalDragTarget = this.props.dragTarget || this.areaElement;
+        this._dragTarget = getRefTarget(this._originalDragTarget, true);
     }
     protected _updateEvents() {
         const state = this.state;
