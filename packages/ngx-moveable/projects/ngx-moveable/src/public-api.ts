@@ -3,5 +3,6 @@
  */
 
 export * from './ngx-moveable.component';
+export * from './ngx-moveable.legacy.component';
 export * from './ngx-moveable.module';
 export * from 'moveable';
