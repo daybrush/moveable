@@ -65,7 +65,7 @@
         "@vue/cli-service": "^3.12.0",
         "rollup-plugin-vue": "^5.1.9",
         "tslib": "^2.3.1",
-        "typescript": "^4.8",
+        "typescript": "^4.8 <4.9",
         "vue": "^2.6.11",
         "vue-template-compiler": "^2.6.11"
     }

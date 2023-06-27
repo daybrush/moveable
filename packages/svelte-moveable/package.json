@@ -2,8 +2,9 @@
     "name": "svelte-moveable",
     "version": "0.41.0",
     "description": "A Svelte Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
-    "svelte": "./src/index.js",
-    "types": "src/index.d.ts",
+    "svelte": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "type": "module",
     "sideEffects": false,
     "keywords": [
         "moveable",
@@ -45,33 +46,37 @@
         "url": "https://github.com/daybrush/moveable/issues"
     },
     "homepage": "https://daybrush.com/moveable",
+    "scripts": {
+        "dev": "vite dev",
+        "build": "vite build && npm run package",
+        "preview": "vite preview",
+        "package": "svelte-kit sync && svelte-package && publint",
+        "prepublishOnly": "npm run package",
+        "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "svelte": "./dist/index.js"
+        }
+    },
+    "peerDependencies": {
+        "svelte": "^3.54.0"
+    },
     "devDependencies": {
-        "@daybrush/builder": "^0.1.2",
-        "keycon": "^0.6.0",
-        "print-sizes": "^0.2.0",
-        "rollup": "^1.12.0",
-        "rollup-plugin-commonjs": "^10.0.0",
-        "rollup-plugin-livereload": "^1.0.4",
-        "rollup-plugin-node-resolve": "^5.2.0",
-        "rollup-plugin-svelte": "^7.1.0",
-        "rollup-plugin-terser": "^5.2.0",
-        "scenejs": "^1.1.5",
-        "sirv-cli": "^0.4.5",
-        "svelte": "^3.48.0",
-        "svelte-guides": "^0.17.1",
-        "svelte-preprocess": "^3.2.2",
-        "tslib": "^2.3.1",
-        "typescript": "^4.5.0 <4.6.0"
+        "@sveltejs/adapter-auto": "^2.0.0",
+        "@sveltejs/kit": "^1.5.0",
+        "@sveltejs/package": "^2.0.0",
+        "publint": "^0.1.9",
+        "svelte": "^3.54.0",
+        "svelte-check": "^3.0.1",
+        "tslib": "^2.4.1",
+        "typescript": "^4.8 <4.9",
+        "vite": "^4.3.0"
     },
     "dependencies": {
         "framework-utils": "^1.1.0",
         "moveable": "~0.49.0"
-    },
-    "scripts": {
-        "build": "rollup -c rollup.build.config.js && print-sizes ./dist",
-        "dev": "rollup -c -w",
-        "start": "sirv public --single",
-        "start:dev": "sirv public --single --dev",
-        "build:dev": "rollup -c"
     }
 }
