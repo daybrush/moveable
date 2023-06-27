@@ -57,10 +57,9 @@
         "declaration": "rm -rf declaration && tsc -p tsconfig.declaration.json"
     },
     "devDependencies": {
-        "@daybrush/builder": "^0.1.2",
+        "@daybrush/builder": "^0.2.4",
         "lit": "^2.0",
-        "tslint": "^5.20.1",
-        "typescript": "^4.5.0 <4.6.0"
+        "typescript": "^4.8 <4.9"
     },
     "dependencies": {
         "@daybrush/utils": "^1.13.0",

@@ -11,7 +11,6 @@ export function getElementInfo(
 export function makeAble<
     Name extends string,
     AbleObject extends Partial<Able<any, any>>,
-    Props extends DefaultProps<Name, AbleObject>,
 >(name: Name, able: AbleObject) {
-    return makeAbleFunction<Name, AbleObject, Props>(name, able);
+    return makeAbleFunction<Name, AbleObject>(name, able);
 }

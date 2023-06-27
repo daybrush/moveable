@@ -835,7 +835,7 @@ export default class MoveableManager<T = {}>
         const parentMoveable = this.props.parentMoveable;
 
         if (parentMoveable) {
-            (parentMoveable as MoveableManager).checkUpdateRect();
+            (parentMoveable as any).checkUpdateRect();
             return;
         }
         cancelAnimationFrame(this._observerId);

@@ -5,6 +5,7 @@ const preact = require("rollup-plugin-preact");
 const defaultOptions = {
     sourcemap: false,
     tsconfig: "tsconfig.build.json",
+    typescript2: true,
     external: {
         "@daybrush/utils": "utils",
         "gesto": "Gesto",

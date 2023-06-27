@@ -5,7 +5,6 @@ const defaultOptions = {
     sourcemap: true,
     input: "./src/index.ts",
     exports: "named",
-    typescript2: true,
     plugins: [
         vuePlugin(),
     ],

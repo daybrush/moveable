@@ -48,7 +48,7 @@ export function getMoveableTargetInfo(
         const getStyle = getCachedStyle(target);
 
         requestStyles.forEach(name => {
-            style[name] = getStyle(name as any);
+            (style as any)[name] = getStyle(name as any);
         });
         const n = result.is3d ? 4 : 3;
         const beforePosition = calculateElementPosition(

@@ -6,7 +6,6 @@ const defaultOptions = {
     input: "./src/index.ts",
     exports: "named",
     external: true,
-    typescript2: true,
     plugins: [
         vuePlugin(),
     ]

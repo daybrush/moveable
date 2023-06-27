@@ -70,7 +70,7 @@
         "intercept-stdout": "0.1.2",
         "lerna": "^4.0.0",
         "lerna-changelog": "2.2.0",
-        "typescript": "^4.5.0 <4.6.0"
+        "typescript": "^4.8 <4.9"
     },
     "workspaces": {
         "packages": [
@@ -97,7 +97,7 @@
     "resolutions": {
         "@daybrush/utils": "^1.13.0",
         "@types/react": "^16.9.17",
-        "typescript": "^4.5.0 <4.6.0",
+        "typescript": "^4.8 <4.9",
         "@storybook/react": "^6.4.22",
         "@storybook/addon-actions": "^6.4.22",
         "@storybook/addon-controls": "^6.4.22",
@@ -121,7 +121,7 @@
     "overrides": {
         "@daybrush/utils": "^1.13.0",
         "@types/react": "^16.9.17",
-        "typescript": "^4.5.0 <4.6.0",
+        "typescript": "^4.8 <4.9",
         "@storybook/react": "^6.4.22",
         "@storybook/addon-actions": "^6.4.22",
         "@storybook/addon-controls": "^6.4.22",

@@ -41,6 +41,7 @@ module.exports = builder([
         format: "es",
         plugins: [reactPlugin],
         external,
+        typescript2: true,
     },
     {
         sourcemap: false,
@@ -50,5 +51,6 @@ module.exports = builder([
         plugins: [reactPlugin],
         format: "cjs",
         external,
+        typescript2: true,
     },
 ]);

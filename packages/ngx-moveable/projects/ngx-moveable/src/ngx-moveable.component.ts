@@ -7,6 +7,7 @@ import {
   EventEmitter,
   ElementRef,
   NgZone,
+  Inject,
 } from '@angular/core';
 import Moveable, { PROPERTIES, EVENTS, MoveableOptions } from 'moveable';
 import { IObject } from '@daybrush/utils';
@@ -15,6 +16,7 @@ import { NgxMoveableInterface } from './ngx-moveable.interface';
 import { ANGULAR_MOVEABLE_INPUTS, ANGULAR_MOVEABLE_OUTPUTS } from './consts';
 
 @Component({
+  standalone: true,
   selector: 'ngx-moveable',
   template: '',
   inputs: ANGULAR_MOVEABLE_INPUTS,
@@ -25,8 +27,10 @@ export class NgxMoveableComponent
   implements OnDestroy, OnInit, OnChanges
 {
   constructor(
+    @Inject(NgZone)
     private _ngZone: NgZone,
-    private _elementRef: ElementRef<HTMLElement>
+    @Inject(ElementRef)
+    private _elementRef: ElementRef<HTMLElement>,
   ) {
     super();
     EVENTS.forEach((name) => {

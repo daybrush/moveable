@@ -2,6 +2,7 @@ const builder = require("@daybrush/builder");
 
 const defaultOptions = {
     tsconfig: "tsconfig.build.json",
+    typescript2: true,
 };
 
 module.exports = builder([{

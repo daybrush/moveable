@@ -46,6 +46,7 @@ module.exports = builder([
         format: "umd",
         minifyPrototype: true,
         plugins: [resolveCompatPlugin],
+        typescript2: true,
     },
     {
         name: "Moveable",
@@ -56,6 +57,7 @@ module.exports = builder([
         minifyPrototype: true,
         plugins: [resolveCompatPlugin],
         uglify: true,
+        typescript2: true,
     },
     {
         input: "src/index.ts",
@@ -65,6 +67,7 @@ module.exports = builder([
         minifyPrototype: true,
         plugins: [compatPlugin],
         external,
+        typescript2: true,
     },
     {
         input: "src/index.cjs.ts",
@@ -74,5 +77,6 @@ module.exports = builder([
         minifyPrototype: true,
         plugins: [compatPlugin],
         external,
+
     },
 ]);
