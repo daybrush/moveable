@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.1](https://github.com/daybrush/moveable/compare/0.49.0...0.49.1) (2023-06-28)
+### :sparkles: Packages
+* `croact-moveable` 0.5.1
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.26.1
+* `moveable` 0.49.1
+* `preact-moveable` 0.51.1
+* `react-moveable` 0.52.1
+* `svelte-moveable` 0.41.1
+* `vue-moveable` 2.0.0-beta.78
+* `vue3-moveable` 0.24.1
+* `ngx-moveable` 0.46.1
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `moveable`
+    * fix dragTarget's unset #960 ([8e60b38](https://github.com/daybrush/moveable/commit/8e60b385b8931a3aab953b315618ec15f9360611))
+* `react-moveable`
+    * fix helper alias ([ee5bf0b](https://github.com/daybrush/moveable/commit/ee5bf0b958a49694e4eed111755d1ef5ba5c6dc9))
+
+
+### :memo: Documentation
+
+* update CHANGELOG.md (#959) ([145d5a3](https://github.com/daybrush/moveable/commit/145d5a3abfc2e6e1823a889eba528c77cb761afa))
+
+
+### :house: Code Refactoring
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`
+    * change rollup to vite ([213f346](https://github.com/daybrush/moveable/commit/213f346257289eaec6f3f6f618e8fba33859c384))
+* `ngx-moveable`
+    * update angular 15 version, use standalone ([226ea64](https://github.com/daybrush/moveable/commit/226ea643cb5c12315fc96e334a4bfa920f78d8aa))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`, `@moveable/helper`
+    * fix update modules ([bb608dc](https://github.com/daybrush/moveable/commit/bb608dc0d1d9eb13e538d1026c05809d89757b1d))
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([510d7cd](https://github.com/daybrush/moveable/commit/510d7cdf76eef4a17cc75d95634ebcb6d9688f8e))
+* `react-moveable`
+    * fix ts-loader version ([429ae5f](https://github.com/daybrush/moveable/commit/429ae5faa48fa9bedfc2463c1aaaebc58575bf80))
+
+
+
 ## [0.49.0](https://github.com/daybrush/moveable/compare/0.48.0...0.49.0) (2023-06-25)
 ### :sparkles: Packages
 * `croact-moveable` 0.5.0

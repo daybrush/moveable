@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.52.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.52.0...react-moveable@0.52.1) (2023-06-28)
+
+
+### :bug: Bug Fix
+
+* fix dragTarget's unset #960 ([8e60b38](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8e60b385b8931a3aab953b315618ec15f9360611))
+* fix helper alias ([ee5bf0b](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ee5bf0b958a49694e4eed111755d1ef5ba5c6dc9))
+
+
+### :house: Code Refactoring
+
+* change rollup to vite ([213f346](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/213f346257289eaec6f3f6f618e8fba33859c384))
+
+
+### :mega: Other
+
+* fix ts-loader version ([429ae5f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/429ae5faa48fa9bedfc2463c1aaaebc58575bf80))
+* fix update modules ([bb608dc](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/bb608dc0d1d9eb13e538d1026c05809d89757b1d))
+* publish packages ([510d7cd](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/510d7cdf76eef4a17cc75d95634ebcb6d9688f8e))
+
+
+
 ## [0.52.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.51.0...react-moveable@0.52.0) (2023-06-25)
 
 

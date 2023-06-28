@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.46.1](https://github.com/daybrush/moveable/compare/ngx-moveable@0.46.0...ngx-moveable@0.46.1) (2023-06-28)
+
+
+### :house: Code Refactoring
+
+* update angular 15 version, use standalone ([226ea64](https://github.com/daybrush/moveable/commit/226ea643cb5c12315fc96e334a4bfa920f78d8aa))
+
+
+### :mega: Other
+
+* fix update modules ([bb608dc](https://github.com/daybrush/moveable/commit/bb608dc0d1d9eb13e538d1026c05809d89757b1d))
+* publish packages ([510d7cd](https://github.com/daybrush/moveable/commit/510d7cdf76eef4a17cc75d95634ebcb6d9688f8e))
+
+
+
 ## [0.46.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.45.0...ngx-moveable@0.46.0) (2023-06-25)
 
 

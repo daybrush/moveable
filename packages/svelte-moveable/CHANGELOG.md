@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.41.1](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/compare/svelte-moveable@0.41.0...svelte-moveable@0.41.1) (2023-06-28)
+
+
+### :house: Code Refactoring
+
+* change rollup to vite ([213f346](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/commit/213f346257289eaec6f3f6f618e8fba33859c384))
+
+
+### :mega: Other
+
+* publish packages ([510d7cd](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/commit/510d7cdf76eef4a17cc75d95634ebcb6d9688f8e))
+
+
+
 ## [0.41.0](https://github.com/daybrush/moveable/blob/master/packages/svelte-moveable/compare/svelte-moveable@0.40.0...svelte-moveable@0.41.0) (2023-06-25)
 
 

@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.49.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.49.0...moveable@0.49.1) (2023-06-28)
+
+
+### :bug: Bug Fix
+
+* fix dragTarget's unset #960 ([8e60b38](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/8e60b385b8931a3aab953b315618ec15f9360611))
+
+
+### :mega: Other
+
+* fix update modules ([bb608dc](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/bb608dc0d1d9eb13e538d1026c05809d89757b1d))
+* publish packages ([510d7cd](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/510d7cdf76eef4a17cc75d95634ebcb6d9688f8e))
+
+
+
 ## [0.49.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.48.0...moveable@0.49.0) (2023-06-25)
 
 
