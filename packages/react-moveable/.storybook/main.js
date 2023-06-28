@@ -32,9 +32,10 @@ module.exports = {
         config.plugins.push(definePlugin);
         config.plugins.push(new ForkTsCheckerWebpackPlugin());
         config.resolve.alias["@/stories"] = path.resolve(__dirname, "../stories");
-        config.resolve.alias["moveable-helper"] = path.resolve(__dirname, "../stories/moveable-helper");
         config.resolve.alias["@/react-moveable"] = path.resolve(__dirname, "../src");
         config.resolve.alias["@/helper"] = path.resolve(__dirname, "../../helper/src");
+        config.resolve.alias["@moveable/helper"] = path.resolve(__dirname, "../../helper/src");
+
 
         return config;
     },
