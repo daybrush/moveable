@@ -30,7 +30,7 @@
         "@angular/platform-browser": "~15.2.2",
         "@angular/platform-browser-dynamic": "~15.2.2",
         "@babel/plugin-proposal-decorators": "^7.22.5",
-        "@croffle/bakery": "^0.0.23",
+        "@croffle/bakery": "^0.0.25",
         "@daybrush/utils": "^1.13.0",
         "@nitedani/vite-plugin-angular": "^15.0.6",
         "@storybook/addon-essentials": "^7.0.6",
@@ -46,7 +46,7 @@
         "@types/react-dom": "^18.0.11",
         "@vitejs/plugin-react": "^3.1.0",
         "@vitejs/plugin-vue": "^4.2.3",
-        "croffle": "^0.0.19",
+        "croffle": "^0.0.21",
         "lit": "^2.7.5",
         "msw": "^1.2.1",
         "msw-storybook-addon": "^1.8.0",
@@ -61,5 +61,8 @@
         "vite-plugin-commonjs": "^0.8.0",
         "vue": "^3.2.45",
         "zone.js": "^0.13.0"
+    },
+    "resolutions": {
+        "typescript": "^4.8 <4.9"
     }
 }

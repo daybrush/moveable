@@ -70,10 +70,11 @@ exports.makeStories = function makeStories() {
         };
 
         ["angular", "script", "vue3", "svelte"].forEach(frameworkName => {
-            const frameworkPath = path.resolve(path.resolve(__dirname, "../", storiesPath, "../", fileName.replace("react", frameworkName)));
+            const frameworkFileName = fileName.replace("react", frameworkName);
+            const frameworkPath = path.resolve(path.resolve(__dirname, "../", storiesPath, "../", frameworkFileName));
             fs.writeFileSync(frameworkPath, `
 import { convertFrameworkStory } from "../utils/story";
-import * as All from "./react-Basic.stories";
+import * as All from "./${fileName}";
 
 export default {
     title: "${frameworkName}/${defaultTitle}",

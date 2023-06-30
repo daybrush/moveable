@@ -27,10 +27,10 @@ stories/**/svelte/
 stories/**/script/
 stories/**/lit/
 stories/**/angular/
-stories/**/script-Basic.stories.tsx
-stories/**/vue3-Basic.stories.tsx
-stories/**/svelte-Basic.stories.tsx
-stories/**/angular-Basic.stories.tsx
+stories/**/script-*.stories.tsx
+stories/**/vue3-*.stories.tsx
+stories/**/svelte-*.stories.tsx
+stories/**/angular-*.stories.tsx
 .nyc_output
 test-static
 __snapshots__
