@@ -31,10 +31,10 @@ export default function App(props: Record<string, any>) {
         <div>
             width: <input ref={widthInputRef}
                 type="number" defaultValue="280"
-                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="true"></input>&nbsp;
+                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="true"/>&nbsp;
             height: <input ref={heightInputRef}
                 type="number" defaultValue="230"
-                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="false"></input>
+                onInput={onInput} onKeyUp={onKeyUp} data-horizontal="false"/>
         </div>
         <div className="container">
             <div className="target">Target1</div>

@@ -4,9 +4,9 @@ import Moveable from "@/react-moveable";
 export default function App() {
     return <div className="container">
         <p>checkInput (false)</p>
-        <input type="input" className="target1"></input>
+        <input type="input" className="target1" />
         <p>checkInput (true)</p>
-        <input type="input" className="target2"></input>
+        <input type="input" className="target2" />
         <Moveable
             target={".target1"}
             draggable={true}

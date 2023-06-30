@@ -4,9 +4,9 @@ import Moveable from "@/react-moveable";
 export default function App() {
     return <div className="container">
         <p>No Stop</p>
-        <input type="input" className="target1"></input>
+        <input type="input" className="target1"/>
         <p>Stop Drag</p>
-        <input type="input" className="target2"></input>
+        <input type="input" className="target2"/>
         <p>Stop Drag</p>
         <select className="target3">
             <option>a</option>
