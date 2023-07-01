@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+
+  <title>CodePen - Moveable: Draggable with dragTarget</title>
+    <link rel="canonical" href="https://codepen.io/jadiagaurang/pen/QWJyEaE" />
+
+
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css'>
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+}
+.header {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  color: white;
+  background-color: black;
+  font-size: 2rem;
+}
+.header p {
+  width: 100%;
+  text-align: center;
+}
+
+.smart-designer {
+  cursor: crosshair;
+
+  position: relative;
+
+  height: 100%;
+  width: 100%;
+}
+.el-wrapper {
+  cursor: default;
+  display: inline-block;
+  width: fit-content;
+  position: absolute;
+}
+.el {
+  position: absolute;
+}
+.moveable-control {
+  border-radius: 0!important;
+  background: #fff!important;
+  border: 1px solid #44aaff!important;
+  width: 10px!important;
+  height: 10px!important;
+  margin-left: -5px!important;
+  margin-top: -5px!important;
+}
+.label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 5px;
+  border-radius: 5px;
+  background: #333;
+  z-index: 10;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  display: none;
+  transform: translate(-100%, -100%);
+}
+.grid-guidelines {
+  width: 100%;
+  height: 100%;
+  background: url("https://d3ciwvs59ifrt8.cloudfront.net/b1911a0b-85bd-4bf8-85a7-1aaf7f656a06/21cc22cc-8755-4912-a1aa-43dd9e2410e5.svg") repeat left top;
+  background-size: 50px;
+  opacity: 0;
+  transition: 0.3s linear;
+  position: absolute;
+}
+.smart-designer:hover .grid-guidelines {
+  opacity: 0.3;
+  transition: 0.3s linear;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+</head>
+
+<body translate="no">
+  <div class="label"></div>
+<div class="container" style="background-color: black;">
+  <div class="row g-0">
+    <div class="col-6" style="text-align: left;">
+      <a class="btn btn-success add-image">Add an Image</a>
+    </div>
+  </div>
+</div>
+<div class="container smart-designer-container" style="background-color: lightgray;">
+  <div class="row g-0" style="height: 500px">
+    <div class="col-12" style="background-color: whitesmoke;">
+
+      <div class="smart-designer">
+        <div class="grid-guidelines"></div>
+        <div class="el-wrapper animate__animated animate__tada">
+          <div class="el el-text" style="width: 1100px; height: 50px; transform: translate(100px, 50px); text-align: center;">
+            <h1 contenteditable="true">Lorem ipsum dolor sit amet.</h1>
+          </div>
+        </div>
+        <div class="el-wrapper">
+          <img class="el el-image" src="https://placehold.it/300x200?text=Loading" data-src="https://unsplash.it/300/200" alt="Placehold" style="height: 200px; width: 300px; transform: translate(100px, 200px);" />
+        </div>
+        <div class="el-wrapper">
+          <img class="el el-image" src="https://placehold.it/300x200?text=Loading" data-src="https://unsplash.it/300/200" alt="Placehold" style="height: 200px; width: 300px; transform: translate(500px, 200px);" />
+        </div>
+        <div class="el-wrapper">
+          <img class="el el-image" src="https://placehold.it/300x200?text=Loading" data-src="https://unsplash.it/300/200" alt="Placehold" style="height: 200px; width: 300px; transform: translate(900px, 200px);" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js'></script>
+<script src='../../dist/moveable.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/selecto/1.22.6/selecto.min.js'></script>
+<script src='https://daybrush.com/moveable-helper/release/latest/dist/moveable-helper.js'></script>
+<script src='https://unpkg.com/tagged-jsx/dist/tagged-jsx.js'></script>
+      <script id="rendered-js" >
+window.objMoveables = [];
+
+window.labelElement = $(".label");
+
+function setLabel(clientX, clientY, text) {
+  window.labelElement.css({
+    "display": "block",
+    "transform": `translate(${clientX}px, ${clientY - 10}px) translate(-100%, -100%)` });
+
+  window.labelElement.html(text);
+}
+
+function addImage(coordinate) {
+  let objImage = $("<img />").attr({
+    "class": "el el-image",
+    "src": "https://placehold.it/300x200?text=Loading..." }).
+  css({
+    "height": "200px",
+    "weight": "300px" });
+
+
+  const designCanvas = $(".smart-designer");
+  designCanvas.append($("<div />").attr("class", "el-wrapper animate__animated").html(objImage));
+
+  $.getJSON("https://api.allorigins.win/get?url=" + encodeURIComponent("https://unsplash.it/300/200"), function (data) {
+    objImage.attr("src", data.contents);
+  });
+  objImage.on("load", function () {
+    if (!coordinate) {
+      const designCanvasWidth = designCanvas.width();
+      const designCanvasHeight = designCanvas.height();
+      coordinate = {
+        "x": designCanvasWidth / 2 - objImage.width() / 2,
+        "y": designCanvasHeight / 2 - objImage.height() / 2 };
+
+    }
+
+    objImage.css({
+      "left": coordinate.x,
+      "top": coordinate.y });
+
+  });
+
+  // Update Moveable Instance with update list of ELs!
+  window.objMoveable.elementGuidelines = $(".el").get();
+}
+
+const DragHandleAble = {
+  name: "draghandleable",
+  props: {},
+  events: {},
+  render(moveable, Renderer) {
+    const rect = moveable.getRect();
+
+    return Renderer.createElement("button", {
+      key: "draghandleable",
+      class: "dragHandle",
+      style: {
+        position: "absolute",
+        left: `${rect.width / 2 - 25}px`,
+        top: `${rect.height + 20}px`,
+        background: "#4af",
+        borderRadius: "2px",
+        padding: "2px 4px",
+        color: "white",
+        fontSize: "13px",
+        whiteSpace: "nowrap",
+        fontWeight: "bold",
+        willChange: "transform",
+        transform: "translate(-45%, 0px)" } },
+
+    `X`);
+  } };
+
+
+const { html } = TaggedJSX;
+const DeleteButtonAble = {
+  name: "deletebuttonable",
+  props: {},
+  events: {},
+  render(moveable, Renderer) {
+    const rect = moveable.getRect();
+    const { pos2 } = moveable.state;
+    const EditableViewer = moveable.useCSS("div", `
+                {
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    will-change: transform;
+                    transform-origin: 0px 0px;
+                }
+                .mpr-designer-button {
+                    width: 24px;
+                    height: 24px;
+                    margin-bottom: 4px;
+                    background: #4af;
+                    border-radius: 4px;
+                    appearance: none;
+                    border: 0;
+                    color: white;
+                    font-weight: bold;
+                }
+            `);
+    return html`
+            <${EditableViewer} className="mpr-designer-editable" style=${{ transform: `translate(${pos2[0]}px, ${pos2[1]}px) rotate(${rect.rotation}deg) translate(10px)` }}>
+                <button className="mpr-designer-button" onClick=${() => {
+      moveable.props.target.remove(); // Remove the HTML element
+      window.objMoveable.target = [];
+    }}>X</button>
+            </>
+            `(Renderer.createElement);
+    return result;
+  } };
+
+
+$(document).ready(function () {
+  // Just to Fill Random Color
+  $(".randomColor").each(function () {
+    let $el = $(this);
+    window.setTimeout(function () {
+      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      $el.css("background-color", "#" + randomColor);
+    }, 100);
+  });
+
+  // Just to randomize the images!
+  $("img").each(function (index, elImage) {
+    let objImage = $(elImage);
+
+    window.setTimeout(function () {
+      $.getJSON("https://api.allorigins.win/get?url=" + encodeURIComponent(objImage.data("src")), function (data) {
+        objImage.attr("src", data.contents);
+      });
+    }, 100);
+  });
+
+  $(".add-image").on("click", function (event) {
+    addImage(null);
+  });
+
+  $(".smart-designer").on("contextmenu", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.target !== event.currentTarget) {
+      return;
+    } else
+    {
+      var offset = this.getClientRects()[0];
+      let x = event.clientX - offset.left;
+      let y = event.clientY - offset.top;
+
+      //console.log(objMoveable.getControlBoxElement(), event.target);
+
+      if (!objMoveable.getControlBoxElement().contains(event.target)) {
+        //if (window.objMoveable.target.length === 0) {
+        addImage({ "x": x, "y": y });
+      }
+    }
+  });
+
+  $(".smart-designer").each(function () {
+    const designCanvas = $(this)[0];
+    const designCanvasWidth = $(this).width();
+    const designCanvasHeight = $(this).height();
+
+    window.objMoveable = new Moveable(designCanvas, {
+      target: [],
+
+      hideChildMoveableDefaultLines: true,
+      keepRatio: false,
+
+      draggable: true,
+      dragTarget: ".dragHandle",
+      resizable: true,
+      scalable: true,
+      rotatable: true,
+
+      className: "mpr-designer",
+
+      // May Be for Text: Add padding around the target to increase the drag area.
+      padding: {
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0 },
+
+
+      // ../moveable/issues/896
+      // For <input type="text"></input>
+      checkInput: true,
+      // For contenteditable="true"
+      dragFocusedInput: true,
+
+      // Z-Index Manager
+      layer: 1, // Set initial layer value
+
+      // Custom Abilities
+      ables: [
+      DragHandleAble,
+      DeleteButtonAble],
+
+      props: {
+        draghandleable: true,
+        deletebuttonable: true },
+
+
+      // Snapping!
+      snappable: true,
+      // Limit movement within the container
+      snapContainer: designCanvas,
+      bounds: {
+        left: 0,
+        top: 0,
+        right: designCanvas.offsetWidth,
+        bottom: designCanvas.offsetHeight },
+
+      // Snap to a Grid
+      snapDistFormat: (v, type) => `${v}px`,
+      verticalGuidelines: [
+        //50,
+        //designCanvasWidth / 4,
+        //designCanvasWidth / 2,
+        //designCanvasWidth * 3 / 4,
+        //designCanvasWidth - 50
+      ],
+      horizontalGuidelines: [
+        //50,
+        //designCanvasHeight / 4,
+        //designCanvasHeight / 2,
+        //designCanvasHeight * 3 / 4,
+        //designCanvasHeight - 50
+      ],
+      snapDigit: 50,
+      snapThreshold: 50, // Distance value that can snap to guidelines
+      snapGridWidth: 50,
+      snapGridHeight: 50,
+      snapDirections: {
+        left: true,
+        top: true,
+        right: true,
+        bottom: true,
+        center: true,
+        middle: true },
+
+      isDisplaySnapDigit: true,
+      isDisplayInnerSnapDigit: true,
+      isDisplayGridGuidelines: true,
+      // Element Snap
+      snapElement: false,
+      snapGap: false, // When you drag, make the gap snap in the element guidelines. (default: true)
+      elementSnapDirections: false,
+      elementGuidelines: $(".el").get(), //Add List of Element Except itself to enable Guidelines!
+      // Rotation Snap
+      rotationPosition: "bottom",
+      snapRotataionThreshold: 1,
+      snapRotationDegress: [
+      0,
+      90,
+      180,
+      270] });
+
+
+
+    // The target(s) to drag Moveable target(s)
+    //window.objMoveable.dragTarget = $(this).find(".dragHandle")[0];
+
+    /* draggable */
+    objMoveable.on("dragStart", function (_a) {
+      var target = _a.target,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onDragStart", target);
+    }).on("_drag_changed_other_drag_and_dragGroup", function (_a) {
+      var target = _a.target,transform = _a.transform,left = _a.left,top = _a.top,right = _a.right,bottom = _a.bottom,beforeDelta = _a.beforeDelta,beforeDist = _a.beforeDist,delta = _a.delta,dist = _a.dist,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onDrag left, top", left, top);
+      target.style.left = "".concat(left, "px");
+      target.style.top = "".concat(top, "px");
+      // console.log("onDrag translate", dist);
+      // target!.style.transform = transform;
+    }).on("dragEnd", function (_a) {
+      var target = _a.target,isDrag = _a.isDrag,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onDragEnd", target, isDrag);
+    }).on('render', ev => {
+      //console.log("render");
+      ev.target.style.cssText += ev.cssText;
+    }).on('renderGroup', e => {
+      //console.log("renderGroup");
+      for (ev of e.events) {
+        ev.target.style.cssText += ev.cssText;
+      }
+    }).on("clickGroup", e => {
+      window.objSelecto.clickTarget(e.inputEvent, e.inputTarget);
+    }).on("drag", e => {
+      e.target.style.transform = e.transform;
+    }).on("dragGroup", e => {
+      e.events.forEach(ev => {
+        ev.target.style.transform = ev.transform;
+      });
+    });
+
+    /* resizable */
+    objMoveable.on("resizeStart", function (_a) {
+      var target = _a.target,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onResizeStart", target);
+    }).on("resize", function (_a) {
+      var target = _a.target,width = _a.width,height = _a.height,dist = _a.dist,delta = _a.delta,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onResize", target);
+      delta[0] && (target.style.width = "".concat(width, "px"));
+      delta[1] && (target.style.height = "".concat(height, "px"));
+
+      let rect = objMoveable.getRect();
+      setLabel(clientX, clientY, `W: ${Math.round(rect.offsetWidth)} H: ${Math.round(rect.offsetHeight)}`);
+    }).on("resizeEnd", function (_a) {
+      var target = _a.target,isDrag = _a.isDrag,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onResizeEnd", target, isDrag);
+      labelElement.hide();
+    });
+    /* scalable */
+    objMoveable.on("scaleStart", function (_a) {
+      var target = _a.target,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onScaleStart", target);
+    }).on("scale", function (_a) {
+      var target = _a.target,scale = _a.scale,dist = _a.dist,delta = _a.delta,transform = _a.transform,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onScale scale", scale);
+      target.style.transform = transform;
+    }).on("scaleEnd", function (_a) {
+      var target = _a.target,isDrag = _a.isDrag,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onScaleEnd", target, isDrag);
+    });
+    /* rotatable */
+    objMoveable.on("rotateStart", function (_a) {
+      var target = _a.target,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onRotateStart", target);
+    }).on("rotate", function (_a) {
+      var target = _a.target,beforeDelta = _a.beforeDelta,delta = _a.delta,dist = _a.dist,transform = _a.transform,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onRotate", dist);
+      target.style.transform = transform;
+
+      let deg = objMoveable.getRect().rotation;
+      setLabel(clientX, clientY, `${Math.round(deg.toFixed(1))}&deg;`);
+    }).on("rotateEnd", function (_a) {
+      var target = _a.target,isDrag = _a.isDrag,clientX = _a.clientX,clientY = _a.clientY;
+      //console.log("onRotateEnd", target, isDrag);
+      labelElement.hide();
+    });
+
+    /* selecto */
+    let targets = [];
+    window.objSelecto = new Selecto({
+      container: designCanvas,
+      dragContainer: designCanvas,
+      selectableTargets: [".el"],
+      hitRate: 0,
+      selectByClick: true,
+      preventClickEventOnDrag: true,
+      selectFromInside: false,
+      toggleContinueSelect: ["shift"],
+      ratio: 0 });
+
+    window.objSelecto.on("dragStart", e => {
+      //console.log("dragStart");
+      const target = e.inputEvent.target;
+      if (
+      window.objMoveable.isMoveableElement(target) ||
+      targets.some(t => t === target || t.contains(target)) ||
+      target.tagName === "BUTTON" ||
+      target.isContentEditable)
+      {
+        e.stop();
+      }
+    }).on("select", e => {
+      //console.log("select");
+      window.objMoveable.target = e.selected;
+    }).on("selectEnd", e => {
+      if (e.isDragStart) {
+        e.inputEvent.preventDefault();
+
+        setTimeout(() => {
+          window.objMoveable.dragStart(e.inputEvent);
+        });
+      }
+    });
+  });
+});
+//# sourceURL=pen.js
+    </script>
+
+
+</body>
+
+</html>

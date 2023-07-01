@@ -434,13 +434,14 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
         const state = this.state;
         const props = this.props;
 
+
         const prevTarget = this._prevDragTarget;
         const nextTarget = props.dragTarget || this.areaElement;
         const targets = props.targets!;
         const { added, changed, removed } = this.differ.update(targets);
         const isTargetChanged = added.length || removed.length;
 
-        if (isTargetChanged || prevTarget !== nextTarget) {
+        if (isTargetChanged || this._prevOriginalDragTarget !== this._originalDragTarget) {
             unsetGesto(this, false);
             unsetGesto(this, true);
             this.updateState({ gestos: {} });
