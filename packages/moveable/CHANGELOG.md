@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.49.1...moveable@0.50.1) (2023-07-02)
+
+
+### :bug: Bug Fix
+
+* fix choppy reisze #961 ([c8f9637](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/c8f9637ae319870cc6d4e9bf68eb98820f27f25e))
+* fix group's dragTargetRef #953 ([85d17d7](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/85d17d77751d474db88b7238dd39baccd6b7a78d))
+
+
+### :mega: Other
+
+* publish packages ([5697e80](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/5697e8050f486a83ea409b856d1f670759ba6910))
+* publish packages ([5e76998](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/5e76998ba0a90efcbb0c2e4fe8030ca47a1842d4))
+
+
+
 ## [0.49.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.49.0...moveable@0.49.1) (2023-06-28)
 
 

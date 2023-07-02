@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.52.1...react-moveable@0.53.1) (2023-07-02)
+
+
+### :rocket: New Features
+
+* add `getMoveables` with request #940 ([b926985](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b92698522e1b6f20e40ba7d82560d00d3c6a6a97))
+* support dragStart with individualGroupable #967 ([d470f64](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/d470f64a45362a8183d2f1ab572a50bc4d9f2b5e))
+
+
+### :bug: Bug Fix
+
+* fix choppy reisze #961 ([c8f9637](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c8f9637ae319870cc6d4e9bf68eb98820f27f25e))
+* fix group's dragTargetRef #953 ([85d17d7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/85d17d77751d474db88b7238dd39baccd6b7a78d))
+* fix translate(-50%, -50%) #963 ([6577ee9](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6577ee9707246eb0f59e1bb685d96277f8feaa6d))
+* individualGroupable request #967 ([daf6008](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/daf60087a82858d18ee260645e96ebb363b073de))
+
+
+### :mega: Other
+
+* publish packages ([5697e80](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5697e8050f486a83ea409b856d1f670759ba6910))
+* publish packages ([5e76998](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5e76998ba0a90efcbb0c2e4fe8030ca47a1842d4))
+
+
+
 ## [0.52.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.52.0...react-moveable@0.52.1) (2023-06-28)
 
 
