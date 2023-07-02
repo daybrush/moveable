@@ -295,6 +295,9 @@ export class InitialMoveable<T = {}>
     public getMoveables(): MoveableManagerInterface[] {
         return this.moveable.getMoveables();
     }
+    public getDragElement(): HTMLElement | SVGElement | null | undefined {
+        return this.moveable.getDragElement();
+    }
     private _updateRefs(isRender?: boolean) {
         const prevRefTargets = this.refTargets;
         const nextRefTargets = getRefTargets((this.props.target || this.props.targets) as any);

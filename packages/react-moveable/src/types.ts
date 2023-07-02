@@ -3374,6 +3374,10 @@ export interface MoveableInterface {
      * Returns the element of the control box.
      */
     getControlBoxElement(): HTMLElement;
+    /**
+     * Target element to be dragged in moveable
+     */
+    getDragElement(): HTMLElement | SVGElement | null | undefined;
     destroy(): void;
     dragStart(e: MouseEvent | TouchEvent): void;
     isInside(clientX: number, clientY: number): boolean;

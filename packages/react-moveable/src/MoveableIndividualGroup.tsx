@@ -4,6 +4,7 @@ import MoveableManager from "./MoveableManager";
 import { GroupableProps, IndividualGroupableProps, MoveableManagerInterface, RectInfo, Requester } from "./types";
 import { prefix } from "./utils";
 import { setStoreCache } from "./store/Store";
+import { find } from "@daybrush/utils";
 
 /**
  * @namespace Moveable.IndividualGroup
@@ -87,7 +88,24 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
         };
         return requestInstant ? requester.request(param).requestEnd() : requester;
     }
-    public dragStart() {
+    public dragStart(e: MouseEvent | TouchEvent) {
+        const inputTarget = e.target as HTMLElement;
+        const childMoveable = find(this.moveables, child => {
+            const target = child.getTargets()[0];
+            const controlBoxElement = child.getControlBoxElement();
+            const dragElement = child.getDragElement();
+
+            if (!target || !dragElement) {
+                return false;
+            }
+            return dragElement === inputTarget || dragElement.contains(inputTarget)
+                || (dragElement !== target && target === inputTarget || target.contains(inputTarget))
+                || controlBoxElement === inputTarget || controlBoxElement.contains(inputTarget);
+        });
+
+        if (childMoveable) {
+            childMoveable.dragStart(e);
+        }
         return this;
     }
     public hitTest() {
@@ -98,6 +116,9 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
     }
     public isDragging() {
         return false;
+    }
+    public getDragElement() {
+        return null;
     }
     public getMoveables(): MoveableManagerInterface[] {
         return [...this.moveables];

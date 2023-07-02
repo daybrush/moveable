@@ -282,8 +282,19 @@ export default class MoveableManager<T = {}>
             || (parentMoveable && parentMoveable.getContainer())
             || this.controlBox.parentElement!;
     }
+    /**
+     * Returns the element of the control box.
+     * @method Moveable#getControlBoxElement
+     */
     public getControlBoxElement(): HTMLElement {
         return this.controlBox;
+    }
+    /**
+     * Target element to be dragged in moveable
+     * @method Moveable#getDragElement
+     */
+    public getDragElement(): HTMLElement | SVGElement | null | undefined {
+        return this._dragTarget;
     }
     /**
      * Check if the target is an element included in the moveable.
