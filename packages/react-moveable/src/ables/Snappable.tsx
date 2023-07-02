@@ -293,7 +293,7 @@ export function checkSizeDist(
         heightOffset += nextHeightOffset;
     }
 
-    if (direction[0] && direction[1]) {
+    if (!keepRatio && direction[0] && direction[1]) {
         const { maxWidth, maxHeight } = checkMaxBounds(
             moveable,
             poses,

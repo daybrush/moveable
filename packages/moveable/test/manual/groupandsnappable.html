@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+
+
+
+  <title>CodePen - Editor</title>
+    <link rel="canonical" href="https://codepen.io/davidalejandroaguilar/pen/gOQmwQB" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta charset="utf-8">
+
+
+
+
+<style>
+#layout_ui {
+  position: relative;
+}
+
+.target {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+}
+
+.target-a {
+  background: red;
+}
+
+.target-b {
+  background: green;
+  left: 100px;
+}
+
+.grid {
+  width: 1000px;
+  height: 750px;
+  background: linear-gradient(90deg, gray 1px, transparent 1px),
+    linear-gradient(gray 1px, transparent 1px);
+  background-size: 50px 50px;
+
+  border-right-color: rgb(115 115 115);
+  border-bottom-color: rgb(115 115 115);
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-right-style: solid;
+  border-bottom-style: solid;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+
+
+</head>
+
+<body translate="no">
+  <div id="layout_ui" class="grid" data-controller="layout">
+  <div class="target target-a" data-controller"layout-item">A</div>
+  <div class="target target-b" data-controller"layout-item">B</div>
+</div>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+
+  <script src='https://daybrush.com/selecto/release/latest/dist/selecto.js'></script>
+<script src='../../dist/moveable.js'></script>
+<script src='https://unpkg.com/stimulus/dist/stimulus.umd.js'></script>
+      <script id="rendered-js" >
+// Connects to data-controller="layout"
+class layout extends Stimulus.Controller {
+  setTargets(newTargets) {
+    this.myTargets = newTargets;
+    this.moveable.target = newTargets;
+  }
+
+  connect() {
+    this.myTargets = [];
+
+    this._startMoveable();
+    this._startSelecto();
+  }
+
+  _startMoveable() {
+    this.moveable = new Moveable(this.element, {
+      target: [],
+      bounds: { left: 0, top: 0, right: 0, bottom: 0, position: "css" },
+      isDisplayGridGuidelines: true,
+      snapGridWidth: 50,
+      snapGridHeight: 50,
+      snapThreshold: 50,
+      snappable: true,
+      draggable: true,
+      resizable: true,
+      rotatable: true,
+      snapRotationThreshold: 50,
+      snapRotationDegrees: [0, 90, 180, 270],
+      origin: false,
+      rotationPosition: "bottom",
+      edge: true });
+
+
+    /* draggable */
+    this.moveable.
+    on("drag", ({ target, transform }) => {
+      this.element.classList.add("dragging");
+      target.style.transform = transform;
+    }).
+    on("dragEnd", event => {
+      this.element.classList.remove("dragging");
+    }).
+    on("dragGroup", e => {
+      e.events.forEach(ev => {
+        ev.target.style.transform = ev.transform;
+      });
+    });
+
+    /* resizable */
+    this.moveable.
+    on(
+    "resize",
+    ({ target, width, height, dist, delta, clientX, clientY, drag }) => {
+      delta[0] && (target.style.width = `${width}px`);
+      delta[1] && (target.style.height = `${height}px`);
+      target.style.transform = drag.transform;
+    }).
+
+    on("resizeGroup", e => {
+      e.events.forEach(
+      ({ target, width, height, dist, delta, clientX, clientY, drag }) => {
+        delta[0] && (target.style.width = `${width}px`);
+        delta[1] && (target.style.height = `${height}px`);
+        target.style.transform = drag.transform;
+      });
+
+    });
+
+    /* rotatable */
+    this.moveable.
+    on(
+    "rotate",
+    ({ target, beforeDelta, delta, dist, transform, clientX, clientY }) => {
+      target.style.transform = transform;
+    }).
+
+    on("rotateEnd", ({ target, isDrag, clientX, clientY }) => {
+      this.dispatch("rotateEnd", { target });
+    }).
+    on("rotateGroup", e => {
+      e.events.forEach(ev => {
+        ev.target.style.transform = ev.transform;
+      });
+    });
+
+    /*  Selecto clickable */
+    this.moveable.on("clickGroup", e => {
+      this.selecto.clickTarget(e.inputEvent, e.inputTarget);
+    });
+  }
+
+  _startSelecto() {
+    this.selecto = new Selecto({
+      container: this.element,
+      dragContainer: this.element,
+      selectableTargets: [".target"],
+      hitRate: 0,
+      selectByClick: true,
+      selectFromInside: false,
+      toggleContinueSelect: ["shift"],
+      ratio: 0 });
+
+
+    this.selecto.on("selectEnd", e => {
+      if (e.isDragStart) {
+        e.inputEvent.preventDefault();
+        this.moveable.waitToChangeTarget().then(() => {
+          this.moveable.dragStart(e.inputEvent);
+        });
+      }
+      this.setTargets(e.selected);
+    });
+
+    this.selecto.on("dragStart", e => {
+      const target = e.inputEvent.target;
+      if (
+      this.moveable.isMoveableElement(target) ||
+      this.myTargets.some(t => t === target || t.contains(target)))
+      {
+        e.stop();
+      }
+    });
+  }}
+
+
+const application = Stimulus.Application.start();
+application.register("layout", layout);
+//# sourceURL=pen.js
+    </script>
+
+
+</body>
+
+</html>
