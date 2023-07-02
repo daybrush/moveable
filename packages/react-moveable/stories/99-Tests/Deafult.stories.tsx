@@ -231,3 +231,24 @@ export const TestIframe = add("Test Iframe", {
     path: require.resolve("./ReactIframeApp"),
 });
 
+
+export const TestTranslate50 = add("Test translate(-50%, -50%)", {
+    app: require("./ReactTranslate50App").default,
+    path: require.resolve("./ReactTranslate50App"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".target")!;
+        const controlBox = canvasElement.querySelector<HTMLElement>(".moveable-control-box")!;
+
+        expect(controlBox.style.transform).toBe("translate3d(50px, 100px, 0px)");
+        await pan({
+            target,
+            start: [0, 0],
+            end: [100, 0],
+            duration: 100,
+            interval: 10,
+        });
+        expect(target.style.transform).toBe("translate(50px, -50px)");
+        expect(controlBox.style.transform).toBe("translate3d(150px, 100px, 0px)");
+    },
+});

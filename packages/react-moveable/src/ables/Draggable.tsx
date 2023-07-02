@@ -103,7 +103,7 @@ export default {
         datas.startValue = [0, 0];
 
         setDragStart(moveable, e);
-        setDefaultTransformIndex(e, "translate");
+        setDefaultTransformIndex(moveable, e, "translate");
         startCheckSnapDrag(moveable, datas);
 
         datas.prevDist = [0, 0];
@@ -115,7 +115,7 @@ export default {
             set: (translate: number[]) => {
                 datas.startValue = translate;
             },
-            ...fillTransformStartEvent(e),
+            ...fillTransformStartEvent(moveable, e),
         });
         const result = parentEvent || triggerEvent(moveable, "onDragStart", params);
 
@@ -138,7 +138,7 @@ export default {
         if (!e) {
             return;
         }
-        resolveTransformEvent(e, "translate");
+        resolveTransformEvent(moveable, e, "translate");
 
         const {
             datas, parentEvent,

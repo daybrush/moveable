@@ -149,7 +149,7 @@ export default {
         datas.posIndexes = getPosIndexesByDirection(direction);
 
         setDragStart(moveable, e);
-        setDefaultTransformIndex(e, "matrix3d");
+        setDefaultTransformIndex(moveable, e, "matrix3d");
 
         state.snapRenderInfo = {
             request: e.isRequest,
@@ -160,7 +160,7 @@ export default {
             set: (matrix: number[]) => {
                 datas.startValue = matrix;
             },
-            ...fillTransformStartEvent(e),
+            ...fillTransformStartEvent(moveable, e),
         });
         const result = triggerEvent(moveable, "onWarpStart", params);
         if (result !== false) {
@@ -184,7 +184,7 @@ export default {
         if (!isWarp) {
             return false;
         }
-        resolveTransformEvent(e, "matrix3d");
+        resolveTransformEvent(moveable, e, "matrix3d");
         if (hasGuidelines(moveable, "warpable")) {
             const selectedPoses: number[][] = posIndexes.map((index: number) => absolutePoses[index]);
 

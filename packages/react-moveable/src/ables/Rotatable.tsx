@@ -521,7 +521,7 @@ export default {
         datas.startValue = 0;
         datas.datas = {};
 
-        setDefaultTransformIndex(e, "rotate");
+        setDefaultTransformIndex(moveable, e, "rotate");
 
         let dragStart: OnDragStart | false = false;
         let resizeStart: OnResizeStart | false = false;
@@ -552,7 +552,7 @@ export default {
             },
             setFixedDirection,
             setFixedPosition,
-            ...fillTransformStartEvent(e),
+            ...fillTransformStartEvent(moveable, e),
             dragStart,
             resizeStart,
         });
@@ -589,7 +589,7 @@ export default {
             return;
         }
 
-        resolveTransformEvent(e, "rotate");
+        resolveTransformEvent(moveable, e, "rotate");
 
         const targetDirection = getTransformDirection(e);
         const direction = beforeDirection * targetDirection;

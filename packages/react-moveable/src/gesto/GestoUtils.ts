@@ -72,7 +72,7 @@ export interface OriginalDataTransformInfos {
     nextTransformAppendedIndexes: number[];
 }
 
-export function resolveTransformEvent(event: any, functionName: string) {
+export function resolveTransformEvent(moveable: MoveableManagerInterface, event: any, functionName: string) {
     const {
         datas,
         originalDatas: {
@@ -104,7 +104,7 @@ export function resolveTransformEvent(event: any, functionName: string) {
         nextIndex = index + nextTransformAppendedIndexes.filter(info => info.index < index).length;
     }
 
-    const result = convertTransformInfo(nextTransforms, nextIndex);
+    const result = convertTransformInfo(nextTransforms, moveable.state, nextIndex);
     const targetFunction = result.targetFunction;
     const matFunctionName = functionName === "rotate" ? "rotateZ" : functionName;
 
@@ -401,25 +401,25 @@ export function scaleMatrix(
     );
 }
 
-export function fillTransformStartEvent(e: any): OnTransformStartEvent {
+export function fillTransformStartEvent(moveable: MoveableManagerInterface, e: any): OnTransformStartEvent {
     const originalDatas = getBeforeRenderableDatas(e);
     return {
         setTransform: (transform: string | string[], index = -1) => {
             originalDatas.startTransforms = isArray(transform) ? transform : splitSpace(transform);
-            setTransformIndex(e, index);
+            setTransformIndex(moveable, e, index);
         },
         setTransformIndex: (index: number) => {
-            setTransformIndex(e, index);
+            setTransformIndex(moveable, e, index);
         },
     };
 }
-export function setDefaultTransformIndex(e: any, property: string) {
+export function setDefaultTransformIndex(moveable: MoveableManagerInterface, e: any, property: string) {
     const originalDatas = getBeforeRenderableDatas(e);
     const startTransforms = originalDatas.startTransforms;
 
-    setTransformIndex(e, findIndex<string>(startTransforms, func => func.indexOf(`${property}(`) === 0));
+    setTransformIndex(moveable, e, findIndex<string>(startTransforms, func => func.indexOf(`${property}(`) === 0));
 }
-export function setTransformIndex(e: any, index: number) {
+export function setTransformIndex(moveable: MoveableManagerInterface, e: any, index: number) {
     const originalDatas = getBeforeRenderableDatas(e);
     const datas = e.datas;
 
@@ -432,7 +432,11 @@ export function setTransformIndex(e: any, index: number) {
     if (!transform) {
         return;
     }
-    const info = parse([transform]);
+    const state = moveable.state;
+    const info = parse([transform], {
+        "x%": v => v / 100 * state.offsetWidth,
+        "y%": v => v / 100 * state.offsetHeight,
+    });
 
     datas.startValue = info[0].functionValue;
 }

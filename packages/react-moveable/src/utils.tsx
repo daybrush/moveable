@@ -1259,8 +1259,11 @@ export function getDirectionCondition(ableName: string, checkAbles: string[] = [
     };
 }
 
-export function convertTransformInfo(transforms: string[], index: number) {
-    const matrixInfos = parse(transforms);
+export function convertTransformInfo(transforms: string[], state: MoveableManagerState, index: number) {
+    const matrixInfos = parse(transforms, {
+        "x%": v => v / 100 * state.offsetWidth,
+        "y%": v => v / 100 * state.offsetHeight,
+    });
 
     const beforeFunctionTexts = transforms.slice(0, index < 0 ? undefined : index);
     const beforeFunctionTexts2 = transforms.slice(0, index < 0 ? undefined : index + 1);

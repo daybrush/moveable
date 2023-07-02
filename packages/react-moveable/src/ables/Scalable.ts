@@ -114,7 +114,7 @@ export default {
         // datas.scaleXRatio = scaleWidth / width;
         // datas.scaleYRatio = scaleHeight / height;
 
-        setDefaultTransformIndex(e, "scale");
+        setDefaultTransformIndex(moveable, e, "scale");
 
         datas.isWidth = isWidth;
 
@@ -158,7 +158,7 @@ export default {
             setFixedDirection,
             setMinScaleSize,
             setMaxScaleSize,
-            ...fillTransformStartEvent(e),
+            ...fillTransformStartEvent(moveable, e),
             dragStart: Draggable.dragStart(
                 moveable,
                 new CustomGesto().dragStart([0, 0], e),
@@ -181,7 +181,7 @@ export default {
     dragControl(
         moveable: MoveableManagerInterface<ScalableProps & DraggableProps & GroupableProps, SnappableState>,
         e: any) {
-        resolveTransformEvent(e, "scale");
+        resolveTransformEvent(moveable, e, "scale");
         const {
             datas,
             parentKeepRatio,
