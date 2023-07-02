@@ -56,3 +56,10 @@ export const RequestResizableSnappable = add("Resizable With Snappable", {
     app: require("./ReactResizableSnappableApp").default,
     path: require.resolve("./ReactResizableSnappableApp"),
 });
+
+
+
+export const RequestDraggableAlign = add("Align", {
+    app: require("./ReactAlignApp").default,
+    path: require.resolve("./ReactAlignApp"),
+});
