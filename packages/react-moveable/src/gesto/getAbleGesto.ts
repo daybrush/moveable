@@ -7,7 +7,7 @@ import Renderable from "../ables/Renderable";
 
 export function triggerAble(
     moveable: MoveableManagerInterface,
-    ableType: string,
+    moveableAbles: Able[],
     eventOperations: string[],
     eventAffix: string,
     eventType: any,
@@ -31,7 +31,7 @@ export function triggerAble(
     ) {
         return false;
     }
-    const ables: Able[] = [...(moveable as any)[ableType]];
+    const ables: Able[] = [...moveableAbles];
 
     if (isRequest) {
         const requestAble = e.requestAble;
@@ -195,7 +195,7 @@ export function triggerAble(
 
     }
     if (!isStart && !isEnd && !isAfter && updatedCount && !requestInstant) {
-        triggerAble(moveable, ableType, eventOperations, eventAffix, eventType + "After", e);
+        triggerAble(moveable, moveableAbles, eventOperations, eventAffix, eventType + "After", e);
     }
     return true;
 }
@@ -294,8 +294,8 @@ export function getAbleGesto(
                     return;
                 }
                 const eventOperations = eventOperation === "drag" ? [eventOperation] : ["drag", eventOperation];
-
-                const result = triggerAble(moveable, ableType, eventOperations, eventAffix, eventType, e);
+                const moveableAbles: Able[] = [...(moveable as any)[ableType]];
+                const result = triggerAble(moveable, moveableAbles, eventOperations, eventAffix, eventType, e);
 
                 if (!result) {
                     e.stop();

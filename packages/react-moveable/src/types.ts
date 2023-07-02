@@ -3363,6 +3363,14 @@ export interface MoveableInterface {
         Name extends string = string,
     >(ableName: Name, params?: RequestParam, isInstant?: boolean): Requester<RequestParam>;
     /**
+     * moveable is the top level that manages targets
+     * `Single`: MoveableManager instance
+     * `Group`: MoveableGroup instance
+     * `IndividualGroup`: MoveableIndividaulGroup instance
+     * Returns leaf target MoveableManagers.
+     */
+    getMoveables(): MoveableManagerInterface[];
+    /**
      * Returns the element of the control box.
      */
     getControlBoxElement(): HTMLElement;

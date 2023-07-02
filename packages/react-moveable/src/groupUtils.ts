@@ -25,6 +25,7 @@ export function fillChildEvents(
 
         return {
             ...e,
+            isRequestChild: true,
             datas: childDatas[i][name],
             originalDatas: childDatas[i],
         };

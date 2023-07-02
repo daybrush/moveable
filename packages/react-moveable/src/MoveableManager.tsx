@@ -651,9 +651,17 @@ export default class MoveableManager<T = {}>
      * requester.request({ deltaX: 10, deltaY: 10 });
      * requester.requestEnd();
      */
-    public request(ableName: string, param: IObject<any> = {}, isInstant?: boolean): Requester {
-        const { ables, groupable } = this.props as any;
-        const requsetAble: Able = ables!.filter((able: Able) => able.name === ableName)[0];
+    public request(
+        ableName: string,
+        param: IObject<any> = {},
+        isInstant?: boolean,
+    ): Requester {
+        const self = this;
+        const props = self.props;
+        const manager = props.parentMoveable || props.wrapperMoveable || self;
+        const allAbles = manager.props.ables!;
+        const groupable = props.groupable;
+        const requsetAble = find(allAbles, (able: Able) => able.name === ableName);
 
         if (this.isDragging() || !requsetAble || !requsetAble.request) {
             return {
@@ -665,39 +673,49 @@ export default class MoveableManager<T = {}>
                 },
             };
         }
-        const self = this;
-        const ableRequester = requsetAble.request(this);
 
+        const ableRequester = requsetAble.request(self);
         const requestInstant = isInstant || param.isInstant;
         const ableType = ableRequester.isControl ? "controlAbles" : "targetAbles";
         const eventAffix = `${(groupable ? "Group" : "")}${ableRequester.isControl ? "Control" : ""}`;
+        const moveableAbles: Able[] = [...manager[ableType]];
 
         const requester = {
             request(ableParam: IObject<any>) {
-                triggerAble(self, ableType, ["drag"], eventAffix, "", {
+                triggerAble(self, moveableAbles, ["drag"], eventAffix, "", {
                     ...ableRequester.request(ableParam),
                     requestAble: ableName,
                     isRequest: true,
                 }, requestInstant);
-                return this;
+                return requester;
             },
             requestEnd() {
-                triggerAble(self, ableType, ["drag"], eventAffix, "End", {
+                triggerAble(self, moveableAbles, ["drag"], eventAffix, "End", {
                     ...ableRequester.requestEnd(),
                     requestAble: ableName,
                     isRequest: true,
                 }, requestInstant);
-                return this;
+                return requester;
             },
         };
 
-        triggerAble(self, ableType, ["drag"], eventAffix, "Start", {
+        triggerAble(self, moveableAbles, ["drag"], eventAffix, "Start", {
             ...ableRequester.requestStart(param),
             requestAble: ableName,
             isRequest: true,
         }, requestInstant);
 
         return requestInstant ? requester.request(param).requestEnd() : requester;
+    }
+    /**
+     * moveable is the top level that manages targets
+     * `Single`: MoveableManager instance
+     * `Group`: MoveableGroup instance
+     * `IndividualGroup`: MoveableIndividaulGroup instance
+     * Returns leaf target MoveableManagers.
+     */
+    public getMoveables(): MoveableManagerInterface[] {
+        return [this];
     }
     /**
      * Remove the Moveable object and the events.
@@ -814,9 +832,19 @@ export default class MoveableManager<T = {}>
     public waitToChangeTarget(): Promise<void> {
         return new Promise(() => { });
     }
-    public triggerEvent(name: string, e: any): any {
+    public triggerEvent(
+        name: string,
+        e: any,
+    ): any {
+        const props = this.props;
+
         this._emitter.trigger(name, e);
-        const callback = (this.props as any)[name];
+
+        if (props.parentMoveable && e.isRequest && !e.isRequestChild) {
+            return props.parentMoveable.triggerEvent(name, e, true);
+        }
+
+        const callback = (props as any)[name];
 
         return callback && callback(e);
     }

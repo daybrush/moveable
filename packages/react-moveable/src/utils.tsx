@@ -1011,6 +1011,8 @@ export function fillParams<T extends IObject<any>>(
         currentTarget: moveable,
         moveable,
         datas: datas.datas,
+        isRequest: e.isRequest,
+        isRequestChild: e.isRequestChild,
         isFirstDrag: !!e.isFirstDrag,
         isTrusted: e.isTrusted !== false,
         stopAble() {
@@ -1068,8 +1070,14 @@ export function triggerEvent<EventName extends keyof Props, Props extends IObjec
     name: EventName,
     params: Props[EventName] extends ((e: infer P) => any) | undefined ? P : IObject<any>,
     isManager?: boolean,
+    isRequest?: boolean,
 ): any {
-    return moveable.triggerEvent(name, params, isManager);
+    return moveable.triggerEvent(
+        name,
+        params,
+        isManager,
+        isRequest,
+    );
 }
 
 export function getComputedStyle(el: Element, pseudoElt?: string | null) {

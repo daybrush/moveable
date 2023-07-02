@@ -1,7 +1,7 @@
 import { ref, refs } from "framework-utils";
 import * as React from "react";
 import MoveableManager from "./MoveableManager";
-import { GroupableProps, IndividualGroupableProps, RectInfo } from "./types";
+import { GroupableProps, IndividualGroupableProps, MoveableManagerInterface, RectInfo } from "./types";
 import { prefix } from "./utils";
 import { setStoreCache } from "./store/Store";
 
@@ -89,6 +89,9 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
     }
     public isDragging() {
         return false;
+    }
+    public getMoveables(): MoveableManagerInterface[] {
+        return [...this.moveables];
     }
     public updateRenderPoses() { }
     public checkUpdate() { }

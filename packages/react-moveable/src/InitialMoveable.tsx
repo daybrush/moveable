@@ -292,6 +292,9 @@ export class InitialMoveable<T = {}>
     public getManager(): MoveableManagerInterface<any, any> {
         return this.moveable;
     }
+    public getMoveables(): MoveableManagerInterface[] {
+        return this.moveable.getMoveables();
+    }
     private _updateRefs(isRender?: boolean) {
         const prevRefTargets = this.refTargets;
         const nextRefTargets = getRefTargets((this.props.target || this.props.targets) as any);
