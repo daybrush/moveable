@@ -1,7 +1,7 @@
 import { ref, refs } from "framework-utils";
 import * as React from "react";
 import MoveableManager from "./MoveableManager";
-import { GroupableProps, IndividualGroupableProps, MoveableManagerInterface, RectInfo } from "./types";
+import { GroupableProps, IndividualGroupableProps, MoveableManagerInterface, RectInfo, Requester } from "./types";
 import { prefix } from "./utils";
 import { setStoreCache } from "./store/Store";
 
@@ -68,15 +68,24 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
             children: this.moveables.map(child => child.getRect()),
         };
     }
-    public request() {
-        return {
-            request() {
+    public request(
+        ableName: string,
+        param: Record<string, any> = {},
+        isInstant?: boolean,
+    ): Requester {
+        const results = this.moveables.map(m => m.request(ableName, {...param, isInstant: false }, false));
+        const requestInstant = isInstant || param.isInstant;
+        const requester: Requester = {
+            request(ableParam: Record<string, any>) {
+                results.forEach(r => r.request(ableParam));
                 return this;
             },
             requestEnd() {
+                results.forEach(r => r.requestEnd());
                 return this;
             },
         };
+        return requestInstant ? requester.request(param).requestEnd() : requester;
     }
     public dragStart() {
         return this;
