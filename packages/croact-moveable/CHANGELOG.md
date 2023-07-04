@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.6.1...croact-moveable@0.6.2) (2023-07-04)
+
+
+### :mega: Other
+
+* publish packages ([9467cf4](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/9467cf45fd2871573df8886eb134c67a8b0f916d))
+
+
+
 ## [0.6.1](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.5.1...croact-moveable@0.6.1) (2023-07-02)
 
 

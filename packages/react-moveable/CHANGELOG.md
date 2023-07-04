@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.53.1...react-moveable@0.53.2) (2023-07-04)
+
+
+### :bug: Bug Fix
+
+* support individual transform #969 ([1b58541](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1b585412ea1c909bfbdcf094ecdde21024d895a0))
+* support react18 strict mode #962 ([710f019](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/710f0190bd072804a224e715e353ff55e3427095))
+
+
+### :mega: Other
+
+* publish packages ([9467cf4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9467cf45fd2871573df8886eb134c67a8b0f916d))
+
+
+
 ## [0.53.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.52.1...react-moveable@0.53.1) (2023-07-02)
 
 

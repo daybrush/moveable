@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.50.2](https://github.com/daybrush/moveable/compare/0.50.1...0.50.2) (2023-07-04)
+### :sparkles: Packages
+* `croact-moveable` 0.6.2
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.27.2
+* `moveable` 0.50.2
+* `preact-moveable` 0.52.2
+* `react-moveable` 0.53.2
+* `svelte-moveable` 0.42.2
+* `vue-moveable` 2.0.0-beta.81
+* `vue3-moveable` 0.25.2
+* `ngx-moveable` 0.47.2
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * support individual transform #969 ([1b58541](https://github.com/daybrush/moveable/commit/1b585412ea1c909bfbdcf094ecdde21024d895a0))
+    * support react18 strict mode #962 ([710f019](https://github.com/daybrush/moveable/commit/710f0190bd072804a224e715e353ff55e3427095))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([9467cf4](https://github.com/daybrush/moveable/commit/9467cf45fd2871573df8886eb134c67a8b0f916d))
+
+
+
 ## [0.50.1](https://github.com/daybrush/moveable/compare/0.49.1...0.50.1) (2023-07-02)
 ### :sparkles: Packages
 * `croact-moveable` 0.6.1
