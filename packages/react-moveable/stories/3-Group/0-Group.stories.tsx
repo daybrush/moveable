@@ -162,3 +162,9 @@ export const GroupRoundableGroup = add("Roundable Group", {
         });
     },
 });
+
+
+export const GroupFixedResizeGroup = add("Fixed Position Resize Group", {
+    app: require("./ReactFixedResizeGroupApp").default,
+    path: require.resolve("./ReactFixedResizeGroupApp"),
+});
