@@ -121,9 +121,9 @@ export const TestsZoomedTarget = add("Test css zoomed target", {
 });
 
 
-export const TestsScaleTarget = add("Test css scale target", {
-    app: require("./ReactScaleTargetApp").default,
-    path: require.resolve("./ReactScaleTargetApp"),
+export const TestsTRSTarget = add("Test css translate & rotate & scale target", {
+    app: require("./ReactTRSTargetApp").default,
+    path: require.resolve("./ReactTRSTargetApp"),
     play: async ({ canvasElement }) => {
         await wait();
         const target = canvasElement.querySelector<HTMLElement>(".target")!;

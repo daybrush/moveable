@@ -12,6 +12,7 @@ import {
     getSVGMatrix, getBodyOffset, getAbsoluteMatrix,
 } from "../utils";
 import { getDocumentBody, getDocumentElement } from "@daybrush/utils";
+import { parseMat } from "css-to-mat";
 
 
 export function getShadowRoot(parentElement: HTMLElement | SVGElement) {
@@ -60,6 +61,8 @@ export function getMatrixStackInfo(
         const getStyle = getCachedStyle(el);
         const position = getStyle("position");
         const scale = getStyle("scale") as string;
+        const rotate = getStyle("rotate") as string;
+        const translate = getStyle("translate") as string;
         const transform = getElementTransform(el);
         const isFixed = position === "fixed";
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
@@ -203,13 +206,18 @@ export function getMatrixStackInfo(
             matrix: getAbsoluteMatrix(matrix, n, origin),
         });
 
-        if (scale && scale !== "1" && scale !== "none") {
-            const [
-                scaleX,
-                scaleY = scaleX,
-            ] = scale.split(" ").map(scale => parseFloat(scale)) as number[];
-            const scaleMatrix = createScaleMatrix([scaleX, scaleY], n);
+        const individualTransforms: string[] = [];
 
+        if (translate && translate !== "0px" && translate !== "none") {
+            individualTransforms.push(`translate(${translate.split(/\s+/).join(",")})`);
+        }
+        if (rotate && rotate !== "1" && rotate !== "none") {
+            individualTransforms.push(`rotate(${rotate})`);
+        }
+        if (scale && scale !== "1" && scale !== "none") {
+            individualTransforms.push(`scale(${scale.split(/\s+/).join(",")})`);
+        }
+        if (individualTransforms.length) {
             matrixes.push({
                 type: "offset",
                 target: el,
@@ -219,7 +227,7 @@ export function getMatrixStackInfo(
             matrixes.push({
                 type: "target",
                 target: el,
-                matrix: getAbsoluteMatrix(scaleMatrix, n, origin),
+                matrix: getAbsoluteMatrix(parseMat(individualTransforms), n, origin),
             });
         }
         if (hasOffset) {

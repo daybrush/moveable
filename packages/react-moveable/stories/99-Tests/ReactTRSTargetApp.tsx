@@ -12,8 +12,10 @@ export default function App(props: Record<string, any>) {
                     transform: "translate3d(0px, 0px, 100px)",
                 }}>
                     <div className="target" style={{
+                        translate: "100px 10px",
+                        rotate: "30deg",
                         scale: "1 2",
-                        transform: "translate(0px, 0px)",
+                        transform: "translate(100px, 0px)",
                     }}>Target</div>
                 </div>
                 <Moveable
