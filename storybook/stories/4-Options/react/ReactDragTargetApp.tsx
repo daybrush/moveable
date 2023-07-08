@@ -14,12 +14,6 @@ export default function App() {
             scalable={true}
             rotatable={true}
             dragTarget={".drag-area"}
-            padding={{
-                left: 10,
-                right: 20,
-                top: 30,
-                bottom: 40,
-            }}
             onRender={e => {
                 e.target.style.cssText += e.cssText;
             }}

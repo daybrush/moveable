@@ -47,6 +47,7 @@ import { setStoreCache } from "./store/Store";
 export default class MoveableManager<T = {}>
     extends React.PureComponent<MoveableManagerProps<T>, MoveableManagerState> {
     public static defaultProps: Required<MoveableManagerProps> = {
+        dragTargetSelf: false,
         target: null,
         dragTarget: null,
         container: null,

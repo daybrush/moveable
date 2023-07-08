@@ -14,6 +14,7 @@ export default function App() {
             scalable={true}
             rotatable={true}
             dragTarget={".drag-area"}
+            dragTargetSelf={true}
             onRender={e => {
                 e.target.style.cssText += e.cssText;
             }}

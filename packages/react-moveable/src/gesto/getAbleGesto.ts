@@ -227,12 +227,19 @@ export function getTargetAbleGesto(
 ) {
     const controlBox = moveable.controlBox;
     const targets: Array<HTMLElement | SVGElement> = [];
-    const dragTarget = moveable.props.dragTarget;
+    const props = moveable.props;
+    const dragArea =  props.dragArea;
+    const target = moveable.state.target;
+    const dragTarget = props.dragTarget;
 
     targets.push(controlBox);
 
-    if (!moveable.props.dragArea || dragTarget) {
+    if (!dragArea || dragTarget) {
         targets.push(moveableTarget);
+    }
+
+    if (!dragArea && dragTarget && target && moveableTarget !== target && props.dragTargetSelf) {
+        targets.push(target);
     }
 
     return getAbleGesto(moveable, targets, "targetAbles", eventAffix, {

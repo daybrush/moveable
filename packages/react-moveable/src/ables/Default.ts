@@ -2,6 +2,7 @@ export default {
     name: "",
     props: [
         "target",
+        "dragTargetSelf",
         "dragTarget",
         "dragContainer",
         "container",

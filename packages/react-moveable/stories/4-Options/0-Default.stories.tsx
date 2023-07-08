@@ -151,3 +151,10 @@ export const OptionsDragTarget = add("other dragTarget", {
     app: require("./ReactDragTargetApp").default,
     path: require.resolve("./ReactDragTargetApp"),
 });
+
+
+
+export const OptionsDragTargetSelf = add("dragTargetSelf with other dragTarget", {
+    app: require("./ReactDragTargetSelfApp").default,
+    path: require.resolve("./ReactDragTargetSelfApp"),
+});

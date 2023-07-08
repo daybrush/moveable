@@ -61,10 +61,16 @@ export interface DefaultOptions {
      */
     target?: SVGElement | HTMLElement | null;
     /**
-     * The target(s) to drag Moveable target(s)
+     * The external target(s) to drag Moveable target(s)
      * @default target
      */
     dragTarget?: MoveableRefType | null;
+    /**
+     * If dragTarget is set directly, taget itself cannot be dragged.
+     * Whether to drag the target as well.
+     * @default false
+     */
+    dragTargetSelf?: boolean;
     /**
      * Container area where drag works
      * @default window
