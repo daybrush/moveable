@@ -33,15 +33,14 @@ export default {
         } else {
             persistDatChildren = [];
         }
-        const store = (moveable as any)._store;
         const parentPosition = watchValue(
-            store,
+            moveable,
             "parentPosition",
             [left, top],
             styles => styles.join(","),
         );
         const requestStyles = watchValue(
-            store,
+            moveable,
             "requestStyles",
             moveable.getRequestChildStyles(),
             styles => styles.join(","),

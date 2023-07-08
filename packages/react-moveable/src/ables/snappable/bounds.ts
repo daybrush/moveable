@@ -202,6 +202,7 @@ function checkBounds(
 
     if (startBoundPos + 1 > minPos) {
         boundInfos.push({
+            direction: "start",
             isBound: true,
             offset: minPos - startBoundPos,
             pos: startBoundPos,
@@ -209,6 +210,7 @@ function checkBounds(
     }
     if (endBoundPos - 1 < maxPos) {
         boundInfos.push({
+            direction: "end",
             isBound: true,
             offset: maxPos - endBoundPos,
             pos: endBoundPos,

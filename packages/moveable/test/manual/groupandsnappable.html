@@ -137,6 +137,23 @@ class layout extends Stimulus.Controller {
       delta[1] && (target.style.height = `${height}px`);
       target.style.transform = drag.transform;
     }).
+    on("beforeResizeGroup", e => {
+        const throttle = num => Math.round(num / 50) * 50;
+        const ratio = e.boundingWidth / e.boundingHeight;
+
+        if (ratio < 1) {
+            const nextBoundingWidth = throttle(e.boundingWidth);
+            const nextBoundingHeight = nextBoundingWidth / ratio;
+
+            e.setSize([nextBoundingWidth, nextBoundingHeight]);
+        } else {
+            const nextBoundingHeight = throttle(e.boundingHeight);
+            const nextBoundingWidth = nextBoundingHeight * ratio;
+
+            e.setSize([nextBoundingWidth, nextBoundingHeight]);
+        }
+
+    }).
 
     on("resizeGroup", e => {
       e.events.forEach(

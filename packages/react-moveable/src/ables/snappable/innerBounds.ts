@@ -6,7 +6,7 @@ import { SnappableProps, DraggableProps, RotatableProps, MoveableManagerInterfac
 import { getDragDist, getPosByDirection, getInverseDragDist } from "../../gesto/GestoUtils";
 import { getNearOffsetInfo } from "./snap";
 import { TINY_NUM } from "../../consts";
-import { solveLineConstants } from "./utils";
+import { getInitialBounds, solveLineConstants } from "./utils";
 
 function isStartLine(dot: number[], line: number[][]) {
     // l    o     => true
@@ -538,9 +538,11 @@ export function checkInnerBoundPoses(
     moveable: MoveableManagerInterface<SnappableProps>,
 ) {
     const innerBounds = moveable.props.innerBounds;
+    const boundMap = getInitialBounds();
 
     if (!innerBounds) {
         return {
+            boundMap,
             vertical: [],
             horizontal: [],
         };
@@ -563,12 +565,6 @@ export function checkInnerBoundPoses(
     const horizontalPoses: number[] = [];
     const verticalPoses: number[] = [];
 
-    const boundMap = {
-        top: false,
-        bottom: false,
-        left: false,
-        right: false,
-    };
 
     lineInfos.forEach(lineInfo => {
         const { line, lineConstants } = lineInfo;
@@ -604,6 +600,7 @@ export function checkInnerBoundPoses(
     });
 
     return {
+        boundMap,
         horizontal: horizontalPoses,
         vertical: verticalPoses,
     };

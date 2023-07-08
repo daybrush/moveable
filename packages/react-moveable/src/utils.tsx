@@ -1670,17 +1670,19 @@ export function isDeepArrayEquals(arr1: any[], arr2: any[]): boolean {
 
 
 export function watchValue<T>(
-    store: Record<string, any>,
+    moveable: any,
     property: string,
     nextValue: T,
     valueKey: (value: T) => string | number,
+    defaultValue?: T,
 ): T {
+    const store = (moveable as any)._store;
     const prevValue = store[property];
 
-    if (
-        property in store
-        && (prevValue === nextValue || valueKey(prevValue) === valueKey(nextValue))
-    ) {
+    if (!(property in store)) {
+        store.property = defaultValue;
+    }
+    if (prevValue === nextValue || valueKey(prevValue) === valueKey(nextValue)) {
         return prevValue;
     }
 

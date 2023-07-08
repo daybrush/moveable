@@ -34,6 +34,9 @@ export default function App(props: Record<string, any>) {
                         e.target.style.height = `${e.height}px`;
                         e.target.style.transform = e.drag.transform;
                     }}
+                    onBound={e => {
+                        console.log(e);
+                    }}
                 />
             </div>
         </div>

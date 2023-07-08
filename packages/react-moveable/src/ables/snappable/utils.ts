@@ -23,6 +23,17 @@ export const HORIZONTAL_NAMES_MAP = {
 } as const;
 
 
+
+export function getInitialBounds() {
+    return {
+        left: false,
+        top: false,
+        right: false,
+        bottom: false,
+    };
+}
+
+
 export function hasGuidelines(
     moveable: MoveableManagerInterface<any, any>,
     ableName: string

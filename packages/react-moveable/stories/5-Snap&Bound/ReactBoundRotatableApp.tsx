@@ -33,6 +33,9 @@ export default function App(props: Record<string, any>) {
                     onRotate={e => {
                         e.target.style.transform = e.afterTransform;
                     }}
+                    onBound={e => {
+                        console.log(e);
+                    }}
                 />
             </div>
         </div>

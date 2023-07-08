@@ -141,8 +141,9 @@ body {
   </div>
 </div>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js'></script>
-<script src='../../dist/moveable.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/selecto/1.22.6/selecto.min.js'></script>
+<script src='../../dist/moveable.js'></script>
+<script src='../../../../../selecto/packages/selecto/dist/selecto.js'></script>
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/selecto/1.22.6/selecto.min.js'></script> -->
 <script src='https://daybrush.com/moveable-helper/release/latest/dist/moveable-helper.js'></script>
 <script src='https://unpkg.com/tagged-jsx/dist/tagged-jsx.js'></script>
       <script id="rendered-js" >
@@ -391,6 +392,7 @@ $(document).ready(function () {
         center: true,
         middle: true },
 
+        // preventDefault: false,
       isDisplaySnapDigit: true,
       isDisplayInnerSnapDigit: true,
       isDisplayGridGuidelines: true,
@@ -502,7 +504,8 @@ $(document).ready(function () {
       preventClickEventOnDrag: true,
       selectFromInside: false,
       toggleContinueSelect: ["shift"],
-      ratio: 0 });
+      ratio: 0,
+    });
 
     window.objSelecto.on("dragStart", e => {
       //console.log("dragStart");
@@ -513,13 +516,16 @@ $(document).ready(function () {
       target.tagName === "BUTTON" ||
       target.isContentEditable)
       {
+        // console.log("스탑");
         e.stop();
       }
     }).on("select", e => {
-      //console.log("select");
+      console.log("select");
+      targets = e.selected;
       window.objMoveable.target = e.selected;
     }).on("selectEnd", e => {
-      if (e.isDragStart) {
+      if (e.isDragStart ) {
+        // console.log("???");
         e.inputEvent.preventDefault();
 
         setTimeout(() => {

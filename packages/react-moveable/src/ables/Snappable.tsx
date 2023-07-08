@@ -25,6 +25,7 @@ import {
     triggerEvent,
     getDirectionCondition,
     abs,
+    watchValue,
 } from "../utils";
 import {
     find,
@@ -62,6 +63,7 @@ import {
     renderGapGuidelines,
 } from "./snappable/render";
 import {
+    getInitialBounds,
     hasGuidelines,
 } from "./snappable/utils";
 import {
@@ -531,8 +533,18 @@ function addBoundGuidelines(
         verticalPoses,
         horizontalPoses
     );
+
+    const boundMap = getInitialBounds();
+
+
     verticalBoundInfos.forEach((info) => {
         if (info.isBound) {
+            if (info.direction === "start") {
+                boundMap.left = true;
+            }
+            if (info.direction === "end") {
+                boundMap.right = true;
+            }
             verticalSnapPoses.push({
                 type: "bounds",
                 pos: info.pos,
@@ -541,6 +553,12 @@ function addBoundGuidelines(
     });
     horizontalBoundInfos.forEach((info) => {
         if (info.isBound) {
+            if (info.direction === "start") {
+                boundMap.top = true;
+            }
+            if (info.direction === "end") {
+                boundMap.bottom = true;
+            }
             horizontalSnapPoses.push({
                 type: "bounds",
                 pos: info.pos,
@@ -548,6 +566,7 @@ function addBoundGuidelines(
         }
     });
     const {
+        boundMap: innerBoundMap,
         vertical: verticalInnerBoundPoses,
         horizontal: horizontalInnerBoundPoses,
     } = checkInnerBoundPoses(moveable);
@@ -581,6 +600,11 @@ function addBoundGuidelines(
             pos: innerPos,
         });
     });
+
+    return {
+        boundMap,
+        innerBoundMap,
+    };
 }
 
 const directionCondition = getDirectionCondition("", ["resizable", "scalable"]);
@@ -688,6 +712,19 @@ color: #f55;
         } = moveable.props;
 
         if (!snapRenderInfo || !snapRenderInfo.render || !hasGuidelines(moveable, "")) {
+            // reset store
+            watchValue(
+                moveable,
+                "boundMap",
+                getInitialBounds(),
+                v => JSON.stringify(v),
+            );
+            watchValue(
+                moveable,
+                "innerBoundMap",
+                getInitialBounds(),
+                v => JSON.stringify(v),
+            );
             return [];
         }
         state.guidelines = getTotalGuidelines(moveable);
@@ -771,7 +808,10 @@ color: #f55;
             });
         }
 
-        addBoundGuidelines(
+        const {
+            boundMap,
+            innerBoundMap,
+        } = addBoundGuidelines(
             moveable,
             [left, right],
             [top, bottom],
@@ -804,6 +844,37 @@ color: #f55;
             },
             true
         );
+
+        const nextBoundMap = watchValue(
+            moveable,
+            "boundMap",
+            boundMap,
+            v => JSON.stringify(v),
+            getInitialBounds(),
+        );
+        const nextInnerBoundMap = watchValue(
+            moveable,
+            "innerBoundMap",
+            innerBoundMap,
+            v => JSON.stringify(v),
+            getInitialBounds(),
+        );
+
+        if (boundMap === nextBoundMap || innerBoundMap === nextInnerBoundMap) {
+            triggerEvent(
+                moveable,
+                "onBound",
+                {
+                    bounds: boundMap,
+                    innerBounds: innerBoundMap,
+                },
+                true
+            );
+        }
+
+
+
+        // verticalSnapPoses.
         return [
             ...renderDashedGuidelines(
                 moveable,
@@ -991,7 +1062,7 @@ color: #f55;
  */
 
 /**
- * You can specify the snap directions of elements. (default: { left: true, top: true, right: true, bottom: true })
+ * You can specify the snap directions of elements. (default: { left: true, ftrue, right: true, bottom: true })
  * @name Moveable.Snappable#elementSnapDirections
  * @see {@link https://daybrush.com/moveable/release/latest/doc/Moveable.Snappable.html#.SnappableOptions}
  * @example

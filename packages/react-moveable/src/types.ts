@@ -357,6 +357,7 @@ export interface SnapBoundInfo {
     snap?: SnapInfo;
 }
 export interface BoundInfo {
+    direction?: "start" | "end";
     isBound: boolean;
     offset: number;
     pos: number;
@@ -2811,9 +2812,9 @@ export interface ElementGuidelineValue extends SnapDirections {
 }
 export interface SnappableEvents {
     onSnap: OnSnap;
+    onBound: OnBound;
 }
 export interface SnappableProps extends SnappableOptions, EventInterface<SnappableEvents> {
-    onSnap?: (e: OnSnap) => any;
 }
 
 /**
@@ -2833,6 +2834,25 @@ export interface OnSnap {
      * gaps is snapped guidelines that became gap snap between elements.
      */
     gaps: SnapGuideline[];
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface OnBound {
+    bounds: {
+        left: boolean;
+        top: boolean;
+        right: boolean;
+        bottom: boolean;
+    };
+    innerBounds: {
+        left: boolean;
+        top: boolean;
+        right: boolean;
+        bottom: boolean;
+    };
 }
 /**
  * @typedef
