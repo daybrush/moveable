@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.50.2...moveable@0.51.0) (2023-07-09)
+
+
+### :rocket: New Features
+
+* add `onBound` event #970 ([c9db51f](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/c9db51f8ef5f7a0d262323e381ec25ad5bfc391d))
+
+
+### :mega: Other
+
+* publish packages ([25cae7f](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/25cae7f46aa28dcb948a8690fd6062b7e15d72ff))
+
+
+
 ## [0.50.2](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.50.1...moveable@0.50.2) (2023-07-04)
 
 

@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.0](https://github.com/daybrush/moveable/compare/0.50.2...0.51.0) (2023-07-09)
+### :sparkles: Packages
+* `croact-moveable` 0.7.0
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.28.0
+* `moveable` 0.51.0
+* `preact-moveable` 0.53.0
+* `react-moveable` 0.54.0
+* `svelte-moveable` 0.43.0
+* `vue-moveable` 2.0.0-beta.82
+* `vue3-moveable` 0.26.0
+* `ngx-moveable` 0.48.0
+
+
+### :rocket: New Features
+
+* `react-moveable`, `moveable`
+    * add `onBound` event #970 ([c9db51f](https://github.com/daybrush/moveable/commit/c9db51f8ef5f7a0d262323e381ec25ad5bfc391d))
+* `react-moveable`
+    * add dragTargetSelf prop #972 ([4537dfe](https://github.com/daybrush/moveable/commit/4537dfea5ba1652188b026b6bffead4737c36572))
+    * add elementDirection property in guideline #949 ([1073ebc](https://github.com/daybrush/moveable/commit/1073ebcf1302259ce3c54ee744a76b1e85c88f1f))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix watchValue ([644f19c](https://github.com/daybrush/moveable/commit/644f19cb640415ee11072cfecbea4811ff2de327))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([25cae7f](https://github.com/daybrush/moveable/commit/25cae7f46aa28dcb948a8690fd6062b7e15d72ff))
+
+
+
 ## [0.50.2](https://github.com/daybrush/moveable/compare/0.50.1...0.50.2) (2023-07-04)
 ### :sparkles: Packages
 * `croact-moveable` 0.6.2

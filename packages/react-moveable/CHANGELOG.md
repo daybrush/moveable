@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.53.2...react-moveable@0.54.0) (2023-07-09)
+
+
+### :rocket: New Features
+
+* add `onBound` event #970 ([c9db51f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/c9db51f8ef5f7a0d262323e381ec25ad5bfc391d))
+* add dragTargetSelf prop #972 ([4537dfe](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/4537dfea5ba1652188b026b6bffead4737c36572))
+* add elementDirection property in guideline #949 ([1073ebc](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1073ebcf1302259ce3c54ee744a76b1e85c88f1f))
+
+
+### :bug: Bug Fix
+
+* fix watchValue ([644f19c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/644f19cb640415ee11072cfecbea4811ff2de327))
+
+
+### :mega: Other
+
+* publish packages ([25cae7f](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/25cae7f46aa28dcb948a8690fd6062b7e15d72ff))
+
+
+
 ## [0.53.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.53.1...react-moveable@0.53.2) (2023-07-04)
 
 

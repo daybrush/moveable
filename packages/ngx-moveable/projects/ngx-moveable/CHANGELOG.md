@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.48.0](https://github.com/daybrush/moveable/compare/ngx-moveable@0.47.2...ngx-moveable@0.48.0) (2023-07-09)
+
+
+### :mega: Other
+
+* publish packages ([25cae7f](https://github.com/daybrush/moveable/commit/25cae7f46aa28dcb948a8690fd6062b7e15d72ff))
+
+
+
 ## [0.47.2](https://github.com/daybrush/moveable/compare/ngx-moveable@0.47.1...ngx-moveable@0.47.2) (2023-07-04)
 
 
