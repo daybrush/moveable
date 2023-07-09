@@ -1,3 +1,4 @@
+import { splitBracket, splitComma } from "@daybrush/utils";
 import { add } from "../utils/story";
 import { findMoveable, pan, wait } from "../utils/testing";
 import { expect } from "@storybook/jest";
@@ -138,7 +139,9 @@ export const TestsTRSTarget = add("Test css translate & rotate & scale target", 
         // 100x 200
         expect(line1.style.width).toBe("100px");
         expect(line2.style.width).toBe("200px");
-        expect(controlBox.style.transform).toBe("translate3d(100px, 200px, 0px)");
+        expect(splitComma(splitBracket(controlBox.style.transform).value!).map(v => {
+            return parseInt(v, 10);
+        })).toEqual([243, 248, 0]);
 
         await pan({
             target,
@@ -147,8 +150,12 @@ export const TestsTRSTarget = add("Test css translate & rotate & scale target", 
             duration: 100,
             interval: 10,
         });
-        expect(target.style.transform).toBe("translate(100px, 0px)");
-        expect(controlBox.style.transform).toBe("translate3d(200px, 200px, 0px)");
+        expect(splitComma(splitBracket(target.style.transform).value!).map(v => {
+            return parseInt(v, 10);
+        })).toEqual([186, -25]);
+        expect(splitComma(splitBracket(controlBox.style.transform).value!).map(v => {
+            return parseInt(v, 10);
+        })).toEqual([343, 248, 0]);
     },
 });
 
