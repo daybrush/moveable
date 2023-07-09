@@ -11,6 +11,15 @@ import {
 } from "../../utils";
 export const VERTICAL_NAMES = ["left", "right", "center"] as const;
 export const HORIZONTAL_NAMES = ["top", "bottom", "middle"] as const;
+export const SNAP_SKIP_NAMES_MAP = {
+    "left": "start",
+    "right": "end",
+    "center": "center",
+    "top": "start",
+    "bottom": "end",
+    "middle": "center",
+};
+
 export const VERTICAL_NAMES_MAP = {
     start: "left",
     end: "right",

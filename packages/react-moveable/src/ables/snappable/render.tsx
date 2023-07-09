@@ -217,6 +217,7 @@ export function groupByElementGuidelines(
                     size: 0,
                     elementRect: elementRect1,
                     direction: "",
+                    elementDirection: "end",
                 });
                 end.push({
                     type,
@@ -224,6 +225,7 @@ export function groupByElementGuidelines(
                     size: 0,
                     elementRect: elementRect2,
                     direction: "",
+                    elementDirection: "start",
                 });
                 // inner.push(guideline);
             }

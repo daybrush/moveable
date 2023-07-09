@@ -10,7 +10,7 @@ import {
 import { getRect, getAbsolutePosesByState, getRefTarget, calculateInversePosition, prefix, abs } from "../../utils";
 import {
     splitSnapDirectionPoses, getSnapDirections,
-    HORIZONTAL_NAMES_MAP, VERTICAL_NAMES_MAP, calculateContainerPos,
+    HORIZONTAL_NAMES_MAP, VERTICAL_NAMES_MAP, calculateContainerPos, SNAP_SKIP_NAMES_MAP,
 } from "./utils";
 
 export function getTotalGuidelines(
@@ -238,6 +238,7 @@ export function getGapGuidelines(
                 hide: true,
                 gapRects: [snapRect1, snapRect2],
                 direction: "",
+                elementDirection: "",
             });
         });
     });
@@ -374,6 +375,8 @@ export function getElementGuidelines(
         const {
             horizontal,
             vertical,
+            horizontalNames,
+            verticalNames,
         } = splitSnapDirectionPoses({
             top: topValue,
             right: rightValue,
@@ -388,7 +391,7 @@ export function getElementGuidelines(
         const height = rect.bottom! - rectTop;
         const sizes = [width, height];
 
-        vertical.forEach(pos => {
+        vertical.forEach((pos, i) => {
             nextGuidelines.push({
                 type: "vertical", element, pos: [
                     throttle(pos, 0.1),
@@ -397,18 +400,23 @@ export function getElementGuidelines(
                 sizes,
                 className,
                 elementRect: snapRect,
+                elementDirection: SNAP_SKIP_NAMES_MAP[verticalNames[i]] || verticalNames[i],
                 direction: "",
             });
         });
-        horizontal.forEach(pos => {
+        horizontal.forEach((pos, i) => {
             nextGuidelines.push({
-                type: "horizontal", element, pos: [
+                type: "horizontal",
+                element,
+                pos: [
                     rectLeft,
                     throttle(pos, 0.1),
-                ], size: width,
+                ],
+                size: width,
                 sizes,
                 className,
                 elementRect: snapRect,
+                elementDirection: SNAP_SKIP_NAMES_MAP[horizontalNames[i]] || horizontalNames[i],
                 direction: "",
             });
         });

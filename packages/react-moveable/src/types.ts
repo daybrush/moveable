@@ -329,6 +329,7 @@ export interface PaddingBox {
 export interface Renderer {
     createElement(type: any, props?: any, ...children: any[]): any;
 }
+
 /**
  * @typedef
  * @memberof Moveable.Snappable
@@ -350,9 +351,19 @@ export interface SnapGuideline {
     sizes?: number[];
 
     gap?: number;
+    elementDirection?: string;
     elementRect?: SnapElementRect;
     gapRects?: SnapElementRect[];
 }
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface SnapElementGuideline extends SnapGuideline {
+
+}
+
 export interface SnapBoundInfo {
     isBound: boolean;
     isSnap: boolean;
