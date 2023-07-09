@@ -1677,10 +1677,16 @@ export function watchValue<T>(
     defaultValue?: T,
 ): T {
     const store = (moveable as any)._store;
-    const prevValue = store[property];
+    let prevValue = store[property];
 
     if (!(property in store)) {
-        store.property = defaultValue;
+        if (defaultValue != null) {
+            store[property] = defaultValue;
+            prevValue = defaultValue;
+        } else {
+            store[property] = nextValue;
+            return nextValue;
+        }
     }
     if (prevValue === nextValue || valueKey(prevValue) === valueKey(nextValue)) {
         return prevValue;
