@@ -646,7 +646,7 @@ export default {
         "maxSnapElementGuidelineDistance",
         "maxSnapElementGapDistance",
     ] as const,
-    events: ["snap"] as const,
+    events: ["snap", "bound"] as const,
     css: [
         `:host {
 --bounds-color: #d66;
