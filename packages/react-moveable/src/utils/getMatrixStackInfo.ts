@@ -26,6 +26,25 @@ export function getShadowRoot(parentElement: HTMLElement | SVGElement) {
     return;
 }
 
+
+function getIndividualTransforms(getStyle: (property: string) => any) {
+    const scale = getStyle("scale") as string;
+    const rotate = getStyle("rotate") as string;
+    const translate = getStyle("translate") as string;
+    const individualTransforms: string[] = [];
+
+    if (translate && translate !== "0px" && translate !== "none") {
+        individualTransforms.push(`translate(${translate.split(/\s+/).join(",")})`);
+    }
+    if (rotate && rotate !== "1" && rotate !== "none") {
+        individualTransforms.push(`rotate(${rotate})`);
+    }
+    if (scale && scale !== "1" && scale !== "none") {
+        individualTransforms.push(`scale(${scale.split(/\s+/).join(",")})`);
+    }
+    return individualTransforms;
+}
+
 export interface MatrixStackInfo {
     zoom: number;
     offsetContainer: HTMLElement;
@@ -60,11 +79,9 @@ export function getMatrixStackInfo(
         isEnd = requestEnd;
         const getStyle = getCachedStyle(el);
         const position = getStyle("position");
-        const scale = getStyle("scale") as string;
-        const rotate = getStyle("rotate") as string;
-        const translate = getStyle("translate") as string;
         const transform = getElementTransform(el);
         const isFixed = position === "fixed";
+        const individualTransforms = getIndividualTransforms(getStyle);
         let matrix: number[] = convertCSStoMatrix(getTransformMatrix(transform));
         let offsetParent: HTMLElement;
         let isOffsetEnd = false;
@@ -90,7 +107,7 @@ export function getMatrixStackInfo(
         // convert 3 to 4
         const length = matrix.length;
 
-        if (!is3d && length === 16) {
+        if (!is3d && (length === 16 || individualTransforms.length)) {
             is3d = true;
             n = 4;
 
@@ -206,17 +223,6 @@ export function getMatrixStackInfo(
             matrix: getAbsoluteMatrix(matrix, n, origin),
         });
 
-        const individualTransforms: string[] = [];
-
-        if (translate && translate !== "0px" && translate !== "none") {
-            individualTransforms.push(`translate(${translate.split(/\s+/).join(",")})`);
-        }
-        if (rotate && rotate !== "1" && rotate !== "none") {
-            individualTransforms.push(`rotate(${rotate})`);
-        }
-        if (scale && scale !== "1" && scale !== "none") {
-            individualTransforms.push(`scale(${scale.split(/\s+/).join(",")})`);
-        }
         if (individualTransforms.length) {
             matrixes.push({
                 type: "offset",
