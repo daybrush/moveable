@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.1](https://github.com/daybrush/moveable/compare/0.51.0...0.51.1) (2023-07-11)
+### :sparkles: Packages
+* `croact-moveable` 0.7.1
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.28.1
+* `moveable` 0.51.1
+* `preact-moveable` 0.53.1
+* `react-moveable` 0.54.1
+* `svelte-moveable` 0.43.1
+* `vue-moveable` 2.0.0-beta.83
+* `vue3-moveable` 0.26.1
+* `ngx-moveable` 0.48.1
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix individual transforms for 2d #969 ([7e205f4](https://github.com/daybrush/moveable/commit/7e205f47c239993029de250d7848fc198261a5e3))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([27bda8e](https://github.com/daybrush/moveable/commit/27bda8ea3d9751847fc073519a832b3464242d3c))
+
+
+
 ## [0.51.0](https://github.com/daybrush/moveable/compare/0.50.2...0.51.0) (2023-07-09)
 ### :sparkles: Packages
 * `croact-moveable` 0.7.0

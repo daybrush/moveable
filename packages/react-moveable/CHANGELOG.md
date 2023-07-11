@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.54.0...react-moveable@0.54.1) (2023-07-11)
+
+
+### :bug: Bug Fix
+
+* fix individual transforms for 2d #969 ([7e205f4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7e205f47c239993029de250d7848fc198261a5e3))
+
+
+### :mega: Other
+
+* publish packages ([27bda8e](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/27bda8ea3d9751847fc073519a832b3464242d3c))
+
+
+
 ## [0.54.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.53.2...react-moveable@0.54.0) (2023-07-09)
 
 
