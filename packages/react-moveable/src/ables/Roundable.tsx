@@ -325,9 +325,11 @@ cursor: pointer;
                 originalPos[0] += roundPadding;
             }
             const pos = minus(calculatePosition(allMatrix, originalPos, n), basePos);
-
+            const isDisplayVerticalShadow
+                = isDisplayShadowRoundControls
+                && isDisplayShadowRoundControls !== "horizontal";
             const isDisplay = v.vertical
-                ? verticalCount <= maxRoundControls[1] && (isDisplayShadowRoundControls || !v.virtual)
+                ? verticalCount <= maxRoundControls[1] && (isDisplayVerticalShadow || !v.virtual)
                 : horizontalCount <= maxRoundControls[0] && (isDisplayShadowRoundControls || !v.virtual);
 
             return <div key={`borderRadiusControl${i}`}
