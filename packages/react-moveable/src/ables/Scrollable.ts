@@ -62,7 +62,7 @@ export default {
             }
             triggerEvent(moveable, eventName, params);
         }).on("move", ({ offsetX, offsetY, inputEvent }) => {
-            moveable[gestoName].scrollBy(offsetX, offsetY, inputEvent.inputEvent, true);
+            moveable[gestoName].scrollBy(offsetX, offsetY, inputEvent.inputEvent, false);
         }).on("scrollDrag", ({ next }) => {
             next(moveable[gestoName].getCurrentEvent());
         });
