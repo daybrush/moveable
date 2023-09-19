@@ -1,6 +1,6 @@
 {
     "name": "croact-moveable",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "description": "A React Compat Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Pinchable, Groupable, Snappable.",
     "main": "./dist/moveable.cjs.js",
     "module": "./dist/moveable.esm.js",
@@ -82,6 +82,6 @@
         "gesto": "^1.19.0",
         "overlap-area": "^1.1.0",
         "react-css-styled": "^1.1.9",
-        "react-moveable": "~0.54.1"
+        "react-moveable": "~0.54.2"
     }
 }
