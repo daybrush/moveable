@@ -8,7 +8,10 @@ const defaultOptions = {
     external: true,
     plugins: [
         vuePlugin(),
-    ]
+    ],
+    outputOptions: {
+        interop: "auto",
+    },
 };
 module.exports = buildHelper([
     {

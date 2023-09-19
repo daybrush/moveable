@@ -1,6 +1,6 @@
 {
     "name": "vue-moveable",
-    "version": "2.0.0-beta.83",
+    "version": "2.0.0-beta.84",
     "description": "A Vue Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "types": "declaration/index.d.ts",
     "main": "dist/moveable.cjs.js",
@@ -60,7 +60,7 @@
         "moveable": "~0.51.1"
     },
     "devDependencies": {
-        "@daybrush/builder": "^0.2.4",
+        "@daybrush/builder": "0.1.2",
         "@vue/cli-plugin-typescript": "^3.12.0",
         "@vue/cli-service": "^3.12.0",
         "rollup-plugin-vue": "^5.1.9",
@@ -68,5 +68,9 @@
         "typescript": "^4.8 <4.9",
         "vue": "^2.6.11",
         "vue-template-compiler": "^2.6.11"
-    }
+    },
+    "nohoist": [
+        "**/@daybrush/builder",
+        "**/@daybrush/builder/**"
+    ]
 }
