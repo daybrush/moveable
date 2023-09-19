@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.2](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.51.1...moveable@0.51.2) (2023-09-19)
+
+
+### :bug: Bug Fix
+
+* fix roundable shadow condition ([adb09b7](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/adb09b7396271e7de7031c1d621d1232f3751a9b))
+
+
+### :mega: Other
+
+* publish packages ([ecf15ab](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/ecf15ab399bb4d9f6752cb84b0d6b06d15e5c426))
+
+
+
 ## [0.51.1](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.51.0...moveable@0.51.1) (2023-07-11)
 
 

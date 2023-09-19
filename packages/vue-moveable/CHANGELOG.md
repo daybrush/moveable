@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-beta.85](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/compare/vue-moveable@2.0.0-beta.83...vue-moveable@2.0.0-beta.85) (2023-09-19)
+
+
+### :bug: Bug Fix
+
+* fix vue-moveable rollup verseion #1013 ([5d81006](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/commit/5d81006a003b4c39811263144b110eb9d960a965))
+
+
+### :mega: Other
+
+* publish packages ([ecf15ab](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/commit/ecf15ab399bb4d9f6752cb84b0d6b06d15e5c426))
+
+
+
 ## [2.0.0-beta.83](https://github.com/daybrush/moveable/blob/master/packages/vue-moveable/compare/vue-moveable@2.0.0-beta.82...vue-moveable@2.0.0-beta.83) (2023-07-11)
 
 

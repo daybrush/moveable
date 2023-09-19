@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.2](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.53.1...preact-moveable@0.53.2) (2023-09-19)
+
+
+### :mega: Other
+
+* publish packages ([ecf15ab](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/commit/ecf15ab399bb4d9f6752cb84b0d6b06d15e5c426))
+
+
+
 ## [0.53.1](https://github.com/daybrush/moveable/blob/master/packages/preact-moveable/compare/preact-moveable@0.53.0...preact-moveable@0.53.1) (2023-07-11)
 
 

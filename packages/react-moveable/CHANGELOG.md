@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.54.1...react-moveable@0.54.2) (2023-09-19)
+
+
+### :bug: Bug Fix
+
+* fix roundable shadow condition ([adb09b7](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/adb09b7396271e7de7031c1d621d1232f3751a9b))
+* fix scrollable infinite loop #1015 ([b725981](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/b725981982ceed7914b14be8e5ee7908d5ab6e22))
+* support transform-box: fill-box (#1012) ([7a0ed4d](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7a0ed4d8dd5463a85298860d6924b3bd132be8a6))
+
+
+### :mega: Other
+
+* publish packages ([ecf15ab](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/ecf15ab399bb4d9f6752cb84b0d6b06d15e5c426))
+
+
+
 ## [0.54.1](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.54.0...react-moveable@0.54.1) (2023-07-11)
 
 

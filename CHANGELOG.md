@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.2](https://github.com/daybrush/moveable/compare/0.51.1...0.51.2) (2023-09-19)
+### :sparkles: Packages
+* `croact-moveable` 0.7.2
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.28.2
+* `moveable` 0.51.2
+* `preact-moveable` 0.53.2
+* `react-moveable` 0.54.2
+* `svelte-moveable` 0.43.3
+* `vue-moveable` 2.0.0-beta.85
+* `vue3-moveable` 0.26.2
+* `ngx-moveable` 0.48.2
+
+
+### :bug: Bug Fix
+
+* `react-moveable`, `moveable`
+    * fix roundable shadow condition ([adb09b7](https://github.com/daybrush/moveable/commit/adb09b7396271e7de7031c1d621d1232f3751a9b))
+* `svelte-moveable`
+    * add svelte 4 as a compatible dependency (#1005) ([266872c](https://github.com/daybrush/moveable/commit/266872c641dce8d2a2c06e50ac972e116099285a))
+* `react-moveable`
+    * fix scrollable infinite loop #1015 ([b725981](https://github.com/daybrush/moveable/commit/b725981982ceed7914b14be8e5ee7908d5ab6e22))
+    * support transform-box: fill-box (#1012) ([7a0ed4d](https://github.com/daybrush/moveable/commit/7a0ed4d8dd5463a85298860d6924b3bd132be8a6))
+* `vue-moveable`
+    * fix vue-moveable rollup verseion #1013 ([5d81006](https://github.com/daybrush/moveable/commit/5d81006a003b4c39811263144b110eb9d960a965))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([ecf15ab](https://github.com/daybrush/moveable/commit/ecf15ab399bb4d9f6752cb84b0d6b06d15e5c426))
+* `svelte-moveable`
+    * update svelte-moveable version ([377f618](https://github.com/daybrush/moveable/commit/377f6186c9478c294a05cf830d7a0930eec0436a))
+
+
+
 ## [0.51.1](https://github.com/daybrush/moveable/compare/0.51.0...0.51.1) (2023-07-11)
 ### :sparkles: Packages
 * `croact-moveable` 0.7.1
