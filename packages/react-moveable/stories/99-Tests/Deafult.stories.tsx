@@ -239,6 +239,12 @@ export const TestIframe = add("Test Iframe", {
 });
 
 
+export const TestGroupPadding = add("Test Show Group's Padding", {
+    app: require("./ReactGroupPaddingApp").default,
+    path: require.resolve("./ReactGroupPaddingApp"),
+});
+
+
 export const TestTranslate50 = add("Test translate(-50%, -50%)", {
     app: require("./ReactTranslate50App").default,
     path: require.resolve("./ReactTranslate50App"),

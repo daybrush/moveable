@@ -57,3 +57,9 @@ export const SVGOrigin = add("SVGPathElement with center origin", {
     app: require("./ReactOriginApp").default,
     text: require("!!raw-loader!./ReactOriginApp").default,
 });
+
+
+export const SVGFillboxOrigin = add("SVGPathElement with center origin and transform fill-box", {
+    app: require("./ReactOriginFillboxApp").default,
+    text: require("!!raw-loader!./ReactOriginFillboxApp").default,
+});
