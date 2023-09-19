@@ -37,7 +37,6 @@ export const SVGTargetG = add("SVGElement with target G tag", {
     app: require("./react/ReactSVGTargetGApp").default,
 });
 
-
 export const SVGGroup = add("SVG Group", {
     appName: "ReactSVGGroupApp",
     app: require("./react/ReactSVGGroupApp").default,
@@ -52,8 +51,12 @@ export const SVGGroup = add("SVG Group", {
     },
 });
 
-
 export const SVGOrigin = add("SVGPathElement with center origin", {
     appName: "ReactOriginApp",
     app: require("./react/ReactOriginApp").default,
+});
+
+export const SVGFillboxOrigin = add("SVGPathElement with center origin and transform fill-box", {
+    appName: "ReactOriginFillboxApp",
+    app: require("./react/ReactOriginFillBoxApp").default,
 });

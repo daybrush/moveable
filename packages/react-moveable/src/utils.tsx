@@ -407,17 +407,17 @@ export function getSVGGraphicsOffset(
     if (!el.getBBox || !isGTarget && el.tagName.toLowerCase() === "g") {
         return [0, 0, 0, 0];
     }
+    const getStyle = getCachedStyle(el);
+    const isFillBox = getStyle("transform-box") === "fill-box";
+
     const bbox = el.getBBox();
     const viewBox = getSVGViewBox(el.ownerSVGElement!);
     const left = bbox.x - viewBox.x;
     const top = bbox.y - viewBox.y;
+    const originX = isFillBox ? origin[0] : origin[0] - left;
+    const originY = isFillBox ? origin[1] : origin[1] - top;
 
-    return [
-        left,
-        top,
-        origin[0] - left,
-        origin[1] - top,
-    ];
+    return [left, top, originX, originY];
 }
 export function calculatePosition(matrix: number[], pos: number[], n: number) {
     return calculate(matrix, convertPositionMatrix(pos, n), n);
