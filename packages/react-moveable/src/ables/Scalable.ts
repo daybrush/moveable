@@ -1,7 +1,8 @@
 import {
     triggerEvent, multiply2,
     fillParams, fillEndParams, getAbsolutePosesByState,
-    catchEvent, getOffsetSizeDist, getDirectionCondition, getDirectionViewClassName, getTotalDirection, sign, countEach,
+    catchEvent, getOffsetSizeDist, getDirectionCondition,
+    getDirectionViewClassName, getTotalDirection, sign, countEach, abs,
 } from "../utils";
 import { MIN_SCALE } from "../consts";
 import {
@@ -286,6 +287,7 @@ export default {
         let fixedPosition = dragClient;
         let snapDist = [0, 0];
 
+        const distSign = sign(dist[0] * dist[1]);
         const isSelfPinch = !dragClient && !parentFlag && isPinch;
 
         if (isSelfPinch || resolveMatrix) {
@@ -337,7 +339,7 @@ export default {
                 dist[0] += snapDist[0];
                 const snapHeight = startOffsetWidth * dist[0] * tempScaleValue[0] / ratio;
 
-                dist[1] = snapHeight / startOffsetHeight / tempScaleValue[1];
+                dist[1] = sign(distSign * dist[0]) * abs(snapHeight / startOffsetHeight / tempScaleValue[1]);
             } else if (
                 (!sizeDirection[0] && sizeDirection[1])
                 || (!snapDist[0] && snapDist[1])
@@ -346,11 +348,12 @@ export default {
                 dist[1] += snapDist[1];
                 const snapWidth = startOffsetHeight * dist[1] * tempScaleValue[1] * ratio;
 
-                dist[0] = snapWidth / startOffsetWidth / tempScaleValue[0];
+                dist[0] = sign(distSign * dist[1]) * abs(snapWidth / startOffsetWidth / tempScaleValue[0]);
             }
         } else {
             dist[0] += snapDist[0];
             dist[1] += snapDist[1];
+
             if (!snapDist[0]) {
                 dist[0] = throttle(dist[0] * tempScaleValue[0], throttleScale!) / tempScaleValue[0];
             }

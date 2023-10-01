@@ -14,6 +14,7 @@ import { expect } from "@storybook/jest";
 import { userEvent } from "@storybook/testing-library";
 import { pan, rotate, wait } from "../utils/testing";
 import { throttle } from "@daybrush/utils";
+import { parse } from "css-to-mat";
 
 export default {
     title: "Group",
@@ -89,6 +90,34 @@ export const GroupDraggableScalableRotatable = add("Draggable & Scalable & Rotat
         ...DEFAULT_SCALABLE_GROUP_CONTROLS,
         ...DEFAULT_ROTATABLE_CONTROLS,
         ...DEFAULT_DRAGGABLE_CONTROLS,
+    },
+    play: async ({ canvasElement }) => {
+        await wait();
+
+        const targets = canvasElement.querySelectorAll<HTMLElement>(".target")!;
+        const resizeControl = canvasElement.querySelector<HTMLElement>(`.moveable-control-box [data-direction="e"]`)!;
+
+        await pan({
+            target: resizeControl,
+            start: [0, 0],
+            end: [140, 100],
+            duration: 100,
+            interval: 10,
+        });
+
+        targets.forEach((target, i) => {
+            const transform = target.style.transform;
+            const functionValue = parse(transform)[1].functionValue;
+
+            expect(throttle(functionValue[0], 0.1)).toBe(1.5);
+
+            if (i === 2) {
+                expect(throttle(functionValue[1], 0.1)).toBe(-1.5);
+            } else {
+                expect(throttle(functionValue[1], 0.1)).toBe(1.5);
+            }
+        });
+
     },
 });
 
