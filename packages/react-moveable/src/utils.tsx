@@ -240,7 +240,7 @@ export function getOffsetPosInfo(
     let origin: number[];
     let targetOrigin: number[];
     // inner svg element
-    if (!hasOffset && tagName !== "svg") {
+    if (!hasOffset && (tagName !== "svg" || (target as SVGElement).ownerSVGElement)) {
         origin = IS_WEBKIT605
             ? getBeforeTransformOrigin(el as SVGElement)
             : getTransformOriginArray(getStyle("transformOrigin")).map(pos => parseFloat(pos));
@@ -248,13 +248,18 @@ export function getOffsetPosInfo(
         targetOrigin = origin.slice();
         hasOffset = true;
 
-        [
-            offsetLeft, offsetTop, origin[0], origin[1],
-        ] = getSVGGraphicsOffset(
-            el as SVGGraphicsElement,
-            origin,
-            el === target && target.tagName.toLowerCase() === "g",
-        );
+        if (tagName === "svg") {
+            offsetLeft = 0;
+            offsetTop = 0;
+        } else {
+            [
+                offsetLeft, offsetTop, origin[0], origin[1],
+            ] = getSVGGraphicsOffset(
+                el as SVGGraphicsElement,
+                origin,
+                el === target && target.tagName.toLowerCase() === "g",
+            );
+        }
     } else {
         origin = getTransformOriginArray(getStyle("transformOrigin")).map(pos => parseFloat(pos));
         targetOrigin = origin.slice();
@@ -609,7 +614,7 @@ export function getSize(
     let svg = false;
 
     if (target) {
-        if (!hasOffset && target!.tagName.toLowerCase() !== "svg") {
+        if (!hasOffset && (target as SVGElement).ownerSVGElement) {
             // check svg elements
             const bbox = (target as SVGGraphicsElement).getBBox();
 

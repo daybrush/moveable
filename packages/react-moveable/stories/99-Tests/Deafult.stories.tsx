@@ -265,3 +265,9 @@ export const TestTranslate50 = add("Test translate(-50%, -50%)", {
         expect(controlBox.style.transform).toBe("translate3d(150px, 100px, 0px)");
     },
 });
+
+
+export const TestNestedSVG = add("Test Nested SVG", {
+    app: require("./ReactNestedSVGApp").default,
+    path: require.resolve("./ReactNestedSVGApp"),
+});
