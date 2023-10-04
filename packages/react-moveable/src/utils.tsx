@@ -1215,8 +1215,8 @@ export function calculatePadding(
         return pos;
     }
 
-    const xAdded = calculatePosition(matrix, [normalized(added[0]), 0], n);
-    const yAdded = calculatePosition(matrix, [0, normalized(added[1])], n);
+    const xAdded = calculatePosition(matrix, [normalized(added[0] || 1), 0], n);
+    const yAdded = calculatePosition(matrix, [0, normalized(added[1] || 1)], n);
     const nextAdded = calculatePosition(matrix, [
         added[0] / getDistSize(xAdded),
         added[1] / getDistSize(yAdded),

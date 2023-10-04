@@ -273,6 +273,7 @@ export type MoveableManagerState<T = {}> = {
     container: SVGElement | HTMLElement | null | undefined;
     disableNativeEvent: boolean;
     gestos: Record<string, Gesto | CustomGesto | null>;
+    renderLines: number[][][];
     renderPoses: number[][];
     posDelta: number[];
     style: Partial<Writable<CSSStyleDeclaration>>;

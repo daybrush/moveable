@@ -97,6 +97,12 @@ export default class MoveableManager<T = {}>
     public state: MoveableManagerState = {
         container: null,
         gestos: {},
+        renderLines: [
+            [[0, 0], [0, 0]],
+            [[0, 0], [0, 0]],
+            [[0, 0], [0, 0]],
+            [[0, 0], [0, 0]],
+        ],
         renderPoses: [[0, 0], [0, 0], [0, 0], [0, 0]],
         disableNativeEvent: false,
         posDelta: [0, 0],
@@ -760,13 +766,20 @@ export default class MoveableManager<T = {}>
             top: stateTop,
             isPersisted,
         } = state;
+        const zoom = props.zoom || 1;
 
-        if (!padding) {
+        if (!padding && zoom <= 1) {
             state.renderPoses = [
                 pos1,
                 pos2,
                 pos3,
                 pos4,
+            ];
+            state.renderLines = [
+                [pos1, pos2],
+                [pos2, pos4],
+                [pos4, pos3],
+                [pos3, pos1],
             ];
             return;
         }
@@ -775,7 +788,7 @@ export default class MoveableManager<T = {}>
             top,
             bottom,
             right,
-        } = getPaddingBox(padding);
+        } = getPaddingBox(padding || {});
         const n = is3d ? 4 : 3;
 
         // const clipPathInfo = getClipPath(
@@ -808,12 +821,46 @@ export default class MoveableManager<T = {}>
             createOriginMatrix(transformOrigin, n),
         );
 
+        const renderPos1 = calculatePadding(nextMatrix, pos1, [-left, -top], n);
+        const renderPos2 = calculatePadding(nextMatrix, pos2, [right, -top], n);
+        const renderPos3 = calculatePadding(nextMatrix, pos3, [-left, bottom], n);
+        const renderPos4 = calculatePadding(nextMatrix, pos4, [right, bottom], n);
+
         state.renderPoses = [
-            calculatePadding(nextMatrix, pos1, [-left, -top], n),
-            calculatePadding(nextMatrix, pos2, [right, -top], n),
-            calculatePadding(nextMatrix, pos3, [-left, bottom], n),
-            calculatePadding(nextMatrix, pos4, [right, bottom], n),
+            renderPos1,
+            renderPos2,
+            renderPos3,
+            renderPos4,
         ];
+        state.renderLines = [
+            [renderPos1, renderPos2],
+            [renderPos2, renderPos4],
+            [renderPos4, renderPos3],
+            [renderPos3, renderPos1],
+        ];
+
+        if (zoom) {
+            const zoomOffset = zoom / 2;
+
+            state.renderLines = [
+                [
+                    calculatePadding(nextMatrix, pos1, [-left - zoomOffset, -top], n),
+                    calculatePadding(nextMatrix, pos2, [right + zoomOffset, -top], n),
+                ],
+                [
+                    calculatePadding(nextMatrix, pos2, [right, -top - zoomOffset], n),
+                    calculatePadding(nextMatrix, pos4, [right, bottom + zoomOffset], n),
+                ],
+                [
+                    calculatePadding(nextMatrix, pos4, [right + zoomOffset, bottom], n),
+                    calculatePadding(nextMatrix, pos3, [-left - zoomOffset, bottom], n),
+                ],
+                [
+                    calculatePadding(nextMatrix, pos3, [-left, bottom + zoomOffset], n),
+                    calculatePadding(nextMatrix, pos1, [-left, -top - zoomOffset], n),
+                ],
+            ];
+        }
     }
     public checkUpdate() {
         this._isPropTargetChanged = false;
@@ -1043,18 +1090,13 @@ export default class MoveableManager<T = {}>
         if (hideDefaultLines || (parentMoveable && hideChildMoveableDefaultLines)) {
             return [];
         }
-        const renderPoses = this.getState().renderPoses;
+        const state = this.getState();
         const Renderer = {
             createElement,
         };
 
-        return [
-            [0, 1],
-            [1, 3],
-            [3, 2],
-            [2, 0],
-        ].map(([from, to], i) => {
-            return renderLine(Renderer, "", renderPoses[from], renderPoses[to], zoom!, `render-line-${i}`);
+        return state.renderLines.map((line, i) => {
+            return renderLine(Renderer, "", line[0], line[1], zoom!, `render-line-${i}`);
         });
     }
     private _onPreventClick = (e: any) => {

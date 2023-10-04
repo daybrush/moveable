@@ -137,9 +137,16 @@ export const OptionsRootContainer = add("rootContainer (css transformed containe
 });
 
 export const OptionsRootContainerZoom = add("rootContainer (css zoomed container)", {
+    app: require("./ReactRootContainerApp").default,
+    path: require.resolve("./ReactRootContainerApp"),
+});
+
+export const OptionsZoom = add("zoom (line, control)", {
     app: require("./ReactZoomApp").default,
     path: require.resolve("./ReactZoomApp"),
 });
+
+
 export const OptionsAccuratePosition = add("useAccuratePosition (Render in a more accurate position)", {
     app: require("./ReactUseAccuratePositionApp").default,
     path: require.resolve("./ReactUseAccuratePositionApp"),
