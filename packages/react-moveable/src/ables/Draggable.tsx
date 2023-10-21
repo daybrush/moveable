@@ -1,7 +1,7 @@
 import {
     setDragStart, getBeforeDragDist, getTransformDist,
     convertTransformFormat, resolveTransformEvent, fillTransformStartEvent,
-    setDefaultTransformIndex, fillOriginalTransform,
+    setDefaultTransformIndex, fillOriginalTransform, getBeforeRenderableDatas,
 } from "../gesto/GestoUtils";
 import {
     triggerEvent, fillParams,
@@ -145,6 +145,8 @@ export default {
             parentFlag, isPinch, deltaOffset,
             useSnap,
             isRequest,
+            isGroup,
+            parentThrottleDrag,
         } = e;
         let { distX, distY } = e;
         const { isDrag, prevDist, prevBeforeDist, startValue } = datas;
@@ -160,7 +162,7 @@ export default {
         const props = moveable.props;
 
         const parentMoveable = props.parentMoveable;
-        const throttleDrag = parentEvent ? 0 : (props.throttleDrag || 0);
+        const throttleDrag = isGroup ? 0 : (props.throttleDrag || parentThrottleDrag || 0);
         const throttleDragRotate = parentEvent ? 0 : (props.throttleDragRotate || 0);
 
         let dragRotateRad = 0;
@@ -313,7 +315,10 @@ export default {
         if (!params) {
             return false;
         }
-        const events = triggerChildGesto(moveable, this, "dragStart", [
+        const {
+            childEvents,
+            eventParams,
+        } = triggerChildGesto(moveable, this, "dragStart", [
             clientX || 0,
             clientY || 0,
         ], e, false, "draggable");
@@ -321,11 +326,18 @@ export default {
         const nextParams: OnDragGroupStart = {
             ...params,
             targets: moveable.props.targets!,
-            events,
+            events: eventParams,
         };
         const result = triggerEvent(moveable, "onDragGroupStart", nextParams);
 
         datas.isDrag = result !== false;
+
+
+        // find data.startValue and based on first child moveable
+        const startValue = childEvents[0]?.datas.startValue ?? [0, 0];
+
+
+        datas.throttleOffset = [startValue[0] % 1, startValue[1] % 1];
 
         return datas.isDrag ? params : false;
     },
@@ -335,16 +347,24 @@ export default {
         if (!datas.isDrag) {
             return;
         }
-        const params = this.drag(moveable, e);
+        const params = this.drag(moveable, {
+            ...e,
+            parentThrottleDrag: moveable.props.throttleDrag,
+        });
         const { passDelta } = e.datas;
-        const events = triggerChildGesto(moveable, this, "drag", passDelta, e, false, "draggable");
+        const {
+            eventParams,
+        } = triggerChildGesto(moveable, this, "drag", passDelta, e, false, "draggable");
 
         if (!params) {
             return;
         }
+
+        console.log(eventParams);
+
         const nextParams: OnDragGroup = {
             targets: moveable.props.targets!,
-            events,
+            events: eventParams,
             ...params,
         };
 
@@ -358,10 +378,12 @@ export default {
             return;
         }
         this.dragEnd(moveable, e);
-        const events = triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false, "draggable");
+        const {
+            eventParams,
+        } = triggerChildGesto(moveable, this, "dragEnd", [0, 0], e, false, "draggable");
         triggerEvent(moveable, "onDragGroupEnd", fillEndParams<OnDragGroupEnd>(moveable, e, {
             targets: moveable.props.targets!,
-            events,
+            events: eventParams,
         }));
 
         return isDrag;
@@ -450,6 +472,7 @@ export default {
 /**
  * throttle of x, y when drag.
  * @name Moveable.Draggable#throttleDrag
+ * @default 0
  * @example
  * import Moveable from "moveable";
  *

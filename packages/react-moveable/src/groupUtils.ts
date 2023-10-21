@@ -46,7 +46,9 @@ export function triggerChildGesto(
     const datas = e.datas;
     const events = fillChildEvents(moveable, able.name, e);
     const moveables = moveable.moveables;
-    const childs = events.map((ev, i) => {
+
+    const childEvents: any[] = [];
+    const eventParams = events.map((ev, i) => {
         const childMoveable = moveables[i];
         const state = childMoveable.state as MoveableManagerState<any>;
         const gestos = state.gestos;
@@ -54,9 +56,8 @@ export function triggerChildGesto(
 
         if (isStart) {
             childEvent = new CustomGesto(ableName).dragStart(delta, ev);
+            childEvents.push(childEvent);
         } else {
-
-
             if (!gestos[ableName]) {
                 gestos[ableName] = datas.childGestos[i];
             }
@@ -64,6 +65,7 @@ export function triggerChildGesto(
                 return;
             }
             childEvent = setCustomDrag(ev, state, delta, isPinch, isConvert, ableName);
+            childEvents.push(childEvent);
         }
         const result = (able as any)[type]!(childMoveable,  { ...childEvent, parentFlag: true });
 
@@ -75,7 +77,10 @@ export function triggerChildGesto(
     if (isStart) {
         datas.childGestos = moveables.map(child => child.state.gestos[ableName]);
     }
-    return childs;
+    return {
+        eventParams,
+        childEvents,
+    };
 }
 export function triggerChildAbles<T extends Able>(
     moveable: MoveableGroupInterface<any, any>,
