@@ -1,7 +1,7 @@
 import {
     setDragStart, getBeforeDragDist, getTransformDist,
     convertTransformFormat, resolveTransformEvent, fillTransformStartEvent,
-    setDefaultTransformIndex, fillOriginalTransform, getBeforeRenderableDatas,
+    setDefaultTransformIndex, fillOriginalTransform,
 } from "../gesto/GestoUtils";
 import {
     triggerEvent, fillParams,
@@ -359,8 +359,6 @@ export default {
         if (!params) {
             return;
         }
-
-        console.log(eventParams);
 
         const nextParams: OnDragGroup = {
             targets: moveable.props.targets!,
