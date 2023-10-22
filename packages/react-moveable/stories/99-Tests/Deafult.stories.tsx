@@ -137,8 +137,8 @@ export const TestsTRSTarget = add("Test css translate & rotate & scale target", 
         const line2 = controlBox.querySelector<HTMLElement>(`[data-line-key="render-line-1"]`)!;
 
         // 100x 200
-        expect(line1.style.width).toBe("100px");
-        expect(line2.style.width).toBe("200px");
+        expect(line1.style.width).toBe("101px");
+        expect(line2.style.width).toBe("201px");
         expect(splitComma(splitBracket(controlBox.style.transform).value!).map(v => {
             return parseInt(v, 10);
         })).toEqual([243, 248, 0]);

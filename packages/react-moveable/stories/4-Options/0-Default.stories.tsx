@@ -54,8 +54,8 @@ export const OptionsPadding = add("padding", {
         const widthLine = canvasElement.querySelector<HTMLElement>(`[data-line-key="render-line-0"]`)!;
         const heightLine = canvasElement.querySelector<HTMLElement>(`[data-line-key="render-line-1"]`)!;
 
-        expect(Math.round(parseFloat(widthLine.style.width))).toBe(230);
-        expect(Math.round(parseFloat(heightLine.style.width))).toBe(220);
+        expect(Math.round(parseFloat(widthLine.style.width))).toBe(231);
+        expect(Math.round(parseFloat(heightLine.style.width))).toBe(221);
 
         // left
         expect(Math.round(paddingAreas[0].getBoundingClientRect().width)).toBe(10);

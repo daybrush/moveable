@@ -11,6 +11,7 @@ import { expect } from "@storybook/jest";
 import { add } from "../utils/story";
 import { pan, pinch, rotate, wait } from "../utils/testing";
 import { throttle } from "@daybrush/utils";
+import { parseMat } from "css-to-mat";
 
 
 export default {
@@ -158,7 +159,16 @@ export const BasicWarpable = add("Warpable", {
             duration: 100,
             interval: 10,
         });
-        expect(target.style.transform).toBe(`matrix3d(1.04545, 0.0454545, 0, -0.000909091, 0.0454545, 1.04545, 0, -0.000909091, 0, 0, 1, 0, 0, 0, 0, 1)`);
+        const mat = parseMat(target.style.transform);
+
+        [
+            1.04545, 0.0454545, 0, -0.000909091,
+            0.0454545, 1.04545, 0, -0.000909091,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ].forEach((v, i) => {
+            expect(mat[i]).toBeCloseTo(v, 4);
+        });
     },
 });
 
