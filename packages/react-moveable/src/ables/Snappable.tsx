@@ -635,6 +635,7 @@ export default {
         "snapDigit",
         "snapThreshold",
         "snapRenderThreshold",
+        "snapGridAll",
         NAME_snapRotationThreshold,
         NAME_snapRotationDegrees,
         "horizontalGuidelines",

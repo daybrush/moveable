@@ -22,7 +22,12 @@ export function checkMoveableSnapPoses(
     customSnapThreshold?: number,
 ) {
     const props = moveable.props;
-    const snapThreshold = selectValue<number>(customSnapThreshold, props.snapThreshold, 5);
+    const snapThresholdMultiples = moveable.state.snapThresholdInfo?.multiples || [1, 1];
+    const snapThreshold = selectValue<number>(
+        customSnapThreshold,
+        props.snapThreshold,
+        5,
+    );
 
     return checkSnapPoses(
         moveable.state.guidelines,
@@ -31,6 +36,7 @@ export function checkMoveableSnapPoses(
         dirXs,
         dirYs,
         snapThreshold,
+        snapThresholdMultiples,
     );
 }
 
@@ -41,10 +47,11 @@ export function checkSnapPoses(
     dirXs: string[],
     dirYs: string[],
     snapThreshold: number,
+    multiples: number[],
 ) {
     return {
-        vertical: checkSnap(guidelines, "vertical", posesX, snapThreshold, dirXs),
-        horizontal: checkSnap(guidelines, "horizontal", posesY, snapThreshold, dirYs),
+        vertical: checkSnap(guidelines, "vertical", posesX, snapThreshold * multiples[0], dirXs),
+        horizontal: checkSnap(guidelines, "horizontal", posesY, snapThreshold * multiples[1], dirYs),
     };
 }
 export function checkSnapKeepRatio(

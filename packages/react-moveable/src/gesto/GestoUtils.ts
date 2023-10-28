@@ -293,25 +293,25 @@ export function getPosesByDirection(
     return getPosIndexesByDirection(direction).map(index => poses[index]);
 }
 
+export function getPosBySingleDirection(
+    poses: number[][],
+    direction: number,
+) {
+    const ratio = (direction + 1) / 2;
+    return [
+        dot(poses[0][0], poses[1][0], ratio, 1 - ratio),
+        dot(poses[0][1], poses[1][1], ratio, 1 - ratio),
+    ];
+}
+
 export function getPosByDirection(
     poses: number[][],
     direction: number[],
 ) {
-    const xRatio = (direction[0] + 1) / 2;
-    const yRatio = (direction[1] + 1) / 2;
+    const top = getPosBySingleDirection([poses[0], poses[1]], direction[0]);
+    const bottom = getPosBySingleDirection([poses[2], poses[3]], direction[0]);
 
-    const top = [
-        dot(poses[0][0], poses[1][0], xRatio, 1 - xRatio),
-        dot(poses[0][1], poses[1][1], xRatio, 1 - xRatio),
-    ];
-    const bottom = [
-        dot(poses[2][0], poses[3][0], xRatio, 1 - xRatio),
-        dot(poses[2][1], poses[3][1], xRatio, 1 - xRatio),
-    ];
-    return [
-        dot(top[0], bottom[0], yRatio, 1 - yRatio),
-        dot(top[1], bottom[1], yRatio, 1 - yRatio),
-    ];
+    return getPosBySingleDirection([top, bottom], direction[1]);
 }
 
 function getDist(

@@ -335,6 +335,7 @@ export function checkSnapBounds(
     posesX: number[],
     posesY: number[],
     snapThreshold: number,
+    multiples = [1, 1],
 ): DirectionSnapType<Required<SnapBoundInfo>> {
     const {
         horizontal: horizontalBoundInfos,
@@ -348,7 +349,11 @@ export function checkSnapBounds(
     const {
         horizontal: horizontalSnapInfo,
         vertical: verticalSnapInfo,
-    } = checkSnapPoses(guideines, posesX, posesY, [], [], snapThreshold);
+    } = checkSnapPoses(
+        guideines, posesX, posesY, [], [],
+        snapThreshold,
+        multiples,
+    );
 
     const horizontalOffset = getSnapBound(
         horizontalBoundInfos[0],

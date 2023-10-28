@@ -68,6 +68,16 @@ export const SnapGrid = add("Snap Grid", {
     },
 });
 
+
+export const SnapGridGroup = add("Snap Grid Group (snapGridAll)", {
+    app: require("./ReactSnapGridGroupApp").default,
+    path: require.resolve("./ReactSnapGridGroupApp"),
+    argsTypes: {
+        ...DEFAULT_DRAGGABLE_CONTROLS,
+        ...DEFAULT_RESIZABLE_CONTROLS,
+    },
+});
+
 export const SnapBoundDragScale = add("Bound Drag & Scale", {
     app: require("./ReactBoundScalableApp").default,
     path: require.resolve("./ReactBoundScalableApp"),

@@ -345,6 +345,7 @@ export interface SnapGuideline {
     isEnd?: boolean;
     isCenter?: boolean;
     isInner?: boolean;
+    grid?: boolean;
 
     pos: number[];
     size: number;
@@ -2636,6 +2637,12 @@ export interface SnappableOptions {
      */
     snapGridHeight?: number;
     /**
+     * In the case of a group, if `snapGridWidth` and `snapGridHeight` are used, all children can be snapped.
+     * Custom fixed directions are not yet allowed. Also, it cannot be applied if rotated.
+     * @default false
+     */
+    snapGridAll?: boolean;
+    /**
      * Whether to show snap distance.
      * @default true
      */
@@ -2917,6 +2924,7 @@ export interface SnappableState {
     snapContainer: MoveableRefType<HTMLElement | SVGElement>;
     snapOffset: { left: number, top: number, bottom: number, right: number }
     snapRenderInfo?: SnapRenderInfo | null;
+    snapThresholdInfo?: { multiples: number[]; offset: number[]; } | null;
     enableSnap: boolean;
 }
 export interface SnapRenderInfo {
