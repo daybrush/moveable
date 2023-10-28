@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.52.0](https://github.com/daybrush/moveable/compare/0.51.2...0.52.0) (2023-10-28)
+### :sparkles: Packages
+* `croact-moveable` 0.8.0
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.29.0
+* `moveable` 0.52.0
+* `preact-moveable` 0.54.0
+* `react-moveable` 0.55.0
+* `svelte-moveable` 0.44.0
+* `vue-moveable` 2.0.0-beta.86
+* `vue3-moveable` 0.27.0
+* `ngx-moveable` 0.49.0
+
+
+### :rocket: New Features
+
+* `react-moveable`
+    * add snapGridAll prop #990 ([7ecd0d0](https://github.com/daybrush/moveable/commit/7ecd0d04595b72b882a1a69a4676dc140bb9eb21))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix line break #1001 ([5f68143](https://github.com/daybrush/moveable/commit/5f68143289bd25c505d40684662a071b39417727))
+    * fix nested svg #1011 ([33366b5](https://github.com/daybrush/moveable/commit/33366b53c4871b1b7676c234168d1ef0cb0ba3c3))
+    * fix throttleDrag for group ([5f6d392](https://github.com/daybrush/moveable/commit/5f6d392f4731a4728b7e04e856d4a4805f7ac89b))
+    * fix width scale for keepRatio #1020 ([8dd5c36](https://github.com/daybrush/moveable/commit/8dd5c3613faac796021a6057d4a54ce660eac329))
+    * remove console.log ([56f99ea](https://github.com/daybrush/moveable/commit/56f99ea6652f23becfd88596d84194fcbaec2277))
+* `vue-moveable`
+    * fix vue-moveable exports #1028 ([809073d](https://github.com/daybrush/moveable/commit/809073d279d8ae33b430fff2f34097403510c7ca))
+* `svelte-moveable`
+    * support svelte 4.x #981 ([90e3f7f](https://github.com/daybrush/moveable/commit/90e3f7ff41cc7cffd44c792c2e6a7bffcfc19785))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([1a65454](https://github.com/daybrush/moveable/commit/1a654540f1390648d7e4db910d0673acff190007))
+
+
+
 ## [0.51.2](https://github.com/daybrush/moveable/compare/0.51.1...0.51.2) (2023-09-19)
 ### :sparkles: Packages
 * `croact-moveable` 0.7.2

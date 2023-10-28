@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.55.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.54.2...react-moveable@0.55.0) (2023-10-28)
+
+
+### :rocket: New Features
+
+* add snapGridAll prop #990 ([7ecd0d0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7ecd0d04595b72b882a1a69a4676dc140bb9eb21))
+
+
+### :bug: Bug Fix
+
+* fix line break #1001 ([5f68143](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5f68143289bd25c505d40684662a071b39417727))
+* fix nested svg #1011 ([33366b5](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/33366b53c4871b1b7676c234168d1ef0cb0ba3c3))
+* fix throttleDrag for group ([5f6d392](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/5f6d392f4731a4728b7e04e856d4a4805f7ac89b))
+* fix width scale for keepRatio #1020 ([8dd5c36](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/8dd5c3613faac796021a6057d4a54ce660eac329))
+* remove console.log ([56f99ea](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/56f99ea6652f23becfd88596d84194fcbaec2277))
+
+
+### :mega: Other
+
+* publish packages ([1a65454](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/1a654540f1390648d7e4db910d0673acff190007))
+
+
+
 ## [0.54.2](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.54.1...react-moveable@0.54.2) (2023-09-19)
 
 
