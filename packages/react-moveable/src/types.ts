@@ -182,6 +182,16 @@ export interface DefaultOptions {
      */
     preventDefault?: boolean;
     /**
+     * Whether to prevent dragging using the right mouse button
+     * @default true
+     */
+    preventRightClick?: boolean;
+    /**
+     * Whether to prevent dragging using the wheel (middle) mouse button
+     * @default true
+     */
+    preventWheelClick?: boolean;
+    /**
      * Prevent click event on drag. (mousemove, touchmove)
      * @default true
      */

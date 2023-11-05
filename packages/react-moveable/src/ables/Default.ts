@@ -34,6 +34,8 @@ export default {
         "linePadding",
         "controlPadding",
         "preventDefault",
+        "preventRightClick",
+        "preventWheelClick",
         "requestStyles",
     ] as const,
     events: [
