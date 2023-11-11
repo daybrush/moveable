@@ -63,6 +63,8 @@ export default class MoveableManager<T = {}>
         useResizeObserver: false,
         useMutationObserver: false,
         preventDefault: true,
+        preventRightClick: true,
+        preventWheelClick: true,
         linePadding: 0,
         controlPadding: 0,
         ables: [],

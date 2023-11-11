@@ -263,14 +263,16 @@ export function getAbleGesto(
         checkInput,
         dragFocusedInput,
         preventDefault = true,
+        preventRightClick = true,
+        preventWheelClick = true,
         dragContainer: dragContaienrOption,
     } = moveable.props;
     const dragContainer = getRefTarget(dragContaienrOption, true);
 
     const options: GestoOptions = {
         preventDefault,
-        preventRightClick: true,
-        preventWheelClick: true,
+        preventRightClick,
+        preventWheelClick,
         container: dragContainer || getWindow(moveable.getControlBoxElement()),
         pinchThreshold,
         pinchOutside,
