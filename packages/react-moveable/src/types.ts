@@ -3435,7 +3435,7 @@ export interface MoveableInterface {
      */
     getDragElement(): HTMLElement | SVGElement | null | undefined;
     destroy(): void;
-    dragStart(e: MouseEvent | TouchEvent): void;
+    dragStart(e: MouseEvent | TouchEvent, target?: EventTarget | null): void;
     isInside(clientX: number, clientY: number): boolean;
     isDragging(ableName?: string): boolean;
     hitTest(el: Element | HitRect): number;

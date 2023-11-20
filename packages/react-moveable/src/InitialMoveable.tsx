@@ -260,7 +260,7 @@ export class InitialMoveable<T = {}>
      * @example
      * document.querySelector(".target").addEventListener("mousedown", e => {
      *   moveable.waitToChangeTarget().then(() => {
-     *      moveable.dragStart(e.currentTarget);
+     *      moveable.dragStart(e, e.currentTarget);
      *   });
      *   moveable.target = e.currentTarget;
      * });
