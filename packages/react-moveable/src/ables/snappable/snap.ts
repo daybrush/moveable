@@ -19,13 +19,19 @@ export function checkMoveableSnapPoses(
     posesY: number[],
     dirXs: string[] = [],
     dirYs: string[] = [],
-    customSnapThreshold?: number,
+    customSnapVerticalThreshold: number | undefined,
+    customSnapHorizontalThreshold: number | undefined,
 ) {
     const props = moveable.props;
     const snapThresholdMultiples = moveable.state.snapThresholdInfo?.multiples || [1, 1];
-    const snapThreshold = selectValue<number>(
-        customSnapThreshold,
-        props.snapThreshold,
+    const snapHorizontalThreshold = selectValue<number>(
+        customSnapHorizontalThreshold,
+        props.snapHorizontalThreshold,
+        5,
+    );
+    const snapVerticalThreshold = selectValue<number>(
+        customSnapVerticalThreshold,
+        props.snapVerticalThreshold,
         5,
     );
 
@@ -35,7 +41,8 @@ export function checkMoveableSnapPoses(
         posesY,
         dirXs,
         dirYs,
-        snapThreshold,
+        snapHorizontalThreshold,
+        snapVerticalThreshold,
         snapThresholdMultiples,
     );
 }
@@ -46,12 +53,13 @@ export function checkSnapPoses(
     posesY: number[],
     dirXs: string[],
     dirYs: string[],
-    snapThreshold: number,
+    snapHorizontalThreshold: number,
+    snapVerticalThreshold: number,
     multiples: number[],
 ) {
     return {
-        vertical: checkSnap(guidelines, "vertical", posesX, snapThreshold * multiples[0], dirXs),
-        horizontal: checkSnap(guidelines, "horizontal", posesY, snapThreshold * multiples[1], dirYs),
+        vertical: checkSnap(guidelines, "vertical", posesX, snapVerticalThreshold * multiples[0], dirXs),
+        horizontal: checkSnap(guidelines, "horizontal", posesY, snapHorizontalThreshold * multiples[1], dirYs),
     };
 }
 export function checkSnapKeepRatio(
@@ -88,7 +96,15 @@ export function checkSnapKeepRatio(
     const {
         vertical: verticalSnapInfo,
         horizontal: horizontalSnapInfo,
-    } = checkMoveableSnapPoses(moveable, dx ? [endX] : [], dy ? [endY] : []);
+    } = checkMoveableSnapPoses(
+        moveable,
+        dx ? [endX] : [],
+        dy ? [endY] : [],
+        [],
+        [],
+        undefined,
+        undefined,
+    );
 
     verticalSnapInfo.posInfos.filter(({ pos }) => {
         return isRight ? pos >= startX : pos <= startX;
@@ -173,7 +189,8 @@ function getStringDirection(dir: number | string) {
 export function checkSnaps(
     moveable: MoveableManagerInterface<SnappableProps, SnappableState>,
     rect: SnapDirectionPoses,
-    customSnapThreshold?: number,
+    customSnapVerticalThreshold: number | undefined,
+    customSnapHorizontalThreshold: number | undefined,
 ): { vertical: SnapDirectionInfo; horizontal: SnapDirectionInfo } {
     const poses = splitSnapDirectionPoses(moveable.props.snapDirections, rect);
 
@@ -183,7 +200,8 @@ export function checkSnaps(
         poses.horizontal,
         poses.verticalNames.map(name => getStringDirection(name)),
         poses.horizontalNames.map(name => getStringDirection(name)),
-        customSnapThreshold,
+        customSnapVerticalThreshold,
+        customSnapHorizontalThreshold,
     );
     const horizontalDirection = getStringDirection(poses.horizontalNames[result.horizontal.index]);
     const verticalDirection = getStringDirection(poses.verticalNames[result.vertical.index]);
@@ -300,7 +318,8 @@ export function getSnapInfosByDirection(
     // pos1 pos2 pos3 pos4
     poses: number[][],
     snapDirection: number[],
-    snapThreshold = 1,
+    customSnapVerticalThreshold: number | undefined,
+    customSnapHorizontalThreshold: number | undefined,
 ): { vertical: SnapDirectionInfo; horizontal: SnapDirectionInfo } {
     let dirs: number[][] = [];
 
@@ -357,7 +376,8 @@ export function getSnapInfosByDirection(
         xs, ys,
         dirs.map(dir => getStringDirection(dir[0])),
         dirs.map(dir => getStringDirection(dir[1])),
-        snapThreshold
+        customSnapVerticalThreshold,
+        customSnapHorizontalThreshold,
     );
     const verticalDirection = getStringDirection(dirs.map(dir => dir[0])[result.vertical.index]);
     const horizontalDirection = getStringDirection(dirs.map(dir => dir[1])[result.horizontal.index]);

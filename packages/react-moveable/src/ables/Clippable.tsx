@@ -661,6 +661,7 @@ background: var(--bounds-color);
             guideXPoses,
             guideYPoses,
             5,
+            5,
         );
         let snapOffsetY = horizontalSnapInfo.offset;
         let snapOffsetX = verticalSnapInfo.offset;
@@ -766,6 +767,7 @@ background: var(--bounds-color);
             props.clipTargetBounds && { left: 0, top: 0, right: width, bottom: height },
             guideXPoses,
             guideYPoses,
+            1,
             1,
         );
 

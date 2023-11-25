@@ -758,6 +758,7 @@ color: #f55;
                         poses,
                         snapRenderInfo.direction,
                         snapRenderThreshold,
+                        snapRenderThreshold,
                     )
                 );
             }
@@ -767,7 +768,7 @@ color: #f55;
                     (rect as any).middle = (rect.top + rect.bottom) / 2;
                     (rect as any).center = (rect.left + rect.right) / 2;
                 }
-                snapInfos.push(checkSnaps(moveable, rect, snapRenderThreshold));
+                snapInfos.push(checkSnaps(moveable, rect, snapRenderThreshold, snapRenderThreshold));
             }
             if (hasExternalPoses) {
                 if (snapRenderInfo.center) {
@@ -776,7 +777,7 @@ color: #f55;
                     (externalRect as any).center =
                         (externalRect.left + externalRect.right) / 2;
                 }
-                snapInfos.push(checkSnaps(moveable, externalRect, snapRenderThreshold));
+                snapInfos.push(checkSnaps(moveable, externalRect, snapRenderThreshold, snapRenderThreshold));
             }
             snapInfos.forEach((snapInfo) => {
                 const {

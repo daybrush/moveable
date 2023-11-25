@@ -295,6 +295,10 @@ export function checkMoveableSnapBounds(
         moveable,
         poses.vertical,
         poses.horizontal,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
     );
     const horizontalOffset = getSnapBound(
         horizontalBoundInfos[0],
@@ -334,7 +338,8 @@ export function checkSnapBounds(
     bounds: BoundType | undefined | false,
     posesX: number[],
     posesY: number[],
-    snapThreshold: number,
+    snapHorizontalThreshold: number,
+    snapVerticalThreshold: number,
     multiples = [1, 1],
 ): DirectionSnapType<Required<SnapBoundInfo>> {
     const {
@@ -351,7 +356,8 @@ export function checkSnapBounds(
         vertical: verticalSnapInfo,
     } = checkSnapPoses(
         guideines, posesX, posesY, [], [],
-        snapThreshold,
+        snapHorizontalThreshold,
+        snapVerticalThreshold,
         multiples,
     );
 

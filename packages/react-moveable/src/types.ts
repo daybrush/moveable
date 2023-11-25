@@ -2608,9 +2608,21 @@ export interface SnappableOptions {
     /**
     /**
      * Distance value that can snap to guidelines.
-     * @default 5
+     * Use `snapHorizontalThreshold` and `snapVerticalThreshold`
+     * @default 0
+     * @depreacted
      */
     snapThreshold?: number;
+    /**
+     * Distance horizontal between horizontal value that can snap to guidelines.
+     * @default 5
+     */
+    snapHorizontalThreshold?: number;
+    /**
+     * Distance Horizontal value that can snap to guidelines.
+     * @default 5
+     */
+    snapVerticalThreshold?: number;
     /**
      * Distance value that render snapped guidelines.
      * @default 1

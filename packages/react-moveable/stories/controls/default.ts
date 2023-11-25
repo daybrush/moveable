@@ -199,9 +199,14 @@ export const DEFAULT_SNAPPABLE_CONTROLS = {
         description: makeLink("Snappable", "snapDirections"),
         defaultValue: { top: true, left: true, bottom: true, right: true },
     }),
-    snapThreshold: makeArgType({
+    snapHorizontalThreshold: makeArgType({
         type: "number",
-        description: makeLink("Snappable", "snapThreshold"),
+        description: makeLink("Snappable", "snapHorizontalThreshold"),
+        defaultValue: 5,
+    }),
+    snapVerticalThreshold: makeArgType({
+        type: "number",
+        description: makeLink("Snappable", "snapVerticalThreshold"),
         defaultValue: 5,
     }),
 };
