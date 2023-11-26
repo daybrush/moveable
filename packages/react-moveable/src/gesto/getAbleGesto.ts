@@ -201,8 +201,8 @@ export function triggerAble(
 }
 
 export function checkMoveableTarget(moveable: MoveableManagerInterface) {
-    return (e: { inputEvent: Event }) => {
-        const eventTarget = e.inputEvent.target as Element;
+    return (e: { inputEvent: Event }, target: EventTarget | null = e.inputEvent.target) => {
+        const eventTarget = target as Element;
         const areaElement = moveable.areaElement;
         const dragTargetElement = (moveable as any)._dragTarget;
 

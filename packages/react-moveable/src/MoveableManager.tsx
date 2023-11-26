@@ -343,15 +343,15 @@ export default class MoveableManager<T = {}>
      *     }
      * });
      */
-    public dragStart(e: MouseEvent | TouchEvent) {
+    public dragStart(e: MouseEvent | TouchEvent, target: EventTarget | null = e.target) {
         const targetGesto = this.targetGesto;
         const controlGesto = this.controlGesto;
 
-        if (targetGesto && checkMoveableTarget(this)({ inputEvent: e })) {
+        if (targetGesto && checkMoveableTarget(this)({ inputEvent: e }, target)) {
             if (!targetGesto.isFlag()) {
                 targetGesto.triggerDragStart(e);
             }
-        } else if (controlGesto && this.isMoveableElement(e.target as Element)) {
+        } else if (controlGesto && this.isMoveableElement(target as Element)) {
             if (!controlGesto.isFlag()) {
                 controlGesto.triggerDragStart(e);
             }

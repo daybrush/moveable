@@ -88,8 +88,8 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
         };
         return requestInstant ? requester.request(param).requestEnd() : requester;
     }
-    public dragStart(e: MouseEvent | TouchEvent) {
-        const inputTarget = e.target as HTMLElement;
+    public dragStart(e: MouseEvent | TouchEvent, target: EventTarget | null = e.target) {
+        const inputTarget = target as HTMLElement;
         const childMoveable = find(this.moveables, child => {
             const target = child.getTargets()[0];
             const controlBoxElement = child.getControlBoxElement();
@@ -104,7 +104,7 @@ class MoveableIndividualGroup extends MoveableManager<GroupableProps & Individua
         });
 
         if (childMoveable) {
-            childMoveable.dragStart(e);
+            childMoveable.dragStart(e, target);
         }
         return this;
     }
