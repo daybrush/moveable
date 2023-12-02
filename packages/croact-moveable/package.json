@@ -79,7 +79,7 @@
         "croact-css-styled": "^1.1.9",
         "css-to-mat": "^1.1.1",
         "framework-utils": "^1.1.0",
-        "gesto": "^1.19.0",
+        "gesto": "^1.19.3",
         "overlap-area": "^1.1.0",
         "react-css-styled": "^1.1.9",
         "react-moveable": "~0.55.0"
