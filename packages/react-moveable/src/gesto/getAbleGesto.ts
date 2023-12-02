@@ -200,13 +200,13 @@ export function triggerAble(
     return true;
 }
 
-export function checkMoveableTarget(moveable: MoveableManagerInterface) {
+export function checkMoveableTarget(moveable: MoveableManagerInterface, isControl?: boolean) {
     return (e: { inputEvent: Event }, target: EventTarget | null = e.inputEvent.target) => {
         const eventTarget = target as Element;
         const areaElement = moveable.areaElement;
         const dragTargetElement = (moveable as any)._dragTarget;
 
-        if (!dragTargetElement || moveable.controlGesto?.isFlag()) {
+        if (!dragTargetElement || (!isControl && moveable.controlGesto?.isFlag())) {
             return false;
         }
 
@@ -241,12 +241,39 @@ export function getTargetAbleGesto(
     if (!dragArea && dragTarget && target && moveableTarget !== target && props.dragTargetSelf) {
         targets.push(target);
     }
+    const checkTarget = checkMoveableTarget(moveable);
 
     return getAbleGesto(moveable, targets, "targetAbles", eventAffix, {
-        dragStart: checkMoveableTarget(moveable),
-        pinchStart: checkMoveableTarget(moveable),
+        dragStart: checkTarget,
+        pinchStart: checkTarget,
     });
 }
+
+export function getControlAbleGesto(
+    moveable: MoveableManagerInterface,
+    eventAffix: string,
+) {
+    const controlBox = moveable.controlBox;
+    const targets: Array<HTMLElement | SVGElement> = [];
+
+    targets.push(controlBox);
+
+    const checkTarget = checkMoveableTarget(moveable, true);
+    const checkControlTarget = (e: any, target: EventTarget | null = e.inputEvent.target) => {
+        if (target === controlBox) {
+            return true;
+        }
+        const result = checkTarget(e, target);
+
+        return !result;
+    };
+
+    return getAbleGesto(moveable, targets, "controlAbles", eventAffix, {
+        dragStart: checkControlTarget,
+        pinchStart: checkControlTarget,
+    });
+}
+
 export function getAbleGesto(
     moveable: MoveableManagerInterface,
     target: HTMLElement | SVGElement | Array<HTMLElement | SVGElement>,

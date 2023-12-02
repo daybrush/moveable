@@ -27,7 +27,10 @@ import {
     GroupableProps,
     MoveableRefType,
 } from "./types";
-import { triggerAble, getTargetAbleGesto, getAbleGesto, checkMoveableTarget } from "./gesto/getAbleGesto";
+import {
+    triggerAble, getTargetAbleGesto,
+    checkMoveableTarget, getControlAbleGesto,
+} from "./gesto/getAbleGesto";
 import { createOriginMatrix, multiplies, plus } from "@scena/matrix";
 import {
     addClass, cancelAnimationFrame, find,
@@ -1045,7 +1048,6 @@ export default class MoveableManager<T = {}>
         this._updateMutationObserver(prevProps);
     }
     protected _updateEvents() {
-        const controlBoxElement = this.controlBox;
         const hasTargetAble = this.targetAbles.length;
         const hasControlAble = this.controlAbles.length;
         const target = this._dragTarget;
@@ -1064,7 +1066,7 @@ export default class MoveableManager<T = {}>
             this.targetGesto = getTargetAbleGesto(this, target!, "");
         }
         if (!this.controlGesto && hasControlAble) {
-            this.controlGesto = getAbleGesto(this, controlBoxElement, "controlAbles", "Control");
+            this.controlGesto = getControlAbleGesto(this, "Control");
         }
     }
     protected _updateTargets() {

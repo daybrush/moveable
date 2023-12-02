@@ -1,7 +1,7 @@
 import MoveableManager from "./MoveableManager";
 import { GroupableProps, GroupRect, MoveableManagerInterface, MoveableTargetGroupsType, RectInfo } from "./types";
 import ChildrenDiffer from "@egjs/children-differ";
-import { getAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
+import { getControlAbleGesto, getTargetAbleGesto } from "./gesto/getAbleGesto";
 import Groupable from "./ables/Groupable";
 import { MIN_NUM, MAX_NUM, TINY_NUM } from "./consts";
 import {
@@ -462,7 +462,7 @@ class MoveableGroup extends MoveableManager<GroupableProps> {
                 this.targetGesto = getTargetAbleGesto(this, this._dragTarget!, "Group");
             }
             if (!this.controlGesto) {
-                this.controlGesto = getAbleGesto(this, this.controlBox, "controlAbles", "GroupControl");
+                this.controlGesto = getControlAbleGesto(this, "GroupControl");
             }
         }
         const isContainerChanged = !equals(state.container, props.container);

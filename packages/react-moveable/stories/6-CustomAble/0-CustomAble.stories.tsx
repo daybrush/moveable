@@ -23,3 +23,9 @@ export const CustomAbleMouseEnterLeave = add("Mouse Enter & Leave", {
     app: require("./ReactMouseEnterLeaveApp").default,
     path: require.resolve("./ReactMouseEnterLeaveApp"),
 });
+
+
+export const CustomAbleDragTarget = add("DragTarget", {
+    app: require("./ReactDragTargetAbleApp").default,
+    path: require.resolve("./ReactDragTargetAbleApp"),
+});
