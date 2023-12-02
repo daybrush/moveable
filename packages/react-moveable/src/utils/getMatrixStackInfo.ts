@@ -132,7 +132,8 @@ export function getMatrixStackInfo(
             offsetTop,
         ] = offsetPos;
 
-        if (tagName === "svg" && !(target as SVGSVGElement).ownerSVGElement && targetMatrix) {
+        // no target with svg
+        if (tagName === "svg" && !(el as SVGSVGElement).ownerSVGElement && targetMatrix) {
             // scale matrix for svg's SVGElements.
             matrixes.push({
                 type: "target",

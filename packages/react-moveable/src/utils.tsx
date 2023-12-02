@@ -190,6 +190,7 @@ export function getOffsetInfo(
             // offsetParent is the parentElement if the target's zoom is not 1 and not absolute.
             !isParent && checkZoom && targetZoom !== 1 && targetPosition && targetPosition !== "absolute"
             || tagName === "svg"
+            || tagName === "foreignobject"
             || position !== "static"
             || (transform && transform !== "none")
             || willChange === "transform"
@@ -240,7 +241,7 @@ export function getOffsetPosInfo(
     let origin: number[];
     let targetOrigin: number[];
     // inner svg element
-    if (!hasOffset && (tagName !== "svg" || (target as SVGElement).ownerSVGElement)) {
+    if (!hasOffset && (tagName !== "svg" || (el as SVGElement).ownerSVGElement)) {
         origin = IS_WEBKIT605
             ? getBeforeTransformOrigin(el as SVGElement)
             : getTransformOriginArray(getStyle("transformOrigin")).map(pos => parseFloat(pos));
@@ -262,7 +263,9 @@ export function getOffsetPosInfo(
         }
     } else {
         origin = getTransformOriginArray(getStyle("transformOrigin")).map(pos => parseFloat(pos));
+
         targetOrigin = origin.slice();
+        // console.log(getStyle("transformOrigin"), targetOrigin);
     }
     return {
         tagName,
@@ -409,7 +412,9 @@ export function getSVGGraphicsOffset(
     origin: number[],
     isGTarget?: boolean,
 ) {
-    if (!el.getBBox || !isGTarget && el.tagName.toLowerCase() === "g") {
+    const tagName = el.tagName.toLowerCase();
+
+    if (!el.getBBox || !isGTarget && tagName === "g") {
         return [0, 0, 0, 0];
     }
     const getStyle = getCachedStyle(el);
@@ -417,10 +422,32 @@ export function getSVGGraphicsOffset(
 
     const bbox = el.getBBox();
     const viewBox = getSVGViewBox(el.ownerSVGElement!);
-    const left = bbox.x - viewBox.x;
-    const top = bbox.y - viewBox.y;
+    let x = bbox.x;
+    let y = bbox.y;
+
+    // x, y가 0으로 나타나는 버그
+    if (tagName === "foreignobject" && (!x && !y)) {
+        x = parseFloat(el.getAttribute("x")!) || 0;
+        y = parseFloat(el.getAttribute("y")!) || 0;
+    }
+    const left = x - viewBox.x;
+    const top = y - viewBox.y;
     const originX = isFillBox ? origin[0] : origin[0] - left;
     const originY = isFillBox ? origin[1] : origin[1] - top;
+
+    // if (isFillBox) {
+    //     const bbox = (el as SVGGraphicsElement).getBBox();
+    //     const x = parseFloat(getStyle("x")) || bbox.x;
+    //     const y = parseFloat(getStyle("y")) || bbox.y;
+
+    //     const xScale = bbox.x / x;
+    //     const yScale = bbox.y / y;
+
+    //     console.log(x, y);
+
+    //     originX *= xScale;
+    //     originY *= yScale;
+    // }
 
     return [left, top, originX, originY];
 }

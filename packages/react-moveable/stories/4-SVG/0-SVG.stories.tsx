@@ -63,3 +63,17 @@ export const SVGFillboxOrigin = add("SVGPathElement with center origin and trans
     app: require("./ReactOriginFillboxApp").default,
     text: require("!!raw-loader!./ReactOriginFillboxApp").default,
 });
+
+
+
+
+export const SVGForeignObject = add("SVGForeignObject", {
+    app: require("./ReactSVGForeignObjectApp").default,
+    text: require("!!raw-loader!./ReactSVGForeignObjectApp").default,
+});
+
+
+export const SVGForeignObjectInner = add("SVGForeignObject div", {
+    app: require("./ReactSVGForeignObjectInnerApp").default,
+    text: require("!!raw-loader!./ReactSVGForeignObjectInnerApp").default,
+});

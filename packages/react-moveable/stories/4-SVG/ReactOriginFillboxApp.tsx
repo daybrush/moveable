@@ -28,9 +28,11 @@ export default function App(props: Record<string, any>) {
                         style={{
                             fill: "red",
                             transformBox: "fill-box",
+                            transform: "",
+                            strokeWidth: "0",
+                            transformOrigin: "50% 50%",
                         }}
-                        transform="rotate(45)"
-                        {...{ "transform-origin": "50% 50%" }}
+                        // {...{ "transform-origin": "50% 50%" }}
                     />
                 </svg>
                 <Moveable

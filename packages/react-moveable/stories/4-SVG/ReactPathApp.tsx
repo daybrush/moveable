@@ -10,7 +10,10 @@ export default function App(props: Record<string, any>) {
                 transformOrigin: "0 0",
                 transform: `scale(${props.containerScale})`,
             }}>
-                <svg viewBox="0 0 200 200" style={{
+                <svg viewBox="0 0 400 400" style={{
+                    position: "relative",
+                    left: "200px",
+                    top: "200px",
                     border: "1px solid black",
                     width: "200px",
                     height: "200px",
