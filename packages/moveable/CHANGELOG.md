@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.52.0...moveable@0.53.0) (2023-12-03)
+
+
+### :house: Code Refactoring
+
+* let the target be passed into dragStart (#1050) ([786fc0c](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/786fc0cd4cb3f3f67719740aa953231b7d410815))
+
+
+### :mega: Other
+
+* publish packages ([f9a0eed](https://github.com/daybrush/moveable/blob/master/packages/moveable/commit/f9a0eed9db93c1fa3522138e9c7604287f0ce21f))
+
+
+
 ## [0.52.0](https://github.com/daybrush/moveable/blob/master/packages/moveable/compare/moveable@0.51.2...moveable@0.52.0) (2023-10-28)
 
 

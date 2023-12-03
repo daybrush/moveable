@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.53.0](https://github.com/daybrush/moveable/compare/0.52.0...0.53.0) (2023-12-03)
+### :sparkles: Packages
+* `croact-moveable` 0.9.0
+* `@moveable/helper` 0.1.3
+* `lit-moveable` 0.30.0
+* `moveable` 0.53.0
+* `preact-moveable` 0.55.0
+* `react-moveable` 0.56.0
+* `svelte-moveable` 0.45.0
+* `vue-moveable` 2.0.0-beta.87
+* `vue3-moveable` 0.28.0
+* `ngx-moveable` 0.50.0
+
+
+### :rocket: New Features
+
+* `react-moveable`, `ngx-moveable`
+    * expose gesto preventRightClick and preventWheelClick props (#1040) ([9f4c9f4](https://github.com/daybrush/moveable/commit/9f4c9f452470026ecea3f7a0b1aff91c22444868))
+* `react-moveable`
+    * add snapHorizontalThreshold, snapVerticalThreshold #1044 ([6cd5114](https://github.com/daybrush/moveable/commit/6cd51145ec81b3294c0ba9968d6530748ae46beb))
+
+
+### :bug: Bug Fix
+
+* `react-moveable`
+    * fix dragTarget in control box #1054 ([f4e3232](https://github.com/daybrush/moveable/commit/f4e3232c787f50f9a9947c45307870e5ad5c87ef))
+    * fix names ([7722add](https://github.com/daybrush/moveable/commit/7722addf758da09480808f1e03c5b9e3061f855b))
+    * fix svg origin for viewbox and foreignbox #1048 ([6c27742](https://github.com/daybrush/moveable/commit/6c2774205077fa982bf140a413fdef1b6f2f8a7a))
+    * updateSelector's update #1055 ([fc9da03](https://github.com/daybrush/moveable/commit/fc9da032daa1c721cf47e3c97434f698849137ad))
+
+
+### :house: Code Refactoring
+
+* `react-moveable`, `moveable`
+    * let the target be passed into dragStart (#1050) ([786fc0c](https://github.com/daybrush/moveable/commit/786fc0cd4cb3f3f67719740aa953231b7d410815))
+
+
+### :mega: Other
+
+* `vue3-moveable`, `vue-moveable`, `svelte-moveable`, `react-moveable`, `preact-moveable`, `ngx-moveable`, `moveable`, `lit-moveable`, `croact-moveable`
+    * publish packages ([f9a0eed](https://github.com/daybrush/moveable/commit/f9a0eed9db93c1fa3522138e9c7604287f0ce21f))
+* `react-moveable`, `croact-moveable`
+    * update gesto version ([4d12e48](https://github.com/daybrush/moveable/commit/4d12e484ea08bc1630c6a301b86c34a5d7a023c2))
+
+
+
 ## [0.52.0](https://github.com/daybrush/moveable/compare/0.51.2...0.52.0) (2023-10-28)
 ### :sparkles: Packages
 * `croact-moveable` 0.8.0

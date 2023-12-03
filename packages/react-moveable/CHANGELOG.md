@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.56.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.55.0...react-moveable@0.56.0) (2023-12-03)
+
+
+### :rocket: New Features
+
+* add snapHorizontalThreshold, snapVerticalThreshold #1044 ([6cd5114](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6cd51145ec81b3294c0ba9968d6530748ae46beb))
+* expose gesto preventRightClick and preventWheelClick props (#1040) ([9f4c9f4](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/9f4c9f452470026ecea3f7a0b1aff91c22444868))
+
+
+### :bug: Bug Fix
+
+* fix dragTarget in control box #1054 ([f4e3232](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f4e3232c787f50f9a9947c45307870e5ad5c87ef))
+* fix names ([7722add](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/7722addf758da09480808f1e03c5b9e3061f855b))
+* fix svg origin for viewbox and foreignbox #1048 ([6c27742](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/6c2774205077fa982bf140a413fdef1b6f2f8a7a))
+* updateSelector's update #1055 ([fc9da03](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/fc9da032daa1c721cf47e3c97434f698849137ad))
+
+
+### :house: Code Refactoring
+
+* let the target be passed into dragStart (#1050) ([786fc0c](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/786fc0cd4cb3f3f67719740aa953231b7d410815))
+
+
+### :mega: Other
+
+* publish packages ([f9a0eed](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/f9a0eed9db93c1fa3522138e9c7604287f0ce21f))
+* update gesto version ([4d12e48](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/commit/4d12e484ea08bc1630c6a301b86c34a5d7a023c2))
+
+
+
 ## [0.55.0](https://github.com/daybrush/moveable/blob/master/packages/react-moveable/compare/react-moveable@0.54.2...react-moveable@0.55.0) (2023-10-28)
 
 

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.0](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.8.0...croact-moveable@0.9.0) (2023-12-03)
+
+
+### :mega: Other
+
+* publish packages ([f9a0eed](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/f9a0eed9db93c1fa3522138e9c7604287f0ce21f))
+* update gesto version ([4d12e48](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/commit/4d12e484ea08bc1630c6a301b86c34a5d7a023c2))
+
+
+
 ## [0.8.0](https://github.com/daybrush/moveable/blob/master/packages/croact-moveable/compare/croact-moveable@0.7.2...croact-moveable@0.8.0) (2023-10-28)
 
 
