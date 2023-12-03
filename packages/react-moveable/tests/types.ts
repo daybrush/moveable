@@ -38,7 +38,7 @@ type MatchTypes<
     T extends { [key in keyof Required<E>]: any },
     E extends  { [key in keyof Required<T>]: any },
 > = any;
-type Writable<T> = { -readonly [key in keyof T]: any };
+// type Writable<T> = { -readonly [key in keyof T]: any };
 
 type PropsTester<Able extends { props: readonly string[] }, Props extends Record<string, any> = MoveableOptions> = {
     -readonly [key in Able["props"][number]]: Props[key];

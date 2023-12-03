@@ -2847,7 +2847,7 @@
     sinon "^7.4.1"
     source-map-support "^0.5.13"
 
-"@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.3", "@daybrush/utils@^1.12.0", "@daybrush/utils@^1.13.0", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
+"@daybrush/utils@^0.10.0", "@daybrush/utils@^0.10.1", "@daybrush/utils@^0.11.0", "@daybrush/utils@^0.7.1", "@daybrush/utils@^1.0.0", "@daybrush/utils@^1.1.1", "@daybrush/utils@^1.10.3", "@daybrush/utils@^1.13.0", "@daybrush/utils@^1.4.0", "@daybrush/utils@^1.6.0", "@daybrush/utils@^1.7.1", "@daybrush/utils@^1.9.1":
   version "1.13.0"
   resolved "https://registry.npmjs.org/@daybrush/utils/-/utils-1.13.0.tgz#ea70a60864130da476406fdd1d465e3068aea0ff"
   integrity sha512-ALK12C6SQNNHw1enXK+UO8bdyQ+jaWNQ1Af7Z3FNxeAwjYhQT7do+TRE4RASAJ3ObaS2+TJ7TXR3oz2Gzbw0PQ==
@@ -15096,12 +15096,12 @@ gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-gesto@^1.13.0, gesto@^1.19.0, gesto@^1.19.1, gesto@^1.19.3, gesto@^1.5.1:
-  version "1.19.0"
-  resolved "https://registry.npmjs.org/gesto/-/gesto-1.19.0.tgz#3f76d6c191eb6040f39dffafa362473f73d59af3"
-  integrity sha512-XY+L0UP9KZODjSKkPc0YlrrGltPMKuNyS9YMTKFzIuI52IzwjJnty0e3Lj24g57CxzilszhNgMNQbGtsMq+awQ==
+gesto@^1.13.0, gesto@^1.19.1, gesto@^1.19.3, gesto@^1.5.1:
+  version "1.19.4"
+  resolved "https://registry.npmjs.org/gesto/-/gesto-1.19.4.tgz#14921ca89e4e70c14307c4d942df04f59eb00749"
+  integrity sha512-hfr/0dWwh0Bnbb88s3QVJd1ZRJeOWcgHPPwmiH6NnafDYvhTsxg+SLYu+q/oPNh9JS3V+nlr6fNs8kvPAtcRDQ==
   dependencies:
-    "@daybrush/utils" "^1.12.0"
+    "@daybrush/utils" "^1.13.0"
     "@scena/event-emitter" "^1.0.2"
 
 get-caller-file@^2.0.1, get-caller-file@^2.0.5:
