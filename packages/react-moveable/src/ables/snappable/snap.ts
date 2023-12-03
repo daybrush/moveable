@@ -10,6 +10,7 @@ import { getPosByDirection, getPosesByDirection } from "../../gesto/GestoUtils";
 import { TINY_NUM } from "../../consts";
 import { minus } from "@scena/matrix";
 import { splitSnapDirectionPoses } from "./utils";
+import { NAME_snapHorizontalThreshold, NAME_snapVerticalThreshold } from "./names";
 
 
 
@@ -26,12 +27,12 @@ export function checkMoveableSnapPoses(
     const snapThresholdMultiples = moveable.state.snapThresholdInfo?.multiples || [1, 1];
     const snapHorizontalThreshold = selectValue<number>(
         customSnapHorizontalThreshold,
-        props.snapHorizontalThreshold,
+        props[NAME_snapHorizontalThreshold],
         5,
     );
     const snapVerticalThreshold = selectValue<number>(
         customSnapVerticalThreshold,
-        props.snapVerticalThreshold,
+        props[NAME_snapVerticalThreshold],
         5,
     );
 

@@ -72,6 +72,10 @@ import {
     getSnapBoundInfo,
 } from "./snappable/snapBounds";
 import { getTotalGuidelines } from "./snappable/getTotalGuidelines";
+import {
+    NAME_snapRotationThreshold, NAME_snapRotationDegrees,
+    NAME_snapHorizontalThreshold, NAME_snapVerticalThreshold,
+} from "./snappable/names";
 
 
 export interface SnapPoses {
@@ -610,8 +614,6 @@ function addBoundGuidelines(
 const directionCondition = getDirectionCondition("", ["resizable", "scalable"]);
 
 
-const NAME_snapRotationThreshold = "snapRotationThreshold";
-const NAME_snapRotationDegrees = "snapRotationDegrees";
 
 /**
  * @namespace Moveable.Snappable
@@ -638,6 +640,8 @@ export default {
         "snapGridAll",
         NAME_snapRotationThreshold,
         NAME_snapRotationDegrees,
+        NAME_snapHorizontalThreshold,
+        NAME_snapVerticalThreshold,
         "horizontalGuidelines",
         "verticalGuidelines",
         "elementGuidelines",
