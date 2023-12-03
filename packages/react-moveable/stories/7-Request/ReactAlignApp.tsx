@@ -20,6 +20,8 @@ export default function App() {
                             y: rect.top,
                         }, true);
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Align Top</button>&nbsp;
                 <button onClick={() => {
                     const rect = moveableRef.current!.getRect();
@@ -33,6 +35,8 @@ export default function App() {
                             y: rect.top + rect.height,
                         }, true);
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Align Bottom</button>&nbsp;
                 <button onClick={() => {
                     const rect = moveableRef.current!.getRect();
@@ -46,6 +50,8 @@ export default function App() {
                             x: rect.left,
                         }, true);
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Align Left</button>&nbsp;
                 <button onClick={() => {
                     const rect = moveableRef.current!.getRect();
@@ -59,6 +65,8 @@ export default function App() {
                             y: rect.left + rect.width,
                         }, true);
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Align Right</button>&nbsp;
                 <button onClick={() => {
                     const rect = moveableRef.current!.getRect();
@@ -72,6 +80,8 @@ export default function App() {
                             y: rect.top + rect.height / 2 - rect.children![i].height / 2,
                         }, true);
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Align Vertical Center</button>&nbsp;
                 <button onClick={() => {
                     const rect = moveableRef.current!.getRect();
@@ -85,6 +95,8 @@ export default function App() {
                             x: rect.left + rect.width / 2 - rect.children![i].width / 2,
                         }, true);
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Align Horizontal Center</button>&nbsp;
                 <button onClick={() => {
                     const groupRect = moveableRef.current!.getRect();
@@ -110,6 +122,9 @@ export default function App() {
 
                         top += rect.height + gap;
                     });
+
+
+                    moveableRef.current?.updateRect();
                 }}>Arrange Vertical Spacing</button>&nbsp;
                 <button onClick={() => {
                     const groupRect = moveableRef.current!.getRect();
@@ -135,6 +150,8 @@ export default function App() {
 
                         left += rect.width + gap;
                     });
+
+                    moveableRef.current?.updateRect();
                 }}>Arrange Horizontal Spacing</button>&nbsp;
                 <div className="target target1" style={{
                     left: "50px",
