@@ -115,7 +115,7 @@ export const BasicScalableKeepRatioTest = add("Scalable keepRatio Test", {
     },
 });
 
-export const BaiscRotatable = add("Rotatable", {
+export const BasicRotatable = add("Rotatable", {
     app: require("./ReactRotatableApp").default,
     path: require.resolve("./ReactRotatableApp"),
     argsTypes: {
