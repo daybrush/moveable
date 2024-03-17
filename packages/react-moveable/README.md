@@ -100,7 +100,7 @@ $ npm i react-moveable
 ## 🚀 How to use
 
 ```tsx
-import Moveable from "react-moveable";
+import Moveable, { OnDrag, OnResize, OnScale, OnRotate } from "react-moveable";
 
 render() {
     return (
@@ -189,7 +189,7 @@ render() {
                 delta, dist,
                 transform,
                 clientX, clientY,
-            }: onRotate) => {
+            }: OnRotate) => {
                 console.log("onRotate", dist);
                 target!.style.transform = transform;
             }}
