@@ -68,6 +68,7 @@
     "@scena/event-emitter": "^1.0.5",
     "croact": "^1.0.4",
     "croact-moveable": "~0.9.0",
+    "framework-utils": "^1.1.0",
     "react-moveable": "~0.56.0"
   },
   "devDependencies": {
