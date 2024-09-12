@@ -3,7 +3,7 @@
     "version": "0.28.0",
     "description": "A Vue 3 Component that create Moveable, Draggable, Resizable, Scalable, Rotatable, Warpable, Pinchable, Groupable.",
     "types": "dist/index.d.ts",
-    "main": "dist/moveable.cjs.js",
+    "main": "dist/moveable.cjs",
     "module": "dist/moveable.js",
     "sideEffects": false,
     "type": "module",
