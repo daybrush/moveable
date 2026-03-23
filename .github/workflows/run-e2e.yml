@@ -2,7 +2,7 @@ name: Storybook Tests
 on: [push, pull_request]
 jobs:
   test:
-    timeout-minutes: 60
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -10,16 +10,16 @@ jobs:
         with:
             node-version: '16'
             cache: 'yarn'
-      - name: restore lerna
+      - name: restore neyj
         uses: actions/cache@v3
-        id: cache-lerna
+        id: cache-neyj
         with:
           path: |
             **/node_modules
             ~/.cache/ms-playwright
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        if: steps.cache-lerna.outputs.cache-hit != 'true'
+        if: steps.cache-neyj.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
       - name: Run Storybook tests
         run: yarn test:ci
