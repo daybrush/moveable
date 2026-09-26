@@ -88,8 +88,6 @@ export function getMatrixStackInfo(
         let isStatic = false;
         let parentClientLeft = 0;
         let parentClientTop = 0;
-        let fixedClientLeft = 0;
-        let fixedClientTop = 0;
         let fixedInfo: {
             hasTransform: boolean;
             fixedContainer: HTMLElement | null;
@@ -99,9 +97,13 @@ export function getMatrixStackInfo(
         };
 
         if (isFixed) {
-            hasFixed = true;
             fixedInfo = getPositionFixedInfo(el);
-            offsetContainer = fixedInfo.fixedContainer!;
+            // A transformed ancestor contains fixed descendants; only a fixed
+            // element attached to the viewport ends the matrix stack.
+            if (!fixedInfo.hasTransform) {
+                hasFixed = true;
+                offsetContainer = fixedInfo.fixedContainer!;
+            }
         }
 
         // convert 3 to 4
@@ -152,7 +154,7 @@ export function getMatrixStackInfo(
 
         if (isFixed) {
             offsetParent = fixedInfo.fixedContainer!;
-            isOffsetEnd = true;
+            isOffsetEnd = !fixedInfo.hasTransform || offsetParent === container;
         } else {
             const offsetInfo = getOffsetInfo(el, container, false, true, getStyle);
             const offsetZoom = offsetInfo.offsetZoom;
@@ -201,8 +203,10 @@ export function getMatrixStackInfo(
         if (isFixed) {
             if (hasOffset && fixedInfo.hasTransform) {
                 // border
-                fixedClientLeft = offsetParent.clientLeft;
-                fixedClientTop = offsetParent.clientTop;
+                if (offsetContainer !== offsetParent) {
+                    parentClientLeft = offsetParent.clientLeft;
+                    parentClientTop = offsetParent.clientTop;
+                }
             }
         } else {
             if (hasOffset && offsetContainer !== offsetParent) {
@@ -246,8 +250,8 @@ export function getMatrixStackInfo(
                 type: "offset",
                 target: el,
                 matrix: createOriginMatrix([
-                    offsetLeft - scrollLeft + parentClientLeft - fixedClientLeft,
-                    offsetTop - scrollTop + parentClientTop - fixedClientTop,
+                    offsetLeft - scrollLeft + parentClientLeft,
+                    offsetTop - scrollTop + parentClientTop,
                 ], n),
             });
         } else {
@@ -276,7 +280,7 @@ export function getMatrixStackInfo(
             targetTransformOrigin = targetOrigin;
         }
 
-        if (isEnd || isFixed) {
+        if (isEnd || (isFixed && !fixedInfo.hasTransform)) {
             break;
         } else {
             el = offsetParent;
