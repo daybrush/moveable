@@ -271,3 +271,30 @@ export const TestNestedSVG = add("Test Nested SVG", {
     app: require("./ReactNestedSVGApp").default,
     path: require.resolve("./ReactNestedSVGApp"),
 });
+
+
+export const TestsNestedFixed = add("Fixed child of a transformed containing block", {
+    app: require("./ReactNestedFixedApp").default,
+    path: require.resolve("./ReactNestedFixedApp"),
+    play: async ({ canvasElement }) => {
+        await wait();
+        const target = canvasElement.querySelector<HTMLElement>(".nested-fixed-target")!;
+        const checkCorners = () => {
+            for (const direction of ["nw", "ne", "sw", "se"]) {
+                const corner = target.querySelector(`[data-corner="${direction}"]`)!.getBoundingClientRect();
+                const handle = canvasElement.querySelector(
+                    `.moveable-control[data-direction="${direction}"]`,
+                )!.getBoundingClientRect();
+
+                expect(Math.hypot(
+                    corner.x - handle.x - handle.width / 2,
+                    corner.y - handle.y - handle.height / 2,
+                )).toBeLessThan(2);
+            }
+        };
+
+        checkCorners();
+        await pan({ target, start: [50, 40], end: [120, 70], duration: 100, interval: 10 });
+        checkCorners();
+    },
+});
